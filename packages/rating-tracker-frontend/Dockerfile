@@ -4,7 +4,7 @@ ENV NODE_ENV production
 WORKDIR /app
 
 COPY . .
-RUN yarn install --production
-RUN yarn build
+RUN yarn install --production && yarn build && yarn cache clean --all
+RUN yarn global add serve
 
 CMD ["yarn", "serve"]
