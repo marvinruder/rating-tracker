@@ -1,6 +1,4 @@
-**/node_modules
-**/.yarn
-**/npm-debug.log
+node_modules
+.yarn
 yarn-debug.log*
 yarn-error.log*
-build
