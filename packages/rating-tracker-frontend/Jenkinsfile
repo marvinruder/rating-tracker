@@ -27,7 +27,7 @@ node {
 
         stage ('Publish Docker Image') {
             docker.withRegistry('', 'dockerhub') {
-                if (env.BRANCH_NAME == 'origin/main') {
+                if (env.BRANCH_NAME == 'main') {
                     image.push(main_tag)
                 } else {
                     image.push(branch_tag)
