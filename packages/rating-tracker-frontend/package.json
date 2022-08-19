@@ -20,7 +20,7 @@
     "@vitejs/plugin-react": "^2.0.1",
     "apexcharts": "^3.35.3",
     "clsx": "^1.1.1",
-    "date-fns": "^2.28.0",
+    "date-fns": "^2.29.2",
     "nprogress": "^0.2.0",
     "numeral": "^2.0.6",
     "prop-types": "^15.8.1",
