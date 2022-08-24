@@ -29,7 +29,7 @@ node {
             docker.withRegistry('', 'dockerhub') {
                 if (env.BRANCH_NAME == 'main') {
                     image.push(main_tag)
-                } else {
+                } else if (!(env.BRANCH_NAME).startsWith('dependabot')) {
                     image.push(branch_tag)
                 }
             }
@@ -39,7 +39,7 @@ node {
             sh "docker rmi $imagename:build-$GIT_COMMIT_HASH || true"
             if (env.BRANCH_NAME == 'main') {
                 sh "docker rmi $imagename:$main_tag || true"
-            } else {
+            } else if (!(env.BRANCH_NAME).startsWith('dependabot')) {
                 sh "docker rmi $imagename:$branch_tag || true"
             }
         }
