@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "@mui/material";
 import { themeCreator } from "./base";
-import { StylesProvider } from "@mui/styles";
 
 export const ThemeContext = React.createContext(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (themeName: string): void => {}
 );
 
-const ThemeProviderWrapper: React.FC = (props) => {
+type ThemeProviderWrapperProps = {
+  children: React.ReactNode;
+};
+
+const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = (
+  props: ThemeProviderWrapperProps
+) => {
   const curThemeName = localStorage.getItem("appTheme") || "NebulaFighterTheme";
   const [themeName, _setThemeName] = useState(curThemeName);
   const theme = themeCreator(themeName);
@@ -41,11 +46,9 @@ const ThemeProviderWrapper: React.FC = (props) => {
   }, []);
 
   return (
-    <StylesProvider injectFirst>
-      <ThemeContext.Provider value={setThemeName}>
-        <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
-      </ThemeContext.Provider>
-    </StylesProvider>
+    <ThemeContext.Provider value={setThemeName}>
+      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
+    </ThemeContext.Provider>
   );
 };
 

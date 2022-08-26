@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 import "nprogress/nprogress.css";
 import App from "src/App";
@@ -8,9 +8,9 @@ import * as serviceWorker from "src/serviceWorker";
 
 ReactDOM.render(
   <SidebarProvider>
-    <BrowserRouter>
+    <HashRouter>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   </SidebarProvider>,
   document.getElementById("root")
 );

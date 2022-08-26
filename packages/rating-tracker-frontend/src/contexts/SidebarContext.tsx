@@ -10,7 +10,13 @@ export const SidebarContext = createContext<SidebarContext>(
   {} as SidebarContext
 );
 
-export const SidebarProvider: FC = ({ children }) => {
+type SidebarProviderProps = {
+  children: React.ReactNode;
+};
+
+export const SidebarProvider: FC<SidebarProviderProps> = (
+  props: SidebarProviderProps
+) => {
   const [sidebarToggle, setSidebarToggle] = useState(false);
   const toggleSidebar = () => {
     setSidebarToggle(!sidebarToggle);
@@ -23,7 +29,7 @@ export const SidebarProvider: FC = ({ children }) => {
     <SidebarContext.Provider
       value={{ sidebarToggle, toggleSidebar, closeSidebar }}
     >
-      {children}
+      {props.children}
     </SidebarContext.Provider>
   );
 };
