@@ -1,4 +1,4 @@
-FROM node:16-alpine as test
+FROM node:current-alpine as test
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ RUN yarn install
 RUN yarn test:ci
 
 
-FROM node:16-alpine as build
+FROM node:current-alpine as build
 ENV NODE_ENV production
 
 WORKDIR /app
@@ -17,7 +17,7 @@ RUN yarn workspaces focus --production
 RUN yarn build
 
 
-FROM node:16-alpine as run
+FROM node:current-alpine as run
 
 COPY --from=build /app/package.json /package.json
 COPY --from=build /app/dist /dist
