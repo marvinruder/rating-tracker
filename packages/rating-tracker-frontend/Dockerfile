@@ -17,9 +17,14 @@ RUN yarn workspaces focus --production
 RUN yarn build
 
 
-FROM node:lts-alpine as run
+FROM alpine:3.16 as run
 
-COPY --from=build /app/package.json /package.json
+RUN apk update \
+  && apk add lighttpd \
+  && rm -rf /var/cache/apk/*
+
 COPY --from=build /app/dist /dist
+COPY lighttpd.conf .
+RUN mkdir /deflate_cache
 
-CMD ["yarn", "serve"]
+CMD [ "lighttpd", "-D", "-f", "/lighttpd.conf" ]

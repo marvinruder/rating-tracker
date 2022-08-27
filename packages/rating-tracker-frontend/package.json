@@ -41,7 +41,6 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "serve": "npx serve dist",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
     "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix",
     "test": "jest --watchAll",
