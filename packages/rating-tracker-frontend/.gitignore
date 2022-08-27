@@ -11,6 +11,9 @@
 # testing
 /coverage
 
+# building
+.vite
+
 # production
 /dist
 
