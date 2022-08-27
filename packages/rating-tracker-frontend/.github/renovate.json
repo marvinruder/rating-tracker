@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "schedule": ["every weekend"],
+  "timezone": "Europe/Berlin",
+  "assignees": ["ruder.marvin@icloud.com"],
+  "updateLockFiles": true,
+  "rangeStrategy": "bump",
+  "constraints": {
+    "node": "^16",
+    "jest": "^28"
+  }
+}
