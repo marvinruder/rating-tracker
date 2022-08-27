@@ -1,0 +1,9 @@
+FROM node:lts-alpine as test
+
+WORKDIR /app
+
+COPY . .
+RUN yarn install
+RUN yarn test:ci
+
+ENTRYPOINT [ "/bin/sh" ]
