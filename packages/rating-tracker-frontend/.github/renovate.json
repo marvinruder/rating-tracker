@@ -2,14 +2,21 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
   "prConcurrentLimit": 0,
+  "prCreation": "not-pending",
   "prHourlyLimit": 0,
   "schedule": ["every weekend"],
   "timezone": "Europe/Berlin",
   "assignees": ["ruder.marvin@icloud.com"],
   "updateLockFiles": true,
   "rangeStrategy": "bump",
-  "constraints": {
-    "node": "^16",
-    "jest": "^28"
-  }
+  "packageRules": [
+    {
+      "matchPackageNames": ["jest", "babel-jest"],
+      "allowedVersions": "^28"
+    },
+    {
+      "matchPackageNames": ["node"],
+      "allowedVersions": "^16"
+    }
+  ]
 }
