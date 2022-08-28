@@ -9,7 +9,6 @@ export function themeCreator(theme: string): Theme {
 }
 
 declare module "@mui/material/styles" {
-  // eslint-disable-next-line no-unused-vars
   interface Theme {
     colors: {
       gradients: {

@@ -2,9 +2,7 @@ import { FC, ChangeEvent, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Tooltip,
-  Divider,
   Box,
-  Card,
   Checkbox,
   IconButton,
   Table,
@@ -16,7 +14,6 @@ import {
   TableContainer,
   Typography,
   useTheme,
-  CardHeader,
 } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
@@ -91,9 +88,7 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
   const theme = useTheme();
 
   return (
-    <Card>
-      <CardHeader title="Recent Orders" />
-      <Divider />
+    <>
       <TableContainer>
         <Table>
           <TableHead>
@@ -133,13 +128,17 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
                       variant="body1"
                       fontWeight="bold"
                       color="text.primary"
-                      maxWidth={200}
-                      gutterBottom
+                      maxWidth={160}
                       noWrap
                     >
                       {stock.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      maxWidth={160}
+                      noWrap
+                    >
                       {stock.ticker}
                     </Typography>
                   </TableCell>
@@ -148,17 +147,27 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
                       variant="body1"
                       fontWeight="bold"
                       color="text.primary"
-                      gutterBottom
+                      maxWidth={125}
                       noWrap
                     >
                       {emojiFlag(getCountryCode(stock.country)) +
                         " " +
                         stock.country}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      maxWidth={125}
+                      noWrap
+                    >
                       {getRegionFromCountry(stock.country)}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      maxWidth={125}
+                      noWrap
+                    >
                       {getSuperRegionFromCountry(stock.country)}
                     </Typography>
                   </TableCell>
@@ -170,7 +179,7 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
                       imageUrl={`/static/images/sector/${getSectorKey(
                         getSectorFromIndustry(stock.industry)
                       )}.svg`}
-                      gutterBottom
+                      maxWidth={125}
                       noWrap
                     >
                       {getSectorFromIndustry(stock.industry)}
@@ -181,6 +190,7 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
                       imageUrl={`/static/images/supersector/${getSuperSectorKey(
                         getSuperSectorFromIndustry(stock.industry)
                       )}.svg`}
+                      maxWidth={125}
                       noWrap
                     >
                       {getSuperSectorFromIndustry(stock.industry)}
@@ -191,12 +201,17 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
                       variant="body1"
                       fontWeight="bold"
                       color="text.primary"
-                      gutterBottom
+                      maxWidth={150}
                       noWrap
                     >
                       {stock.industry}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      maxWidth={150}
+                      noWrap
+                    >
                       {getGroupFromIndustry(stock.industry)}
                     </Typography>
                   </TableCell>
@@ -245,7 +260,7 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
           rowsPerPageOptions={[10, 25, 50, { label: "All", value: -1 }]}
         />
       </Box>
-    </Card>
+    </>
   );
 };
 

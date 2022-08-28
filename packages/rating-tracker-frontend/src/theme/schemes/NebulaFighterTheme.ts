@@ -459,7 +459,7 @@ export const NebulaFighterTheme = createTheme({
         colorPrimary: {
           fontWeight: "bold",
           lineHeight: "40px",
-          fontSize: 13,
+          fontSize: 11,
           background: colors.alpha.black[5],
           color: colors.alpha.black[70],
         },
@@ -472,7 +472,7 @@ export const NebulaFighterTheme = createTheme({
           marginBottom: -5,
         },
         title: {
-          fontSize: 15,
+          fontSize: 13,
         },
       },
     },
@@ -519,7 +519,7 @@ export const NebulaFighterTheme = createTheme({
     MuiAvatar: {
       styleOverrides: {
         root: {
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: "bold",
         },
         colorDefault: {
@@ -535,7 +535,7 @@ export const NebulaFighterTheme = createTheme({
         },
         avatar: {
           background: colors.alpha.black[10],
-          fontSize: 13,
+          fontSize: 11,
           color: colors.alpha.black[70],
           fontWeight: "bold",
 
@@ -556,7 +556,7 @@ export const NebulaFighterTheme = createTheme({
     MuiPaginationItem: {
       styleOverrides: {
         page: {
-          fontSize: 13,
+          fontSize: 11,
           fontWeight: "bold",
           transition: "all .2s",
         },
@@ -663,7 +663,7 @@ export const NebulaFighterTheme = createTheme({
           },
         },
         sizeSmall: {
-          padding: 4,
+          padding: 2,
         },
       },
     },
@@ -857,7 +857,7 @@ export const NebulaFighterTheme = createTheme({
           padding: 12,
 
           "& .MuiMenuItem-root.MuiButtonBase-root": {
-            fontSize: 14,
+            fontSize: 12,
             marginTop: 1,
             marginBottom: 1,
             transition: "all .2s",
@@ -974,11 +974,12 @@ export const NebulaFighterTheme = createTheme({
       styleOverrides: {
         root: {
           borderBottomColor: colors.alpha.black[10],
-          fontSize: 14,
+          fontSize: 12,
+          padding: 8,
         },
         head: {
           textTransform: "uppercase",
-          fontSize: 13,
+          fontSize: 11,
           fontWeight: "bold",
           color: colors.alpha.black[70],
         },
@@ -988,7 +989,7 @@ export const NebulaFighterTheme = createTheme({
       styleOverrides: {
         message: {
           lineHeight: 1.5,
-          fontSize: 14,
+          fontSize: 12,
         },
         standardInfo: {
           color: colors.info.main,
@@ -1051,7 +1052,7 @@ export const NebulaFighterTheme = createTheme({
         tooltip: {
           backgroundColor: alpha(colors.alpha.black["100"], 0.95),
           padding: "8px 16px",
-          fontSize: 13,
+          fontSize: 11,
         },
         arrow: {
           color: alpha(colors.alpha.black["100"], 0.95),
@@ -1137,10 +1138,10 @@ export const NebulaFighterTheme = createTheme({
       },
       styleOverrides: {
         gutterBottom: {
-          marginBottom: 4,
+          marginBottom: 2,
         },
         paragraph: {
-          fontSize: 17,
+          fontSize: 15,
           lineHeight: 1.7,
         },
       },
@@ -1154,54 +1155,54 @@ export const NebulaFighterTheme = createTheme({
       '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
     h1: {
       fontWeight: 700,
-      fontSize: 35,
+      fontSize: 30,
     },
     h2: {
       fontWeight: 700,
-      fontSize: 30,
+      fontSize: 26,
     },
     h3: {
       fontWeight: 700,
-      fontSize: 25,
+      fontSize: 21,
       lineHeight: 1.4,
       color: colors.alpha.black[100],
     },
     h4: {
       fontWeight: 700,
-      fontSize: 16,
+      fontSize: 14,
     },
     h5: {
       fontWeight: 700,
-      fontSize: 14,
+      fontSize: 12,
     },
     h6: {
-      fontSize: 15,
+      fontSize: 13,
     },
     body1: {
-      fontSize: 14,
+      fontSize: 12,
     },
     body2: {
-      fontSize: 14,
+      fontSize: 12,
     },
     button: {
       fontWeight: 600,
     },
     caption: {
-      fontSize: 13,
+      fontSize: 11,
       textTransform: "uppercase",
       color: colors.alpha.black[50],
     },
     subtitle1: {
-      fontSize: 14,
+      fontSize: 12,
       color: colors.alpha.black[70],
     },
     subtitle2: {
       fontWeight: 400,
-      fontSize: 15,
+      fontSize: 13,
       color: colors.alpha.black[50],
     },
     overline: {
-      fontSize: 13,
+      fontSize: 11,
       fontWeight: 700,
       textTransform: "uppercase",
     },
