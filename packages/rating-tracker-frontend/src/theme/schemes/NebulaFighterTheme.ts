@@ -2,15 +2,15 @@ import { alpha, createTheme, darken } from "@mui/material";
 import "@mui/lab/themeAugmentation";
 
 const themeColors = {
-  primary: "#8C7CF0",
-  secondary: "#9EA4C1",
+  primary: "#3D6399",
+  secondary: "#B0B0B0",
   success: "#57CA22",
   warning: "#FFA319",
   error: "#FF1943",
   info: "#33C2FF",
-  black: "#CBCCD2",
-  white: "#111633",
-  primaryAlt: "#111633",
+  black: "#CFCFCF",
+  white: "#212121",
+  primaryAlt: "#212121",
   trueWhite: "#ffffff",
 };
 
@@ -40,27 +40,27 @@ const colors = {
       "0px 1px 4px rgba(255, 25, 67, 0.25), 0px 3px 12px 2px rgba(255, 25, 67, 0.35)",
     info: "0px 1px 4px rgba(51, 194, 255, 0.25), 0px 3px 12px 2px rgba(51, 194, 255, 0.35)",
     primary:
-      "0px 1px 4px rgba(112, 99, 192, 0.25), 0px 3px 12px 2px rgba(112, 99, 192, 0.35)",
+      "0px 1px 4px rgba(112, 99, 192, 0.25), 0px 3px 12px 2px rgba(61, 99, 153, 0.35)",
     warning:
       "0px 1px 4px rgba(255, 163, 25, 0.25), 0px 3px 12px 2px rgba(255, 163, 25, 0.35)",
-    card: "0px 0px 2px #6A7199",
-    cardSm: "0px 0px 2px #6A7199",
+    card: "0px 0px 2px #828282",
+    cardSm: "0px 0px 2px #828282",
     cardLg:
-      "0 0rem 14rem 0 rgb(255 255 255 / 20%), 0 0.8rem 2.3rem rgb(111 130 156 / 3%), 0 0.2rem 0.7rem rgb(17 29 57 / 15%)",
+      "0 0rem 14rem 0 rgb(255 255 255 / 20%), 0 0.8rem 2.3rem rgb(133 133 133 / 3%), 0 0.2rem 0.7rem rgb(38 38 38 / 15%)",
   },
   layout: {
     general: {
-      bodyBg: "#070C27",
+      bodyBg: "#171717",
     },
     sidebar: {
       background: themeColors.primaryAlt,
       textColor: themeColors.secondary,
-      dividerBg: "#272C48",
-      menuItemColor: "#9EA4C1",
+      dividerBg: "#383838",
+      menuItemColor: themeColors.secondary,
       menuItemColorActive: "#ffffff",
       menuItemBg: themeColors.primaryAlt,
-      menuItemBgActive: "rgba(43, 48, 77, .6)",
-      menuItemIconColor: "#444A6B",
+      menuItemBgActive: "rgba(61, 61, 61, .6)",
+      menuItemIconColor: "#575757",
       menuItemIconColorActive: "#ffffff",
       menuItemHeadingColor: darken(themeColors.secondary, 0.3),
     },
@@ -238,13 +238,13 @@ export const NebulaFighterTheme = createTheme({
     menuItemIconColor: colors.layout.sidebar.menuItemIconColor,
     menuItemIconColorActive: colors.layout.sidebar.menuItemIconColorActive,
     menuItemHeadingColor: colors.layout.sidebar.menuItemHeadingColor,
-    boxShadow: "1px 0 0 #272C48",
+    boxShadow: "1px 0 0 #383838",
     width: "290px",
   },
   header: {
     height: "80px",
     background: themeColors.primaryAlt,
-    boxShadow: "0px 1px 0px #272C48",
+    boxShadow: "0px 1px 0px #383838",
     textColor: colors.secondary.main,
   },
   spacing: 9,
@@ -324,7 +324,7 @@ export const NebulaFighterTheme = createTheme({
     MuiBackdrop: {
       styleOverrides: {
         root: {
-          backgroundColor: alpha(darken("#070C27", 0.5), 0.4),
+          backgroundColor: alpha(darken("#171717", 0.5), 0.4),
           backdropFilter: "blur(2px)",
 
           "&.MuiBackdrop-invisible": {
