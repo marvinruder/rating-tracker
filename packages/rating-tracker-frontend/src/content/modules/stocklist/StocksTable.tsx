@@ -29,6 +29,9 @@ import {
 } from "src/enums/sectors/superSector";
 import { getGroupFromIndustry } from "src/enums/sectors/industryGroup";
 import IconTypography from "src/components/IconTypography";
+import { Size } from "src/enums/size";
+import { Style } from "src/enums/style";
+import StyleBox from "src/components/StyleBox";
 
 interface StocksTableProps {
   className?: string;
@@ -45,7 +48,7 @@ const applyPagination = (
     : stocks;
 };
 
-const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
+const StocksTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
   const [selectedStocks, setSelectedStocks] = useState<string[]>([]);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -103,6 +106,7 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
               </TableCell>
               <TableCell>Stock</TableCell>
               <TableCell>Country</TableCell>
+              <TableCell>StyleBox</TableCell>
               <TableCell>Sector</TableCell>
               <TableCell>Industry</TableCell>
               <TableCell align="right">Actions</TableCell>
@@ -170,6 +174,23 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
                     >
                       {getSuperRegionFromCountry(stock.country)}
                     </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip
+                      title={`${Size[stock.size]}-${Style[stock.style]}`}
+                    >
+                      <div>
+                        <StyleBox
+                          fill={theme.colors.alpha.black[100]}
+                          stroke={theme.colors.alpha.black[100]}
+                          size={stock.size}
+                          style={stock.style}
+                          length={
+                            2 * (theme.typography.body1.fontSize as number)
+                          }
+                        />
+                      </div>
+                    </Tooltip>
                   </TableCell>
                   <TableCell>
                     <IconTypography
@@ -264,12 +285,12 @@ const RecentOrdersTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
   );
 };
 
-RecentOrdersTable.propTypes = {
+StocksTable.propTypes = {
   stocks: PropTypes.array.isRequired,
 };
 
-RecentOrdersTable.defaultProps = {
+StocksTable.defaultProps = {
   stocks: [],
 };
 
-export default RecentOrdersTable;
+export default StocksTable;

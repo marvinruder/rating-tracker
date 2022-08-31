@@ -1046,7 +1046,7 @@ export const PureLightTheme = createTheme({
       styleOverrides: {
         tooltip: {
           backgroundColor: alpha(colors.alpha.black["100"], 0.95),
-          padding: "8px 16px",
+          padding: "4px 8px",
           fontSize: 11,
         },
         arrow: {
