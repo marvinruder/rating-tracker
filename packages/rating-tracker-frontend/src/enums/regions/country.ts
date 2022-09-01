@@ -252,3 +252,8 @@ export enum Country {
 export const getCountryCode = (country: Country) => {
   return Object.keys(Country)[Object.values(Country).indexOf(country)];
 };
+
+const alphaToFlagAlpha = (a: string) =>
+  String.fromCodePoint(0x1f1a5 + a.toUpperCase().codePointAt(0)!);
+export const emojiFlag = (country: Country) =>
+  getCountryCode(country).slice(0, 2).split("").map(alphaToFlagAlpha).join("");

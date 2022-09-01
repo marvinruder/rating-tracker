@@ -219,6 +219,11 @@ export const PureLightTheme = createTheme({
       main: themeColors.info,
       dark: darken(themeColors.info, 0.2),
     },
+    sector: {
+      cyclical: "#EF7622",
+      defensive: "#518428",
+      sensitive: "#1F55A5",
+    },
   },
   general: {
     reactFrameworkColor: "#00D8FF",

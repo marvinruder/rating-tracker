@@ -1,3 +1,4 @@
+import { NebulaFighterTheme } from "src/theme/schemes/NebulaFighterTheme";
 import { Industry } from "./sectors/industry";
 import { getGroupFromIndustry, IndustryGroup } from "./sectors/industryGroup";
 import {
@@ -6,9 +7,21 @@ import {
   Sector,
 } from "./sectors/sector";
 import {
+  getColor,
   getSuperSectorFromIndustry,
   getSuperSectorFromSector,
+  SuperSector,
 } from "./sectors/superSector";
+
+jest.mock("@mui/material", () => {
+  const original = jest.requireActual("@mui/material");
+  return {
+    ...original,
+    useTheme: () => {
+      return NebulaFighterTheme;
+    },
+  };
+});
 
 describe("industry groups", () => {
   it("provides exactly one industry group per industry", () => {
@@ -46,6 +59,18 @@ describe("super sectors", () => {
       expect(() =>
         getSuperSectorFromIndustry(industry as Industry)
       ).not.toThrow()
+    );
+  });
+
+  it("provides the correct color for every super sector", () => {
+    expect(getColor(SuperSector.Cyclical)).toBe(
+      NebulaFighterTheme.colors.sector.cyclical
+    );
+    expect(getColor(SuperSector.Defensive)).toBe(
+      NebulaFighterTheme.colors.sector.defensive
+    );
+    expect(getColor(SuperSector.Sensitive)).toBe(
+      NebulaFighterTheme.colors.sector.sensitive
     );
   });
 });

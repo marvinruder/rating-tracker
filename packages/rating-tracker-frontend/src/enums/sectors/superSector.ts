@@ -1,3 +1,4 @@
+import { useTheme } from "@mui/material";
 import { Industry } from "./industry";
 import { getGroupFromIndustry } from "./industryGroup";
 import { getSectorFromIndustryGroup, Sector } from "./sector";
@@ -60,8 +61,14 @@ export const getSuperSectorFromIndustry = (industry: Industry) => {
   );
 };
 
-export const getSuperSectorKey = (superSector: SuperSector) => {
-  return Object.keys(SuperSector)[
-    Object.values(SuperSector).indexOf(superSector)
-  ];
+export const getColor = (superSector: SuperSector) => {
+  const theme = useTheme();
+  switch (superSector) {
+    case SuperSector.Cyclical:
+      return theme.colors.sector.cyclical;
+    case SuperSector.Defensive:
+      return theme.colors.sector.defensive;
+    case SuperSector.Sensitive:
+      return theme.colors.sector.sensitive;
+  }
 };

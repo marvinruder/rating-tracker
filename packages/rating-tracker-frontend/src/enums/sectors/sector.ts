@@ -153,7 +153,3 @@ export const getSectorFromIndustryGroup = (industryGroup: IndustryGroup) => {
 export const getSectorFromIndustry = (industry: Industry) => {
   return getSectorFromIndustryGroup(getGroupFromIndustry(industry));
 };
-
-export const getSectorKey = (sector: Sector) => {
-  return Object.keys(Sector)[Object.values(Sector).indexOf(sector)];
-};

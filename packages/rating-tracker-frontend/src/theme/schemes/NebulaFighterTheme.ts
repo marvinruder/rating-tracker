@@ -2,9 +2,9 @@ import { alpha, createTheme, darken } from "@mui/material";
 import "@mui/lab/themeAugmentation";
 
 const themeColors = {
-  primary: "#3D6399",
+  primary: "#3F6AA6",
   secondary: "#B0B0B0",
-  success: "#57CA22",
+  success: "#54AB2B",
   warning: "#FFA319",
   error: "#FF1943",
   info: "#33C2FF",
@@ -218,6 +218,11 @@ export const NebulaFighterTheme = createTheme({
       light: alpha(themeColors.info, 0.3),
       main: themeColors.info,
       dark: darken(themeColors.info, 0.2),
+    },
+    sector: {
+      cyclical: "#DA6410",
+      defensive: "#65A432",
+      sensitive: "#4F88DE",
     },
   },
   general: {
