@@ -11,7 +11,7 @@
   "rangeStrategy": "bump",
   "packageRules": [
     {
-      "matchPackageNames": ["jest", "babel-jest"],
+      "matchPackageNames": ["jest", "babel-jest", "@types/jest"],
       "allowedVersions": "^28"
     },
     {
