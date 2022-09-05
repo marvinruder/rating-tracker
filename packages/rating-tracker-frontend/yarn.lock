@@ -38,7 +38,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.18.10, @babel/core@npm:^7.18.5":
+"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.18.5":
   version: 7.18.13
   resolution: "@babel/core@npm:7.18.13"
   dependencies:
@@ -61,7 +61,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.19.0":
+"@babel/core@npm:^7.18.13, @babel/core@npm:^7.19.0":
   version: 7.19.0
   resolution: "@babel/core@npm:7.19.0"
   dependencies:
@@ -2862,11 +2862,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@vitejs/plugin-react@npm:2.0.1"
+"@vitejs/plugin-react@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@vitejs/plugin-react@npm:2.1.0"
   dependencies:
-    "@babel/core": ^7.18.10
+    "@babel/core": ^7.18.13
     "@babel/plugin-transform-react-jsx": ^7.18.10
     "@babel/plugin-transform-react-jsx-development": ^7.18.6
     "@babel/plugin-transform-react-jsx-self": ^7.18.6
@@ -2875,7 +2875,7 @@ __metadata:
     react-refresh: ^0.14.0
   peerDependencies:
     vite: ^3.0.0
-  checksum: 90702768ee34bd7e5021398ab827c682cfe1ebfce0988a532a678b664d80b9ad991d1c24f81045626b811c9aa2aae7d9d0fd563db5c6b7b8fd36c8eecdfc04b9
+  checksum: cd13ad549f33e579e0e1d14f5b8a4ad60d5fbbc8cd579e4381d52bb426700118e876644a619a19c5cec4efeb4f8a0ff50b6c9456d5c24836071190b46d781fef
   languageName: node
   linkType: hard
 
@@ -6765,7 +6765,7 @@ __metadata:
     "@types/react-dom": ^18.0.6
     "@typescript-eslint/eslint-plugin": ^5.36.2
     "@typescript-eslint/parser": ^5.36.2
-    "@vitejs/plugin-react": ^2.0.1
+    "@vitejs/plugin-react": ^2.1.0
     apexcharts: ^3.35.5
     babel-jest: ^28.1.3
     clsx: ^1.2.1
