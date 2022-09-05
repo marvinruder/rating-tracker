@@ -100,14 +100,12 @@ const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
       width={props.length}
       height={props.length}
     >
-      <g id="a" focusable="false">
-        <path
-          d="M1.5,1.5H13.5V13.5H1.5V1.5Zm4,0V13.5M9.5,1.5V13.5M1.5,5.5H13.5M1.5,9.5H13.5"
-          vectorEffect="non-scaling-stroke"
-          fill="none"
-        ></path>
-        {getSquare(props.size, props.style)}
-      </g>
+      <path
+        d="M1.5,1.5H13.5V13.5H1.5V1.5Zm4,0V13.5M9.5,1.5V13.5M1.5,5.5H13.5M1.5,9.5H13.5"
+        vectorEffect="non-scaling-stroke"
+        fill="none"
+      ></path>
+      {getSquare(props.size, props.style)}
     </svg>
   );
 };
