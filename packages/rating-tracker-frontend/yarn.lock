@@ -4129,9 +4129,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.31.4":
-  version: 7.31.4
-  resolution: "eslint-plugin-react@npm:7.31.4"
+"eslint-plugin-react@npm:^7.31.6":
+  version: 7.31.6
+  resolution: "eslint-plugin-react@npm:7.31.6"
   dependencies:
     array-includes: ^3.1.5
     array.prototype.flatmap: ^1.3.0
@@ -4149,7 +4149,7 @@ __metadata:
     string.prototype.matchall: ^4.0.7
   peerDependencies:
     eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
-  checksum: 5fa5293f922c9fc24c300a60b9d3f33a2406116b88df46a134cbcdb514b91b526251ce604716ab1cde94c7c95f25963a56c1509faf867601b3b0f94d9f68d61b
+  checksum: fdcee460db2e01398b31dd75bb0597d6dfa2f29beda9c5ef641e6e3c72c8c2191cbaa952f7469a5e091bc2be959a1abc09761bdca70f12aa4a73090f48a98f6b
   languageName: node
   linkType: hard
 
@@ -6624,7 +6624,7 @@ __metadata:
     eslint-config-google: ^0.14.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-prettier: ^4.2.1
-    eslint-plugin-react: ^7.31.4
+    eslint-plugin-react: ^7.31.6
     jest: ^28.1.3
     nprogress: ^0.2.0
     numeral: ^2.0.6
