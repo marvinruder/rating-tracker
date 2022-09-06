@@ -1,5 +1,6 @@
 FROM node:lts-alpine as build
 ENV NODE_ENV production
+ENV FORCE_COLOR true
 
 WORKDIR /app
 
