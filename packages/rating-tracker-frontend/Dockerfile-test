@@ -1,4 +1,4 @@
-FROM node:lts-alpine as test
+FROM node:alpine as test
 ENV FORCE_COLOR true
 
 WORKDIR /app

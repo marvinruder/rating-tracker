@@ -13,10 +13,6 @@
     {
       "matchPackageNames": ["jest", "babel-jest", "@types/jest"],
       "allowedVersions": "^28"
-    },
-    {
-      "matchPackageNames": ["node", "@types/node"],
-      "allowedVersions": "^16"
     }
   ]
 }

@@ -1,9 +1,9 @@
-import { FC, ChangeEvent, useState } from "react";
+import { FC, ChangeEvent, useState, useEffect } from "react";
+import axios from "axios";
 import PropTypes from "prop-types";
 import {
   Tooltip,
   Box,
-  Checkbox,
   IconButton,
   Table,
   TableBody,
@@ -14,6 +14,7 @@ import {
   TableContainer,
   Typography,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
@@ -28,45 +29,59 @@ import { Style } from "src/enums/style";
 import StyleBox from "src/components/StyleBox";
 import SectorIcon from "src/components/SectorIcon";
 import { emojiFlag } from "src/enums/regions/country";
+import {
+  baseUrl,
+  stockAPI,
+  stockDetailsEndpoint,
+  stockListEndpoint,
+} from "src/endpoints";
 
-interface StocksTableProps {
-  className?: string;
-  stocks: Stock[];
-}
-
-const applyPagination = (
-  stocks: Stock[],
-  page: number,
-  rowsPerPage: number
-): Stock[] => {
-  return rowsPerPage > 0
-    ? stocks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    : stocks;
-};
-
-const StocksTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
-  const [selectedStocks, setSelectedStocks] = useState<string[]>([]);
+const StocksTable: FC = () => {
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const [tickers, setTickers] = useState<string[]>([]);
+  const [stocks, setStocks] = useState<Stock[]>([]);
+  const [stocksFinal, setStocksFinal] = useState<boolean>(false);
 
-  const handleSelectAllStocks = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    setSelectedStocks(
-      event.target.checked ? stocks.map((stock) => stock.ticker) : []
+  useEffect(() => {
+    axios
+      .get(baseUrl + stockAPI + stockListEndpoint)
+      .then((res) => {
+        if (res.status < 400) {
+          setTickers(res.data as string[]);
+        } else {
+          throw new Error();
+        }
+      })
+      .catch(() => {
+        setStocksFinal(true);
+        // TODO error handling
+      });
+  }, []);
+
+  useEffect(() => {
+    getStocks();
+  }, [tickers, page, rowsPerPage]);
+
+  const getStocks = () => {
+    const tickersToRequest = tickers.slice(
+      page * rowsPerPage,
+      (page + 1) * rowsPerPage
     );
-  };
-
-  const handleSelectOneStock = (
-    event: ChangeEvent<HTMLInputElement>,
-    stockTicker: string
-  ): void => {
-    if (!selectedStocks.includes(stockTicker)) {
-      setSelectedStocks((prevSelected) => [...prevSelected, stockTicker]);
-    } else {
-      setSelectedStocks((prevSelected) =>
-        prevSelected.filter((ticker) => ticker !== stockTicker)
-      );
+    if (tickersToRequest.length > 0) {
+      axios
+        .get(baseUrl + stockAPI + stockDetailsEndpoint + tickersToRequest)
+        .then((res) => {
+          if (res.status < 400) {
+            setStocks(res.data.map((rawStock) => new Stock(rawStock)));
+          } else {
+            throw new Error();
+          }
+        })
+        .catch(() => {
+          // TODO error handling
+        })
+        .finally(() => setStocksFinal(true));
     }
   };
 
@@ -77,13 +92,10 @@ const StocksTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
   const handleRowsPerPageChange = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
+    setPage(0);
     setRowsPerPage(parseInt(event.target.value));
   };
 
-  const paginatedStocks = applyPagination(stocks, page, rowsPerPage);
-  const selectedSomeStocks =
-    selectedStocks.length > 0 && selectedStocks.length < stocks.length;
-  const selectedAllStocks = selectedStocks.length === stocks.length;
   const theme = useTheme();
 
   return (
@@ -92,14 +104,6 @@ const StocksTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  color="primary"
-                  checked={selectedAllStocks}
-                  indeterminate={selectedSomeStocks}
-                  onChange={handleSelectAllStocks}
-                />
-              </TableCell>
               <TableCell>Stock</TableCell>
               <TableCell>Country</TableCell>
               <TableCell sx={{ textAlign: "center" }}>StyleBox</TableCell>
@@ -109,194 +113,200 @@ const StocksTable: FC<StocksTableProps> = ({ stocks: stocks }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedStocks.map((stock) => {
-              const isStockSelected = selectedStocks.includes(stock.ticker);
-              return (
-                <TableRow hover key={stock.ticker} selected={isStockSelected}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      color="primary"
-                      checked={isStockSelected}
-                      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneStock(event, stock.ticker)
-                      }
-                      value={isStockSelected}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      maxWidth={160}
-                      noWrap
-                    >
-                      {stock.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      maxWidth={160}
-                      noWrap
-                    >
-                      {stock.ticker}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      maxWidth={125}
-                      noWrap
-                    >
-                      {emojiFlag(stock.country) + " " + stock.country}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      maxWidth={125}
-                      noWrap
-                    >
-                      {getRegionFromCountry(stock.country)}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      maxWidth={125}
-                      noWrap
-                    >
-                      {getSuperRegionFromCountry(stock.country)}
-                    </Typography>
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
-                    <Tooltip
-                      title={`${Size[stock.size]}-${Style[stock.style]}`}
-                      arrow
-                    >
-                      <div>
-                        <StyleBox
-                          fill={theme.colors.alpha.black[100]}
-                          stroke={theme.colors.alpha.black[100]}
-                          size={stock.size}
-                          style={stock.style}
-                          length={
-                            2.25 * (theme.typography.body1.fontSize as number)
-                          }
-                        />
-                      </div>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    <span
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <SectorIcon
-                        industry={stock.industry}
-                        length={
-                          1.75 * (theme.typography.body1.fontSize as number)
-                        }
-                        type={"Sector"}
-                      />
-                      <span style={{ width: 6 }} />
+            {stocksFinal ? (
+              stocks.map((stock) => {
+                return (
+                  <TableRow hover key={stock.ticker}>
+                    <TableCell>
                       <Typography
                         variant="body1"
                         fontWeight="bold"
-                        maxWidth={105}
+                        color="text.primary"
+                        maxWidth={160}
                         noWrap
                       >
-                        {getSectorFromIndustry(stock.industry)}
+                        {stock.name}
                       </Typography>
-                    </span>
-                    <span
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <SectorIcon
-                        industry={stock.industry}
-                        length={
-                          1.75 * (theme.typography.body2.fontSize as number)
-                        }
-                        type={"SuperSector"}
-                      />
-                      <span style={{ width: 6 }} />
                       <Typography
                         variant="body2"
                         color="text.secondary"
-                        maxWidth={105}
+                        maxWidth={160}
                         noWrap
                       >
-                        {getSuperSectorFromIndustry(stock.industry)}
+                        {stock.ticker}
                       </Typography>
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      maxWidth={150}
-                      noWrap
-                    >
-                      {stock.industry}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      maxWidth={150}
-                      noWrap
-                    >
-                      {getGroupFromIndustry(stock.industry)}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edit Order" arrow>
-                      <IconButton
-                        sx={{
-                          "&:hover": {
-                            background: theme.colors.primary.lighter,
-                          },
-                          color: theme.palette.primary.main,
-                        }}
-                        color="inherit"
-                        size="small"
+                    </TableCell>
+                    <TableCell>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        color="text.primary"
+                        maxWidth={125}
+                        noWrap
                       >
-                        <EditTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Order" arrow>
-                      <IconButton
-                        sx={{
-                          "&:hover": { background: theme.colors.error.lighter },
-                          color: theme.palette.error.main,
-                        }}
-                        color="inherit"
-                        size="small"
+                        {emojiFlag(stock.country) + " " + stock.country}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        maxWidth={125}
+                        noWrap
                       >
-                        <DeleteTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                        {getRegionFromCountry(stock.country)}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        maxWidth={125}
+                        noWrap
+                      >
+                        {getSuperRegionFromCountry(stock.country)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      <Tooltip
+                        title={`${Size[stock.size]}-${Style[stock.style]}`}
+                        arrow
+                      >
+                        <div>
+                          <StyleBox
+                            fill={theme.colors.alpha.black[100]}
+                            stroke={theme.colors.alpha.black[100]}
+                            size={stock.size}
+                            style={stock.style}
+                            length={
+                              2.25 * (theme.typography.body1.fontSize as number)
+                            }
+                          />
+                        </div>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell>
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <SectorIcon
+                          industry={stock.industry}
+                          length={
+                            1.75 * (theme.typography.body1.fontSize as number)
+                          }
+                          type={"Sector"}
+                        />
+                        <span style={{ width: 6 }} />
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          maxWidth={105}
+                          noWrap
+                        >
+                          {getSectorFromIndustry(stock.industry)}
+                        </Typography>
+                      </span>
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <SectorIcon
+                          industry={stock.industry}
+                          length={
+                            1.75 * (theme.typography.body2.fontSize as number)
+                          }
+                          type={"SuperSector"}
+                        />
+                        <span style={{ width: 6 }} />
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          maxWidth={105}
+                          noWrap
+                        >
+                          {getSuperSectorFromIndustry(stock.industry)}
+                        </Typography>
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        color="text.primary"
+                        maxWidth={150}
+                        noWrap
+                      >
+                        {stock.industry}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        maxWidth={150}
+                        noWrap
+                      >
+                        {getGroupFromIndustry(stock.industry)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Tooltip title="Edit Order" arrow>
+                        <IconButton
+                          sx={{
+                            "&:hover": {
+                              background: theme.colors.primary.lighter,
+                            },
+                            color: theme.palette.primary.main,
+                          }}
+                          color="inherit"
+                          size="small"
+                        >
+                          <EditTwoToneIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete Order" arrow>
+                        <IconButton
+                          sx={{
+                            "&:hover": {
+                              background: theme.colors.error.lighter,
+                            },
+                            color: theme.palette.error.main,
+                          }}
+                          color="inherit"
+                          size="small"
+                        >
+                          <DeleteTwoToneIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={99}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    minHeight="69px"
+                  >
+                    <CircularProgress />
+                  </Box>
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <Box p={2}>
         <TablePagination
           component="div"
-          count={stocks.length}
+          count={tickers.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleRowsPerPageChange}
           page={page}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[10, 25, 50, { label: "All", value: -1 }]}
+          rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
         />
       </Box>
     </>

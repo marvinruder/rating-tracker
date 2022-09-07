@@ -1,9 +1,9 @@
 import PageHeader from "./PageHeader";
 import PageTitleWrapper from "src/components/PageTitleWrapper";
-import { Grid, Container } from "@mui/material";
+import { Card, Grid, Container } from "@mui/material";
 import Footer from "src/components/Footer";
 
-import AllStocks from "./AllStocks";
+import StocksTable from "./StocksTable";
 
 function StocklistModule() {
   return (
@@ -20,7 +20,9 @@ function StocklistModule() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <AllStocks />
+            <Card>
+              <StocksTable />
+            </Card>
           </Grid>
         </Grid>
       </Container>
