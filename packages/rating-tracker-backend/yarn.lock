@@ -2507,7 +2507,7 @@ __metadata:
     express-openapi-validator: ^4.13.8
     nodemon: ^2.0.19
     prettier: ^2.7.1
-    src: "link:./dist/src"
+    src: "link:./src"
     swagger-ui-express: ^4.5.0
     ts-node: ^10.9.1
     typescript: ^4.8.2
@@ -2784,9 +2784,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"src@link:./dist/src::locator=rating-tracker-backend%40workspace%3A.":
+"src@link:./src::locator=rating-tracker-backend%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "src@link:./dist/src::locator=rating-tracker-backend%40workspace%3A."
+  resolution: "src@link:./src::locator=rating-tracker-backend%40workspace%3A."
   languageName: node
   linkType: soft
 

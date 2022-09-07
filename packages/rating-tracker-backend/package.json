@@ -15,13 +15,13 @@
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "express-openapi-validator": "^4.13.8",
-    "src": "link:./dist/src",
+    "src": "link:./dist",
     "swagger-ui-express": "^4.5.0",
     "typescript": "^4.8.2"
   },
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "start": "node dist/src/server.js",
+    "start": "node dist/server.js",
     "build": "tsc",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
     "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix"
@@ -37,6 +37,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
+    "src": "link:./src",
     "ts-node": "^10.9.1"
   },
   "packageManager": "yarn@3.2.3"

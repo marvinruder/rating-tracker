@@ -47,7 +47,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-openapi-validator", "npm:4.13.8"],\
             ["nodemon", "npm:2.0.19"],\
             ["prettier", "npm:2.7.1"],\
-            ["src", "link:./dist/src::locator=rating-tracker-backend%40workspace%3A."],\
+            ["src", "link:./src::locator=rating-tracker-backend%40workspace%3A."],\
             ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.5.0"],\
             ["ts-node", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=a1c5e5"]\
@@ -3074,7 +3074,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-openapi-validator", "npm:4.13.8"],\
             ["nodemon", "npm:2.0.19"],\
             ["prettier", "npm:2.7.1"],\
-            ["src", "link:./dist/src::locator=rating-tracker-backend%40workspace%3A."],\
+            ["src", "link:./src::locator=rating-tracker-backend%40workspace%3A."],\
             ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.5.0"],\
             ["ts-node", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=a1c5e5"]\
@@ -3381,10 +3381,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["src", [\
-        ["link:./dist/src::locator=rating-tracker-backend%40workspace%3A.", {\
-          "packageLocation": "./dist/src/",\
+        ["link:./src::locator=rating-tracker-backend%40workspace%3A.", {\
+          "packageLocation": "./src/",\
           "packageDependencies": [\
-            ["src", "link:./dist/src::locator=rating-tracker-backend%40workspace%3A."]\
+            ["src", "link:./src::locator=rating-tracker-backend%40workspace%3A."]\
           ],\
           "linkType": "SOFT",\
           "discardFromLookup": true\
