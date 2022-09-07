@@ -1,0 +1,6 @@
+# .prettierignore file
+dist
+build
+node_modules/
+.yarn/
+README.md

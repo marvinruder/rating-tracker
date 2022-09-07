@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "prConcurrentLimit": 0,
+  "prCreation": "not-pending",
+  "prHourlyLimit": 0,
+  "schedule": ["every weekend"],
+  "timezone": "Europe/Berlin",
+  "assignees": ["ruder.marvin@icloud.com"],
+  "updateLockFiles": true,
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "matchPackageNames": ["jest", "babel-jest", "@types/jest"],
+      "allowedVersions": "^28"
+    }
+  ]
+}
