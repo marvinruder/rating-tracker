@@ -17,7 +17,7 @@
     "express-openapi-validator": "^4.13.8",
     "src": "link:./dist",
     "swagger-ui-express": "^4.5.0",
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.3"
   },
   "scripts": {
     "dev": "nodemon src/server.ts",
