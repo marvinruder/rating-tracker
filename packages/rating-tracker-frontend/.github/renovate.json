@@ -9,10 +9,5 @@
   "assignees": ["ruder.marvin@icloud.com"],
   "updateLockFiles": true,
   "rangeStrategy": "bump",
-  "packageRules": [
-    {
-      "matchPackageNames": ["jest", "babel-jest", "@types/jest"],
-      "allowedVersions": "^28"
-    }
-  ]
+  "packageRules": []
 }

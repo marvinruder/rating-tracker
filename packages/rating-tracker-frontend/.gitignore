@@ -26,4 +26,4 @@
 /.env.production.local
 .idea
 features.html
-node_modules/.cache/esbuild
+node_modules/.cache
