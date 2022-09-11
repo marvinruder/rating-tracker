@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
-import StockController from "../../controllers/StockController";
+import StockController from "../../controllers/StockController.js";
+import "express-async-errors";
 
 class StockRouter {
   private _router = Router();
@@ -17,15 +18,19 @@ class StockRouter {
    * Connect routes to their matching controller endpoints.
    */
   private _configure() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    this._router.get("/details/*", (req: Request, res: Response, next) => {
-      this._controller.getDetails(req, res);
+    this._router.get("/list", async (req: Request, res: Response) => {
+      await this._controller.getList(req, res);
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    this._router.get("/list", (req: Request, res: Response, next) => {
-      res.status(200).json(this._controller.getList());
+    this._router.put(
+      "/fillWithExampleData",
+      async (req: Request, res: Response) => {
+        await this._controller.fillWithExampleData(res);
+      }
+    );
+    this._router.delete("/*", async (req: Request, res: Response) => {
+      await this._controller.delete(req, res);
     });
   }
 }
 
-export = new StockRouter().router;
+export default new StockRouter().router;

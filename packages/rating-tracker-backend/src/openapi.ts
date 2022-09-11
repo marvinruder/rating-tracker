@@ -1,107 +1,131 @@
-{
-  "openapi": "3.0.0",
-  "info": {
-    "title": "rating-tracker-backend",
-    "version": "0.1.0",
-    "contact": {
-      "name": "Marvin A. Ruder",
-      "email": "info@mruder.dev"
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+
+export const openapiDocument: OpenAPIV3.Document = {
+  openapi: "3.0.0",
+  info: {
+    title: "rating-tracker-backend",
+    version: "0.1.0",
+    contact: {
+      name: "Marvin A. Ruder",
+      email: "info@mruder.dev",
     },
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
+    license: {
+      name: "MIT",
+      url: "https://opensource.org/licenses/MIT",
     },
-    "description": "Specification JSONs: [v3](/api-spec/v3)."
+    description: "Specification JSONs: [v3](/api-spec/v3).",
   },
-  "servers": [
+  servers: [
     {
-      "url": "http://localhost:3001/",
-      "description": "Local server"
+      url: "http://localhost:3001/",
+      description: "Local server",
     },
     {
-      "url": "https://ratingtracker-snapshot.mruder.dev",
-      "description": "Snapshot server"
+      url: "https://ratingtracker-snapshot.mruder.dev",
+      description: "Snapshot server",
     },
     {
-      "url": "https://ratingtracker.mruder.dev",
-      "description": "Production server"
-    }
+      url: "https://ratingtracker.mruder.dev",
+      description: "Production server",
+    },
   ],
-  "paths": {
-    "/api/stock/details/{ticker}": {
-      "get": {
-        "summary": "Stock API",
-        "description": "Get a list of all stocks known to the service with all available attributes",
-        "parameters": [
+  paths: {
+    "/api/stock/list": {
+      get: {
+        summary: "Stock List API",
+        description: "Get a list of stocks. Supports pagination.",
+        parameters: [
           {
-            "in": "path",
-            "name": "ticker",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "example": "AAPL"
-              }
-            }
-          }
+            in: "query",
+            name: "offset",
+            description: "The zero-based offset. Used for pagination.",
+            required: false,
+            schema: {
+              type: "number",
+              example: 0,
+            },
+          },
+          {
+            in: "query",
+            name: "count",
+            description:
+              "The number of entities to be returned. If omitted, all entities known to the service will be returned (maximum: 10000).",
+            required: false,
+            schema: {
+              type: "number",
+              example: 5,
+            },
+          },
         ],
-        "responses": {
+        responses: {
           "200": {
-            "description": "OK",
-            "content": {
+            description: "OK",
+            content: {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Stock"
-                  }
-                }
-              }
-            }
+                schema: {
+                  $ref: "#/components/schemas/StockListWithCount",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/stock/fillWithExampleData": {
+      put: {
+        summary: "Stock Example Data API",
+        description: "Fills the connected data service with example stocks",
+        responses: {
+          "201": {
+            description: "Created",
+            content: {},
+          },
+        },
+      },
+    },
+    "/api/stock/{entityID}": {
+      delete: {
+        summary: "Delete Stock API",
+        description: "Delete the specified stock",
+        parameters: [
+          {
+            in: "path",
+            name: "entityID",
+            description: "The entity ID of the stock to be deleted.",
+            required: true,
+            schema: {
+              type: "string",
+              example: "01FJYWEYRHYFT8YTEGQBABJ43J",
+            },
+          },
+        ],
+        responses: {
+          "204": {
+            description: "No Content",
+            content: {},
           },
           "404": {
-            "description": "Ticker not found",
-            "content": {
+            description: "Stock Entity not found",
+            content: {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+              },
+            },
+          },
+        },
+      },
     },
-    "/api/stock/list": {
-      "get": {
-        "summary": "Stock API",
-        "description": "Get a list of all stocks tickers known to the service",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "example": "AAPL"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
   },
-  "tags": [],
-  "components": {
-    "schemas": {
-      "Country": {
-        "type": "string",
-        "enum": [
+  tags: [],
+  components: {
+    schemas: {
+      Country: {
+        type: "string",
+        description:
+          "The 2-letter ISO 3166-1 country code of the country the stock is based in.",
+        enum: [
           "AF",
           "AX",
           "AL",
@@ -349,13 +373,14 @@
           "EH",
           "YE",
           "ZM",
-          "ZW"
+          "ZW",
         ],
-        "example": "US"
+        example: "US",
       },
-      "Industry": {
-        "type": "string",
-        "enum": [
+      Industry: {
+        type: "string",
+        description: "The main industry the company operates in.",
+        enum: [
           "AgriculturalInputs",
           "BuildingMaterials",
           "Chemicals",
@@ -500,54 +525,79 @@
           "ScientificTechnicalInstruments",
           "SemiconductorEquipmentMaterials",
           "Semiconductors",
-          "Solar"
+          "Solar",
         ],
-        "example": "ConsumerElectronics"
+        example: "ConsumerElectronics",
       },
-      "Size": {
-        "type": "string",
-        "enum": ["Large", "Mid", "Small"],
-        "example": "Large"
+      Size: {
+        type: "string",
+        description: "The size of the company.",
+        enum: ["Large", "Mid", "Small"],
+        example: "Large",
       },
-      "Style": {
-        "type": "string",
-        "enum": ["Value", "Blend", "Growth"],
-        "example": "Growth"
+      Style: {
+        type: "string",
+        description: "The style of the stock.",
+        enum: ["Value", "Blend", "Growth"],
+        example: "Growth",
       },
-      "Stock": {
-        "properties": {
-          "ticker": {
-            "type": "string",
-            "example": "AAPL"
+      Stock: {
+        type: "object",
+        description: "A stock.",
+        properties: {
+          ticker: {
+            type: "string",
+            example: "AAPL",
           },
-          "name": {
-            "type": "string",
-            "example": "Apple Inc."
+          name: {
+            type: "string",
+            example: "Apple Inc.",
           },
-          "country": {
-            "$ref": "#/components/schemas/Country"
+          country: {
+            $ref: "#/components/schemas/Country",
           },
-          "industry": {
-            "$ref": "#/components/schemas/Industry"
+          industry: {
+            $ref: "#/components/schemas/Industry",
           },
-          "size": {
-            "$ref": "#/components/schemas/Size"
+          size: {
+            $ref: "#/components/schemas/Size",
           },
-          "style": {
-            "$ref": "#/components/schemas/Style"
-          }
-        }
+          style: {
+            $ref: "#/components/schemas/Style",
+          },
+        },
       },
-      "Error": {
-        "properties": {
-          "message": {
-            "type": "string"
+      StockListWithCount: {
+        type: "object",
+        description:
+          "A stock list accompanied with the total number of available stocks",
+        properties: {
+          stocks: {
+            type: "array",
+            description: "The list of requested stocks.",
+            items: {
+              $ref: "#/components/schemas/Stock",
+            },
           },
-          "errors": {
-            "type": "string"
-          }
-        }
-      }
-    }
-  }
-}
+          count: {
+            type: "number",
+            description: "The total number of available stocks.",
+          },
+        },
+      },
+      Error: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+          },
+          errors: {
+            type: "string",
+          },
+        },
+      },
+    },
+  },
+};
+
+export default openapiDocument;

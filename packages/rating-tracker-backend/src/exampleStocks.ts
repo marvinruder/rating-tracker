@@ -1,12 +1,12 @@
-import { Country } from "./enums/country";
-import { Industry } from "./enums/industry";
-import { Size } from "./enums/size";
-import { Style } from "./enums/style";
-import { Stock } from "./models/stock";
+import { Country } from "./enums/country.js";
+import { Industry } from "./enums/industry.js";
+import { Size } from "./enums/size.js";
+import { Style } from "./enums/style.js";
+import { Stock } from "./models/stock.js";
 
 const exampleStocks: Stock[] = [
   {
-    ticker: "AAPL",
+    ticker: "exampleAAPL",
     name: "Apple Inc.",
     country: Country.US,
     industry: Industry.ConsumerElectronics,
@@ -14,7 +14,7 @@ const exampleStocks: Stock[] = [
     style: Style.Growth,
   },
   {
-    ticker: "TSM",
+    ticker: "exampleTSM",
     name: "Taiwan Semiconductor Manufacturing Co., Ltd.",
     country: Country.TW,
     industry: Industry.Semiconductors,
@@ -22,7 +22,7 @@ const exampleStocks: Stock[] = [
     style: Style.Blend,
   },
   {
-    ticker: "ALIZF",
+    ticker: "exampleALIZF",
     name: "Allianz SE",
     country: Country.DE,
     industry: Industry.InsuranceDiversified,
@@ -30,7 +30,7 @@ const exampleStocks: Stock[] = [
     style: Style.Value,
   },
   {
-    ticker: "NEM",
+    ticker: "exampleNEM",
     name: "Newmont Corporation",
     country: Country.US,
     industry: Industry.Gold,
@@ -38,7 +38,7 @@ const exampleStocks: Stock[] = [
     style: Style.Value,
   },
   {
-    ticker: "IBDSF",
+    ticker: "exampleIBDSF",
     name: "Iberdrola, S.A.",
     country: Country.ES,
     industry: Industry.UtilitiesDiversified,
@@ -46,7 +46,7 @@ const exampleStocks: Stock[] = [
     style: Style.Blend,
   },
   {
-    ticker: "MELI",
+    ticker: "exampleMELI",
     name: "MercadoLibre Inc.",
     country: Country.AR,
     industry: Industry.InternetRetail,
@@ -54,7 +54,7 @@ const exampleStocks: Stock[] = [
     style: Style.Growth,
   },
   {
-    ticker: "NONOF",
+    ticker: "exampleNONOF",
     name: "Novo Nordisk A/S",
     country: Country.DK,
     industry: Industry.Biotechnology,
@@ -62,7 +62,7 @@ const exampleStocks: Stock[] = [
     style: Style.Growth,
   },
   {
-    ticker: "GPDNF",
+    ticker: "exampleGPDNF",
     name: "Danone SA",
     country: Country.FR,
     industry: Industry.PackagedFoods,
@@ -70,7 +70,7 @@ const exampleStocks: Stock[] = [
     style: Style.Blend,
   },
   {
-    ticker: "DOGEF",
+    ticker: "exampleDOGEF",
     name: "Ørsted A/S",
     country: Country.DK,
     industry: Industry.UtilitiesRenewable,
@@ -78,7 +78,7 @@ const exampleStocks: Stock[] = [
     style: Style.Blend,
   },
   {
-    ticker: "KNNGF",
+    ticker: "exampleKNNGF",
     name: "Kion Group AG",
     country: Country.DE,
     industry: Industry.FarmHeavyConstructionMachinery,

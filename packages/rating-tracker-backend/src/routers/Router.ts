@@ -1,5 +1,5 @@
 import { Router } from "express";
-import StockRouter from "./stock/StockRouter";
+import StockRouter from "./stock/StockRouter.js";
 
 class MainRouter {
   private _router = Router();
@@ -21,4 +21,4 @@ class MainRouter {
   }
 }
 
-export = new MainRouter().router;
+export default new MainRouter().router;

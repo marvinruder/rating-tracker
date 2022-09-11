@@ -17,6 +17,7 @@ WORKDIR /app
 COPY --from=build /app/.yarn /app/.yarn
 COPY --from=build /app/dist /app/dist
 COPY --from=build /app/.pnp.cjs /app/.pnp.cjs
+COPY --from=build /app/.pnp.loader.mjs /app/.pnp.loader.mjs
 COPY --from=build /app/.yarnrc.yml /app/.yarnrc.yml
 COPY --from=build /app/package.json /app/package.json
 COPY --from=build /app/yarn.lock /app/yarn.lock
