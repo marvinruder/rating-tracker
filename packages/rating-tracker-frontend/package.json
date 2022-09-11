@@ -16,7 +16,7 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/lab": "^5.0.0-alpha.98",
     "@mui/material": "^5.10.4",
-    "@types/jest": "^29.0.0",
+    "@types/jest": "^29.0.1",
     "@types/react": "^18.0.19",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.1.0",
