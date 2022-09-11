@@ -29,60 +29,43 @@ import { Style } from "src/enums/style";
 import StyleBox from "src/components/StyleBox";
 import SectorIcon from "src/components/SectorIcon";
 import { emojiFlag } from "src/enums/regions/country";
-import {
-  baseUrl,
-  stockAPI,
-  stockDetailsEndpoint,
-  stockListEndpoint,
-} from "src/endpoints";
+import { baseUrl, stockAPI, stockListEndpoint } from "src/endpoints";
 
 const StocksTable: FC = () => {
   const [page, setPage] = useState<number>(0);
+  const [count, setCount] = useState<number>(-1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
-  const [tickers, setTickers] = useState<string[]>([]);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
 
   useEffect(() => {
+    getStocks();
+  }, []);
+
+  useEffect(() => {
+    getStocks();
+  }, [page, rowsPerPage]);
+
+  const getStocks = () => {
     axios
-      .get(baseUrl + stockAPI + stockListEndpoint)
+      .get(baseUrl + stockAPI + stockListEndpoint, {
+        params: {
+          offset: page * rowsPerPage,
+          count: rowsPerPage > 0 ? rowsPerPage : undefined,
+        },
+      })
       .then((res) => {
         if (res.status < 400) {
-          setTickers(res.data as string[]);
+          setStocks(res.data.stocks.map((rawStock) => new Stock(rawStock)));
+          setCount(res.data.count);
         } else {
           throw new Error();
         }
       })
       .catch(() => {
-        setStocksFinal(true);
         // TODO error handling
-      });
-  }, []);
-
-  useEffect(() => {
-    getStocks();
-  }, [tickers, page, rowsPerPage]);
-
-  const getStocks = () => {
-    const tickersToRequest = tickers.slice(
-      page * rowsPerPage,
-      (page + 1) * rowsPerPage
-    );
-    if (tickersToRequest.length > 0) {
-      axios
-        .get(baseUrl + stockAPI + stockDetailsEndpoint + tickersToRequest)
-        .then((res) => {
-          if (res.status < 400) {
-            setStocks(res.data.map((rawStock) => new Stock(rawStock)));
-          } else {
-            throw new Error();
-          }
-        })
-        .catch(() => {
-          // TODO error handling
-        })
-        .finally(() => setStocksFinal(true));
-    }
+      })
+      .finally(() => setStocksFinal(true));
   };
 
   const handlePageChange = (event: any, newPage: number): void => {
@@ -298,17 +281,15 @@ const StocksTable: FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box p={2}>
-        <TablePagination
-          component="div"
-          count={tickers.length}
-          onPageChange={handlePageChange}
-          onRowsPerPageChange={handleRowsPerPageChange}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
-        />
-      </Box>
+      <TablePagination
+        component="div"
+        count={count}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
+      />
     </>
   );
 };

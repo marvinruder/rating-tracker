@@ -8,4 +8,3 @@ export const baseUrl =
 
 export const stockAPI = "/api/stock";
 export const stockListEndpoint = "/list";
-export const stockDetailsEndpoint = "/details/";
