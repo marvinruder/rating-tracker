@@ -32,6 +32,7 @@ export const openapiDocument: OpenAPIV3.Document = {
   paths: {
     "/api/stock/list": {
       get: {
+        operationId: "getStockList",
         summary: "Stock List API",
         description: "Get a list of stocks. Supports pagination.",
         parameters: [
@@ -73,6 +74,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     },
     "/api/stock/fillWithExampleData": {
       put: {
+        operationId: "putExampleStocks",
         summary: "Stock Example Data API",
         description: "Fills the connected data service with example stocks",
         responses: {
@@ -85,6 +87,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     },
     "/api/stock/{entityID}": {
       delete: {
+        operationId: "deleteStock",
         summary: "Delete Stock API",
         description: "Delete the specified stock",
         parameters: [
@@ -566,6 +569,7 @@ export const openapiDocument: OpenAPIV3.Document = {
             $ref: "#/components/schemas/Style",
           },
         },
+        required: ["ticker", "name", "country", "industry", "size", "style"],
       },
       StockListWithCount: {
         type: "object",
@@ -584,6 +588,7 @@ export const openapiDocument: OpenAPIV3.Document = {
             description: "The total number of available stocks.",
           },
         },
+        required: ["stocks", "count"],
       },
       Error: {
         type: "object",
@@ -595,6 +600,7 @@ export const openapiDocument: OpenAPIV3.Document = {
             type: "string",
           },
         },
+        required: ["message"],
       },
     },
   },
