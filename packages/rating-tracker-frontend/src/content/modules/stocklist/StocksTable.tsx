@@ -15,6 +15,9 @@ import {
   Typography,
   useTheme,
   CircularProgress,
+  Snackbar,
+  Alert,
+  Slide,
 } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
@@ -37,6 +40,7 @@ const StocksTable: FC = () => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     getStocks();
@@ -55,15 +59,19 @@ const StocksTable: FC = () => {
         },
       })
       .then((res) => {
-        if (res.status < 400) {
-          setStocks(res.data.stocks.map((rawStock) => new Stock(rawStock)));
-          setCount(res.data.count);
-        } else {
-          throw new Error();
-        }
+        setStocks(res.data.stocks.map((rawStock) => new Stock(rawStock)));
+        setCount(res.data.count);
       })
-      .catch(() => {
-        // TODO error handling
+      .catch((e) => {
+        console.error(e);
+        try {
+          setErrorMessage(
+            `${e.response.status} ${e.response.statusText}: ${e.response.data.message}`
+          );
+        } catch {
+          setErrorMessage(e.message);
+        }
+        setCount(0);
       })
       .finally(() => setStocksFinal(true));
   };
@@ -290,6 +298,21 @@ const StocksTable: FC = () => {
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
       />
+      <Snackbar
+        open={errorMessage.length > 0}
+        onClose={() => setErrorMessage("")}
+        TransitionComponent={(props) => <Slide {...props} direction="up" />}
+        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+      >
+        <Alert
+          onClose={() => setErrorMessage("")}
+          severity="error"
+          sx={{ width: "100%" }}
+          variant={"filled"}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

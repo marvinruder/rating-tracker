@@ -999,9 +999,6 @@ export const NebulaFighterTheme = createTheme({
         standardInfo: {
           color: colors.info.main,
         },
-        action: {
-          color: colors.alpha.black[70],
-        },
       },
     },
     MuiTimelineDot: {
