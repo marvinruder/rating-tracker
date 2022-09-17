@@ -33,7 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["@types/express", "npm:4.17.13"],\
+            ["@types/express", "npm:4.17.14"],\
             ["@types/node", "npm:18.7.16"],\
             ["@typescript-eslint/eslint-plugin", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:5.36.2"],\
             ["@typescript-eslint/parser", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:5.36.2"],\
@@ -315,6 +315,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-express-npm-4.17.13-0e12fe9c24-12a2a0e6c4.zip/node_modules/@types/express/",\
           "packageDependencies": [\
             ["@types/express", "npm:4.17.13"],\
+            ["@types/body-parser", "npm:1.19.2"],\
+            ["@types/express-serve-static-core", "npm:4.17.30"],\
+            ["@types/qs", "npm:6.9.7"],\
+            ["@types/serve-static", "npm:1.15.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:4.17.14", {\
+          "packageLocation": "./.yarn/cache/@types-express-npm-4.17.14-076e1b4711-15c1af46d0.zip/node_modules/@types/express/",\
+          "packageDependencies": [\
+            ["@types/express", "npm:4.17.14"],\
             ["@types/body-parser", "npm:1.19.2"],\
             ["@types/express-serve-static-core", "npm:4.17.30"],\
             ["@types/qs", "npm:6.9.7"],\
@@ -1406,7 +1417,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/express-async-errors-virtual-4cd42cad86/0/cache/express-async-errors-npm-3.1.1-c0a6b1e552-3a2a6df8ea.zip/node_modules/express-async-errors/",\
           "packageDependencies": [\
             ["express-async-errors", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:3.1.1"],\
-            ["@types/express", "npm:4.17.13"],\
+            ["@types/express", "npm:4.17.14"],\
             ["express", "npm:4.18.1"]\
           ],\
           "packagePeers": [\
@@ -2397,7 +2408,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["rating-tracker-backend", "workspace:."],\
-            ["@types/express", "npm:4.17.13"],\
+            ["@types/express", "npm:4.17.14"],\
             ["@types/node", "npm:18.7.16"],\
             ["@typescript-eslint/eslint-plugin", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:5.36.2"],\
             ["@typescript-eslint/parser", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:5.36.2"],\
@@ -2731,7 +2742,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/swagger-ui-express-virtual-14dafba105/0/cache/swagger-ui-express-npm-4.5.0-bb65f0369a-67f1725bce.zip/node_modules/swagger-ui-express/",\
           "packageDependencies": [\
             ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.5.0"],\
-            ["@types/express", "npm:4.17.13"],\
+            ["@types/express", "npm:4.17.14"],\
             ["express", "npm:4.18.1"],\
             ["swagger-ui-dist", "npm:4.14.0"]\
           ],\
