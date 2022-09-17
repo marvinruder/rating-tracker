@@ -7034,7 +7034,7 @@ __metadata:
     ts-jest: ^29.0.1
     ts-node: ^10.9.1
     typescript: ^4.8.3
-    vite: ^3.1.0
+    vite: ^3.1.2
     vite-plugin-svgr: ^2.2.1
     vite-tsconfig-paths: ^3.5.0
   languageName: unknown
@@ -8353,9 +8353,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "vite@npm:3.1.0"
+"vite@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "vite@npm:3.1.2"
   dependencies:
     esbuild: ^0.15.6
     fsevents: ~2.3.2
@@ -8381,7 +8381,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 1a343e3d46450181f79f34ff49cca5ff59bb7472de51ea2c4a042aa076f597d27d25c49f48405e82f607af7d8c1c13a9e789402ccb1b23570132382132ec3903
+  checksum: 90f645853f53efaddfa216eaf42ed93afe6b43f849889a7716ef9c04623b9ae244f391ed17ed0c41189422060cad5e78eb17583ac5a3759988f54b7412e18cb7
   languageName: node
   linkType: hard
 
