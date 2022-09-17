@@ -23,7 +23,7 @@
     "apexcharts": "^3.35.5",
     "axios": "^0.27.2",
     "clsx": "^1.2.1",
-    "date-fns": "^2.29.2",
+    "date-fns": "^2.29.3",
     "dotenv": "^16.0.2",
     "nprogress": "^0.2.0",
     "numeral": "^2.0.6",

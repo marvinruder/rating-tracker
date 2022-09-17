@@ -52,7 +52,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:0.27.2"],\
             ["babel-jest", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:29.0.3"],\
             ["clsx", "npm:1.2.1"],\
-            ["date-fns", "npm:2.29.2"],\
+            ["date-fns", "npm:2.29.3"],\
             ["dotenv", "npm:16.0.2"],\
             ["eslint", "npm:8.23.0"],\
             ["eslint-config-google", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:0.14.0"],\
@@ -6301,10 +6301,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["date-fns", [\
-        ["npm:2.29.2", {\
-          "packageLocation": "./.yarn/cache/date-fns-npm-2.29.2-da48c27e93-08bebcceb0.zip/node_modules/date-fns/",\
+        ["npm:2.29.3", {\
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.29.3-fef7e3c72c-e01cf5b62a.zip/node_modules/date-fns/",\
           "packageDependencies": [\
-            ["date-fns", "npm:2.29.2"]\
+            ["date-fns", "npm:2.29.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9949,7 +9949,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:0.27.2"],\
             ["babel-jest", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:29.0.3"],\
             ["clsx", "npm:1.2.1"],\
-            ["date-fns", "npm:2.29.2"],\
+            ["date-fns", "npm:2.29.3"],\
             ["dotenv", "npm:16.0.2"],\
             ["eslint", "npm:8.23.0"],\
             ["eslint-config-google", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:0.14.0"],\
