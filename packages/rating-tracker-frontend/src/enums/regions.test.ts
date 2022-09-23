@@ -4,6 +4,7 @@ import {
   getSuperRegionFromCountry,
   getSuperRegionFromRegion,
 } from "./regions/superregion";
+import { describe, it, expect } from "vitest";
 
 describe("countries", () => {
   it("provides correct country codes", () => {

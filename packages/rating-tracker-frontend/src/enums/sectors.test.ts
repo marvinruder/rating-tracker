@@ -12,11 +12,12 @@ import {
   getSuperSectorFromSector,
   SuperSector,
 } from "./sectors/superSector";
+import { vi, describe, it, expect } from "vitest";
 
-jest.mock("@mui/material", () => {
-  const original = jest.requireActual("@mui/material");
+vi.mock("@mui/material", async () => {
+  const original = await vi.importActual("@mui/material");
   return {
-    ...original,
+    ...(typeof original === "object" ? original : {}),
     useTheme: () => {
       return NebulaFighterTheme;
     },
