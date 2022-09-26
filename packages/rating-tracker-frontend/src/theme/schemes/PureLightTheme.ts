@@ -305,7 +305,7 @@ export const PureLightTheme = createTheme({
     },
     action: {
       active: colors.alpha.black[100],
-      hover: colors.primary.lighter,
+      // hover: colors.primary.lighter,
       hoverOpacity: 0.1,
       selected: colors.alpha.black[10],
       selectedOpacity: 0.1,
@@ -1140,6 +1140,14 @@ export const PureLightTheme = createTheme({
         paragraph: {
           fontSize: 15,
           lineHeight: 1.7,
+        },
+      },
+    },
+    MuiSkeleton: {
+      defaultProps: {
+        animation: "wave",
+        sx: {
+          bgcolor: colors.alpha.black[10],
         },
       },
     },
