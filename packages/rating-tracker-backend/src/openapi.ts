@@ -57,6 +57,81 @@ export const openapiDocument: OpenAPIV3.Document = {
               example: 5,
             },
           },
+          {
+            in: "query",
+            name: "sortBy",
+            description: "A parameter by which the stock list is to be sorted.",
+            required: false,
+            schema: {
+              $ref: "#/components/schemas/SortableAttribute",
+            },
+          },
+          {
+            in: "query",
+            name: "sortDesc",
+            description: "Whether to sort descending.",
+            required: false,
+            schema: {
+              type: "boolean",
+            },
+          },
+          {
+            in: "query",
+            name: "name",
+            description:
+              "A string to be searched for in the name of the stock(s).",
+            required: false,
+            schema: {
+              type: "string",
+              example: "App",
+            },
+          },
+          {
+            in: "query",
+            name: "country",
+            description: "A list of countries used for searching.",
+            required: false,
+            explode: false,
+            allowReserved: true,
+            schema: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/Country",
+              },
+            },
+          },
+          {
+            in: "query",
+            name: "industry",
+            description: "A list of industries used for searching.",
+            required: false,
+            explode: false,
+            allowReserved: true,
+            schema: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/Industry",
+              },
+            },
+          },
+          {
+            in: "query",
+            name: "size",
+            description: "A list of sizes used for searching.",
+            required: false,
+            schema: {
+              $ref: "#/components/schemas/Size",
+            },
+          },
+          {
+            in: "query",
+            name: "style",
+            description: "A list of styles used for searching.",
+            required: false,
+            schema: {
+              $ref: "#/components/schemas/Style",
+            },
+          },
         ],
         responses: {
           "200": {
@@ -570,6 +645,12 @@ export const openapiDocument: OpenAPIV3.Document = {
           },
         },
         required: ["ticker", "name", "country", "industry", "size", "style"],
+      },
+      SortableAttribute: {
+        type: "string",
+        description: "The name of an attribute whose values can be sorted.",
+        enum: ["name", "size", "style"],
+        example: "name",
       },
       StockListWithCount: {
         type: "object",

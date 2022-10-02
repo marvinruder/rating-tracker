@@ -25,16 +25,16 @@ const server = new Server();
 const highlightMethod = (method: string) => {
   switch (method) {
     case "GET":
-      return chalk.whiteBright.bgBlue(method);
+      return chalk.whiteBright.bgBlue(` ${method} `) + chalk.blue.bgGrey("");
 
     case "POST":
-      return chalk.whiteBright.bgGreen(method);
+      return chalk.whiteBright.bgGreen(` ${method} `) + chalk.green.bgGrey("");
 
     case "PUT":
-      return chalk.black.bgYellow(method);
+      return chalk.black.bgYellow(` ${method} `) + chalk.yellow.bgGrey("");
 
     case "DELETE":
-      return chalk.whiteBright.bgRed(method);
+      return chalk.whiteBright.bgRed(` ${method} `) + chalk.red.bgGrey("");
 
     default:
       return method;
@@ -42,18 +42,18 @@ const highlightMethod = (method: string) => {
 };
 
 const statusCodeDescription = (statusCode: number) => {
-  const statusCodeString = `${statusCode} ${STATUS_CODES[statusCode]}`;
+  const statusCodeString = ` ${statusCode}  ${STATUS_CODES[statusCode]} `;
   switch (Math.floor(statusCode / 100)) {
     case 2:
-      return chalk.whiteBright.bgGreen(statusCodeString);
+      return chalk.whiteBright.bgGreen(statusCodeString) + chalk.green("");
 
     case 1:
     case 3:
-      return chalk.black.bgYellow(statusCodeString);
+      return chalk.black.bgYellow(statusCodeString) + chalk.yellow("");
 
     case 4:
     case 5:
-      return chalk.whiteBright.bgRed(statusCodeString);
+      return chalk.whiteBright.bgRed(statusCodeString) + chalk.red("");
   }
   return statusCodeString;
 };
@@ -61,16 +61,33 @@ const statusCodeDescription = (statusCode: number) => {
 server.app.use(
   responseTime((req: Request, res: Response, time) => {
     console.log(
+      chalk.whiteBright.bgRed(" \ue76d ") + chalk.red(""),
       new Date().toISOString(),
       req.headers["x-forwarded-for"] || req.socket.remoteAddress,
-      req.headers.host,
-      highlightMethod(req.method),
-      req.path,
-      JSON.stringify(req.query),
-      " – ",
+      req.headers.host
+    );
+    console.log(
+      "├─",
+      highlightMethod(req.method) +
+        chalk.bgGrey(
+          ` ${req.originalUrl
+            .slice(
+              1,
+              req.originalUrl.indexOf("?") == -1
+                ? undefined
+                : req.originalUrl.indexOf("?")
+            )
+            .replaceAll("/", "  ")} `
+        ) +
+        chalk.grey(""),
+      JSON.stringify(req.query)
+    );
+    console.log(
+      "╰─",
       statusCodeDescription(res.statusCode),
       `after ${Math.round(time)} ms`
     );
+    console.log();
   })
 );
 
@@ -89,9 +106,7 @@ server.app.use("/api", cors(), server.router);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 server.app.use((err, req, res, next) => {
-  console.error(
-    chalk.redBright(`Terminating with error code ${err.status}: ${err.message}`)
-  );
+  console.error(chalk.redBright(err.message));
   // format error
   res.status(err.status || 500).json({
     message: err.message,
@@ -100,5 +115,12 @@ server.app.use((err, req, res, next) => {
 });
 
 server.app.listen(PORT, () =>
-  console.log(chalk.green(`> Listening on port ${PORT}`))
+  console.log(
+    chalk.whiteBright.bgRed(" \ue76d ") +
+      chalk.red.bgGrey("") +
+      chalk.whiteBright.bgGrey(` \uf6ff ${PORT} `) +
+      chalk.grey("") +
+      chalk.green(" Listening…") +
+      "\n"
+  )
 );

@@ -37,7 +37,7 @@ export class StockEntity extends Entity {}
 
 export const stockSchema = new Schema(StockEntity, {
   ticker: { type: "string" },
-  name: { type: "text" },
+  name: { type: "text", sortable: true },
   country: { type: "string" },
   industry: { type: "string" },
   size: { type: "string" },

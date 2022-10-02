@@ -76,14 +76,8 @@ export const createStock = async (stock: Stock) => {
 //   });
 // };
 
-export const readAllStocks = async (offset: number, count: number) => {
-  if (isNaN(offset)) {
-    offset = 0;
-  }
-  if (isNaN(count)) {
-    return await stockRepository.search().all();
-  }
-  return await stockRepository.search().return.page(offset, count);
+export const readAllStocks = async () => {
+  return await stockRepository.search().return.all();
 };
 
 export const readStockCount = async () => {
