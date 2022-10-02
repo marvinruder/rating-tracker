@@ -333,80 +333,86 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                     </TableRow>
                   );
                 })
-              : [...Array(rowsPerPage)].map((undef, key) => {
-                  return (
-                    <TableRow hover key={key}>
-                      <TableCell>
-                        <Typography variant="body1">
-                          <Skeleton width={160} />
-                        </Typography>
-                        <Typography variant="body2">
-                          <Skeleton width={160} />
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          <Skeleton width={125} />
-                        </Typography>
-                        <Typography variant="body2">
-                          <Skeleton width={125} />
-                        </Typography>
-                        <Typography variant="body2">
-                          <Skeleton width={125} />
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton
-                          variant="rectangular"
-                          width={
-                            2.75 * (theme.typography.body1.fontSize as number)
-                          }
-                          height={
-                            2.75 * (theme.typography.body1.fontSize as number)
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          <Skeleton width={132} />
-                        </Typography>
-                        <Typography variant="body2">
-                          <Skeleton width={132} />
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          <Skeleton width={150} />
-                        </Typography>
-                        <Typography variant="body2">
-                          <Skeleton width={150} />
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Skeleton
-                          sx={{ m: "2px", display: "inline-block" }}
-                          variant="circular"
-                          width={
-                            2 * (theme.typography.body1.fontSize as number) - 4
-                          }
-                          height={
-                            2 * (theme.typography.body1.fontSize as number) - 4
-                          }
-                        />
-                        <Skeleton
-                          sx={{ m: "2px", display: "inline-block" }}
-                          variant="circular"
-                          width={
-                            2 * (theme.typography.body1.fontSize as number) - 4
-                          }
-                          height={
-                            2 * (theme.typography.body1.fontSize as number) - 4
-                          }
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+              : [...Array(rowsPerPage > 0 ? rowsPerPage : 100)].map(
+                  (_undef, key) => {
+                    return (
+                      <TableRow hover key={key}>
+                        <TableCell>
+                          <Typography variant="body1">
+                            <Skeleton width={160} />
+                          </Typography>
+                          <Typography variant="body2">
+                            <Skeleton width={160} />
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body1">
+                            <Skeleton width={125} />
+                          </Typography>
+                          <Typography variant="body2">
+                            <Skeleton width={125} />
+                          </Typography>
+                          <Typography variant="body2">
+                            <Skeleton width={125} />
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton
+                            variant="rectangular"
+                            width={
+                              2.75 * (theme.typography.body1.fontSize as number)
+                            }
+                            height={
+                              2.75 * (theme.typography.body1.fontSize as number)
+                            }
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body1">
+                            <Skeleton width={132} />
+                          </Typography>
+                          <Typography variant="body2">
+                            <Skeleton width={132} />
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body1">
+                            <Skeleton width={150} />
+                          </Typography>
+                          <Typography variant="body2">
+                            <Skeleton width={150} />
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Skeleton
+                            sx={{ m: "2px", display: "inline-block" }}
+                            variant="circular"
+                            width={
+                              2 * (theme.typography.body1.fontSize as number) -
+                              4
+                            }
+                            height={
+                              2 * (theme.typography.body1.fontSize as number) -
+                              4
+                            }
+                          />
+                          <Skeleton
+                            sx={{ m: "2px", display: "inline-block" }}
+                            variant="circular"
+                            width={
+                              2 * (theme.typography.body1.fontSize as number) -
+                              4
+                            }
+                            height={
+                              2 * (theme.typography.body1.fontSize as number) -
+                              4
+                            }
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+                )}
           </TableBody>
         </Table>
       </TableContainer>
