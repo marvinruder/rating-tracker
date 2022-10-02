@@ -1,9 +1,7 @@
 import { FC, ChangeEvent, useState, useEffect } from "react";
 import axios from "axios";
-import PropTypes from "prop-types";
 import {
   Tooltip,
-  Box,
   IconButton,
   Table,
   TableBody,
@@ -14,10 +12,10 @@ import {
   TableContainer,
   Typography,
   useTheme,
-  CircularProgress,
   Snackbar,
   Alert,
   Slide,
+  TableSortLabel,
   Skeleton,
 } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
@@ -32,16 +30,20 @@ import { Size } from "src/enums/size";
 import { Style } from "src/enums/style";
 import StyleBox from "src/components/StyleBox";
 import SectorIcon from "src/components/SectorIcon";
-import { emojiFlag } from "src/enums/regions/country";
+import { Country, emojiFlag, getCountryCode } from "src/enums/regions/country";
 import { baseUrl, stockAPI, stockListEndpoint } from "src/endpoints";
+import { SortableAttribute } from "src/types";
+import { getIndustryKey, Industry } from "src/enums/sectors/industry";
 
-const StocksTable: FC = () => {
+const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [page, setPage] = useState<number>(0);
   const [count, setCount] = useState<number>(-1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [sortBy, setSortBy] = useState<SortableAttribute>("name");
+  const [sortDesc, setSortDesc] = useState<boolean>(false);
 
   useEffect(() => {
     getStocks();
@@ -49,7 +51,7 @@ const StocksTable: FC = () => {
 
   useEffect(() => {
     getStocks();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, sortBy, sortDesc, props.filter]);
 
   const getStocks = () => {
     setStocksFinal(false);
@@ -58,6 +60,23 @@ const StocksTable: FC = () => {
         params: {
           offset: page * rowsPerPage,
           count: rowsPerPage > 0 ? rowsPerPage : undefined,
+          sortBy: sortBy,
+          sortDesc: sortDesc,
+          name: props.filter.name ? props.filter.name : undefined,
+          size: props.filter.size,
+          style: props.filter.style,
+          country:
+            props.filter.countries?.length > 0
+              ? props.filter.countries
+                  .map((country) => getCountryCode(country))
+                  .join(",")
+              : undefined,
+          industry:
+            props.filter.industries?.length > 0
+              ? props.filter.industries
+                  .map((industry) => getIndustryKey(industry))
+                  .join(",")
+              : undefined,
         },
       })
       .then((res) => {
@@ -89,6 +108,15 @@ const StocksTable: FC = () => {
     setRowsPerPage(parseInt(event.target.value));
   };
 
+  const handleSortLabelClicked = (attribute: SortableAttribute) => () => {
+    if (sortBy === attribute) {
+      setSortDesc(!sortDesc);
+    } else {
+      setSortBy(attribute);
+      setSortDesc(attribute === "size");
+    }
+  };
+
   const theme = useTheme();
 
   return (
@@ -97,9 +125,33 @@ const StocksTable: FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Stock</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "name"}
+                  direction={sortBy === "name" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("name")}
+                >
+                  Stock
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Country</TableCell>
-              <TableCell sx={{ textAlign: "center" }}>StyleBox</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "size"}
+                  direction={sortBy !== "size" || sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("size")}
+                >
+                  Size
+                </TableSortLabel>
+                <br />
+                <TableSortLabel
+                  active={sortBy === "style"}
+                  direction={sortBy === "style" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("style")}
+                >
+                  Style
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Sector</TableCell>
               <TableCell>Industry</TableCell>
               <TableCell align="right">Actions</TableCell>
@@ -115,7 +167,7 @@ const StocksTable: FC = () => {
                           variant="body1"
                           fontWeight="bold"
                           color="text.primary"
-                          maxWidth={160}
+                          width={160}
                           noWrap
                         >
                           {stock.name}
@@ -123,7 +175,7 @@ const StocksTable: FC = () => {
                         <Typography
                           variant="body2"
                           color="text.secondary"
-                          maxWidth={160}
+                          width={160}
                           noWrap
                         >
                           {stock.ticker}
@@ -134,7 +186,7 @@ const StocksTable: FC = () => {
                           variant="body1"
                           fontWeight="bold"
                           color="text.primary"
-                          maxWidth={125}
+                          width={125}
                           noWrap
                         >
                           {emojiFlag(stock.country) + " " + stock.country}
@@ -142,7 +194,7 @@ const StocksTable: FC = () => {
                         <Typography
                           variant="body2"
                           color="text.secondary"
-                          maxWidth={125}
+                          width={125}
                           noWrap
                         >
                           {getRegionFromCountry(stock.country)}
@@ -150,25 +202,31 @@ const StocksTable: FC = () => {
                         <Typography
                           variant="body2"
                           color="text.secondary"
-                          maxWidth={125}
+                          width={125}
                           noWrap
                         >
                           {getSuperRegionFromCountry(stock.country)}
                         </Typography>
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell>
                         <Tooltip
                           title={`${Size[stock.size]}-${Style[stock.style]}`}
                           arrow
                         >
-                          <div>
+                          <div
+                            style={{
+                              width:
+                                2.75 *
+                                (theme.typography.body1.fontSize as number),
+                            }}
+                          >
                             <StyleBox
                               fill={theme.colors.alpha.black[100]}
                               stroke={theme.colors.alpha.black[100]}
                               size={stock.size}
                               style={stock.style}
                               length={
-                                2.25 *
+                                2.75 *
                                 (theme.typography.body1.fontSize as number)
                               }
                             />
@@ -193,7 +251,7 @@ const StocksTable: FC = () => {
                           <Typography
                             variant="body1"
                             fontWeight="bold"
-                            maxWidth={105}
+                            width={105}
                             noWrap
                           >
                             {getSectorFromIndustry(stock.industry)}
@@ -216,7 +274,7 @@ const StocksTable: FC = () => {
                           <Typography
                             variant="body2"
                             color="text.secondary"
-                            maxWidth={105}
+                            width={105}
                             noWrap
                           >
                             {getSuperSectorFromIndustry(stock.industry)}
@@ -228,7 +286,7 @@ const StocksTable: FC = () => {
                           variant="body1"
                           fontWeight="bold"
                           color="text.primary"
-                          maxWidth={150}
+                          width={150}
                           noWrap
                         >
                           {stock.industry}
@@ -236,7 +294,7 @@ const StocksTable: FC = () => {
                         <Typography
                           variant="body2"
                           color="text.secondary"
-                          maxWidth={150}
+                          width={150}
                           noWrap
                         >
                           {getGroupFromIndustry(stock.industry)}
@@ -297,16 +355,15 @@ const StocksTable: FC = () => {
                           <Skeleton width={125} />
                         </Typography>
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell>
                         <Skeleton
                           variant="rectangular"
                           width={
-                            2.25 * (theme.typography.body1.fontSize as number)
+                            2.75 * (theme.typography.body1.fontSize as number)
                           }
                           height={
-                            2.25 * (theme.typography.body1.fontSize as number)
+                            2.75 * (theme.typography.body1.fontSize as number)
                           }
-                          sx={{ m: "auto" }}
                         />
                       </TableCell>
                       <TableCell>
@@ -361,6 +418,8 @@ const StocksTable: FC = () => {
         page={page}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
+        showFirstButton
+        showLastButton
       />
       <Snackbar
         open={errorMessage.length > 0}
@@ -381,12 +440,17 @@ const StocksTable: FC = () => {
   );
 };
 
-StocksTable.propTypes = {
-  stocks: PropTypes.array.isRequired,
-};
+export interface StockFilter {
+  name?: string;
+  size?: Size;
+  style?: Style;
+  countries?: Country[];
+  industries?: Industry[];
+}
 
-StocksTable.defaultProps = {
-  stocks: [],
-};
+interface StocksTableProps {
+  // stocks?: string[];
+  filter: StockFilter;
+}
 
 export default StocksTable;

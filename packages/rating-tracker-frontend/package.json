@@ -8,12 +8,12 @@
   },
   "license": "MIT",
   "engines": {
-    "node": "^18.9.0"
+    "node": "^18.10.0"
   },
   "scripts": {
-    "start": "vite ; rm -r node_modules",
-    "start:host": "vite --host ; rm -r node_modules",
-    "build": "vite build ; rm -r node_modules",
+    "start": "vite",
+    "start:host": "vite --host",
+    "build": "vite build",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
     "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix",
     "test": "vitest watch",
@@ -44,7 +44,6 @@
     "axios": "^0.27.2",
     "clsx": "^1.2.1",
     "date-fns": "^2.29.3",
-    "dotenv": "^16.0.3",
     "nprogress": "^0.2.0",
     "numeral": "^2.0.6",
     "prop-types": "^15.8.1",

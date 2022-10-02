@@ -3,13 +3,45 @@ import PageTitleWrapper from "src/components/PageTitleWrapper";
 import { Card, Grid, Container } from "@mui/material";
 import Footer from "src/components/Footer";
 
-import StocksTable from "./StocksTable";
+import StocksTable, { StockFilter } from "./StocksTable";
+import { useState } from "react";
+import { Size } from "src/enums/size";
+import { Style } from "src/enums/style";
+import { Country } from "src/enums/regions/country";
+import { Industry } from "src/enums/sectors/industry";
 
 function StocklistModule() {
+  const [filter, setFilter] = useState<StockFilter>({});
+
+  const applyFilters = (
+    name?: string,
+    size?: Size,
+    style?: Style,
+    countries?: Country[],
+    industries?: Industry[]
+  ) => {
+    setFilter({
+      name: name ? name : "",
+      size: size,
+      style: style,
+      countries: countries,
+      industries: industries,
+    });
+  };
+
   return (
     <>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader
+          applyFilters={applyFilters}
+          filtersInUse={
+            !!filter.name ||
+            !!filter.size ||
+            !!filter.style ||
+            (!!filter.countries && filter.countries.length > 0) ||
+            (!!filter.industries && filter.industries.length > 0)
+          }
+        />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -21,7 +53,7 @@ function StocklistModule() {
         >
           <Grid item xs={12}>
             <Card>
-              <StocksTable />
+              <StocksTable filter={filter} />
             </Card>
           </Grid>
         </Grid>

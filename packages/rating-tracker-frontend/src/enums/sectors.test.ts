@@ -1,13 +1,19 @@
 import { NebulaFighterTheme } from "src/theme/schemes/NebulaFighterTheme";
-import { Industry } from "./sectors/industry";
-import { getGroupFromIndustry, IndustryGroup } from "./sectors/industryGroup";
+import { getIndustryKey, Industry } from "./sectors/industry";
 import {
+  getGroupFromIndustry,
+  getIndustriesInGroup,
+  IndustryGroup,
+} from "./sectors/industryGroup";
+import {
+  getIndustryGroupsInSector,
   getSectorFromIndustry,
   getSectorFromIndustryGroup,
   Sector,
 } from "./sectors/sector";
 import {
   getColor,
+  getSectorsInSuperSector,
   getSuperSectorFromIndustry,
   getSuperSectorFromSector,
   SuperSector,
@@ -24,10 +30,26 @@ vi.mock("@mui/material", async () => {
   };
 });
 
+describe("industries", () => {
+  it("provides the correct industry keys", () => {
+    Object.values(Industry).forEach((industry) =>
+      expect(Object.keys(Industry)).toContain(getIndustryKey(industry))
+    );
+  });
+});
+
 describe("industry groups", () => {
   it("provides exactly one industry group per industry", () => {
     Object.values(Industry).forEach((industry) =>
-      expect(() => getGroupFromIndustry(industry as Industry)).not.toThrow()
+      expect(() => getGroupFromIndustry(industry)).not.toThrow()
+    );
+  });
+
+  it("provides the correct industries in industry group", () => {
+    Object.values(Industry).forEach((industry) =>
+      expect(getIndustriesInGroup(getGroupFromIndustry(industry))).toContain(
+        industry
+      )
     );
   });
 });
@@ -35,15 +57,21 @@ describe("industry groups", () => {
 describe("sectors", () => {
   it("provides exactly one sector per industry group", () => {
     Object.values(IndustryGroup).forEach((industryGroup) =>
-      expect(() =>
-        getSectorFromIndustryGroup(industryGroup as IndustryGroup)
-      ).not.toThrow()
+      expect(() => getSectorFromIndustryGroup(industryGroup)).not.toThrow()
+    );
+  });
+
+  it("provides the correct industry groups in sector", () => {
+    Object.values(IndustryGroup).forEach((industryGroup) =>
+      expect(
+        getIndustryGroupsInSector(getSectorFromIndustryGroup(industryGroup))
+      ).toContain(industryGroup)
     );
   });
 
   it("provides exactly one sector per industry", () => {
     Object.values(Industry).forEach((industry) =>
-      expect(() => getSectorFromIndustry(industry as Industry)).not.toThrow()
+      expect(() => getSectorFromIndustry(industry)).not.toThrow()
     );
   });
 });
@@ -51,15 +79,21 @@ describe("sectors", () => {
 describe("super sectors", () => {
   it("provides exactly one super sector per sector", () => {
     Object.values(Sector).forEach((sector) =>
-      expect(() => getSuperSectorFromSector(sector as Sector)).not.toThrow()
+      expect(() => getSuperSectorFromSector(sector)).not.toThrow()
+    );
+  });
+
+  it("provides the correct sectors in super sector", () => {
+    Object.values(Sector).forEach((sector) =>
+      expect(
+        getSectorsInSuperSector(getSuperSectorFromSector(sector))
+      ).toContain(sector)
     );
   });
 
   it("provides exactly one super sector per industry", () => {
     Object.values(Industry).forEach((industry) =>
-      expect(() =>
-        getSuperSectorFromIndustry(industry as Industry)
-      ).not.toThrow()
+      expect(() => getSuperSectorFromIndustry(industry)).not.toThrow()
     );
   });
 

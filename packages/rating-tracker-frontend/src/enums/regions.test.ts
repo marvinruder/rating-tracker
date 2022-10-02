@@ -1,6 +1,11 @@
 import { Country, emojiFlag, getCountryCode } from "./regions/country";
-import { getRegionFromCountry, Region } from "./regions/region";
 import {
+  getCountriesInRegion,
+  getRegionFromCountry,
+  Region,
+} from "./regions/region";
+import {
+  getRegionsInSuperRegions,
   getSuperRegionFromCountry,
   getSuperRegionFromRegion,
 } from "./regions/superregion";
@@ -27,7 +32,15 @@ describe("countries", () => {
 describe("regions", () => {
   it("provides exactly one region per country", () => {
     Object.values(Country).forEach((country) =>
-      expect(() => getRegionFromCountry(country as Country)).not.toThrow()
+      expect(() => getRegionFromCountry(country)).not.toThrow()
+    );
+  });
+
+  it("provides the correct countries in region", () => {
+    Object.values(Country).forEach((country) =>
+      expect(getCountriesInRegion(getRegionFromCountry(country))).toContain(
+        country
+      )
     );
   });
 });
@@ -35,13 +48,21 @@ describe("regions", () => {
 describe("super regions", () => {
   it("provides exactly one super region per region", () => {
     Object.values(Region).forEach((region) =>
-      expect(() => getSuperRegionFromRegion(region as Region)).not.toThrow()
+      expect(() => getSuperRegionFromRegion(region)).not.toThrow()
+    );
+  });
+
+  it("provides the correct regions in super region", () => {
+    Object.values(Region).forEach((region) =>
+      expect(
+        getRegionsInSuperRegions(getSuperRegionFromRegion(region))
+      ).toContain(region)
     );
   });
 
   it("provides exactly one super region per country", () => {
     Object.values(Country).forEach((country) =>
-      expect(() => getSuperRegionFromCountry(country as Country)).not.toThrow()
+      expect(() => getSuperRegionFromCountry(country)).not.toThrow()
     );
   });
 });

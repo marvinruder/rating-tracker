@@ -145,3 +145,7 @@ export enum Industry {
   Semiconductors = "Semiconductors",
   Solar = "Solar",
 }
+
+export const getIndustryKey = (industry: Industry) => {
+  return Object.keys(Industry)[Object.values(Industry).indexOf(industry)];
+};

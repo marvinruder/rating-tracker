@@ -15,141 +15,115 @@ export enum Sector {
   Technology = "Technology",
 }
 
-const industryGroupsInSectors = new Map<Sector, Set<IndustryGroup>>();
+const industryGroupsInSectors = new Map<Sector, IndustryGroup[]>();
 
-industryGroupsInSectors.set(
-  Sector.BasicMaterials,
-  new Set<IndustryGroup>([
-    IndustryGroup.Agriculture,
-    IndustryGroup.BuildingMaterials,
-    IndustryGroup.Chemicals,
-    IndustryGroup.ForestProducts,
-    IndustryGroup.MetalsMining,
-    IndustryGroup.Steel,
-  ])
-);
+industryGroupsInSectors.set(Sector.BasicMaterials, [
+  IndustryGroup.Agriculture,
+  IndustryGroup.BuildingMaterials,
+  IndustryGroup.Chemicals,
+  IndustryGroup.ForestProducts,
+  IndustryGroup.MetalsMining,
+  IndustryGroup.Steel,
+]);
 
-industryGroupsInSectors.set(
-  Sector.ConsumerCyclical,
-  new Set<IndustryGroup>([
-    IndustryGroup.VehiclesParts,
-    IndustryGroup.FurnishingsFixturesAppliance,
-    IndustryGroup.HomebuildingConstruction,
-    IndustryGroup.ManufacturingApparelAccessories,
-    IndustryGroup.PackagingContainers,
-    IndustryGroup.PersonalServices,
-    IndustryGroup.Restaurants,
-    IndustryGroup.RetailCyclical,
-    IndustryGroup.TravelLeisure,
-  ])
-);
+industryGroupsInSectors.set(Sector.ConsumerCyclical, [
+  IndustryGroup.VehiclesParts,
+  IndustryGroup.FurnishingsFixturesAppliance,
+  IndustryGroup.HomebuildingConstruction,
+  IndustryGroup.ManufacturingApparelAccessories,
+  IndustryGroup.PackagingContainers,
+  IndustryGroup.PersonalServices,
+  IndustryGroup.Restaurants,
+  IndustryGroup.RetailCyclical,
+  IndustryGroup.TravelLeisure,
+]);
 
-industryGroupsInSectors.set(
-  Sector.FinancialServices,
-  new Set<IndustryGroup>([
-    IndustryGroup.AssetManagement,
-    IndustryGroup.Banks,
-    IndustryGroup.CapitalMarkets,
-    IndustryGroup.Insurance,
-    IndustryGroup.DiversifiedFinancialServices,
-    IndustryGroup.CreditServices,
-  ])
-);
+industryGroupsInSectors.set(Sector.FinancialServices, [
+  IndustryGroup.AssetManagement,
+  IndustryGroup.Banks,
+  IndustryGroup.CapitalMarkets,
+  IndustryGroup.Insurance,
+  IndustryGroup.DiversifiedFinancialServices,
+  IndustryGroup.CreditServices,
+]);
 
-industryGroupsInSectors.set(
-  Sector.RealEstate,
-  new Set<IndustryGroup>([IndustryGroup.RealEstate, IndustryGroup.REITs])
-);
+industryGroupsInSectors.set(Sector.RealEstate, [
+  IndustryGroup.RealEstate,
+  IndustryGroup.REITs,
+]);
 
-industryGroupsInSectors.set(
-  Sector.ConsumerDefensive,
-  new Set<IndustryGroup>([
-    IndustryGroup.BeveragesAlcoholic,
-    IndustryGroup.BeveragesNonAlcoholic,
-    IndustryGroup.ConsumerPackagedGoods,
-    IndustryGroup.Education,
-    IndustryGroup.RetailDefensive,
-    IndustryGroup.TobaccoProducts,
-  ])
-);
+industryGroupsInSectors.set(Sector.ConsumerDefensive, [
+  IndustryGroup.BeveragesAlcoholic,
+  IndustryGroup.BeveragesNonAlcoholic,
+  IndustryGroup.ConsumerPackagedGoods,
+  IndustryGroup.Education,
+  IndustryGroup.RetailDefensive,
+  IndustryGroup.TobaccoProducts,
+]);
 
-industryGroupsInSectors.set(
-  Sector.HealthCare,
-  new Set<IndustryGroup>([
-    IndustryGroup.Biotechnology,
-    IndustryGroup.DrugManufacturers,
-    IndustryGroup.HealthcarePlans,
-    IndustryGroup.HealthcareProvidersServices,
-    IndustryGroup.MedicalDevicesInstruments,
-    IndustryGroup.MedicalDiagnosticsResearch,
-    IndustryGroup.MedicalDistribution,
-  ])
-);
+industryGroupsInSectors.set(Sector.HealthCare, [
+  IndustryGroup.Biotechnology,
+  IndustryGroup.DrugManufacturers,
+  IndustryGroup.HealthcarePlans,
+  IndustryGroup.HealthcareProvidersServices,
+  IndustryGroup.MedicalDevicesInstruments,
+  IndustryGroup.MedicalDiagnosticsResearch,
+  IndustryGroup.MedicalDistribution,
+]);
 
-industryGroupsInSectors.set(
-  Sector.Utilities,
-  new Set<IndustryGroup>([
-    IndustryGroup.UtilitiesIndependentPowerProducers,
-    IndustryGroup.UtilitiesRegulated,
-  ])
-);
+industryGroupsInSectors.set(Sector.Utilities, [
+  IndustryGroup.UtilitiesIndependentPowerProducers,
+  IndustryGroup.UtilitiesRegulated,
+]);
 
-industryGroupsInSectors.set(
-  Sector.CommunicationServices,
-  new Set<IndustryGroup>([
-    IndustryGroup.TelecommunicationServices,
-    IndustryGroup.MediaDiversified,
-    IndustryGroup.InteractiveMedia,
-  ])
-);
+industryGroupsInSectors.set(Sector.CommunicationServices, [
+  IndustryGroup.TelecommunicationServices,
+  IndustryGroup.MediaDiversified,
+  IndustryGroup.InteractiveMedia,
+]);
 
-industryGroupsInSectors.set(
-  Sector.Energy,
-  new Set<IndustryGroup>([
-    IndustryGroup.OilGas,
-    IndustryGroup.OtherEnergySources,
-  ])
-);
+industryGroupsInSectors.set(Sector.Energy, [
+  IndustryGroup.OilGas,
+  IndustryGroup.OtherEnergySources,
+]);
 
-industryGroupsInSectors.set(
-  Sector.Industrials,
-  new Set<IndustryGroup>([
-    IndustryGroup.AerospaceDefense,
-    IndustryGroup.BusinessServices,
-    IndustryGroup.Conglomerates,
-    IndustryGroup.Construction,
-    IndustryGroup.FarmHeavyConstructionMachinery,
-    IndustryGroup.IndustrialDistribution,
-    IndustryGroup.IndustrialProducts,
-    IndustryGroup.Transportation,
-    IndustryGroup.WasteManagement,
-  ])
-);
+industryGroupsInSectors.set(Sector.Industrials, [
+  IndustryGroup.AerospaceDefense,
+  IndustryGroup.BusinessServices,
+  IndustryGroup.Conglomerates,
+  IndustryGroup.Construction,
+  IndustryGroup.FarmHeavyConstructionMachinery,
+  IndustryGroup.IndustrialDistribution,
+  IndustryGroup.IndustrialProducts,
+  IndustryGroup.Transportation,
+  IndustryGroup.WasteManagement,
+]);
 
-industryGroupsInSectors.set(
-  Sector.Technology,
-  new Set<IndustryGroup>([
-    IndustryGroup.Software,
-    IndustryGroup.Hardware,
-    IndustryGroup.Semiconductors,
-  ])
-);
+industryGroupsInSectors.set(Sector.Technology, [
+  IndustryGroup.Software,
+  IndustryGroup.Hardware,
+  IndustryGroup.Semiconductors,
+]);
 
 export const getSectorFromIndustryGroup = (industryGroup: IndustryGroup) => {
-  const sectorsContainingIndustryGroup = new Set<Sector>();
+  const sectorsContainingIndustryGroup: Sector[] = [];
   industryGroupsInSectors.forEach((industryGroupSet, sector) => {
-    if (industryGroupSet.has(industryGroup)) {
-      sectorsContainingIndustryGroup.add(sector);
+    if (industryGroupSet.includes(industryGroup)) {
+      sectorsContainingIndustryGroup.push(sector);
     }
   });
-  if (sectorsContainingIndustryGroup.size != 1) {
+  if (sectorsContainingIndustryGroup.length != 1) {
     throw new ReferenceError(
       "The industry group " + industryGroup + " is not in exactly one sector"
     );
   }
-  return sectorsContainingIndustryGroup.values().next().value;
+  return sectorsContainingIndustryGroup[0];
 };
 
 export const getSectorFromIndustry = (industry: Industry) => {
   return getSectorFromIndustryGroup(getGroupFromIndustry(industry));
+};
+
+export const getIndustryGroupsInSector = (sector: Sector) => {
+  return industryGroupsInSectors.get(sector);
 };
