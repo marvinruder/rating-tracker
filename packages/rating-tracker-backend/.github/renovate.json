@@ -4,15 +4,9 @@
   "prConcurrentLimit": 0,
   "prCreation": "not-pending",
   "prHourlyLimit": 0,
-  "schedule": ["every weekend"],
+  "automergeType": "branch",
   "timezone": "Europe/Berlin",
   "assignees": ["ruder.marvin@icloud.com"],
   "updateLockFiles": true,
-  "rangeStrategy": "bump",
-  "packageRules": [
-    {
-      "matchPackageNames": ["chalk"],
-      "allowedVersions": "^4"
-    }
-  ]
+  "rangeStrategy": "bump"
 }
