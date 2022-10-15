@@ -75,7 +75,7 @@ industriesInGroups.set(IndustryGroup.Chemicals, [
 
 industriesInGroups.set(IndustryGroup.ForestProducts, [
   Industry.LumberWoodProduction,
-  Industry.PaperProducts,
+  Industry.PaperPaperProducts,
 ]);
 
 industriesInGroups.set(IndustryGroup.MetalsMining, [

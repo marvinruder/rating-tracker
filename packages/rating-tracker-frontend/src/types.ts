@@ -1,1 +1,7 @@
-export type SortableAttribute = "name" | "size" | "style";
+export type SortableAttribute =
+  | "name"
+  | "size"
+  | "style"
+  | "starRating"
+  | "dividendYieldPercent"
+  | "priceEarningRatio";

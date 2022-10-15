@@ -36,6 +36,14 @@ describe("industries", () => {
       expect(Object.keys(Industry)).toContain(getIndustryKey(industry))
     );
   });
+
+  it("allows for creation of industry key from industry text", () => {
+    Object.values(Industry).forEach((industry: string) =>
+      expect(Object.keys(Industry)).toContain(
+        industry.replaceAll(/[^a-zA-Z0-9]/g, "")
+      )
+    );
+  });
 });
 
 describe("industry groups", () => {

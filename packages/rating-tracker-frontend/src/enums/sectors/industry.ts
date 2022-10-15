@@ -4,7 +4,7 @@ export enum Industry {
   Chemicals = "Chemicals",
   SpecialtyChemicals = "Specialty Chemicals",
   LumberWoodProduction = "Lumber & Wood Production",
-  PaperProducts = "Paper & Paper Products",
+  PaperPaperProducts = "Paper & Paper Products",
   Aluminum = "Aluminum",
   Copper = "Copper",
   OtherIndustrialMetalsMining = "Other Industrial Metals & Mining",

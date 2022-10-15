@@ -2,7 +2,7 @@ import { FC, ChangeEvent, useState, useEffect } from "react";
 import axios from "axios";
 import {
   Tooltip,
-  IconButton,
+  // IconButton,
   Table,
   TableBody,
   TableCell,
@@ -18,8 +18,8 @@ import {
   TableSortLabel,
   Skeleton,
 } from "@mui/material";
-import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+// import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+// import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import { Stock } from "src/models/stock";
 import { getRegionFromCountry } from "src/enums/regions/region";
 import { getSuperRegionFromCountry } from "src/enums/regions/superregion";
@@ -34,6 +34,7 @@ import { Country, emojiFlag, getCountryCode } from "src/enums/regions/country";
 import { baseUrl, stockAPI, stockListEndpoint } from "src/endpoints";
 import { SortableAttribute } from "src/types";
 import { getIndustryKey, Industry } from "src/enums/sectors/industry";
+import StarRating from "src/components/StarRating/index";
 
 const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [page, setPage] = useState<number>(0);
@@ -122,7 +123,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   return (
     <>
       <TableContainer>
-        <Table>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell>
@@ -154,7 +155,44 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
               </TableCell>
               <TableCell>Sector</TableCell>
               <TableCell>Industry</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "starRating"}
+                  direction={
+                    sortBy === "starRating" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("starRating")}
+                >
+                  Star Rating
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sx={{ lineHeight: "1rem" }}>
+                <TableSortLabel
+                  active={sortBy === "dividendYieldPercent"}
+                  direction={
+                    sortBy === "dividendYieldPercent" && sortDesc
+                      ? "desc"
+                      : "asc"
+                  }
+                  onClick={handleSortLabelClicked("dividendYieldPercent")}
+                >
+                  Div
+                  <br />
+                  Yield
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "priceEarningRatio"}
+                  direction={
+                    sortBy === "priceEarningRatio" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("priceEarningRatio")}
+                >
+                  P/E
+                </TableSortLabel>
+              </TableCell>
+              {/* <TableCell align="right">Actions</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -189,7 +227,8 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                           width={125}
                           noWrap
                         >
-                          {emojiFlag(stock.country) + " " + stock.country}
+                          {stock.country &&
+                            emojiFlag(stock.country) + " " + stock.country}
                         </Typography>
                         <Typography
                           variant="body2"
@@ -197,7 +236,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                           width={125}
                           noWrap
                         >
-                          {getRegionFromCountry(stock.country)}
+                          {stock.country && getRegionFromCountry(stock.country)}
                         </Typography>
                         <Typography
                           variant="body2"
@@ -205,12 +244,17 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                           width={125}
                           noWrap
                         >
-                          {getSuperRegionFromCountry(stock.country)}
+                          {stock.country &&
+                            getSuperRegionFromCountry(stock.country)}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Tooltip
-                          title={`${Size[stock.size]}-${Style[stock.style]}`}
+                          title={
+                            stock.size != undefined && stock.style != undefined
+                              ? `${Size[stock.size]}-${Style[stock.style]}`
+                              : undefined
+                          }
                           arrow
                         >
                           <div
@@ -240,13 +284,16 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                             alignItems: "center",
                           }}
                         >
-                          <SectorIcon
-                            industry={stock.industry}
-                            length={
-                              1.75 * (theme.typography.body1.fontSize as number)
-                            }
-                            type={"Sector"}
-                          />
+                          {stock.industry && (
+                            <SectorIcon
+                              industry={stock.industry}
+                              length={
+                                1.75 *
+                                (theme.typography.body1.fontSize as number)
+                              }
+                              type={"Sector"}
+                            />
+                          )}
                           <span style={{ width: 6 }} />
                           <Typography
                             variant="body1"
@@ -254,7 +301,8 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                             width={105}
                             noWrap
                           >
-                            {getSectorFromIndustry(stock.industry)}
+                            {stock.industry &&
+                              getSectorFromIndustry(stock.industry)}
                           </Typography>
                         </span>
                         <span
@@ -263,13 +311,16 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                             alignItems: "center",
                           }}
                         >
-                          <SectorIcon
-                            industry={stock.industry}
-                            length={
-                              1.75 * (theme.typography.body2.fontSize as number)
-                            }
-                            type={"SuperSector"}
-                          />
+                          {stock.industry && (
+                            <SectorIcon
+                              industry={stock.industry}
+                              length={
+                                1.75 *
+                                (theme.typography.body2.fontSize as number)
+                              }
+                              type={"SuperSector"}
+                            />
+                          )}
                           <span style={{ width: 6 }} />
                           <Typography
                             variant="body2"
@@ -277,7 +328,8 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                             width={105}
                             noWrap
                           >
-                            {getSuperSectorFromIndustry(stock.industry)}
+                            {stock.industry &&
+                              getSuperSectorFromIndustry(stock.industry)}
                           </Typography>
                         </span>
                       </TableCell>
@@ -289,7 +341,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                           width={150}
                           noWrap
                         >
-                          {stock.industry}
+                          {stock.industry && stock.industry}
                         </Typography>
                         <Typography
                           variant="body2"
@@ -297,10 +349,35 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                           width={150}
                           noWrap
                         >
-                          {getGroupFromIndustry(stock.industry)}
+                          {stock.industry &&
+                            getGroupFromIndustry(stock.industry)}
                         </Typography>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell>
+                        <StarRating value={stock.starRating} />
+                      </TableCell>
+                      <TableCell>
+                        <Typography
+                          variant="body1"
+                          color="text.primary"
+                          width={45}
+                          noWrap
+                        >
+                          {stock.dividendYieldPercent ?? "–"}
+                          {" %"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography
+                          variant="body1"
+                          color="text.primary"
+                          width={45}
+                          noWrap
+                        >
+                          {stock.priceEarningRatio ?? "–"}
+                        </Typography>
+                      </TableCell>
+                      {/* <TableCell align="right">
                         <Tooltip title="Edit Order" arrow>
                           <IconButton
                             sx={{
@@ -329,7 +406,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                             <DeleteTwoToneIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   );
                 })
@@ -383,32 +460,55 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                             <Skeleton width={150} />
                           </Typography>
                         </TableCell>
-                        <TableCell align="right">
-                          <Skeleton
-                            sx={{ m: "2px", display: "inline-block" }}
-                            variant="circular"
-                            width={
-                              2 * (theme.typography.body1.fontSize as number) -
-                              4
-                            }
-                            height={
-                              2 * (theme.typography.body1.fontSize as number) -
-                              4
-                            }
-                          />
-                          <Skeleton
-                            sx={{ m: "2px", display: "inline-block" }}
-                            variant="circular"
-                            width={
-                              2 * (theme.typography.body1.fontSize as number) -
-                              4
-                            }
-                            height={
-                              2 * (theme.typography.body1.fontSize as number) -
-                              4
-                            }
-                          />
+                        <TableCell>
+                          {[...Array(5).keys()].map((index) => {
+                            return (
+                              <Skeleton
+                                key={index}
+                                sx={{ m: "2px", display: "inline-block" }}
+                                variant="circular"
+                                width={20}
+                                height={20}
+                              />
+                            );
+                          })}
                         </TableCell>
+                        <TableCell>
+                          <Typography variant="body1">
+                            <Skeleton width={45} />
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body1">
+                            <Skeleton width={45} />
+                          </Typography>
+                        </TableCell>
+                        {/* <TableCell align="right">
+                          <Skeleton
+                            sx={{ m: "2px", display: "inline-block" }}
+                            variant="circular"
+                            width={
+                              2 * (theme.typography.body1.fontSize as number) -
+                              4
+                            }
+                            height={
+                              2 * (theme.typography.body1.fontSize as number) -
+                              4
+                            }
+                          />
+                          <Skeleton
+                            sx={{ m: "2px", display: "inline-block" }}
+                            variant="circular"
+                            width={
+                              2 * (theme.typography.body1.fontSize as number) -
+                              4
+                            }
+                            height={
+                              2 * (theme.typography.body1.fontSize as number) -
+                              4
+                            }
+                          />
+                        </TableCell> */}
                       </TableRow>
                     );
                   }
