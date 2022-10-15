@@ -2,6 +2,10 @@ import APIError from "../../apiError.js";
 import { Stock, stockSchema } from "../../models/stock.js";
 import client from "../Client.js";
 import chalk from "chalk";
+import { Country } from "../../enums/country.js";
+import { Industry } from "../../enums/industry.js";
+import { Size } from "../../enums/size.js";
+import { Style } from "../../enums/style.js";
 
 console.log(
   chalk.grey(
@@ -62,19 +66,18 @@ export const createStock = async (stock: Stock) => {
   indexStockRepository();
 };
 
-// export const readStock = async (entityID: string) => {
-//   return await readStocks([entityID]);
-// };
-
-// export const readStocks = async (entityIDs: string[]) => {
-//   return (await stockRepository.fetch(entityIDs)).map((stockEntity) => {
-//     const stock = new Stock(stockEntity);
-//     if (stock.ticker) {
-//       return stock;
-//     }
-//     throw new APIError(404, `Stock Entity ${stockEntity.entityId} not found.`);
-//   });
-// };
+export const readStock = async (ticker: string) => {
+  const stockEntity = await stockRepository
+    .search()
+    .where("ticker")
+    .equals(ticker)
+    .first();
+  if (stockEntity) {
+    return new Stock(stockEntity);
+  } else {
+    throw new APIError(404, `Stock ${ticker} not found.`);
+  }
+};
 
 export const readAllStocks = async () => {
   return await stockRepository.search().return.all();
@@ -84,22 +87,142 @@ export const readStockCount = async () => {
   return await stockRepository.search().count();
 };
 
-export const deleteStockWithoutReindexing = async (entityID: string) => {
-  const stockEntity = await stockRepository.fetch(entityID);
-  const stock = new Stock(stockEntity);
-  if (stock.ticker) {
-    await stockRepository.remove(entityID);
-    console.log(
-      chalk.greenBright(
-        `Deleted stock “${stock.name}” with entity ID ${entityID}.`
-      )
-    );
+export const updateStockWithoutReindexing = async (
+  ticker: string,
+  updatedValues: {
+    country?: Country;
+    industry?: Industry;
+    size?: Size;
+    style?: Style;
+    morningstarId?: string;
+    starRating?: number;
+    dividendYieldPercent?: number;
+    priceEarningRatio?: number;
+  }
+) => {
+  const stockEntity = await stockRepository
+    .search()
+    .where("ticker")
+    .equals(ticker)
+    .first();
+  if (stockEntity) {
+    console.log(chalk.greenBright(`Updating stock ${ticker}…`));
+    let isNewData = false;
+    if (
+      updatedValues.country &&
+      updatedValues.country !== stockEntity.country
+    ) {
+      isNewData = true;
+      stockEntity.country = updatedValues.country;
+      console.log(chalk.greenBright(`    Country: ${updatedValues.country}`));
+    }
+    if (
+      updatedValues.industry &&
+      updatedValues.industry !== stockEntity.industry
+    ) {
+      isNewData = true;
+      stockEntity.industry = updatedValues.industry;
+      console.log(chalk.greenBright(`    Industry: ${updatedValues.industry}`));
+    }
+    if (updatedValues.size && updatedValues.size !== stockEntity.size) {
+      isNewData = true;
+      stockEntity.size = updatedValues.size;
+      console.log(chalk.greenBright(`    Size: ${updatedValues.size}`));
+    }
+    if (updatedValues.style && updatedValues.style !== stockEntity.style) {
+      isNewData = true;
+      stockEntity.style = updatedValues.style;
+      console.log(chalk.greenBright(`    Style: ${updatedValues.style}`));
+    }
+    if (
+      updatedValues.morningstarId &&
+      updatedValues.morningstarId !== stockEntity.morningstarId
+    ) {
+      isNewData = true;
+      stockEntity.morningstarId = updatedValues.morningstarId;
+      console.log(
+        chalk.greenBright(`    Morningstar ID: ${updatedValues.morningstarId}`)
+      );
+    }
+    if (
+      updatedValues.starRating &&
+      updatedValues.starRating !== stockEntity.starRating
+    ) {
+      isNewData = true;
+      stockEntity.starRating = updatedValues.starRating;
+      console.log(
+        chalk.greenBright(`    Star Rating: ${updatedValues.starRating}`)
+      );
+    }
+    if (
+      updatedValues.dividendYieldPercent &&
+      updatedValues.dividendYieldPercent !== stockEntity.dividendYieldPercent
+    ) {
+      isNewData = true;
+      stockEntity.dividendYieldPercent = updatedValues.dividendYieldPercent;
+      console.log(
+        chalk.greenBright(
+          `    Dividend Yield (%): ${updatedValues.dividendYieldPercent}`
+        )
+      );
+    }
+    if (
+      updatedValues.priceEarningRatio &&
+      updatedValues.priceEarningRatio !== stockEntity.priceEarningRatio
+    ) {
+      isNewData = true;
+      stockEntity.priceEarningRatio = updatedValues.priceEarningRatio;
+      console.log(
+        chalk.greenBright(
+          `    Price Earning Ratio: ${updatedValues.priceEarningRatio}`
+        )
+      );
+    }
+    if (isNewData) {
+      await stockRepository.save(stockEntity);
+    } else {
+      console.log(chalk.grey(`No updates for stock ${ticker}.`));
+    }
   } else {
-    throw new APIError(404, `Stock Entity ${entityID} not found.`);
+    throw new APIError(404, `Stock ${ticker} not found.`);
   }
 };
 
-export const deleteStock = async (entityID: string) => {
-  await deleteStockWithoutReindexing(entityID);
+export const updateStock = async (
+  ticker: string,
+  updatedValues: {
+    country?: Country;
+    industry?: Industry;
+    size?: Size;
+    style?: Style;
+    morningstarId?: string;
+    starRating?: number;
+    dividendYieldPercent?: number;
+    priceEarningRatio?: number;
+  }
+) => {
+  await updateStockWithoutReindexing(ticker, updatedValues);
+  indexStockRepository();
+};
+
+export const deleteStockWithoutReindexing = async (ticker: string) => {
+  const stockEntity = await stockRepository
+    .search()
+    .where("ticker")
+    .equals(ticker)
+    .first();
+  if (stockEntity) {
+    const name = new Stock(stockEntity).name;
+    await stockRepository.remove(stockEntity.entityId);
+    console.log(
+      chalk.greenBright(`Deleted stock “${name}” (ticker ${ticker}).`)
+    );
+  } else {
+    throw new APIError(404, `Stock ${ticker} not found.`);
+  }
+};
+
+export const deleteStock = async (ticker: string) => {
+  await deleteStockWithoutReindexing(ticker);
   indexStockRepository();
 };

@@ -7,18 +7,42 @@ import { Style } from "../enums/style.js";
 export class Stock {
   ticker: string;
   name: string;
-  country: Country;
-  industry: Industry;
-  size: Size;
-  style: Style;
+  country?: Country;
+  industry?: Industry;
+  size?: Size;
+  style?: Style;
+  morningstarId?: string;
+  starRating?: number;
+  dividendYieldPercent?: number;
+  priceEarningRatio?: number;
 
   constructor(stockEntity: StockEntity) {
-    this.ticker = stockEntity.toJSON()["ticker"];
-    this.name = stockEntity.toJSON()["name"];
-    this.country = stockEntity.toJSON()["country"] as Country;
-    this.industry = stockEntity.toJSON()["industry"] as Industry;
-    this.size = stockEntity.toJSON()["size"] as Size;
-    this.style = stockEntity.toJSON()["style"] as Style;
+    this.ticker = stockEntity.ticker;
+    this.name = stockEntity.name;
+    if (stockEntity.country != null) {
+      this.country = stockEntity.country as Country;
+    }
+    if (stockEntity.industry != null) {
+      this.industry = stockEntity.industry as Industry;
+    }
+    if (stockEntity.size != null) {
+      this.size = stockEntity.size as Size;
+    }
+    if (stockEntity.style != null) {
+      this.style = stockEntity.style as Style;
+    }
+    if (stockEntity.morningstarId != null) {
+      this.morningstarId = stockEntity.morningstarId;
+    }
+    if (stockEntity.starRating != null) {
+      this.starRating = stockEntity.starRating;
+    }
+    if (stockEntity.dividendYieldPercent != null) {
+      this.dividendYieldPercent = stockEntity.dividendYieldPercent;
+    }
+    if (stockEntity.priceEarningRatio != null) {
+      this.priceEarningRatio = stockEntity.priceEarningRatio;
+    }
   }
 
   static toJSON = (stock: Stock) => {
@@ -29,8 +53,25 @@ export class Stock {
       industry: stock.industry as string,
       size: stock.size as string,
       style: stock.style as string,
+      morningstarId: stock.morningstarId,
+      starRating: stock.starRating,
+      dividendYieldPercent: stock.dividendYieldPercent,
+      priceEarningRatio: stock.priceEarningRatio,
     };
   };
+}
+
+export interface StockEntity {
+  ticker: string;
+  name: string;
+  country: string;
+  industry: string;
+  size: string;
+  style: string;
+  morningstarId: string;
+  starRating: number;
+  dividendYieldPercent: number;
+  priceEarningRatio: number;
 }
 
 export class StockEntity extends Entity {}
@@ -42,4 +83,8 @@ export const stockSchema = new Schema(StockEntity, {
   industry: { type: "string" },
   size: { type: "string" },
   style: { type: "string" },
+  morningstarId: { type: "string" },
+  starRating: { type: "number" },
+  dividendYieldPercent: { type: "number" },
+  priceEarningRatio: { type: "number" },
 });

@@ -11,7 +11,7 @@ import { Industry } from "../enums/industry.js";
 import { Country } from "../enums/country.js";
 import { Size } from "../enums/size.js";
 import { Style } from "../enums/style.js";
-import { SortableAttribute } from "src/types.js";
+import { SortableAttribute } from "../types.js";
 
 class StockController {
   async getList(req: Request, res: Response) {
@@ -79,6 +79,20 @@ class StockController {
             (a, b) =>
               [Style.Value, Style.Blend, Style.Growth].indexOf(a.style) -
               [Style.Value, Style.Blend, Style.Growth].indexOf(b.style)
+          );
+          break;
+        case "starRating":
+          stocks.sort((a, b) => (a.starRating ?? 0) - (b.starRating ?? 0));
+          break;
+        case "dividendYieldPercent":
+          stocks.sort(
+            (a, b) =>
+              (a.dividendYieldPercent ?? 0) - (b.dividendYieldPercent ?? 0)
+          );
+          break;
+        case "priceEarningRatio":
+          stocks.sort(
+            (a, b) => (a.priceEarningRatio ?? 0) - (b.priceEarningRatio ?? 0)
           );
           break;
       }

@@ -160,7 +160,7 @@ export const openapiDocument: OpenAPIV3.Document = {
         },
       },
     },
-    "/api/stock/{entityID}": {
+    "/api/stock/{ticker}": {
       delete: {
         operationId: "deleteStock",
         summary: "Delete Stock API",
@@ -168,12 +168,12 @@ export const openapiDocument: OpenAPIV3.Document = {
         parameters: [
           {
             in: "path",
-            name: "entityID",
-            description: "The entity ID of the stock to be deleted.",
+            name: "ticker",
+            description: "The ticker symbol of the stock to be deleted.",
             required: true,
             schema: {
               type: "string",
-              example: "01FJYWEYRHYFT8YTEGQBABJ43J",
+              example: "AAPL",
             },
           },
         ],
@@ -183,7 +183,66 @@ export const openapiDocument: OpenAPIV3.Document = {
             content: {},
           },
           "404": {
-            description: "Stock Entity not found",
+            description: "Stock not found",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/fetch/morningstar": {
+      get: {
+        operationId: "fetchMorningstarData",
+        summary: "Morningstar Fetch API",
+        description: "Fetch information from Morningstar UK web page",
+        parameters: [
+          {
+            in: "query",
+            name: "ticker",
+            description:
+              "The ticker of the stock for which information is to be fetched. If not present, all stocks known to the system will be used",
+            required: false,
+            schema: {
+              type: "string",
+              example: "AAPL",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "OK",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "array",
+                  items: {
+                    $ref: "#/components/schemas/Stock",
+                  },
+                },
+              },
+            },
+          },
+          "204": {
+            description: "No Content",
+            content: {},
+          },
+          "404": {
+            description: "Stock not found",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+              },
+            },
+          },
+          "502": {
+            description: "Unable to fetch",
             content: {
               "application/json": {
                 schema: {
@@ -644,12 +703,19 @@ export const openapiDocument: OpenAPIV3.Document = {
             $ref: "#/components/schemas/Style",
           },
         },
-        required: ["ticker", "name", "country", "industry", "size", "style"],
+        required: ["ticker", "name"],
       },
       SortableAttribute: {
         type: "string",
         description: "The name of an attribute whose values can be sorted.",
-        enum: ["name", "size", "style"],
+        enum: [
+          "name",
+          "size",
+          "style",
+          "starRating",
+          "dividendYieldPercent",
+          "priceEarningRatio",
+        ],
         example: "name",
       },
       StockListWithCount: {
