@@ -166,7 +166,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Star Rating
                 </TableSortLabel>
               </TableCell>
-              <TableCell sx={{ lineHeight: "1rem" }}>
+              <TableCell>
                 <TableSortLabel
                   active={sortBy === "dividendYieldPercent"}
                   direction={
@@ -176,9 +176,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   }
                   onClick={handleSortLabelClicked("dividendYieldPercent")}
                 >
-                  Div
-                  <br />
-                  Yield
+                  Div Yield
                 </TableSortLabel>
               </TableCell>
               <TableCell>

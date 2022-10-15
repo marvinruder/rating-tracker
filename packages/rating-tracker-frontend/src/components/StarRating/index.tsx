@@ -24,7 +24,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
       break;
   }
   return (
-    <>
+    <span style={{ whiteSpace: "nowrap" }}>
       {[...Array(5).keys()].map((index) => {
         return (value as number) > index ? (
           <StarIcon key={index} />
@@ -32,7 +32,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
           <StarOutlineIcon key={index} />
         );
       })}
-    </>
+    </span>
   );
 };
 
