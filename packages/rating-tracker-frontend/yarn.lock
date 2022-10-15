@@ -5822,7 +5822,7 @@ __metadata:
     src: "link:./src"
     ts-node: ^10.9.1
     typescript: ^4.8.4
-    vite: ^3.1.6
+    vite: ^3.1.8
     vite-plugin-svgr: ^2.2.1
     vite-tsconfig-paths: ^3.5.1
     vitest: ^0.24.0
@@ -7016,7 +7016,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^3.0.0, vite@npm:^3.1.6":
+"vite@npm:^3.0.0":
   version: 3.1.6
   resolution: "vite@npm:3.1.6"
   dependencies:
@@ -7045,6 +7045,38 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 393369af4da85aef8718d2236fceb238410c130cc740462c317c6ae4d9c04c519c1591cf8fef2ccc61195e41db54c0d892b3f9a10d3ed0e3c8ae8f0cffaa46ed
+  languageName: node
+  linkType: hard
+
+"vite@npm:^3.1.8":
+  version: 3.1.8
+  resolution: "vite@npm:3.1.8"
+  dependencies:
+    esbuild: ^0.15.9
+    fsevents: ~2.3.2
+    postcss: ^8.4.16
+    resolve: ^1.22.1
+    rollup: ~2.78.0
+  peerDependencies:
+    less: "*"
+    sass: "*"
+    stylus: "*"
+    terser: ^5.4.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    less:
+      optional: true
+    sass:
+      optional: true
+    stylus:
+      optional: true
+    terser:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: 982696ad134577dd9915c4c3548ad36ddcf5dc6d341058548a670a13d860e4cdaaf2b320a59221f178018df089d148b9980e9a344316bef12b698a1c1abc7390
   languageName: node
   linkType: hard
 
