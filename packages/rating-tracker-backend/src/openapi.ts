@@ -3,7 +3,7 @@ import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 export const openapiDocument: OpenAPIV3.Document = {
   openapi: "3.0.0",
   info: {
-    title: "rating-tracker-backend",
+    title: "Rating Tracker Backend",
     version: "0.1.0",
     contact: {
       name: "Marvin A. Ruder",
@@ -32,6 +32,7 @@ export const openapiDocument: OpenAPIV3.Document = {
   paths: {
     "/api/stock/list": {
       get: {
+        tags: ["Stock API"],
         operationId: "getStockList",
         summary: "Stock List API",
         description: "Get a list of stocks. Supports pagination.",
@@ -149,6 +150,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     },
     "/api/stock/fillWithExampleData": {
       put: {
+        tags: ["Stock API"],
         operationId: "putExampleStocks",
         summary: "Stock Example Data API",
         description: "Fills the connected data service with example stocks",
@@ -162,6 +164,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     },
     "/api/stock/{ticker}": {
       delete: {
+        tags: ["Stock API"],
         operationId: "deleteStock",
         summary: "Delete Stock API",
         description: "Delete the specified stock",
@@ -197,6 +200,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     },
     "/api/fetch/morningstar": {
       get: {
+        tags: ["Fetch API"],
         operationId: "fetchMorningstarData",
         summary: "Morningstar Fetch API",
         description: "Fetch information from Morningstar UK web page",
@@ -247,6 +251,33 @@ export const openapiDocument: OpenAPIV3.Document = {
               "application/json": {
                 schema: {
                   $ref: "#/components/schemas/Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/status": {
+      get: {
+        tags: ["Status API"],
+        operationId: "status",
+        summary: "Status API",
+        description:
+          "Returns a JSON object with the status “operational” if online.",
+        responses: {
+          "200": {
+            description: "operational",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    status: {
+                      type: "string",
+                    },
+                  },
+                  required: ["status"],
                 },
               },
             },

@@ -21,6 +21,9 @@ class MainRouter {
   private _configure() {
     this._router.use("/fetch", this._subrouterFetch);
     this._router.use("/stock", this._subrouterStock);
+    this._router.get("/status", (req, res) => {
+      return res.status(200).json({ status: "operational" });
+    });
   }
 }
 
