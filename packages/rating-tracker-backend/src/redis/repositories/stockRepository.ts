@@ -2,10 +2,7 @@ import APIError from "../../apiError.js";
 import { Stock, stockSchema } from "../../models/stock.js";
 import client from "../Client.js";
 import chalk from "chalk";
-import { Country } from "../../enums/country.js";
-import { Industry } from "../../enums/industry.js";
-import { Size } from "../../enums/size.js";
-import { Style } from "../../enums/style.js";
+import { Country, Industry, Size, Style } from "../../types.js";
 
 console.log(
   chalk.grey(

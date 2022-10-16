@@ -1,4 +1,3 @@
-import { Country } from "./enums/country.js";
 import { Stock } from "./models/stock.js";
 
 const exampleStocks: Stock[] = [
@@ -9,61 +8,61 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleAAPL",
     name: "Apple Inc",
-    country: Country.US,
+    country: "US",
     morningstarId: "0P000000GY",
   },
   {
     ticker: "exampleTSM",
     name: "Taiwan Semiconductor Manufacturing Co Ltd",
-    country: Country.TW,
+    country: "TW",
     morningstarId: "0P000005AR",
   },
   {
     ticker: "exampleALV",
     name: "Allianz SE",
-    country: Country.DE,
+    country: "DE",
     morningstarId: "0P00009QNO",
   },
   {
     ticker: "exampleNEM",
     name: "Newmont Corp",
-    country: Country.US,
+    country: "US",
     morningstarId: "0P000003WE",
   },
   {
     ticker: "exampleIBE",
     name: "Iberdrola SA",
-    country: Country.ES,
+    country: "ES",
     morningstarId: "0P0000A4Z3",
   },
   {
     ticker: "exampleMELI",
     name: "MercadoLibre Inc",
-    country: Country.AR,
+    country: "AR",
     morningstarId: "0P00009FL7",
   },
   {
     ticker: "exampleNOVO B",
     name: "Novo Nordisk A/S",
-    country: Country.DK,
+    country: "DK",
     morningstarId: "0P0000A5BQ",
   },
   {
     ticker: "exampleBN",
     name: "Danone SA",
-    country: Country.FR,
+    country: "FR",
     morningstarId: "0P00009WEL",
   },
   {
     ticker: "exampleORSTED",
     name: "Ørsted A/S",
-    country: Country.DK,
+    country: "DK",
     morningstarId: "0P0001846T",
   },
   {
     ticker: "exampleKGX",
     name: "Kion Group AG",
-    country: Country.DE,
+    country: "DE",
     morningstarId: "0P0000Z3A6",
   },
 ];

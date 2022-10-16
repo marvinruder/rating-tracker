@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Builder, By, Capabilities } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
-import { Industry } from "../enums/industry.js";
 import APIError from "../apiError.js";
 import { Stock } from "../models/stock.js";
 import {
@@ -10,9 +9,15 @@ import {
   readStock,
   updateStockWithoutReindexing,
 } from "../redis/repositories/stockRepository.js";
-import { Size } from "../enums/size.js";
-import { Style } from "../enums/style.js";
 import chalk from "chalk";
+import {
+  Industry,
+  isIndustry,
+  isSize,
+  isStyle,
+  Size,
+  Style,
+} from "../types.js";
 
 class FetchController {
   getDriver() {
@@ -69,20 +74,24 @@ class FetchController {
         );
 
         try {
-          industry =
-            Industry[
-              (
-                await driver
-                  .findElement(
-                    By.xpath(
-                      "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.."
-                    )
-                  )
-                  .getText()
+          const industryString = (
+            await driver
+              .findElement(
+                By.xpath(
+                  "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.."
+                )
               )
-                .replace("Industry\n", "")
-                .replaceAll(/[^a-zA-Z0-9]/g, "")
-            ];
+              .getText()
+          )
+            .replace("Industry\n", "")
+            .replaceAll(/[^a-zA-Z0-9]/g, "");
+          if (isIndustry(industryString)) {
+            industry = industryString;
+          } else {
+            throw TypeError(
+              `Extracted industry “${industryString}” is no valid industry.`
+            );
+          }
         } catch (e) {
           console.warn(
             chalk.yellowBright(
@@ -103,8 +112,20 @@ class FetchController {
           )
             .replace("Stock Style\n", "")
             .split("-");
-          size = Size[sizeAndStyle[0]];
-          style = Style[sizeAndStyle[1]];
+          if (isSize(sizeAndStyle[0])) {
+            size = sizeAndStyle[0];
+          } else {
+            throw TypeError(
+              `Extracted size “${sizeAndStyle[0]}” is no valid size.`
+            );
+          }
+          if (isStyle(sizeAndStyle[1])) {
+            style = sizeAndStyle[1];
+          } else {
+            throw TypeError(
+              `Extracted style “${sizeAndStyle[1]}” is no valid style.`
+            );
+          }
         } catch (e) {
           console.warn(
             chalk.yellowBright(

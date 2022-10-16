@@ -7,11 +7,17 @@ import {
   readAllStocks,
   indexStockRepository,
 } from "../redis/repositories/stockRepository.js";
-import { Industry } from "../enums/industry.js";
-import { Country } from "../enums/country.js";
-import { Size } from "../enums/size.js";
-import { Style } from "../enums/style.js";
-import { SortableAttribute } from "../types.js";
+import {
+  Country,
+  Industry,
+  isCountry,
+  isIndustry,
+  isSize,
+  isStyle,
+  sizeArray,
+  SortableAttribute,
+  styleArray,
+} from "../types.js";
 
 class StockController {
   async getList(req: Request, res: Response) {
@@ -28,31 +34,35 @@ class StockController {
       );
     }
     if (req.query.country) {
-      const countries = req.query.country;
-      if (typeof countries !== "string") {
-        stocks = stocks.filter((stock) =>
-          (countries as Country[]).includes(stock.country)
+      const countryParam = req.query.country;
+      if (Array.isArray(countryParam)) {
+        const countries: Country[] = [];
+        countryParam.forEach(
+          (country) => isCountry(country) && countries.push(country)
         );
+        stocks = stocks.filter((stock) => countries.includes(stock.country));
       }
     }
     if (req.query.industry) {
-      const industries = req.query.industry;
-      if (typeof industries !== "string") {
-        stocks = stocks.filter((stock) =>
-          (industries as Industry[]).includes(stock.industry)
+      const industryParam = req.query.industry;
+      if (Array.isArray(industryParam)) {
+        const industries: Industry[] = [];
+        industryParam.forEach(
+          (industry) => isIndustry(industry) && industries.push(industry)
         );
+        stocks = stocks.filter((stock) => industries.includes(stock.industry));
       }
     }
     if (req.query.size) {
       const size = req.query.size;
-      if (typeof size === "string") {
-        stocks = stocks.filter((stock) => (size as Size) === stock.size);
+      if (typeof size === "string" && isSize(size)) {
+        stocks = stocks.filter((stock) => size === stock.size);
       }
     }
     if (req.query.style) {
       const style = req.query.style;
-      if (typeof style === "string") {
-        stocks = stocks.filter((stock) => (style as Style) === stock.style);
+      if (typeof style === "string" && isStyle(style)) {
+        stocks = stocks.filter((stock) => style === stock.style);
       }
     }
 
@@ -69,16 +79,12 @@ class StockController {
           break;
         case "size":
           stocks.sort(
-            (a, b) =>
-              [Size.Small, Size.Mid, Size.Large].indexOf(a.size) -
-              [Size.Small, Size.Mid, Size.Large].indexOf(b.size)
+            (a, b) => sizeArray.indexOf(a.size) - sizeArray.indexOf(b.size)
           );
           break;
         case "style":
           stocks.sort(
-            (a, b) =>
-              [Style.Value, Style.Blend, Style.Growth].indexOf(a.style) -
-              [Style.Value, Style.Blend, Style.Growth].indexOf(b.style)
+            (a, b) => styleArray.indexOf(a.style) - styleArray.indexOf(b.style)
           );
           break;
         case "starRating":
