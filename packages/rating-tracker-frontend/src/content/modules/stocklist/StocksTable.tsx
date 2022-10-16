@@ -21,20 +21,30 @@ import {
 // import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 // import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import { Stock } from "src/models/stock";
-import { getRegionFromCountry } from "src/enums/regions/region";
-import { getSuperRegionFromCountry } from "src/enums/regions/superregion";
-import { getSectorFromIndustry } from "src/enums/sectors/sector";
-import { getSuperSectorFromIndustry } from "src/enums/sectors/superSector";
-import { getGroupFromIndustry } from "src/enums/sectors/industryGroup";
-import { Size } from "src/enums/size";
-import { Style } from "src/enums/style";
 import StyleBox from "src/components/StyleBox";
 import SectorIcon from "src/components/SectorIcon";
-import { Country, emojiFlag, getCountryCode } from "src/enums/regions/country";
+import { countryNameWithFlag } from "src/taxonomy/regions/country";
 import { baseUrl, stockAPI, stockListEndpoint } from "src/endpoints";
-import { SortableAttribute } from "src/types";
-import { getIndustryKey, Industry } from "src/enums/sectors/industry";
+import { Country, Industry, Size, SortableAttribute, Style } from "src/types";
 import StarRating from "src/components/StarRating/index";
+import { regionName, regionOfCountry } from "src/taxonomy/regions/region.js";
+import {
+  superRegionName,
+  superRegionOfRegion,
+} from "src/taxonomy/regions/superregion.js";
+import {
+  sectorName,
+  sectorOfIndustryGroup,
+} from "src/taxonomy/sectors/sector.js";
+import {
+  groupOfIndustry,
+  industryGroupName,
+} from "src/taxonomy/sectors/industryGroup.js";
+import {
+  superSectorName,
+  superSectorOfSector,
+} from "src/taxonomy/sectors/superSector.js";
+import { industryName } from "src/taxonomy/sectors/industry.js";
 
 const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [page, setPage] = useState<number>(0);
@@ -68,15 +78,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
           style: props.filter.style,
           country:
             props.filter.countries?.length > 0
-              ? props.filter.countries
-                  .map((country) => getCountryCode(country))
-                  .join(",")
+              ? props.filter.countries.join(",")
               : undefined,
           industry:
             props.filter.industries?.length > 0
-              ? props.filter.industries
-                  .map((industry) => getIndustryKey(industry))
-                  .join(",")
+              ? props.filter.industries.join(",")
               : undefined,
         },
       })
@@ -225,16 +231,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                           width={125}
                           noWrap
                         >
-                          {stock.country &&
-                            emojiFlag(stock.country) + " " + stock.country}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          width={125}
-                          noWrap
-                        >
-                          {stock.country && getRegionFromCountry(stock.country)}
+                          {stock.country && countryNameWithFlag[stock.country]}
                         </Typography>
                         <Typography
                           variant="body2"
@@ -243,14 +240,27 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                           noWrap
                         >
                           {stock.country &&
-                            getSuperRegionFromCountry(stock.country)}
+                            regionName[regionOfCountry[stock.country]]}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          width={125}
+                          noWrap
+                        >
+                          {stock.country &&
+                            superRegionName[
+                              superRegionOfRegion[
+                                regionOfCountry[stock.country]
+                              ]
+                            ]}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Tooltip
                           title={
-                            stock.size != undefined && stock.style != undefined
-                              ? `${Size[stock.size]}-${Style[stock.style]}`
+                            stock.size && stock.style
+                              ? `${stock.size}-${stock.style}`
                               : undefined
                           }
                           arrow
@@ -300,7 +310,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                             noWrap
                           >
                             {stock.industry &&
-                              getSectorFromIndustry(stock.industry)}
+                              sectorName[
+                                sectorOfIndustryGroup[
+                                  groupOfIndustry[stock.industry]
+                                ]
+                              ]}
                           </Typography>
                         </span>
                         <span
@@ -327,7 +341,13 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                             noWrap
                           >
                             {stock.industry &&
-                              getSuperSectorFromIndustry(stock.industry)}
+                              superSectorName[
+                                superSectorOfSector[
+                                  sectorOfIndustryGroup[
+                                    groupOfIndustry[stock.industry]
+                                  ]
+                                ]
+                              ]}
                           </Typography>
                         </span>
                       </TableCell>
@@ -339,7 +359,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                           width={150}
                           noWrap
                         >
-                          {stock.industry && stock.industry}
+                          {stock.industry && industryName[stock.industry]}
                         </Typography>
                         <Typography
                           variant="body2"
@@ -348,7 +368,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                           noWrap
                         >
                           {stock.industry &&
-                            getGroupFromIndustry(stock.industry)}
+                            industryGroupName[groupOfIndustry[stock.industry]]}
                         </Typography>
                       </TableCell>
                       <TableCell>

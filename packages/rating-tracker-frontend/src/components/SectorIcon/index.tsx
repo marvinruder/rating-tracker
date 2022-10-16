@@ -1,11 +1,11 @@
 import { FC } from "react";
-import { Industry } from "src/enums/sectors/industry";
-import { getSectorFromIndustry, Sector } from "src/enums/sectors/sector";
+import { groupOfIndustry } from "src/taxonomy/sectors/industryGroup.js";
+import { sectorOfIndustryGroup } from "src/taxonomy/sectors/sector.js";
 import {
   getColor,
-  getSuperSectorFromIndustry,
-  SuperSector,
-} from "src/enums/sectors/superSector";
+  superSectorOfSector,
+} from "src/taxonomy/sectors/superSector";
+import { Industry } from "src/types";
 
 interface SectorIconProps {
   industry: Industry;
@@ -16,26 +16,35 @@ interface SectorIconProps {
 
 const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps) => {
   const color: React.CSSProperties["color"] =
-    props.color || getColor(getSuperSectorFromIndustry(props.industry));
+    props.color ||
+    getColor(
+      superSectorOfSector[
+        sectorOfIndustryGroup[groupOfIndustry[props.industry]]
+      ]
+    );
 
   const getPaths = () => {
     if (props.type === "SuperSector") {
-      switch (getSuperSectorFromIndustry(props.industry)) {
-        case SuperSector.Cyclical:
+      switch (
+        superSectorOfSector[
+          sectorOfIndustryGroup[groupOfIndustry[props.industry]]
+        ]
+      ) {
+        case "Cyclical":
           return (
             <path
               stroke="none"
               d="M10.917 9.619v.372c0 .438-.107.846-.322 1.226-.215.38-.509.681-.884.901-.374.221-.78.331-1.217.331-.434 0-.841-.115-1.224-.345-.382-.231-.682-.542-.899-.934-.216-.392-.325-.805-.325-1.239V5.08c0-.244-.088-.469-.263-.674-.175-.205-.385-.307-.63-.307-.181 0-.341.042-.479.124-.137.082-.247.205-.331.369s-.123.307-.123.429v1.644c0 .209-.075.388-.225.538-.15.15-.329.225-.538.225-.205 0-.383-.076-.535-.227-.151-.153-.227-.331-.227-.536V5.003c0-.434.111-.843.334-1.226.223-.384.523-.685.901-.901.379-.217.786-.326 1.223-.326.434 0 .838.116 1.215.349.376.232.671.545.884.937.212.392.318.807.318 1.244v4.853c0 .26.091.487.275.68.183.193.399.29.647.29.205 0 .372-.047.503-.142.13-.095.229-.212.296-.352.067-.14.1-.279.1-.417V9.62h-1.43l2.181-3.753 2.163 3.753-1.388-.001z"
             ></path>
           );
-        case SuperSector.Defensive:
+        case "Defensive":
           return (
             <path
               stroke="none"
               d="M9.761 9.642V8.296H2.462c-.235 0-.438-.085-.607-.254-.17-.17-.255-.363-.255-.578 0-.231.087-.428.26-.589s.378-.242.613-.242H9.76V5.358L13.5 7.5 9.761 9.642z"
             ></path>
           );
-        case SuperSector.Sensitive:
+        case "Sensitive":
           return (
             <path
               stroke="none"
@@ -44,15 +53,15 @@ const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps) => {
           );
       }
     } else if (props.type === "Sector") {
-      switch (getSectorFromIndustry(props.industry)) {
-        case Sector.BasicMaterials:
+      switch (sectorOfIndustryGroup[groupOfIndustry[props.industry]]) {
+        case "BasicMaterials":
           return (
             <path
               stroke="none"
               d="M14 14H1V1h13zm-8.862-3L4.89 9.364a.362.362 0 00-.1-.259A.321.321 0 004.548 9H2.576a.321.321 0 00-.243.1.361.361 0 00-.1.259L1.987 11zm1.949-3l-.249-1.652a.351.351 0 00-.094-.248.3.3 0 00-.232-.1H4.523a.328.328 0 00-.241.1.337.337 0 00-.1.246L3.931 8zm1.962-3L8.8 3.359a.354.354 0 00-.1-.251A.318.318 0 008.463 3h-2a.3.3 0 00-.232.107.372.372 0 00-.094.251L5.893 5zm0 6L8.8 9.364a.356.356 0 00-.1-.259A.321.321 0 008.46 9H6.471a.3.3 0 00-.231.1.373.373 0 00-.094.259L5.9 11zM11 8l-.25-1.652a.346.346 0 00-.1-.246.31.31 0 00-.234-.1H8.428a.318.318 0 00-.241.1.346.346 0 00-.1.246L7.837 8zm1.944 3l-.248-1.636a.361.361 0 00-.1-.259.321.321 0 00-.243-.1h-1.971a.321.321 0 00-.243.1.362.362 0 00-.1.259L9.792 11z"
             ></path>
           );
-        case Sector.CommunicationServices:
+        case "CommunicationServices":
           return (
             <>
               <path
@@ -69,63 +78,63 @@ const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps) => {
               ></path>
             </>
           );
-        case Sector.ConsumerCyclical:
+        case "ConsumerCyclical":
           return (
             <path
               stroke="none"
               d="M1 1.124h13v13H1zm12.153 8.754V8.331a1.812 1.812 0 00-.24-.929 1.313 1.313 0 00-.643-.576 3.573 3.573 0 00-.648-1.7 3.661 3.661 0 00-1.4-1.216A4.066 4.066 0 008.4 3.493a4.066 4.066 0 00-1.087.135 3.819 3.819 0 00-.948.411 3.52 3.52 0 00-.825.685 4.323 4.323 0 00-.624.93 3.469 3.469 0 00-.323.831 3.723 3.723 0 00-1.633.569 2.722 2.722 0 00-1.008 1.2 4 4 0 00-.327 1.627h.848a1.109 1.109 0 00.127.419 1.408 1.408 0 00.3.435 1.319 1.319 0 00.42.264 1.5 1.5 0 00.57.1 1.38 1.38 0 00.956-.332 1.469 1.469 0 00.463-.893h3.963a1.181 1.181 0 00.128.426 1.528 1.528 0 00.311.47 1.4 1.4 0 00.429.293 1.452 1.452 0 00.585.107 1.512 1.512 0 00.709-.17 1.388 1.388 0 00.53-.484 1.757 1.757 0 00.268-.634zM5.664 6.3a2.218 2.218 0 01.722-1.286 2.348 2.348 0 011.4-.615V6.3zm2.889-1.948l.1-.012h.1a2.341 2.341 0 011.526.56 2.249 2.249 0 01.819 1.4H8.553z"
             ></path>
           );
-        case Sector.ConsumerDefensive:
+        case "ConsumerDefensive":
           return (
             <path
               stroke="none"
               d="M1 1h12.967v12.967H1zm11.9 3.766l-8.94-.838-.28-1.545H1.927a.448.448 0 00-.339.143.466.466 0 00-.136.333.488.488 0 00.475.475h.987l1.2 6.516a1.317 1.317 0 00-.783.457 1.3 1.3 0 00-.321.873 1.282 1.282 0 00.4.962 1.357 1.357 0 001.9-.006 1.288 1.288 0 00.4-.957 1.274 1.274 0 00-.065-.38h5.9a.445.445 0 00.333-.142.467.467 0 00.136-.333.474.474 0 00-.469-.476H5.063L4.748 8.14l7.687-.6zm-2.023 7.706a.715.715 0 10-.5-.208.677.677 0 00.498.208z"
             ></path>
           );
-        case Sector.Energy:
+        case "Energy":
           return (
             <path
               stroke="none"
               d="M7.843 8.723a3.661 3.661 0 011.094 2.009 1.482 1.482 0 01-1.475 1.486 1.521 1.521 0 01-1.085-.439 1.377 1.377 0 01-.461-1.022 1.579 1.579 0 01.148-.625 5.9 5.9 0 01.366-.692c.145-.235.3-.467.464-.692l.448-.618zM14 1v13H1V1zm-2.874 7.788a6.306 6.306 0 00-1.079-3.454 10.8 10.8 0 00-3.059-3.026L7 2.457V2.7a4.4 4.4 0 01-.146 1.15 3.061 3.061 0 01-.407.922 3.686 3.686 0 01-.767.781 10.616 10.616 0 00-1.534 1.384 3.369 3.369 0 00-.761 2.2 3.205 3.205 0 00.547 1.754 4.021 4.021 0 001.478 1.363 3.931 3.931 0 001.917.511 3.65 3.65 0 001.932-.529 3.728 3.728 0 001.37-1.444 4.135 4.135 0 00.497-2.004z"
             ></path>
           );
-        case Sector.FinancialServices:
+        case "FinancialServices":
           return (
             <path
               stroke="none"
               d="M8 9.041a1.125 1.125 0 11-1.125-1.125A1.127 1.127 0 018 9.041zm1.875-6.125A1.125 1.125 0 1011 4.041a1.127 1.127 0 00-1.125-1.125zM14 .833v13H1v-13zm-1 4h-1.157a2.125 2.125 0 10-3.937 0H4v4h.771a2.071 2.071 0 00-.021.208 2.108 2.108 0 00.157.792H3v-4H2v5h3.744a2.106 2.106 0 001.131.333c.049 0 .1-.011.143-.014a1.482 1.482 0 00-.018.181 1.5 1.5 0 102.908-.5H12v-1H8.843A2.108 2.108 0 009 9.041a2.071 2.071 0 00-.021-.208H13z"
             ></path>
           );
-        case Sector.HealthCare:
+        case "HealthCare":
           return (
             <path
               stroke="none"
               d="M1 1.083v13h13v-13zm11 8H9v3H6v-3H3v-3h3v-3h3v3h3z"
             ></path>
           );
-        case Sector.Industrials:
+        case "Industrials":
           return (
             <path
               stroke="none"
               d="M1 1h12.976v13H1zm11.58 5.737L11.3 6.5a3.311 3.311 0 00-.428-1.011l.743-1.046-1.08-1.077-1.076.734a3.145 3.145 0 00-.969-.417L8.258 2.4H6.725l-.256 1.281a3.766 3.766 0 00-1.041.429L4.37 3.366 3.323 4.448l.7 1.082a4.223 4.223 0 00-.423.97l-1.254.232v1.527l1.278.268a3.516 3.516 0 00.4.963l-.708 1.094 1.054 1.058 1.058-.742a3.937 3.937 0 001.041.452l.256 1.278h1.533l.232-1.278a3.421 3.421 0 00.969-.4l1.076.689 1.082-1.059-.743-1.069a3.49 3.49 0 00.439-1l1.267-.256zm-5.1-1.291A2.041 2.041 0 019.524 7.5a2.068 2.068 0 01-.271 1.037 2.028 2.028 0 01-.746.761 1.979 1.979 0 01-1.028.283A2.081 2.081 0 015.393 7.5a1.954 1.954 0 01.615-1.463 2.043 2.043 0 011.471-.591z"
             ></path>
           );
-        case Sector.RealEstate:
+        case "RealEstate":
           return (
             <path
               stroke="none"
               d="M14 14H1.006V1H14zm-2.028-6.269h1.2L7.557 3.012 1.833 7.731h1.189v4.585h1.72V8.97h1.917v3.345h5.313zm-1.708 3.478H8.36V8.983h1.9z"
             ></path>
           );
-        case Sector.Technology:
+        case "Technology":
           return (
             <path
               stroke="none"
               d="M5 9h1v2H5V9zm2 1v1h1V9H7zm2.588-6.929H5.425a.492.492 0 00-.369.158.521.521 0 00-.156.371v3.812a.521.521 0 00.151.375.491.491 0 00.369.157h4.168a.534.534 0 00.369-.144.494.494 0 00.163-.384V3.6a.5.5 0 00-.16-.38.525.525 0 00-.372-.149zM14 1v13H1V1zm-1.812 8.795a.7.7 0 00-.2-.5.652.652 0 00-.494-.21H11.3V2.6a.7.7 0 00-.712-.7H4.422a.667.667 0 00-.5.207.683.683 0 00-.2.492v6.484h-.2a.678.678 0 00-.5.207.685.685 0 00-.207.5v2.22a.669.669 0 00.207.492.678.678 0 00.5.207H11.5a.651.651 0 00.491-.213.686.686 0 00.2-.486zM9 10v1h1V9H9z"
             ></path>
           );
-        case Sector.Utilities:
+        case "Utilities":
           return (
             <path
               stroke="none"

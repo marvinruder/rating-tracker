@@ -1,6 +1,5 @@
 import { FC } from "react";
-import { Size } from "src/enums/size";
-import { Style } from "src/enums/style";
+import { Size, Style } from "src/types";
 
 interface StyleBoxProps {
   size: Size;
@@ -13,23 +12,23 @@ interface StyleBoxProps {
 const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
   const getSquare = (size: Size, style: Style) => {
     switch (size) {
-      case Size.Small:
+      case "Small":
         switch (style) {
-          case Style.Value:
+          case "Value":
             return (
               <path
                 d="M1.5,9.5H5.5v4H1.5v-4Z"
                 vectorEffect="non-scaling-stroke"
               ></path>
             );
-          case Style.Blend:
+          case "Blend":
             return (
               <path
                 d="M5.5,9.5h4v4H5.5v-4Z"
                 vectorEffect="non-scaling-stroke"
               ></path>
             );
-          case Style.Growth:
+          case "Growth":
             return (
               <path
                 d="M9.5,9.5h4v4h-4v-4Z"
@@ -38,23 +37,23 @@ const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
             );
         }
 
-      case Size.Mid:
+      case "Mid":
         switch (style) {
-          case Style.Value:
+          case "Value":
             return (
               <path
                 d="M1.5,5.5H5.5v4H1.5V5.5Z"
                 vectorEffect="non-scaling-stroke"
               ></path>
             );
-          case Style.Blend:
+          case "Blend":
             return (
               <path
                 d="M5.5,5.5h4v4H5.5V5.5Z"
                 vectorEffect="non-scaling-stroke"
               ></path>
             );
-          case Style.Growth:
+          case "Growth":
             return (
               <path
                 d="M9.5,5.5h4v4h-4V5.5Z"
@@ -63,23 +62,23 @@ const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
             );
         }
 
-      case Size.Large:
+      case "Large":
         switch (style) {
-          case Style.Value:
+          case "Value":
             return (
               <path
                 d="M1.5,1.5H5.5V5.5H1.5V1.5Z"
                 vectorEffect="non-scaling-stroke"
               ></path>
             );
-          case Style.Blend:
+          case "Blend":
             return (
               <path
                 d="M5.5,1.5h4V5.5H5.5V1.5Z"
                 vectorEffect="non-scaling-stroke"
               ></path>
             );
-          case Style.Growth:
+          case "Growth":
             return (
               <path
                 d="M9.5,1.5h4V5.5h-4V1.5Z"

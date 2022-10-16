@@ -15,10 +15,10 @@ import { Fragment, useState } from "react";
 type CheckboxState = "unchecked" | "indeterminate" | "checked";
 
 const NestedCheckboxList = <
-  FirstLevelType,
-  SecondLevelType,
-  ThirdLevelType,
-  FourthLevelType
+  FirstLevelType extends string,
+  SecondLevelType extends string,
+  ThirdLevelType extends string,
+  FourthLevelType extends string
 >(
   props: NestedCheckboxListProps<
     FirstLevelType,
@@ -226,7 +226,7 @@ const NestedCheckboxList = <
       }}
     >
       {props.firstLevelElements.map((firstLevelElement) => (
-        <Fragment key={firstLevelElement as string}>
+        <Fragment key={firstLevelElement}>
           <ListItemButton
             onClick={() => clickFirstLevelCheckbox(firstLevelElement)}
             disableGutters
@@ -244,7 +244,13 @@ const NestedCheckboxList = <
                 disableRipple
               />
             </ListItemIcon>
-            <ListItemText primary={firstLevelElement as string} />
+            <ListItemText
+              primary={
+                props.firstLevelLabels
+                  ? props.firstLevelLabels[firstLevelElement]
+                  : firstLevelElement
+              }
+            />
             {props.getSecondLevelElements &&
               (openFirstLevel.includes(firstLevelElement) ? (
                 <IconButton
@@ -280,7 +286,7 @@ const NestedCheckboxList = <
                 {props
                   .getSecondLevelElements(firstLevelElement)
                   .map((secondLevelElement) => (
-                    <Fragment key={secondLevelElement as string}>
+                    <Fragment key={secondLevelElement}>
                       <ListItemButton
                         onClick={() =>
                           clickSecondLevelCheckbox(secondLevelElement)
@@ -303,7 +309,13 @@ const NestedCheckboxList = <
                             disableRipple
                           />
                         </ListItemIcon>
-                        <ListItemText primary={secondLevelElement as string} />
+                        <ListItemText
+                          primary={
+                            props.secondLevelLabels
+                              ? props.secondLevelLabels[secondLevelElement]
+                              : secondLevelElement
+                          }
+                        />
                         {props.getThirdLevelElements &&
                           (openSecondLevel.includes(secondLevelElement) ? (
                             <IconButton
@@ -342,7 +354,7 @@ const NestedCheckboxList = <
                             {props
                               .getThirdLevelElements(secondLevelElement)
                               .map((thirdLevelElement) => (
-                                <Fragment key={thirdLevelElement as string}>
+                                <Fragment key={thirdLevelElement}>
                                   <ListItemButton
                                     onClick={() =>
                                       clickThirdLevelCheckbox(thirdLevelElement)
@@ -366,7 +378,13 @@ const NestedCheckboxList = <
                                       />
                                     </ListItemIcon>
                                     <ListItemText
-                                      primary={thirdLevelElement as string}
+                                      primary={
+                                        props.thirdLevelLabels
+                                          ? props.thirdLevelLabels[
+                                              thirdLevelElement
+                                            ]
+                                          : thirdLevelElement
+                                      }
                                     />
                                     {props.getFourthLevelElements &&
                                       (openThirdLevel.includes(
@@ -415,7 +433,7 @@ const NestedCheckboxList = <
                                           )
                                           .map((fourthLevelElement) => (
                                             <ListItemButton
-                                              key={fourthLevelElement as string}
+                                              key={fourthLevelElement}
                                               onClick={() =>
                                                 clickFourthLevelCheckbox(
                                                   fourthLevelElement
@@ -438,7 +456,11 @@ const NestedCheckboxList = <
                                               </ListItemIcon>
                                               <ListItemText
                                                 primary={
-                                                  fourthLevelElement as string
+                                                  props.fourthLevelLabels
+                                                    ? props.fourthLevelLabels[
+                                                        fourthLevelElement
+                                                      ]
+                                                    : fourthLevelElement
                                                 }
                                               />
                                             </ListItemButton>
@@ -463,10 +485,10 @@ const NestedCheckboxList = <
 };
 
 interface NestedCheckboxListProps<
-  FirstLevelType,
-  SecondLevelType,
-  ThirdLevelType,
-  FourthLevelType
+  FirstLevelType extends string,
+  SecondLevelType extends string,
+  ThirdLevelType extends string,
+  FourthLevelType extends string
 > {
   selectedLastLevelElements: (
     | FirstLevelType
@@ -479,16 +501,20 @@ interface NestedCheckboxListProps<
     | React.Dispatch<React.SetStateAction<SecondLevelType[]>>
     | React.Dispatch<React.SetStateAction<ThirdLevelType[]>>
     | React.Dispatch<React.SetStateAction<FourthLevelType[]>>;
-  firstLevelElements: FirstLevelType[];
+  firstLevelElements: readonly FirstLevelType[];
+  firstLevelLabels?: Record<FirstLevelType, String>;
   getSecondLevelElements?: (
     firstLevelElement: FirstLevelType
   ) => SecondLevelType[];
+  secondLevelLabels?: Record<SecondLevelType, String>;
   getThirdLevelElements?: (
     secondLevelElement: SecondLevelType
   ) => ThirdLevelType[];
+  thirdLevelLabels?: Record<ThirdLevelType, String>;
   getFourthLevelElements?: (
     thirdLevelElement: ThirdLevelType
   ) => FourthLevelType[];
+  fourthLevelLabels?: Record<FourthLevelType, String>;
   height: number;
 }
 

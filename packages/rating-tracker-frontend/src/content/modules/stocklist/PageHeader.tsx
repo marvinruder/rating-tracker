@@ -18,26 +18,42 @@ import ClearTwoToneIcon from "@mui/icons-material/ClearTwoTone";
 import TuneTwoToneIcon from "@mui/icons-material/TuneTwoTone";
 import PublishedWithChangesTwoToneIcon from "@mui/icons-material/PublishedWithChangesTwoTone";
 import { FC, useState } from "react";
-import { Size } from "src/enums/size";
-import { Style } from "src/enums/style";
+import {
+  Country,
+  Industry,
+  IndustryGroup,
+  Region,
+  Sector,
+  Size,
+  sizeArray,
+  Style,
+  styleArray,
+  SuperRegion,
+  superRegionArray,
+  SuperSector,
+  superSectorArray,
+} from "src/types";
 import React from "react";
 import NestedCheckboxList from "src/components/NestedCheckboxList/index";
 import {
-  getRegionsInSuperRegions,
-  SuperRegion,
-} from "src/enums/regions/superregion";
-import { getCountriesInRegion, Region } from "src/enums/regions/region";
-import { Country } from "src/enums/regions/country";
-import {
-  getSectorsInSuperSector,
-  SuperSector,
-} from "src/enums/sectors/superSector";
-import { getIndustryGroupsInSector, Sector } from "src/enums/sectors/sector";
-import { Industry } from "src/enums/sectors/industry";
+  getRegionsInSuperRegion,
+  superRegionName,
+} from "src/taxonomy/regions/superregion";
+import { getCountriesInRegion, regionName } from "src/taxonomy/regions/region";
 import {
   getIndustriesInGroup,
-  IndustryGroup,
-} from "src/enums/sectors/industryGroup";
+  industryGroupName,
+} from "src/taxonomy/sectors/industryGroup";
+import {
+  getIndustryGroupsInSector,
+  sectorName,
+} from "src/taxonomy/sectors/sector";
+import {
+  getSectorsInSuperSector,
+  superSectorName,
+} from "src/taxonomy/sectors/superSector";
+import { countryNameWithFlag } from "src/taxonomy/regions/country.js";
+import { industryName } from "src/taxonomy/sectors/industry.js";
 
 const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
@@ -166,37 +182,35 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                       </IconButton>
                     </Tooltip>
                   </Grid>
-                  {Object.values(Style)
-                    .filter((style) => typeof style === "string")
-                    .map((style) => (
-                      <Grid key={style as string} xs={1} item>
-                        <Tooltip title={`All ${style}`} arrow>
-                          <IconButton
-                            sx={{
-                              m: "5px",
-                              width: "40px",
-                              height: "40px",
-                              borderRadius: 1024,
-                            }}
-                            onClick={() =>
-                              setStyleboxInput({
-                                size: undefined,
-                                style: style as Style,
-                              })
-                            }
-                          >
-                            <ArrowDropDownTwoToneIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Grid>
-                    ))}
+                  {styleArray.map((style) => (
+                    <Grid key={style} xs={1} item>
+                      <Tooltip title={`All ${style}`} arrow>
+                        <IconButton
+                          sx={{
+                            m: "5px",
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: 1024,
+                          }}
+                          onClick={() =>
+                            setStyleboxInput({
+                              size: undefined,
+                              style: style,
+                            })
+                          }
+                        >
+                          <ArrowDropDownTwoToneIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                  ))}
                   <Grid xs={1} item />
-                  {Object.values(Size)
-                    .filter((size) => typeof size === "string")
+                  {Array.from(sizeArray)
+                    .reverse()
                     .map((size) => {
                       return (
-                        <React.Fragment key={"fragment" + (size as string)}>
-                          <Grid key={size as string} xs={1} item>
+                        <React.Fragment key={"fragment" + size}>
+                          <Grid key={size} xs={1} item>
                             <Tooltip title={`All ${size}`} arrow>
                               <IconButton
                                 sx={{
@@ -207,7 +221,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                                 }}
                                 onClick={() =>
                                   setStyleboxInput({
-                                    size: size as Size,
+                                    size: size,
                                     style: undefined,
                                   })
                                 }
@@ -216,39 +230,36 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                               </IconButton>
                             </Tooltip>
                           </Grid>
-                          {Object.values(Style)
-                            .filter((style) => typeof style === "string")
-                            .map((style) => (
-                              <Tooltip
-                                title={`${size}-${style}`}
-                                key={(size as string) + (style as string)}
-                                arrow
-                              >
-                                <Grid
-                                  xs={1}
-                                  sx={{
-                                    backgroundColor:
-                                      (styleboxInput.size == size ||
-                                        !styleboxInput.size) &&
-                                      (styleboxInput.style == style ||
-                                        !styleboxInput.style) &&
-                                      (styleboxInput.size ||
-                                        styleboxInput.style)
-                                        ? theme.colors.alpha.black[100]
-                                        : theme.colors.alpha.white[100],
-                                    height: "50px",
-                                    outline: `1px solid ${theme.colors.alpha.black[100]}`,
-                                  }}
-                                  onClick={() =>
-                                    setStyleboxInput({
-                                      size: size as Size,
-                                      style: style as Style,
-                                    })
-                                  }
-                                  item
-                                />
-                              </Tooltip>
-                            ))}
+                          {styleArray.map((style) => (
+                            <Tooltip
+                              title={`${size}-${style}`}
+                              key={size + style}
+                              arrow
+                            >
+                              <Grid
+                                xs={1}
+                                sx={{
+                                  backgroundColor:
+                                    (styleboxInput.size == size ||
+                                      !styleboxInput.size) &&
+                                    (styleboxInput.style == style ||
+                                      !styleboxInput.style) &&
+                                    (styleboxInput.size || styleboxInput.style)
+                                      ? theme.colors.alpha.black[100]
+                                      : theme.colors.alpha.white[100],
+                                  height: "50px",
+                                  outline: `1px solid ${theme.colors.alpha.black[100]}`,
+                                }}
+                                onClick={() =>
+                                  setStyleboxInput({
+                                    size: size,
+                                    style: style,
+                                  })
+                                }
+                                item
+                              />
+                            </Tooltip>
+                          ))}
                           <Grid xs={1} item />
                         </React.Fragment>
                       );
@@ -259,13 +270,12 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
             <Grid item>
               <DialogTitle>Region</DialogTitle>
               <NestedCheckboxList<SuperRegion, Region, Country, never>
-                firstLevelElements={[
-                  SuperRegion.Americas,
-                  SuperRegion.EMEA,
-                  SuperRegion.Asia,
-                ]}
-                getSecondLevelElements={getRegionsInSuperRegions}
+                firstLevelElements={superRegionArray}
+                firstLevelLabels={superRegionName}
+                getSecondLevelElements={getRegionsInSuperRegion}
+                secondLevelLabels={regionName}
                 getThirdLevelElements={getCountriesInRegion}
+                thirdLevelLabels={countryNameWithFlag}
                 height={180}
                 selectedLastLevelElements={countryInput}
                 setSelectedLastLevelElements={setCountryInput}
@@ -274,14 +284,14 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
             <Grid item>
               <DialogTitle>Industry</DialogTitle>
               <NestedCheckboxList<SuperSector, Sector, IndustryGroup, Industry>
-                firstLevelElements={[
-                  SuperSector.Cyclical,
-                  SuperSector.Defensive,
-                  SuperSector.Sensitive,
-                ]}
+                firstLevelElements={superSectorArray}
+                firstLevelLabels={superSectorName}
                 getSecondLevelElements={getSectorsInSuperSector}
+                secondLevelLabels={sectorName}
                 getThirdLevelElements={getIndustryGroupsInSector}
+                thirdLevelLabels={industryGroupName}
                 getFourthLevelElements={getIndustriesInGroup}
+                fourthLevelLabels={industryName}
                 height={180}
                 selectedLastLevelElements={industryInput}
                 setSelectedLastLevelElements={setIndustryInput}

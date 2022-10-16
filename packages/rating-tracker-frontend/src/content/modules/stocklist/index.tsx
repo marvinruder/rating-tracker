@@ -5,10 +5,7 @@ import Footer from "src/components/Footer";
 
 import StocksTable, { StockFilter } from "./StocksTable";
 import { useState } from "react";
-import { Size } from "src/enums/size";
-import { Style } from "src/enums/style";
-import { Country } from "src/enums/regions/country";
-import { Industry } from "src/enums/sectors/industry";
+import { Size, Style, Country, Industry } from "src/types";
 
 function StocklistModule() {
   const [filter, setFilter] = useState<StockFilter>({});
