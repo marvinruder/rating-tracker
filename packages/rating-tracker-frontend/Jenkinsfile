@@ -14,7 +14,7 @@ node {
         }
 
         stage('Create yarn caches') {
-            nodejs(nodeJSInstallationName: 'node18') {
+            nodejs(nodeJSInstallationName: 'node19') {
                 sh 'yarn install'
             }
         }
