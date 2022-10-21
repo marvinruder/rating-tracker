@@ -235,12 +235,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/selenium-webdriver@npm:^4.1.5":
-  version: 4.1.5
-  resolution: "@types/selenium-webdriver@npm:4.1.5"
+"@types/selenium-webdriver@npm:^4.1.6":
+  version: 4.1.6
+  resolution: "@types/selenium-webdriver@npm:4.1.6"
   dependencies:
     "@types/ws": "*"
-  checksum: 30101c407e623a74201b94679b6c6e2912559c37cf64668565d09dc289b0820c80095433ae71ebb2d255f5430a20d6b90d3f3327c10d138cf7da36c917fcf257
+  checksum: e981d9a755ca093f598618c00cfa3c1f913d574b10bbb7d6d2563185f47c1a9d6f36356d747c323f6b74f23f3fd36221e95b4e5298786e8c7c82d8d4490ccd6c
   languageName: node
   linkType: hard
 
@@ -1895,7 +1895,7 @@ __metadata:
   dependencies:
     "@types/express": ^4.17.14
     "@types/node": ^18.11.0
-    "@types/selenium-webdriver": ^4.1.5
+    "@types/selenium-webdriver": ^4.1.6
     "@typescript-eslint/eslint-plugin": ^5.40.1
     "@typescript-eslint/parser": ^5.40.1
     chalk: ^5.1.2
