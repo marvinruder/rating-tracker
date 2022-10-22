@@ -1,3 +1,4 @@
+import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 import { Builder, By, Capabilities } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
@@ -54,13 +55,42 @@ class FetchController {
       );
     }
 
-    stocks = stocks.filter((stock) => stock.morningstarId);
+    stocks = stocks
+      .filter((stock) => stock.morningstarId)
+      .sort(
+        (a, b) =>
+          (a.morningstarLastFetch ?? new Date(0)).getTime() -
+          (b.morningstarLastFetch ?? new Date(0)).getTime()
+      );
     if (stocks.length === 0) {
       return res.status(204).end();
     }
+    if (req.query.detach) {
+      res.sendStatus(202);
+    }
+
     const updatedStocks: Stock[] = [];
     const driver = this.getDriver();
     for await (const stock of stocks) {
+      if (
+        !req.query.noSkip &&
+        stock.morningstarLastFetch &&
+        new Date().getTime() - stock.morningstarLastFetch.getTime() <
+          1000 * 60 * 60 * 12
+      ) {
+        console.warn(
+          chalk.yellowBright(
+            `Stock ${
+              stock.ticker
+            }: Skipping since last successful fetch was ${formatDistance(
+              stock.morningstarLastFetch.getTime(),
+              new Date().getTime(),
+              { addSuffix: true }
+            )}`
+          )
+        );
+        continue;
+      }
       let industry: Industry;
       let size: Size;
       let style: Style;
@@ -73,6 +103,7 @@ class FetchController {
           `https://tools.morningstar.co.uk/uk/stockreport/default.aspx?Site=us&id=${stock.morningstarId}&LanguageId=en-US&SecurityToken=${stock.morningstarId}]3]0]E0WWE$$ALL`
         );
 
+        let fetchSuccessful = true;
         try {
           const industryString = (
             await driver
@@ -93,6 +124,7 @@ class FetchController {
             );
           }
         } catch (e) {
+          fetchSuccessful = false;
           console.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract industry: ${e.message}`
@@ -127,6 +159,7 @@ class FetchController {
             );
           }
         } catch (e) {
+          fetchSuccessful = false;
           console.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract size and style: ${e.message}`
@@ -185,6 +218,7 @@ class FetchController {
           industry: industry,
           size: size,
           style: style,
+          morningstarLastFetch: fetchSuccessful ? new Date() : undefined,
           starRating: starRating,
           dividendYieldPercent: dividendYieldPercent,
           priceEarningRatio: priceEarningRatio,

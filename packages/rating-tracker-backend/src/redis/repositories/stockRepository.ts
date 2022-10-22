@@ -92,6 +92,7 @@ export const updateStockWithoutReindexing = async (
     size?: Size;
     style?: Style;
     morningstarId?: string;
+    morningstarLastFetch?: Date;
     starRating?: number;
     dividendYieldPercent?: number;
     priceEarningRatio?: number;
@@ -139,6 +140,18 @@ export const updateStockWithoutReindexing = async (
       stockEntity.morningstarId = updatedValues.morningstarId;
       console.log(
         chalk.greenBright(`    Morningstar ID: ${updatedValues.morningstarId}`)
+      );
+    }
+    if (
+      updatedValues.morningstarLastFetch &&
+      updatedValues.morningstarLastFetch !== stockEntity.morningstarLastFetch
+    ) {
+      isNewData = true;
+      stockEntity.morningstarLastFetch = updatedValues.morningstarLastFetch;
+      console.log(
+        chalk.greenBright(
+          `    Last successful fetch of Morningstar data: ${updatedValues.morningstarLastFetch}`
+        )
       );
     }
     if (

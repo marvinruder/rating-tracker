@@ -223,6 +223,28 @@ export const openapiDocument: OpenAPIV3.Document = {
               example: "AAPL",
             },
           },
+          {
+            in: "query",
+            name: "detach",
+            description:
+              "Whether to immediately respond to the request and detach the fetch process from it",
+            required: false,
+            schema: {
+              type: "boolean",
+              example: "false",
+            },
+          },
+          {
+            in: "query",
+            name: "noSkip",
+            description:
+              "Whether not to skip fetching date due to a recent successful fetch",
+            required: false,
+            schema: {
+              type: "boolean",
+              example: "false",
+            },
+          },
         ],
         responses: {
           "200": {
@@ -237,6 +259,10 @@ export const openapiDocument: OpenAPIV3.Document = {
                 },
               },
             },
+          },
+          "202": {
+            description: "Accepted",
+            content: {},
           },
           "204": {
             description: "No Content",

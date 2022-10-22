@@ -9,6 +9,7 @@ export class Stock {
   size?: Size;
   style?: Style;
   morningstarId?: string;
+  morningstarLastFetch?: Date;
   starRating?: number;
   dividendYieldPercent?: number;
   priceEarningRatio?: number;
@@ -31,6 +32,9 @@ export class Stock {
     if (stockEntity.morningstarId != null) {
       this.morningstarId = stockEntity.morningstarId;
     }
+    if (stockEntity.morningstarLastFetch != null) {
+      this.morningstarLastFetch = stockEntity.morningstarLastFetch;
+    }
     if (stockEntity.starRating != null) {
       this.starRating = stockEntity.starRating;
     }
@@ -51,6 +55,7 @@ export class Stock {
       size: stock.size as string,
       style: stock.style as string,
       morningstarId: stock.morningstarId,
+      morningstarLastFetch: stock.morningstarLastFetch,
       starRating: stock.starRating,
       dividendYieldPercent: stock.dividendYieldPercent,
       priceEarningRatio: stock.priceEarningRatio,
@@ -66,6 +71,7 @@ export interface StockEntity {
   size: string;
   style: string;
   morningstarId: string;
+  morningstarLastFetch: Date;
   starRating: number;
   dividendYieldPercent: number;
   priceEarningRatio: number;
@@ -81,6 +87,7 @@ export const stockSchema = new Schema(StockEntity, {
   size: { type: "string" },
   style: { type: "string" },
   morningstarId: { type: "string" },
+  morningstarLastFetch: { type: "date" },
   starRating: { type: "number" },
   dividendYieldPercent: { type: "number" },
   priceEarningRatio: { type: "number" },
