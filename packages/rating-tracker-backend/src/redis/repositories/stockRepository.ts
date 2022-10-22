@@ -1,5 +1,5 @@
 import APIError from "../../apiError.js";
-import { Stock, stockSchema } from "../../models/stock.js";
+import { Stock, StockEntity, stockSchema } from "../../models/stock.js";
 import client from "../Client.js";
 import chalk from "chalk";
 import { Country, Industry, Size, Style } from "../../types.js";
@@ -31,28 +31,29 @@ export const indexStockRepository = async () => {
 };
 
 export const createStockWithoutReindexing = async (stock: Stock) => {
-  let entityID;
+  let existingStock: StockEntity;
   try {
-    entityID = await stockRepository
-      .search()
-      .where("ticker")
-      .equals(stock.ticker)
-      .firstId();
+    existingStock = await stockRepository.fetch(stock.ticker);
   } catch (e) {
-    entityID = undefined;
+    existingStock = undefined;
   }
-  if (entityID) {
+  if (existingStock && existingStock.name) {
     console.warn(
       chalk.yellowBright(
-        `Skipping stock “${stock.name}” – existing already (entity ID ${entityID}).`
+        `Skipping stock “${stock.name}” – existing already (entity ID ${existingStock.entityId}).`
       )
     );
   } else {
+    const stockEntity = new StockEntity(
+      stockSchema,
+      stock.ticker,
+      Stock.getDataForEntity(stock)
+    );
     console.log(
       chalk.greenBright(
-        `Created stock “${stock.name}” with entity ID ${
-          (await stockRepository.createAndSave(Stock.toJSON(stock))).entityId
-        }.`
+        `Created stock “${
+          stock.name
+        }” with entity ID ${await stockRepository.save(stockEntity)}.`
       )
     );
   }
@@ -64,12 +65,8 @@ export const createStock = async (stock: Stock) => {
 };
 
 export const readStock = async (ticker: string) => {
-  const stockEntity = await stockRepository
-    .search()
-    .where("ticker")
-    .equals(ticker)
-    .first();
-  if (stockEntity) {
+  const stockEntity = await stockRepository.fetch(ticker);
+  if (stockEntity && stockEntity.name) {
     return new Stock(stockEntity);
   } else {
     throw new APIError(404, `Stock ${ticker} not found.`);
@@ -98,12 +95,8 @@ export const updateStockWithoutReindexing = async (
     priceEarningRatio?: number;
   }
 ) => {
-  const stockEntity = await stockRepository
-    .search()
-    .where("ticker")
-    .equals(ticker)
-    .first();
-  if (stockEntity) {
+  const stockEntity = await stockRepository.fetch(ticker);
+  if (stockEntity && stockEntity.name) {
     console.log(chalk.greenBright(`Updating stock ${ticker}…`));
     let isNewData = false;
     if (
@@ -206,6 +199,7 @@ export const updateStock = async (
     size?: Size;
     style?: Style;
     morningstarId?: string;
+    morningstarLastFetch?: Date;
     starRating?: number;
     dividendYieldPercent?: number;
     priceEarningRatio?: number;
@@ -216,12 +210,8 @@ export const updateStock = async (
 };
 
 export const deleteStockWithoutReindexing = async (ticker: string) => {
-  const stockEntity = await stockRepository
-    .search()
-    .where("ticker")
-    .equals(ticker)
-    .first();
-  if (stockEntity) {
+  const stockEntity = await stockRepository.fetch(ticker);
+  if (stockEntity && stockEntity.name) {
     const name = new Stock(stockEntity).name;
     await stockRepository.remove(stockEntity.entityId);
     console.log(

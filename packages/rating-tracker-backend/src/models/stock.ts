@@ -15,7 +15,7 @@ export class Stock {
   priceEarningRatio?: number;
 
   constructor(stockEntity: StockEntity) {
-    this.ticker = stockEntity.ticker;
+    this.ticker = stockEntity.entityId;
     this.name = stockEntity.name;
     if (stockEntity.country != null) {
       this.country = stockEntity.country as Country;
@@ -46,9 +46,8 @@ export class Stock {
     }
   }
 
-  static toJSON = (stock: Stock) => {
+  static getDataForEntity = (stock: Stock) => {
     return {
-      ticker: stock.ticker,
       name: stock.name,
       country: stock.country as string,
       industry: stock.industry as string,
@@ -64,7 +63,6 @@ export class Stock {
 }
 
 export interface StockEntity {
-  ticker: string;
   name: string;
   country: string;
   industry: string;
@@ -80,7 +78,6 @@ export interface StockEntity {
 export class StockEntity extends Entity {}
 
 export const stockSchema = new Schema(StockEntity, {
-  ticker: { type: "string" },
   name: { type: "text", sortable: true },
   country: { type: "string" },
   industry: { type: "string" },
