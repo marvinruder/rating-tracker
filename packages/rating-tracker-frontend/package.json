@@ -36,7 +36,7 @@
     "@mui/lab": "^5.0.0-alpha.105",
     "@mui/material": "^5.10.11",
     "@types/react": "^18.0.24",
-    "@types/react-dom": "^18.0.7",
+    "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "^2.2.0",
     "apexcharts": "^3.36.0",
     "axios": "^1.1.3",
