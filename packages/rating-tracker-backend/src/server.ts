@@ -13,6 +13,7 @@ dotenv.config({
   path: ".env.local",
 });
 
+/* istanbul ignore next */
 const PORT = process.env.PORT || 3000;
 
 class Server {
@@ -20,8 +21,9 @@ class Server {
   public router = MainRouter;
 }
 
-const server = new Server();
+export const server = new Server();
 
+/* istanbul ignore next */
 const highlightMethod = (method: string) => {
   switch (method) {
     case "GET":
@@ -41,6 +43,7 @@ const highlightMethod = (method: string) => {
   }
 };
 
+/* istanbul ignore next */
 const statusCodeDescription = (statusCode: number) => {
   const statusCodeString = ` ${statusCode}  ${STATUS_CODES[statusCode]} `;
   switch (Math.floor(statusCode / 100)) {
@@ -64,9 +67,8 @@ server.app.use(
       chalk.whiteBright.bgRed(" \ue76d ") + chalk.red(""),
       new Date().toISOString(),
       req.headers["x-forwarded-for"] || req.socket.remoteAddress,
-      req.headers.host
-    );
-    console.log(
+      req.headers.host,
+      "\n",
       "├─",
       highlightMethod(req.method) +
         chalk.bgGrey(
@@ -80,14 +82,13 @@ server.app.use(
             .replaceAll("/", "  ")} `
         ) +
         chalk.grey(""),
-      JSON.stringify(req.query)
-    );
-    console.log(
+      JSON.stringify(req.query),
+      "\n",
       "╰─",
       statusCodeDescription(res.statusCode),
-      `after ${Math.round(time)} ms`
+      `after ${Math.round(time)} ms`,
+      "\n"
     );
-    console.log();
   })
 );
 
@@ -114,7 +115,7 @@ server.app.use((err, req, res, next) => {
   });
 });
 
-server.app.listen(PORT, () =>
+export const listener = server.app.listen(PORT, () =>
   console.log(
     chalk.whiteBright.bgRed(" \ue76d ") +
       chalk.red.bgGrey("") +

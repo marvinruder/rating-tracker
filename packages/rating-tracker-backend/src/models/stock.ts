@@ -45,21 +45,6 @@ export class Stock {
       this.priceEarningRatio = stockEntity.priceEarningRatio;
     }
   }
-
-  static getDataForEntity = (stock: Stock) => {
-    return {
-      name: stock.name,
-      country: stock.country as string,
-      industry: stock.industry as string,
-      size: stock.size as string,
-      style: stock.style as string,
-      morningstarId: stock.morningstarId,
-      morningstarLastFetch: stock.morningstarLastFetch,
-      starRating: stock.starRating,
-      dividendYieldPercent: stock.dividendYieldPercent,
-      priceEarningRatio: stock.priceEarningRatio,
-    };
-  };
 }
 
 export interface StockEntity {

@@ -1,0 +1,10 @@
+FROM node:alpine as test
+ENV FORCE_COLOR true
+
+WORKDIR /app
+
+COPY . .
+RUN yarn install
+RUN yarn test
+
+ENTRYPOINT [ "/bin/sh" ]

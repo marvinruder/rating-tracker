@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Request, Response, Router } from "express";
 import FetchController from "../../controllers/FetchController.js";
 import "express-async-errors";

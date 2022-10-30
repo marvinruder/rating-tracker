@@ -1,15 +1,10 @@
+/* istanbul ignore file */
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 import { Builder, By, Capabilities } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
 import APIError from "../apiError.js";
 import { Stock } from "../models/stock.js";
-import {
-  indexStockRepository,
-  readAllStocks,
-  readStock,
-  updateStockWithoutReindexing,
-} from "../redis/repositories/stockRepository.js";
 import chalk from "chalk";
 import {
   Industry,
@@ -19,6 +14,12 @@ import {
   Size,
   Style,
 } from "../types.js";
+import {
+  indexStockRepository,
+  readAllStocks,
+  readStock,
+  updateStockWithoutReindexing,
+} from "../redis/repositories/stockRepository.js";
 
 class FetchController {
   getDriver() {

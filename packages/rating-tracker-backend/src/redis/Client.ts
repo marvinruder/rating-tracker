@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import chalk from "chalk";
 import dotenv from "dotenv";
 import { createClient } from "redis";
@@ -9,7 +10,7 @@ dotenv.config({
 
 const url = process.env.REDIS_URL || "redis://redis:6379";
 
-const redis = createClient({ url: url });
+export const redis = createClient({ url: url });
 redis.on("error", (err) =>
   console.error(chalk.redBright(`Redis Client: ${err}`))
 );

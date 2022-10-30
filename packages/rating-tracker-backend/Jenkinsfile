@@ -19,6 +19,20 @@ node {
             }
         }
 
+        stage ('Run Tests') {
+            docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
+            sh """
+            id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
+            docker cp \$id:/app/coverage .
+            docker rm -v \$id
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x ./codecov
+            """
+            withCredentials([string(credentialsId: 'codecov-token-backend', variable: 'CODECOV_TOKEN')]) {
+                sh "./codecov -s coverage -C $GIT_COMMIT_HASH"
+            }
+        }
+
         def image
 
         stage ('Build Docker Image') {
