@@ -30,7 +30,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@jest/globals", "npm:29.2.2"],\
             ["@types/express", "npm:4.17.14"],\
-            ["@types/jest", "npm:29.2.0"],\
+            ["@types/jest", "npm:29.2.1"],\
             ["@types/node", "npm:18.11.8"],\
             ["@types/selenium-webdriver", "npm:4.1.6"],\
             ["@types/supertest", "npm:2.0.12"],\
@@ -1672,10 +1672,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/jest", [\
-        ["npm:29.2.0", {\
-          "packageLocation": "./.yarn/cache/@types-jest-npm-29.2.0-08120e58d2-6779e63d8d.zip/node_modules/@types/jest/",\
+        ["npm:29.2.1", {\
+          "packageLocation": "./.yarn/cache/@types-jest-npm-29.2.1-36a85a6f8e-5610c9a44c.zip/node_modules/@types/jest/",\
           "packageDependencies": [\
-            ["@types/jest", "npm:29.2.0"],\
+            ["@types/jest", "npm:29.2.1"],\
             ["expect", "npm:29.2.2"],\
             ["pretty-format", "npm:29.2.1"]\
           ],\
@@ -6089,7 +6089,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rating-tracker-backend", "workspace:."],\
             ["@jest/globals", "npm:29.2.2"],\
             ["@types/express", "npm:4.17.14"],\
-            ["@types/jest", "npm:29.2.0"],\
+            ["@types/jest", "npm:29.2.1"],\
             ["@types/node", "npm:18.11.8"],\
             ["@types/selenium-webdriver", "npm:4.1.6"],\
             ["@types/supertest", "npm:2.0.12"],\
@@ -6857,7 +6857,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel-jest", null],\
             ["@types/babel__core", null],\
             ["@types/esbuild", null],\
-            ["@types/jest", "npm:29.2.0"],\
+            ["@types/jest", "npm:29.2.1"],\
             ["@types/jest__types", null],\
             ["@types/typescript", null],\
             ["babel-jest", null],\
