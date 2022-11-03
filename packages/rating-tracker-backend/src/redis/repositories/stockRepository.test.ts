@@ -1,6 +1,11 @@
 import { jest } from "@jest/globals";
 
 jest.unstable_mockModule(
+  "../../signal/signalBase",
+  async () => await import("../../signal/__mocks__/signalBase")
+);
+
+jest.unstable_mockModule(
   "./stockRepositoryBase",
   async () => await import("./__mocks__/stockRepositoryBase")
 );
@@ -8,8 +13,13 @@ jest.unstable_mockModule(
 const { createStock, readStock, updateStock, deleteStock } = await import(
   "./stockRepository"
 );
+import dotenv from "dotenv";
 import { initMockRepository } from "./__mocks__/stockRepositoryBase";
 import { Stock } from "../../models/stock";
+
+dotenv.config({
+  path: ".env.local",
+});
 
 beforeAll((done) => {
   initMockRepository();

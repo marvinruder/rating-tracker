@@ -115,7 +115,7 @@ server.app.use((err, req, res, next) => {
   });
 });
 
-export const listener = server.app.listen(PORT, () =>
+export const listener = server.app.listen(PORT, () => {
   console.log(
     chalk.whiteBright.bgRed(" \ue76d ") +
       chalk.red.bgGrey("") +
@@ -123,5 +123,5 @@ export const listener = server.app.listen(PORT, () =>
       chalk.grey("") +
       chalk.green(" Listening…") +
       "\n"
-  )
-);
+  );
+});

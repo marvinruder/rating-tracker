@@ -3,6 +3,7 @@ import { Stock, StockEntity, stockSchema } from "../../models/stock.js";
 import { fetch, fetchAll, index, remove, save } from "./stockRepositoryBase.js";
 import chalk from "chalk";
 import { Country, Industry, Size, Style } from "../../types.js";
+import { sendMessage } from "../../signal/signal.js";
 
 export const indexStockRepository = () => {
   index();
@@ -55,6 +56,7 @@ export const updateStockWithoutReindexing = async (
   let k: keyof typeof newValues;
   const stockEntity = await fetch(ticker);
   if (stockEntity && stockEntity.name) {
+    let signalMessage = `Updates for ${stockEntity.name} (${ticker}):`;
     console.log(chalk.greenBright(`Updating stock ${ticker}…`));
     let isNewData = false;
     for (k in newValues) {
@@ -66,6 +68,29 @@ export const updateStockWithoutReindexing = async (
               `    Property ${k} updated from ${stockEntity[k]} to ${newValues[k]}`
             )
           );
+          switch (k) {
+            case "starRating":
+              signalMessage += `\n\tStar Rating changed from ${
+                "★".repeat(stockEntity[k] ?? 0) +
+                "☆".repeat(5 - stockEntity[k] ?? 0)
+              } to ${
+                "★".repeat(newValues[k] ?? 0) +
+                "☆".repeat(5 - newValues[k] ?? 0)
+              }`;
+              break;
+            // case "dividendYieldPercent":
+            //   signalMessage += `\n\tDividend Yield changed from ${
+            //     stockEntity[k] ?? 0
+            //   } % to ${newValues[k] ?? 0} %`;
+            //   break;
+            // case "priceEarningRatio":
+            //   signalMessage += `\n\tPrice/Earning ratio changed from ${
+            //     stockEntity[k] ?? 0
+            //   } to ${newValues[k] ?? 0}`;
+            //   break;
+            default:
+              break;
+          }
           switch (k) {
             case "country":
             case "industry":
@@ -91,6 +116,9 @@ export const updateStockWithoutReindexing = async (
     }
     if (isNewData) {
       await save(stockEntity);
+      if (signalMessage.includes("\n")) {
+        sendMessage(signalMessage);
+      }
     } else {
       console.log(chalk.grey(`No updates for stock ${ticker}.`));
     }

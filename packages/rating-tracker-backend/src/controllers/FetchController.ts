@@ -20,6 +20,7 @@ import {
   readStock,
   updateStockWithoutReindexing,
 } from "../redis/repositories/stockRepository.js";
+import { sendMessage } from "../signal/signal.js";
 
 class FetchController {
   getDriver() {
@@ -131,6 +132,9 @@ class FetchController {
               `Stock ${stock.ticker}: Unable to extract industry: ${e.message}`
             )
           );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract industry: ${e.message}`
+          );
         }
 
         try {
@@ -166,6 +170,9 @@ class FetchController {
               `Stock ${stock.ticker}: Unable to extract size and style: ${e.message}`
             )
           );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract size and style: ${e.message}`
+          );
         }
 
         try {
@@ -193,10 +200,14 @@ class FetchController {
             dividendYieldPercent = 0;
           }
         } catch (e) {
+          fetchSuccessful = false;
           console.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract dividend yield: ${e.message}`
             )
+          );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract dividend yield: ${e.message}`
           );
         }
 
@@ -208,10 +219,14 @@ class FetchController {
             priceEarningRatio = 0;
           }
         } catch (e) {
+          fetchSuccessful = false;
           console.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e.message}`
             )
+          );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e.message}`
           );
         }
 
@@ -236,6 +251,9 @@ class FetchController {
           chalk.yellowBright(
             `Stock ${stock.ticker}: Unable to fetch Morningstar information: ${e.message}`
           )
+        );
+        sendMessage(
+          `Stock ${stock.ticker}: Unable to fetch Morningstar information: ${e.message}`
         );
       }
     }
