@@ -1,3 +1,4 @@
+import * as cron from "cron";
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import cors from "cors";
@@ -8,6 +9,7 @@ import * as OpenApiValidator from "express-openapi-validator";
 import chalk from "chalk";
 import responseTime from "response-time";
 import { STATUS_CODES } from "http";
+import axios from "axios";
 
 dotenv.config({
   path: ".env.local",
@@ -114,6 +116,28 @@ server.app.use((err, req, res, next) => {
     errors: err.errors,
   });
 });
+
+/* istanbul ignore next */
+if (process.env.AUTO_FETCH_SCHEDULE) {
+  new cron.CronJob(
+    process.env.AUTO_FETCH_SCHEDULE,
+    () => {
+      axios.get(`http://localhost:${PORT}/api/fetch/morningstar`, {
+        params: { detach: "true" },
+      });
+    },
+    null,
+    true
+  );
+  console.log(
+    chalk.whiteBright.bgGrey(` Auto Fetch activated `) +
+      chalk.grey("") +
+      chalk.green(
+        " This instance will periodically fetch information from data providers for all known stocks."
+      ) +
+      "\n"
+  );
+}
 
 export const listener = server.app.listen(PORT, () => {
   console.log(

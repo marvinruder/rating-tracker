@@ -29,6 +29,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@jest/globals", "npm:29.2.2"],\
+            ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.14"],\
             ["@types/jest", "npm:29.2.1"],\
             ["@types/node", "npm:18.11.9"],\
@@ -39,6 +40,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:1.1.3"],\
             ["chalk", "npm:5.1.2"],\
             ["cors", "npm:2.8.5"],\
+            ["cron", "npm:2.1.0"],\
             ["date-fns", "npm:2.29.3"],\
             ["dotenv", "npm:16.0.3"],\
             ["eslint", "npm:8.26.0"],\
@@ -1608,6 +1610,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/cron", [\
+        ["npm:2.0.0", {\
+          "packageLocation": "./.yarn/cache/@types-cron-npm-2.0.0-ea513eeeaf-392d2cfca5.zip/node_modules/@types/cron/",\
+          "packageDependencies": [\
+            ["@types/cron", "npm:2.0.0"],\
+            ["@types/luxon", "npm:3.0.2"],\
+            ["@types/node", "npm:18.11.9"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/express", [\
         ["npm:4.17.14", {\
           "packageLocation": "./.yarn/cache/@types-express-npm-4.17.14-076e1b4711-15c1af46d0.zip/node_modules/@types/express/",\
@@ -1688,6 +1701,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-json-schema-npm-7.0.11-79462ae5ca-527bddfe62.zip/node_modules/@types/json-schema/",\
           "packageDependencies": [\
             ["@types/json-schema", "npm:7.0.11"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/luxon", [\
+        ["npm:3.0.2", {\
+          "packageLocation": "./.yarn/cache/@types-luxon-npm-3.0.2-f4ac799a84-e47e199c5d.zip/node_modules/@types/luxon/",\
+          "packageDependencies": [\
+            ["@types/luxon", "npm:3.0.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2932,6 +2954,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/create-require-npm-1.1.1-839884ca2e-a9a1503d43.zip/node_modules/create-require/",\
           "packageDependencies": [\
             ["create-require", "npm:1.1.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["cron", [\
+        ["npm:2.1.0", {\
+          "packageLocation": "./.yarn/cache/cron-npm-2.1.0-80a1fa89dd-9395875c09.zip/node_modules/cron/",\
+          "packageDependencies": [\
+            ["cron", "npm:2.1.0"],\
+            ["luxon", "npm:1.28.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5262,6 +5294,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["luxon", [\
+        ["npm:1.28.0", {\
+          "packageLocation": "./.yarn/cache/luxon-npm-1.28.0-51c0607a71-5250cb9f13.zip/node_modules/luxon/",\
+          "packageDependencies": [\
+            ["luxon", "npm:1.28.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["make-dir", [\
         ["npm:3.1.0", {\
           "packageLocation": "./.yarn/cache/make-dir-npm-3.1.0-d1d7505142-484200020a.zip/node_modules/make-dir/",\
@@ -6125,6 +6166,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["rating-tracker-backend", "workspace:."],\
             ["@jest/globals", "npm:29.2.2"],\
+            ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.14"],\
             ["@types/jest", "npm:29.2.1"],\
             ["@types/node", "npm:18.11.9"],\
@@ -6135,6 +6177,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:1.1.3"],\
             ["chalk", "npm:5.1.2"],\
             ["cors", "npm:2.8.5"],\
+            ["cron", "npm:2.1.0"],\
             ["date-fns", "npm:2.29.3"],\
             ["dotenv", "npm:16.0.3"],\
             ["eslint", "npm:8.26.0"],\

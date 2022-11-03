@@ -15,7 +15,7 @@ console.log(
     `Stock Repository is now fetched and indexed (${await stockRepository
       .search()
       .count()} stocks available).`
-  )
+  ) + "\n"
 );
 
 export const index = async () => {
@@ -25,7 +25,7 @@ export const index = async () => {
       `Stock Repository is now freshly indexed (${await stockRepository
         .search()
         .count()} stocks available).`
-    )
+    ) + "\n"
   );
 };
 
