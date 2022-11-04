@@ -55,7 +55,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["redis", "npm:4.4.0"],\
             ["redis-om", "npm:0.3.6"],\
             ["response-time", "npm:2.3.2"],\
-            ["selenium-webdriver", "npm:4.5.0"],\
+            ["selenium-webdriver", "npm:4.6.0"],\
             ["supertest", "npm:6.3.1"],\
             ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.5.0"],\
             ["ts-jest", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:29.0.3"],\
@@ -6192,7 +6192,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["redis", "npm:4.4.0"],\
             ["redis-om", "npm:0.3.6"],\
             ["response-time", "npm:2.3.2"],\
-            ["selenium-webdriver", "npm:4.5.0"],\
+            ["selenium-webdriver", "npm:4.6.0"],\
             ["supertest", "npm:6.3.1"],\
             ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.5.0"],\
             ["ts-jest", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:29.0.3"],\
@@ -6416,13 +6416,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["selenium-webdriver", [\
-        ["npm:4.5.0", {\
-          "packageLocation": "./.yarn/cache/selenium-webdriver-npm-4.5.0-3fd9e5635d-00efa4b3c5.zip/node_modules/selenium-webdriver/",\
+        ["npm:4.6.0", {\
+          "packageLocation": "./.yarn/unplugged/selenium-webdriver-npm-4.6.0-8d9d4ede3c/node_modules/selenium-webdriver/",\
           "packageDependencies": [\
-            ["selenium-webdriver", "npm:4.5.0"],\
+            ["selenium-webdriver", "npm:4.6.0"],\
             ["jszip", "npm:3.10.1"],\
             ["tmp", "npm:0.2.1"],\
-            ["ws", "virtual:3fd9e5635df00f04183a37a01fb3fa87379cb152b4863dd34e1830bac3835ff57771cc55c2fc6a51dc95dd79b06e8626c8e8fafddcc9daa759c4a4b0f0838847#npm:8.10.0"]\
+            ["ws", "virtual:8d9d4ede3c489f4ecf51b50ae9061e4a348733871f414240be0d8cabf5ec81676121dc17e9716e45c077e1b612381fd40b29f86e1920edf3c7231bab4ac36c49#npm:8.10.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -7325,10 +7325,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:3fd9e5635df00f04183a37a01fb3fa87379cb152b4863dd34e1830bac3835ff57771cc55c2fc6a51dc95dd79b06e8626c8e8fafddcc9daa759c4a4b0f0838847#npm:8.10.0", {\
-          "packageLocation": "./.yarn/__virtual__/ws-virtual-0880126893/0/cache/ws-npm-8.10.0-053bb23547-3a32e15dff.zip/node_modules/ws/",\
+        ["virtual:8d9d4ede3c489f4ecf51b50ae9061e4a348733871f414240be0d8cabf5ec81676121dc17e9716e45c077e1b612381fd40b29f86e1920edf3c7231bab4ac36c49#npm:8.10.0", {\
+          "packageLocation": "./.yarn/__virtual__/ws-virtual-7a9b8df9e8/0/cache/ws-npm-8.10.0-053bb23547-3a32e15dff.zip/node_modules/ws/",\
           "packageDependencies": [\
-            ["ws", "virtual:3fd9e5635df00f04183a37a01fb3fa87379cb152b4863dd34e1830bac3835ff57771cc55c2fc6a51dc95dd79b06e8626c8e8fafddcc9daa759c4a4b0f0838847#npm:8.10.0"],\
+            ["ws", "virtual:8d9d4ede3c489f4ecf51b50ae9061e4a348733871f414240be0d8cabf5ec81676121dc17e9716e45c077e1b612381fd40b29f86e1920edf3c7231bab4ac36c49#npm:8.10.0"],\
             ["@types/bufferutil", null],\
             ["@types/utf-8-validate", null],\
             ["bufferutil", null],\
