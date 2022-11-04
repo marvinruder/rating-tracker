@@ -31,7 +31,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/globals", "npm:29.2.2"],\
             ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.14"],\
-            ["@types/jest", "npm:29.2.1"],\
+            ["@types/jest", "npm:29.2.2"],\
             ["@types/node", "npm:18.11.9"],\
             ["@types/selenium-webdriver", "npm:4.1.7"],\
             ["@types/supertest", "npm:2.0.12"],\
@@ -1686,10 +1686,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/jest", [\
-        ["npm:29.2.1", {\
-          "packageLocation": "./.yarn/cache/@types-jest-npm-29.2.1-36a85a6f8e-5610c9a44c.zip/node_modules/@types/jest/",\
+        ["npm:29.2.2", {\
+          "packageLocation": "./.yarn/cache/@types-jest-npm-29.2.2-563a51378d-13b1a48858.zip/node_modules/@types/jest/",\
           "packageDependencies": [\
-            ["@types/jest", "npm:29.2.1"],\
+            ["@types/jest", "npm:29.2.2"],\
             ["expect", "npm:29.2.2"],\
             ["pretty-format", "npm:29.2.1"]\
           ],\
@@ -6168,7 +6168,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/globals", "npm:29.2.2"],\
             ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.14"],\
-            ["@types/jest", "npm:29.2.1"],\
+            ["@types/jest", "npm:29.2.2"],\
             ["@types/node", "npm:18.11.9"],\
             ["@types/selenium-webdriver", "npm:4.1.7"],\
             ["@types/supertest", "npm:2.0.12"],\
@@ -6938,7 +6938,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel-jest", null],\
             ["@types/babel__core", null],\
             ["@types/esbuild", null],\
-            ["@types/jest", "npm:29.2.1"],\
+            ["@types/jest", "npm:29.2.2"],\
             ["@types/jest__types", null],\
             ["@types/typescript", null],\
             ["babel-jest", null],\
