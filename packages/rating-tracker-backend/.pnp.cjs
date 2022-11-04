@@ -33,7 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/express", "npm:4.17.14"],\
             ["@types/jest", "npm:29.2.2"],\
             ["@types/node", "npm:18.11.9"],\
-            ["@types/selenium-webdriver", "npm:4.1.7"],\
+            ["@types/selenium-webdriver", "npm:4.1.8"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@typescript-eslint/eslint-plugin", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:5.42.0"],\
             ["@typescript-eslint/parser", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:5.42.0"],\
@@ -1770,10 +1770,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/selenium-webdriver", [\
-        ["npm:4.1.7", {\
-          "packageLocation": "./.yarn/cache/@types-selenium-webdriver-npm-4.1.7-9bd456886f-3692afb66d.zip/node_modules/@types/selenium-webdriver/",\
+        ["npm:4.1.8", {\
+          "packageLocation": "./.yarn/cache/@types-selenium-webdriver-npm-4.1.8-9bef3c6a6b-312b099f92.zip/node_modules/@types/selenium-webdriver/",\
           "packageDependencies": [\
-            ["@types/selenium-webdriver", "npm:4.1.7"],\
+            ["@types/selenium-webdriver", "npm:4.1.8"],\
             ["@types/ws", "npm:8.5.3"]\
           ],\
           "linkType": "HARD"\
@@ -6170,7 +6170,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/express", "npm:4.17.14"],\
             ["@types/jest", "npm:29.2.2"],\
             ["@types/node", "npm:18.11.9"],\
-            ["@types/selenium-webdriver", "npm:4.1.7"],\
+            ["@types/selenium-webdriver", "npm:4.1.8"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@typescript-eslint/eslint-plugin", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:5.42.0"],\
             ["@typescript-eslint/parser", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:5.42.0"],\
