@@ -12,10 +12,8 @@
     "node": "^19.0.0"
   },
   "scripts": {
-    "dev:start": "tsc && node --watch dist/src/server.js",
-    "dev:build": "tsc --watch",
-    "dev:test": "yarn node --experimental-vm-modules $(yarn bin jest) --watch --runInBand",
-    "start": "node dist/src/server.js",
+    "start": "concurrently \"tsc --watch\" \"node --watch dist/src/server.js\"",
+    "test:watch": "yarn node --experimental-vm-modules $(yarn bin jest) --watch --runInBand",
     "build": "tsc --project tsconfig.build.json",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand --coverage",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
@@ -48,6 +46,7 @@
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
+    "concurrently": "^7.5.0",
     "eslint": "^8.26.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.5.0",
