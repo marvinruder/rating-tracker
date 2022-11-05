@@ -42,7 +42,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/eslint-plugin", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:5.42.0"],\
             ["@typescript-eslint/parser", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:5.42.0"],\
             ["@vitejs/plugin-react", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.2.0"],\
-            ["apexcharts", "npm:3.36.1"],\
+            ["apexcharts", "npm:3.36.3"],\
             ["axios", "npm:1.1.3"],\
             ["clsx", "npm:1.2.1"],\
             ["date-fns", "npm:2.29.3"],\
@@ -4362,10 +4362,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["apexcharts", [\
-        ["npm:3.36.1", {\
-          "packageLocation": "./.yarn/cache/apexcharts-npm-3.36.1-a30019500c-4c45ea121a.zip/node_modules/apexcharts/",\
+        ["npm:3.36.3", {\
+          "packageLocation": "./.yarn/cache/apexcharts-npm-3.36.3-5f3c11de37-2b92f123cf.zip/node_modules/apexcharts/",\
           "packageDependencies": [\
-            ["apexcharts", "npm:3.36.1"],\
+            ["apexcharts", "npm:3.36.3"],\
             ["svg.draggable.js", "npm:2.2.2"],\
             ["svg.easing.js", "npm:2.0.0"],\
             ["svg.filter.js", "npm:2.0.2"],\
@@ -7262,7 +7262,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/eslint-plugin", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:5.42.0"],\
             ["@typescript-eslint/parser", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:5.42.0"],\
             ["@vitejs/plugin-react", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.2.0"],\
-            ["apexcharts", "npm:3.36.1"],\
+            ["apexcharts", "npm:3.36.3"],\
             ["axios", "npm:1.1.3"],\
             ["clsx", "npm:1.2.1"],\
             ["date-fns", "npm:2.29.3"],\
@@ -7314,7 +7314,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-apexcharts", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:1.4.0"],\
             ["@types/apexcharts", null],\
             ["@types/react", "npm:18.0.25"],\
-            ["apexcharts", "npm:3.36.1"],\
+            ["apexcharts", "npm:3.36.3"],\
             ["prop-types", "npm:15.8.1"],\
             ["react", "npm:18.2.0"]\
           ],\
