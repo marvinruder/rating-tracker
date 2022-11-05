@@ -1,4 +1,4 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["src/**/*.test.ts", "jest.config.ts"]
+  "exclude": ["dist", "src/**/*.test.ts", "jest.config.ts"]
 }
