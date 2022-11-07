@@ -52,7 +52,7 @@
     "react-router": "^6.4.3",
     "react-router-dom": "^6.4.3",
     "src": "link:./src",
-    "vite": "^3.2.2",
+    "vite": "^3.2.3",
     "vite-plugin-svgr": "^2.2.2",
     "vite-tsconfig-paths": "^3.5.2"
   },
