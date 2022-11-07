@@ -58,7 +58,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["response-time", "npm:2.3.2"],\
             ["selenium-webdriver", "npm:4.6.0"],\
             ["supertest", "npm:6.3.1"],\
-            ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.5.0"],\
+            ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.6.0"],\
             ["ts-jest", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:29.0.3"],\
             ["ts-node", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"]\
@@ -6223,7 +6223,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["response-time", "npm:2.3.2"],\
             ["selenium-webdriver", "npm:4.6.0"],\
             ["supertest", "npm:6.3.1"],\
-            ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.5.0"],\
+            ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.6.0"],\
             ["ts-jest", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:29.0.3"],\
             ["ts-node", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"]\
@@ -6873,17 +6873,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["swagger-ui-express", [\
-        ["npm:4.5.0", {\
-          "packageLocation": "./.yarn/cache/swagger-ui-express-npm-4.5.0-bb65f0369a-67f1725bce.zip/node_modules/swagger-ui-express/",\
+        ["npm:4.6.0", {\
+          "packageLocation": "./.yarn/cache/swagger-ui-express-npm-4.6.0-e6d70a5883-8e5e2bf431.zip/node_modules/swagger-ui-express/",\
           "packageDependencies": [\
-            ["swagger-ui-express", "npm:4.5.0"]\
+            ["swagger-ui-express", "npm:4.6.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.5.0", {\
-          "packageLocation": "./.yarn/__virtual__/swagger-ui-express-virtual-14dafba105/0/cache/swagger-ui-express-npm-4.5.0-bb65f0369a-67f1725bce.zip/node_modules/swagger-ui-express/",\
+        ["virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.6.0", {\
+          "packageLocation": "./.yarn/__virtual__/swagger-ui-express-virtual-76cbfdb937/0/cache/swagger-ui-express-npm-4.6.0-e6d70a5883-8e5e2bf431.zip/node_modules/swagger-ui-express/",\
           "packageDependencies": [\
-            ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.5.0"],\
+            ["swagger-ui-express", "virtual:cc23b8fc61b87a1d7c0ac27979fe7b1d50fa65759aa4c971488b27db887a08c7f3db8168b406f5bf31667e5b08e9a9414cd874eefe0a999fecdab0da4c474cd7#npm:4.6.0"],\
             ["@types/express", "npm:4.17.14"],\
             ["express", "npm:4.18.2"],\
             ["swagger-ui-dist", "npm:4.15.2"]\
