@@ -68,7 +68,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-tsparticles", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.3"],\
             ["src", "link:./src::locator=rating-tracker-frontend%40workspace%3A."],\
             ["tsparticles", "npm:2.5.3"],\
-            ["tsparticles-engine", "npm:2.5.0"],\
+            ["tsparticles-engine", "npm:2.5.2"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"],\
             ["vite", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:3.2.3"],\
             ["vite-plugin-svgr", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.2.2"],\
@@ -7335,7 +7335,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-tsparticles", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.3"],\
             ["src", "link:./src::locator=rating-tracker-frontend%40workspace%3A."],\
             ["tsparticles", "npm:2.5.3"],\
-            ["tsparticles-engine", "npm:2.5.0"],\
+            ["tsparticles-engine", "npm:2.5.2"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"],\
             ["vite", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:3.2.3"],\
             ["vite-plugin-svgr", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.2.2"],\
@@ -8337,13 +8337,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["tsparticles-engine", [\
-        ["npm:2.5.0", {\
-          "packageLocation": "./.yarn/unplugged/tsparticles-engine-npm-2.5.0-2ca3629fef/node_modules/tsparticles-engine/",\
-          "packageDependencies": [\
-            ["tsparticles-engine", "npm:2.5.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:2.5.2", {\
           "packageLocation": "./.yarn/unplugged/tsparticles-engine-npm-2.5.2-6da577a129/node_modules/tsparticles-engine/",\
           "packageDependencies": [\

@@ -58,7 +58,7 @@
     "react-tsparticles": "^2.5.3",
     "src": "link:./src",
     "tsparticles": "^2.5.3",
-    "tsparticles-engine": "^2.5.0",
+    "tsparticles-engine": "^2.5.2",
     "vite": "^3.2.3",
     "vite-plugin-svgr": "^2.2.2",
     "vite-tsconfig-paths": "^3.5.2"
