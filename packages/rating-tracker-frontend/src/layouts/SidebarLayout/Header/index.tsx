@@ -12,7 +12,7 @@ import {
   useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { SidebarContext } from "src/contexts/SidebarContext";
+import { SidebarContext } from "../../../contexts/SidebarContext";
 import CloseIcon from "@mui/icons-material/Close";
 
 import HeaderButtons from "./Buttons";

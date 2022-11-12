@@ -21,7 +21,6 @@ const servers = [
 
 /* istanbul ignore next */
 process.env.NODE_ENV === "dev" &&
-  process.env.PORT &&
   servers.push({
     url: `http://localhost:${process.env.PORT}/`,
     description: "Local server",

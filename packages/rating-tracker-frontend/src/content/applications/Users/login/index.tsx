@@ -18,11 +18,11 @@ import {
   baseUrl,
   registerEndpoint,
   signInEndpoint,
-} from "src/endpoints";
-import SwitchSelector from "src/components/SwitchSelector";
+} from "../../../../endpoints";
+import SwitchSelector from "../../../../components/SwitchSelector";
 import NotificationSnackbar, {
   Notification,
-} from "src/components/NotificationSnackbar";
+} from "../../../../components/NotificationSnackbar";
 import { useNavigate } from "react-router";
 
 const LoginApp = () => {

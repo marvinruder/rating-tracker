@@ -14,13 +14,16 @@ import axios from "axios";
 import APIError from "./apiError.js";
 import { refreshSessionAndFetchUser } from "./redis/repositories/session/sessionRepository.js";
 import { sessionTTLInSeconds } from "./redis/repositories/session/sessionRepositoryBase.js";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config({
   path: ".env.local",
 });
 
-/* istanbul ignore next */
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 class Server {
   public app = express();
@@ -28,6 +31,11 @@ class Server {
 }
 
 export const server = new Server();
+
+const staticContentPath = path.join(__dirname, "..", "static");
+
+server.app.use(express.static(staticContentPath));
+console.log(chalk.grey(`Serving static content from ${staticContentPath}`));
 
 /* istanbul ignore next */
 const highlightMethod = (method: string) => {
@@ -102,8 +110,8 @@ server.app.use(
             "  " +
             chalk.yellow(
               res.locals.user
-                ? `\uf007 ${res.locals.user.name} (${res.locals.user.email}) from `
-                : "\uf21b "
+                ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})`
+                : "\uf21b"
             ) +
             "  " +
             // use reverse proxy that sets this header to prevent CWE-134

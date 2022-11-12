@@ -1,11 +1,11 @@
 import { FC } from "react";
-import { groupOfIndustry } from "src/taxonomy/sectors/industryGroup";
-import { sectorOfIndustryGroup } from "src/taxonomy/sectors/sector";
+import { groupOfIndustry } from "../../taxonomy/sectors/industryGroup";
+import { sectorOfIndustryGroup } from "../../taxonomy/sectors/sector";
 import {
   getColor,
   superSectorOfSector,
-} from "src/taxonomy/sectors/superSector";
-import { Industry } from "src/types";
+} from "../../taxonomy/sectors/superSector";
+import { Industry } from "../../types";
 
 interface SectorIconProps {
   industry: Industry;

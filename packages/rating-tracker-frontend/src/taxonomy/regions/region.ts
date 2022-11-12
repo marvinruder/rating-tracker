@@ -1,4 +1,4 @@
-import { Country, countryArray, Region } from "src/types";
+import { Country, countryArray, Region } from "../../types";
 
 export const regionName: Record<Region, string> = {
   NorthAmerica: "North America",

@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useEffect } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { RouteObject } from "react-router";
 
@@ -19,18 +19,18 @@ const loader = (Component) => (props) =>
 // Applications
 
 const LoginApp = loader(
-  lazy(() => import("src/content/applications/Users/login"))
+  lazy(() => import("./content/applications/Users/login"))
 );
 
 // Modules
 
-const Stocklist = loader(lazy(() => import("src/content/modules/stocklist")));
+const Stocklist = loader(lazy(() => import("./content/modules/stocklist")));
 
 const Status404 = loader(
-  lazy(() => import("src/content/pages/Status/Status404"))
+  lazy(() => import("./content/pages/Status/Status404"))
 );
 const Status500 = loader(
-  lazy(() => import("src/content/pages/Status/Status500"))
+  lazy(() => import("./content/pages/Status/Status500"))
 );
 
 const AuthWrapper = ({ children }: { children: JSX.Element }) => {

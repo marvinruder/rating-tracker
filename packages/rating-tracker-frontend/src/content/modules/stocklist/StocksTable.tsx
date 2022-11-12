@@ -13,13 +13,19 @@ import {
 } from "@mui/material";
 // import EditIcon from "@mui/icons-material/Edit";
 // import DeleteIcon from "@mui/icons-material/Delete";
-import { Stock } from "src/models/stock";
-import { baseUrl, stockAPI, stockListEndpoint } from "src/endpoints";
-import { Country, Industry, Size, SortableAttribute, Style } from "src/types";
+import { Stock } from "../../../models/stock";
+import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
+import {
+  Country,
+  Industry,
+  Size,
+  SortableAttribute,
+  Style,
+} from "../../../types";
 import StockRow from "./StockRow";
 import NotificationSnackbar, {
   Notification,
-} from "src/components/NotificationSnackbar/index.js";
+} from "../../../components/NotificationSnackbar/index.js";
 
 const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [page, setPage] = useState<number>(0);

@@ -1,4 +1,4 @@
-import { Industry, industryArray, IndustryGroup } from "src/types";
+import { Industry, industryArray, IndustryGroup } from "../../types";
 
 export const industryGroupName: Record<IndustryGroup, string> = {
   Agriculture: "Agriculture",

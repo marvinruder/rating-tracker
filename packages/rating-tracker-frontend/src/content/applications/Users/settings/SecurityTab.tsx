@@ -127,7 +127,7 @@ function SecurityTab() {
           <List>
             <ListItem sx={{ p: 3 }}>
               <ListItemAvatar sx={{ pr: 2 }}>
-                <AvatarWrapper src="/static/images/logo/google.svg" />
+                <AvatarWrapper src="/assets/images/logo/google.svg" />
               </ListItemAvatar>
               <ListItemText
                 primaryTypographyProps={{ variant: "h5", gutterBottom: true }}
