@@ -8,7 +8,7 @@ dotenv.config({
   path: ".env.local",
 });
 
-const url = process.env.REDIS_URL || "redis://redis:6379";
+const url = process.env.REDIS_URL;
 
 export const redis = createClient({ url: url });
 redis.on("error", (err) =>

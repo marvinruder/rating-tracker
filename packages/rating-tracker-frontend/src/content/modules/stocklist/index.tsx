@@ -1,11 +1,11 @@
 import PageHeader from "./PageHeader";
-import PageTitleWrapper from "src/components/PageTitleWrapper";
+import PageTitleWrapper from "../../../components/PageTitleWrapper";
 import { Card, Grid, Container } from "@mui/material";
-import Footer from "src/components/Footer";
+import Footer from "../../../components/Footer";
 
 import StocksTable, { StockFilter } from "./StocksTable";
 import { useState } from "react";
-import { Size, Style, Country, Industry } from "src/types";
+import { Size, Style, Country, Industry } from "../../../types";
 
 function StocklistModule() {
   const [filter, setFilter] = useState<StockFilter>({});

@@ -24,7 +24,7 @@ import { sendMessage } from "../signal/signal.js";
 
 class FetchController {
   getDriver() {
-    const url = process.env.SELENIUM_URL || "http://selenium:4444";
+    const url = process.env.SELENIUM_URL;
 
     const capabilities = new Capabilities();
     capabilities.setBrowserName("chrome");

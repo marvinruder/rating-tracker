@@ -1,4 +1,4 @@
-import { Country, Industry, Size, Style } from "src/types";
+import { Country, Industry, Size, Style } from "../types";
 
 export class Stock {
   ticker: string;

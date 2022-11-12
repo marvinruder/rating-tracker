@@ -32,28 +32,31 @@ import {
   superRegionArray,
   SuperSector,
   superSectorArray,
-} from "src/types";
+} from "../../../types";
 import React from "react";
-import NestedCheckboxList from "src/components/NestedCheckboxList";
+import NestedCheckboxList from "../../../components/NestedCheckboxList";
 import {
   getRegionsInSuperRegion,
   superRegionName,
-} from "src/taxonomy/regions/superregion";
-import { getCountriesInRegion, regionName } from "src/taxonomy/regions/region";
+} from "../../../taxonomy/regions/superregion";
+import {
+  getCountriesInRegion,
+  regionName,
+} from "../../../taxonomy/regions/region";
 import {
   getIndustriesInGroup,
   industryGroupName,
-} from "src/taxonomy/sectors/industryGroup";
+} from "../../../taxonomy/sectors/industryGroup";
 import {
   getIndustryGroupsInSector,
   sectorName,
-} from "src/taxonomy/sectors/sector";
+} from "../../../taxonomy/sectors/sector";
 import {
   getSectorsInSuperSector,
   superSectorName,
-} from "src/taxonomy/sectors/superSector";
-import { countryNameWithFlag } from "src/taxonomy/regions/country";
-import { industryName } from "src/taxonomy/sectors/industry";
+} from "../../../taxonomy/sectors/superSector";
+import { countryNameWithFlag } from "../../../taxonomy/regions/country";
+import { industryName } from "../../../taxonomy/sectors/industry";
 
 const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);

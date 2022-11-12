@@ -1,0 +1,27 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# testing
+packages/*/coverage
+
+# production
+packages/*/dist
+
+# vite
+packages/*/.vite
+
+# misc
+.DS_Store
+node_modules/.cache
+packages/*/.env
+packages/*/.env.local
+packages/*/.env.development.local
+packages/*/.env.test.local
+packages/*/.env.production.local

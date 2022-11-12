@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Size, Style } from "src/types";
+import { Size, Style } from "../../types";
 
 interface StyleBoxProps {
   size: Size;

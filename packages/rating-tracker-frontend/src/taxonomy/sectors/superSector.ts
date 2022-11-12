@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material";
-import { Sector, sectorArray, SuperSector } from "src/types";
+import { Sector, sectorArray, SuperSector } from "../../types";
 
 export const superSectorName: Record<SuperSector, string> = {
   Cyclical: "Cyclical",

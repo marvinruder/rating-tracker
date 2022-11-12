@@ -6,26 +6,29 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import SectorIcon from "src/components/SectorIcon";
-import StarRating from "src/components/StarRating";
-import StyleBox from "src/components/StyleBox";
-import { Stock } from "src/models/stock";
-import { countryNameWithFlag } from "src/taxonomy/regions/country";
-import { regionName, regionOfCountry } from "src/taxonomy/regions/region";
+import SectorIcon from "../../../components/SectorIcon";
+import StarRating from "../../../components/StarRating";
+import StyleBox from "../../../components/StyleBox";
+import { Stock } from "../../../models/stock";
+import { countryNameWithFlag } from "../../../taxonomy/regions/country";
+import { regionName, regionOfCountry } from "../../../taxonomy/regions/region";
 import {
   superRegionName,
   superRegionOfRegion,
-} from "src/taxonomy/regions/superregion";
-import { industryName } from "src/taxonomy/sectors/industry";
+} from "../../../taxonomy/regions/superregion";
+import { industryName } from "../../../taxonomy/sectors/industry";
 import {
   groupOfIndustry,
   industryGroupName,
-} from "src/taxonomy/sectors/industryGroup";
-import { sectorName, sectorOfIndustryGroup } from "src/taxonomy/sectors/sector";
+} from "../../../taxonomy/sectors/industryGroup";
+import {
+  sectorName,
+  sectorOfIndustryGroup,
+} from "../../../taxonomy/sectors/sector";
 import {
   superSectorName,
   superSectorOfSector,
-} from "src/taxonomy/sectors/superSector";
+} from "../../../taxonomy/sectors/superSector";
 
 const StockRow = (props: { stock?: Stock }) => {
   const theme = useTheme();

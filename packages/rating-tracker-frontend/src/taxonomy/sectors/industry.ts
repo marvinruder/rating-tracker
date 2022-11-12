@@ -1,4 +1,4 @@
-import { Industry } from "src/types";
+import { Industry } from "../../types";
 
 export const industryName: Record<Industry, string> = {
   AgriculturalInputs: "Agricultural Inputs",

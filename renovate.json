@@ -6,5 +6,5 @@
   "timezone": "Europe/Berlin",
   "assignees": ["ruder.marvin@icloud.com"],
   "updateLockFiles": true,
-  "rangeStrategy": "bump"
+  "rangeStrategy": "pin"
 }

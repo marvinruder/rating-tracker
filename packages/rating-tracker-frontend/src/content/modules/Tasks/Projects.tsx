@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Link as RouterLink } from "react-router-dom";
-import Text from "src/components/Text";
+import Text from "../../../components/Text";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CheckIcon from "@mui/icons-material/Check";
 import StarIcon from "@mui/icons-material/Star";
@@ -129,7 +129,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Remy Sharp"
-                    src="/static/images/avatars/1.jpg"
+                    src="/assets/images/avatars/1.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Travis Howard">
@@ -141,7 +141,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Travis Howard"
-                    src="/static/images/avatars/2.jpg"
+                    src="/assets/images/avatars/2.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Cindy Baker">
@@ -153,7 +153,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Cindy Baker"
-                    src="/static/images/avatars/3.jpg"
+                    src="/assets/images/avatars/3.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Agnes Walker">
@@ -165,7 +165,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Agnes Walker"
-                    src="/static/images/avatars/4.jpg"
+                    src="/assets/images/avatars/4.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Trevor Henderson">
@@ -177,7 +177,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Trevor Henderson"
-                    src="/static/images/avatars/5.jpg"
+                    src="/assets/images/avatars/5.jpg"
                   />
                 </Tooltip>
               </AvatarGroup>
@@ -270,7 +270,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Remy Sharp"
-                    src="/static/images/avatars/4.jpg"
+                    src="/assets/images/avatars/4.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Travis Howard">
@@ -282,7 +282,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Travis Howard"
-                    src="/static/images/avatars/3.jpg"
+                    src="/assets/images/avatars/3.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Trevor Henderson">
@@ -294,7 +294,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Trevor Henderson"
-                    src="/static/images/avatars/1.jpg"
+                    src="/assets/images/avatars/1.jpg"
                   />
                 </Tooltip>
               </AvatarGroup>
@@ -351,7 +351,7 @@ function Projects() {
                     </Tooltip>
                   }
                 >
-                  <Avatar alt="Remy Sharp" src="/static/images/avatars/1.jpg" />
+                  <Avatar alt="Remy Sharp" src="/assets/images/avatars/1.jpg" />
                 </Badge>
               }
               action={
@@ -396,7 +396,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Remy Sharp"
-                    src="/static/images/avatars/1.jpg"
+                    src="/assets/images/avatars/1.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Cindy Baker">
@@ -408,7 +408,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Cindy Baker"
-                    src="/static/images/avatars/3.jpg"
+                    src="/assets/images/avatars/3.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Agnes Walker">
@@ -420,7 +420,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Agnes Walker"
-                    src="/static/images/avatars/2.jpg"
+                    src="/assets/images/avatars/2.jpg"
                   />
                 </Tooltip>
                 <Tooltip arrow title="View profile for Trevor Henderson">
@@ -432,7 +432,7 @@ function Projects() {
                     component={RouterLink}
                     to="#"
                     alt="Trevor Henderson"
-                    src="/static/images/avatars/4.jpg"
+                    src="/assets/images/avatars/4.jpg"
                   />
                 </Tooltip>
               </AvatarGroup>

@@ -1,4 +1,4 @@
-import { Region, regionArray, SuperRegion } from "src/types";
+import { Region, regionArray, SuperRegion } from "../../types";
 
 export const superRegionName: Record<SuperRegion, string> = {
   Americas: "The Americas",

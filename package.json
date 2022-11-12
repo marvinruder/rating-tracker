@@ -1,0 +1,27 @@
+{
+  "name": "rating-tracker",
+  "version": "0.1.0",
+  "title": "Rating Tracker",
+  "author": {
+    "name": "Marvin A. Ruder",
+    "url": "https://mruder.dev"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "conc --kill-others \"cd packages/rating-tracker-backend && yarn dev:ssh\" \"cd packages/rating-tracker-backend && yarn dev:tsc\" \"cd packages/rating-tracker-backend && yarn dev:node\" \"cd packages/rating-tracker-frontend && yarn dev:vite\" -n \",ﯤ,,\" -p \"{name}\" -c grey,#3178C6,#339933,#61DAFB --timings",
+    "test:watch": "cd packages/rating-tracker-backend && yarn test:watch",
+    "test": "cd packages/rating-tracker-backend && yarn test",
+    "build": "yarn workspaces foreach run build",
+    "start": "cd packages/rating-tracker-backend && yarn start"
+  },
+  "packageManager": "yarn@3.2.4",
+  "devDependencies": {
+    "concurrently": "7.5.0",
+    "eslint": "8.27.0",
+    "prettier": "2.7.1",
+    "typescript": "4.8.4"
+  }
+}

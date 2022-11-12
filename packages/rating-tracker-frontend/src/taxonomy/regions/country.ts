@@ -1,4 +1,4 @@
-import { Country } from "src/types";
+import { Country } from "../../types";
 
 export const countryName: Record<Country, string> = {
   AF: "Afghanistan",

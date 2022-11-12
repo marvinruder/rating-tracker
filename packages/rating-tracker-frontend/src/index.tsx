@@ -2,9 +2,8 @@ import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 
 import "nprogress/nprogress.css";
-import App from "src/App";
-import { SidebarProvider } from "src/contexts/SidebarContext";
-import * as serviceWorker from "src/serviceWorker";
+import App from "./App";
+import { SidebarProvider } from "./contexts/SidebarContext";
 
 createRoot(document.getElementById("root")).render(
   <SidebarProvider>
@@ -13,5 +12,3 @@ createRoot(document.getElementById("root")).render(
     </HashRouter>
   </SidebarProvider>
 );
-
-serviceWorker.unregister();
