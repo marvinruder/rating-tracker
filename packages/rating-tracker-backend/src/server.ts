@@ -115,7 +115,7 @@ server.app.use(
             ) +
             "  " +
             // use reverse proxy that sets this header to prevent CWE-134
-            chalk.magenta("\uf98c" + req.headers["x-forwarded-for"]) +
+            chalk.magenta("\uf98c" + req.headers["x-real-ip"]) +
             " "
         ) +
         chalk.grey(""),
