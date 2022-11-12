@@ -5290,7 +5290,7 @@ __metadata:
     react-router: ^6.4.3
     react-router-dom: ^6.4.3
     react-switch-selector: ^2.2.1
-    react-tsparticles: ^2.5.1
+    react-tsparticles: ^2.5.3
     src: "link:./src"
     tsparticles: ^2.5.1
     tsparticles-engine: ^2.5.0
@@ -5439,15 +5439,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tsparticles@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "react-tsparticles@npm:2.5.1"
+"react-tsparticles@npm:^2.5.3":
+  version: 2.5.3
+  resolution: "react-tsparticles@npm:2.5.3"
   dependencies:
     fast-deep-equal: ^3.1.3
-    tsparticles-engine: ^2.5.0
+    tsparticles-engine: ^2.5.2
   peerDependencies:
     react: ">=16"
-  checksum: fab26123304d1b6aff164da9078d0bea7bce602c35caf4a0aa01e8b4e18af8c49f1c61ed0e7351764346c5edb8c55aee4244b167e07e1270d0232035428af6c4
+  checksum: 26abd1894cbd4d5e6537cdae3e5055f87adc821d59f7e9109c30764ae4bedaf6f0d310d7437be57957b3f61f91d8589644027eba0b00c763d4035e37b1df21f7
   languageName: node
   linkType: hard
 

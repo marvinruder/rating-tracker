@@ -55,7 +55,7 @@
     "react-router": "^6.4.3",
     "react-router-dom": "^6.4.3",
     "react-switch-selector": "^2.2.1",
-    "react-tsparticles": "^2.5.1",
+    "react-tsparticles": "^2.5.3",
     "src": "link:./src",
     "tsparticles": "^2.5.1",
     "tsparticles-engine": "^2.5.0",

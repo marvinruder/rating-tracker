@@ -65,7 +65,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-router", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:6.4.3"],\
             ["react-router-dom", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:6.4.3"],\
             ["react-switch-selector", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.2.1"],\
-            ["react-tsparticles", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.1"],\
+            ["react-tsparticles", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.3"],\
             ["src", "link:./src::locator=rating-tracker-frontend%40workspace%3A."],\
             ["tsparticles", "npm:2.5.1"],\
             ["tsparticles-engine", "npm:2.5.0"],\
@@ -7332,7 +7332,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-router", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:6.4.3"],\
             ["react-router-dom", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:6.4.3"],\
             ["react-switch-selector", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.2.1"],\
-            ["react-tsparticles", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.1"],\
+            ["react-tsparticles", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.3"],\
             ["src", "link:./src::locator=rating-tracker-frontend%40workspace%3A."],\
             ["tsparticles", "npm:2.5.1"],\
             ["tsparticles-engine", "npm:2.5.0"],\
@@ -7594,21 +7594,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["react-tsparticles", [\
-        ["npm:2.5.1", {\
-          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-67e3fb354c/node_modules/react-tsparticles/",\
+        ["npm:2.5.3", {\
+          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-3c29f908b1/node_modules/react-tsparticles/",\
           "packageDependencies": [\
-            ["react-tsparticles", "npm:2.5.1"]\
+            ["react-tsparticles", "npm:2.5.3"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.1", {\
-          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-67e3fb354c/node_modules/react-tsparticles/",\
+        ["virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.3", {\
+          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-3c29f908b1/node_modules/react-tsparticles/",\
           "packageDependencies": [\
-            ["react-tsparticles", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.1"],\
+            ["react-tsparticles", "virtual:53f2884abe5c3fa349d1ed5015e93267f98e5addcb9c52968c161259683cdc63e15ff1bb5d9f79450e0adc34bd348785cb044ba3e7cc35774d6b76808ff4dcc3#npm:2.5.3"],\
             ["@types/react", "npm:18.0.25"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["react", "npm:18.2.0"],\
-            ["tsparticles-engine", "npm:2.5.0"]\
+            ["tsparticles-engine", "npm:2.5.2"]\
           ],\
           "packagePeers": [\
             "@types/react",\
