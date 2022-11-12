@@ -3,3 +3,5 @@ packages/*/dist
 node_modules/
 .yarn/
 README.md
+
+packages/rating-tracker-frontend/public/index.css
