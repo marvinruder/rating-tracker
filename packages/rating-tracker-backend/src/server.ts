@@ -35,7 +35,7 @@ export const server = new Server();
 const staticContentPath = path.join(__dirname, "..", "static");
 
 server.app.use(express.static(staticContentPath));
-console.log(chalk.grey(`Serving static content from ${staticContentPath}`));
+console.log(chalk.grey(`Serving static content from ${staticContentPath}\n`));
 
 /* istanbul ignore next */
 const highlightMethod = (method: string) => {
@@ -106,7 +106,7 @@ server.app.use(
       chalk.whiteBright.bgRed(" \ue76d ") +
         chalk.bgGrey.red("") +
         chalk.bgGrey(
-          chalk.cyan(" \uf5ef " + new Date().toISOString()) +
+          chalk.cyanBright(" \uf5ef " + new Date().toISOString()) +
             "  " +
             chalk.yellow(
               res.locals.user
@@ -115,7 +115,7 @@ server.app.use(
             ) +
             "  " +
             // use reverse proxy that sets this header to prevent CWE-134
-            chalk.magenta("\uf98c" + req.headers["x-forwarded-for"]) +
+            chalk.magentaBright("\uf98c" + req.headers["x-forwarded-for"]) +
             " "
         ) +
         chalk.grey(""),
