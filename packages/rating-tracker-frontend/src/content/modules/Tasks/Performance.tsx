@@ -8,8 +8,8 @@ import {
   LinearProgress,
   styled,
 } from "@mui/material";
-import AssignmentTurnedInTwoToneIcon from "@mui/icons-material/AssignmentTurnedInTwoTone";
-import CancelPresentationTwoToneIcon from "@mui/icons-material/CancelPresentationTwoTone";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 
 const RootWrapper = styled(Card)(
   ({ theme }) => `
@@ -95,7 +95,7 @@ function Performance() {
             }}
             variant="rounded"
           >
-            <AssignmentTurnedInTwoToneIcon fontSize="large" />
+            <AssignmentTurnedInIcon fontSize="large" />
           </AvatarSuccess>
           <Box>
             <Typography variant="h1">23</Typography>
@@ -118,7 +118,7 @@ function Performance() {
             }}
             variant="rounded"
           >
-            <CancelPresentationTwoToneIcon fontSize="large" />
+            <CancelPresentationIcon fontSize="large" />
           </AvatarError>
           <Box>
             <Typography variant="h1">5</Typography>

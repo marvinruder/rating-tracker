@@ -103,6 +103,10 @@ declare module "@mui/material/styles" {
         defensive: string;
         sensitive: string;
       };
+      switchSelector: {
+        selected: string;
+        unselected: string;
+      };
     };
     general: {
       reactFrameworkColor: React.CSSProperties["color"];
@@ -227,6 +231,10 @@ declare module "@mui/material/styles" {
         cyclical: string;
         defensive: string;
         sensitive: string;
+      };
+      switchSelector: {
+        selected: string;
+        unselected: string;
       };
     };
 

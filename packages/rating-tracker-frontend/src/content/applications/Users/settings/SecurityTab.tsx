@@ -26,8 +26,8 @@ import {
   styled,
 } from "@mui/material";
 
-import DoneTwoToneIcon from "@mui/icons-material/DoneTwoTone";
-import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import DoneIcon from "@mui/icons-material/Done";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { format, subHours, subWeeks, subDays } from "date-fns";
 
 const ButtonError = styled(Button)(
@@ -151,7 +151,7 @@ function SecurityTab() {
             <ListItem sx={{ p: 3 }}>
               <ListItemAvatar sx={{ pr: 2 }}>
                 <AvatarSuccess>
-                  <DoneTwoToneIcon />
+                  <DoneIcon />
                 </AvatarSuccess>
               </ListItemAvatar>
               <ListItemText
@@ -171,7 +171,7 @@ function SecurityTab() {
             <ListItem sx={{ p: 3 }}>
               <ListItemAvatar sx={{ pr: 2 }}>
                 <AvatarSuccess>
-                  <DoneTwoToneIcon />
+                  <DoneIcon />
                 </AvatarSuccess>
               </ListItemAvatar>
               <ListItemText
@@ -270,7 +270,7 @@ function SecurityTab() {
                           color="inherit"
                           size="small"
                         >
-                          <DeleteTwoToneIcon fontSize="small" />
+                          <DeleteIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
                     </TableCell>

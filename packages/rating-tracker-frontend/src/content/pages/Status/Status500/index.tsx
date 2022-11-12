@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, Typography, Container, Button, styled } from "@mui/material";
-import RefreshTwoToneIcon from "@mui/icons-material/RefreshTwoTone";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 const MainContent = styled(Box)(
@@ -44,7 +44,7 @@ function Status500() {
             loading={pending}
             variant="outlined"
             color="primary"
-            startIcon={<RefreshTwoToneIcon />}
+            startIcon={<RefreshIcon />}
           >
             Refresh view
           </LoadingButton>

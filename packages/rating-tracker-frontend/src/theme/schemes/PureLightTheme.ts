@@ -2,7 +2,7 @@ import { alpha, createTheme, lighten, darken } from "@mui/material";
 import "@mui/lab/themeAugmentation";
 
 const themeColors = {
-  primary: "#247AF2",
+  primary: "#2971D6",
   secondary: "#878787",
   success: "#57CA22",
   warning: "#FFA319",
@@ -99,31 +99,31 @@ const colors = {
   },
   primary: {
     lighter: lighten(themeColors.primary, 0.85),
-    light: lighten(themeColors.primary, 0.3),
+    light: lighten(themeColors.primary, 0.6),
     main: themeColors.primary,
     dark: darken(themeColors.primary, 0.2),
   },
   success: {
     lighter: lighten(themeColors.success, 0.85),
-    light: lighten(themeColors.success, 0.3),
+    light: lighten(themeColors.success, 0.6),
     main: themeColors.success,
     dark: darken(themeColors.success, 0.2),
   },
   warning: {
     lighter: lighten(themeColors.warning, 0.85),
-    light: lighten(themeColors.warning, 0.3),
+    light: lighten(themeColors.warning, 0.6),
     main: themeColors.warning,
     dark: darken(themeColors.warning, 0.2),
   },
   error: {
     lighter: lighten(themeColors.error, 0.85),
-    light: lighten(themeColors.error, 0.3),
+    light: lighten(themeColors.error, 0.6),
     main: themeColors.error,
     dark: darken(themeColors.error, 0.2),
   },
   info: {
     lighter: lighten(themeColors.info, 0.85),
-    light: lighten(themeColors.info, 0.3),
+    light: lighten(themeColors.info, 0.6),
     main: themeColors.info,
     dark: darken(themeColors.info, 0.2),
   },
@@ -223,6 +223,10 @@ export const PureLightTheme = createTheme({
       cyclical: "#EF7622",
       defensive: "#518428",
       sensitive: "#1F55A5",
+    },
+    switchSelector: {
+      selected: themeColors.primary,
+      unselected: themeColors.white,
     },
   },
   general: {
@@ -989,6 +993,9 @@ export const PureLightTheme = createTheme({
     },
     MuiAlert: {
       styleOverrides: {
+        root: {
+          boxShadow: colors.shadows.card,
+        },
         message: {
           lineHeight: 1.5,
           fontSize: 12,
@@ -1118,6 +1125,11 @@ export const PureLightTheme = createTheme({
             color: colors.success.main,
           },
         },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        size: "small",
       },
     },
     MuiTypography: {

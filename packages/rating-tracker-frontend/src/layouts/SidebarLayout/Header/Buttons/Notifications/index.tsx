@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRef, useState } from "react";
-import NotificationsActiveTwoToneIcon from "@mui/icons-material/NotificationsActiveTwoTone";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { styled } from "@mui/material/styles";
 
 import { formatDistance, subDays } from "date-fns";
@@ -64,7 +64,7 @@ function HeaderNotifications() {
               horizontal: 'right'
             }}
           >
-            <NotificationsActiveTwoToneIcon />
+            <NotificationsActiveIcon />
           </NotificationsBadge>
         </IconButton>
       </Tooltip>

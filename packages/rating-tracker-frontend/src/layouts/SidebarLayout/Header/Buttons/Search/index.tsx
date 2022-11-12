@@ -24,10 +24,10 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
-import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
-import FindInPageTwoToneIcon from "@mui/icons-material/FindInPageTwoTone";
+import SearchIcon from "@mui/icons-material/Search";
+import FindInPageIcon from "@mui/icons-material/FindInPage";
 
-import ChevronRightTwoToneIcon from "@mui/icons-material/ChevronRightTwoTone";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: ReactElement<any, any> },
@@ -95,7 +95,7 @@ function HeaderSearch() {
     <>
       {/* <Tooltip arrow title="Search">
         <IconButton color="primary" onClick={handleClickOpen}>
-          <SearchTwoToneIcon />
+          <SearchIcon />
         </IconButton>
       </Tooltip>
 
@@ -116,7 +116,7 @@ function HeaderSearch() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchTwoToneIcon />
+                  <SearchIcon />
                 </InputAdornment>
               )
             }}
@@ -159,7 +159,7 @@ function HeaderSearch() {
                           theme.palette.secondary.main
                       }}
                     >
-                      <FindInPageTwoToneIcon />
+                      <FindInPageIcon />
                     </Avatar>
                   </ListItemAvatar>
                 </Hidden>
@@ -186,7 +186,7 @@ function HeaderSearch() {
                     managing all hospital staff.
                   </Typography>
                 </Box>
-                <ChevronRightTwoToneIcon />
+                <ChevronRightIcon />
               </ListItem>
               <Divider sx={{ my: 1 }} component="li" />
               <ListItem button>
@@ -198,7 +198,7 @@ function HeaderSearch() {
                           theme.palette.secondary.main
                       }}
                     >
-                      <FindInPageTwoToneIcon />
+                      <FindInPageIcon />
                     </Avatar>
                   </ListItemAvatar>
                 </Hidden>
@@ -224,7 +224,7 @@ function HeaderSearch() {
                     This is yet another search result pointing to a app page.
                   </Typography>
                 </Box>
-                <ChevronRightTwoToneIcon />
+                <ChevronRightIcon />
               </ListItem>
               <Divider sx={{ my: 1 }} component="li" />
               <ListItem button>
@@ -236,7 +236,7 @@ function HeaderSearch() {
                           theme.palette.secondary.main
                       }}
                     >
-                      <FindInPageTwoToneIcon />
+                      <FindInPageIcon />
                     </Avatar>
                   </ListItemAvatar>
                 </Hidden>
@@ -263,7 +263,7 @@ function HeaderSearch() {
                     section here...
                   </Typography>
                 </Box>
-                <ChevronRightTwoToneIcon />
+                <ChevronRightIcon />
               </ListItem>
             </List>
             <Divider sx={{ mt: 1, mb: 2 }} />

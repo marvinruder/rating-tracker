@@ -11,9 +11,9 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import MenuTwoToneIcon from "@mui/icons-material/MenuTwoTone";
+import MenuIcon from "@mui/icons-material/Menu";
 import { SidebarContext } from "src/contexts/SidebarContext";
-import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+import CloseIcon from "@mui/icons-material/Close";
 
 import HeaderButtons from "./Buttons";
 import HeaderUserbox from "./Userbox";
@@ -83,9 +83,9 @@ function Header() {
           <Tooltip arrow title="Toggle Menu">
             <IconButton color="primary" onClick={toggleSidebar}>
               {!sidebarToggle ? (
-                <MenuTwoToneIcon fontSize="small" />
+                <MenuIcon fontSize="small" />
               ) : (
-                <CloseTwoToneIcon fontSize="small" />
+                <CloseIcon fontSize="small" />
               )}
             </IconButton>
           </Tooltip>

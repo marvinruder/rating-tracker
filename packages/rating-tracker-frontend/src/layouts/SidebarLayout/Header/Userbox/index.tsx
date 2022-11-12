@@ -17,12 +17,12 @@ import {
   Typography,
 } from "@mui/material";
 
-import InboxTwoToneIcon from "@mui/icons-material/InboxTwoTone";
+import InboxIcon from "@mui/icons-material/Inbox";
 import { styled } from "@mui/material/styles";
-import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
-import AccountBoxTwoToneIcon from "@mui/icons-material/AccountBoxTwoTone";
-import LockOpenTwoToneIcon from "@mui/icons-material/LockOpenTwoTone";
-import AccountTreeTwoToneIcon from "@mui/icons-material/AccountTreeTwoTone";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -90,7 +90,7 @@ function HeaderUserbox() {
           </UserBoxText>
         </Hidden>
         <Hidden smDown>
-          <ExpandMoreTwoToneIcon sx={{ ml: 1 }} />
+          <ExpandMoreIcon sx={{ ml: 1 }} />
         </Hidden>
       </UserBoxButton>
       <Popover
@@ -118,11 +118,11 @@ function HeaderUserbox() {
         <Divider sx={{ mb: 0 }} />
         <List sx={{ p: 1 }} component="nav">
           <ListItem button to="/management/profile/details" component={NavLink}>
-            <AccountBoxTwoToneIcon fontSize="small" />
+            <AccountBoxIcon fontSize="small" />
             <ListItemText primary="My Profile" />
           </ListItem>
           <ListItem button to="/dashboards/messenger" component={NavLink}>
-            <InboxTwoToneIcon fontSize="small" />
+            <InboxIcon fontSize="small" />
             <ListItemText primary="Messenger" />
           </ListItem>
           <ListItem
@@ -130,14 +130,14 @@ function HeaderUserbox() {
             to="/management/profile/settings"
             component={NavLink}
           >
-            <AccountTreeTwoToneIcon fontSize="small" />
+            <AccountTreeIcon fontSize="small" />
             <ListItemText primary="Account Settings" />
           </ListItem>
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
           <Button color="primary" fullWidth>
-            <LockOpenTwoToneIcon sx={{ mr: 1 }} />
+            <LockOpenIcon sx={{ mr: 1 }} />
             Sign out
           </Button>
         </Box>

@@ -10,7 +10,7 @@ import {
 import { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const ListWrapper = styled(Box)(
   ({ theme }) => `
@@ -120,7 +120,7 @@ function HeaderMenu() {
                 <Box display="flex" alignItems="center">
                   Others
                   <Box display="flex" alignItems="center" pl={0.3}>
-                    <ExpandMoreTwoToneIcon fontSize="small" />
+                    <ExpandMoreIcon fontSize="small" />
                   </Box>
                 </Box>
               }

@@ -12,7 +12,7 @@ import {
 import { NavLink as RouterLink } from "react-router-dom";
 import { SidebarContext } from "src/contexts/SidebarContext";
 
-import TableRowsTwoToneIcon from "@mui/icons-material/TableRowsTwoTone";
+import TableRowsIcon from "@mui/icons-material/TableRows";
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -178,7 +178,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/dashboards/stocklist"
-                  startIcon={<TableRowsTwoToneIcon />}
+                  startIcon={<TableRowsIcon />}
                 >
                   Stock List
                 </Button>

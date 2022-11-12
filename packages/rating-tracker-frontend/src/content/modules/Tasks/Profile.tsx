@@ -11,9 +11,9 @@ import {
   Avatar,
   useTheme,
 } from "@mui/material";
-import PhoneTwoToneIcon from "@mui/icons-material/PhoneTwoTone";
-import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
-import MessageTwoToneIcon from "@mui/icons-material/MessageTwoTone";
+import PhoneIcon from "@mui/icons-material/Phone";
+import EmailIcon from "@mui/icons-material/Email";
+import MessageIcon from "@mui/icons-material/Message";
 
 function Profile() {
   const theme = useTheme();
@@ -58,7 +58,7 @@ function Profile() {
               mx: 0.5,
             }}
           >
-            <PhoneTwoToneIcon />
+            <PhoneIcon />
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="top" title="Send email">
@@ -68,7 +68,7 @@ function Profile() {
               mx: 0.5,
             }}
           >
-            <EmailTwoToneIcon />
+            <EmailIcon />
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="top" title="Send message">
@@ -78,7 +78,7 @@ function Profile() {
               mx: 0.5,
             }}
           >
-            <MessageTwoToneIcon />
+            <MessageIcon />
           </IconButton>
         </Tooltip>
       </Box>

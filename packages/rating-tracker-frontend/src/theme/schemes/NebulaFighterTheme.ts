@@ -2,7 +2,7 @@ import { alpha, createTheme, darken } from "@mui/material";
 import "@mui/lab/themeAugmentation";
 
 const themeColors = {
-  primary: "#3F6AA6",
+  primary: "#2971D6",
   secondary: "#B0B0B0",
   success: "#54AB2B",
   warning: "#FFA319",
@@ -46,7 +46,7 @@ const colors = {
     card: "0px 0px 2px #828282",
     cardSm: "0px 0px 2px #828282",
     cardLg:
-      "0 0rem 14rem 0 rgb(255 255 255 / 20%), 0 0.8rem 2.3rem rgb(133 133 133 / 3%), 0 0.2rem 0.7rem rgb(38 38 38 / 15%)",
+      "0 0rem 14rem 0 rgb(255 255 255 / 10%), 0 0.8rem 2.3rem rgb(133 133 133 / 3%), 0 0.2rem 0.7rem rgb(38 38 38 / 15%)",
   },
   layout: {
     general: {
@@ -99,31 +99,31 @@ const colors = {
   },
   primary: {
     lighter: alpha(themeColors.primary, 0.85),
-    light: alpha(themeColors.primary, 0.3),
+    light: alpha(themeColors.primary, 0.6),
     main: themeColors.primary,
     dark: darken(themeColors.primary, 0.2),
   },
   success: {
     lighter: alpha(themeColors.success, 0.85),
-    light: alpha(themeColors.success, 0.3),
+    light: alpha(themeColors.success, 0.6),
     main: themeColors.success,
     dark: darken(themeColors.success, 0.2),
   },
   warning: {
     lighter: alpha(themeColors.warning, 0.85),
-    light: alpha(themeColors.warning, 0.3),
+    light: alpha(themeColors.warning, 0.6),
     main: themeColors.warning,
     dark: darken(themeColors.warning, 0.2),
   },
   error: {
     lighter: alpha(themeColors.error, 0.85),
-    light: alpha(themeColors.error, 0.3),
+    light: alpha(themeColors.error, 0.6),
     main: themeColors.error,
     dark: darken(themeColors.error, 0.2),
   },
   info: {
     lighter: alpha(themeColors.info, 0.85),
-    light: alpha(themeColors.info, 0.3),
+    light: alpha(themeColors.info, 0.6),
     main: themeColors.info,
     dark: darken(themeColors.info, 0.2),
   },
@@ -223,6 +223,10 @@ export const NebulaFighterTheme = createTheme({
       cyclical: "#DA6410",
       defensive: "#65A432",
       sensitive: "#4F88DE",
+    },
+    switchSelector: {
+      selected: themeColors.black,
+      unselected: themeColors.white,
     },
   },
   general: {
@@ -994,6 +998,9 @@ export const NebulaFighterTheme = createTheme({
     },
     MuiAlert: {
       styleOverrides: {
+        root: {
+          boxShadow: colors.shadows.card,
+        },
         message: {
           lineHeight: 1.5,
           fontSize: 12,
@@ -1123,6 +1130,11 @@ export const NebulaFighterTheme = createTheme({
             color: colors.success.main,
           },
         },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        size: "small",
       },
     },
     MuiTypography: {

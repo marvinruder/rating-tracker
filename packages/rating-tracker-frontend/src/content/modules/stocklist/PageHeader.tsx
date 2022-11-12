@@ -11,12 +11,12 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
-import ArrowRightTwoToneIcon from "@mui/icons-material/ArrowRightTwoTone";
-import ArrowDropDownTwoToneIcon from "@mui/icons-material/ArrowDropDownTwoTone";
-import ClearTwoToneIcon from "@mui/icons-material/ClearTwoTone";
-import TuneTwoToneIcon from "@mui/icons-material/TuneTwoTone";
-import PublishedWithChangesTwoToneIcon from "@mui/icons-material/PublishedWithChangesTwoTone";
+import AddIcon from "@mui/icons-material/Add";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ClearIcon from "@mui/icons-material/Clear";
+import TuneIcon from "@mui/icons-material/Tune";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import { FC, useState } from "react";
 import {
   Country,
@@ -34,7 +34,7 @@ import {
   superSectorArray,
 } from "src/types";
 import React from "react";
-import NestedCheckboxList from "src/components/NestedCheckboxList/index";
+import NestedCheckboxList from "src/components/NestedCheckboxList";
 import {
   getRegionsInSuperRegion,
   superRegionName,
@@ -52,8 +52,8 @@ import {
   getSectorsInSuperSector,
   superSectorName,
 } from "src/taxonomy/sectors/superSector";
-import { countryNameWithFlag } from "src/taxonomy/regions/country.js";
-import { industryName } from "src/taxonomy/sectors/industry.js";
+import { countryNameWithFlag } from "src/taxonomy/regions/country";
+import { industryName } from "src/taxonomy/sectors/industry";
 
 const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
@@ -83,7 +83,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
             <Button
               sx={{ mt: { xs: 2, md: 0 }, ml: { xs: 0, md: 2 } }}
               variant="contained"
-              startIcon={<AddTwoToneIcon />}
+              startIcon={<AddIcon />}
               disabled
             >
               New Stock
@@ -93,7 +93,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
         <Button
           sx={{ mt: { xs: 2, md: 0 }, ml: { xs: 0, md: 2 } }}
           variant="contained"
-          startIcon={<TuneTwoToneIcon />}
+          startIcon={<TuneIcon />}
           onClick={() => setFilterOpen(true)}
         >
           Filter Stocks
@@ -106,7 +106,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           }}
           variant="contained"
           color="error"
-          startIcon={<ClearTwoToneIcon />}
+          startIcon={<ClearIcon />}
           onClick={() => {
             props.applyFilters();
             setStockNameInput("");
@@ -153,7 +153,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                       }}
                       onClick={() => setStockNameInput("")}
                     >
-                      <ClearTwoToneIcon />
+                      <ClearIcon />
                     </IconButton>
                   ),
                 }}
@@ -178,7 +178,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                         }}
                         onClick={() => setStyleboxInput({})}
                       >
-                        <ClearTwoToneIcon />
+                        <ClearIcon />
                       </IconButton>
                     </Tooltip>
                   </Grid>
@@ -199,7 +199,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                             })
                           }
                         >
-                          <ArrowDropDownTwoToneIcon />
+                          <ArrowDropDownIcon />
                         </IconButton>
                       </Tooltip>
                     </Grid>
@@ -226,7 +226,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                                   })
                                 }
                               >
-                                <ArrowRightTwoToneIcon />
+                                <ArrowRightIcon />
                               </IconButton>
                             </Tooltip>
                           </Grid>
@@ -309,7 +309,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
               );
               setFilterOpen(false);
             }}
-            startIcon={<PublishedWithChangesTwoToneIcon />}
+            startIcon={<PublishedWithChangesIcon />}
             color="success"
             sx={{ borderRadius: 0, mt: 2 }}
           >

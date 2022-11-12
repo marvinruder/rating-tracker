@@ -28,7 +28,7 @@ node {
         //     curl -Os https://uploader.codecov.io/latest/linux/codecov
         //     chmod +x ./codecov
         //     """
-        //     withCredentials([string(credentialsId: 'codecov-token', variable: 'CODECOV_TOKEN')]) {
+        //     withCredentials([string(credentialsId: 'codecov-token-frontend', variable: 'CODECOV_TOKEN')]) {
         //         sh "./codecov -s coverage -C $GIT_COMMIT_HASH"
         //     }
         // }

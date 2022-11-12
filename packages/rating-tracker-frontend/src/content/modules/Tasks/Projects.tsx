@@ -13,12 +13,12 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import MoreVertTwoToneIcon from "@mui/icons-material/MoreVertTwoTone";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Link as RouterLink } from "react-router-dom";
 import Text from "src/components/Text";
-import CalendarTodayTwoToneIcon from "@mui/icons-material/CalendarTodayTwoTone";
-import CheckTwoToneIcon from "@mui/icons-material/CheckTwoTone";
-import StarTwoToneIcon from "@mui/icons-material/StarTwoTone";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import CheckIcon from "@mui/icons-material/Check";
+import StarIcon from "@mui/icons-material/Star";
 
 const AvatarWrapperSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -84,12 +84,12 @@ function Projects() {
               }}
               avatar={
                 <AvatarWrapperSuccess>
-                  <CheckTwoToneIcon />
+                  <CheckIcon />
                 </AvatarWrapperSuccess>
               }
               action={
                 <IconButton size="small" color="primary">
-                  <MoreVertTwoToneIcon />
+                  <MoreVertIcon />
                 </IconButton>
               }
               title="Fix Urgent Mobile App Bugs"
@@ -190,7 +190,7 @@ function Projects() {
                       ml: 0.5,
                     }}
                   >
-                    <CalendarTodayTwoToneIcon fontSize="small" />
+                    <CalendarTodayIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
                 <Tooltip
@@ -205,7 +205,7 @@ function Projects() {
                       ml: 0.5,
                     }}
                   >
-                    <StarTwoToneIcon fontSize="small" />
+                    <StarIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -230,7 +230,7 @@ function Projects() {
               }
               action={
                 <IconButton size="small" color="primary">
-                  <MoreVertTwoToneIcon />
+                  <MoreVertIcon />
                 </IconButton>
               }
               title="Replace Placeholder Images"
@@ -307,7 +307,7 @@ function Projects() {
                       ml: 0.5,
                     }}
                   >
-                    <CalendarTodayTwoToneIcon fontSize="small" />
+                    <CalendarTodayIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
                 <Tooltip
@@ -322,7 +322,7 @@ function Projects() {
                       ml: 0.5,
                     }}
                   >
-                    <StarTwoToneIcon fontSize="small" />
+                    <StarIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -356,7 +356,7 @@ function Projects() {
               }
               action={
                 <IconButton size="small" color="primary">
-                  <MoreVertTwoToneIcon />
+                  <MoreVertIcon />
                 </IconButton>
               }
               title="BloomUI Redesign Project"
@@ -445,7 +445,7 @@ function Projects() {
                       ml: 0.5,
                     }}
                   >
-                    <CalendarTodayTwoToneIcon fontSize="small" />
+                    <CalendarTodayIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
                 <Tooltip
@@ -460,7 +460,7 @@ function Projects() {
                       ml: 0.5,
                     }}
                   >
-                    <StarTwoToneIcon fontSize="small" />
+                    <StarIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
               </Box>

@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { groupOfIndustry } from "src/taxonomy/sectors/industryGroup.js";
-import { sectorOfIndustryGroup } from "src/taxonomy/sectors/sector.js";
+import { groupOfIndustry } from "src/taxonomy/sectors/industryGroup";
+import { sectorOfIndustryGroup } from "src/taxonomy/sectors/sector";
 import {
   getColor,
   superSectorOfSector,

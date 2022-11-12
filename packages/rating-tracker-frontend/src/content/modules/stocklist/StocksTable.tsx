@@ -1,7 +1,6 @@
 import { FC, ChangeEvent, useState, useEffect } from "react";
 import axios from "axios";
 import {
-  Tooltip,
   // IconButton,
   Table,
   TableBody,
@@ -10,41 +9,17 @@ import {
   TablePagination,
   TableRow,
   TableContainer,
-  Typography,
-  useTheme,
-  Snackbar,
-  Alert,
-  Slide,
   TableSortLabel,
-  Skeleton,
 } from "@mui/material";
-// import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-// import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+// import EditIcon from "@mui/icons-material/Edit";
+// import DeleteIcon from "@mui/icons-material/Delete";
 import { Stock } from "src/models/stock";
-import StyleBox from "src/components/StyleBox";
-import SectorIcon from "src/components/SectorIcon";
-import { countryNameWithFlag } from "src/taxonomy/regions/country";
 import { baseUrl, stockAPI, stockListEndpoint } from "src/endpoints";
 import { Country, Industry, Size, SortableAttribute, Style } from "src/types";
-import StarRating from "src/components/StarRating/index";
-import { regionName, regionOfCountry } from "src/taxonomy/regions/region.js";
-import {
-  superRegionName,
-  superRegionOfRegion,
-} from "src/taxonomy/regions/superregion.js";
-import {
-  sectorName,
-  sectorOfIndustryGroup,
-} from "src/taxonomy/sectors/sector.js";
-import {
-  groupOfIndustry,
-  industryGroupName,
-} from "src/taxonomy/sectors/industryGroup.js";
-import {
-  superSectorName,
-  superSectorOfSector,
-} from "src/taxonomy/sectors/superSector.js";
-import { industryName } from "src/taxonomy/sectors/industry.js";
+import StockRow from "./StockRow";
+import NotificationSnackbar, {
+  Notification,
+} from "src/components/NotificationSnackbar/index.js";
 
 const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [page, setPage] = useState<number>(0);
@@ -52,13 +27,9 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [notification, setNotification] = useState<Notification>(undefined);
   const [sortBy, setSortBy] = useState<SortableAttribute>("name");
   const [sortDesc, setSortDesc] = useState<boolean>(false);
-
-  useEffect(() => {
-    getStocks();
-  }, []);
 
   useEffect(() => {
     getStocks();
@@ -91,14 +62,14 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
         setCount(res.data.count);
       })
       .catch((e) => {
-        console.error(e);
-        try {
-          setErrorMessage(
-            `${e.response.status} ${e.response.statusText}: ${e.response.data.message}`
-          );
-        } catch {
-          setErrorMessage(e.message);
-        }
+        setNotification({
+          severity: "error",
+          title: "Error while fetching stock information",
+          message:
+            e.response?.status && e.response?.data?.message
+              ? `${e.response.status}: ${e.response.data.message}`
+              : e.message ?? "No additional information available.",
+        });
         setCount(0);
       })
       .finally(() => setStocksFinal(true));
@@ -124,10 +95,14 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
     }
   };
 
-  const theme = useTheme();
-
   return (
     <>
+      <NotificationSnackbar
+        notification={notification}
+        snackbarProps={{
+          anchorOrigin: { horizontal: "center", vertical: "bottom" },
+        }}
+      />
       <TableContainer>
         <Table size="small">
           <TableHead>
@@ -201,335 +176,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
           </TableHead>
           <TableBody>
             {stocksFinal
-              ? stocks.map((stock) => {
-                  return (
-                    <TableRow hover key={stock.ticker}>
-                      <TableCell>
-                        <Typography
-                          variant="body1"
-                          fontWeight="bold"
-                          color="text.primary"
-                          width={160}
-                          noWrap
-                        >
-                          {stock.name}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          width={160}
-                          noWrap
-                        >
-                          {stock.ticker}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body1"
-                          fontWeight="bold"
-                          color="text.primary"
-                          width={125}
-                          noWrap
-                        >
-                          {stock.country && countryNameWithFlag[stock.country]}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          width={125}
-                          noWrap
-                        >
-                          {stock.country &&
-                            regionName[regionOfCountry[stock.country]]}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          width={125}
-                          noWrap
-                        >
-                          {stock.country &&
-                            superRegionName[
-                              superRegionOfRegion[
-                                regionOfCountry[stock.country]
-                              ]
-                            ]}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Tooltip
-                          title={
-                            stock.size && stock.style
-                              ? `${stock.size}-${stock.style}`
-                              : undefined
-                          }
-                          arrow
-                        >
-                          <div
-                            style={{
-                              width:
-                                2.75 *
-                                (theme.typography.body1.fontSize as number),
-                            }}
-                          >
-                            <StyleBox
-                              fill={theme.colors.alpha.black[100]}
-                              stroke={theme.colors.alpha.black[100]}
-                              size={stock.size}
-                              style={stock.style}
-                              length={
-                                2.75 *
-                                (theme.typography.body1.fontSize as number)
-                              }
-                            />
-                          </div>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          {stock.industry && (
-                            <SectorIcon
-                              industry={stock.industry}
-                              length={
-                                1.75 *
-                                (theme.typography.body1.fontSize as number)
-                              }
-                              type={"Sector"}
-                            />
-                          )}
-                          <span style={{ width: 6 }} />
-                          <Typography
-                            variant="body1"
-                            fontWeight="bold"
-                            width={105}
-                            noWrap
-                          >
-                            {stock.industry &&
-                              sectorName[
-                                sectorOfIndustryGroup[
-                                  groupOfIndustry[stock.industry]
-                                ]
-                              ]}
-                          </Typography>
-                        </span>
-                        <span
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          {stock.industry && (
-                            <SectorIcon
-                              industry={stock.industry}
-                              length={
-                                1.75 *
-                                (theme.typography.body2.fontSize as number)
-                              }
-                              type={"SuperSector"}
-                            />
-                          )}
-                          <span style={{ width: 6 }} />
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            width={105}
-                            noWrap
-                          >
-                            {stock.industry &&
-                              superSectorName[
-                                superSectorOfSector[
-                                  sectorOfIndustryGroup[
-                                    groupOfIndustry[stock.industry]
-                                  ]
-                                ]
-                              ]}
-                          </Typography>
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body1"
-                          fontWeight="bold"
-                          color="text.primary"
-                          width={150}
-                          noWrap
-                        >
-                          {stock.industry && industryName[stock.industry]}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          width={150}
-                          noWrap
-                        >
-                          {stock.industry &&
-                            industryGroupName[groupOfIndustry[stock.industry]]}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <StarRating value={stock.starRating} />
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body1"
-                          color="text.primary"
-                          width={45}
-                          noWrap
-                        >
-                          {stock.dividendYieldPercent ?? "–"}
-                          {" %"}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body1"
-                          color="text.primary"
-                          width={45}
-                          noWrap
-                        >
-                          {stock.priceEarningRatio ?? "–"}
-                        </Typography>
-                      </TableCell>
-                      {/* <TableCell align="right">
-                        <Tooltip title="Edit Order" arrow>
-                          <IconButton
-                            sx={{
-                              "&:hover": {
-                                background: theme.colors.primary.lighter,
-                              },
-                              color: theme.palette.primary.main,
-                            }}
-                            color="inherit"
-                            size="small"
-                          >
-                            <EditTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete Order" arrow>
-                          <IconButton
-                            sx={{
-                              "&:hover": {
-                                background: theme.colors.error.lighter,
-                              },
-                              color: theme.palette.error.main,
-                            }}
-                            color="inherit"
-                            size="small"
-                          >
-                            <DeleteTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell> */}
-                    </TableRow>
-                  );
-                })
+              ? stocks.map((stock) => (
+                  <StockRow stock={stock} key={stock.ticker} />
+                ))
               : [...Array(rowsPerPage > 0 ? rowsPerPage : 100)].map(
-                  (_undef, key) => {
-                    return (
-                      <TableRow hover key={key}>
-                        <TableCell>
-                          <Typography variant="body1">
-                            <Skeleton width={160} />
-                          </Typography>
-                          <Typography variant="body2">
-                            <Skeleton width={160} />
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body1">
-                            <Skeleton width={125} />
-                          </Typography>
-                          <Typography variant="body2">
-                            <Skeleton width={125} />
-                          </Typography>
-                          <Typography variant="body2">
-                            <Skeleton width={125} />
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton
-                            variant="rectangular"
-                            width={
-                              2.75 * (theme.typography.body1.fontSize as number)
-                            }
-                            height={
-                              2.75 * (theme.typography.body1.fontSize as number)
-                            }
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body1">
-                            <Skeleton width={132} />
-                          </Typography>
-                          <Typography variant="body2">
-                            <Skeleton width={132} />
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body1">
-                            <Skeleton width={150} />
-                          </Typography>
-                          <Typography variant="body2">
-                            <Skeleton width={150} />
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {[...Array(5).keys()].map((index) => {
-                            return (
-                              <Skeleton
-                                key={index}
-                                sx={{ m: "2px", display: "inline-block" }}
-                                variant="circular"
-                                width={20}
-                                height={20}
-                              />
-                            );
-                          })}
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body1">
-                            <Skeleton width={45} />
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body1">
-                            <Skeleton width={45} />
-                          </Typography>
-                        </TableCell>
-                        {/* <TableCell align="right">
-                          <Skeleton
-                            sx={{ m: "2px", display: "inline-block" }}
-                            variant="circular"
-                            width={
-                              2 * (theme.typography.body1.fontSize as number) -
-                              4
-                            }
-                            height={
-                              2 * (theme.typography.body1.fontSize as number) -
-                              4
-                            }
-                          />
-                          <Skeleton
-                            sx={{ m: "2px", display: "inline-block" }}
-                            variant="circular"
-                            width={
-                              2 * (theme.typography.body1.fontSize as number) -
-                              4
-                            }
-                            height={
-                              2 * (theme.typography.body1.fontSize as number) -
-                              4
-                            }
-                          />
-                        </TableCell> */}
-                      </TableRow>
-                    );
-                  }
+                  (_undef, key) => <StockRow key={key} />
                 )}
           </TableBody>
         </Table>
@@ -545,21 +196,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
         showFirstButton
         showLastButton
       />
-      <Snackbar
-        open={errorMessage.length > 0}
-        onClose={() => setErrorMessage("")}
-        TransitionComponent={(props) => <Slide {...props} direction="up" />}
-        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-      >
-        <Alert
-          onClose={() => setErrorMessage("")}
-          severity="error"
-          sx={{ width: "100%" }}
-          variant={"filled"}
-        >
-          {errorMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };
