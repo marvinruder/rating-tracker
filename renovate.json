@@ -1,6 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ]
+  "extends": ["config:base"],
+  "automerge": true,
+  "automergeType": "branch",
+  "timezone": "Europe/Berlin",
+  "assignees": ["ruder.marvin@icloud.com"],
+  "updateLockFiles": true,
+  "rangeStrategy": "bump"
 }
