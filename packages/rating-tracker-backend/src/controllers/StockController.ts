@@ -6,7 +6,7 @@ import {
   deleteStock,
   readAllStocks,
   indexStockRepository,
-} from "../redis/repositories/stockRepository.js";
+} from "../redis/repositories/stock/stockRepository.js";
 import {
   Country,
   Industry,

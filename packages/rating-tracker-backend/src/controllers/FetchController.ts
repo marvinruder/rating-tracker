@@ -19,7 +19,7 @@ import {
   readAllStocks,
   readStock,
   updateStockWithoutReindexing,
-} from "../redis/repositories/stockRepository.js";
+} from "../redis/repositories/stock/stockRepository.js";
 import { sendMessage } from "../signal/signal.js";
 
 class FetchController {

@@ -1,7 +1,12 @@
+// import { STATUS_CODES } from "http";
+
 class APIError extends Error {
   status: number;
 
   constructor(httpStatus: number, message: string) {
+    // if (!message) {
+    //   message = STATUS_CODES[httpStatus];
+    // }
     super(message);
     Error.captureStackTrace(this, this.constructor);
     this.name = this.constructor.name;

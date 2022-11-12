@@ -1,9 +1,9 @@
-import APIError from "../../apiError.js";
-import { Stock, StockEntity, stockSchema } from "../../models/stock.js";
+import APIError from "../../../apiError.js";
+import { Stock, StockEntity, stockSchema } from "../../../models/stock.js";
 import { fetch, fetchAll, index, remove, save } from "./stockRepositoryBase.js";
 import chalk from "chalk";
-import { Country, Industry, Size, Style } from "../../types.js";
-import { sendMessage } from "../../signal/signal.js";
+import { Country, Industry, Size, Style } from "../../../types.js";
+import { sendMessage } from "../../../signal/signal.js";
 
 export const indexStockRepository = () => {
   index();
@@ -40,9 +40,8 @@ export const readStock = async (ticker: string) => {
   const stockEntity = await fetch(ticker);
   if (stockEntity && stockEntity.name) {
     return new Stock(stockEntity);
-  } else {
-    throw new APIError(404, `Stock ${ticker} not found.`);
   }
+  throw new APIError(404, `Stock ${ticker} not found.`);
 };
 
 export const readAllStocks = () => {

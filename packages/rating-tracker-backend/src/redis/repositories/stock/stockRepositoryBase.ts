@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import { StockEntity, stockSchema } from "../../models/stock.js";
-import client from "../Client.js";
+import { StockEntity, stockSchema } from "../../../models/stock.js";
+import client from "../../Client.js";
 import chalk from "chalk";
 
 console.log(
