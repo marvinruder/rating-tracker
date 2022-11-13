@@ -15,7 +15,8 @@
     "test:watch": "cd packages/rating-tracker-backend && yarn test:watch",
     "test": "cd packages/rating-tracker-backend && yarn test",
     "build": "yarn workspaces foreach run build",
-    "start": "cd packages/rating-tracker-backend && yarn start"
+    "start": "cd packages/rating-tracker-backend && yarn start",
+    "lint": "yarn workspaces foreach run lint"
   },
   "packageManager": "yarn@3.2.4",
   "devDependencies": {
