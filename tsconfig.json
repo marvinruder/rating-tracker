@@ -15,5 +15,5 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["package.json"]
+  "include": []
 }
