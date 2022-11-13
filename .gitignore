@@ -25,3 +25,4 @@ packages/*/.env.local
 packages/*/.env.development.local
 packages/*/.env.test.local
 packages/*/.env.production.local
+stash
