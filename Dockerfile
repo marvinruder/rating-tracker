@@ -12,7 +12,7 @@ RUN yarn
 RUN yarn build
 
 # Copy static frontend files into backend for serving
-RUN cp -r /build/packages/rating-tracker-frontend/dist /build/packages/rating-tracker-backend/dist/static
+RUN cp -r /build/packages/rating-tracker-frontend/dist /build/packages/rating-tracker-backend/static
 
 # Delete frontend code and caches only used by frontend
 RUN rm -r /build/packages/rating-tracker-frontend
@@ -22,7 +22,7 @@ RUN yarn
 RUN mkdir -p /build/app/packages/rating-tracker-backend /build/app/.yarn
 RUN cp -r /build/.pnp.* /build/package.json /build/yarn.lock /build/app
 RUN cp -r /build/.yarn/cache /build/.yarn/releases /build/.yarn/unplugged /build/app/.yarn
-RUN cp -r /build/packages/rating-tracker-backend/dist /build/packages/rating-tracker-backend/package.json /build/app/packages/rating-tracker-backend
+RUN cp -r /build/packages/rating-tracker-backend/dist /build/packages/rating-tracker-backend/static /build/packages/rating-tracker-backend/package.json /build/app/packages/rating-tracker-backend
 
 # should contain the yarnPath
 RUN tail -1 .yarnrc.yml > /build/app/.yarnrc.yml
