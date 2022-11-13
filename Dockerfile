@@ -14,6 +14,7 @@ WORKDIR /app
 RUN rm -r /app/packages/rating-tracker-frontend
 RUN yarn
 RUN yarn build
+RUN cp -r /app/static /app/packages/rating-tracker-backend/dist/static
 
 
 FROM node:alpine as run
@@ -21,14 +22,10 @@ ENV NODE_ENV production
 
 WORKDIR /app
 
-COPY --from=build /app/.yarn /app/.yarn
-COPY --from=build /app/.pnp.cjs /app/.pnp.cjs
-COPY --from=build /app/.pnp.loader.mjs /app/.pnp.loader.mjs
-COPY --from=build /app/.yarnrc.yml /app/.yarnrc.yml
+COPY --from=build /app/*yarn* /app/
+COPY --from=build /app/.pnp* /app/
 COPY --from=build /app/package.json /app/package.json
-COPY --from=build /app/yarn.lock /app/yarn.lock
 COPY --from=build /app/packages/rating-tracker-backend/dist /app/packages/rating-tracker-backend/dist
 COPY --from=build /app/packages/rating-tracker-backend/package.json /app/packages/rating-tracker-backend/package.json
-COPY --from=build /app/static /app/packages/rating-tracker-backend/dist/static
 
 CMD [ "yarn", "start" ]
