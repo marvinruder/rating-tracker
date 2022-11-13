@@ -2,27 +2,36 @@ FROM node:alpine as build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
-WORKDIR /app
+WORKDIR /build
 
 COPY . .
+
+# Build
 RUN yarn workspaces focus --production
 RUN yarn
 RUN yarn build
 
+# Copy static frontend files into backend for serving
+RUN cp -r /build/packages/rating-tracker-frontend/dist /build/packages/rating-tracker-backend/public
+
+# Delete frontend code and caches only used by frontend
+RUN rm -r /build/packages/rating-tracker-frontend
+RUN yarn
+
+# Create directories for run container and copy only necessary files
+RUN mkdir -p /build/app/packages/rating-tracker-backend /build/app/.yarn
+RUN cp -r /build/.pnp.* /build/package.json /build/yarn.lock /build/app
+RUN cp -r /build/.yarn/cache /build/.yarn/releases /build/.yarn/unplugged /build/app/.yarn
+RUN cp -r /build/packages/rating-tracker-backend/dist /build/packages/rating-tracker-backend/public /build/packages/rating-tracker-backend/package.json /build/app/packages/rating-tracker-backend
+
+# should contain the yarnPath
+RUN tail -1 .yarnrc.yml > /build/app/.yarnrc.yml
 
 FROM node:alpine as run
 ENV NODE_ENV production
 
-WORKDIR /app
+COPY --from=build /build/app /app
 
-COPY --from=build /app/.yarn /app/.yarn
-COPY --from=build /app/.pnp.cjs /app/.pnp.cjs
-COPY --from=build /app/.pnp.loader.mjs /app/.pnp.loader.mjs
-COPY --from=build /app/.yarnrc.yml /app/.yarnrc.yml
-COPY --from=build /app/package.json /app/package.json
-COPY --from=build /app/yarn.lock /app/yarn.lock
-COPY --from=build /app/packages/rating-tracker-backend/dist /app/packages/rating-tracker-backend/dist
-COPY --from=build /app/packages/rating-tracker-backend/package.json /app/packages/rating-tracker-backend/package.json
-COPY --from=build /app/packages/rating-tracker-frontend/dist /app/packages/rating-tracker-backend/dist/static
+WORKDIR /app
 
 CMD [ "yarn", "start" ]

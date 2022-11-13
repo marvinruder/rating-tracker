@@ -32,7 +32,7 @@ class Server {
 
 export const server = new Server();
 
-const staticContentPath = path.join(__dirname, "..", "static");
+const staticContentPath = path.join(__dirname, "..", "public");
 
 server.app.use(express.static(staticContentPath));
 console.log(chalk.grey(`Serving static content from ${staticContentPath}\n`));

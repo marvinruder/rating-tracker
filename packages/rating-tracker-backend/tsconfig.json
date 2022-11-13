@@ -4,6 +4,5 @@
     "noEmit": false,
     "outDir": "dist"
   },
-  "include": ["."],
-  "exclude": ["dist"]
+  "include": ["src", "jest.config.ts"]
 }
