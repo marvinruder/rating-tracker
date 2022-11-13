@@ -8,6 +8,7 @@ COPY . .
 
 # Build
 RUN yarn workspaces focus --production
+RUN yarn
 RUN yarn build
 
 # Copy static frontend files into backend for serving
