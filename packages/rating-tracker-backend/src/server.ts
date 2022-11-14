@@ -33,7 +33,10 @@ class Server {
 export const server = new Server();
 
 server.app.use((_, res, next) => {
-  res.set("Content-Security-Policy", "default-src 'self'");
+  res.set(
+    "Content-Security-Policy",
+    "default-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'none'; form-action 'self';"
+  );
   next();
 });
 

@@ -45,7 +45,7 @@ class PrivateRouter {
   private _configure() {
     this._router.use("/fetch", this._subrouterFetch);
     this._router.use("/stock", this._subrouterStock);
-    this._router.head("/session", (req, res) => {
+    this._router.head("/session", (_, res) => {
       return res.sendStatus(204);
     });
   }
