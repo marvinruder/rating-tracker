@@ -35,7 +35,7 @@ export const server = new Server();
 server.app.use((_, res, next) => {
   res.set(
     "Content-Security-Policy",
-    "default-src 'self'; style-src-attr 'self' 'unsafe-inline'; frame-ancestors 'none'; form-action 'self';"
+    "default-src 'self'; style-src-elem 'self' 'unsafe-inline'; frame-ancestors 'none'; form-action 'self';"
   );
   next();
 });
