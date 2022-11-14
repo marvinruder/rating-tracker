@@ -1,3 +1,4 @@
+const { randomUUID } = await import("node:crypto");
 import cookieParser from "cookie-parser";
 import * as cron from "cron";
 import dotenv from "dotenv";
@@ -23,7 +24,7 @@ dotenv.config({
   path: ".env.local",
 });
 
-const PORT = process.env.PORT;
+const bypassAuthenticationForInternalRequestsToken = randomUUID();
 
 class Server {
   public app = express();
@@ -175,8 +176,12 @@ server.app.use(
   "/api",
   cors(),
   server.router.public,
-  (_, res, next) => {
-    if (res.locals.user && res.locals.user.accessRights > 0) {
+  (req, res, next) => {
+    if (
+      (res.locals.user && res.locals.user.accessRights > 0) ||
+      req.cookies.bypassAuthenticationForInternalRequestsToken ===
+        bypassAuthenticationForInternalRequestsToken
+    ) {
       next();
     } else {
       throw new APIError(
@@ -203,8 +208,11 @@ if (process.env.AUTO_FETCH_SCHEDULE) {
   new cron.CronJob(
     process.env.AUTO_FETCH_SCHEDULE,
     () => {
-      axios.get(`http://localhost:${PORT}/api/fetch/morningstar`, {
+      axios.get(`http://localhost:${process.env.PORT}/api/fetch/morningstar`, {
         params: { detach: "true" },
+        headers: {
+          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+        },
       });
     },
     null,
@@ -220,11 +228,11 @@ if (process.env.AUTO_FETCH_SCHEDULE) {
   );
 }
 
-export const listener = server.app.listen(PORT, () => {
+export const listener = server.app.listen(process.env.PORT, () => {
   console.log(
     chalk.whiteBright.bgRed(" \ue76d ") +
       chalk.red.bgGrey("") +
-      chalk.whiteBright.bgGrey(` \uf6ff ${PORT} `) +
+      chalk.whiteBright.bgGrey(` \uf6ff ${process.env.PORT} `) +
       chalk.grey("") +
       chalk.green(" Listening…") +
       "\n"
