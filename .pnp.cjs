@@ -6042,17 +6042,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["cors", [\
-        ["npm:2.8.5", {\
-          "packageLocation": "./.yarn/cache/cors-npm-2.8.5-c9935a2d12-ced838404c.zip/node_modules/cors/",\
-          "packageDependencies": [\
-            ["cors", "npm:2.8.5"],\
-            ["object-assign", "npm:4.1.1"],\
-            ["vary", "npm:1.1.2"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["cosmiconfig", [\
         ["npm:7.0.1", {\
           "packageLocation": "./.yarn/cache/cosmiconfig-npm-7.0.1-dd19ae2403-4be63e7117.zip/node_modules/cosmiconfig/",\
@@ -10322,7 +10311,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chalk", "npm:5.1.2"],\
             ["concurrently", "npm:7.5.0"],\
             ["cookie-parser", "npm:1.4.6"],\
-            ["cors", "npm:2.8.5"],\
             ["cron", "npm:2.1.0"],\
             ["date-fns", "npm:2.29.3"],\
             ["dotenv", "npm:16.0.3"],\

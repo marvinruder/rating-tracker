@@ -3,7 +3,6 @@ import cookieParser from "cookie-parser";
 import * as cron from "cron";
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
-import cors from "cors";
 import Router from "./routers/Router.js";
 import SwaggerUI from "swagger-ui-express";
 import openapiDocument from "./openapi.js";
@@ -179,7 +178,6 @@ server.app.use(
 
 server.app.use(
   "/api",
-  cors(),
   server.router.public,
   (req, res, next) => {
     if (
