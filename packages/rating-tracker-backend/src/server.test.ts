@@ -253,7 +253,7 @@ describe("Authentication API", () => {
     expect(res.body.authenticatorSelection.requireResidentKey).toBeTruthy();
   });
 
-  it("handles a registration challenge request from an existing user", async () => {
+  it("rejects a registration challenge request from an existing user", async () => {
     const res = await requestWithSupertest.get(
       "/api/auth/register?email=jane.doe%40example.com&name=Jane%20Doe"
     );
@@ -263,7 +263,14 @@ describe("Authentication API", () => {
     );
   });
 
-  it("handles a registration challenge request from an unknown user", async () => {
+  it("rejects a registration challenge request from an unknown user", async () => {
+    const res = await requestWithSupertest.get(
+      "/api/auth/register?email=notAnEmailAddress&name=John%20Doe"
+    );
+    expect(res.status).toBe(400);
+  });
+
+  it("rejects a registration challenge request from an invalid user", async () => {
     const res = await requestWithSupertest.get("/api/auth/register");
     expect(res.status).toBe(400);
   });

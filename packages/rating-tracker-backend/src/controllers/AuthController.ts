@@ -14,6 +14,7 @@ import {
   userExists,
 } from "../redis/repositories/user/userRepository.js";
 import { sessionTTLInSeconds } from "../redis/repositories/session/sessionRepositoryBase.js";
+import validator from "validator";
 
 dotenv.config({
   path: ".env.local",
@@ -29,7 +30,11 @@ class AuthController {
   async getRegistrationOptions(req: Request, res: Response) {
     const email = req.query.email;
     const name = req.query.name;
-    if (typeof email === "string" && typeof name === "string") {
+    if (
+      typeof email === "string" &&
+      typeof name === "string" &&
+      validator.isEmail(email)
+    ) {
       if (await userExists(email)) {
         throw new APIError(
           403,
@@ -49,6 +54,8 @@ class AuthController {
       });
       currentChallenges[email] = options.challenge;
       return res.status(200).json(options);
+    } else {
+      throw new APIError(400, "Invalid name or email address");
     }
   }
 
@@ -56,7 +63,11 @@ class AuthController {
   async postRegistrationResponse(req: Request, res: Response) {
     const email = req.query.email;
     const name = req.query.name;
-    if (typeof email === "string" && typeof name === "string") {
+    if (
+      typeof email === "string" &&
+      typeof name === "string" &&
+      validator.isEmail(email)
+    ) {
       const expectedChallenge: string = currentChallenges[email];
       let verification;
       try {
@@ -97,6 +108,8 @@ class AuthController {
         return res.sendStatus(201);
       }
       throw new APIError(400, "Registration failed");
+    } else {
+      throw new APIError(400, "Invalid name or email address");
     }
   }
 
