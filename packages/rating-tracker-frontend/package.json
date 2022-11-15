@@ -36,7 +36,7 @@
     "@mui/material": "5.10.13",
     "@simplewebauthn/browser": "6.2.2",
     "@types/react": "18.0.25",
-    "@types/react-dom": "18.0.8",
+    "@types/react-dom": "18.0.9",
     "@vitejs/plugin-react": "2.2.0",
     "apexcharts": "3.36.3",
     "axios": "1.1.3",
