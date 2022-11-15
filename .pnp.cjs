@@ -7180,17 +7180,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["express-rate-limit", [\
-        ["npm:6.6.0", {\
-          "packageLocation": "./.yarn/cache/express-rate-limit-npm-6.6.0-d57a9b2fe2-056e26c30a.zip/node_modules/express-rate-limit/",\
+        ["npm:6.7.0", {\
+          "packageLocation": "./.yarn/cache/express-rate-limit-npm-6.7.0-e847771089-7bd3f298b2.zip/node_modules/express-rate-limit/",\
           "packageDependencies": [\
-            ["express-rate-limit", "npm:6.6.0"]\
+            ["express-rate-limit", "npm:6.7.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.6.0", {\
-          "packageLocation": "./.yarn/__virtual__/express-rate-limit-virtual-4764043cde/0/cache/express-rate-limit-npm-6.6.0-d57a9b2fe2-056e26c30a.zip/node_modules/express-rate-limit/",\
+        ["virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.7.0", {\
+          "packageLocation": "./.yarn/__virtual__/express-rate-limit-virtual-0135a44e93/0/cache/express-rate-limit-npm-6.7.0-e847771089-7bd3f298b2.zip/node_modules/express-rate-limit/",\
           "packageDependencies": [\
-            ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.6.0"],\
+            ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.7.0"],\
             ["@types/express", "npm:4.17.14"],\
             ["express", "npm:4.18.2"]\
           ],\
@@ -10331,7 +10331,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.18.2"],\
             ["express-async-errors", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:3.1.1"],\
             ["express-openapi-validator", "npm:4.13.8"],\
-            ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.6.0"],\
+            ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.7.0"],\
             ["jest", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.3.1"],\
             ["prettier", "npm:2.7.1"],\
             ["redis", "npm:4.5.0"],\
