@@ -34,10 +34,6 @@ export const server = new Server();
 
 server.app.disable("x-powered-by");
 
-server.app.use((_, res, next) => {
-  next();
-});
-
 const staticContentPath = path.join(__dirname, "..", "public");
 
 server.app.use(express.static(staticContentPath));
