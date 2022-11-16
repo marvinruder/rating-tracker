@@ -41,7 +41,7 @@
     "response-time": "2.3.2",
     "selenium-webdriver": "4.6.1",
     "swagger-ui-express": "4.6.0",
-    "typescript": "4.8.4"
+    "typescript": "4.9.3"
   },
   "devDependencies": {
     "@jest/globals": "29.3.1",
