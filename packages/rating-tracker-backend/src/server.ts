@@ -39,6 +39,11 @@ const staticContentPath = path.join(__dirname, "..", "public");
 server.app.use(express.static(staticContentPath));
 console.log(chalk.grey(`Serving static content from ${staticContentPath}\n`));
 
+server.app.use((_, res, next) => {
+  res.set("Cache-Control", "no-cache");
+  next();
+});
+
 /* istanbul ignore next */
 const highlightMethod = (method: string) => {
   switch (method) {
