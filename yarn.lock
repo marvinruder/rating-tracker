@@ -7695,7 +7695,7 @@ __metadata:
     typescript: 4.9.3
     vite: 3.2.4
     vite-plugin-svgr: 2.2.2
-    vite-tsconfig-paths: 3.5.2
+    vite-tsconfig-paths: 3.6.0
   languageName: unknown
   linkType: soft
 
@@ -9676,9 +9676,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-tsconfig-paths@npm:3.5.2":
-  version: 3.5.2
-  resolution: "vite-tsconfig-paths@npm:3.5.2"
+"vite-tsconfig-paths@npm:3.6.0":
+  version: 3.6.0
+  resolution: "vite-tsconfig-paths@npm:3.6.0"
   dependencies:
     debug: ^4.1.1
     globrex: ^0.1.2
@@ -9686,7 +9686,7 @@ __metadata:
     tsconfig-paths: ^4.0.0
   peerDependencies:
     vite: ">2.0.0-0"
-  checksum: f3159d05fe2033563ccb7b15d9c1c37b1ed71016c7d0106147e898b68309978f7b2c76df841d563dfdff3be631ad22a5271bc869955b37a4ec1ed4ad6bb21655
+  checksum: 3b079d7fd49e49392d2739bff5144a12f1b4b535468cea803a13265a85472044f4072db0f92830b1f38fcc4d0cdf6aeecf2a32413d669ca13de73c10c88d6ee9
   languageName: node
   linkType: hard
 
