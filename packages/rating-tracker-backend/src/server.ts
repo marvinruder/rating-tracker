@@ -36,6 +36,7 @@ server.app.disable("x-powered-by");
 
 const staticContentPath = path.join(__dirname, "..", "public");
 
+/* istanbul ignore next */
 server.app.use(
   express.static(staticContentPath, {
     dotfiles: "ignore",
