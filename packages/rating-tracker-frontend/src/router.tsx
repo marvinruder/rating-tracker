@@ -33,7 +33,13 @@ const Status500 = loader(
   lazy(() => import("./content/pages/Status/Status500"))
 );
 
-const AuthWrapper = ({ children }: { children: JSX.Element }) => {
+const AuthWrapper = ({
+  children,
+  isLoginPage,
+}: {
+  children: JSX.Element;
+  isLoginPage?: boolean;
+}) => {
   const [done, setDone] = useState<boolean>(false);
   const [authed, setAuthed] = useState<boolean>(false);
   useEffect(() => {
@@ -52,6 +58,12 @@ const AuthWrapper = ({ children }: { children: JSX.Element }) => {
 
   return done ? (
     authed ? (
+      isLoginPage ? (
+        <Navigate to="/" replace />
+      ) : (
+        children
+      )
+    ) : isLoginPage ? (
       children
     ) : (
       <Navigate to="/login" replace />
@@ -91,7 +103,11 @@ const routes: RouteObject[] = [
   },
   {
     path: "login",
-    element: <LoginApp />,
+    element: (
+      <AuthWrapper isLoginPage>
+        <LoginApp />
+      </AuthWrapper>
+    ),
   },
   {
     path: "status",

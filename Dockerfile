@@ -28,10 +28,9 @@ RUN cp -r /build/packages/rating-tracker-backend/dist /build/packages/rating-tra
 RUN tail -1 .yarnrc.yml > /build/app/.yarnrc.yml
 
 FROM node:alpine as run
+RUN apk add --no-cache dumb-init
 ENV NODE_ENV production
-
-COPY --from=build /build/app /app
-
+USER node
 WORKDIR /app
-
-CMD [ "yarn", "start" ]
+COPY --from=build --chown=node:node /build/app .
+CMD [ "dumb-init", "yarn", "start" ]

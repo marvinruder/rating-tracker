@@ -3,7 +3,6 @@ import cookieParser from "cookie-parser";
 import * as cron from "cron";
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
-import cors from "cors";
 import Router from "./routers/Router.js";
 import SwaggerUI from "swagger-ui-express";
 import openapiDocument from "./openapi.js";
@@ -33,10 +32,17 @@ class Server {
 
 export const server = new Server();
 
+server.app.disable("x-powered-by");
+
 const staticContentPath = path.join(__dirname, "..", "public");
 
 server.app.use(express.static(staticContentPath));
 console.log(chalk.grey(`Serving static content from ${staticContentPath}\n`));
+
+server.app.use((_, res, next) => {
+  res.set("Cache-Control", "no-cache");
+  next();
+});
 
 /* istanbul ignore next */
 const highlightMethod = (method: string) => {
@@ -174,7 +180,6 @@ server.app.use(
 
 server.app.use(
   "/api",
-  cors(),
   server.router.public,
   (req, res, next) => {
     if (
