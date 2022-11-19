@@ -40,7 +40,7 @@ server.app.use(
   express.static(staticContentPath, {
     dotfiles: "ignore",
     lastModified: false,
-    maxAge: "30 days",
+    maxAge: "1 year",
     setHeaders: (res, filepath) => {
       !filepath.startsWith(path.join(staticContentPath, "assets")) &&
         res.setHeader("Cache-Control", "public, max-age=0");
