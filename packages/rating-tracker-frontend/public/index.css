@@ -9,7 +9,7 @@
     url("assets/fonts/inter-v12-all-ext-regular.woff2") format("woff2"),
     /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
     url("assets/fonts/inter-v12-all-ext-regular.woff") format("woff");
-  font-display: swap
+  font-display: swap;
 }
 
 /* inter-700 - all extensions */
@@ -23,5 +23,5 @@
     url("assets/fonts/inter-v12-all-ext-700.woff2") format("woff2"),
     /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
     url("assets/fonts/inter-v12-all-ext-700.woff") format("woff");
-  font-display: swap
+  font-display: swap;
 }
