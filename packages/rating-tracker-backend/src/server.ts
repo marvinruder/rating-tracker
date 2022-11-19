@@ -36,7 +36,18 @@ server.app.disable("x-powered-by");
 
 const staticContentPath = path.join(__dirname, "..", "public");
 
-server.app.use(express.static(staticContentPath));
+/* istanbul ignore next */
+server.app.use(
+  express.static(staticContentPath, {
+    dotfiles: "ignore",
+    lastModified: false,
+    maxAge: "1 year",
+    setHeaders: (res, filepath) => {
+      !filepath.startsWith(path.join(staticContentPath, "assets")) &&
+        res.setHeader("Cache-Control", "public, max-age=0");
+    },
+  })
+);
 console.log(chalk.grey(`Serving static content from ${staticContentPath}\n`));
 
 server.app.use((_, res, next) => {
