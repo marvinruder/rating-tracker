@@ -5006,6 +5006,61 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["uri-js", "npm:4.4.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:8.11.2", {\
+          "packageLocation": "./.yarn/cache/ajv-npm-8.11.2-96b35a945e-53435bf79e.zip/node_modules/ajv/",\
+          "packageDependencies": [\
+            ["ajv", "npm:8.11.2"],\
+            ["fast-deep-equal", "npm:3.1.3"],\
+            ["json-schema-traverse", "npm:1.0.0"],\
+            ["require-from-string", "npm:2.0.2"],\
+            ["uri-js", "npm:4.4.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["ajv-draft-04", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/ajv-draft-04-npm-1.0.0-6fc962dbab-3f11fa0e7f.zip/node_modules/ajv-draft-04/",\
+          "packageDependencies": [\
+            ["ajv-draft-04", "npm:1.0.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:050a88a67d0ee9cacd8e508f202d06da8b2c87b2f2260fa6fc8782da65bae5d29f14985fc2a63360a8569d264cdef91c1596e286450471bbe454c1b0d93700f9#npm:1.0.0", {\
+          "packageLocation": "./.yarn/__virtual__/ajv-draft-04-virtual-4d2a6be6f8/0/cache/ajv-draft-04-npm-1.0.0-6fc962dbab-3f11fa0e7f.zip/node_modules/ajv-draft-04/",\
+          "packageDependencies": [\
+            ["ajv-draft-04", "virtual:050a88a67d0ee9cacd8e508f202d06da8b2c87b2f2260fa6fc8782da65bae5d29f14985fc2a63360a8569d264cdef91c1596e286450471bbe454c1b0d93700f9#npm:1.0.0"],\
+            ["@types/ajv", null],\
+            ["ajv", "npm:8.11.2"]\
+          ],\
+          "packagePeers": [\
+            "@types/ajv",\
+            "ajv"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["ajv-formats", [\
+        ["npm:2.1.1", {\
+          "packageLocation": "./.yarn/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
+          "packageDependencies": [\
+            ["ajv-formats", "npm:2.1.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:050a88a67d0ee9cacd8e508f202d06da8b2c87b2f2260fa6fc8782da65bae5d29f14985fc2a63360a8569d264cdef91c1596e286450471bbe454c1b0d93700f9#npm:2.1.1", {\
+          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-b675a44266/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
+          "packageDependencies": [\
+            ["ajv-formats", "virtual:050a88a67d0ee9cacd8e508f202d06da8b2c87b2f2260fa6fc8782da65bae5d29f14985fc2a63360a8569d264cdef91c1596e286450471bbe454c1b0d93700f9#npm:2.1.1"],\
+            ["@types/ajv", null],\
+            ["ajv", "npm:8.11.2"]\
+          ],\
+          "packagePeers": [\
+            "@types/ajv",\
+            "ajv"\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["ansi-escapes", [\
@@ -7173,12 +7228,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["express-openapi-validator", [\
-        ["npm:4.13.8", {\
-          "packageLocation": "./.yarn/cache/express-openapi-validator-npm-4.13.8-555e3aac06-a20a82c371.zip/node_modules/express-openapi-validator/",\
+        ["npm:5.0.0", {\
+          "packageLocation": "./.yarn/cache/express-openapi-validator-npm-5.0.0-050a88a67d-6c61999d1e.zip/node_modules/express-openapi-validator/",\
           "packageDependencies": [\
-            ["express-openapi-validator", "npm:4.13.8"],\
+            ["express-openapi-validator", "npm:5.0.0"],\
             ["@types/multer", "npm:1.4.7"],\
-            ["ajv", "npm:6.12.6"],\
+            ["ajv", "npm:8.11.2"],\
+            ["ajv-draft-04", "virtual:050a88a67d0ee9cacd8e508f202d06da8b2c87b2f2260fa6fc8782da65bae5d29f14985fc2a63360a8569d264cdef91c1596e286450471bbe454c1b0d93700f9#npm:1.0.0"],\
+            ["ajv-formats", "virtual:050a88a67d0ee9cacd8e508f202d06da8b2c87b2f2260fa6fc8782da65bae5d29f14985fc2a63360a8569d264cdef91c1596e286450471bbe454c1b0d93700f9#npm:2.1.1"],\
             ["content-type", "npm:1.0.4"],\
             ["express", "npm:4.18.2"],\
             ["json-schema-ref-parser", "npm:9.0.9"],\
@@ -8958,6 +9015,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["json-schema-traverse", "npm:0.4.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/json-schema-traverse-npm-1.0.0-fb3684f4f0-02f2f466cd.zip/node_modules/json-schema-traverse/",\
+          "packageDependencies": [\
+            ["json-schema-traverse", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["json-stable-stringify-without-jsonify", [\
@@ -10345,7 +10409,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-prettier", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.2.1"],\
             ["express", "npm:4.18.2"],\
             ["express-async-errors", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:3.1.1"],\
-            ["express-openapi-validator", "npm:4.13.8"],\
+            ["express-openapi-validator", "npm:5.0.0"],\
             ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.7.0"],\
             ["jest", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.3.1"],\
             ["prettier", "npm:2.7.1"],\
@@ -10867,6 +10931,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/require-directory-npm-2.1.1-8608aee50b-fb47e70bf0.zip/node_modules/require-directory/",\
           "packageDependencies": [\
             ["require-directory", "npm:2.1.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["require-from-string", [\
+        ["npm:2.0.2", {\
+          "packageLocation": "./.yarn/cache/require-from-string-npm-2.0.2-8557e0db12-a03ef68954.zip/node_modules/require-from-string/",\
+          "packageDependencies": [\
+            ["require-from-string", "npm:2.0.2"]\
           ],\
           "linkType": "HARD"\
         }]\
