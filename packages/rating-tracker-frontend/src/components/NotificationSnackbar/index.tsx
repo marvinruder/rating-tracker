@@ -1,52 +1,51 @@
 import {
   Alert,
-  AlertColor,
   AlertProps,
   AlertTitle,
-  Slide,
   Snackbar,
   SnackbarProps,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import useNotification from "../../helpers/useNotification";
+
+const TRANSITION_DURATION = 350;
 
 const NotificationSnackbar = (props: NotificationSnackbarProps) => {
   const [snackbarShown, setSnackbarShown] = useState<boolean>(false);
-  useEffect(
-    () => setSnackbarShown(props.notification != undefined),
-    [props.notification]
-  );
+  const { notification, setNotification } = useNotification();
+  useEffect(() => setSnackbarShown(notification != undefined), [notification]);
+
+  const closeNotification = () => {
+    setSnackbarShown(false);
+    setTimeout(() => {
+      setNotification(undefined);
+    }, TRANSITION_DURATION);
+  };
 
   return (
     <Snackbar
       {...props.snackbarProps}
       open={snackbarShown}
       autoHideDuration={10000}
-      onClose={() => setSnackbarShown(false)}
-      TransitionComponent={(props) => <Slide {...props} direction="up" />}
+      onClose={closeNotification}
+      transitionDuration={TRANSITION_DURATION}
     >
       <Alert
         {...props.alertProps}
-        onClose={() => setSnackbarShown(false)}
-        severity={props.notification?.severity ?? "info"}
+        onClose={closeNotification}
+        severity={notification?.severity ?? "info"}
         sx={{ maxWidth: "450px" }}
       >
         <AlertTitle>
-          <strong>{props.notification?.title}</strong>
+          <strong>{notification?.title}</strong>
         </AlertTitle>
-        {props.notification?.message}
+        {notification?.message}
       </Alert>
     </Snackbar>
   );
 };
 
-export interface Notification {
-  severity: AlertColor;
-  title: string;
-  message: string;
-}
-
 interface NotificationSnackbarProps {
-  notification: Notification;
   snackbarProps?: Partial<SnackbarProps>;
   alertProps?: Partial<AlertProps>;
 }

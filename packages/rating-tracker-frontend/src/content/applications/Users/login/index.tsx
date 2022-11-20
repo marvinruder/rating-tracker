@@ -20,10 +20,9 @@ import {
   signInEndpoint,
 } from "../../../../endpoints";
 import SwitchSelector from "../../../../components/SwitchSelector";
-import NotificationSnackbar, {
-  Notification,
-} from "../../../../components/NotificationSnackbar";
+import NotificationSnackbar from "../../../../components/NotificationSnackbar";
 import { useNavigate } from "react-router";
+import useNotification from "../../../../helpers/useNotification";
 
 const LoginApp = () => {
   const theme = useTheme();
@@ -33,7 +32,7 @@ const LoginApp = () => {
   const [name, setName] = useState<string>("");
   const [emailError, setEmailError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
-  const [notification, setNotification] = useState<Notification>(undefined);
+  const { setNotification } = useNotification();
 
   const validateEmail = () => {
     return (
@@ -111,7 +110,7 @@ const LoginApp = () => {
               title: "Welcome back!",
               message: "Authentication successful",
             });
-            setTimeout(() => navigate("/"), 1000);
+            navigate("/");
           } catch (err) {
             reportError(err, "processing authorization response");
           }
@@ -126,7 +125,7 @@ const LoginApp = () => {
 
   return (
     <>
-      <NotificationSnackbar notification={notification} />
+      <NotificationSnackbar />
       <Card sx={{ margin: "auto", minWidth: 275 }}>
         <CardContent>
           <Grid container direction={"column"} spacing={2} padding={1}>

@@ -1,3 +1,5 @@
+import { AlertColor } from "@mui/material";
+
 export const countryArray = [
   "AF",
   "AX",
@@ -555,3 +557,9 @@ export type Style = typeof styleArray[number];
 export function isStyle(s: string): s is Style {
   return styleArray.includes(s as Style);
 }
+
+export type Notification = {
+  severity: AlertColor;
+  title: string;
+  message: string;
+};
