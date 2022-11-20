@@ -38,7 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["concurrently", "npm:7.5.0"],\
+            ["concurrently", "npm:7.6.0"],\
             ["eslint", "npm:8.28.0"],\
             ["prettier", "npm:2.7.1"],\
             ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
@@ -5995,10 +5995,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["concurrently", [\
-        ["npm:7.5.0", {\
-          "packageLocation": "./.yarn/cache/concurrently-npm-7.5.0-3391f9b984-7886e1c855.zip/node_modules/concurrently/",\
+        ["npm:7.6.0", {\
+          "packageLocation": "./.yarn/cache/concurrently-npm-7.6.0-2eabc58c36-f705c9a796.zip/node_modules/concurrently/",\
           "packageDependencies": [\
-            ["concurrently", "npm:7.5.0"],\
+            ["concurrently", "npm:7.6.0"],\
             ["chalk", "npm:4.1.2"],\
             ["date-fns", "npm:2.29.3"],\
             ["lodash", "npm:4.17.21"],\
@@ -10371,7 +10371,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["rating-tracker", "workspace:."],\
-            ["concurrently", "npm:7.5.0"],\
+            ["concurrently", "npm:7.6.0"],\
             ["eslint", "npm:8.28.0"],\
             ["prettier", "npm:2.7.1"],\
             ["typescript", "patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"]\
@@ -10398,7 +10398,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/parser", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:5.43.0"],\
             ["axios", "npm:1.1.3"],\
             ["chalk", "npm:5.1.2"],\
-            ["concurrently", "npm:7.5.0"],\
+            ["concurrently", "npm:7.6.0"],\
             ["cookie-parser", "npm:1.4.6"],\
             ["cron", "npm:2.1.0"],\
             ["date-fns", "npm:2.29.3"],\
