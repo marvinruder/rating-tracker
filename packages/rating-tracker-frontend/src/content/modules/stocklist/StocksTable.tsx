@@ -23,9 +23,8 @@ import {
   Style,
 } from "../../../types";
 import StockRow from "./StockRow";
-import NotificationSnackbar, {
-  Notification,
-} from "../../../components/NotificationSnackbar/index.js";
+import NotificationSnackbar from "../../../components/NotificationSnackbar";
+import useNotification from "../../../helpers/useNotification";
 
 const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [page, setPage] = useState<number>(0);
@@ -33,9 +32,9 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
-  const [notification, setNotification] = useState<Notification>(undefined);
   const [sortBy, setSortBy] = useState<SortableAttribute>("name");
   const [sortDesc, setSortDesc] = useState<boolean>(false);
+  const { setNotification } = useNotification();
 
   useEffect(() => {
     getStocks();
@@ -104,7 +103,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   return (
     <>
       <NotificationSnackbar
-        notification={notification}
         snackbarProps={{
           anchorOrigin: { horizontal: "center", vertical: "bottom" },
         }}
