@@ -1,5 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import { Country, Industry, Size, Style } from "../types.js";
+import { Country, Industry, Size, Style } from "rating-tracker-commons";
 
 export class Stock {
   ticker: string;

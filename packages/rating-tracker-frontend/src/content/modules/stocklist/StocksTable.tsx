@@ -21,7 +21,7 @@ import {
   Size,
   SortableAttribute,
   Style,
-} from "../../../types";
+} from "rating-tracker-commons";
 import StockRow from "./StockRow";
 import NotificationSnackbar from "../../../components/NotificationSnackbar";
 import useNotification from "../../../helpers/useNotification";

@@ -5,7 +5,7 @@ import {
   getColor,
   superSectorOfSector,
 } from "../../taxonomy/sectors/superSector";
-import { Industry } from "../../types";
+import { Industry } from "rating-tracker-commons";
 
 interface SectorIconProps {
   industry: Industry;

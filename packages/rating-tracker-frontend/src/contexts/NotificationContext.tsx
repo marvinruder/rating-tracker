@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { Notification } from "../types";
+import { Notification } from "../types/Notification";
 
 const NotificationContext = createContext<{
   notification?: Notification;

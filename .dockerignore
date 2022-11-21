@@ -6,3 +6,6 @@
 !.yarn/sdks
 !.yarn/versions
 !.yarn/unplugged
+packages/**/*.d.ts*
+packages/**/*.d.ts.map
+packages/**/*.tsbuildinfo

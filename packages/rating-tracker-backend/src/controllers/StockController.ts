@@ -17,7 +17,7 @@ import {
   sizeArray,
   SortableAttribute,
   styleArray,
-} from "../types.js";
+} from "rating-tracker-commons";
 
 class StockController {
   async getList(req: Request, res: Response) {

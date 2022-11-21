@@ -1,4 +1,4 @@
-import { Industry } from "../../types";
+import { Industry } from "rating-tracker-commons";
 
 export const industryName: Record<Industry, string> = {
   AgriculturalInputs: "Agricultural Inputs",

@@ -5,7 +5,7 @@ import Footer from "../../../components/Footer";
 
 import StocksTable, { StockFilter } from "./StocksTable";
 import { useState } from "react";
-import { Size, Style, Country, Industry } from "../../../types";
+import { Size, Style, Country, Industry } from "rating-tracker-commons";
 
 function StocklistModule() {
   const [filter, setFilter] = useState<StockFilter>({});

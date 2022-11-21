@@ -22,7 +22,7 @@ import { Stock } from "./models/stock";
 import { initStockRepository } from "./redis/repositories/stock/__mocks__/stockRepositoryBase";
 import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
 import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
-import { sortableAttributeArray } from "./types";
+import { sortableAttributeArray } from "rating-tracker-commons";
 
 const requestWithSupertest = supertest(server.app);
 

@@ -1,0 +1,33 @@
+{
+  "name": "rating-tracker-commons",
+  "version": "0.1.0",
+  "title": "Rating Tracker",
+  "author": {
+    "name": "Marvin A. Ruder",
+    "url": "https://mruder.dev"
+  },
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": "19.1.0"
+  },
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
+    "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix"
+  },
+  "dependencies": {
+    "typescript": "^4.9.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "5.43.0",
+    "@typescript-eslint/parser": "5.43.0",
+    "eslint": "8.28.0",
+    "eslint-config-google": "0.14.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "prettier": "2.7.1"
+  }
+}

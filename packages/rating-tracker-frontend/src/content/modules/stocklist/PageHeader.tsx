@@ -32,7 +32,7 @@ import {
   superRegionArray,
   SuperSector,
   superSectorArray,
-} from "../../../types";
+} from "rating-tracker-commons";
 import React from "react";
 import NestedCheckboxList from "../../../components/NestedCheckboxList";
 import {

@@ -1,4 +1,4 @@
-import { Country } from "../../types";
+import { Country } from "rating-tracker-commons";
 
 export const countryName: Record<Country, string> = {
   AF: "Afghanistan",

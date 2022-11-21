@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material";
-import { Sector, sectorArray, SuperSector } from "../../types";
+import { Sector, sectorArray, SuperSector } from "rating-tracker-commons";
 
 export const superSectorName: Record<SuperSector, string> = {
   Cyclical: "Cyclical",

@@ -5386,11 +5386,11 @@ __metadata:
   linkType: hard
 
 "globals@npm:^13.15.0":
-  version: 13.17.0
-  resolution: "globals@npm:13.17.0"
+  version: 13.18.0
+  resolution: "globals@npm:13.18.0"
   dependencies:
     type-fest: ^0.20.2
-  checksum: fbaf4112e59b92c9f5575e85ce65e9e17c0b82711196ec5f58beb08599bbd92fd72703d6dfc9b080381fd35b644e1b11dcf25b38cc2341ec21df942594cbc8ce
+  checksum: 9fdaa74cfd5d4ac91319662f512c29b11d1d2deb9c8a20d3998097671deba83d195f20730b2345887de3ddab958a6fa68952feed9ae836ee4594a82ace62fdb4
   languageName: node
   linkType: hard
 
@@ -6506,9 +6506,9 @@ __metadata:
   linkType: hard
 
 "jsrsasign@npm:^10.4.0":
-  version: 10.6.0
-  resolution: "jsrsasign@npm:10.6.0"
-  checksum: 68d4447136a08ae361f5a21d806b73fb3a0c66d9ff186b0885ce1cde128fca3186117216609d65786ad50a8b9b634548417b19917782b90a1a7602087dae5385
+  version: 10.6.1
+  resolution: "jsrsasign@npm:10.6.1"
+  checksum: 372cde32c0a1b54f0df65e2091f7b99724103f150ff535df5db798897e91cac5c484284633959da8ddf4e3d4868253c428df4d3c709f44667928e05e705105d2
   languageName: node
   linkType: hard
 
@@ -7682,6 +7682,7 @@ __metadata:
     express-rate-limit: 6.7.0
     jest: 29.3.1
     prettier: 2.7.1
+    rating-tracker-commons: "workspace:*"
     redis: 4.5.0
     redis-om: 0.3.6
     response-time: 2.3.2
@@ -7692,6 +7693,21 @@ __metadata:
     ts-node: 10.9.1
     typescript: 4.9.3
     validator: 13.7.0
+  languageName: unknown
+  linkType: soft
+
+"rating-tracker-commons@workspace:*, rating-tracker-commons@workspace:packages/rating-tracker-commons":
+  version: 0.0.0-use.local
+  resolution: "rating-tracker-commons@workspace:packages/rating-tracker-commons"
+  dependencies:
+    "@typescript-eslint/eslint-plugin": 5.43.0
+    "@typescript-eslint/parser": 5.43.0
+    eslint: 8.28.0
+    eslint-config-google: 0.14.0
+    eslint-config-prettier: 8.5.0
+    eslint-plugin-prettier: 4.2.1
+    prettier: 2.7.1
+    typescript: ^4.9.3
   languageName: unknown
   linkType: soft
 
@@ -7728,6 +7744,7 @@ __metadata:
     particlesjs: 2.2.3
     prettier: 2.7.1
     prop-types: 15.8.1
+    rating-tracker-commons: "workspace:*"
     react: 18.2.0
     react-apexcharts: 1.4.0
     react-custom-scrollbars-2: 4.5.0
@@ -9552,7 +9569,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:*, typescript@npm:4.9.3":
+"typescript@npm:*, typescript@npm:4.9.3, typescript@npm:^4.9.3":
   version: 4.9.3
   resolution: "typescript@npm:4.9.3"
   bin:
@@ -9562,7 +9579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@*#~builtin<compat/typescript>, typescript@patch:typescript@4.9.3#~builtin<compat/typescript>":
+"typescript@patch:typescript@*#~builtin<compat/typescript>, typescript@patch:typescript@4.9.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.9.3#~builtin<compat/typescript>":
   version: 4.9.3
   resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"
   bin:

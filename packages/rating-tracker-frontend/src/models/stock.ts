@@ -1,4 +1,4 @@
-import { Country, Industry, Size, Style } from "../types";
+import { Country, Industry, Size, Style } from "rating-tracker-commons";
 
 export class Stock {
   ticker: string;

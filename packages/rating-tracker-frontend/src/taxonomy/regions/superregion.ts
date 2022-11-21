@@ -1,4 +1,4 @@
-import { Region, regionArray, SuperRegion } from "../../types";
+import { Region, regionArray, SuperRegion } from "rating-tracker-commons";
 
 export const superRegionName: Record<SuperRegion, string> = {
   Americas: "The Americas",
