@@ -12,11 +12,11 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "conc --kill-others \"cd packages/rating-tracker-backend && yarn dev:ssh\" \"cd packages/rating-tracker-backend && yarn dev:tsc\" \"cd packages/rating-tracker-backend && yarn dev:node\" \"cd packages/rating-tracker-frontend && yarn dev:vite\" -n \",ﯤ,,\" -p \"{name}\" -c grey,#3178C6,#339933,#61DAFB --timings",
-    "test:watch": "cd packages/rating-tracker-backend && yarn test:watch",
-    "test": "cd packages/rating-tracker-backend && yarn test",
+    "dev": "conc --kill-others \"yarn workspace rating-tracker-backend dev:ssh\" \"yarn workspace rating-tracker-backend dev:tsc\" \"yarn workspace rating-tracker-backend dev:node\" \"yarn workspace rating-tracker-frontend dev:vite\" -n \",ﯤ,,\" -p \"{name}\" -c grey,#3178C6,#339933,#61DAFB --timings",
+    "test:watch": "yarn workspace rating-tracker-backend test:watch",
+    "test": "yarn workspace rating-tracker-backend test",
     "build": "yarn workspaces foreach -pt run build",
-    "start": "cd packages/rating-tracker-backend && yarn start",
+    "start": "yarn workspace rating-tracker-backend start",
     "lint": "yarn workspaces foreach -pt run lint"
   },
   "packageManager": "yarn@3.3.0",
