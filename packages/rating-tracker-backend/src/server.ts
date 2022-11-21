@@ -34,7 +34,7 @@ export const server = new Server();
 
 server.app.disable("x-powered-by");
 
-const staticContentPath = path.join(__dirname, "..", "public");
+const staticContentPath = path.join(__dirname, "..", "..", "public");
 
 /* istanbul ignore next */
 server.app.use(
