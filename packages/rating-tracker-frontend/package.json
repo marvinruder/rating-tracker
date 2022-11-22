@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": "19.0.1"
+    "node": "19.1.0"
   },
   "scripts": {
     "dev:vite": "vite",
@@ -46,6 +46,7 @@
     "numeral": "2.0.6",
     "particlesjs": "2.2.3",
     "prop-types": "15.8.1",
+    "rating-tracker-commons": "workspace:*",
     "react": "18.2.0",
     "react-apexcharts": "1.4.0",
     "react-custom-scrollbars-2": "4.5.0",

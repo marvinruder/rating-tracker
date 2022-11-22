@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Size, Style } from "../../types";
+import { Size, Style } from "rating-tracker-commons";
 
 interface StyleBoxProps {
   size: Size;

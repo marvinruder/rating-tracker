@@ -1,5 +1,12 @@
-import { useTheme } from "@mui/material";
-import { Sector, sectorArray, SuperSector } from "../../types";
+import { Sector, sectorArray } from "./Sector.js";
+
+export const superSectorArray = ["Cyclical", "Defensive", "Sensitive"] as const;
+
+export type SuperSector = typeof superSectorArray[number];
+
+export function isSuperSector(s: string): s is SuperSector {
+  return superSectorArray.includes(s as SuperSector);
+}
 
 export const superSectorName: Record<SuperSector, string> = {
   Cyclical: "Cyclical",
@@ -19,18 +26,6 @@ export const superSectorOfSector: Record<Sector, SuperSector> = {
   Energy: "Sensitive",
   Industrials: "Sensitive",
   Technology: "Sensitive",
-};
-
-export const getColor = (superSector: SuperSector) => {
-  const theme = useTheme();
-  switch (superSector) {
-    case "Cyclical":
-      return theme.colors.sector.cyclical;
-    case "Defensive":
-      return theme.colors.sector.defensive;
-    case "Sensitive":
-      return theme.colors.sector.sensitive;
-  }
 };
 
 export const getSectorsInSuperSector = (superSector: SuperSector): Sector[] => {

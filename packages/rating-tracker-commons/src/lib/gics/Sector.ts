@@ -1,4 +1,24 @@
-import { IndustryGroup, industryGroupArray, Sector } from "../../types";
+import { IndustryGroup, industryGroupArray } from "./IndustryGroup.js";
+
+export const sectorArray = [
+  "BasicMaterials",
+  "ConsumerCyclical",
+  "FinancialServices",
+  "RealEstate",
+  "ConsumerDefensive",
+  "HealthCare",
+  "Utilities",
+  "CommunicationServices",
+  "Energy",
+  "Industrials",
+  "Technology",
+] as const;
+
+export type Sector = typeof sectorArray[number];
+
+export function isSector(s: string): s is Sector {
+  return sectorArray.includes(s as Sector);
+}
 
 export const sectorName: Record<Sector, string> = {
   BasicMaterials: "Basic Materials",

@@ -1,11 +1,11 @@
 import { FC } from "react";
-import { groupOfIndustry } from "../../taxonomy/sectors/industryGroup";
-import { sectorOfIndustryGroup } from "../../taxonomy/sectors/sector";
 import {
-  getColor,
+  groupOfIndustry,
+  sectorOfIndustryGroup,
   superSectorOfSector,
-} from "../../taxonomy/sectors/superSector";
-import { Industry } from "../../types";
+} from "rating-tracker-commons";
+import { Industry } from "rating-tracker-commons";
+import { useTheme } from "@mui/material";
 
 interface SectorIconProps {
   industry: Industry;
@@ -15,13 +15,14 @@ interface SectorIconProps {
 }
 
 const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps) => {
+  const theme = useTheme();
   const color: React.CSSProperties["color"] =
     props.color ||
-    getColor(
+    theme.colors.sector[
       superSectorOfSector[
         sectorOfIndustryGroup[groupOfIndustry[props.industry]]
       ]
-    );
+    ];
 
   const getPaths = () => {
     if (props.type === "SuperSector") {

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 // import EditIcon from "@mui/icons-material/Edit";
 // import DeleteIcon from "@mui/icons-material/Delete";
-import { Stock } from "../../../models/stock";
+import { Stock } from "rating-tracker-commons";
 import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
 import {
   Country,
@@ -21,7 +21,7 @@ import {
   Size,
   SortableAttribute,
   Style,
-} from "../../../types";
+} from "rating-tracker-commons";
 import StockRow from "./StockRow";
 import NotificationSnackbar from "../../../components/NotificationSnackbar";
 import useNotification from "../../../helpers/useNotification";
@@ -63,7 +63,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
         },
       })
       .then((res) => {
-        setStocks(res.data.stocks.map((rawStock) => new Stock(rawStock)));
+        setStocks(res.data.stocks);
         setCount(res.data.count);
       })
       .catch((e) => {
@@ -213,7 +213,6 @@ export interface StockFilter {
 }
 
 interface StocksTableProps {
-  // stocks?: string[];
   filter: StockFilter;
 }
 

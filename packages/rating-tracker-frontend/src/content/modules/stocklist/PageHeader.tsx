@@ -20,43 +20,33 @@ import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import { FC, useState } from "react";
 import {
   Country,
+  countryNameWithFlag,
+  getCountriesInRegion,
+  getIndustriesInGroup,
+  getIndustryGroupsInSector,
+  getRegionsInSuperRegion,
+  getSectorsInSuperSector,
   Industry,
   IndustryGroup,
+  industryGroupName,
+  industryName,
   Region,
+  regionName,
   Sector,
+  sectorName,
   Size,
   sizeArray,
   Style,
   styleArray,
   SuperRegion,
   superRegionArray,
+  superRegionName,
   SuperSector,
   superSectorArray,
-} from "../../../types";
+  superSectorName,
+} from "rating-tracker-commons";
 import React from "react";
 import NestedCheckboxList from "../../../components/NestedCheckboxList";
-import {
-  getRegionsInSuperRegion,
-  superRegionName,
-} from "../../../taxonomy/regions/superregion";
-import {
-  getCountriesInRegion,
-  regionName,
-} from "../../../taxonomy/regions/region";
-import {
-  getIndustriesInGroup,
-  industryGroupName,
-} from "../../../taxonomy/sectors/industryGroup";
-import {
-  getIndustryGroupsInSector,
-  sectorName,
-} from "../../../taxonomy/sectors/sector";
-import {
-  getSectorsInSuperSector,
-  superSectorName,
-} from "../../../taxonomy/sectors/superSector";
-import { countryNameWithFlag } from "../../../taxonomy/regions/country";
-import { industryName } from "../../../taxonomy/sectors/industry";
 
 const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);

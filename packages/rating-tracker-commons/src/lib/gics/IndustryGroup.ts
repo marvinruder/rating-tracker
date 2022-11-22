@@ -1,4 +1,68 @@
-import { Industry, industryArray, IndustryGroup } from "../../types";
+import { Industry, industryArray } from "./Industry.js";
+
+export const industryGroupArray = [
+  "Agriculture",
+  "BuildingMaterials",
+  "Chemicals",
+  "ForestProducts",
+  "MetalsMining",
+  "Steel",
+  "VehiclesParts",
+  "FurnishingsFixturesAppliance",
+  "HomebuildingConstruction",
+  "ManufacturingApparelAccessories",
+  "PackagingContainers",
+  "PersonalServices",
+  "Restaurants",
+  "RetailCyclical",
+  "TravelLeisure",
+  "AssetManagement",
+  "Banks",
+  "CapitalMarkets",
+  "Insurance",
+  "DiversifiedFinancialServices",
+  "CreditServices",
+  "RealEstate",
+  "REITs",
+  "BeveragesAlcoholic",
+  "BeveragesNonAlcoholic",
+  "ConsumerPackagedGoods",
+  "Education",
+  "RetailDefensive",
+  "TobaccoProducts",
+  "Biotechnology",
+  "DrugManufacturers",
+  "HealthcarePlans",
+  "HealthcareProvidersServices",
+  "MedicalDevicesInstruments",
+  "MedicalDiagnosticsResearch",
+  "MedicalDistribution",
+  "UtilitiesIndependentPowerProducers",
+  "UtilitiesRegulated",
+  "TelecommunicationServices",
+  "MediaDiversified",
+  "InteractiveMedia",
+  "OilGas",
+  "OtherEnergySources",
+  "AerospaceDefense",
+  "BusinessServices",
+  "Conglomerates",
+  "Construction",
+  "FarmHeavyConstructionMachinery",
+  "IndustrialDistribution",
+  "IndustrialProducts",
+  "Transportation",
+  "WasteManagement",
+  "Software",
+  "Hardware",
+  "Semiconductors",
+] as const;
+
+export type IndustryGroup = typeof industryGroupArray[number];
+
+export function isIndustryGroup(s: string): s is IndustryGroup {
+  return industryGroupArray.includes(s as IndustryGroup);
+}
 
 export const industryGroupName: Record<IndustryGroup, string> = {
   Agriculture: "Agriculture",

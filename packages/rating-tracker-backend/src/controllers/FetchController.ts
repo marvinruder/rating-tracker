@@ -13,7 +13,7 @@ import {
   isStyle,
   Size,
   Style,
-} from "../types.js";
+} from "rating-tracker-commons";
 import {
   indexStockRepository,
   readAllStocks,

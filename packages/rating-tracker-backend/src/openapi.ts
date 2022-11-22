@@ -5,7 +5,7 @@ import {
   sizeArray,
   sortableAttributeArray,
   styleArray,
-} from "./types.js";
+} from "rating-tracker-commons";
 import dotenv from "dotenv";
 
 dotenv.config({

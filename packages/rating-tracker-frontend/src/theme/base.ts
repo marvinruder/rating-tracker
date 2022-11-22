@@ -3,6 +3,7 @@ import React from "react";
 import { Theme } from "@mui/material";
 import { NebulaFighterTheme } from "./schemes/NebulaFighterTheme";
 import { PureLightTheme } from "./schemes/PureLightTheme";
+import { SuperSector } from "rating-tracker-commons";
 
 export function themeCreator(theme: string): Theme {
   return themeMap[theme];
@@ -98,11 +99,7 @@ declare module "@mui/material/styles" {
         main: string;
         dark: string;
       };
-      sector: {
-        cyclical: string;
-        defensive: string;
-        sensitive: string;
-      };
+      sector: Record<SuperSector, string>;
       switchSelector: {
         selected: string;
         unselected: string;
@@ -227,11 +224,7 @@ declare module "@mui/material/styles" {
         main: string;
         dark: string;
       };
-      sector: {
-        cyclical: string;
-        defensive: string;
-        sensitive: string;
-      };
+      sector: Record<SuperSector, string>;
       switchSelector: {
         selected: string;
         unselected: string;
