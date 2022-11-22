@@ -1,13 +1,9 @@
+import { User as CommonsUser } from "rating-tracker-commons";
 import { Entity, Schema } from "redis-om";
 
-export class User {
-  email: string;
-  name: string;
-  accessRights: number;
-  credentialID: string;
-  credentialPublicKey: string;
-  counter: number;
+export class User extends CommonsUser {
   constructor(userEntity: UserEntity) {
+    super();
     this.email = userEntity.entityId;
     this.name = userEntity.name;
     this.accessRights = userEntity.accessRights;

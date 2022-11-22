@@ -1,20 +1,15 @@
 import { Entity, Schema } from "redis-om";
-import { Country, Industry, Size, Style } from "rating-tracker-commons";
+import {
+  Country,
+  Industry,
+  Size,
+  Stock as CommonsStock,
+  Style,
+} from "rating-tracker-commons";
 
-export class Stock {
-  ticker: string;
-  name: string;
-  country?: Country;
-  industry?: Industry;
-  size?: Size;
-  style?: Style;
-  morningstarId?: string;
-  morningstarLastFetch?: Date;
-  starRating?: number;
-  dividendYieldPercent?: number;
-  priceEarningRatio?: number;
-
+export class Stock extends CommonsStock {
   constructor(stockEntity: StockEntity) {
+    super();
     this.ticker = stockEntity.entityId;
     this.name = stockEntity.name;
     if (stockEntity.country != null) {

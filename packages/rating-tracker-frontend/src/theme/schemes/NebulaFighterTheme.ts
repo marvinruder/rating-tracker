@@ -220,9 +220,9 @@ export const NebulaFighterTheme = createTheme({
       dark: darken(themeColors.info, 0.2),
     },
     sector: {
-      cyclical: "#DA6410",
-      defensive: "#65A432",
-      sensitive: "#4F88DE",
+      Cyclical: "#DA6410",
+      Defensive: "#65A432",
+      Sensitive: "#4F88DE",
     },
     switchSelector: {
       selected: themeColors.black,

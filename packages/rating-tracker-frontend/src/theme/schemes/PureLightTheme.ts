@@ -220,9 +220,9 @@ export const PureLightTheme = createTheme({
       dark: darken(themeColors.info, 0.2),
     },
     sector: {
-      cyclical: "#EF7622",
-      defensive: "#518428",
-      sensitive: "#1F55A5",
+      Cyclical: "#EF7622",
+      Defensive: "#518428",
+      Sensitive: "#1F55A5",
     },
     switchSelector: {
       selected: themeColors.primary,

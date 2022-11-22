@@ -9,26 +9,21 @@ import {
 import SectorIcon from "../../../components/SectorIcon";
 import StarRating from "../../../components/StarRating";
 import StyleBox from "../../../components/StyleBox";
-import { Stock } from "../../../models/stock";
-import { countryNameWithFlag } from "../../../taxonomy/regions/country";
-import { regionName, regionOfCountry } from "../../../taxonomy/regions/region";
 import {
-  superRegionName,
-  superRegionOfRegion,
-} from "../../../taxonomy/regions/superregion";
-import { industryName } from "../../../taxonomy/sectors/industry";
-import {
+  countryNameWithFlag,
   groupOfIndustry,
   industryGroupName,
-} from "../../../taxonomy/sectors/industryGroup";
-import {
+  industryName,
+  regionName,
+  regionOfCountry,
   sectorName,
   sectorOfIndustryGroup,
-} from "../../../taxonomy/sectors/sector";
-import {
+  Stock,
+  superRegionName,
+  superRegionOfRegion,
   superSectorName,
   superSectorOfSector,
-} from "../../../taxonomy/sectors/superSector";
+} from "rating-tracker-commons";
 
 const StockRow = (props: { stock?: Stock }) => {
   const theme = useTheme();
