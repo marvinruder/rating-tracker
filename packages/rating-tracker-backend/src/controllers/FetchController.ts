@@ -3,7 +3,7 @@ import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 import { Builder, By, Capabilities } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
-import APIError from "../apiError.js";
+import APIError from "../lib/apiError.js";
 import { Stock } from "../models/stock.js";
 import chalk from "chalk";
 import {

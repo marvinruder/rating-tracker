@@ -1,4 +1,4 @@
-import APIError from "../../../apiError.js";
+import APIError from "../../../lib/apiError.js";
 import { Stock, StockEntity, stockSchema } from "../../../models/stock.js";
 import { fetch, fetchAll, index, remove, save } from "./stockRepositoryBase.js";
 import chalk from "chalk";
