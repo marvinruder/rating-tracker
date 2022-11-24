@@ -7,6 +7,7 @@ const email: OpenAPIV3.ParameterObject = {
   allowReserved: true,
   schema: {
     type: "string",
+    format: "email",
     example: "jane.doe@example.com",
   },
 };

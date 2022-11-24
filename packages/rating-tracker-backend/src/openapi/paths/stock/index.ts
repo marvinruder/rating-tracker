@@ -1,6 +1,11 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { notFound, unauthorized } from "../../responses/clientError.js";
-import { noContent } from "../../responses/success.js";
+import {
+  badRequest,
+  conflict,
+  notFound,
+  unauthorized,
+} from "../../responses/clientError.js";
+import { created, noContent } from "../../responses/success.js";
 import * as stock from "../../parameters/stock.js";
 
 const deleteRequest: OpenAPIV3.OperationObject = {
@@ -22,4 +27,36 @@ const deleteRequest: OpenAPIV3.OperationObject = {
   },
 };
 
-export { deleteRequest as delete };
+const put: OpenAPIV3.OperationObject = {
+  tags: ["Stock API"],
+  operationId: "createStock",
+  summary: "Create Stock API",
+  description: "Create the stock using the information provided.",
+  parameters: [
+    {
+      ...stock.ticker,
+      in: "path",
+      required: true,
+    },
+    {
+      ...stock.name,
+      required: true,
+    },
+    {
+      ...stock.country,
+      required: true,
+      allowReserved: false,
+      schema: {
+        $ref: "#/components/schemas/Country",
+      },
+    },
+  ],
+  responses: {
+    "201": created,
+    "400": badRequest,
+    "401": unauthorized,
+    "409": conflict,
+  },
+};
+
+export { deleteRequest as delete, put };

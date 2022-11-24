@@ -9,7 +9,9 @@ export const indexStockRepository = () => {
   index();
 };
 
-export const createStockWithoutReindexing = async (stock: Stock) => {
+export const createStockWithoutReindexing = async (
+  stock: Stock
+): Promise<boolean> => {
   const existingStock = await fetch(stock.ticker);
   if (existingStock && existingStock.name) {
     console.warn(
@@ -17,6 +19,7 @@ export const createStockWithoutReindexing = async (stock: Stock) => {
         `Skipping stock “${stock.name}” – existing already (entity ID ${existingStock.entityId}).`
       )
     );
+    return false;
   } else {
     const stockEntity = new StockEntity(stockSchema, stock.ticker, {
       ...stock,
@@ -28,12 +31,16 @@ export const createStockWithoutReindexing = async (stock: Stock) => {
         )}.`
       )
     );
+    return true;
   }
 };
 
-export const createStock = async (stock: Stock) => {
-  await createStockWithoutReindexing(stock);
-  index();
+export const createStock = async (stock: Stock): Promise<boolean> => {
+  if (await createStockWithoutReindexing(stock)) {
+    index();
+    return true;
+  }
+  return false;
 };
 
 export const readStock = async (ticker: string) => {

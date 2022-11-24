@@ -6,6 +6,7 @@ import {
   deleteStock,
   readAllStocks,
   indexStockRepository,
+  createStock,
 } from "../redis/repositories/stock/stockRepository.js";
 import {
   Country,
@@ -18,6 +19,7 @@ import {
   SortableAttribute,
   styleArray,
 } from "rating-tracker-commons";
+import APIError from "../lib/apiError.js";
 
 class StockController {
   async getList(req: Request, res: Response) {
@@ -127,6 +129,25 @@ class StockController {
     }
     indexStockRepository();
     return res.status(201).end();
+  }
+
+  async put(req: Request, res: Response) {
+    const ticker = req.params[0];
+    const { name, country } = req.query;
+    if (
+      typeof ticker === "string" &&
+      typeof name === "string" &&
+      typeof country === "string" &&
+      isCountry(country)
+    ) {
+      if (await createStock({ ticker, name, country })) {
+        return res.status(201).end();
+      } else {
+        throw new APIError(409, "A stock with that ticker exists already.");
+      }
+    } else {
+      throw new APIError(400, "Invalid stock information");
+    }
   }
 
   async delete(req: Request, res: Response) {

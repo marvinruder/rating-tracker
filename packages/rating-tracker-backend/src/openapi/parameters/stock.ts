@@ -55,7 +55,7 @@ const name: OpenAPIV3.ParameterObject = {
   description: "The name of a stock",
   schema: {
     type: "string",
-    example: "App",
+    example: "Apple Inc.",
   },
 };
 
