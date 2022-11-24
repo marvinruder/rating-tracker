@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Stock } from "../models/stock.js";
-import exampleStocks from "../exampleStocks.js";
+import exampleStocks from "../lib/exampleStocks.js";
 import {
   createStockWithoutReindexing,
   deleteStock,

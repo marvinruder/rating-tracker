@@ -5,8 +5,8 @@ import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import { createSession } from "../redis/repositories/session/sessionRepository.js";
-import { GENERAL_ACCESS } from "../accessRights.js";
-import APIError from "../apiError.js";
+import { GENERAL_ACCESS } from "../lib/accessRights.js";
+import APIError from "../lib/apiError.js";
 import {
   createUser,
   readUser,

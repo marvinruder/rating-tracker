@@ -1,4 +1,4 @@
-import APIError from "../../../apiError.js";
+import APIError from "../../../lib/apiError.js";
 import { User, UserEntity, userSchema } from "../../../models/user.js";
 import { fetch, save } from "./userRepositoryBase.js";
 import chalk from "chalk";

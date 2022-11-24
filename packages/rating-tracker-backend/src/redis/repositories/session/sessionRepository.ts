@@ -1,4 +1,4 @@
-import APIError from "../../../apiError.js";
+import APIError from "../../../lib/apiError.js";
 import {
   Session,
   SessionEntity,

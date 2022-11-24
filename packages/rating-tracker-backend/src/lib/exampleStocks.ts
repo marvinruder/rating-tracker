@@ -1,4 +1,4 @@
-import { Stock } from "./models/stock.js";
+import { Stock } from "../models/stock.js";
 
 const exampleStocks: Stock[] = [
   {

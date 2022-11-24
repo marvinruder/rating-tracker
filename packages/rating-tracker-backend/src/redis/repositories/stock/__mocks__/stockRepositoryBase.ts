@@ -1,5 +1,5 @@
 import { StockEntity, stockSchema } from "../../../../models/stock.js";
-import exampleStocks from "../../../../exampleStocks.js";
+import exampleStocks from "../../../../lib/exampleStocks.js";
 
 // export default import.meta.jest.createMockFromModule("stockRepository");
 
