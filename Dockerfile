@@ -16,7 +16,7 @@ RUN cp -r /build/packages/rating-tracker-frontend/dist /build/packages/rating-tr
 
 # Delete frontend code, caches only used by frontend, and unused TypeScript output
 RUN rm -r /build/packages/rating-tracker-frontend
-RUN yarn
+RUN echo yarn: $(yarn | grep "appears to be unused - removing" | wc -l) packages appear to be unused - removing
 RUN find /build/packages -type f '(' -name "*.d.ts*" -o -name "*.tsbuildinfo" ')' -delete
 
 # Create directories for run container and copy only necessary files
