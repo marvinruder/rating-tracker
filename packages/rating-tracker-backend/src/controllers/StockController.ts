@@ -145,8 +145,6 @@ class StockController {
       } else {
         throw new APIError(409, "A stock with that ticker exists already.");
       }
-    } else {
-      throw new APIError(400, "Invalid stock information");
     }
   }
 

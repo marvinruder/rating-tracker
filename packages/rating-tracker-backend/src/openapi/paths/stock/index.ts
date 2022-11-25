@@ -1,6 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 import {
-  badRequest,
   conflict,
   notFound,
   unauthorized,
@@ -53,7 +52,6 @@ const put: OpenAPIV3.OperationObject = {
   ],
   responses: {
     "201": created,
-    "400": badRequest,
     "401": unauthorized,
     "409": conflict,
   },

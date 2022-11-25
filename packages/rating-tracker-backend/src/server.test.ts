@@ -178,20 +178,46 @@ describe("Stock API", () => {
   });
 
   it("creates example stocks", async () => {
+    await expectRouteToBePrivate(
+      "/api/stock/fillWithExampleData",
+      requestWithSupertest.put
+    );
     let res = await requestWithSupertest
       .delete("/api/stock/exampleAAPL")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
     await expectStockListLengthToBe(10);
-    await expectRouteToBePrivate(
-      "/api/stock/fillWithExampleData",
-      requestWithSupertest.put
-    );
     res = await requestWithSupertest
       .put("/api/stock/fillWithExampleData")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(201);
     await expectStockListLengthToBe(11);
+  });
+
+  it("creates a stock", async () => {
+    await expectRouteToBePrivate(
+      "/api/stock/NEWSTOCK?name=New%20Stock&country=GB",
+      requestWithSupertest.put
+    );
+    let res = await requestWithSupertest
+      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(201);
+    await expectStockListLengthToBe(12);
+    res = await requestWithSupertest
+      .get("/api/stock/list?name=New%20Stock")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.body.stocks).toHaveLength(1);
+    expect(res.body.stocks[0].ticker).toBe("NEWSTOCK");
+    expect(res.body.stocks[0].name).toBe("New Stock");
+    expect(res.body.stocks[0].country).toBe("GB");
+
+    // attempting to create the same stock again results in an error
+    res = await requestWithSupertest
+      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(409);
+    await expectStockListLengthToBe(12);
   });
 
   it("deletes a stock", async () => {
