@@ -15,10 +15,10 @@
     "dev:ssh": "ssh -N rating-tracker-port-forwarding",
     "dev:tsc": "tsc --watch",
     "dev:node": "node --watch dist/src/server.js",
-    "test:watch": "yarn node --experimental-vm-modules $(yarn bin jest) --watch --runInBand",
+    "test:watch": "yarn node --experimental-vm-modules $(yarn bin jest) --watch --runInBand --silent",
     "start": "node dist/src/server.js",
     "build": "tsc --project tsconfig.build.json",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand --coverage",
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand --coverage --silent",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
     "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix"
   },
