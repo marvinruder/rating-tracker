@@ -20,14 +20,13 @@ RUN echo -e "\033[0;34m➤\033[0m YN0019: \033[0;35m$(yarn | grep -c 'appears to
 RUN find /build/packages -type f '(' -name "*.d.ts*" -o -name "*.tsbuildinfo" ')' -delete
 
 # Create directories for run container and copy only necessary files
-RUN mkdir -p /build/app/packages/rating-tracker-backend /build/app/packages/rating-tracker-commons /build/app/.yarn
-RUN cp -r /build/.pnp.* /build/package.json /build/yarn.lock /build/app
-RUN cp -r /build/.yarn/cache /build/.yarn/releases /build/.yarn/unplugged /build/app/.yarn
-RUN cp -r /build/packages/rating-tracker-backend/dist /build/packages/rating-tracker-backend/public /build/packages/rating-tracker-backend/package.json /build/app/packages/rating-tracker-backend
-RUN cp -r /build/packages/rating-tracker-commons/dist /build/packages/rating-tracker-commons/package.json /build/app/packages/rating-tracker-commons
-
-# should contain the yarnPath
-RUN tail -1 .yarnrc.yml > /build/app/.yarnrc.yml
+RUN mkdir -p /build/app/packages/rating-tracker-backend /build/app/packages/rating-tracker-commons /build/app/.yarn && \
+  cp -r /build/.pnp.* /build/package.json /build/yarn.lock /build/app && \
+  cp -r /build/.yarn/cache /build/.yarn/releases /build/.yarn/unplugged /build/app/.yarn && \
+  cp -r /build/packages/rating-tracker-backend/dist /build/packages/rating-tracker-backend/public /build/packages/rating-tracker-backend/package.json /build/app/packages/rating-tracker-backend && \
+  cp -r /build/packages/rating-tracker-commons/dist /build/packages/rating-tracker-commons/package.json /build/app/packages/rating-tracker-commons && \
+  # should contain the yarnPath
+  tail -1 .yarnrc.yml > /build/app/.yarnrc.yml
 
 FROM node:19.1.0-alpine3.16 as run
 RUN apk add --no-cache dumb-init
