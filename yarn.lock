@@ -7692,7 +7692,6 @@ __metadata:
     ts-jest: 29.0.3
     ts-node: 10.9.1
     typescript: 4.9.3
-    validator: 13.7.0
   languageName: unknown
   linkType: soft
 
@@ -9718,13 +9717,6 @@ __metadata:
     "@types/istanbul-lib-coverage": ^2.0.1
     convert-source-map: ^1.6.0
   checksum: a49c34bf0a3af0c11041a3952a2600913904a983bd1bc87148b5c033bc5c1d02d5a13620fcdbfa2c60bc582a2e2970185780f0c844b4c3a220abf405f8af6311
-  languageName: node
-  linkType: hard
-
-"validator@npm:13.7.0":
-  version: 13.7.0
-  resolution: "validator@npm:13.7.0"
-  checksum: 2b83283de1222ca549a7ef57f46e8d49c6669213348db78b7045bce36a3b5843ff1e9f709ebf74574e06223461ee1f264f8cc9a26a0060a79a27de079d8286ef
   languageName: node
   linkType: hard
 
