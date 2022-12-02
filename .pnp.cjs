@@ -10720,7 +10720,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["redis-om", "npm:0.3.6"],\
             ["response-time", "npm:2.3.2"],\
             ["selenium-webdriver", "npm:4.7.0"],\
-            ["supertest", "npm:6.3.1"],\
+            ["supertest", "npm:6.3.2"],\
             ["swagger-ui-express", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.6.0"],\
             ["ts-jest", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.0.3"],\
             ["ts-node", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:10.9.1"],\
@@ -11899,10 +11899,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["supertest", [\
-        ["npm:6.3.1", {\
-          "packageLocation": "./.yarn/cache/supertest-npm-6.3.1-16f8b9d655-024d10e305.zip/node_modules/supertest/",\
+        ["npm:6.3.2", {\
+          "packageLocation": "./.yarn/cache/supertest-npm-6.3.2-2a2b1a0f3c-97f6834df6.zip/node_modules/supertest/",\
           "packageDependencies": [\
-            ["supertest", "npm:6.3.1"],\
+            ["supertest", "npm:6.3.2"],\
             ["methods", "npm:1.1.2"],\
             ["superagent", "npm:8.0.3"]\
           ],\
