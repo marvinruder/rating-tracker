@@ -7776,7 +7776,7 @@ __metadata:
     redis: 4.5.1
     redis-om: 0.3.6
     response-time: 2.3.2
-    selenium-webdriver: 4.6.1
+    selenium-webdriver: 4.7.0
     supertest: 6.3.1
     swagger-ui-express: 4.6.0
     ts-jest: 29.0.3
@@ -8404,14 +8404,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"selenium-webdriver@npm:4.6.1":
-  version: 4.6.1
-  resolution: "selenium-webdriver@npm:4.6.1"
+"selenium-webdriver@npm:4.7.0":
+  version: 4.7.0
+  resolution: "selenium-webdriver@npm:4.7.0"
   dependencies:
     jszip: ^3.10.0
     tmp: ^0.2.1
     ws: ">=8.7.0"
-  checksum: 0c36477bbaab2d3da3c276f34b841d1c9d09c83d631f9e728f512648ef8d37146ba39e24c8fa0c8ba6ce607ced553a66e838c4a6245dab0091544daa0ce64310
+  checksum: a04230aecb7a7f6c314eec9688c339a3eb0d410f66f26effa1712444513036485e8f5141ea894e4d3b41e145059ad32391920d3f9032753f9af9a1a4b3874c16
   languageName: node
   linkType: hard
 
