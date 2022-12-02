@@ -57,12 +57,6 @@ const StockRow = (props: { stock?: Stock }) => {
           {props.stock.country &&
             regionName[regionOfCountry[props.stock.country]]}
         </Typography>
-        <Typography variant="body2" color="text.secondary" width={125} noWrap>
-          {props.stock.country &&
-            superRegionName[
-              superRegionOfRegion[regionOfCountry[props.stock.country]]
-            ]}
-        </Typography>
       </TableCell>
       <TableCell>
         <Tooltip
@@ -206,9 +200,6 @@ const StockRow = (props: { stock?: Stock }) => {
       </TableCell>
       <TableCell>
         <Typography variant="body1">
-          <Skeleton width={125} />
-        </Typography>
-        <Typography variant="body2">
           <Skeleton width={125} />
         </Typography>
         <Typography variant="body2">
