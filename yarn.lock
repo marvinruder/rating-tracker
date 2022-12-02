@@ -2890,7 +2890,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:18.0.25":
+"@types/react@npm:*":
   version: 18.0.25
   resolution: "@types/react@npm:18.0.25"
   dependencies:
@@ -2898,6 +2898,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: 231d658c45abdef044a716b4502774f1585d8336d73b2f5bd68f181acbfc874b7a457686ecd29b415b43ed0922c309bab7e2cf96832d188a3f4f1b02f2af760a
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:18.0.26":
+  version: 18.0.26
+  resolution: "@types/react@npm:18.0.26"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: b62f0ea3cdfa68e106391728325057ad36f1bde7ba2dfae029472c47e01e482bc77c6ba4f1dad59f3f04ee81cb597618ff7c30a33c157c0a20462b6dd6aa2d4d
   languageName: node
   linkType: hard
 
@@ -7776,7 +7787,7 @@ __metadata:
     redis: 4.5.1
     redis-om: 0.3.6
     response-time: 2.3.2
-    selenium-webdriver: 4.6.1
+    selenium-webdriver: 4.7.0
     supertest: 6.3.1
     swagger-ui-express: 4.6.0
     ts-jest: 29.0.3
@@ -7814,7 +7825,7 @@ __metadata:
     "@mui/material": 5.10.16
     "@simplewebauthn/browser": 6.2.2
     "@types/node": 18.11.10
-    "@types/react": 18.0.25
+    "@types/react": 18.0.26
     "@types/react-dom": 18.0.9
     "@typescript-eslint/eslint-plugin": 5.45.0
     "@typescript-eslint/parser": 5.45.0
@@ -8403,14 +8414,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"selenium-webdriver@npm:4.6.1":
-  version: 4.6.1
-  resolution: "selenium-webdriver@npm:4.6.1"
+"selenium-webdriver@npm:4.7.0":
+  version: 4.7.0
+  resolution: "selenium-webdriver@npm:4.7.0"
   dependencies:
     jszip: ^3.10.0
     tmp: ^0.2.1
     ws: ">=8.7.0"
-  checksum: 0c36477bbaab2d3da3c276f34b841d1c9d09c83d631f9e728f512648ef8d37146ba39e24c8fa0c8ba6ce607ced553a66e838c4a6245dab0091544daa0ce64310
+  checksum: a04230aecb7a7f6c314eec9688c339a3eb0d410f66f26effa1712444513036485e8f5141ea894e4d3b41e145059ad32391920d3f9032753f9af9a1a4b3874c16
   languageName: node
   linkType: hard
 
