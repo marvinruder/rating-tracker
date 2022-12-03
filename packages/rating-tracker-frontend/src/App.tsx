@@ -5,6 +5,7 @@ import { CssBaseline } from "@mui/material";
 import ThemeProvider from "./theme/ThemeProvider";
 import ParticleBackground from "./components/ParticleBackground";
 import { NotificationProvider } from "./contexts/NotificationContext";
+import NotificationSnackbar from "./components/NotificationSnackbar";
 
 function App() {
   const content = useRoutes(router);
@@ -12,7 +13,14 @@ function App() {
   return (
     <ThemeProvider>
       <CssBaseline />
-      <NotificationProvider>{content}</NotificationProvider>
+      <NotificationProvider>
+        {content}
+        <NotificationSnackbar
+          snackbarProps={{
+            anchorOrigin: { horizontal: "center", vertical: "bottom" },
+          }}
+        />
+      </NotificationProvider>
       <ParticleBackground />
     </ThemeProvider>
   );

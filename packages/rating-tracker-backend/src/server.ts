@@ -72,6 +72,11 @@ const highlightMethod = (method: string) => {
     case "PUT":
       return chalk.black.bgYellow(` ${method} `) + chalk.yellow.bgGrey("");
 
+    case "PATCH":
+      return (
+        chalk.black.bgCyanBright(` ${method} `) + chalk.cyanBright.bgGrey("")
+      );
+
     case "DELETE":
       return chalk.whiteBright.bgRed(` ${method} `) + chalk.red.bgGrey("");
 

@@ -4,8 +4,9 @@ import { Box, Container, styled } from "@mui/material";
 
 const PageTitle = styled(Box)(
   ({ theme }) => `
-        padding: ${theme.spacing(4)};
-`
+  padding-top: ${theme.spacing(4)};
+  padding-bottom: ${theme.spacing(4)};
+  `
 );
 
 interface PageTitleWrapperProps {

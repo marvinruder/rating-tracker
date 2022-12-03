@@ -9,7 +9,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": "19.1.0"
+    "node": "19.2.0"
   },
   "scripts": {
     "dev:ssh": "ssh -N rating-tracker-port-forwarding",

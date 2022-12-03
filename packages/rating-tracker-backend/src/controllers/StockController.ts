@@ -7,6 +7,8 @@ import {
   readAllStocks,
   indexStockRepository,
   createStock,
+  updateStock,
+  readStock,
 } from "../redis/repositories/stock/stockRepository.js";
 import {
   Country,
@@ -22,6 +24,11 @@ import {
 import APIError from "../lib/apiError.js";
 
 class StockController {
+  async get(req: Request, res: Response) {
+    const stock = await readStock(req.params[0]);
+    return res.status(200).json(stock);
+  }
+
   async getList(req: Request, res: Response) {
     let stocks = (await readAllStocks()).map(
       (stockEntity) => new Stock(stockEntity)
@@ -145,6 +152,22 @@ class StockController {
       } else {
         throw new APIError(409, "A stock with that ticker exists already.");
       }
+    }
+  }
+
+  async patch(req: Request, res: Response) {
+    const ticker = req.params[0];
+    const { name, country, morningstarId } = req.query;
+    if (
+      typeof ticker === "string" &&
+      (typeof name === "string" || typeof name === "undefined") &&
+      ((typeof country === "string" && isCountry(country)) ||
+        typeof country === "undefined") &&
+      (typeof morningstarId === "string" ||
+        typeof morningstarId === "undefined")
+    ) {
+      await updateStock(ticker, { name, country, morningstarId });
+      return res.status(204).end();
     }
   }
 

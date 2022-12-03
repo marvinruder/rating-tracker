@@ -105,6 +105,16 @@ const style: OpenAPIV3.ParameterObject = {
   },
 };
 
+const morningstarId: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "morningstarId",
+  description: "The identifier of a stock used by Morningstar",
+  schema: {
+    type: "string",
+    example: "0P000000GY",
+  },
+};
+
 export {
   offset,
   count,
@@ -116,4 +126,5 @@ export {
   industry,
   size,
   style,
+  morningstarId,
 };

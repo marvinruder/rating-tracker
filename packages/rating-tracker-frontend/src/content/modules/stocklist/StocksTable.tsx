@@ -1,7 +1,6 @@
 import { FC, ChangeEvent, useState, useEffect } from "react";
 import axios from "axios";
 import {
-  // IconButton,
   Table,
   TableBody,
   TableCell,
@@ -10,9 +9,8 @@ import {
   TableRow,
   TableContainer,
   TableSortLabel,
+  Typography,
 } from "@mui/material";
-// import EditIcon from "@mui/icons-material/Edit";
-// import DeleteIcon from "@mui/icons-material/Delete";
 import { Stock } from "rating-tracker-commons";
 import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
 import {
@@ -23,7 +21,6 @@ import {
   Style,
 } from "rating-tracker-commons";
 import StockRow from "./StockRow";
-import NotificationSnackbar from "../../../components/NotificationSnackbar";
 import useNotification from "../../../helpers/useNotification";
 
 const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
@@ -38,7 +35,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
 
   useEffect(() => {
     getStocks();
-  }, [page, rowsPerPage, sortBy, sortDesc, props.filter]);
+  }, [page, rowsPerPage, sortBy, sortDesc, props.filter, props.triggerRefetch]);
 
   const getStocks = () => {
     setStocksFinal(false);
@@ -75,6 +72,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
               ? `${e.response.status}: ${e.response.data.message}`
               : e.message ?? "No additional information available.",
         });
+        setStocks([]);
         setCount(0);
       })
       .finally(() => setStocksFinal(true));
@@ -102,11 +100,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
 
   return (
     <>
-      <NotificationSnackbar
-        snackbarProps={{
-          anchorOrigin: { horizontal: "center", vertical: "bottom" },
-        }}
-      />
       <TableContainer>
         <Table size="small">
           <TableHead>
@@ -175,16 +168,20 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   P/E
                 </TableSortLabel>
               </TableCell>
-              {/* <TableCell align="right">Actions</TableCell> */}
+              <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {stocksFinal
               ? stocks.map((stock) => (
-                  <StockRow stock={stock} key={stock.ticker} />
+                  <StockRow
+                    stock={stock}
+                    getStocks={getStocks}
+                    key={stock.ticker}
+                  />
                 ))
               : [...Array(rowsPerPage > 0 ? rowsPerPage : 100)].map(
-                  (_undef, key) => <StockRow key={key} />
+                  (_undef, key) => <StockRow getStocks={getStocks} key={key} />
                 )}
           </TableBody>
         </Table>
@@ -199,6 +196,18 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
         rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
         showFirstButton
         showLastButton
+        labelRowsPerPage={
+          <Typography variant="caption" sx={{ ml: "8px" }}>
+            <strong>Rows per page</strong>
+          </Typography>
+        }
+        labelDisplayedRows={({ from, to, count }) => (
+          <Typography variant="caption" sx={{ ml: "8px" }}>
+            <strong>
+              {from}–{to} of {count}
+            </strong>
+          </Typography>
+        )}
       />
     </>
   );
@@ -214,6 +223,7 @@ export interface StockFilter {
 
 interface StocksTableProps {
   filter: StockFilter;
+  triggerRefetch?: boolean;
 }
 
 export default StocksTable;

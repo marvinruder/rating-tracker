@@ -11,6 +11,17 @@ const okObject: OpenAPIV3.ResponseObject = {
   },
 };
 
+const okStock: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "application/json": {
+      schema: {
+        $ref: "#/components/schemas/Stock",
+      },
+    },
+  },
+};
+
 const okStockList: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -67,6 +78,7 @@ const noContent: OpenAPIV3.ResponseObject = {
 
 export {
   okObject,
+  okStock,
   okStockList,
   okStockListWithCount,
   okOperational,

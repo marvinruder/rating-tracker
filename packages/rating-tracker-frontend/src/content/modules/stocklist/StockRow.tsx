@@ -1,4 +1,10 @@
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
   Skeleton,
   TableCell,
   TableRow,
@@ -6,6 +12,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SectorIcon from "../../../components/SectorIcon";
 import StarRating from "../../../components/StarRating";
 import StyleBox from "../../../components/StyleBox";
@@ -24,9 +31,40 @@ import {
   superSectorName,
   superSectorOfSector,
 } from "rating-tracker-commons";
+import axios from "axios";
+import { baseUrl, stockAPI } from "../../../endpoints";
+import useNotification from "../../../helpers/useNotification";
+import { useState } from "react";
+import LoadingButton from "@mui/lab/LoadingButton";
 
-const StockRow = (props: { stock?: Stock }) => {
+const StockRow = (props: StockRowProps) => {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [deletionInProgress, setDeletionInProgress] = useState<boolean>(false);
   const theme = useTheme();
+  const { setNotification } = useNotification();
+
+  const deleteStock = () => {
+    props.stock &&
+      props.getStocks &&
+      (setDeletionInProgress(true),
+      axios
+        .delete(baseUrl + stockAPI + `/${props.stock.ticker}`)
+        .then(() => {
+          setDeletionInProgress(false);
+          props.getStocks();
+        })
+        .catch((e) => {
+          setNotification({
+            severity: "error",
+            title: "Error while deleting stock",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+        }));
+  };
+
   return props.stock ? (
     <TableRow hover>
       <TableCell>
@@ -157,8 +195,9 @@ const StockRow = (props: { stock?: Stock }) => {
           {props.stock.priceEarningRatio ?? "–"}
         </Typography>
       </TableCell>
-      {/* <TableCell align="right">
-            <Tooltip title="Edit Order" arrow>
+      {props.getStocks && (
+        <TableCell align="right">
+          {/* <Tooltip title="Edit Stock" arrow>
               <IconButton
                 sx={{
                   "&:hover": {
@@ -171,22 +210,49 @@ const StockRow = (props: { stock?: Stock }) => {
               >
                 <EditIcon fontSize="small" />
               </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete Order" arrow>
-              <IconButton
-                sx={{
-                  "&:hover": {
-                    background: theme.colors.error.lighter,
-                  },
-                  color: theme.palette.error.main,
-                }}
-                color="inherit"
-                size="small"
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </TableCell> */}
+            </Tooltip> */}
+          <Tooltip title="Delete Stock" arrow>
+            <IconButton
+              sx={{
+                "&:hover": {
+                  background: theme.colors.error.lighter,
+                },
+                color: theme.palette.error.main,
+              }}
+              color="inherit"
+              size="small"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+      )}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>
+          <Typography variant="h3">
+            Delete Stock “{props.stock.name}”
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          Do you really want to delete the Stock “{props.stock.name}” (
+          {props.stock.ticker})? This action cannot be reversed.
+        </DialogContent>
+        <DialogActions sx={{ p: 2.6666, pt: 0 }}>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <LoadingButton
+            loading={deletionInProgress}
+            variant="contained"
+            onClick={deleteStock}
+            color="error"
+          >
+            Delete “{props.stock.ticker}”
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
     </TableRow>
   ) : (
     <TableRow hover>
@@ -230,17 +296,19 @@ const StockRow = (props: { stock?: Stock }) => {
         </Typography>
       </TableCell>
       <TableCell>
-        {[...Array(5).keys()].map((index) => {
-          return (
-            <Skeleton
-              key={index}
-              sx={{ m: "2px", display: "inline-block" }}
-              variant="circular"
-              width={20}
-              height={20}
-            />
-          );
-        })}
+        <span style={{ whiteSpace: "nowrap" }}>
+          {[...Array(5).keys()].map((index) => {
+            return (
+              <Skeleton
+                key={index}
+                sx={{ m: "2px", display: "inline-block" }}
+                variant="circular"
+                width={20}
+                height={20}
+              />
+            );
+          })}
+        </span>
       </TableCell>
       <TableCell>
         <Typography variant="body1">
@@ -252,8 +320,9 @@ const StockRow = (props: { stock?: Stock }) => {
           <Skeleton width={45} />
         </Typography>
       </TableCell>
-      {/* <TableCell align="right">
-            <Skeleton
+      {props.getStocks && (
+        <TableCell align="right">
+          {/* <Skeleton
               sx={{ m: "2px", display: "inline-block" }}
               variant="circular"
               width={
@@ -264,22 +333,22 @@ const StockRow = (props: { stock?: Stock }) => {
                 2 * (theme.typography.body1.fontSize as number) -
                 4
               }
-            />
-            <Skeleton
-              sx={{ m: "2px", display: "inline-block" }}
-              variant="circular"
-              width={
-                2 * (theme.typography.body1.fontSize as number) -
-                4
-              }
-              height={
-                2 * (theme.typography.body1.fontSize as number) -
-                4
-              }
-            />
-          </TableCell> */}
+            /> */}
+          <Skeleton
+            sx={{ m: "2px", display: "inline-block" }}
+            variant="circular"
+            width={2 * (theme.typography.body1.fontSize as number) - 4}
+            height={2 * (theme.typography.body1.fontSize as number) - 4}
+          />
+        </TableCell>
+      )}
     </TableRow>
   );
 };
+
+interface StockRowProps {
+  stock?: Stock;
+  getStocks?: () => void;
+}
 
 export default StockRow;

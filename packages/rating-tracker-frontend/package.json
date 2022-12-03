@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": "19.1.0"
+    "node": "19.2.0"
   },
   "scripts": {
     "dev:vite": "vite",

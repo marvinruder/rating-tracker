@@ -47,6 +47,7 @@ import {
 } from "rating-tracker-commons";
 import React from "react";
 import NestedCheckboxList from "../../../components/NestedCheckboxList";
+import AddStock from "./AddStock";
 
 const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
@@ -57,6 +58,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   }>({});
   const [countryInput, setCountryInput] = useState<Country[]>([]);
   const [industryInput, setIndustryInput] = useState<Industry[]>([]);
+  const [addStockOpen, setAddStockOpen] = useState<boolean>(false);
 
   const theme = useTheme();
 
@@ -71,20 +73,16 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
         </Typography>
       </Grid>
       <Grid item>
-        <Tooltip title="Not yet implemented" arrow>
-          <span>
-            <Button
-              sx={{ mt: { xs: 2, md: 0 }, ml: { xs: 0, md: 2 } }}
-              variant="contained"
-              startIcon={<AddIcon />}
-              disabled
-            >
-              New Stock
-            </Button>
-          </span>
-        </Tooltip>
         <Button
-          sx={{ mt: { xs: 2, md: 0 }, ml: { xs: 0, md: 2 } }}
+          sx={{ mt: 1, mb: 1, ml: 2 }}
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setAddStockOpen(true)}
+        >
+          New Stock
+        </Button>
+        <Button
+          sx={{ mt: 1, mb: 1, ml: 2 }}
           variant="contained"
           startIcon={<TuneIcon />}
           onClick={() => setFilterOpen(true)}
@@ -92,11 +90,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           Filter Stocks
         </Button>
         <Button
-          sx={{
-            display: props.filtersInUse ? undefined : "none",
-            mt: { xs: 2, md: 0 },
-            ml: { xs: 0, md: 2 },
-          }}
+          sx={{ display: !props.filtersInUse && "none", mt: 1, mb: 1, ml: 2 }}
           variant="contained"
           color="error"
           startIcon={<ClearIcon />}
@@ -110,13 +104,23 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
         >
           Clear Filters
         </Button>
+        <Dialog open={addStockOpen}>
+          <AddStock
+            onClose={() => (setAddStockOpen(false), props.triggerRefetch())}
+          />
+        </Dialog>
         <Dialog onClose={() => setFilterOpen(false)} open={filterOpen}>
+          <DialogTitle>
+            <Typography variant="h3">Filter Stocks</Typography>
+          </DialogTitle>
           <Grid
             container
             width={useMediaQuery("(min-width:664px)") ? 600 : 300}
           >
             <Grid item width={300}>
-              <DialogTitle>Name</DialogTitle>
+              <DialogTitle>
+                <Typography variant="h4">Name</Typography>
+              </DialogTitle>
               <TextField
                 onChange={(event) => {
                   setStockNameInput(event.target.value);
@@ -140,6 +144,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                   sx: { pr: "5px" },
                   endAdornment: (
                     <IconButton
+                      size="small"
                       sx={{
                         borderRadius: 1024,
                         visibility: stockNameInput ? "visible" : "hidden",
@@ -153,7 +158,9 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
               />
             </Grid>
             <Grid item>
-              <DialogTitle>Style</DialogTitle>
+              <DialogTitle>
+                <Typography variant="h4">Style</Typography>
+              </DialogTitle>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <Grid container pl="24px" pr="24px" columns={5} width="298px">
                   <Grid xs={1} item>
@@ -261,7 +268,9 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
               </div>
             </Grid>
             <Grid item>
-              <DialogTitle>Region</DialogTitle>
+              <DialogTitle>
+                <Typography variant="h4">Region</Typography>
+              </DialogTitle>
               <NestedCheckboxList<SuperRegion, Region, Country, never>
                 firstLevelElements={superRegionArray}
                 firstLevelLabels={superRegionName}
@@ -275,7 +284,9 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
               />
             </Grid>
             <Grid item>
-              <DialogTitle>Industry</DialogTitle>
+              <DialogTitle>
+                <Typography variant="h4">Industry</Typography>
+              </DialogTitle>
               <NestedCheckboxList<SuperSector, Sector, IndustryGroup, Industry>
                 firstLevelElements={superSectorArray}
                 firstLevelLabels={superSectorName}
@@ -323,6 +334,7 @@ interface PageHeaderProps {
     industries?: Industry[]
   ) => void;
   filtersInUse: boolean;
+  triggerRefetch: () => void;
 }
 
 export default PageHeader;
