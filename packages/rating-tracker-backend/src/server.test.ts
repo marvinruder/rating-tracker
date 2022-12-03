@@ -241,14 +241,16 @@ describe("Stock API", () => {
       requestWithSupertest.patch
     );
     let res = await requestWithSupertest
-      .patch("/api/stock/exampleAAPL?morningstarId=US012345678")
+      .patch(
+        "/api/stock/exampleAAPL?morningstarId=US012345678&name=Apple%20Inc."
+      )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
     res = await requestWithSupertest
       .get("/api/stock/exampleAAPL")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).name).toEqual("Apple Inc.");
     expect((res.body as Stock).morningstarId).toEqual("US012345678");
 
     // sending an update with the same information results in no changes
@@ -260,7 +262,19 @@ describe("Stock API", () => {
       .get("/api/stock/exampleAAPL")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).name).toEqual("Apple Inc.");
+    expect((res.body as Stock).morningstarId).toEqual("US012345678");
+
+    // sending an update without anything results in no changes
+    res = await requestWithSupertest
+      .patch("/api/stock/exampleAAPL")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await requestWithSupertest
+      .get("/api/stock/exampleAAPL")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc.");
     expect((res.body as Stock).morningstarId).toEqual("US012345678");
 
     // attempting to update a non-existent stock results in an error
