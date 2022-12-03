@@ -220,6 +220,56 @@ describe("Stock API", () => {
     await expectStockListLengthToBe(12);
   });
 
+  it("reads a stock", async () => {
+    await expectRouteToBePrivate("/api/stock/exampleAAPL");
+    let res = await requestWithSupertest
+      .get("/api/stock/exampleAAPL")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc");
+
+    // attempting to read a non-existent stock results in an error
+    res = await requestWithSupertest
+      .get("/api/stock/doesNotExist")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+  });
+
+  it("updates a stock", async () => {
+    await expectRouteToBePrivate(
+      "/api/stock/exampleAAPL",
+      requestWithSupertest.patch
+    );
+    let res = await requestWithSupertest
+      .patch("/api/stock/exampleAAPL?morningstarId=US012345678")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await requestWithSupertest
+      .get("/api/stock/exampleAAPL")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).morningstarId).toEqual("US012345678");
+
+    // sending an update with the same information results in no changes
+    res = await requestWithSupertest
+      .patch("/api/stock/exampleAAPL?morningstarId=US012345678")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await requestWithSupertest
+      .get("/api/stock/exampleAAPL")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).morningstarId).toEqual("US012345678");
+
+    // attempting to update a non-existent stock results in an error
+    res = await requestWithSupertest
+      .patch("/api/stock/doesNotExist?morningstarId=CA012345678")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+  });
+
   it("deletes a stock", async () => {
     await expectRouteToBePrivate(
       "/api/stock/exampleAAPL",
