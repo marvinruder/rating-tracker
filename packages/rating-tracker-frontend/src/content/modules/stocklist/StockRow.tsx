@@ -81,10 +81,12 @@ const StockRow = (props: StockRowProps) => {
       axios
         .patch(baseUrl + stockAPI + `/${props.stock.ticker}`, undefined, {
           params: {
-            name: name !== props.stock.name && name,
-            country: country !== props.stock.country && country,
+            name: name !== props.stock.name ? name : undefined,
+            country: country !== props.stock.country ? country : undefined,
             morningstarId:
-              morningstarId !== props.stock.morningstarId && morningstarId,
+              morningstarId !== props.stock.morningstarId
+                ? morningstarId
+                : undefined,
           },
         })
         .then(props.getStocks)
