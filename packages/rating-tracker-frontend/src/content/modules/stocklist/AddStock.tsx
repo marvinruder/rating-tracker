@@ -167,76 +167,78 @@ const AddStock = (props: AddStockProps) => {
       title: "Enter Stock information",
       content: (
         <>
-          <Typography variant="h4" sx={{ mb: 1 }}>
+          <Typography variant="h4" sx={{ mb: 2 }}>
             Let’s start by adding some basic information:
           </Typography>
-          <div>
-            <TextField
-              onChange={(event) => {
-                setStock((prevStock) => {
-                  return { ...prevStock, ticker: event.target.value };
-                });
-                setTickerError(false);
-              }}
-              error={tickerError}
-              label="Ticker symbol"
-              value={stock.ticker}
-              placeholder={"e.g. AAPL"}
-              sx={{ pb: 1, maxWidth: "300px" }}
-              fullWidth
-            />
-          </div>
-          <div>
-            <TextField
-              onChange={(event) => {
-                setStock((prevStock) => {
-                  return { ...prevStock, name: event.target.value };
-                });
-                setNameError(false);
-              }}
-              error={nameError}
-              label="Stock name"
-              value={stock.name}
-              placeholder={"e.g. Apple Inc."}
-              sx={{ pb: 1, maxWidth: "300px" }}
-              fullWidth
-            />
-          </div>
-          <div>
-            <Autocomplete
-              sx={{ maxWidth: "300px" }}
-              options={countryArray}
-              autoHighlight
-              getOptionLabel={(option) => countryNameWithFlag[option]}
-              renderOption={(props, option) => (
-                <Box component="li" {...props}>
-                  {countryNameWithFlag[option]}
-                </Box>
-              )}
-              inputValue={countryInputValue}
-              onInputChange={(_, value) => setCountryInputValue(value)}
-              multiple={false}
-              value={stock.country ?? null}
-              onChange={(_, value) =>
-                isCountry(value) &&
-                (setStock((prevStock) => {
-                  return { ...prevStock, country: value };
-                }),
-                setCountryError(false))
-              }
-              filterOptions={(options) =>
-                options.filter((option) =>
-                  countryName[option]
-                    .toUpperCase()
-                    .startsWith(countryInputValue.trim().toUpperCase())
-                )
-              }
-              disableClearable
-              renderInput={(params) => (
-                <TextField {...params} label="Country" error={countryError} />
-              )}
-            />
-          </div>
+          <Grid container spacing={1} alignItems="center">
+            <Grid item xs={12}>
+              <TextField
+                onChange={(event) => {
+                  setStock((prevStock) => {
+                    return { ...prevStock, ticker: event.target.value };
+                  });
+                  setTickerError(false);
+                }}
+                error={tickerError}
+                label="Ticker symbol"
+                value={stock.ticker}
+                placeholder={"e.g. AAPL"}
+                sx={{ maxWidth: "300px" }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                onChange={(event) => {
+                  setStock((prevStock) => {
+                    return { ...prevStock, name: event.target.value };
+                  });
+                  setNameError(false);
+                }}
+                error={nameError}
+                label="Stock name"
+                value={stock.name}
+                placeholder={"e.g. Apple Inc."}
+                sx={{ maxWidth: "300px" }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Autocomplete
+                sx={{ maxWidth: "300px" }}
+                options={countryArray}
+                autoHighlight
+                getOptionLabel={(option) => countryNameWithFlag[option]}
+                renderOption={(props, option) => (
+                  <Box component="li" {...props}>
+                    {countryNameWithFlag[option]}
+                  </Box>
+                )}
+                inputValue={countryInputValue}
+                onInputChange={(_, value) => setCountryInputValue(value)}
+                multiple={false}
+                value={stock.country ?? null}
+                onChange={(_, value) =>
+                  isCountry(value) &&
+                  (setStock((prevStock) => {
+                    return { ...prevStock, country: value };
+                  }),
+                  setCountryError(false))
+                }
+                filterOptions={(options) =>
+                  options.filter((option) =>
+                    countryName[option]
+                      .toUpperCase()
+                      .startsWith(countryInputValue.trim().toUpperCase())
+                  )
+                }
+                disableClearable
+                renderInput={(params) => (
+                  <TextField {...params} label="Country" error={countryError} />
+                )}
+              />
+            </Grid>
+          </Grid>
         </>
       ),
       nextButton: (
@@ -258,7 +260,7 @@ const AddStock = (props: AddStockProps) => {
       title: "Connect Data Providers",
       content: (
         <>
-          <Typography variant="h4" sx={{ mb: 1 }}>
+          <Typography variant="h4" sx={{ mb: 2 }}>
             Alright, now connect some data providers:
           </Typography>
           <Grid container spacing={1} alignItems="center">
@@ -310,7 +312,7 @@ const AddStock = (props: AddStockProps) => {
       title: "View Stock",
       content: (
         <>
-          <Typography variant="h4" sx={{ mb: 1 }}>
+          <Typography variant="h4" sx={{ mb: 2 }}>
             Here’s your new stock:
           </Typography>
           <TableContainer>
