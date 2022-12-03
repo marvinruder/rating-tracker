@@ -9,7 +9,9 @@ export const indexStockRepository = () => {
   index();
 };
 
-export const createStockWithoutReindexing = async (stock: Stock) => {
+export const createStockWithoutReindexing = async (
+  stock: Stock
+): Promise<boolean> => {
   const existingStock = await fetch(stock.ticker);
   if (existingStock && existingStock.name) {
     console.warn(
@@ -17,6 +19,7 @@ export const createStockWithoutReindexing = async (stock: Stock) => {
         `Skipping stock “${stock.name}” – existing already (entity ID ${existingStock.entityId}).`
       )
     );
+    return false;
   } else {
     const stockEntity = new StockEntity(stockSchema, stock.ticker, {
       ...stock,
@@ -28,12 +31,16 @@ export const createStockWithoutReindexing = async (stock: Stock) => {
         )}.`
       )
     );
+    return true;
   }
 };
 
-export const createStock = async (stock: Stock) => {
-  await createStockWithoutReindexing(stock);
-  index();
+export const createStock = async (stock: Stock): Promise<boolean> => {
+  if (await createStockWithoutReindexing(stock)) {
+    index();
+    return true;
+  }
+  return false;
 };
 
 export const readStock = async (ticker: string) => {
@@ -50,7 +57,7 @@ export const readAllStocks = () => {
 
 export const updateStockWithoutReindexing = async (
   ticker: string,
-  newValues: Omit<Stock, "ticker" | "name">
+  newValues: Partial<Omit<Stock, "ticker">>
 ) => {
   let k: keyof typeof newValues;
   const stockEntity = await fetch(ticker);
@@ -59,7 +66,11 @@ export const updateStockWithoutReindexing = async (
     console.log(chalk.greenBright(`Updating stock ${ticker}…`));
     let isNewData = false;
     for (k in newValues) {
-      if (k in newValues && newValues[k]) {
+      if (
+        k in newValues &&
+        newValues[k] !== undefined &&
+        newValues[k] !== undefined
+      ) {
         if (newValues[k] !== stockEntity[k]) {
           isNewData = true;
           console.log(
@@ -91,6 +102,7 @@ export const updateStockWithoutReindexing = async (
               break;
           }
           switch (k) {
+            case "name":
             case "country":
             case "industry":
             case "size":
@@ -129,6 +141,7 @@ export const updateStockWithoutReindexing = async (
 export const updateStock = async (
   ticker: string,
   newValues: {
+    name?: string;
     country?: Country;
     industry?: Industry;
     size?: Size;

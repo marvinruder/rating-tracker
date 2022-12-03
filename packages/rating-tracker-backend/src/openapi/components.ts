@@ -58,6 +58,27 @@ export const components: OpenAPIV3.ComponentsObject = {
         style: {
           $ref: "#/components/schemas/Style",
         },
+        morningstarId: {
+          type: "string",
+          example: "0P000000GY",
+        },
+        morningstarLastFetch: {
+          type: "string",
+          format: "date-time",
+          example: "2022-11-24T03:30:15.908Z",
+        },
+        starRating: {
+          type: "integer",
+          example: 3,
+        },
+        dividendYieldPercent: {
+          type: "number",
+          example: 0.62,
+        },
+        priceEarningRatio: {
+          type: "number",
+          example: 17.82,
+        },
       },
       required: ["ticker", "name"],
     },

@@ -9,7 +9,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": "19.1.0"
+    "node": "19.2.0"
   },
   "scripts": {
     "dev:ssh": "ssh -N rating-tracker-port-forwarding",
@@ -41,8 +41,7 @@
     "response-time": "2.3.2",
     "selenium-webdriver": "4.7.0",
     "swagger-ui-express": "4.6.0",
-    "typescript": "4.9.3",
-    "validator": "13.7.0"
+    "typescript": "4.9.3"
   },
   "devDependencies": {
     "@jest/globals": "29.3.1",

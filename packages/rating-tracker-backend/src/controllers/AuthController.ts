@@ -14,7 +14,6 @@ import {
   userExists,
 } from "../redis/repositories/user/userRepository.js";
 import { sessionTTLInSeconds } from "../redis/repositories/session/sessionRepositoryBase.js";
-import validator from "validator";
 
 dotenv.config({
   path: ".env.local",
@@ -30,11 +29,7 @@ class AuthController {
   async getRegistrationOptions(req: Request, res: Response) {
     const email = req.query.email;
     const name = req.query.name;
-    if (
-      typeof email === "string" &&
-      typeof name === "string" &&
-      validator.isEmail(email)
-    ) {
+    if (typeof email === "string" && typeof name === "string") {
       if (await userExists(email)) {
         throw new APIError(
           403,
@@ -54,8 +49,6 @@ class AuthController {
       });
       currentChallenges[email] = options.challenge;
       return res.status(200).json(options);
-    } else {
-      throw new APIError(400, "Invalid name or email address");
     }
   }
 
@@ -63,11 +56,7 @@ class AuthController {
   async postRegistrationResponse(req: Request, res: Response) {
     const email = req.query.email;
     const name = req.query.name;
-    if (
-      typeof email === "string" &&
-      typeof name === "string" &&
-      validator.isEmail(email)
-    ) {
+    if (typeof email === "string" && typeof name === "string") {
       const expectedChallenge: string = currentChallenges[email];
       let verification;
       try {
@@ -79,7 +68,7 @@ class AuthController {
           requireUserVerification: true,
         });
       } catch (error) {
-        throw new APIError(400, error.message);
+        throw new APIError(500, error.message);
       }
 
       const { verified } = verification;
@@ -108,8 +97,6 @@ class AuthController {
         return res.sendStatus(201);
       }
       throw new APIError(400, "Registration failed");
-    } else {
-      throw new APIError(400, "Invalid name or email address");
     }
   }
 
@@ -142,7 +129,7 @@ class AuthController {
         requireUserVerification: true,
       });
     } catch (error) {
-      throw new APIError(400, error.message);
+      throw new APIError(500, error.message);
     }
 
     const { verified } = verification;
@@ -158,7 +145,7 @@ class AuthController {
       res.cookie("authToken", authToken, {
         maxAge: 1000 * sessionTTLInSeconds,
         httpOnly: true,
-        secure: process.env.NODE_ENV != "dev",
+        secure: process.env.NODE_ENV !== "dev",
         sameSite: true,
       });
       return res.sendStatus(204);

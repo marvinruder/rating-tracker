@@ -27,6 +27,15 @@ class StockRouter {
         await this._controller.fillWithExampleData(res);
       }
     );
+    this._router.get("/*", async (req: Request, res: Response) => {
+      await this._controller.get(req, res);
+    });
+    this._router.put("/*", async (req: Request, res: Response) => {
+      await this._controller.put(req, res);
+    });
+    this._router.patch("/*", async (req: Request, res: Response) => {
+      await this._controller.patch(req, res);
+    });
     this._router.delete("/*", async (req: Request, res: Response) => {
       await this._controller.delete(req, res);
     });

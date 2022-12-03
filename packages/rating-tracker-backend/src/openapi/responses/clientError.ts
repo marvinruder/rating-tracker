@@ -44,6 +44,17 @@ const notFound: OpenAPIV3.ResponseObject = {
   },
 };
 
+const conflict: OpenAPIV3.ResponseObject = {
+  description: "Conflict",
+  content: {
+    "application/json": {
+      schema: {
+        $ref: "#/components/schemas/Error",
+      },
+    },
+  },
+};
+
 const tooManyRequests: OpenAPIV3.ResponseObject = {
   description: "Too Many Requests",
   content: {
@@ -51,4 +62,11 @@ const tooManyRequests: OpenAPIV3.ResponseObject = {
   },
 };
 
-export { badRequest, unauthorized, forbidden, notFound, tooManyRequests };
+export {
+  badRequest,
+  unauthorized,
+  forbidden,
+  notFound,
+  conflict,
+  tooManyRequests,
+};

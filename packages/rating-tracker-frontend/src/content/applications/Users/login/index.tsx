@@ -20,7 +20,6 @@ import {
   signInEndpoint,
 } from "../../../../endpoints";
 import SwitchSelector from "../../../../components/SwitchSelector";
-import NotificationSnackbar from "../../../../components/NotificationSnackbar";
 import { useNavigate } from "react-router";
 import useNotification from "../../../../helpers/useNotification";
 
@@ -124,105 +123,102 @@ const LoginApp = () => {
   };
 
   return (
-    <>
-      <NotificationSnackbar />
-      <Card sx={{ margin: "auto", minWidth: 275 }}>
-        <CardContent>
-          <Grid container direction={"column"} spacing={2} padding={1}>
-            <Grid item>
-              <Avatar
-                sx={{
-                  m: "auto",
-                  height: 64,
-                  width: 64,
-                  color: theme.palette.text.primary,
+    <Card sx={{ margin: "auto", minWidth: 275 }}>
+      <CardContent>
+        <Grid container direction={"column"} spacing={2} padding={1}>
+          <Grid item>
+            <Avatar
+              sx={{
+                m: "auto",
+                height: 64,
+                width: 64,
+                color: theme.palette.text.primary,
+              }}
+            >
+              <QueryStatsIcon fontSize="large" />
+            </Avatar>
+          </Grid>
+          <Grid item>
+            <Typography variant="h3" textAlign={"center"}>
+              Rating Tracker
+            </Typography>
+          </Grid>
+          <Grid item>
+            <SwitchSelector
+              value={action}
+              setValue={setAction}
+              leftValue="signIn"
+              leftLabel="Sign in"
+              rightValue="register"
+              rightLabel="Register"
+            />
+          </Grid>
+          <Grid container item direction={"column"} spacing={1}>
+            <Grid
+              item
+              maxHeight={action === "register" ? 60 : 0}
+              sx={{
+                opacity: action === "register" ? 1 : 0,
+                transitionProperty: "max-height,opacity",
+                transitionDuration: ".4s,.2s",
+                transitionDelay: action === "register" && "0s,.2s",
+                transitionTimingFunction: `ease`,
+              }}
+            >
+              <TextField
+                id={"inputEmail"}
+                type={"email"}
+                fullWidth
+                label={"Email Address"}
+                value={email}
+                error={emailError}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setEmail(event.target.value);
+                  setEmailError(false);
                 }}
-              >
-                <QueryStatsIcon fontSize="large" />
-              </Avatar>
-            </Grid>
-            <Grid item>
-              <Typography variant="h3" textAlign={"center"}>
-                Rating Tracker
-              </Typography>
-            </Grid>
-            <Grid item>
-              <SwitchSelector
-                value={action}
-                setValue={setAction}
-                leftValue="signIn"
-                leftLabel="Sign in"
-                rightValue="register"
-                rightLabel="Register"
+                required
               />
             </Grid>
-            <Grid container item direction={"column"} spacing={1}>
-              <Grid
-                item
-                maxHeight={action === "register" ? 60 : 0}
-                sx={{
-                  opacity: action === "register" ? 1 : 0,
-                  transitionProperty: "max-height,opacity",
-                  transitionDuration: ".4s,.2s",
-                  transitionDelay: action === "register" && "0s,.2s",
-                  transitionTimingFunction: `ease`,
+            <Grid
+              item
+              maxHeight={action === "register" ? 60 : 0}
+              sx={{
+                opacity: action === "register" ? 1 : 0,
+                transitionProperty: "max-height,opacity",
+                transitionDuration: ".4s,.2s",
+                transitionDelay: action === "register" && "0s,.2s",
+                transitionTimingFunction: `ease`,
+              }}
+            >
+              <TextField
+                fullWidth
+                id={"inputName"}
+                label={"Name"}
+                value={name}
+                error={nameError}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setName(event.target.value);
+                  setNameError(false);
                 }}
+                required
+              />
+            </Grid>
+            <Grid item>
+              <Button
+                startIcon={<FingerprintIcon />}
+                variant="contained"
+                disabled={action === "register" && (emailError || nameError)}
+                fullWidth
+                onMouseOver={validate}
+                onClick={onButtonClick}
               >
-                <TextField
-                  id={"inputEmail"}
-                  type={"email"}
-                  fullWidth
-                  label={"Email Address"}
-                  value={email}
-                  error={emailError}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setEmail(event.target.value);
-                    setEmailError(false);
-                  }}
-                  required
-                />
-              </Grid>
-              <Grid
-                item
-                maxHeight={action === "register" ? 60 : 0}
-                sx={{
-                  opacity: action === "register" ? 1 : 0,
-                  transitionProperty: "max-height,opacity",
-                  transitionDuration: ".4s,.2s",
-                  transitionDelay: action === "register" && "0s,.2s",
-                  transitionTimingFunction: `ease`,
-                }}
-              >
-                <TextField
-                  fullWidth
-                  id={"inputName"}
-                  label={"Name"}
-                  value={name}
-                  error={nameError}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setName(event.target.value);
-                    setNameError(false);
-                  }}
-                  required
-                />
-              </Grid>
-              <Grid item>
-                <Button
-                  startIcon={<FingerprintIcon />}
-                  variant="contained"
-                  disabled={action === "register" && (emailError || nameError)}
-                  fullWidth
-                  onMouseOver={validate}
-                  onClick={onButtonClick}
-                >
-                  {action === "signIn" ? "Sign in" : "Register"}
-                </Button>
-              </Grid>
+                {action === "signIn" ? "Sign in" : "Register"}
+              </Button>
             </Grid>
           </Grid>
-        </CardContent>
-      </Card>
-    </>
+        </Grid>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -4,6 +4,7 @@ import {
   forbidden,
   tooManyRequests,
 } from "../../responses/clientError.js";
+import { internalServerError } from "../../responses/serverError.js";
 import { noContent, okObject } from "../../responses/success.js";
 
 const get: OpenAPIV3.OperationObject = {
@@ -14,7 +15,6 @@ const get: OpenAPIV3.OperationObject = {
     "Get information required for authenticating as a registered user via WebAuthn standard",
   responses: {
     "200": okObject,
-    "400": badRequest,
     "429": tooManyRequests,
   },
 };
@@ -29,6 +29,7 @@ const post: OpenAPIV3.OperationObject = {
     "400": badRequest,
     "403": forbidden,
     "429": tooManyRequests,
+    "500": internalServerError,
   },
 };
 

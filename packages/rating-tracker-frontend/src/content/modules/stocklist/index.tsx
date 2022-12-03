@@ -9,6 +9,11 @@ import { Size, Style, Country, Industry } from "rating-tracker-commons";
 
 function StocklistModule() {
   const [filter, setFilter] = useState<StockFilter>({});
+  const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
+
+  const triggerRefetch = () => {
+    setRefetchTrigger((prevRefetchTrigger) => !prevRefetchTrigger);
+  };
 
   const applyFilters = (
     name?: string,
@@ -31,6 +36,7 @@ function StocklistModule() {
       <PageTitleWrapper>
         <PageHeader
           applyFilters={applyFilters}
+          triggerRefetch={triggerRefetch}
           filtersInUse={
             !!filter.name ||
             !!filter.size ||
@@ -50,7 +56,7 @@ function StocklistModule() {
         >
           <Grid item xs={12}>
             <Card>
-              <StocksTable filter={filter} />
+              <StocksTable filter={filter} triggerRefetch={refetchTrigger} />
             </Card>
           </Grid>
         </Grid>
