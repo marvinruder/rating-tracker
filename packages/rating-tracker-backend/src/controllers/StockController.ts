@@ -114,17 +114,14 @@ class StockController {
           stocks.sort(
             (a, b) =>
               (a.morningstarFairValue && a.lastClose
-                ? a.morningstarFairValue / a.lastClose
+                ? a.lastClose / a.morningstarFairValue
                 : /* istanbul ignore next */
                   0) -
               (b.morningstarFairValue && b.lastClose
-                ? b.morningstarFairValue / b.lastClose
+                ? b.lastClose / b.morningstarFairValue
                 : /* istanbul ignore next */
                   0)
           );
-          break;
-        case "marketCap":
-          stocks.sort((a, b) => (a.marketCap ?? 0) - (b.marketCap ?? 0));
           break;
         case "52w":
           stocks.sort(

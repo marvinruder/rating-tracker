@@ -146,6 +146,28 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
               </TableCell>
               <TableCell>
                 <TableSortLabel
+                  active={sortBy === "morningstarFairValue"}
+                  direction={
+                    sortBy === "morningstarFairValue" && sortDesc
+                      ? "desc"
+                      : "asc"
+                  }
+                  onClick={handleSortLabelClicked("morningstarFairValue")}
+                >
+                  Fair Value
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "52w"}
+                  direction={sortBy === "52w" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("52w")}
+                >
+                  52W Range
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
                   active={sortBy === "dividendYieldPercent"}
                   direction={
                     sortBy === "dividendYieldPercent" && sortDesc
@@ -168,6 +190,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   P/E
                 </TableSortLabel>
               </TableCell>
+              <TableCell>Market Cap</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>

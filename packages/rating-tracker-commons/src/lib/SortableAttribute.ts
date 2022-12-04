@@ -6,7 +6,6 @@ export const sortableAttributeArray = [
   "dividendYieldPercent",
   "priceEarningRatio",
   "morningstarFairValue",
-  "marketCap",
   "52w",
 ] as const;
 
