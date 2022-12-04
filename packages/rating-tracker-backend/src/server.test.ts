@@ -143,11 +143,58 @@ describe("Stock API", () => {
     expect(res.body.stocks[0].ticker).toMatch("TSM");
 
     sortableAttributeArray.forEach(async (sortCriterion) => {
-      if (!["morningstarFairValue", "52w"].includes(sortCriterion)) {
-        res = await requestWithSupertest
-          .get(`/api/stock/list?sortBy=${sortCriterion}`)
-          .set("Cookie", ["authToken=exampleSessionID"]);
-        expect(res.status).toBe(200);
+      res = await requestWithSupertest
+        .get(`/api/stock/list?sortBy=${sortCriterion}`)
+        .set("Cookie", ["authToken=exampleSessionID"]);
+      expect(res.status).toBe(200);
+      if (sortCriterion === "morningstarFairValue") {
+        for (let i = 0; i < res.body.count - 1; i++) {
+          if (
+            res.body.stocks[i].morningstarFairValue &&
+            res.body.stocks[i + 1].morningstarFairValue &&
+            typeof res.body.stocks[i].morningstarFairValue == "number" &&
+            typeof res.body.stocks[i + 1].morningstarFairValue == "number" &&
+            res.body.stocks[i].lastClose &&
+            res.body.stocks[i + 1].lastClose &&
+            typeof res.body.stocks[i].lastClose == "number" &&
+            typeof res.body.stocks[i + 1].lastClose == "number"
+          ) {
+            expect(
+              res.body.stocks[i].morningstarFairValue /
+                res.body.stocks[i].lastClose
+            ).toBeLessThanOrEqual(
+              res.body.stocks[i + 1].morningstarFairValue /
+                res.body.stocks[i + 1].lastClose
+            );
+          }
+        }
+      } else if (sortCriterion === "52w") {
+        for (let i = 0; i < res.body.count - 1; i++) {
+          if (
+            res.body.stocks[i].low52w &&
+            res.body.stocks[i + 1].low52w &&
+            typeof res.body.stocks[i].low52w == "number" &&
+            typeof res.body.stocks[i + 1].low52w == "number" &&
+            res.body.stocks[i].high52w &&
+            res.body.stocks[i + 1].high52w &&
+            typeof res.body.stocks[i].high52w == "number" &&
+            typeof res.body.stocks[i + 1].high52w == "number" &&
+            res.body.stocks[i].lastClose &&
+            res.body.stocks[i + 1].lastClose &&
+            typeof res.body.stocks[i].lastClose == "number" &&
+            typeof res.body.stocks[i + 1].lastClose == "number"
+          ) {
+            expect(
+              (res.body.stocks[i].lastClose - res.body.stocks[i].low52w) /
+                (res.body.stocks[i].high52w - res.body.stocks[i].low52w)
+            ).toBeLessThanOrEqual(
+              (res.body.stocks[i + 1].lastClose -
+                res.body.stocks[i + 1].low52w) /
+                (res.body.stocks[i + 1].high52w - res.body.stocks[i + 1].low52w)
+            );
+          }
+        }
+      } else {
         for (let i = 0; i < res.body.count - 1; i++) {
           if (
             res.body.stocks[i][sortCriterion] &&
