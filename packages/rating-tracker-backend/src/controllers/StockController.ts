@@ -115,10 +115,12 @@ class StockController {
             (a, b) =>
               (a.morningstarFairValue && a.lastClose
                 ? a.morningstarFairValue / a.lastClose
-                : 0) -
+                : /* istanbul ignore next */
+                  0) -
               (b.morningstarFairValue && b.lastClose
                 ? b.morningstarFairValue / b.lastClose
-                : 0)
+                : /* istanbul ignore next */
+                  0)
           );
           break;
         case "marketCap":
@@ -129,10 +131,12 @@ class StockController {
             (a, b) =>
               (a.low52w && a.high52w && a.lastClose
                 ? (a.lastClose - a.low52w) / (a.high52w - a.low52w)
-                : 0) -
+                : /* istanbul ignore next */
+                  0) -
               (b.low52w && b.high52w && b.lastClose
                 ? (b.lastClose - b.low52w) / (b.high52w - b.low52w)
-                : 0)
+                : /* istanbul ignore next */
+                  0)
           );
       }
       if (String(req.query.sortDesc).toLowerCase() === "true") {
