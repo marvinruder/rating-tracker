@@ -53,22 +53,9 @@ import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 const Range52WSlider = styled(Slider)(({ theme }) => ({
-  // height: 2,
-  // padding: "15px 0",
-  // "& .MuiSlider-thumb": {
-  //   height: 28,
-  //   width: 28,
-  //   backgroundColor: "#fff",
-  //   boxShadow: iOSBoxShadow,
-  //   "&:focus, &:hover, &.Mui-active": {
-  //     boxShadow:
-  //       "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02)",
-  //     // Reset on touch devices, it doesn't add specificity
-  //     "@media (hover: none)": {
-  //       boxShadow: iOSBoxShadow,
-  //     },
-  //   },
-  // },
+  "@media (pointer: coarse)": {
+    padding: "13px 0",
+  },
   "& .MuiSlider-valueLabel": {
     fontSize: theme.typography.body2.fontSize,
     top: 0,
