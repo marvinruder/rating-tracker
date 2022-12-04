@@ -174,7 +174,7 @@ const exampleStocks: Stock[] = [
   },
   {
     ticker: "exampleAAPL",
-    name: "Apple Inc.",
+    name: "Apple Inc",
     country: "US",
     industry: "ConsumerElectronics",
     size: "Large",
