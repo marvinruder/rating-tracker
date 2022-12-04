@@ -110,6 +110,30 @@ class StockController {
             (a, b) => (a.priceEarningRatio ?? 0) - (b.priceEarningRatio ?? 0)
           );
           break;
+        case "morningstarFairValue":
+          stocks.sort(
+            (a, b) =>
+              (a.morningstarFairValue && a.lastClose
+                ? a.morningstarFairValue / a.lastClose
+                : 0) -
+              (b.morningstarFairValue && b.lastClose
+                ? b.morningstarFairValue / b.lastClose
+                : 0)
+          );
+          break;
+        case "marketCap":
+          stocks.sort((a, b) => (a.marketCap ?? 0) - (b.marketCap ?? 0));
+          break;
+        case "52w":
+          stocks.sort(
+            (a, b) =>
+              (a.low52w && a.high52w && a.lastClose
+                ? (a.lastClose - a.low52w) / (a.high52w - a.low52w)
+                : 0) -
+              (b.low52w && b.high52w && b.lastClose
+                ? (b.lastClose - b.low52w) / (b.high52w - b.low52w)
+                : 0)
+          );
       }
       if (String(req.query.sortDesc).toLowerCase() === "true") {
         stocks.reverse();

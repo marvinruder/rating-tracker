@@ -1,3 +1,4 @@
+import { Currency } from "../Currency.js";
 import { Country } from "../geo/Country.js";
 import { Industry } from "../gics/Industry.js";
 import { Size } from "../stylebox/Size.js";
@@ -15,4 +16,10 @@ export class Stock {
   starRating?: number;
   dividendYieldPercent?: number;
   priceEarningRatio?: number;
+  currency?: Currency;
+  lastClose?: number;
+  morningstarFairValue?: number;
+  marketCap?: number;
+  low52w?: number;
+  high52w?: number;
 }

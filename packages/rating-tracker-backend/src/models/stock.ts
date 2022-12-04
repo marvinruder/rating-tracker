@@ -1,6 +1,7 @@
 import { Entity, Schema } from "redis-om";
 import {
   Country,
+  Currency,
   Industry,
   Size,
   Stock as CommonsStock,
@@ -39,6 +40,24 @@ export class Stock extends CommonsStock {
     if (stockEntity.priceEarningRatio != null) {
       this.priceEarningRatio = stockEntity.priceEarningRatio;
     }
+    if (stockEntity.currency != null) {
+      this.currency = stockEntity.currency as Currency;
+    }
+    if (stockEntity.lastClose != null) {
+      this.lastClose = stockEntity.lastClose;
+    }
+    if (stockEntity.morningstarFairValue != null) {
+      this.morningstarFairValue = stockEntity.morningstarFairValue;
+    }
+    if (stockEntity.marketCap != null) {
+      this.marketCap = stockEntity.marketCap;
+    }
+    if (stockEntity.low52w != null) {
+      this.low52w = stockEntity.low52w;
+    }
+    if (stockEntity.high52w != null) {
+      this.high52w = stockEntity.high52w;
+    }
   }
 }
 
@@ -53,6 +72,12 @@ export interface StockEntity {
   starRating: number;
   dividendYieldPercent: number;
   priceEarningRatio: number;
+  currency: string;
+  lastClose: number;
+  morningstarFairValue: number;
+  marketCap: number;
+  low52w: number;
+  high52w: number;
 }
 
 export class StockEntity extends Entity {}
@@ -68,4 +93,10 @@ export const stockSchema = new Schema(StockEntity, {
   starRating: { type: "number" },
   dividendYieldPercent: { type: "number" },
   priceEarningRatio: { type: "number" },
+  currency: { type: "string" },
+  lastClose: { type: "number" },
+  morningstarFairValue: { type: "number" },
+  marketCap: { type: "number" },
+  low52w: { type: "number" },
+  high52w: { type: "number" },
 });

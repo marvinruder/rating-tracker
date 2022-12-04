@@ -88,16 +88,16 @@ export const updateStockWithoutReindexing = async (
                 "☆".repeat(5 - newValues[k] ?? 0)
               }`;
               break;
-            // case "dividendYieldPercent":
-            //   signalMessage += `\n\tDividend Yield changed from ${
-            //     stockEntity[k] ?? 0
-            //   } % to ${newValues[k] ?? 0} %`;
-            //   break;
-            // case "priceEarningRatio":
-            //   signalMessage += `\n\tPrice/Earning ratio changed from ${
-            //     stockEntity[k] ?? 0
-            //   } to ${newValues[k] ?? 0}`;
-            //   break;
+            case "morningstarFairValue":
+              const currency = newValues.currency ?? stockEntity.currency ?? "";
+              const lastClose =
+                newValues.lastClose ?? stockEntity.lastClose ?? 0;
+              signalMessage += `\n\tMorningstar Fair Value changed from ${currency} ${
+                stockEntity[k] ?? 0
+              } to ${currency} ${
+                newValues[k] ?? 0
+              } (last close ${currency} ${lastClose})`;
+              break;
             default:
               break;
           }
@@ -108,6 +108,7 @@ export const updateStockWithoutReindexing = async (
             case "size":
             case "style":
             case "morningstarId":
+            case "currency":
               stockEntity[k] = newValues[k];
               break;
             case "morningstarLastFetch":
@@ -116,6 +117,11 @@ export const updateStockWithoutReindexing = async (
             case "starRating":
             case "dividendYieldPercent":
             case "priceEarningRatio":
+            case "lastClose":
+            case "morningstarFairValue":
+            case "marketCap":
+            case "low52w":
+            case "high52w":
               stockEntity[k] = newValues[k];
               break;
             // default:

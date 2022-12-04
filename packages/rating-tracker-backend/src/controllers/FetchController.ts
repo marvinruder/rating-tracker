@@ -7,7 +7,9 @@ import APIError from "../lib/apiError.js";
 import { Stock } from "../models/stock.js";
 import chalk from "chalk";
 import {
+  Currency,
   Industry,
+  isCurrency,
   isIndustry,
   isSize,
   isStyle,
@@ -99,6 +101,12 @@ class FetchController {
       let starRating: number;
       let dividendYieldPercent: number;
       let priceEarningRatio: number;
+      let currency: Currency;
+      let lastClose: number;
+      let morningstarFairValue: number;
+      let marketCap: number;
+      let low52w: number;
+      let high52w: number;
 
       try {
         await driver.get(
@@ -212,9 +220,9 @@ class FetchController {
         }
 
         try {
-          priceEarningRatio = +(await driver
-            .findElement(By.id("Col0PE"))
-            .getText());
+          priceEarningRatio = +(
+            await driver.findElement(By.id("Col0PE")).getText()
+          ).replaceAll(",", "");
           if (isNaN(priceEarningRatio)) {
             priceEarningRatio = 0;
           }
@@ -230,6 +238,127 @@ class FetchController {
           );
         }
 
+        try {
+          let currencyString = await driver
+            .findElement(By.id("Col0PriceTime"))
+            .getText();
+          currencyString = currencyString.match(/\s+\|\s+([A-Z]{3})\s+/)[1];
+          if (isCurrency(currencyString)) {
+            currency = currencyString;
+          } else {
+            throw TypeError(
+              `Extracted currency code “${currencyString}” is no valid currency code.`
+            );
+          }
+        } catch (e) {
+          fetchSuccessful = false;
+          console.warn(
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to extract currency: ${e.message}`
+            )
+          );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract currency: ${e.message}`
+          );
+        }
+
+        try {
+          lastClose = +(
+            await driver.findElement(By.id("Col0LastClose")).getText()
+          ).replaceAll(",", "");
+          if (isNaN(lastClose)) {
+            lastClose = 0;
+          }
+        } catch (e) {
+          fetchSuccessful = false;
+          console.warn(
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to extract last close: ${e.message}`
+            )
+          );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract last close: ${e.message}`
+          );
+        }
+
+        try {
+          morningstarFairValue = +(
+            await driver
+              .findElement(By.xpath("//*/datapoint[@id='FairValueEstimate']"))
+              .getText()
+          )
+            .split(/\s+/)[0]
+            .replaceAll(",", "");
+          if (isNaN(morningstarFairValue)) {
+            morningstarFairValue = 0;
+          }
+        } catch (e) {
+          console.warn(
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e.message}`
+            )
+          );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e.message}`
+          );
+        }
+
+        try {
+          const marketCapText = (
+            await driver.findElement(By.id("Col0MCap")).getText()
+          ).replaceAll(",", "");
+          if (marketCapText.includes("Bil")) {
+            marketCap = Math.round(
+              1e9 * +marketCapText.substring(0, marketCapText.indexOf("Bil"))
+            );
+          } else if (marketCapText.includes("Mil")) {
+            marketCap = Math.round(
+              1e6 * +marketCapText.substring(0, marketCapText.indexOf("Mil"))
+            );
+          } else {
+            marketCap = +marketCapText;
+          }
+          if (isNaN(marketCap)) {
+            marketCap = 0;
+          }
+        } catch (e) {
+          fetchSuccessful = false;
+          console.warn(
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e.message}`
+            )
+          );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e.message}`
+          );
+        }
+
+        try {
+          const range52wTexts = (
+            await driver.findElement(By.id("Col0WeekRange")).getText()
+          )
+            .replaceAll(",", "")
+            .split(" - ");
+          low52w = +range52wTexts[0];
+          if (isNaN(low52w)) {
+            low52w = 0;
+          }
+          high52w = +range52wTexts[1];
+          if (isNaN(high52w)) {
+            high52w = 0;
+          }
+        } catch (e) {
+          fetchSuccessful = false;
+          console.warn(
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e.message}`
+            )
+          );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e.message}`
+          );
+        }
+
         await updateStockWithoutReindexing(stock.ticker, {
           industry: industry,
           size: size,
@@ -238,6 +367,12 @@ class FetchController {
           starRating: starRating,
           dividendYieldPercent: dividendYieldPercent,
           priceEarningRatio: priceEarningRatio,
+          currency: currency,
+          lastClose: lastClose,
+          morningstarFairValue: morningstarFairValue,
+          marketCap: marketCap,
+          low52w: low52w,
+          high52w: high52w,
         });
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
