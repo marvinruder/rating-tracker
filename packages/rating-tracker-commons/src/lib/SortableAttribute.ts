@@ -5,6 +5,8 @@ export const sortableAttributeArray = [
   "starRating",
   "dividendYieldPercent",
   "priceEarningRatio",
+  "morningstarFairValue",
+  "52w",
 ] as const;
 
 export type SortableAttribute = typeof sortableAttributeArray[number];

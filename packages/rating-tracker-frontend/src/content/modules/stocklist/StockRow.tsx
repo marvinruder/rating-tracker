@@ -9,6 +9,8 @@ import {
   Grid,
   IconButton,
   Skeleton,
+  Slider,
+  styled,
   TableCell,
   TableRow,
   TextField,
@@ -49,6 +51,28 @@ import {
 import useNotification from "../../../helpers/useNotification";
 import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
+
+const Range52WSlider = styled(Slider)(({ theme }) => ({
+  "@media (pointer: coarse)": {
+    padding: "13px 0",
+  },
+  "& .MuiSlider-valueLabel": {
+    fontSize: theme.typography.body2.fontSize,
+    top: 0,
+    backgroundColor: "unset",
+    color: theme.palette.text.primary,
+  },
+  "& .MuiSlider-mark": {
+    display: "none",
+  },
+  "& .MuiSlider-markLabel": {
+    top: 18,
+    transform: "translateX(-100%)",
+    "&Active": {
+      transform: "translateX(0%)",
+    },
+  },
+}));
 
 const StockRow = (props: StockRowProps) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
@@ -166,8 +190,22 @@ const StockRow = (props: StockRowProps) => {
         .finally(() => setRequestInProgress(false)));
   };
 
+  const formatMarketCap = () => {
+    if (props.stock.marketCap > 1e12) {
+      return (props.stock.marketCap / 1e12).toPrecision(3) + " T";
+    } else if (props.stock.marketCap > 1e9) {
+      return (props.stock.marketCap / 1e9).toPrecision(3) + " B";
+    } else if (props.stock.marketCap > 1e6) {
+      return (props.stock.marketCap / 1e6).toPrecision(3) + " M";
+    } else if (props.stock.marketCap > 1e3) {
+      return (props.stock.marketCap / 1e3).toPrecision(3) + " k";
+    } else {
+      return props.stock.marketCap.toPrecision(3);
+    }
+  };
+
   return props.stock ? (
-    <TableRow hover>
+    <TableRow hover sx={{ height: 59 }}>
       <TableCell>
         <Typography
           variant="body1"
@@ -286,14 +324,87 @@ const StockRow = (props: StockRowProps) => {
         <StarRating value={props.stock.starRating} />
       </TableCell>
       <TableCell>
-        <Typography variant="body1" color="text.primary" width={45} noWrap>
+        <Typography
+          variant="body1"
+          fontWeight="bold"
+          color="text.primary"
+          width={90}
+          noWrap
+        >
+          <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
+          <span style={{ float: "right" }}>
+            {props.stock.morningstarFairValue?.toFixed(2) ?? "–"}
+          </span>
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          width={90}
+          sx={{ textAlign: "right" }}
+          noWrap
+        >
+          {props.stock.morningstarFairValue &&
+            props.stock.lastClose &&
+            `${
+              props.stock.lastClose > props.stock.morningstarFairValue
+                ? "+"
+                : ""
+            }${Math.round(
+              100 *
+                (props.stock.lastClose / props.stock.morningstarFairValue - 1)
+            )} %`}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        {props.stock.lastClose && props.stock.low52w && props.stock.high52w && (
+          <Range52WSlider
+            size="small"
+            sx={{
+              mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
+              mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
+              width: 150,
+            }}
+            value={props.stock.lastClose}
+            min={props.stock.low52w}
+            max={props.stock.high52w}
+            marks={[
+              { value: props.stock.low52w, label: props.stock.low52w },
+              { value: props.stock.high52w, label: props.stock.high52w },
+            ]}
+            valueLabelDisplay="on"
+            disabled
+          />
+        )}
+      </TableCell>
+      <TableCell>
+        <Typography
+          variant="body1"
+          color="text.primary"
+          width={45}
+          sx={{ textAlign: "right" }}
+          noWrap
+        >
           {props.stock.dividendYieldPercent ?? "–"}
           {" %"}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="body1" color="text.primary" width={45} noWrap>
+        <Typography
+          variant="body1"
+          color="text.primary"
+          width={45}
+          sx={{ textAlign: "right" }}
+          noWrap
+        >
           {props.stock.priceEarningRatio ?? "–"}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography variant="body1" color="text.primary" width={75} noWrap>
+          <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
+          <span style={{ float: "right" }}>
+            {props.stock.marketCap ? formatMarketCap() : "–"}
+          </span>
         </Typography>
       </TableCell>
       {props.getStocks && (
@@ -524,12 +635,28 @@ const StockRow = (props: StockRowProps) => {
       </TableCell>
       <TableCell>
         <Typography variant="body1">
+          <Skeleton width={90} />
+        </Typography>
+        <Typography variant="body2">
+          <Skeleton width={90} />
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Skeleton variant="rectangular" width={150} height={42} />
+      </TableCell>
+      <TableCell>
+        <Typography variant="body1">
           <Skeleton width={45} />
         </Typography>
       </TableCell>
       <TableCell>
         <Typography variant="body1">
           <Skeleton width={45} />
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography variant="body1">
+          <Skeleton width={75} />
         </Typography>
       </TableCell>
       {props.getStocks && (

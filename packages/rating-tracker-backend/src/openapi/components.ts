@@ -5,6 +5,7 @@ import {
   sizeArray,
   styleArray,
   sortableAttributeArray,
+  currencyArray,
 } from "rating-tracker-commons";
 
 export const components: OpenAPIV3.ComponentsObject = {
@@ -33,6 +34,13 @@ export const components: OpenAPIV3.ComponentsObject = {
       description: "The style of the stock.",
       enum: Array.from(styleArray),
       example: "Growth",
+    },
+    Currency: {
+      type: "string",
+      description:
+        "The 3-letter ISO 4217 currency code of the currency the stock is traded in.",
+      enum: Array.from(currencyArray),
+      example: "USD",
     },
     Stock: {
       type: "object",
@@ -78,6 +86,29 @@ export const components: OpenAPIV3.ComponentsObject = {
         priceEarningRatio: {
           type: "number",
           example: 17.82,
+        },
+        currency: {
+          $ref: "#/components/schemas/Currency",
+        },
+        lastClose: {
+          type: "number",
+          example: 148.31,
+        },
+        morningstarFairValue: {
+          type: "number",
+          example: 130.0,
+        },
+        marketCap: {
+          type: "number",
+          example: 2351000000000,
+        },
+        low52w: {
+          type: "number",
+          example: 129.04,
+        },
+        high52w: {
+          type: "number",
+          example: 182.13,
         },
       },
       required: ["ticker", "name"],

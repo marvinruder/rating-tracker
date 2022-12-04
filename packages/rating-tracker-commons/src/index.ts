@@ -23,5 +23,8 @@ export type { Size } from "./lib/stylebox/Size.js";
 export * from "./lib/stylebox/Style.js";
 export type { Style } from "./lib/stylebox/Style.js";
 
+export * from "./lib/Currency.js";
+export type { Currency } from "./lib/Currency.js";
+
 export * from "./lib/SortableAttribute.js";
 export type { SortableAttribute } from "./lib/SortableAttribute.js";

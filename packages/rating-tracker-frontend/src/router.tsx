@@ -43,17 +43,11 @@ const AuthWrapper = ({
   const [done, setDone] = useState<boolean>(false);
   const [authed, setAuthed] = useState<boolean>(false);
   useEffect(() => {
-    const getAuthed = async () => {
-      setAuthed(
-        await axios
-          .head(baseUrl + sessionAPI)
-          .then((res) => res.status == 204)
-          .catch(() => false)
-          .finally(() => setDone(true))
-      );
-    };
-
-    getAuthed();
+    axios
+      .head(baseUrl + sessionAPI)
+      .then((res) => setAuthed(res.status === 204))
+      .catch(() => {})
+      .finally(() => setDone(true));
   }, []);
 
   return done ? (

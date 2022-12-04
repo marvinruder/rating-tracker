@@ -106,11 +106,15 @@ describe("Stock API", () => {
       .get("/api/stock/list?size=Large&style=Growth&sortBy=name&sortDesc=true")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect(res.body.count).toBe(3);
-    expect(res.body.stocks).toHaveLength(3);
-    expect(res.body.stocks[0].name).toMatch("Novo Nordisk");
-    expect(res.body.stocks[1].name).toMatch("MercadoLibre");
-    expect(res.body.stocks[2].name).toMatch("Apple");
+    expect(res.body.count).toBe(5);
+    expect(res.body.stocks).toHaveLength(5);
+    expect(res.body.stocks[0].name).toMatch(
+      "Taiwan Semiconductor Manufacturing Co Ltd"
+    );
+    expect(res.body.stocks[1].name).toMatch("Ørsted A/S");
+    expect(res.body.stocks[2].name).toMatch("Novo Nordisk");
+    expect(res.body.stocks[3].name).toMatch("MercadoLibre");
+    expect(res.body.stocks[4].name).toMatch("Apple");
 
     res = await requestWithSupertest
       .get("/api/stock/list?country=US&sortBy=size")
@@ -143,16 +147,65 @@ describe("Stock API", () => {
         .get(`/api/stock/list?sortBy=${sortCriterion}`)
         .set("Cookie", ["authToken=exampleSessionID"]);
       expect(res.status).toBe(200);
-      for (let i = 0; i < res.body.count - 1; i++) {
-        if (
-          res.body.stocks[i][sortCriterion] &&
-          res.body.stocks[i + 1][sortCriterion] &&
-          typeof res.body.stocks[i][sortCriterion] == "number" &&
-          typeof res.body.stocks[i + 1][sortCriterion] == "number"
-        ) {
-          expect(res.body.stocks[i][sortCriterion]).toBeLessThanOrEqual(
-            res.body.stocks[i + 1][sortCriterion]
-          );
+      if (sortCriterion === "morningstarFairValue") {
+        for (let i = 0; i < res.body.count - 1; i++) {
+          if (
+            res.body.stocks[i].morningstarFairValue &&
+            res.body.stocks[i + 1].morningstarFairValue &&
+            typeof res.body.stocks[i].morningstarFairValue == "number" &&
+            typeof res.body.stocks[i + 1].morningstarFairValue == "number" &&
+            res.body.stocks[i].lastClose &&
+            res.body.stocks[i + 1].lastClose &&
+            typeof res.body.stocks[i].lastClose == "number" &&
+            typeof res.body.stocks[i + 1].lastClose == "number"
+          ) {
+            expect(
+              res.body.stocks[i].lastClose /
+                res.body.stocks[i].morningstarFairValue
+            ).toBeLessThanOrEqual(
+              res.body.stocks[i + 1].lastClose /
+                res.body.stocks[i + 1].morningstarFairValue
+            );
+          }
+        }
+      } else if (sortCriterion === "52w") {
+        for (let i = 0; i < res.body.count - 1; i++) {
+          if (
+            res.body.stocks[i].low52w &&
+            res.body.stocks[i + 1].low52w &&
+            typeof res.body.stocks[i].low52w == "number" &&
+            typeof res.body.stocks[i + 1].low52w == "number" &&
+            res.body.stocks[i].high52w &&
+            res.body.stocks[i + 1].high52w &&
+            typeof res.body.stocks[i].high52w == "number" &&
+            typeof res.body.stocks[i + 1].high52w == "number" &&
+            res.body.stocks[i].lastClose &&
+            res.body.stocks[i + 1].lastClose &&
+            typeof res.body.stocks[i].lastClose == "number" &&
+            typeof res.body.stocks[i + 1].lastClose == "number"
+          ) {
+            expect(
+              (res.body.stocks[i].lastClose - res.body.stocks[i].low52w) /
+                (res.body.stocks[i].high52w - res.body.stocks[i].low52w)
+            ).toBeLessThanOrEqual(
+              (res.body.stocks[i + 1].lastClose -
+                res.body.stocks[i + 1].low52w) /
+                (res.body.stocks[i + 1].high52w - res.body.stocks[i + 1].low52w)
+            );
+          }
+        }
+      } else {
+        for (let i = 0; i < res.body.count - 1; i++) {
+          if (
+            res.body.stocks[i][sortCriterion] &&
+            res.body.stocks[i + 1][sortCriterion] &&
+            typeof res.body.stocks[i][sortCriterion] == "number" &&
+            typeof res.body.stocks[i + 1][sortCriterion] == "number"
+          ) {
+            expect(res.body.stocks[i][sortCriterion]).toBeLessThanOrEqual(
+              res.body.stocks[i + 1][sortCriterion]
+            );
+          }
         }
       }
     });
@@ -242,7 +295,7 @@ describe("Stock API", () => {
     );
     let res = await requestWithSupertest
       .patch(
-        "/api/stock/exampleAAPL?morningstarId=US012345678&name=Apple%20Inc."
+        "/api/stock/exampleAAPL?morningstarId=US012345678&name=Apple%20Inc"
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
@@ -250,7 +303,7 @@ describe("Stock API", () => {
       .get("/api/stock/exampleAAPL")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect((res.body as Stock).name).toEqual("Apple Inc.");
+    expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarId).toEqual("US012345678");
 
     // sending an update with the same information results in no changes
@@ -262,7 +315,7 @@ describe("Stock API", () => {
       .get("/api/stock/exampleAAPL")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect((res.body as Stock).name).toEqual("Apple Inc.");
+    expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarId).toEqual("US012345678");
 
     // sending an update without anything results in no changes
@@ -274,7 +327,7 @@ describe("Stock API", () => {
       .get("/api/stock/exampleAAPL")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect((res.body as Stock).name).toEqual("Apple Inc.");
+    expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarId).toEqual("US012345678");
 
     // attempting to update a non-existent stock results in an error

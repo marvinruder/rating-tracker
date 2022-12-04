@@ -37,7 +37,8 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       name: "New Stock Inc.",
     });
 
-    const newValues: Omit<Stock, "ticker" | "name"> = {
+    const newValues: Omit<Stock, "ticker"> = {
+      name: "Updated Stock",
       country: "CA",
       industry: "LumberWoodProduction",
       size: "Mid",
@@ -47,6 +48,12 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       starRating: 4,
       dividendYieldPercent: 3.61,
       priceEarningRatio: 17.42,
+      currency: "CAD",
+      lastClose: 123.45,
+      morningstarFairValue: 160,
+      marketCap: 67800000000,
+      low52w: 101.23,
+      high52w: 145.67,
     };
 
     await updateStock("NEWSTOCK", newValues);
@@ -59,6 +66,6 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
     }
 
     expect(updatedStock.ticker).toMatch("NEWSTOCK");
-    expect(updatedStock.name).toMatch("New Stock");
+    expect(updatedStock.name).toMatch("Updated Stock");
   });
 });
