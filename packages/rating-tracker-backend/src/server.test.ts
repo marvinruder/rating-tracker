@@ -160,11 +160,11 @@ describe("Stock API", () => {
             typeof res.body.stocks[i + 1].lastClose == "number"
           ) {
             expect(
-              res.body.stocks[i].morningstarFairValue /
-                res.body.stocks[i].lastClose
+              res.body.stocks[i].lastClose /
+                res.body.stocks[i].morningstarFairValue
             ).toBeLessThanOrEqual(
-              res.body.stocks[i + 1].morningstarFairValue /
-                res.body.stocks[i + 1].lastClose
+              res.body.stocks[i + 1].lastClose /
+                res.body.stocks[i + 1].morningstarFairValue
             );
           }
         }
