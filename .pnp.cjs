@@ -6084,10 +6084,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:5.1.2", {\
-          "packageLocation": "./.yarn/cache/chalk-npm-5.1.2-221d111371-804d7485e3.zip/node_modules/chalk/",\
+        ["npm:5.2.0", {\
+          "packageLocation": "./.yarn/cache/chalk-npm-5.2.0-bedd808592-03d8060277.zip/node_modules/chalk/",\
           "packageDependencies": [\
-            ["chalk", "npm:5.1.2"]\
+            ["chalk", "npm:5.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10631,7 +10631,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/eslint-plugin", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:5.46.0"],\
             ["@typescript-eslint/parser", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:5.46.0"],\
             ["axios", "npm:1.2.1"],\
-            ["chalk", "npm:5.1.2"],\
+            ["chalk", "npm:5.2.0"],\
             ["concurrently", "npm:7.6.0"],\
             ["cookie-parser", "npm:1.4.6"],\
             ["cron", "npm:2.1.0"],\
