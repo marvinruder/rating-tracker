@@ -7632,7 +7632,7 @@ __metadata:
     tsparticles-engine: 2.6.0
     typescript: 4.9.3
     vite: 4.0.0
-    vite-tsconfig-paths: 4.0.1
+    vite-tsconfig-paths: 4.0.2
   languageName: unknown
   linkType: soft
 
@@ -9528,16 +9528,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-tsconfig-paths@npm:4.0.1":
-  version: 4.0.1
-  resolution: "vite-tsconfig-paths@npm:4.0.1"
+"vite-tsconfig-paths@npm:4.0.2":
+  version: 4.0.2
+  resolution: "vite-tsconfig-paths@npm:4.0.2"
   dependencies:
     debug: ^4.1.1
     globrex: ^0.1.2
     tsconfck: ^2.0.1
   peerDependencies:
     vite: ">2.0.0-0"
-  checksum: 6ffb50b84118405cfe306e62976799567f68463da791d8499517e37de0c58ef8ce5e414245c973d86edf2b6390118196ea5b3f667e540ba2d48e2f188a6d0374
+  checksum: 30573def2ebd2568025be99e0348d71ee03d2af817d19343b2b764799e5008f374c93511529817a2f4d5b700d42243dbc1e46145f15f098121415784126d2a2e
   languageName: node
   linkType: hard
 
