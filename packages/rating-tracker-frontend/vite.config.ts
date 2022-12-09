@@ -5,20 +5,11 @@
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
-import svgrPlugin from "vite-plugin-svgr";
 
 export default mergeConfig(
   defineViteConfig({
     cacheDir: ".vite",
-    plugins: [
-      react(),
-      tsconfigPaths(),
-      svgrPlugin({
-        svgrOptions: {
-          icon: true,
-        },
-      }),
-    ],
+    plugins: [react(), tsconfigPaths()],
   }),
   {}
   // defineVitestConfig({
