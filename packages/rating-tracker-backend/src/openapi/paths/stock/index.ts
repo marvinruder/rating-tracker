@@ -99,6 +99,10 @@ const patch: OpenAPIV3.OperationObject = {
       ...stock.morningstarId,
       allowEmptyValue: true,
     },
+    {
+      ...stock.msciId,
+      allowEmptyValue: true,
+    },
   ],
   responses: {
     "204": noContent,

@@ -224,6 +224,15 @@ export const PureLightTheme = createTheme({
       Defensive: "#518428",
       Sensitive: "#1F55A5",
     },
+    msci: {
+      Leader: "#007567",
+      Average: "#FFB500",
+      Laggard: "#CF333B",
+      Aligned1: "#5a84c3",
+      Aligned2: "#fdc32d",
+      Misaligned: "#f08908",
+      StronglyMisaligned: "#e44261",
+    },
     switchSelector: {
       selected: themeColors.primary,
       unselected: themeColors.white,

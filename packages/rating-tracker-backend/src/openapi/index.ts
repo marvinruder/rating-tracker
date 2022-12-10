@@ -3,6 +3,7 @@ import { components } from "./components.js";
 import * as fillWithExampleDataEndpoint from "./paths/stock/fillWithExampleDataEndpoint.js";
 import * as listEndpoint from "./paths/stock/listEndpoint.js";
 import * as morningstarEndpoint from "./paths/fetch/morningstarEndpoint.js";
+import * as msciEndpoint from "./paths/fetch/msciEndpoint.js";
 import * as registerEndpoint from "./paths/auth/registerEndpoint.js";
 import * as sessionEndpoint from "./paths/sessionEndpoint.js";
 import * as statusEndpoint from "./paths/statusEndpoint.js";
@@ -33,6 +34,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     "/api/stock/fillWithExampleData": fillWithExampleDataEndpoint,
     "/api/stock/{ticker}": stockEndpoint,
     "/api/fetch/morningstar": morningstarEndpoint,
+    "/api/fetch/msci": msciEndpoint,
     "/api/status": statusEndpoint,
     "/api/session": sessionEndpoint,
   },

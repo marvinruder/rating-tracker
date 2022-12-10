@@ -17,6 +17,7 @@ import {
   isIndustry,
   isSize,
   isStyle,
+  msciESGRatingArray,
   sizeArray,
   SortableAttribute,
   styleArray,
@@ -135,6 +136,23 @@ class StockController {
                 : /* istanbul ignore next */
                   0)
           );
+          break;
+        case "msciESGRating":
+          stocks.sort(
+            (a, b) =>
+              (a.msciESGRating
+                ? msciESGRatingArray.indexOf(a.msciESGRating)
+                : 7) -
+              (b.msciESGRating
+                ? msciESGRatingArray.indexOf(b.msciESGRating)
+                : 7)
+          );
+          break;
+        case "msciTemperature":
+          stocks.sort(
+            (a, b) => (a.msciTemperature ?? 4.0) - (b.msciTemperature ?? 4.0)
+          );
+          break;
       }
       if (String(req.query.sortDesc).toLowerCase() === "true") {
         stocks.reverse();
@@ -182,16 +200,17 @@ class StockController {
 
   async patch(req: Request, res: Response) {
     const ticker = req.params[0];
-    const { name, country, morningstarId } = req.query;
+    const { name, country, morningstarId, msciId } = req.query;
     if (
       typeof ticker === "string" &&
       (typeof name === "string" || typeof name === "undefined") &&
       ((typeof country === "string" && isCountry(country)) ||
         typeof country === "undefined") &&
       (typeof morningstarId === "string" ||
-        typeof morningstarId === "undefined")
+        typeof morningstarId === "undefined") &&
+      (typeof msciId === "string" || typeof msciId === "undefined")
     ) {
-      await updateStock(ticker, { name, country, morningstarId });
+      await updateStock(ticker, { name, country, morningstarId, msciId });
       return res.status(204).end();
     }
   }

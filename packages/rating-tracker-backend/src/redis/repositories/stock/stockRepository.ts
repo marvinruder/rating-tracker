@@ -2,7 +2,14 @@ import APIError from "../../../lib/apiError.js";
 import { Stock, StockEntity, stockSchema } from "../../../models/stock.js";
 import { fetch, fetchAll, index, remove, save } from "./stockRepositoryBase.js";
 import chalk from "chalk";
-import { Country, Industry, Size, Style } from "rating-tracker-commons";
+import {
+  Country,
+  Currency,
+  Industry,
+  MSCIESGRating,
+  Size,
+  Style,
+} from "rating-tracker-commons";
 import { sendMessage } from "../../../signal/signal.js";
 
 export const indexStockRepository = () => {
@@ -98,6 +105,16 @@ export const updateStockWithoutReindexing = async (
                 newValues[k] ?? 0
               } (last close ${currency} ${lastClose})`;
               break;
+            case "msciESGRating":
+              signalMessage += `\n\tMSCI ESG Rating changed from ${
+                stockEntity[k] ?? "N/A"
+              } to ${newValues[k] ?? "N/A"}`;
+              break;
+            case "msciTemperature":
+              signalMessage += `\n\tMSCI Implied Temperature Rise changed from ${
+                stockEntity[k] ?? "N/A"
+              }°C to ${newValues[k] ?? "N/A"}°C`;
+              break;
             default:
               break;
           }
@@ -109,9 +126,12 @@ export const updateStockWithoutReindexing = async (
             case "style":
             case "morningstarId":
             case "currency":
+            case "msciId":
+            case "msciESGRating":
               stockEntity[k] = newValues[k];
               break;
             case "morningstarLastFetch":
+            case "msciLastFetch":
               stockEntity[k] = newValues[k];
               break;
             case "starRating":
@@ -122,6 +142,7 @@ export const updateStockWithoutReindexing = async (
             case "marketCap":
             case "low52w":
             case "high52w":
+            case "msciTemperature":
               stockEntity[k] = newValues[k];
               break;
             // default:
@@ -157,6 +178,16 @@ export const updateStock = async (
     starRating?: number;
     dividendYieldPercent?: number;
     priceEarningRatio?: number;
+    lastClose?: number;
+    morningstarFairValue?: number;
+    currency?: Currency;
+    marketCap?: number;
+    low52w?: number;
+    high52w?: number;
+    msciId?: string;
+    msciLastFetch?: Date;
+    msciESGRating?: MSCIESGRating;
+    msciTemperature?: number;
   }
 ) => {
   await updateStockWithoutReindexing(ticker, newValues);

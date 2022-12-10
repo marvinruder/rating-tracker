@@ -9,3 +9,4 @@ export const stockAPI = "/api/stock";
 export const stockListEndpoint = "/list";
 export const fetchAPI = "/api/fetch";
 export const morningstarEndpoint = "/morningstar";
+export const msciEndpoint = "/msci";

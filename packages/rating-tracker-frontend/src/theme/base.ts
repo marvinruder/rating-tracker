@@ -100,6 +100,15 @@ declare module "@mui/material/styles" {
         dark: string;
       };
       sector: Record<SuperSector, string>;
+      msci: {
+        Leader: string;
+        Average: string;
+        Laggard: string;
+        Aligned1: string;
+        Aligned2: string;
+        Misaligned: string;
+        StronglyMisaligned: string;
+      };
       switchSelector: {
         selected: string;
         unselected: string;
@@ -225,6 +234,15 @@ declare module "@mui/material/styles" {
         dark: string;
       };
       sector: Record<SuperSector, string>;
+      msci: {
+        Leader: string;
+        Average: string;
+        Laggard: string;
+        Aligned1: string;
+        Aligned2: string;
+        Misaligned: string;
+        StronglyMisaligned: string;
+      };
       switchSelector: {
         selected: string;
         unselected: string;

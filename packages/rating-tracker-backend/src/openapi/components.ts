@@ -6,6 +6,7 @@ import {
   styleArray,
   sortableAttributeArray,
   currencyArray,
+  msciESGRatingArray,
 } from "rating-tracker-commons";
 
 export const components: OpenAPIV3.ComponentsObject = {
@@ -41,6 +42,12 @@ export const components: OpenAPIV3.ComponentsObject = {
         "The 3-letter ISO 4217 currency code of the currency the stock is traded in.",
       enum: Array.from(currencyArray),
       example: "USD",
+    },
+    MSCIESGRating: {
+      type: "string",
+      description: "The MSCI ESG rating of the stock.",
+      enum: Array.from(msciESGRatingArray),
+      example: "AA",
     },
     Stock: {
       type: "object",
@@ -109,6 +116,22 @@ export const components: OpenAPIV3.ComponentsObject = {
         high52w: {
           type: "number",
           example: 182.13,
+        },
+        msciId: {
+          type: "string",
+          example: "apple-inc/IID000000002157615",
+        },
+        msciLastFetch: {
+          type: "string",
+          format: "date-time",
+          example: "2022-11-24T03:30:15.908Z",
+        },
+        msciESGRating: {
+          $ref: "#/components/schemas/MSCIESGRating",
+        },
+        msciTemperature: {
+          type: "number",
+          example: 1.7,
         },
       },
       required: ["ticker", "name"],

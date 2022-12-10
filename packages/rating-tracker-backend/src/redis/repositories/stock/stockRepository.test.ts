@@ -54,6 +54,10 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       marketCap: 67800000000,
       low52w: 101.23,
       high52w: 145.67,
+      msciId: "new-stock/IID000001238712974",
+      msciLastFetch: new Date(),
+      msciESGRating: "BB",
+      msciTemperature: 2.1,
     };
 
     await updateStock("NEWSTOCK", newValues);
