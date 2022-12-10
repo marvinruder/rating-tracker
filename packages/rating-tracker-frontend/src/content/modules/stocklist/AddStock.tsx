@@ -27,6 +27,7 @@ import {
   baseUrl,
   fetchAPI,
   morningstarEndpoint,
+  msciEndpoint,
   stockAPI,
 } from "../../../endpoints";
 import {
@@ -47,6 +48,7 @@ const AddStock = (props: AddStockProps) => {
     name: "",
     country: undefined,
     morningstarId: "",
+    msciId: "",
   });
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [countryInputValue, setCountryInputValue] = useState<string>("");
@@ -56,6 +58,9 @@ const AddStock = (props: AddStockProps) => {
   const [morningstarIdRequestInProgress, setMorningstarIdRequestInProgress] =
     useState<boolean>(false);
   const [morningstarIdSet, setMorningstarIdSet] = useState<boolean>(false);
+  const [msciIdRequestInProgress, setMsciIdRequestInProgress] =
+    useState<boolean>(false);
+  const [msciIdSet, setMsciIdSet] = useState<boolean>(false);
   const { setNotification } = useNotification();
 
   const validate = () => {
@@ -132,6 +137,48 @@ const AddStock = (props: AddStockProps) => {
         setNotification({
           severity: "error",
           title: "Error while adding Morningstar ID",
+          message:
+            e.response?.status && e.response?.data?.message
+              ? `${e.response.status}: ${e.response.data.message}`
+              : e.message ?? "No additional information available.",
+        });
+      });
+  };
+
+  const patchStockMsciId = () => {
+    setMsciIdRequestInProgress(true);
+    axios
+      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+        params: { msciId: stock.msciId },
+      })
+      .then(() => {
+        setMsciIdSet(!!stock.msciId);
+        if (stock.msciId) {
+          axios
+            .get(baseUrl + fetchAPI + msciEndpoint, {
+              params: { ticker: stock.ticker, noSkip: true },
+            })
+            .then(() => {})
+            .catch((e) => {
+              setNotification({
+                severity: "error",
+                title: "Error while fetching information from MSCI",
+                message:
+                  e.response?.status && e.response?.data?.message
+                    ? `${e.response.status}: ${e.response.data.message}`
+                    : e.message ?? "No additional information available.",
+              });
+            })
+            .finally(() => setMsciIdRequestInProgress(false));
+        } else {
+          setMsciIdRequestInProgress(false);
+        }
+      })
+      .catch((e) => {
+        setMsciIdRequestInProgress(false);
+        setNotification({
+          severity: "error",
+          title: "Error while adding MSCI ID",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`
@@ -290,6 +337,33 @@ const AddStock = (props: AddStockProps) => {
               </LoadingButton>
             </Grid>
           </Grid>
+          <Grid container spacing={1} marginTop={0} alignItems="center">
+            <Grid item>
+              <TextField
+                onChange={(event) => {
+                  setStock((prevStock) => {
+                    return { ...prevStock, msciId: event.target.value };
+                  });
+                }}
+                label="MSCI ID"
+                value={stock.msciId}
+                placeholder={"e.g. apple-inc/IID000000002157615"}
+                sx={{ maxWidth: "300px" }}
+              />
+            </Grid>
+            <Grid item>
+              <LoadingButton
+                size="small"
+                loading={msciIdRequestInProgress}
+                onClick={patchStockMsciId}
+                disabled={requestInProgress}
+                variant="contained"
+                startIcon={msciIdSet ? <LinkIcon /> : <AddLinkIcon />}
+              >
+                {msciIdSet ? "Update" : "Add"}
+              </LoadingButton>
+            </Grid>
+          </Grid>
         </>
       ),
       noStepBack: true,
@@ -300,7 +374,7 @@ const AddStock = (props: AddStockProps) => {
           variant="contained"
           onClick={getAndShowStock}
           sx={{ mt: 1, ml: 1, float: "right" }}
-          disabled={morningstarIdRequestInProgress}
+          disabled={morningstarIdRequestInProgress || msciIdRequestInProgress}
           startIcon={<AutoGraphIcon />}
         >
           Show Stock

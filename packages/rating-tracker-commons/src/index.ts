@@ -18,6 +18,9 @@ export * from "./lib/models/session.js";
 export * from "./lib/models/stock.js";
 export * from "./lib/models/user.js";
 
+export * from "./lib/ratings/MSCI.js";
+export type { MSCIESGRating } from "./lib/ratings/MSCI.js";
+
 export * from "./lib/stylebox/Size.js";
 export type { Size } from "./lib/stylebox/Size.js";
 export * from "./lib/stylebox/Style.js";

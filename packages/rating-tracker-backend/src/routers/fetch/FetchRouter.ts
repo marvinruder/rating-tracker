@@ -22,6 +22,9 @@ class FetchRouter {
     this._router.get("/morningstar", async (req: Request, res: Response) => {
       await this._controller.fetchMorningstarData(req, res);
     });
+    this._router.get("/msci", async (req: Request, res: Response) => {
+      await this._controller.fetchMSCIData(req, res);
+    });
   }
 }
 

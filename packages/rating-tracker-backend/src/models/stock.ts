@@ -3,6 +3,7 @@ import {
   Country,
   Currency,
   Industry,
+  MSCIESGRating,
   Size,
   Stock as CommonsStock,
   Style,
@@ -58,6 +59,18 @@ export class Stock extends CommonsStock {
     if (stockEntity.high52w != null) {
       this.high52w = stockEntity.high52w;
     }
+    if (stockEntity.msciId != null) {
+      this.msciId = stockEntity.msciId;
+    }
+    if (stockEntity.msciLastFetch != null) {
+      this.msciLastFetch = stockEntity.msciLastFetch;
+    }
+    if (stockEntity.msciESGRating != null) {
+      this.msciESGRating = stockEntity.msciESGRating as MSCIESGRating;
+    }
+    if (stockEntity.msciTemperature != null) {
+      this.msciTemperature = stockEntity.msciTemperature;
+    }
   }
 }
 
@@ -78,6 +91,10 @@ export interface StockEntity {
   marketCap: number;
   low52w: number;
   high52w: number;
+  msciId: string;
+  msciLastFetch: Date;
+  msciESGRating: string;
+  msciTemperature: number;
 }
 
 export class StockEntity extends Entity {}
@@ -99,4 +116,8 @@ export const stockSchema = new Schema(StockEntity, {
   marketCap: { type: "number" },
   low52w: { type: "number" },
   high52w: { type: "number" },
+  msciId: { type: "string" },
+  msciLastFetch: { type: "date" },
+  msciESGRating: { type: "string" },
+  msciTemperature: { type: "number" },
 });

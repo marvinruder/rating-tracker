@@ -224,6 +224,15 @@ export const NebulaFighterTheme = createTheme({
       Defensive: "#65A432",
       Sensitive: "#4F88DE",
     },
+    msci: {
+      Leader: "#007567",
+      Average: "#FFB500",
+      Laggard: "#CF333B",
+      Aligned1: "#5a84c3",
+      Aligned2: "#fdc32d",
+      Misaligned: "#f08908",
+      StronglyMisaligned: "#e44261",
+    },
     switchSelector: {
       selected: themeColors.black,
       unselected: themeColors.white,

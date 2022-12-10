@@ -13,6 +13,7 @@ import {
   isIndustry,
   isSize,
   isStyle,
+  MSCIESGRating,
   Size,
   Style,
 } from "rating-tracker-commons";
@@ -25,12 +26,12 @@ import {
 import { sendMessage } from "../signal/signal.js";
 
 class FetchController {
-  getDriver() {
+  getDriver(pageLoadStrategy: "normal" | "eager" | "none" = "eager") {
     const url = process.env.SELENIUM_URL;
 
     const capabilities = new Capabilities();
     capabilities.setBrowserName("chrome");
-    capabilities.setPageLoadStrategy("eager");
+    capabilities.setPageLoadStrategy(pageLoadStrategy);
 
     return new Builder()
       .usingServer(url)
@@ -80,7 +81,7 @@ class FetchController {
         !req.query.noSkip &&
         stock.morningstarLastFetch &&
         new Date().getTime() - stock.morningstarLastFetch.getTime() <
-          1000 * 60 * 60 * 12
+          1000 * 60 * 60 * 12 // 12 hours
       ) {
         console.warn(
           chalk.yellowBright(
@@ -389,6 +390,138 @@ class FetchController {
         );
         sendMessage(
           `Stock ${stock.ticker}: Unable to fetch Morningstar information: ${e.message}`
+        );
+      }
+    }
+    await driver.quit();
+    if (updatedStocks.length === 0) {
+      return res.status(204).end();
+    } else {
+      indexStockRepository();
+      return res.status(200).json(updatedStocks);
+    }
+  }
+
+  async fetchMSCIData(req: Request, res: Response) {
+    let stocks: Stock[];
+
+    if (req.query.ticker) {
+      const ticker = req.query.ticker;
+      if (typeof ticker === "string") {
+        stocks = [await readStock(ticker)];
+        if (!stocks[0].msciId) {
+          throw new APIError(404, `Stock ${ticker} does not have a MSCI ID.`);
+        }
+      }
+    } else {
+      stocks = (await readAllStocks()).map(
+        (stockEntity) => new Stock(stockEntity)
+      );
+    }
+
+    stocks = stocks
+      .filter((stock) => stock.msciId)
+      .sort(
+        (a, b) =>
+          (a.msciLastFetch ?? new Date(0)).getTime() -
+          (b.msciLastFetch ?? new Date(0)).getTime()
+      );
+    if (stocks.length === 0) {
+      return res.status(204).end();
+    }
+    if (req.query.detach) {
+      res.sendStatus(202);
+    }
+
+    const updatedStocks: Stock[] = [];
+    const driver = this.getDriver("normal");
+    for await (const stock of stocks) {
+      if (
+        !req.query.noSkip &&
+        stock.msciLastFetch &&
+        new Date().getTime() - stock.msciLastFetch.getTime() <
+          1000 * 60 * 60 * 24 * 7 // 7 days
+      ) {
+        console.warn(
+          chalk.yellowBright(
+            `Stock ${
+              stock.ticker
+            }: Skipping since last successful fetch was ${formatDistance(
+              stock.msciLastFetch.getTime(),
+              new Date().getTime(),
+              { addSuffix: true }
+            )}`
+          )
+        );
+        continue;
+      }
+      let msciESGRating: MSCIESGRating;
+      let msciTemperature: number;
+
+      try {
+        await driver.manage().deleteAllCookies();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await driver.get(
+          `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${stock.msciId}`
+        );
+
+        let fetchSuccessful = true;
+        try {
+          const esgClassName = await driver
+            .findElement(By.className("ratingdata-company-rating"))
+            .getAttribute("class");
+          msciESGRating = esgClassName
+            .substring(esgClassName.lastIndexOf("-") + 1)
+            .toUpperCase() as MSCIESGRating;
+        } catch (e) {
+          fetchSuccessful = false;
+          console.warn(
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e.message}`
+            )
+          );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e.message}`
+          );
+        }
+
+        try {
+          const temperatureText = await driver
+            .findElement(By.className("implied-temp-rise-value"))
+            .getAttribute("outerText");
+          msciTemperature = +temperatureText.match(/(\d+(\.\d+)?)/g)[0];
+        } catch (e) {
+          fetchSuccessful = false;
+          console.warn(
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e.message}`
+            )
+          );
+          sendMessage(
+            `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e.message}`
+          );
+        }
+
+        await updateStockWithoutReindexing(stock.ticker, {
+          msciLastFetch: fetchSuccessful ? new Date() : undefined,
+          msciESGRating: msciESGRating,
+          msciTemperature: msciTemperature,
+        });
+        updatedStocks.push(await readStock(stock.ticker));
+      } catch (e) {
+        if (req.query.ticker) {
+          throw new APIError(
+            502,
+            `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
+          );
+        }
+        console.warn(
+          chalk.yellowBright(
+            `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
+          )
+        );
+        sendMessage(
+          `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
         );
       }
     }

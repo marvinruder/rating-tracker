@@ -18,6 +18,8 @@ const get: OpenAPIV3.OperationObject = {
     stock.industry,
     stock.size,
     stock.style,
+    stock.msciESGRating,
+    stock.msciTemperature,
   ],
   responses: {
     "200": okStockListWithCount,

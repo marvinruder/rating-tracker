@@ -2,6 +2,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -21,6 +22,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import ThermostatIcon from "@mui/icons-material/Thermostat";
 import SectorIcon from "../../../components/SectorIcon";
 import StarRating from "../../../components/StarRating";
 import StyleBox from "../../../components/StyleBox";
@@ -46,6 +48,7 @@ import {
   baseUrl,
   fetchAPI,
   morningstarEndpoint,
+  msciEndpoint,
   stockAPI,
 } from "../../../endpoints";
 import useNotification from "../../../helpers/useNotification";
@@ -75,6 +78,19 @@ const Range52WSlider = styled(Slider)(({ theme }) => ({
 }));
 
 const StockRow = (props: StockRowProps) => {
+  const TemperatureChip = styled(Chip)(() => ({
+    ".MuiChip-icon": {
+      color:
+        props.stock.msciTemperature <= 1.5
+          ? theme.colors.msci.Aligned1
+          : props.stock.msciTemperature <= 2.0
+          ? theme.colors.msci.Aligned2
+          : props.stock.msciTemperature <= 3.2
+          ? theme.colors.msci.Misaligned
+          : theme.colors.msci.StronglyMisaligned,
+    },
+  }));
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
@@ -89,6 +105,9 @@ const StockRow = (props: StockRowProps) => {
     props.stock?.morningstarId
   );
   const [morningstarIdRequestInProgress, setMorningstarIdRequestInProgress] =
+    useState<boolean>(false);
+  const [msciId, setMsciId] = useState<string>(props.stock?.msciId);
+  const [msciIdRequestInProgress, setMsciIdRequestInProgress] =
     useState<boolean>(false);
   const theme = useTheme();
   const { setNotification } = useNotification();
@@ -111,6 +130,7 @@ const StockRow = (props: StockRowProps) => {
               morningstarId !== props.stock.morningstarId
                 ? morningstarId
                 : undefined,
+            msciId: msciId !== props.stock.msciId ? msciId : undefined,
           },
         })
         .then(props.getStocks)
@@ -162,6 +182,49 @@ const StockRow = (props: StockRowProps) => {
           setNotification({
             severity: "error",
             title: "Error while adding Morningstar ID",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+        }));
+  };
+
+  const patchStockMsciId = () => {
+    props.stock &&
+      props.getStocks &&
+      (setMsciIdRequestInProgress(true),
+      axios
+        .patch(baseUrl + stockAPI + `/${props.stock.ticker}`, undefined, {
+          params: { msciId: msciId },
+        })
+        .then(() => {
+          if (msciId) {
+            axios
+              .get(baseUrl + fetchAPI + msciEndpoint, {
+                params: { ticker: props.stock.ticker, noSkip: true },
+              })
+              .then(() => {})
+              .catch((e) => {
+                setNotification({
+                  severity: "error",
+                  title: "Error while fetching information from MSCI",
+                  message:
+                    e.response?.status && e.response?.data?.message
+                      ? `${e.response.status}: ${e.response.data.message}`
+                      : e.message ?? "No additional information available.",
+                });
+              })
+              .finally(() => setMsciIdRequestInProgress(false));
+          } else {
+            setMsciIdRequestInProgress(false);
+          }
+        })
+        .catch((e) => {
+          setMsciIdRequestInProgress(false);
+          setNotification({
+            severity: "error",
+            title: "Error while adding MSCI ID",
             message:
               e.response?.status && e.response?.data?.message
                 ? `${e.response.status}: ${e.response.data.message}`
@@ -356,6 +419,33 @@ const StockRow = (props: StockRowProps) => {
         </Typography>
       </TableCell>
       <TableCell>
+        {props.stock.msciESGRating && (
+          <Chip
+            label={<strong>{props.stock.msciESGRating}</strong>}
+            sx={{
+              backgroundColor: ["AAA", "AA"].includes(props.stock.msciESGRating)
+                ? theme.colors.msci.Leader
+                : ["B", "CCC"].includes(props.stock.msciESGRating)
+                ? theme.colors.msci.Laggard
+                : theme.colors.msci.Average,
+              color: theme.colors.alpha.trueWhite[100],
+              width: 48,
+            }}
+            size="small"
+          />
+        )}
+      </TableCell>
+      <TableCell>
+        {props.stock.msciTemperature && (
+          <TemperatureChip
+            icon={<ThermostatIcon />}
+            label={<strong>{props.stock.msciTemperature + "°C"}</strong>}
+            size="small"
+            sx={{ width: 72 }}
+          />
+        )}
+      </TableCell>
+      <TableCell>
         {props.stock.lastClose && props.stock.low52w && props.stock.high52w && (
           <Range52WSlider
             size="small"
@@ -538,6 +628,32 @@ const StockRow = (props: StockRowProps) => {
                 </LoadingButton>
               </Grid>
             </Grid>
+            <Grid item xs={12} container spacing={1} alignItems="center">
+              <Grid item xs={7.5}>
+                <TextField
+                  onChange={(event) => {
+                    setMsciId(event.target.value);
+                  }}
+                  label="MSCI ID"
+                  value={msciId}
+                  placeholder={"e.g. apple-inc/IID000000002157615"}
+                  sx={{ maxWidth: "300px" }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item>
+                <LoadingButton
+                  size="small"
+                  loading={msciIdRequestInProgress}
+                  onClick={patchStockMsciId}
+                  disabled={requestInProgress}
+                  variant="contained"
+                  startIcon={<PublishedWithChangesIcon />}
+                >
+                  {"Update and fetch"}
+                </LoadingButton>
+              </Grid>
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions sx={{ p: 2.6666, pt: 0 }}>
@@ -640,6 +756,12 @@ const StockRow = (props: StockRowProps) => {
         <Typography variant="body2">
           <Skeleton width={90} />
         </Typography>
+      </TableCell>
+      <TableCell>
+        <Skeleton width={48} height={24} />
+      </TableCell>
+      <TableCell>
+        <Skeleton width={72} height={24} />
       </TableCell>
       <TableCell>
         <Skeleton variant="rectangular" width={150} height={42} />

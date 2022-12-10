@@ -115,6 +115,35 @@ const morningstarId: OpenAPIV3.ParameterObject = {
   },
 };
 
+const msciId: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "msciId",
+  description: "The identifier of a stock used by MSCI",
+  schema: {
+    type: "string",
+    example: "apple-inc/IID000000002157615",
+  },
+};
+
+const msciESGRating: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "msciESGRating",
+  description: "The MSCI ESG rating of a stock.",
+  schema: {
+    $ref: "#/components/schemas/MSCIESGRating",
+  },
+};
+
+const msciTemperature: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "msciTemperature",
+  description: "The MSCI Implied Temperature Rise of a stock.",
+  schema: {
+    type: "number",
+    example: 1.7,
+  },
+};
+
 export {
   offset,
   count,
@@ -127,4 +156,7 @@ export {
   size,
   style,
   morningstarId,
+  msciId,
+  msciESGRating,
+  msciTemperature,
 };

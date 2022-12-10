@@ -159,6 +159,28 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
               </TableCell>
               <TableCell>
                 <TableSortLabel
+                  active={sortBy === "msciESGRating"}
+                  direction={
+                    sortBy === "msciESGRating" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("msciESGRating")}
+                >
+                  MSCI ESG
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "msciTemperature"}
+                  direction={
+                    sortBy === "msciTemperature" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("msciTemperature")}
+                >
+                  MSCI Temp
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
                   active={sortBy === "52w"}
                   direction={sortBy === "52w" && sortDesc ? "desc" : "asc"}
                   onClick={handleSortLabelClicked("52w")}
