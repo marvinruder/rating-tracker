@@ -7958,7 +7958,7 @@ __metadata:
     tsparticles-engine: 2.6.0
     typescript: 4.9.3
     vite: 4.0.0
-    vite-plugin-html: ^3.2.0
+    vite-plugin-html: 3.2.0
     vite-tsconfig-paths: 4.0.2
   languageName: unknown
   linkType: soft
@@ -9893,7 +9893,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-html@npm:^3.2.0":
+"vite-plugin-html@npm:3.2.0":
   version: 3.2.0
   resolution: "vite-plugin-html@npm:3.2.0"
   dependencies:
