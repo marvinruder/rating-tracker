@@ -589,13 +589,21 @@ const StockRow = (props: StockRowProps) => {
                   isCountry(value) &&
                   (setCountry(value), setCountryError(false))
                 }
-                filterOptions={(options) =>
-                  options.filter((option) =>
-                    countryName[option]
-                      .toUpperCase()
-                      .startsWith(countryInputValue?.trim().toUpperCase())
-                  )
-                }
+                filterOptions={(options) => {
+                  const currentInputValue = countryInputValue
+                    .trim()
+                    .toUpperCase();
+                  const filteredOptions = options.filter(
+                    (option) =>
+                      countryName[option]
+                        .toUpperCase()
+                        .startsWith(countryInputValue.trim().toUpperCase()) &&
+                      option != currentInputValue
+                  );
+                  isCountry(currentInputValue) &&
+                    filteredOptions.unshift(currentInputValue);
+                  return filteredOptions;
+                }}
                 disableClearable
                 renderInput={(params) => (
                   <TextField {...params} label="Country" error={countryError} />
