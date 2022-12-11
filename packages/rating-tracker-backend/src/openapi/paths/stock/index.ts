@@ -63,7 +63,6 @@ const put: OpenAPIV3.OperationObject = {
     {
       ...stock.country,
       required: true,
-      allowReserved: false,
       schema: {
         $ref: "#/components/schemas/Country",
       },
@@ -90,7 +89,6 @@ const patch: OpenAPIV3.OperationObject = {
     stock.name,
     {
       ...stock.country,
-      allowReserved: false,
       schema: {
         $ref: "#/components/schemas/Country",
       },

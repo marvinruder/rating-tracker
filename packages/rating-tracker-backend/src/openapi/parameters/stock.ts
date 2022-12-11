@@ -64,7 +64,6 @@ const country: OpenAPIV3.ParameterObject = {
   name: "country",
   description: "A country a stock is based in.",
   explode: false,
-  allowReserved: true,
   schema: {
     type: "array",
     items: {
@@ -78,7 +77,6 @@ const industry: OpenAPIV3.ParameterObject = {
   name: "industry",
   description: "An industry a stock operates in.",
   explode: false,
-  allowReserved: true,
   schema: {
     type: "array",
     items: {
