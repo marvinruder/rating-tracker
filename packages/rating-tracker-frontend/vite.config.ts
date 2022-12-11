@@ -15,7 +15,10 @@ export default mergeConfig(
       tsconfigPaths(),
       createHtmlPlugin({
         minify: true,
-        entry: "index.tsx",
+        entry:
+          process.env.NODE_ENV === "development"
+            ? "src/index.tsx"
+            : "index.tsx",
         template: "src/index.html",
         inject: {
           data: {
@@ -33,6 +36,7 @@ export default mergeConfig(
                 : "",
           },
         },
+        verbose: process.env.NODE_ENV === "development",
       }),
     ],
   }),
