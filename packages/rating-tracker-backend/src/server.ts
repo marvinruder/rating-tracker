@@ -37,7 +37,10 @@ server.app.disable("x-powered-by");
 const staticContentPath = path.join(__dirname, "..", "..", "public");
 
 /* istanbul ignore next */
-if (process.env.AUTO_FETCH_SCHEDULE || process.env.NODE_ENV === "development") {
+if (
+  !process.env.AUTO_FETCH_SCHEDULE ||
+  process.env.NODE_ENV === "development"
+) {
   server.app.use(
     "/assets/images/favicon",
     express.static(
