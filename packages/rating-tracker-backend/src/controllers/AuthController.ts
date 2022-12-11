@@ -145,7 +145,7 @@ class AuthController {
       res.cookie("authToken", authToken, {
         maxAge: 1000 * sessionTTLInSeconds,
         httpOnly: true,
-        secure: process.env.NODE_ENV !== "dev",
+        secure: process.env.NODE_ENV !== "development",
         sameSite: true,
       });
       return res.sendStatus(204);

@@ -37,6 +37,24 @@ server.app.disable("x-powered-by");
 const staticContentPath = path.join(__dirname, "..", "..", "public");
 
 /* istanbul ignore next */
+if (
+  !process.env.AUTO_FETCH_SCHEDULE ||
+  process.env.NODE_ENV === "development"
+) {
+  server.app.use(
+    "/assets/images/favicon",
+    express.static(
+      path.join(staticContentPath, "assets", "images", "favicon-dev"),
+      {
+        dotfiles: "ignore",
+        lastModified: false,
+        maxAge: "1 year",
+      }
+    )
+  );
+}
+
+/* istanbul ignore next */
 server.app.use(
   express.static(staticContentPath, {
     dotfiles: "ignore",
@@ -113,7 +131,7 @@ server.app.use(async (req, res, next) => {
       res.cookie("authToken", req.cookies.authToken, {
         maxAge: 1000 * sessionTTLInSeconds,
         httpOnly: true,
-        secure: process.env.NODE_ENV !== "dev",
+        secure: process.env.NODE_ENV !== "development",
         sameSite: true,
       });
     } catch (e) {

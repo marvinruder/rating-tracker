@@ -17,9 +17,14 @@ const MainContent = styled(Box)(
 
 function Status500() {
   const [pending, setPending] = useState(false);
-  function handleClick() {
+  function handleReload() {
     setPending(true);
     window.location.reload();
+  }
+
+  function handleBack() {
+    setPending(true);
+    window.history.back();
   }
 
   return (
@@ -40,7 +45,7 @@ function Status500() {
             complete your request
           </Typography>
           <LoadingButton
-            onClick={handleClick}
+            onClick={handleReload}
             loading={pending}
             variant="outlined"
             color="primary"
@@ -48,7 +53,7 @@ function Status500() {
           >
             Refresh view
           </LoadingButton>
-          <Button href="/overview" variant="contained" sx={{ ml: 1 }}>
+          <Button onClick={handleBack} variant="contained" sx={{ ml: 1 }}>
             Go back
           </Button>
         </Box>
