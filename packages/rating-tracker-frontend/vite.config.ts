@@ -8,7 +8,7 @@ import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { dependencies } from "./package.json";
 
-const chunkList = ["@mui/icons-material", "@mui/lab", "@mui/material"];
+const chunkList = ["@mui/material"];
 
 function renderChunks(deps: Record<string, string>) {
   const chunks = {};
