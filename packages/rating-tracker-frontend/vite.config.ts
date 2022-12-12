@@ -6,9 +6,34 @@ import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { dependencies } from "./package.json";
+
+const chunkList = [
+  "@mui/icons-material",
+  "@mui/lab",
+  "@mui/material",
+  "react-particles",
+];
+
+function renderChunks(deps: Record<string, string>) {
+  const chunks = {};
+  Object.keys(deps).forEach((key) => {
+    if (chunkList.includes(key)) chunks[key] = [key];
+  });
+  return chunks;
+}
 
 export default mergeConfig(
   defineViteConfig({
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            ...renderChunks(dependencies),
+          },
+        },
+      },
+    },
     cacheDir: ".vite",
     plugins: [
       react(),
