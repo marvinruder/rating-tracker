@@ -21,6 +21,7 @@ function renderChunks(deps: Record<string, string>) {
 export default mergeConfig(
   defineViteConfig({
     build: {
+      cssCodeSplit: false,
       rollupOptions: {
         output: {
           manualChunks: {

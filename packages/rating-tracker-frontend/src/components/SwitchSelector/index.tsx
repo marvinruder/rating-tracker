@@ -1,5 +1,6 @@
 import { Typography, useTheme } from "@mui/material";
 import { default as SwitchSelectorBase } from "react-switch-selector";
+import "./switchSelector.css";
 
 const SwitchSelector = (props: SwitchSelectorProps) => {
   const theme = useTheme();
