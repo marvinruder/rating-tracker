@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 
-import "nprogress/nprogress.css";
+import "nprogress/nprogress.css?inline";
 import App from "./App";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import axios from "axios";
