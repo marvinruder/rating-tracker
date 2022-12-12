@@ -18,20 +18,14 @@ const loader = (Component) => (props) =>
 
 // Applications
 
-const LoginApp = loader(
-  lazy(() => import("./content/applications/Users/login"))
-);
+import LoginApp from "./content/applications/Users/login";
 
 // Modules
 
 const Stocklist = loader(lazy(() => import("./content/modules/stocklist")));
 
-const Status404 = loader(
-  lazy(() => import("./content/pages/Status/Status404"))
-);
-const Status500 = loader(
-  lazy(() => import("./content/pages/Status/Status500"))
-);
+import Status404 from "./content/pages/Status/Status404";
+import Status500 from "./content/pages/Status/Status500";
 
 const AuthWrapper = ({
   children,
