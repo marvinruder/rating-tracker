@@ -3,6 +3,7 @@ import chalk from "chalk";
 import dotenv from "dotenv";
 import { createClient } from "redis";
 import { Client } from "redis-om";
+import logger from "../lib/logger.js";
 
 dotenv.config({
   path: ".env.local",
@@ -12,7 +13,7 @@ const url = process.env.REDIS_URL;
 
 export const redis = createClient({ url: url });
 redis.on("error", (err) =>
-  console.error(chalk.redBright(`Redis Client: ${err}`))
+  logger.error(chalk.redBright(`Redis Client: ${err}`))
 );
 await redis.connect();
 

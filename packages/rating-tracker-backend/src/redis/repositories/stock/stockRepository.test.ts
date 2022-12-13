@@ -1,10 +1,14 @@
 import { jest } from "@jest/globals";
 
 jest.unstable_mockModule(
-  "../../signal/signalBase",
-  async () => await import("../../../signal/__mocks__/signalBase")
+  "../../../lib/logger",
+  async () => await import("../../../lib/__mocks__/logger")
 );
 
+jest.unstable_mockModule(
+  "../../../signal/signalBase",
+  async () => await import("../../../signal/__mocks__/signalBase")
+);
 jest.unstable_mockModule(
   "./stockRepositoryBase",
   async () => await import("./__mocks__/stockRepositoryBase")

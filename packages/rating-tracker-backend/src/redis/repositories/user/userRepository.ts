@@ -3,12 +3,13 @@ import { User, UserEntity, userSchema } from "../../../models/user.js";
 import { fetch, save } from "./userRepositoryBase.js";
 import chalk from "chalk";
 import { sendMessage } from "../../../signal/signal.js";
+import logger from "../../../lib/logger.js";
 
 /* istanbul ignore next */
 export const createUser = async (user: User): Promise<boolean> => {
   const existingUser = await fetch(user.email);
   if (existingUser && existingUser.name) {
-    console.warn(
+    logger.warn(
       chalk.yellowBright(
         `Skipping user “${user.name}” – existing already (entity ID ${existingUser.entityId}).`
       )
@@ -18,7 +19,7 @@ export const createUser = async (user: User): Promise<boolean> => {
   const userEntity = new UserEntity(userSchema, user.email, {
     ...user,
   });
-  console.log(
+  logger.info(
     chalk.greenBright(
       `Created user “${user.name}” with entity ID ${await save(userEntity)}.`
     )
@@ -52,13 +53,13 @@ export const updateUser = async (
   let k: keyof typeof newValues;
   const userEntity = await fetch(email);
   if (userEntity && userEntity.name) {
-    console.log(chalk.greenBright(`Updating user ${email}…`));
+    logger.info(chalk.greenBright(`Updating user ${email}…`));
     let isNewData = false;
     for (k in newValues) {
       if (k in newValues && newValues[k]) {
         if (newValues[k] !== userEntity[k]) {
           isNewData = true;
-          console.log(
+          logger.info(
             chalk.greenBright(
               `    Property ${k} updated from ${userEntity[k]} to ${newValues[k]}`
             )
@@ -83,7 +84,7 @@ export const updateUser = async (
     if (isNewData) {
       await save(userEntity);
     } else {
-      console.log(chalk.grey(`No updates for user ${email}.`));
+      logger.info(chalk.grey(`No updates for user ${email}.`));
     }
   } else {
     throw new APIError(404, `User ${email} not found.`);
@@ -95,7 +96,7 @@ export const updateUser = async (
 //   if (userEntity && userEntity.name) {
 //     const name = new User(userEntity).name;
 //     await remove(userEntity.entityId);
-//     console.log(chalk.greenBright(`Deleted user “${name}” (email ${email}).`));
+//     logger.info(chalk.greenBright(`Deleted user “${name}” (email ${email}).`));
 //   } else {
 //     throw new APIError(404, `User ${email} not found.`);
 //   }

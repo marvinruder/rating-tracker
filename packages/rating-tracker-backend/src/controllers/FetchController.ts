@@ -24,6 +24,7 @@ import {
   updateStockWithoutReindexing,
 } from "../redis/repositories/stock/stockRepository.js";
 import { sendMessage } from "../signal/signal.js";
+import logger from "../lib/logger.js";
 
 class FetchController {
   getDriver(pageLoadStrategy: "normal" | "eager" | "none" = "eager") {
@@ -83,7 +84,7 @@ class FetchController {
         new Date().getTime() - stock.morningstarLastFetch.getTime() <
           1000 * 60 * 60 * 12 // 12 hours
       ) {
-        console.warn(
+        logger.warn(
           chalk.yellowBright(
             `Stock ${
               stock.ticker
@@ -136,7 +137,7 @@ class FetchController {
           }
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract industry: ${e.message}`
             )
@@ -174,7 +175,7 @@ class FetchController {
           }
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract size and style: ${e.message}`
             )
@@ -194,7 +195,7 @@ class FetchController {
             starRating = 0;
           }
         } catch (e) {
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract star rating: ${e.message}`
             )
@@ -210,7 +211,7 @@ class FetchController {
           }
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract dividend yield: ${e.message}`
             )
@@ -229,7 +230,7 @@ class FetchController {
           }
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e.message}`
             )
@@ -253,7 +254,7 @@ class FetchController {
           }
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract currency: ${e.message}`
             )
@@ -272,7 +273,7 @@ class FetchController {
           }
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract last close: ${e.message}`
             )
@@ -294,7 +295,7 @@ class FetchController {
             morningstarFairValue = 0;
           }
         } catch (e) {
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e.message}`
             )
@@ -324,7 +325,7 @@ class FetchController {
           }
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e.message}`
             )
@@ -350,7 +351,7 @@ class FetchController {
           }
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e.message}`
             )
@@ -383,7 +384,7 @@ class FetchController {
             `Stock ${stock.ticker}: Unable to fetch Morningstar information: ${e.message}`
           );
         }
-        console.warn(
+        logger.warn(
           chalk.yellowBright(
             `Stock ${stock.ticker}: Unable to fetch Morningstar information: ${e.message}`
           )
@@ -442,7 +443,7 @@ class FetchController {
         new Date().getTime() - stock.msciLastFetch.getTime() <
           1000 * 60 * 60 * 24 * 7 // 7 days
       ) {
-        console.warn(
+        logger.warn(
           chalk.yellowBright(
             `Stock ${
               stock.ticker
@@ -475,7 +476,7 @@ class FetchController {
             .toUpperCase() as MSCIESGRating;
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e.message}`
             )
@@ -492,7 +493,7 @@ class FetchController {
           msciTemperature = +temperatureText.match(/(\d+(\.\d+)?)/g)[0];
         } catch (e) {
           fetchSuccessful = false;
-          console.warn(
+          logger.warn(
             chalk.yellowBright(
               `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e.message}`
             )
@@ -515,7 +516,7 @@ class FetchController {
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
           );
         }
-        console.warn(
+        logger.warn(
           chalk.yellowBright(
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
           )
