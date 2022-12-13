@@ -2,15 +2,16 @@
 import { StockEntity, stockSchema } from "../../../models/stock.js";
 import client from "../../Client.js";
 import chalk from "chalk";
+import logger from "../../../lib/logger.js";
 
-console.log(
+logger.info(
   chalk.grey(
     "Using Stock Repository for the first time, fetching and indexing."
   )
 );
 export const stockRepository = client.fetchRepository(stockSchema);
 await stockRepository.createIndex();
-console.log(
+logger.info(
   chalk.grey(
     `Stock Repository is now fetched and indexed (${await stockRepository
       .search()
@@ -20,7 +21,7 @@ console.log(
 
 export const index = async () => {
   await stockRepository.createIndex();
-  console.log(
+  logger.info(
     chalk.grey(
       `Stock Repository is now freshly indexed (${await stockRepository
         .search()

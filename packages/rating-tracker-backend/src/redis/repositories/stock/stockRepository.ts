@@ -11,6 +11,7 @@ import {
   Style,
 } from "rating-tracker-commons";
 import { sendMessage } from "../../../signal/signal.js";
+import logger from "../../../lib/logger.js";
 
 export const indexStockRepository = () => {
   index();
@@ -21,7 +22,7 @@ export const createStockWithoutReindexing = async (
 ): Promise<boolean> => {
   const existingStock = await fetch(stock.ticker);
   if (existingStock && existingStock.name) {
-    console.warn(
+    logger.warn(
       chalk.yellowBright(
         `Skipping stock “${stock.name}” – existing already (entity ID ${existingStock.entityId}).`
       )
@@ -31,7 +32,7 @@ export const createStockWithoutReindexing = async (
     const stockEntity = new StockEntity(stockSchema, stock.ticker, {
       ...stock,
     });
-    console.log(
+    logger.info(
       chalk.greenBright(
         `Created stock “${stock.name}” with entity ID ${await save(
           stockEntity
@@ -70,7 +71,7 @@ export const updateStockWithoutReindexing = async (
   const stockEntity = await fetch(ticker);
   if (stockEntity && stockEntity.name) {
     let signalMessage = `Updates for ${stockEntity.name} (${ticker}):`;
-    console.log(chalk.greenBright(`Updating stock ${ticker}…`));
+    logger.info(chalk.greenBright(`Updating stock ${ticker}…`));
     let isNewData = false;
     for (k in newValues) {
       if (
@@ -80,7 +81,7 @@ export const updateStockWithoutReindexing = async (
       ) {
         if (newValues[k] !== stockEntity[k]) {
           isNewData = true;
-          console.log(
+          logger.info(
             chalk.greenBright(
               `    Property ${k} updated from ${stockEntity[k]} to ${newValues[k]}`
             )
@@ -158,7 +159,7 @@ export const updateStockWithoutReindexing = async (
         sendMessage(signalMessage);
       }
     } else {
-      console.log(chalk.grey(`No updates for stock ${ticker}.`));
+      logger.info(chalk.grey(`No updates for stock ${ticker}.`));
     }
   } else {
     throw new APIError(404, `Stock ${ticker} not found.`);
@@ -199,7 +200,7 @@ export const deleteStockWithoutReindexing = async (ticker: string) => {
   if (stockEntity && stockEntity.name) {
     const name = new Stock(stockEntity).name;
     await remove(stockEntity.entityId);
-    console.log(
+    logger.info(
       chalk.greenBright(`Deleted stock “${name}” (ticker ${ticker}).`)
     );
   } else {

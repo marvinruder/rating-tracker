@@ -8,12 +8,13 @@ import { refresh, fetch, save } from "./sessionRepositoryBase.js";
 import chalk from "chalk";
 import { User } from "../../../models/user.js";
 import { readUser } from "../user/userRepository.js";
+import logger from "../../../lib/logger.js";
 
 /* istanbul ignore next */
 export const createSession = async (session: Session): Promise<boolean> => {
   const existingSession = await fetch(session.sessionID);
   if (existingSession && existingSession.email) {
-    console.warn(
+    logger.warn(
       chalk.yellowBright(
         `Skipping session ${existingSession.entityId} – existing already.`
       )
@@ -23,7 +24,7 @@ export const createSession = async (session: Session): Promise<boolean> => {
   const sessionEntity = new SessionEntity(sessionSchema, session.sessionID, {
     ...session,
   });
-  console.log(
+  logger.info(
     chalk.greenBright(
       `Created session for “${session.email}” with entity ID ${await save(
         sessionEntity
@@ -59,7 +60,7 @@ export const refreshSessionAndFetchUser = async (
 //   if (sessionEntity && sessionEntity.email) {
 //     const email = new Session(sessionEntity).email;
 //     await remove(sessionEntity.entityId);
-//     console.log(
+//     logger.info(
 //       chalk.greenBright(`Deleted session “${email}” (sessionID ${sessionID}).`)
 //     );
 //   } else {
