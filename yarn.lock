@@ -7790,7 +7790,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-pretty@npm:^9.1.1":
+"pino-pretty@npm:9.1.1":
   version: 9.1.1
   resolution: "pino-pretty@npm:9.1.1"
   dependencies:
@@ -7821,7 +7821,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:^8.7.0":
+"pino@npm:8.7.0":
   version: 8.7.0
   resolution: "pino@npm:8.7.0"
   dependencies:
@@ -8092,8 +8092,8 @@ __metadata:
     express-openapi-validator: 5.0.0
     express-rate-limit: 6.7.0
     jest: 29.3.1
-    pino: ^8.7.0
-    pino-pretty: ^9.1.1
+    pino: 8.7.0
+    pino-pretty: 9.1.1
     prettier: 2.8.1
     rating-tracker-commons: "workspace:*"
     redis: 4.5.1
