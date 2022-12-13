@@ -5,12 +5,12 @@ import * as fs from "fs";
 import chalk from "chalk";
 
 const levelIcons = {
-  10: `${chalk.gray("\uf002")} `,
-  20: `${chalk.magenta("\uf188")} `,
-  30: `${chalk.blue("\uf7fc")} `,
-  40: `${chalk.yellow("\uf071")} `,
-  50: `${chalk.red("\uf658")} `,
-  60: `${chalk.redBright("\uf0e7")} `,
+  10: chalk.whiteBright.bgGray(" \uf002 ") + chalk.gray(" "),
+  20: chalk.whiteBright.bgCyan(" \uf188 ") + chalk.cyan(" "),
+  30: chalk.whiteBright.bgBlue(" \uf7fc ") + chalk.blue(" "),
+  40: chalk.whiteBright.bgYellow(" \uf071 ") + chalk.yellow(" "),
+  50: chalk.whiteBright.bgRed(" \uf658 ") + chalk.red(" "),
+  60: chalk.whiteBright.bgMagenta(" \uf0e7 ") + chalk.bgMagenta(" "),
 };
 
 const prettyStream = pretty({
