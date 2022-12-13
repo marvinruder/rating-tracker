@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import pino from "pino";
 import pretty from "pino-pretty";
 import * as fs from "fs";
