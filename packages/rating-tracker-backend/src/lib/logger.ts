@@ -6,8 +6,8 @@ import chalk from "chalk";
 
 const levelIcons = {
   10: chalk.whiteBright.bgGray(" \uf002 ") + chalk.gray(" "),
-  20: chalk.whiteBright.bgCyan(" \uf188 ") + chalk.cyan(" "),
-  30: chalk.whiteBright.bgBlue(" \uf7fc ") + chalk.blue(" "),
+  20: chalk.whiteBright.bgBlue(" \uf188 ") + chalk.blue(" "),
+  30: chalk.whiteBright.bgGreen(" \uf7fc ") + chalk.green(" "),
   40: chalk.whiteBright.bgYellow(" \uf071 ") + chalk.yellow(" "),
   50: chalk.whiteBright.bgRed(" \uf658 ") + chalk.red(" "),
   60: chalk.whiteBright.bgMagenta(" \uf0e7 ") + chalk.bgMagenta(" "),
