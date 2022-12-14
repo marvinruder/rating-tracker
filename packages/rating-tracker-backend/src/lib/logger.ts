@@ -1,8 +1,9 @@
 /* istanbul ignore file */
 import pino from "pino";
 import pretty from "pino-pretty";
-import * as fs from "fs";
+import fs from "node:fs";
 import chalk from "chalk";
+import cron from "cron";
 
 const levelIcons = {
   10: chalk.whiteBright.bgGray(" \uf002 ") + chalk.gray(" "),
@@ -20,11 +21,33 @@ const prettyStream = pretty({
   },
 });
 
-const streams = [
-  prettyStream,
-  fs.createWriteStream(process.env.LOG_FILE || `/tmp/rating-tracker-log.txt`),
-];
+const getLogFileName = () => {
+  return (
+    process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).log"
+  ).replaceAll("(DATE)", new Date().toISOString().split("T")[0]);
+};
 
-const logger = pino({}, pino.multistream(streams));
+const getNewFileStream = () => {
+  return fs.createWriteStream(getLogFileName(), {
+    flags: "a",
+  });
+};
+
+let fileStream = getNewFileStream();
+const multistream = pino.multistream([prettyStream, fileStream]);
+const logger = pino({}, multistream);
+
+new cron.CronJob(
+  "0 0 0 * * *",
+  () => {
+    fileStream.end();
+    fileStream = getNewFileStream();
+    multistream.streams.find(
+      (stream) => stream.stream instanceof fs.WriteStream
+    ).stream = fileStream;
+  },
+  null,
+  true
+);
 
 export default logger;
