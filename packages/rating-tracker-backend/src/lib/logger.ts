@@ -23,7 +23,7 @@ const prettyStream = pretty({
 
 const getLogFileName = () => {
   return (
-    process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).json"
+    process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).log"
   ).replaceAll("(DATE)", new Date().toISOString().split("T")[0]);
 };
 
