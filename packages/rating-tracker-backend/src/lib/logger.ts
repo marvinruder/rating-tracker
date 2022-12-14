@@ -21,16 +21,16 @@ const prettyStream = pretty({
   },
 });
 
+const getLogFileName = () => {
+  return (
+    process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).txt"
+  ).replaceAll("(DATE)", new Date().toISOString().split("T")[0]);
+};
+
 const getNewFileStream = () => {
-  return fs.createWriteStream(
-    (process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).txt").replaceAll(
-      "(DATE)",
-      new Date().toISOString().split("T")[0]
-    ),
-    {
-      flags: "a",
-    }
-  );
+  return fs.createWriteStream(getLogFileName(), {
+    flags: "a",
+  });
 };
 
 let fileStream = getNewFileStream();
@@ -38,11 +38,13 @@ const multistream = pino.multistream([prettyStream, fileStream]);
 const logger = pino({}, multistream);
 
 new cron.CronJob(
-  "* * * * * *",
+  "0 0 0 * * *",
   () => {
     fileStream.end();
     fileStream = getNewFileStream();
-    multistream.streams[1].stream = fileStream;
+    multistream.streams.find(
+      (stream) => stream.stream instanceof fs.WriteStream
+    ).stream = fileStream;
   },
   null,
   true
