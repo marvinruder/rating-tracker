@@ -2,7 +2,7 @@ import APIError from "../../../lib/apiError.js";
 import { User, UserEntity, userSchema } from "../../../models/user.js";
 import { fetch, save } from "./userRepositoryBase.js";
 import chalk from "chalk";
-import { sendMessage } from "../../../signal/signal.js";
+import * as signal from "../../../signal/signal.js";
 import logger from "../../../lib/logger.js";
 
 /* istanbul ignore next */
@@ -24,7 +24,9 @@ export const createUser = async (user: User): Promise<boolean> => {
       `Created user “${user.name}” with entity ID ${await save(userEntity)}.`
     )
   );
-  sendMessage(`New user “${user.name}” (email ${user.email}) registered.`);
+  signal.sendMessage(
+    `New user “${user.name}” (email ${user.email}) registered.`
+  );
   return true;
 };
 
