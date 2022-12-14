@@ -372,6 +372,9 @@ const AddStock = (props: AddStockProps) => {
               </LoadingButton>
             </Grid>
           </Grid>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            You can always add more data providers later.
+          </Typography>
         </>
       ),
       noStepBack: true,
@@ -397,6 +400,7 @@ const AddStock = (props: AddStockProps) => {
           <Typography variant="h4" sx={{ mb: 2 }}>
             Here’s your new stock:
           </Typography>
+          {/* TODO: Check extracted data */}
           <TableContainer>
             <Table size="small">
               <TableBody>
@@ -405,6 +409,11 @@ const AddStock = (props: AddStockProps) => {
               </TableBody>
             </Table>
           </TableContainer>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            Please check whether all expected fields are filled. If a field is
+            not filled, an alert will not be raised when the information cannot
+            be extracted at a later time.
+          </Typography>
         </>
       ),
       buttonColor: "success",

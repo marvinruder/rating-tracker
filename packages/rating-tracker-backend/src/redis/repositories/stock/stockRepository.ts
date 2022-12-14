@@ -10,7 +10,7 @@ import {
   Size,
   Style,
 } from "rating-tracker-commons";
-import { sendMessage } from "../../../signal/signal.js";
+import * as signal from "../../../signal/signal.js";
 import logger from "../../../lib/logger.js";
 
 export const indexStockRepository = () => {
@@ -156,7 +156,7 @@ export const updateStockWithoutReindexing = async (
     if (isNewData) {
       await save(stockEntity);
       if (signalMessage.includes("\n")) {
-        sendMessage(signalMessage);
+        signal.sendMessage(signalMessage);
       }
     } else {
       logger.info(chalk.grey(`No updates for stock ${ticker}.`));
