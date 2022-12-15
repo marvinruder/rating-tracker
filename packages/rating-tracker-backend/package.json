@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dev:ssh": "ssh -N rating-tracker-port-forwarding",
-    "dev:tsc": "tsc --watch",
+    "dev:tsc": "tsc --watch --preserveWatchOutput",
     "dev:node": "node --watch dist/src/server.js",
     "test:watch": "yarn node --experimental-vm-modules $(yarn bin jest) --watch --runInBand",
     "start": "node dist/src/server.js",

@@ -4,14 +4,26 @@ import pretty from "pino-pretty";
 import fs from "node:fs";
 import chalk from "chalk";
 import cron from "cron";
+import dotenv from "dotenv";
+
+dotenv.config({
+  path: ".env.local",
+});
+
+export const PREFIX_NODEJS =
+  chalk.whiteBright.bgGreen(" \uf898 ") + chalk.green(" ");
+export const PREFIX_REDIS =
+  chalk.whiteBright.bgRed(" \ue76d ") + chalk.red(" ");
+export const PREFIX_CHROME =
+  chalk.whiteBright.bgBlueBright(" \ufc0d ") + chalk.blueBright(" ");
 
 const levelIcons = {
-  10: chalk.whiteBright.bgGray(" \uf002 ") + chalk.gray(" "),
-  20: chalk.whiteBright.bgBlue(" \uf188 ") + chalk.blue(" "),
-  30: chalk.whiteBright.bgGreen(" \uf7fc ") + chalk.green(" "),
-  40: chalk.whiteBright.bgYellow(" \uf071 ") + chalk.yellow(" "),
-  50: chalk.whiteBright.bgRed(" \uf658 ") + chalk.red(" "),
-  60: chalk.whiteBright.bgMagenta(" \uf0e7 ") + chalk.bgMagenta(" "),
+  10: chalk.gray("\uf002 "),
+  20: chalk.blue("\uf188 "),
+  30: chalk.cyanBright("\uf7fc "),
+  40: chalk.yellowBright("\uf071 "),
+  50: "\x07" + chalk.red("\uf658 "),
+  60: "\x07" + chalk.magentaBright("\uf0e7 "),
 };
 
 const prettyStream = pretty({
@@ -34,8 +46,22 @@ const getNewFileStream = () => {
 };
 
 let fileStream = getNewFileStream();
-const multistream = pino.multistream([prettyStream, fileStream]);
-const logger = pino({}, multistream);
+const multistream = pino.multistream([
+  {
+    level: (process.env.LOG_LEVEL as pino.Level) ?? "info",
+    stream: prettyStream,
+  },
+  {
+    level: (process.env.LOG_LEVEL as pino.Level) ?? "info",
+    stream: fileStream,
+  },
+]);
+const logger = pino(
+  {
+    level: process.env.LOG_LEVEL ?? "info",
+  },
+  multistream
+);
 
 new cron.CronJob(
   "0 0 0 * * *",

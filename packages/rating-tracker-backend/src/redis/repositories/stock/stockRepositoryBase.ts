@@ -2,32 +2,33 @@
 import { StockEntity, stockSchema } from "../../../models/stock.js";
 import client from "../../Client.js";
 import chalk from "chalk";
-import logger from "../../../lib/logger.js";
+import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
 
 logger.info(
-  chalk.grey(
+  PREFIX_REDIS +
     "Using Stock Repository for the first time, fetching and indexing."
-  )
 );
 export const stockRepository = client.fetchRepository(stockSchema);
 await stockRepository.createIndex();
 logger.info(
-  chalk.grey(
+  PREFIX_REDIS +
     `Stock Repository is now fetched and indexed (${await stockRepository
       .search()
       .count()} stocks available).`
-  ) + "\n"
 );
+logger.info("");
 
 export const index = async () => {
   await stockRepository.createIndex();
   logger.info(
-    chalk.grey(
-      `Stock Repository is now freshly indexed (${await stockRepository
-        .search()
-        .count()} stocks available).`
-    ) + "\n"
+    PREFIX_REDIS +
+      chalk.grey(
+        `Stock Repository is now freshly indexed (${await stockRepository
+          .search()
+          .count()} stocks available).`
+      )
   );
+  logger.info("");
 };
 
 export const fetch = (id: string) => {
