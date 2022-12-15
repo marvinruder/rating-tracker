@@ -18,12 +18,12 @@ export const PREFIX_CHROME =
   chalk.whiteBright.bgBlueBright(" \ufc0d ") + chalk.blueBright(" ");
 
 const levelIcons = {
-  10: chalk.gray("\uf002 "),
-  20: chalk.blue("\uf188 "),
-  30: chalk.cyanBright("\uf7fc "),
-  40: chalk.yellowBright("\uf071 "),
-  50: "\x07" + chalk.red("\uf658 "),
-  60: "\x07" + chalk.magentaBright("\uf0e7 "),
+  10: chalk.gray(" \uf002 "),
+  20: chalk.blue(" \uf188 "),
+  30: chalk.cyanBright(" \uf7fc "),
+  40: chalk.yellowBright(" \uf071 "),
+  50: "\x07" + chalk.red(" \uf658 "),
+  60: "\x07" + chalk.magentaBright(" \uf0e7 "),
 };
 
 const prettyStream = pretty({
