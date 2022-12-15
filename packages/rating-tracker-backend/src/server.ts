@@ -15,7 +15,7 @@ import APIError from "./lib/apiError.js";
 import { refreshSessionAndFetchUser } from "./redis/repositories/session/sessionRepository.js";
 import { sessionTTLInSeconds } from "./redis/repositories/session/sessionRepositoryBase.js";
 import path from "path";
-import logger from "./lib/logger.js";
+import logger, { PREFIX_NODEJS } from "./lib/logger.js";
 
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
@@ -68,7 +68,8 @@ server.app.use(
     },
   })
 );
-logger.info(chalk.grey(`Serving static content from ${staticContentPath}\n`));
+logger.info(PREFIX_NODEJS + `Serving static content from ${staticContentPath}`);
+logger.info("");
 
 server.app.use((_, res, next) => {
   res.set("Cache-Control", "no-cache");
@@ -147,14 +148,18 @@ server.app.use(
   responseTime((req: Request, res: Response, time) => {
     chalk
       .white(
-        chalk.whiteBright.bgRed(" \ue76d ") +
-          chalk.bgGrey.red("") +
+        chalk.whiteBright.bgGreen(" \uf898 ") +
+          chalk.bgGrey.green("") +
           chalk.bgGrey(
             chalk.cyanBright(" \uf5ef " + new Date().toISOString()) +
               "  " +
               chalk.yellow(
                 res.locals.user
                   ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})`
+                  : /* istanbul ignore next */
+                  req.cookies.bypassAuthenticationForInternalRequestsToken ===
+                    bypassAuthenticationForInternalRequestsToken
+                  ? "\ufba7 cron"
                   : "\uf21b"
               ) +
               "  " +
@@ -198,10 +203,11 @@ server.app.use(
             .join(" ") +
           "\n ╰─" +
           statusCodeDescription(res.statusCode) +
-          ` after ${Math.round(time)} ms\n`
+          ` after ${Math.round(time)} ms`
       )
       .split("\n")
       .forEach((line) => logger.info(line));
+    logger.info("");
   })
 );
 
@@ -238,7 +244,7 @@ server.app.use(
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 server.app.use((err, _, res, next) => {
-  logger.error(chalk.redBright(err.message));
+  logger.error(PREFIX_NODEJS + chalk.redBright(err.message));
   // format error
   res.status(err.status || 500).json({
     message: err.message,
@@ -271,22 +277,24 @@ if (process.env.AUTO_FETCH_SCHEDULE) {
     true
   );
   logger.info(
-    chalk.whiteBright.bgGrey(` Auto Fetch activated `) +
+    chalk.whiteBright.bgGreen(" \uf898 ") +
+      chalk.green.bgGrey("") +
+      chalk.whiteBright.bgGrey(` Auto Fetch activated `) +
       chalk.grey("") +
       chalk.green(
         " This instance will periodically fetch information from data providers for all known stocks."
-      ) +
-      "\n"
+      )
   );
+  logger.info("");
 }
 
 export const listener = server.app.listen(process.env.PORT, () => {
   logger.info(
-    chalk.whiteBright.bgRed(" \ue76d ") +
-      chalk.red.bgGrey("") +
+    chalk.whiteBright.bgGreen(" \uf898 ") +
+      chalk.green.bgGrey("") +
       chalk.whiteBright.bgGrey(` \uf6ff ${process.env.PORT} `) +
       chalk.grey("") +
-      chalk.green(" Listening…") +
-      "\n"
+      " Listening…"
   );
+  logger.info("");
 });

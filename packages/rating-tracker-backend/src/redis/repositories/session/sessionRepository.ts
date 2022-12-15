@@ -8,16 +8,17 @@ import { refresh, fetch, save } from "./sessionRepositoryBase.js";
 import chalk from "chalk";
 import { User } from "../../../models/user.js";
 import { readUser } from "../user/userRepository.js";
-import logger from "../../../lib/logger.js";
+import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
 
 /* istanbul ignore next */
 export const createSession = async (session: Session): Promise<boolean> => {
   const existingSession = await fetch(session.sessionID);
   if (existingSession && existingSession.email) {
     logger.warn(
-      chalk.yellowBright(
-        `Skipping session ${existingSession.entityId} – existing already.`
-      )
+      PREFIX_REDIS +
+        chalk.yellowBright(
+          `Skipping session ${existingSession.entityId} – existing already.`
+        )
     );
     return false;
   }
@@ -25,11 +26,12 @@ export const createSession = async (session: Session): Promise<boolean> => {
     ...session,
   });
   logger.info(
-    chalk.greenBright(
-      `Created session for “${session.email}” with entity ID ${await save(
-        sessionEntity
-      )}.`
-    )
+    PREFIX_REDIS +
+      chalk.greenBright(
+        `Created session for “${session.email}” with entity ID ${await save(
+          sessionEntity
+        )}.`
+      )
   );
   await refresh(session.sessionID);
   return true;
@@ -60,7 +62,7 @@ export const refreshSessionAndFetchUser = async (
 //   if (sessionEntity && sessionEntity.email) {
 //     const email = new Session(sessionEntity).email;
 //     await remove(sessionEntity.entityId);
-//     logger.info(
+//     logger.info(PREFIX_REDIS +
 //       chalk.greenBright(`Deleted session “${email}” (sessionID ${sessionID}).`)
 //     );
 //   } else {

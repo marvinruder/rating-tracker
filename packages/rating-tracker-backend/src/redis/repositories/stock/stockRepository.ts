@@ -11,7 +11,7 @@ import {
   Style,
 } from "rating-tracker-commons";
 import * as signal from "../../../signal/signal.js";
-import logger from "../../../lib/logger.js";
+import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
 
 export const indexStockRepository = () => {
   index();
@@ -23,9 +23,10 @@ export const createStockWithoutReindexing = async (
   const existingStock = await fetch(stock.ticker);
   if (existingStock && existingStock.name) {
     logger.warn(
-      chalk.yellowBright(
-        `Skipping stock “${stock.name}” – existing already (entity ID ${existingStock.entityId}).`
-      )
+      PREFIX_REDIS +
+        chalk.yellowBright(
+          `Skipping stock “${stock.name}” – existing already (entity ID ${existingStock.entityId}).`
+        )
     );
     return false;
   } else {
@@ -33,11 +34,12 @@ export const createStockWithoutReindexing = async (
       ...stock,
     });
     logger.info(
-      chalk.greenBright(
-        `Created stock “${stock.name}” with entity ID ${await save(
-          stockEntity
-        )}.`
-      )
+      PREFIX_REDIS +
+        chalk.greenBright(
+          `Created stock “${stock.name}” with entity ID ${await save(
+            stockEntity
+          )}.`
+        )
     );
     return true;
   }
@@ -71,7 +73,7 @@ export const updateStockWithoutReindexing = async (
   const stockEntity = await fetch(ticker);
   if (stockEntity && stockEntity.name) {
     let signalMessage = `Updates for ${stockEntity.name} (${ticker}):`;
-    logger.info(chalk.greenBright(`Updating stock ${ticker}…`));
+    logger.info(PREFIX_REDIS + chalk.greenBright(`Updating stock ${ticker}…`));
     let isNewData = false;
     for (k in newValues) {
       if (
@@ -82,9 +84,10 @@ export const updateStockWithoutReindexing = async (
         if (newValues[k] !== stockEntity[k]) {
           isNewData = true;
           logger.info(
-            chalk.greenBright(
-              `    Property ${k} updated from ${stockEntity[k]} to ${newValues[k]}`
-            )
+            PREFIX_REDIS +
+              chalk.greenBright(
+                `    Property ${k} updated from ${stockEntity[k]} to ${newValues[k]}`
+              )
           );
           switch (k) {
             case "starRating":
@@ -159,7 +162,7 @@ export const updateStockWithoutReindexing = async (
         signal.sendMessage(signalMessage);
       }
     } else {
-      logger.info(chalk.grey(`No updates for stock ${ticker}.`));
+      logger.info(PREFIX_REDIS + `No updates for stock ${ticker}.`);
     }
   } else {
     throw new APIError(404, `Stock ${ticker} not found.`);
@@ -201,7 +204,8 @@ export const deleteStockWithoutReindexing = async (ticker: string) => {
     const name = new Stock(stockEntity).name;
     await remove(stockEntity.entityId);
     logger.info(
-      chalk.greenBright(`Deleted stock “${name}” (ticker ${ticker}).`)
+      PREFIX_REDIS +
+        chalk.greenBright(`Deleted stock “${name}” (ticker ${ticker}).`)
     );
   } else {
     throw new APIError(404, `Stock ${ticker} not found.`);
