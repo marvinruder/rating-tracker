@@ -1,4 +1,4 @@
-FROM node:19.2.0-alpine3.16 as build
+FROM node:19.3.0-alpine3.16 as build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -28,7 +28,7 @@ RUN mkdir -p /build/app/packages/rating-tracker-backend /build/app/packages/rati
   # should contain the yarnPath
   tail -1 .yarnrc.yml > /build/app/.yarnrc.yml
 
-FROM node:19.2.0-alpine3.16 as run
+FROM node:19.3.0-alpine3.16 as run
 RUN apk add --no-cache dumb-init
 ENV NODE_ENV production
 USER node
