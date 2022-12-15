@@ -156,6 +156,9 @@ server.app.use(
               chalk.yellow(
                 res.locals.user
                   ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})`
+                  : req.cookies.bypassAuthenticationForInternalRequestsToken ===
+                    bypassAuthenticationForInternalRequestsToken
+                  ? "\ufba7 cron"
                   : "\uf21b"
               ) +
               "  " +
