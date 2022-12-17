@@ -4627,10 +4627,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/node", [\
-        ["npm:18.11.16", {\
-          "packageLocation": "./.yarn/cache/@types-node-npm-18.11.16-9ae9c5d49f-23603ecc1c.zip/node_modules/@types/node/",\
+        ["npm:18.11.17", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.11.17-897ad73ae4-1933afd068.zip/node_modules/@types/node/",\
           "packageDependencies": [\
-            ["@types/node", "npm:18.11.16"]\
+            ["@types/node", "npm:18.11.17"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -10895,7 +10895,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.15"],\
             ["@types/jest", "npm:29.2.4"],\
-            ["@types/node", "npm:18.11.16"],\
+            ["@types/node", "npm:18.11.17"],\
             ["@types/selenium-webdriver", "npm:4.1.9"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/validator", "npm:13.7.10"],\
@@ -10965,7 +10965,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mui/lab", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:5.0.0-alpha.112"],\
             ["@mui/material", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:5.11.0"],\
             ["@simplewebauthn/browser", "npm:6.2.2"],\
-            ["@types/node", "npm:18.11.16"],\
+            ["@types/node", "npm:18.11.17"],\
             ["@types/react", "npm:18.0.26"],\
             ["@types/react-dom", "npm:18.0.9"],\
             ["@typescript-eslint/eslint-plugin", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:5.46.1"],\
@@ -12510,7 +12510,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node12", "npm:1.0.11"],\
             ["@tsconfig/node14", "npm:1.0.3"],\
             ["@tsconfig/node16", "npm:1.0.3"],\
-            ["@types/node", "npm:18.11.16"],\
+            ["@types/node", "npm:18.11.17"],\
             ["@types/swc__core", null],\
             ["@types/swc__wasm", null],\
             ["@types/typescript", null],\
@@ -13399,7 +13399,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["vite", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:4.0.1"],\
             ["@types/less", null],\
-            ["@types/node", "npm:18.11.16"],\
+            ["@types/node", "npm:18.11.17"],\
             ["@types/sass", null],\
             ["@types/stylus", null],\
             ["@types/sugarss", null],\
