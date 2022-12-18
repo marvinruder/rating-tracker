@@ -12,7 +12,9 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "conc --kill-others \"yarn workspace rating-tracker-backend dev:ssh\" \"yarn workspace rating-tracker-backend dev:tsc\" \"yarn workspace rating-tracker-backend dev:node\" \"yarn workspace rating-tracker-frontend dev:vite\" -n \",ﯤ,,\" -p \"{name}\" -c grey,#3178C6,#339933,#61DAFB --timings",
+    "dev": "conc --kill-others \"yarn workspace rating-tracker-backend dev:tools\" \"yarn workspace rating-tracker-backend dev:tsc\" \"yarn workspace rating-tracker-backend dev:node\" \"yarn workspace rating-tracker-frontend dev:vite\" -n \",ﯤ,,\" -p \"{name}\" -c grey,#3178C6,#339933,#61DAFB --timings",
+    "dev:server": "conc --kill-others \"yarn workspace rating-tracker-backend dev:tsc\" \"yarn workspace rating-tracker-backend dev:node\" \"yarn workspace rating-tracker-frontend dev:vite\" -n \"ﯤ,,\" -p \"{name}\" -c #3178C6,#339933,#61DAFB --timings",
+    "dev:tools": "conc --kill-others \"yarn workspace rating-tracker-backend dev:tools\" -n \"\" -p \"{name}\" -c grey --timings",
     "test:watch": "yarn workspace rating-tracker-backend test:watch",
     "test": "yarn workspace rating-tracker-backend test",
     "build": "yarn workspaces foreach -pt run build",

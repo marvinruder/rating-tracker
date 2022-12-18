@@ -12,8 +12,12 @@
     "node": "19.2.0"
   },
   "scripts": {
-    "dev:ssh": "ssh -N rating-tracker-port-forwarding",
     "dev:tsc": "tsc --watch --preserveWatchOutput",
+    "dev:nginx": "docker compose -f local-dev/docker-compose.yml up nginx",
+    "dev:redis": "docker compose -f local-dev/docker-compose.yml up redis",
+    "dev:selenium": "docker compose -f local-dev/docker-compose.yml up selenium",
+    "dev:signal": "docker compose -f local-dev/docker-compose.yml up signal",
+    "dev:tools": "conc --kill-others \"yarn dev:nginx\" \"yarn dev:redis\" \"yarn dev:selenium\" \"yarn dev:signal\" -n \",,ﰍ,\" -p \"{name}\" -c #43972A,#D82C20,#43B02A,#4975E8 --timings",
     "dev:node": "node --watch dist/src/server.js",
     "test:watch": "yarn node --experimental-vm-modules $(yarn bin jest) --watch --runInBand",
     "start": "node dist/src/server.js",
