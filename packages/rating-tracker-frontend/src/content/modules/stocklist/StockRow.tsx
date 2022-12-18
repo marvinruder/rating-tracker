@@ -830,10 +830,17 @@ const StockRow = (props: StockRowProps) => {
             min={props.stock.low52w}
             max={props.stock.high52w}
             marks={[
-              { value: props.stock.low52w, label: props.stock.low52w },
-              { value: props.stock.high52w, label: props.stock.high52w },
+              {
+                value: props.stock.low52w,
+                label: props.stock.low52w?.toFixed(2),
+              },
+              {
+                value: props.stock.high52w,
+                label: props.stock.high52w?.toFixed(2),
+              },
             ]}
             valueLabelDisplay="on"
+            valueLabelFormat={(value) => value.toFixed(2)}
             disabled
           />
         )}
