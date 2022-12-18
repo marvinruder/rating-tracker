@@ -26,9 +26,13 @@ import axios from "axios";
 import {
   baseUrl,
   fetchAPI,
+  marketScreenerEndpoint,
   morningstarEndpoint,
   msciEndpoint,
+  refinitivEndpoint,
+  spEndpoint,
   stockAPI,
+  sustainalyticsEndpoint,
 } from "../../../endpoints";
 import {
   countryArray,
@@ -46,26 +50,45 @@ const AddStock = (props: AddStockProps) => {
   const [stock, setStock] = useState<Stock>({
     ticker: "",
     name: "",
+    isin: "",
     country: undefined,
-    morningstarId: "",
-    msciId: "",
   });
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [countryInputValue, setCountryInputValue] = useState<string>("");
   const [tickerError, setTickerError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
+  const [isinError, setIsinError] = useState<boolean>(false);
   const [countryError, setCountryError] = useState<boolean>(false);
   const [morningstarIdRequestInProgress, setMorningstarIdRequestInProgress] =
     useState<boolean>(false);
   const [morningstarIdSet, setMorningstarIdSet] = useState<boolean>(false);
+  const [
+    marketScreenerIdRequestInProgress,
+    setMarketScreenerIdRequestInProgress,
+  ] = useState<boolean>(false);
+  const [marketScreenerIdSet, setMarketScreenerIdSet] =
+    useState<boolean>(false);
   const [msciIdRequestInProgress, setMsciIdRequestInProgress] =
     useState<boolean>(false);
   const [msciIdSet, setMsciIdSet] = useState<boolean>(false);
   const { setNotification } = useNotification();
+  const [ricRequestInProgress, setRicRequestInProgress] =
+    useState<boolean>(false);
+  const [ricSet, setRicSet] = useState<boolean>(false);
+  const [spIdRequestInProgress, setSpIdRequestInProgress] =
+    useState<boolean>(false);
+  const [spIdSet, setSpIdSet] = useState<boolean>(false);
+  const [
+    sustainalyticsIdRequestInProgress,
+    setSustainalyticsIdRequestInProgress,
+  ] = useState<boolean>(false);
+  const [sustainalyticsIdSet, setSustainalyticsIdSet] =
+    useState<boolean>(false);
 
   const validate = () => {
     setTickerError(!stock.ticker);
     setNameError(!stock.name);
+    setIsinError(!stock.isin);
     setCountryError(!stock.country);
   };
 
@@ -83,9 +106,10 @@ const AddStock = (props: AddStockProps) => {
 
   const putStock = () => {
     setRequestInProgress(true);
+    const { name, isin, country } = stock;
     axios
       .put(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
-        params: { name: stock.name, country: stock.country },
+        params: { name, isin, country },
       })
       .then(() => {
         handleNext();
@@ -145,6 +169,48 @@ const AddStock = (props: AddStockProps) => {
       });
   };
 
+  const patchStockMarketScreenerId = () => {
+    setMarketScreenerIdRequestInProgress(true);
+    axios
+      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+        params: { marketScreenerId: stock.marketScreenerId },
+      })
+      .then(() => {
+        setMarketScreenerIdSet(!!stock.marketScreenerId);
+        if (stock.marketScreenerId) {
+          axios
+            .get(baseUrl + fetchAPI + marketScreenerEndpoint, {
+              params: { ticker: stock.ticker, noSkip: true },
+            })
+            .then(() => {})
+            .catch((e) => {
+              setNotification({
+                severity: "error",
+                title: "Error while fetching information from Market Screener",
+                message:
+                  e.response?.status && e.response?.data?.message
+                    ? `${e.response.status}: ${e.response.data.message}`
+                    : e.message ?? "No additional information available.",
+              });
+            })
+            .finally(() => setMarketScreenerIdRequestInProgress(false));
+        } else {
+          setMarketScreenerIdRequestInProgress(false);
+        }
+      })
+      .catch((e) => {
+        setMarketScreenerIdRequestInProgress(false);
+        setNotification({
+          severity: "error",
+          title: "Error while adding Market Screener ID",
+          message:
+            e.response?.status && e.response?.data?.message
+              ? `${e.response.status}: ${e.response.data.message}`
+              : e.message ?? "No additional information available.",
+        });
+      });
+  };
+
   const patchStockMsciId = () => {
     setMsciIdRequestInProgress(true);
     axios
@@ -179,6 +245,132 @@ const AddStock = (props: AddStockProps) => {
         setNotification({
           severity: "error",
           title: "Error while adding MSCI ID",
+          message:
+            e.response?.status && e.response?.data?.message
+              ? `${e.response.status}: ${e.response.data.message}`
+              : e.message ?? "No additional information available.",
+        });
+      });
+  };
+
+  const patchStockRic = () => {
+    setRicRequestInProgress(true);
+    axios
+      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+        params: { ric: stock.ric },
+      })
+      .then(() => {
+        setRicSet(!!stock.ric);
+        if (stock.ric) {
+          axios
+            .get(baseUrl + fetchAPI + refinitivEndpoint, {
+              params: { ticker: stock.ticker, noSkip: true },
+            })
+            .then(() => {})
+            .catch((e) => {
+              setNotification({
+                severity: "error",
+                title: "Error while fetching information from Refinitiv",
+                message:
+                  e.response?.status && e.response?.data?.message
+                    ? `${e.response.status}: ${e.response.data.message}`
+                    : e.message ?? "No additional information available.",
+              });
+            })
+            .finally(() => setRicRequestInProgress(false));
+        } else {
+          setRicRequestInProgress(false);
+        }
+      })
+      .catch((e) => {
+        setRicRequestInProgress(false);
+        setNotification({
+          severity: "error",
+          title: "Error while adding RIC",
+          message:
+            e.response?.status && e.response?.data?.message
+              ? `${e.response.status}: ${e.response.data.message}`
+              : e.message ?? "No additional information available.",
+        });
+      });
+  };
+
+  const patchStockSpId = () => {
+    setSpIdRequestInProgress(true);
+    axios
+      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+        params: { spId: stock.spId },
+      })
+      .then(() => {
+        setSpIdSet(!!stock.spId);
+        if (stock.spId) {
+          axios
+            .get(baseUrl + fetchAPI + spEndpoint, {
+              params: { ticker: stock.ticker, noSkip: true },
+            })
+            .then(() => {})
+            .catch((e) => {
+              setNotification({
+                severity: "error",
+                title: "Error while fetching information from S&P",
+                message:
+                  e.response?.status && e.response?.data?.message
+                    ? `${e.response.status}: ${e.response.data.message}`
+                    : e.message ?? "No additional information available.",
+              });
+            })
+            .finally(() => setSpIdRequestInProgress(false));
+        } else {
+          setSpIdRequestInProgress(false);
+        }
+      })
+      .catch((e) => {
+        setSpIdRequestInProgress(false);
+        setNotification({
+          severity: "error",
+          title: "Error while adding S&P ID",
+          message:
+            e.response?.status && e.response?.data?.message
+              ? `${e.response.status}: ${e.response.data.message}`
+              : e.message ?? "No additional information available.",
+        });
+      });
+  };
+
+  const patchStockSustainalyticsId = () => {
+    setSustainalyticsIdRequestInProgress(true);
+    axios
+      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+        params: { sustainalyticsId: stock.sustainalyticsId },
+      })
+      .then(() => {
+        setSustainalyticsIdSet(!!stock.sustainalyticsId);
+        if (stock.sustainalyticsId) {
+          axios
+            .get(baseUrl + fetchAPI + sustainalyticsEndpoint, {
+              params: { ticker: stock.ticker, noSkip: true },
+            })
+            .then(() => {})
+            .catch((e) => {
+              setNotification({
+                severity: "error",
+                title: "Error while fetching information from Sustainalytics",
+                message:
+                  e.response?.status && e.response?.data?.message
+                    ? `${e.response.status}: ${e.response.data.message}`
+                    : e.message ?? "No additional information available.",
+              });
+            })
+            .finally(() => setSustainalyticsIdRequestInProgress(false));
+        } else {
+          setSustainalyticsIdRequestInProgress(false);
+        }
+      })
+      .catch((e) => {
+        setSustainalyticsIdRequestInProgress(false);
+        setNotification({
+          severity: "error",
+          title: "Error while adding Sustainalytics ID",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`
@@ -246,6 +438,30 @@ const AddStock = (props: AddStockProps) => {
                 label="Stock name"
                 value={stock.name}
                 placeholder={"e.g. Apple Inc."}
+                sx={{ maxWidth: "300px" }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                onChange={(event) => {
+                  setStock((prevStock) => {
+                    return { ...prevStock, isin: event.target.value };
+                  });
+                  if (!stock.country && event.target.value.length >= 2) {
+                    const possibleCountry = event.target.value.substring(0, 2);
+                    if (isCountry(possibleCountry)) {
+                      setStock((prevStock) => {
+                        return { ...prevStock, country: possibleCountry };
+                      });
+                    }
+                  }
+                  setIsinError(false);
+                }}
+                error={isinError}
+                label="ISIN"
+                value={stock.isin}
+                placeholder={"e.g. US0378331005"}
                 sx={{ maxWidth: "300px" }}
                 fullWidth
               />
@@ -350,6 +566,36 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
+                    return {
+                      ...prevStock,
+                      marketScreenerId: event.target.value,
+                    };
+                  });
+                }}
+                label="Market Screener ID"
+                value={stock.marketScreenerId}
+                placeholder={"e.g. APPLE-INC-4849"}
+                sx={{ maxWidth: "300px" }}
+              />
+            </Grid>
+            <Grid item>
+              <LoadingButton
+                size="small"
+                loading={marketScreenerIdRequestInProgress}
+                onClick={patchStockMarketScreenerId}
+                disabled={requestInProgress}
+                variant="contained"
+                startIcon={marketScreenerIdSet ? <LinkIcon /> : <AddLinkIcon />}
+              >
+                {marketScreenerIdSet ? "Update" : "Add"}
+              </LoadingButton>
+            </Grid>
+          </Grid>
+          <Grid container spacing={1} marginTop={0} alignItems="center">
+            <Grid item>
+              <TextField
+                onChange={(event) => {
+                  setStock((prevStock) => {
                     return { ...prevStock, msciId: event.target.value };
                   });
                 }}
@@ -372,6 +618,93 @@ const AddStock = (props: AddStockProps) => {
               </LoadingButton>
             </Grid>
           </Grid>
+          <Grid container spacing={1} marginTop={0} alignItems="center">
+            <Grid item>
+              <TextField
+                onChange={(event) => {
+                  setStock((prevStock) => {
+                    return { ...prevStock, ric: event.target.value };
+                  });
+                }}
+                label="RIC"
+                value={stock.ric}
+                placeholder={"e.g. AAPL.O"}
+                sx={{ maxWidth: "300px" }}
+              />
+            </Grid>
+            <Grid item>
+              <LoadingButton
+                size="small"
+                loading={ricRequestInProgress}
+                onClick={patchStockRic}
+                disabled={requestInProgress}
+                variant="contained"
+                startIcon={ricSet ? <LinkIcon /> : <AddLinkIcon />}
+              >
+                {ricSet ? "Update" : "Add"}
+              </LoadingButton>
+            </Grid>
+          </Grid>
+          <Grid container spacing={1} marginTop={0} alignItems="center">
+            <Grid item>
+              <TextField
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                onChange={(event) => {
+                  if (!isNaN(+event.target.value)) {
+                    setStock((prevStock) => {
+                      return { ...prevStock, spId: +event.target.value };
+                    });
+                  }
+                }}
+                label="S&P ID"
+                value={stock.spId}
+                placeholder={"e.g. 4004205"}
+                sx={{ maxWidth: "300px" }}
+              />
+            </Grid>
+            <Grid item>
+              <LoadingButton
+                size="small"
+                loading={spIdRequestInProgress}
+                onClick={patchStockSpId}
+                disabled={requestInProgress}
+                variant="contained"
+                startIcon={spIdSet ? <LinkIcon /> : <AddLinkIcon />}
+              >
+                {spIdSet ? "Update" : "Add"}
+              </LoadingButton>
+            </Grid>
+          </Grid>
+          <Grid container spacing={1} marginTop={0} alignItems="center">
+            <Grid item>
+              <TextField
+                onChange={(event) => {
+                  setStock((prevStock) => {
+                    return {
+                      ...prevStock,
+                      sustainalyticsId: event.target.value,
+                    };
+                  });
+                }}
+                label="Sustainalytics ID"
+                value={stock.sustainalyticsId}
+                placeholder={"e.g. apple-inc/1007903183"}
+                sx={{ maxWidth: "300px" }}
+              />
+            </Grid>
+            <Grid item>
+              <LoadingButton
+                size="small"
+                loading={sustainalyticsIdRequestInProgress}
+                onClick={patchStockSustainalyticsId}
+                disabled={requestInProgress}
+                variant="contained"
+                startIcon={sustainalyticsIdSet ? <LinkIcon /> : <AddLinkIcon />}
+              >
+                {sustainalyticsIdSet ? "Update" : "Add"}
+              </LoadingButton>
+            </Grid>
+          </Grid>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             You can always add more data providers later.
           </Typography>
@@ -385,7 +718,14 @@ const AddStock = (props: AddStockProps) => {
           variant="contained"
           onClick={getAndShowStock}
           sx={{ mt: 1, ml: 1, float: "right" }}
-          disabled={morningstarIdRequestInProgress || msciIdRequestInProgress}
+          disabled={
+            morningstarIdRequestInProgress ||
+            marketScreenerIdRequestInProgress ||
+            msciIdRequestInProgress ||
+            ricRequestInProgress ||
+            spIdRequestInProgress ||
+            sustainalyticsIdRequestInProgress
+          }
           startIcon={<AutoGraphIcon />}
         >
           Show Stock

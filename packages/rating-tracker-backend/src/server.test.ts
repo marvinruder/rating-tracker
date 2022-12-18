@@ -6,14 +6,21 @@ jest.unstable_mockModule(
 );
 
 jest.unstable_mockModule(
-  "./redis/repositories/stock/stockRepositoryBase",
+  "./redis/repositories/resource/resourceRepositoryBase",
   async () =>
-    await import("./redis/repositories/stock/__mocks__/stockRepositoryBase")
+    await import(
+      "./redis/repositories/resource/__mocks__/resourceRepositoryBase"
+    )
 );
 jest.unstable_mockModule(
   "./redis/repositories/session/sessionRepositoryBase",
   async () =>
     await import("./redis/repositories/session/__mocks__/sessionRepositoryBase")
+);
+jest.unstable_mockModule(
+  "./redis/repositories/stock/stockRepositoryBase",
+  async () =>
+    await import("./redis/repositories/stock/__mocks__/stockRepositoryBase")
 );
 jest.unstable_mockModule(
   "./redis/repositories/user/userRepositoryBase",
@@ -152,13 +159,15 @@ describe("Stock API", () => {
         .get(`/api/stock/list?sortBy=${sortCriterion}`)
         .set("Cookie", ["authToken=exampleSessionID"]);
       expect(res.status).toBe(200);
-      if (sortCriterion === "morningstarFairValue") {
+      if (
+        ["morningstarFairValue", "analystTargetPrice"].includes(sortCriterion)
+      ) {
         for (let i = 0; i < res.body.count - 1; i++) {
           if (
-            res.body.stocks[i].morningstarFairValue &&
-            res.body.stocks[i + 1].morningstarFairValue &&
-            typeof res.body.stocks[i].morningstarFairValue == "number" &&
-            typeof res.body.stocks[i + 1].morningstarFairValue == "number" &&
+            res.body.stocks[i][sortCriterion] &&
+            res.body.stocks[i + 1][sortCriterion] &&
+            typeof res.body.stocks[i][sortCriterion] == "number" &&
+            typeof res.body.stocks[i + 1][sortCriterion] == "number" &&
             res.body.stocks[i].lastClose &&
             res.body.stocks[i + 1].lastClose &&
             typeof res.body.stocks[i].lastClose == "number" &&
@@ -254,11 +263,11 @@ describe("Stock API", () => {
 
   it("creates a stock", async () => {
     await expectRouteToBePrivate(
-      "/api/stock/NEWSTOCK?name=New%20Stock&country=GB",
+      "/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321",
       requestWithSupertest.put
     );
     let res = await requestWithSupertest
-      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB")
+      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(201);
     await expectStockListLengthToBe(12);
@@ -272,7 +281,7 @@ describe("Stock API", () => {
 
     // attempting to create the same stock again results in an error
     res = await requestWithSupertest
-      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB")
+      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(409);
     await expectStockListLengthToBe(12);

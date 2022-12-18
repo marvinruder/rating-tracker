@@ -7,8 +7,18 @@ export const sortableAttributeArray = [
   "priceEarningRatio",
   "morningstarFairValue",
   "52w",
+  "analystConsensus",
+  "analystTargetPrice",
   "msciESGRating",
   "msciTemperature",
+  "refinitivESGScore",
+  "refinitivEmissions",
+  "spESGScore",
+  "sustainalyticsESGRisk",
 ] as const;
 
 export type SortableAttribute = typeof sortableAttributeArray[number];
+
+export function isSortableAttribute(s: string): s is SortableAttribute {
+  return sortableAttributeArray.includes(s as SortableAttribute);
+}

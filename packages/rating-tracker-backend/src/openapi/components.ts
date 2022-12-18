@@ -61,6 +61,10 @@ export const components: OpenAPIV3.ComponentsObject = {
           type: "string",
           example: "Apple Inc.",
         },
+        isin: {
+          type: "string",
+          example: "US0378331005",
+        },
         country: {
           $ref: "#/components/schemas/Country",
         },
@@ -117,6 +121,27 @@ export const components: OpenAPIV3.ComponentsObject = {
           type: "number",
           example: 182.13,
         },
+        marketScreenerId: {
+          type: "string",
+          example: "APPLE-INC-4849",
+        },
+        marketScreenerLastFetch: {
+          type: "string",
+          format: "date-time",
+          example: "2022-11-24T03:30:15.908Z",
+        },
+        analystConsensus: {
+          type: "number",
+          example: 8.1,
+        },
+        analystCount: {
+          type: "integer",
+          example: 45,
+        },
+        analystTargetPrice: {
+          type: "number",
+          example: 172.51,
+        },
         msciId: {
           type: "string",
           example: "apple-inc/IID000000002157615",
@@ -133,8 +158,46 @@ export const components: OpenAPIV3.ComponentsObject = {
           type: "number",
           example: 1.7,
         },
+        ric: {
+          type: "string",
+          example: "AAPL.O",
+        },
+        refinitivLastFetch: {
+          type: "string",
+          format: "date-time",
+          example: "2022-11-24T03:30:15.908Z",
+        },
+        refinitivESGScore: {
+          type: "integer",
+          example: 80,
+        },
+        refinitivEmissions: {
+          type: "integer",
+          example: 97,
+        },
+        spId: {
+          type: "integer",
+          example: 4004205,
+        },
+        spLastFetch: {
+          type: "string",
+          format: "date-time",
+          example: "2022-11-24T03:30:15.908Z",
+        },
+        spESGScore: {
+          type: "integer",
+          example: 40,
+        },
+        sustainalyticsId: {
+          type: "string",
+          example: "apple-inc/1007903183",
+        },
+        sustainalyticsESGRisk: {
+          type: "number",
+          example: 16.7,
+        },
       },
-      required: ["ticker", "name"],
+      required: ["ticker", "name", "country", "isin"],
     },
     SortableAttribute: {
       type: "string",

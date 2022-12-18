@@ -1,8 +1,6 @@
 import { StockEntity, stockSchema } from "../../../../models/stock.js";
 import exampleStocks from "../../../../lib/exampleStocks.js";
 
-// export default import.meta.jest.createMockFromModule("stockRepository");
-
 let stockRepository: Map<string, StockEntity>;
 
 export const initStockRepository = () => {
@@ -15,8 +13,6 @@ export const initStockRepository = () => {
 };
 
 initStockRepository();
-
-export const index = () => {};
 
 export const fetch = (id: string) => {
   return stockRepository.get(id);

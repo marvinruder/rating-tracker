@@ -61,6 +61,10 @@ const put: OpenAPIV3.OperationObject = {
       required: true,
     },
     {
+      ...stock.isin,
+      required: true,
+    },
+    {
       ...stock.country,
       required: true,
       schema: {
@@ -98,7 +102,23 @@ const patch: OpenAPIV3.OperationObject = {
       allowEmptyValue: true,
     },
     {
+      ...stock.marketScreenerId,
+      allowEmptyValue: true,
+    },
+    {
       ...stock.msciId,
+      allowEmptyValue: true,
+    },
+    {
+      ...stock.ric,
+      allowEmptyValue: true,
+    },
+    {
+      ...stock.spId,
+      allowEmptyValue: true,
+    },
+    {
+      ...stock.sustainalyticsId,
       allowEmptyValue: true,
     },
   ],
