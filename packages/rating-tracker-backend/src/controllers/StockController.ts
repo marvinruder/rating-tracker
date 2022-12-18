@@ -117,8 +117,12 @@ class StockController {
         case "analystTargetPrice":
           stocks.sort(
             (a, b) =>
-              (a[sortBy] && a.lastClose ? a.lastClose / a[sortBy] : 0) -
-              (b[sortBy] && b.lastClose ? b.lastClose / b[sortBy] : 0)
+              (a[sortBy] && a.lastClose
+                ? a.lastClose / a[sortBy]
+                : Number.MAX_VALUE) -
+              (b[sortBy] && b.lastClose
+                ? b.lastClose / b[sortBy]
+                : Number.MAX_VALUE)
           );
           break;
         case "52w":
