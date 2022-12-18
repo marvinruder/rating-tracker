@@ -399,6 +399,7 @@ class FetchController {
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
         if (req.query.ticker) {
+          await driver.quit();
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e.message}`
@@ -574,6 +575,7 @@ class FetchController {
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
         if (req.query.ticker) {
+          await driver.quit();
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e.message}`
@@ -715,6 +717,7 @@ class FetchController {
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
         if (req.query.ticker) {
+          await driver.quit();
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
@@ -847,6 +850,7 @@ class FetchController {
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
         if (req.query.ticker) {
+          await driver.quit();
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e.message}`
@@ -940,6 +944,7 @@ class FetchController {
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
         if (req.query.ticker) {
+          await driver.quit();
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e.message}`
