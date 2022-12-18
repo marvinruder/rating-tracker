@@ -107,7 +107,7 @@ class FetchController {
         !req.query.noSkip &&
         stock.morningstarLastFetch &&
         new Date().getTime() - stock.morningstarLastFetch.getTime() <
-          1000 * 60 * 60 * 12 // 12 hours
+          1000 * 60 * 60 * 12
       ) {
         logger.info(
           PREFIX_CHROME +
@@ -465,7 +465,7 @@ class FetchController {
         !req.query.noSkip &&
         stock.marketScreenerLastFetch &&
         new Date().getTime() - stock.marketScreenerLastFetch.getTime() <
-          1000 * 60 * 60 * 24
+          1000 * 60 * 60 * 12
       ) {
         logger.info(
           PREFIX_CHROME +
