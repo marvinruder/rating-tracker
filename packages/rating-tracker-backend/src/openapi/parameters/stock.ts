@@ -36,6 +36,7 @@ const sortDesc: OpenAPIV3.ParameterObject = {
   description: "Whether to sort descending.",
   schema: {
     type: "boolean",
+    example: false,
   },
 };
 

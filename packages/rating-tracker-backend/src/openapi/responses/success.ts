@@ -11,6 +11,17 @@ const okObject: OpenAPIV3.ResponseObject = {
   },
 };
 
+const okSVG: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "image/svg+xml": {
+      schema: {
+        type: "object",
+      },
+    },
+  },
+};
+
 const okStock: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -78,6 +89,7 @@ const noContent: OpenAPIV3.ResponseObject = {
 
 export {
   okObject,
+  okSVG,
   okStock,
   okStockList,
   okStockListWithCount,

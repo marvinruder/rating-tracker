@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import chalk from "chalk";
 import APIError from "../../../lib/apiError.js";
 import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
@@ -14,6 +13,7 @@ export const createResource = async (
   ttlInSeconds?: number
 ): Promise<boolean> => {
   const existingResource = await fetch(resource.url);
+  /* istanbul ignore next */
   if (existingResource && existingResource.content) {
     logger.warn(
       PREFIX_REDIS +
@@ -29,9 +29,7 @@ export const createResource = async (
   logger.info(
     PREFIX_REDIS +
       chalk.greenBright(
-        `Created resource for “${resource.url}” with entity ID ${await save(
-          resourceEntity
-        )}.`
+        `Created resource with entity ID ${await save(resourceEntity)}.`
       )
   );
   ttlInSeconds && (await expire(resource.url, ttlInSeconds));

@@ -11,6 +11,7 @@ import * as sustainalyticsEndpoint from "./paths/fetch/sustainalyticsEndpoint.js
 import * as registerEndpoint from "./paths/auth/registerEndpoint.js";
 import * as sessionEndpoint from "./paths/sessionEndpoint.js";
 import * as statusEndpoint from "./paths/statusEndpoint.js";
+import * as logoEndpoint from "./paths/stock/logo/index.js";
 import * as stockEndpoint from "./paths/stock/index.js";
 import * as signInEndpoint from "./paths/auth/signInEndpoint.js";
 import { servers } from "./servers.js";
@@ -37,6 +38,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     "/api/stock/list": listEndpoint,
     "/api/stock/fillWithExampleData": fillWithExampleDataEndpoint,
     "/api/stock/{ticker}": stockEndpoint,
+    "/api/stock/logo/{ticker}": logoEndpoint,
     "/api/fetch/morningstar": morningstarEndpoint,
     "/api/fetch/marketscreener": marketScreenerEndpoint,
     "/api/fetch/msci": msciEndpoint,

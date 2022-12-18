@@ -17,7 +17,7 @@ const get: OpenAPIV3.OperationObject = {
         "The ticker of a stock for which information is to be fetched. If not present, all stocks known to the system will be used",
     },
     fetch.detach,
-    fetch.skip,
+    fetch.noSkip,
   ],
   responses: {
     "200": okStockList,
