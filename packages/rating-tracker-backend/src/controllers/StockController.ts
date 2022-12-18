@@ -2,11 +2,9 @@ import { Request, Response } from "express";
 import { Stock } from "../models/stock.js";
 import exampleStocks from "../lib/exampleStocks.js";
 import {
-  createStockWithoutReindexing,
+  createStock,
   deleteStock,
   readAllStocks,
-  indexStockRepository,
-  createStock,
   updateStock,
   readStock,
 } from "../redis/repositories/stock/stockRepository.js";
@@ -16,10 +14,10 @@ import {
   isCountry,
   isIndustry,
   isSize,
+  isSortableAttribute,
   isStyle,
   msciESGRatingArray,
   sizeArray,
-  SortableAttribute,
   styleArray,
 } from "rating-tracker-commons";
 import APIError from "../lib/apiError.js";
@@ -80,8 +78,9 @@ class StockController {
     const length = stocks.length;
 
     // Sorting
-    if (req.query.sortBy) {
-      switch (req.query.sortBy as SortableAttribute) {
+    const sortBy = req.query.sortBy;
+    if (sortBy && typeof sortBy === "string" && isSortableAttribute(sortBy)) {
+      switch (sortBy) {
         case "name":
           stocks.sort((a, b) =>
             a.name.localeCompare(b.name, "en", { usage: "sort" })
@@ -98,30 +97,27 @@ class StockController {
           );
           break;
         case "starRating":
-          stocks.sort((a, b) => (a.starRating ?? 0) - (b.starRating ?? 0));
-          break;
         case "dividendYieldPercent":
-          stocks.sort(
-            (a, b) =>
-              (a.dividendYieldPercent ?? 0) - (b.dividendYieldPercent ?? 0)
-          );
+        case "analystConsensus":
+        case "refinitivESGScore":
+        case "refinitivEmissions":
+        case "spESGScore":
+          stocks.sort((a, b) => (a[sortBy] ?? 0) - (b[sortBy] ?? 0));
           break;
         case "priceEarningRatio":
+        case "msciTemperature":
+        case "sustainalyticsESGRisk":
           stocks.sort(
-            (a, b) => (a.priceEarningRatio ?? 0) - (b.priceEarningRatio ?? 0)
+            (a, b) =>
+              (a[sortBy] ?? Number.MAX_VALUE) - (b[sortBy] ?? Number.MAX_VALUE)
           );
           break;
         case "morningstarFairValue":
+        case "analystTargetPrice":
           stocks.sort(
             (a, b) =>
-              (a.morningstarFairValue && a.lastClose
-                ? a.lastClose / a.morningstarFairValue
-                : /* istanbul ignore next */
-                  0) -
-              (b.morningstarFairValue && b.lastClose
-                ? b.lastClose / b.morningstarFairValue
-                : /* istanbul ignore next */
-                  0)
+              (a[sortBy] && a.lastClose ? a.lastClose / a[sortBy] : 0) -
+              (b[sortBy] && b.lastClose ? b.lastClose / b[sortBy] : 0)
           );
           break;
         case "52w":
@@ -148,11 +144,6 @@ class StockController {
                 : 7)
           );
           break;
-        case "msciTemperature":
-          stocks.sort(
-            (a, b) => (a.msciTemperature ?? 4.0) - (b.msciTemperature ?? 4.0)
-          );
-          break;
       }
       if (String(req.query.sortDesc).toLowerCase() === "true") {
         stocks.reverse();
@@ -175,22 +166,22 @@ class StockController {
 
   async fillWithExampleData(res: Response) {
     for (const stock of exampleStocks) {
-      await createStockWithoutReindexing(stock);
+      await createStock(stock);
     }
-    indexStockRepository();
     return res.status(201).end();
   }
 
   async put(req: Request, res: Response) {
     const ticker = req.params[0];
-    const { name, country } = req.query;
+    const { name, country, isin } = req.query;
     if (
       typeof ticker === "string" &&
       typeof name === "string" &&
       typeof country === "string" &&
-      isCountry(country)
+      isCountry(country) &&
+      typeof isin === "string"
     ) {
-      if (await createStock({ ticker, name, country })) {
+      if (await createStock({ ticker, name, country, isin })) {
         return res.status(201).end();
       } else {
         throw new APIError(409, "A stock with that ticker exists already.");
@@ -200,7 +191,16 @@ class StockController {
 
   async patch(req: Request, res: Response) {
     const ticker = req.params[0];
-    const { name, country, morningstarId, msciId } = req.query;
+    const {
+      name,
+      country,
+      morningstarId,
+      marketScreenerId,
+      msciId,
+      ric,
+      spId,
+      sustainalyticsId,
+    } = req.query;
     if (
       typeof ticker === "string" &&
       (typeof name === "string" || typeof name === "undefined") &&
@@ -208,9 +208,24 @@ class StockController {
         typeof country === "undefined") &&
       (typeof morningstarId === "string" ||
         typeof morningstarId === "undefined") &&
-      (typeof msciId === "string" || typeof msciId === "undefined")
+      (typeof marketScreenerId === "string" ||
+        typeof marketScreenerId === "undefined") &&
+      (typeof msciId === "string" || typeof msciId === "undefined") &&
+      (typeof ric === "string" || typeof ric === "undefined") &&
+      (typeof spId === "number" || typeof spId === "undefined") &&
+      (typeof sustainalyticsId === "string" ||
+        typeof sustainalyticsId === "undefined")
     ) {
-      await updateStock(ticker, { name, country, morningstarId, msciId });
+      await updateStock(ticker, {
+        name,
+        country,
+        morningstarId,
+        marketScreenerId,
+        msciId,
+        ric,
+        spId,
+        sustainalyticsId,
+      });
       return res.status(204).end();
     }
   }

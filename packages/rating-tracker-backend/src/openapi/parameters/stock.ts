@@ -59,6 +59,16 @@ const name: OpenAPIV3.ParameterObject = {
   },
 };
 
+const isin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "isin",
+  description: "The ISIN of a stock.",
+  schema: {
+    type: "string",
+    example: "US0378331005",
+  },
+};
+
 const country: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "country",
@@ -113,6 +123,16 @@ const morningstarId: OpenAPIV3.ParameterObject = {
   },
 };
 
+const marketScreenerId: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "marketScreenerId",
+  description: "The identifier of a stock used by Market Screener",
+  schema: {
+    type: "string",
+    example: "APPLE-INC-4849",
+  },
+};
+
 const msciId: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciId",
@@ -123,22 +143,33 @@ const msciId: OpenAPIV3.ParameterObject = {
   },
 };
 
-const msciESGRating: OpenAPIV3.ParameterObject = {
+const ric: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "msciESGRating",
-  description: "The MSCI ESG rating of a stock.",
+  name: "ric",
+  description: "The Reuters Instrument Code of a stock used by Refintiv",
   schema: {
-    $ref: "#/components/schemas/MSCIESGRating",
+    type: "string",
+    example: "AAPL.O",
   },
 };
 
-const msciTemperature: OpenAPIV3.ParameterObject = {
+const spId: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "msciTemperature",
-  description: "The MSCI Implied Temperature Rise of a stock.",
+  name: "spId",
+  description: "The identifier of a stock used by Standard & Poor's",
   schema: {
-    type: "number",
-    example: 1.7,
+    type: "integer",
+    example: "4004205",
+  },
+};
+
+const sustainalyticsId: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "sustainalyticsId",
+  description: "The identifier of a stock used by Sustainalytics",
+  schema: {
+    type: "string",
+    example: "apple-inc/1007903183",
   },
 };
 
@@ -149,12 +180,15 @@ export {
   sortDesc,
   ticker,
   name,
+  isin,
   country,
   industry,
   size,
   style,
   morningstarId,
+  marketScreenerId,
   msciId,
-  msciESGRating,
-  msciTemperature,
+  ric,
+  spId,
+  sustainalyticsId,
 };

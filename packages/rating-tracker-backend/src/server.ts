@@ -266,12 +266,45 @@ if (process.env.AUTO_FETCH_SCHEDULE) {
           },
         }
       );
+      await axios.get(
+        `http://localhost:${process.env.PORT}/api/fetch/marketscreener`,
+        {
+          params: { detach: "true" },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        }
+      );
       await axios.get(`http://localhost:${process.env.PORT}/api/fetch/msci`, {
         params: { detach: "true" },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },
       });
+      await axios.get(
+        `http://localhost:${process.env.PORT}/api/fetch/refinitiv`,
+        {
+          params: { detach: "true" },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        }
+      );
+      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/sp`, {
+        params: { detach: "true" },
+        headers: {
+          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+        },
+      });
+      await axios.get(
+        `http://localhost:${process.env.PORT}/api/fetch/sustainalytics`,
+        {
+          params: { detach: "true" },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        }
+      );
     },
     null,
     true

@@ -1,10 +1,16 @@
 import { Stock } from "../models/stock.js";
 
 const exampleStocks: Stock[] = [
-  { ticker: "exampleNULL", name: "Null Inc." },
+  {
+    ticker: "exampleNULL",
+    name: "Null Inc.",
+    isin: "XX0000000000",
+    country: "AX",
+  },
   {
     ticker: "exampleKGX",
     name: "Kion Group AG",
+    isin: "DE000KGX8881",
     country: "DE",
     industry: "FarmHeavyConstructionMachinery",
     size: "Mid",
@@ -24,6 +30,7 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleALV",
     name: "Allianz SE",
+    isin: "DE0008404005",
     country: "DE",
     industry: "InsuranceDiversified",
     size: "Large",
@@ -47,6 +54,7 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleIBE",
     name: "Iberdrola SA",
+    isin: "ES0144580Y14",
     country: "ES",
     industry: "UtilitiesDiversified",
     size: "Large",
@@ -70,6 +78,7 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleMELI",
     name: "MercadoLibre Inc",
+    isin: "US58733R1023",
     country: "UY",
     industry: "InternetRetail",
     size: "Large",
@@ -93,6 +102,7 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleNOVO B",
     name: "Novo Nordisk A/S",
+    isin: "DK0060534915",
     country: "DK",
     industry: "Biotechnology",
     size: "Large",
@@ -116,6 +126,7 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleBN",
     name: "Danone SA",
+    isin: "FR0000120644",
     country: "FR",
     industry: "PackagedFoods",
     size: "Large",
@@ -139,6 +150,7 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleORSTED",
     name: "Ørsted A/S",
+    isin: "DK0060094928",
     country: "DK",
     industry: "UtilitiesRenewable",
     size: "Large",
@@ -162,6 +174,7 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleTSM",
     name: "Taiwan Semiconductor Manufacturing Co Ltd",
+    isin: "US8740391003",
     country: "TW",
     industry: "Semiconductors",
     size: "Large",
@@ -185,6 +198,7 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleNEM",
     name: "Newmont Corp",
+    isin: "US6516391066",
     country: "US",
     industry: "Gold",
     size: "Mid",
@@ -207,6 +221,7 @@ const exampleStocks: Stock[] = [
   {
     ticker: "exampleAAPL",
     name: "Apple Inc",
+    isin: "US0378331005",
     country: "US",
     industry: "ConsumerElectronics",
     size: "Large",

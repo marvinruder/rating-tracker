@@ -14,17 +14,22 @@ import {
   isSize,
   isStyle,
   MSCIESGRating,
+  Resource,
   Size,
   Style,
 } from "rating-tracker-commons";
 import {
-  indexStockRepository,
   readAllStocks,
   readStock,
-  updateStockWithoutReindexing,
+  updateStock,
 } from "../redis/repositories/stock/stockRepository.js";
 import * as signal from "../signal/signal.js";
 import logger, { PREFIX_CHROME } from "../lib/logger.js";
+import {
+  createResource,
+  readResource,
+} from "../redis/repositories/resource/resourceRepository.js";
+import axios from "axios";
 
 const XPATH_INDUSTRY =
   "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.." as const;
@@ -33,6 +38,18 @@ const XPATH_SIZE_STYLE =
 const XPATH_STAR_RATING = "//*/img[@class='starsImg']" as const;
 const XPATH_MORNINGSTAR_FAIR_VALUE =
   "//*/datapoint[@id='FairValueEstimate']" as const;
+
+const XPATH_CONSENSUS_DIV =
+  "//*/div[@class='tabTitleLeftWhite']/b[contains(text(), 'Consensus')]/../../../.." as const;
+const XPATH_CONSENSUS_NOTE =
+  "//div/table/tbody/tr/td/div/div[starts-with(@title, 'Note : ')]" as const;
+const XPATH_ANALYST_COUNT =
+  "//div/table/tbody/tr/td[contains(text(), 'Number of Analysts')]/following-sibling::td" as const;
+const XPATH_SPREAD_AVERAGE_TARGET =
+  "//div/table/tbody/tr/td[contains(text(), 'Spread / Average Target')]/following-sibling::td" as const;
+
+const URL_SUSTAINALYTICS =
+  "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings";
 
 class FetchController {
   getDriver(pageLoadStrategy: "normal" | "eager" | "none" = "eager") {
@@ -92,17 +109,15 @@ class FetchController {
         new Date().getTime() - stock.morningstarLastFetch.getTime() <
           1000 * 60 * 60 * 12 // 12 hours
       ) {
-        logger.warn(
+        logger.info(
           PREFIX_CHROME +
-            chalk.yellowBright(
-              `Stock ${
-                stock.ticker
-              }: Skipping since last successful fetch was ${formatDistance(
-                stock.morningstarLastFetch.getTime(),
-                new Date().getTime(),
-                { addSuffix: true }
-              )}`
-            )
+            `Stock ${
+              stock.ticker
+            }: Skipping since last successful fetch was ${formatDistance(
+              stock.morningstarLastFetch.getTime(),
+              new Date().getTime(),
+              { addSuffix: true }
+            )}`
         );
         continue;
       }
@@ -124,7 +139,7 @@ class FetchController {
           `https://tools.morningstar.co.uk/uk/stockreport/default.aspx?Site=us&id=${stock.morningstarId}&LanguageId=en-US&SecurityToken=${stock.morningstarId}]3]0]E0WWE$$ALL`
         );
 
-        let errorMessage = `Error while fetching Morningstar information for ${stock.name} (${stock.ticker}):`;
+        let errorMessage = `Error while fetching Morningstar data for ${stock.name} (${stock.ticker}):`;
 
         try {
           const industryString = (
@@ -189,9 +204,6 @@ class FetchController {
               .findElement(By.xpath(XPATH_STAR_RATING))
               .getAttribute("alt")
           ).replaceAll(/\D/g, "");
-          if (isNaN(starRating)) {
-            starRating = 0;
-          }
         } catch (e) {
           logger.warn(
             PREFIX_CHROME +
@@ -367,39 +379,40 @@ class FetchController {
         if (errorMessage.includes("\n")) {
           signal.sendMessage(errorMessage);
         }
-        await updateStockWithoutReindexing(stock.ticker, {
-          industry: industry,
-          size: size,
-          style: style,
+        await updateStock(stock.ticker, {
+          industry,
+          size,
+          style,
           morningstarLastFetch: errorMessage.includes("\n")
             ? undefined
             : new Date(),
-          starRating: starRating,
-          dividendYieldPercent: dividendYieldPercent,
-          priceEarningRatio: priceEarningRatio,
-          currency: currency,
-          lastClose: lastClose,
-          morningstarFairValue: morningstarFairValue,
-          marketCap: marketCap,
-          low52w: low52w,
-          high52w: high52w,
+          starRating,
+          dividendYieldPercent,
+          priceEarningRatio,
+          currency,
+          lastClose,
+          morningstarFairValue,
+          marketCap,
+          low52w,
+          high52w,
         });
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
         if (req.query.ticker) {
+          await driver.quit();
           throw new APIError(
             502,
-            `Stock ${stock.ticker}: Unable to fetch Morningstar information: ${e.message}`
+            `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e.message}`
           );
         }
         logger.warn(
           PREFIX_CHROME +
             chalk.yellowBright(
-              `Stock ${stock.ticker}: Unable to fetch Morningstar information: ${e.message}`
+              `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e.message}`
             )
         );
         signal.sendMessage(
-          `Stock ${stock.ticker}: Unable to fetch Morningstar information: ${e.message}`
+          `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e.message}`
         );
       }
     }
@@ -407,7 +420,182 @@ class FetchController {
     if (updatedStocks.length === 0) {
       return res.status(204).end();
     } else {
-      indexStockRepository();
+      return res.status(200).json(updatedStocks);
+    }
+  }
+
+  async fetchMarketScreenerData(req: Request, res: Response) {
+    let stocks: Stock[];
+
+    if (req.query.ticker) {
+      const ticker = req.query.ticker;
+      if (typeof ticker === "string") {
+        stocks = [await readStock(ticker)];
+        if (!stocks[0].marketScreenerId) {
+          throw new APIError(
+            404,
+            `Stock ${ticker} does not have a MarketScreener ID.`
+          );
+        }
+      }
+    } else {
+      stocks = (await readAllStocks()).map(
+        (stockEntity) => new Stock(stockEntity)
+      );
+    }
+
+    stocks = stocks
+      .filter((stock) => stock.marketScreenerId)
+      .sort(
+        (a, b) =>
+          (a.marketScreenerLastFetch ?? new Date(0)).getTime() -
+          (b.marketScreenerLastFetch ?? new Date(0)).getTime()
+      );
+    if (stocks.length === 0) {
+      return res.status(204).end();
+    }
+    if (req.query.detach) {
+      res.status(202);
+    }
+
+    const updatedStocks: Stock[] = [];
+    const driver = this.getDriver();
+    for await (const stock of stocks) {
+      if (
+        !req.query.noSkip &&
+        stock.marketScreenerLastFetch &&
+        new Date().getTime() - stock.marketScreenerLastFetch.getTime() <
+          1000 * 60 * 60 * 24
+      ) {
+        logger.info(
+          PREFIX_CHROME +
+            `Stock ${
+              stock.ticker
+            }: Skipping MarketScreener fetch because last fetch was ${formatDistance(
+              stock.marketScreenerLastFetch.getTime(),
+              new Date().getTime(),
+              { addSuffix: true }
+            )}`
+        );
+        continue;
+      }
+      let analystConsensus: number;
+      let analystCount: number;
+      let analystTargetPrice: number;
+
+      try {
+        await driver.get(
+          `https://www.marketscreener.com/quote/stock/${stock.marketScreenerId}/`
+        );
+
+        let errorMessage = `Error while fetching MarketScreener data for stock ${stock.ticker}:`;
+
+        const consensusTableDiv = await driver.findElement(
+          By.xpath(XPATH_CONSENSUS_DIV)
+        );
+
+        try {
+          analystConsensus = +(
+            await (
+              await consensusTableDiv.findElement(
+                By.xpath(XPATH_CONSENSUS_NOTE)
+              )
+            ).getAttribute("title")
+          ).match(/(\d+(\.\d+)?)/g)[0];
+        } catch (e) {
+          logger.warn(
+            PREFIX_CHROME +
+              chalk.yellowBright(
+                `Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e.message}`
+              )
+          );
+          if (stock.analystConsensus) {
+            errorMessage += `\n\tUnable to extract Analyst Consensus: ${e.message}`;
+          }
+        }
+
+        try {
+          analystCount = +(await (
+            await consensusTableDiv.findElement(By.xpath(XPATH_ANALYST_COUNT))
+          ).getText());
+        } catch (e) {
+          logger.warn(
+            PREFIX_CHROME +
+              chalk.yellowBright(
+                `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e.message}`
+              )
+          );
+          if (stock.analystCount) {
+            errorMessage += `\n\tUnable to extract Analyst Count: ${e.message}`;
+          }
+        }
+
+        try {
+          if (!stock.lastClose) {
+            throw new Error(
+              "No Last Close price available to compare spread against."
+            );
+          }
+          analystTargetPrice =
+            stock.lastClose *
+            (+(
+              await (
+                await consensusTableDiv.findElement(
+                  By.xpath(XPATH_SPREAD_AVERAGE_TARGET)
+                )
+              ).getText()
+            )
+              .replaceAll(",", ".")
+              .match(/(\-)?\d+(\.\d+)?/g)[0] /
+              100 +
+              1);
+        } catch (e) {
+          logger.warn(
+            PREFIX_CHROME +
+              chalk.yellowBright(
+                `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e.message}`
+              )
+          );
+          if (stock.analystTargetPrice) {
+            errorMessage += `\n\tUnable to extract Analyst Target Price: ${e.message}`;
+          }
+        }
+
+        if (errorMessage.includes("\n")) {
+          signal.sendMessage(errorMessage);
+        }
+        await updateStock(stock.ticker, {
+          marketScreenerLastFetch: errorMessage.includes("\n")
+            ? undefined
+            : new Date(),
+          analystConsensus,
+          analystCount,
+          analystTargetPrice,
+        });
+        updatedStocks.push(await readStock(stock.ticker));
+      } catch (e) {
+        if (req.query.ticker) {
+          await driver.quit();
+          throw new APIError(
+            502,
+            `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e.message}`
+          );
+        }
+        logger.warn(
+          PREFIX_CHROME +
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e.message}`
+            )
+        );
+        signal.sendMessage(
+          `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e.message}`
+        );
+      }
+    }
+    await driver.quit();
+    if (updatedStocks.length === 0) {
+      return res.status(204).end();
+    } else {
       return res.status(200).json(updatedStocks);
     }
   }
@@ -450,19 +638,17 @@ class FetchController {
         !req.query.noSkip &&
         stock.msciLastFetch &&
         new Date().getTime() - stock.msciLastFetch.getTime() <
-          1000 * 60 * 60 * 24 * 7 // 7 days
+          1000 * 60 * 60 * 24 * 7
       ) {
-        logger.warn(
+        logger.info(
           PREFIX_CHROME +
-            chalk.yellowBright(
-              `Stock ${
-                stock.ticker
-              }: Skipping since last successful fetch was ${formatDistance(
-                stock.msciLastFetch.getTime(),
-                new Date().getTime(),
-                { addSuffix: true }
-              )}`
-            )
+            `Stock ${
+              stock.ticker
+            }: Skipping since last successful fetch was ${formatDistance(
+              stock.msciLastFetch.getTime(),
+              new Date().getTime(),
+              { addSuffix: true }
+            )}`
         );
         continue;
       }
@@ -498,10 +684,11 @@ class FetchController {
         }
 
         try {
-          const temperatureText = await driver
-            .findElement(By.className("implied-temp-rise-value"))
-            .getAttribute("outerText");
-          msciTemperature = +temperatureText.match(/(\d+(\.\d+)?)/g)[0];
+          msciTemperature = +(
+            await driver
+              .findElement(By.className("implied-temp-rise-value"))
+              .getAttribute("outerText")
+          ).match(/(\d+(\.\d+)?)/g)[0];
         } catch (e) {
           logger.warn(
             PREFIX_CHROME +
@@ -522,14 +709,15 @@ class FetchController {
         ) {
           signal.sendMessage(errorMessage);
         }
-        await updateStockWithoutReindexing(stock.ticker, {
+        await updateStock(stock.ticker, {
           msciLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
-          msciESGRating: msciESGRating,
-          msciTemperature: msciTemperature,
+          msciESGRating,
+          msciTemperature,
         });
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
         if (req.query.ticker) {
+          await driver.quit();
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
@@ -550,7 +738,368 @@ class FetchController {
     if (updatedStocks.length === 0) {
       return res.status(204).end();
     } else {
-      indexStockRepository();
+      return res.status(200).json(updatedStocks);
+    }
+  }
+
+  async fetchRefinitivData(req: Request, res: Response) {
+    let stocks: Stock[];
+
+    if (req.query.ticker) {
+      const ticker = req.query.ticker;
+      if (typeof ticker === "string") {
+        stocks = [await readStock(ticker)];
+        if (!stocks[0].ric) {
+          throw new APIError(404, `Stock ${ticker} does not have a RIC.`);
+        }
+      }
+    } else {
+      stocks = (await readAllStocks()).map(
+        (stockEntity) => new Stock(stockEntity)
+      );
+    }
+
+    stocks = stocks
+      .filter((stock) => stock.ric)
+      .sort(
+        (a, b) =>
+          (a.refinitivLastFetch ?? new Date(0)).getTime() -
+          (b.refinitivLastFetch ?? new Date(0)).getTime()
+      );
+    if (stocks.length === 0) {
+      return res.status(204).end();
+    }
+    if (req.query.detach) {
+      res.status(202);
+    }
+
+    const updatedStocks: Stock[] = [];
+    const driver = this.getDriver();
+    for await (const stock of stocks) {
+      if (
+        !req.query.noSkip &&
+        stock.refinitivLastFetch &&
+        new Date().getTime() - stock.refinitivLastFetch.getTime() <
+          1000 * 60 * 60 * 24 * 7
+      ) {
+        logger.info(
+          PREFIX_CHROME +
+            `Stock ${
+              stock.ticker
+            }: Skipping Refinitiv fetch because last fetch was ${formatDistance(
+              stock.refinitivLastFetch.getTime(),
+              new Date().getTime(),
+              { addSuffix: true }
+            )}`
+        );
+        continue;
+      }
+      let refinitivESGScore: number;
+      let refinitivEmissions: number;
+
+      try {
+        await driver.get(
+          `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`
+        );
+
+        const refinitivJSON = JSON.parse(
+          await (await driver.findElement(By.css("pre"))).getText()
+        );
+
+        let errorMessage = `Error while fetching Refinitiv information for stock ${stock.ticker}:`;
+
+        try {
+          refinitivESGScore = +refinitivJSON.esgScore["TR.TRESG"].score;
+        } catch (e) {
+          logger.warn(
+            PREFIX_CHROME +
+              chalk.yellowBright(
+                `Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e.message}`
+              )
+          );
+          if (stock.refinitivESGScore) {
+            errorMessage += `\n\tUnable to extract Refinitiv ESG Score: ${e.message}`;
+          }
+        }
+
+        try {
+          refinitivEmissions =
+            +refinitivJSON.esgScore["TR.TRESGEmissions"].score;
+        } catch (e) {
+          logger.warn(
+            PREFIX_CHROME +
+              chalk.yellowBright(
+                `Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e.message}`
+              )
+          );
+          if (stock.refinitivEmissions) {
+            errorMessage += `\n\tUnable to extract Refinitiv Emissions: ${e.message}`;
+          }
+        }
+
+        if (errorMessage.includes("\n")) {
+          signal.sendMessage(errorMessage);
+        }
+        await updateStock(stock.ticker, {
+          refinitivLastFetch: errorMessage.includes("\n")
+            ? undefined
+            : new Date(),
+          refinitivESGScore,
+          refinitivEmissions,
+        });
+        updatedStocks.push(await readStock(stock.ticker));
+      } catch (e) {
+        if (req.query.ticker) {
+          await driver.quit();
+          throw new APIError(
+            502,
+            `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e.message}`
+          );
+        }
+        logger.warn(
+          PREFIX_CHROME +
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e.message}`
+            )
+        );
+        signal.sendMessage(
+          `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e.message}`
+        );
+      }
+    }
+    await driver.quit();
+    if (updatedStocks.length === 0) {
+      return res.status(204).end();
+    } else {
+      return res.status(200).json(updatedStocks);
+    }
+  }
+
+  async fetchSPData(req: Request, res: Response) {
+    let stocks: Stock[];
+
+    if (req.query.ticker) {
+      const ticker = req.query.ticker;
+      if (typeof ticker === "string") {
+        stocks = [await readStock(ticker)];
+        if (!stocks[0].spId) {
+          throw new APIError(404, `Stock ${ticker} does not have a S&P ID.`);
+        }
+      }
+    } else {
+      stocks = (await readAllStocks()).map(
+        (stockEntity) => new Stock(stockEntity)
+      );
+    }
+
+    stocks = stocks
+      .filter((stock) => stock.spId)
+      .sort(
+        (a, b) =>
+          (a.spLastFetch ?? new Date(0)).getTime() -
+          (b.spLastFetch ?? new Date(0)).getTime()
+      );
+    if (stocks.length === 0) {
+      return res.status(204).end();
+    }
+    if (req.query.detach) {
+      res.status(202);
+    }
+
+    const updatedStocks: Stock[] = [];
+    const driver = this.getDriver();
+    for await (const stock of stocks) {
+      if (
+        !req.query.noSkip &&
+        stock.spLastFetch &&
+        new Date().getTime() - stock.spLastFetch.getTime() <
+          1000 * 60 * 60 * 24 * 7
+      ) {
+        logger.info(
+          PREFIX_CHROME +
+            `Stock ${
+              stock.ticker
+            }: Skipping S&P fetch because last fetch was ${formatDistance(
+              stock.spLastFetch.getTime(),
+              new Date().getTime(),
+              { addSuffix: true }
+            )}`
+        );
+        continue;
+      }
+      let spESGScore: number;
+
+      try {
+        await driver.get(
+          `https://www.spglobal.com/esg/scores/results?cid=${stock.spId}`
+        );
+        spESGScore = +(await (
+          await driver.findElement(By.id("esg-score"))
+        ).getText());
+
+        await updateStock(stock.ticker, {
+          spLastFetch: new Date(),
+          spESGScore,
+        });
+        updatedStocks.push(await readStock(stock.ticker));
+      } catch (e) {
+        if (req.query.ticker) {
+          await driver.quit();
+          throw new APIError(
+            502,
+            `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e.message}`
+          );
+        }
+        logger.warn(
+          PREFIX_CHROME +
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e.message}`
+            )
+        );
+        if (stock.spESGScore) {
+          signal.sendMessage(
+            `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e.message}`
+          );
+        }
+      }
+    }
+    await driver.quit();
+    if (updatedStocks.length === 0) {
+      return res.status(204).end();
+    } else {
+      return res.status(200).json(updatedStocks);
+    }
+  }
+
+  async fetchSustainalyticsData(req: Request, res: Response) {
+    let stocks: Stock[];
+
+    if (req.query.ticker) {
+      const ticker = req.query.ticker;
+      if (typeof ticker === "string") {
+        stocks = [await readStock(ticker)];
+        if (!stocks[0].sustainalyticsId) {
+          throw new APIError(
+            404,
+            `Stock ${ticker} does not have a Sustainalytics ID.`
+          );
+        }
+      }
+    } else {
+      stocks = (await readAllStocks()).map(
+        (stockEntity) => new Stock(stockEntity)
+      );
+    }
+
+    stocks = stocks.filter((stock) => stock.sustainalyticsId);
+    if (stocks.length === 0) {
+      return res.status(204).end();
+    }
+    if (req.query.detach) {
+      res.status(202);
+    }
+
+    const updatedStocks: Stock[] = [];
+    let sustainalyticsXMLResource: Resource;
+    try {
+      try {
+        sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
+        logger.info(
+          PREFIX_CHROME +
+            `Using cached Sustainalytics data because last fetch was ${formatDistance(
+              sustainalyticsXMLResource.fetchDate,
+              new Date().getTime(),
+              { addSuffix: true }
+            )}.`
+        );
+      } catch (e) {
+        await axios
+          .post(
+            URL_SUSTAINALYTICS,
+            "page=1&pageSize=100000&resourcePackage=Sustainalytics",
+            {
+              headers: { "Accept-Encoding": "gzip,deflate,compress" },
+            }
+          )
+          .then(async (response) => {
+            const sustainalyticsXMLLines: string[] = [];
+            response.data.split("\n").forEach((line) => {
+              if (
+                line.includes(`<a data-href="`) ||
+                line.includes(`<div class="col-2">`)
+              ) {
+                sustainalyticsXMLLines.push(line.trim());
+              }
+            });
+            await createResource(
+              {
+                url: URL_SUSTAINALYTICS,
+                fetchDate: new Date(response.headers["date"]),
+                content: sustainalyticsXMLLines.join("\n"),
+              },
+              60 * 60 * 24 * 7
+            );
+            sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
+          });
+      }
+    } catch (e) {
+      throw new APIError(
+        502,
+        `Unable to fetch Sustainalytics information: ${e.message}`
+      );
+    }
+
+    const sustainalyticsXMLLines =
+      sustainalyticsXMLResource.content.split("\n");
+
+    for await (const stock of stocks) {
+      let sustainalyticsESGRisk: number;
+
+      try {
+        const sustainalyticsIdIndex = sustainalyticsXMLLines.findIndex(
+          (line, index) =>
+            line.startsWith(`<a data-href="/${stock.sustainalyticsId}`) &&
+            sustainalyticsXMLLines[index + 1].startsWith(`<div class="col-2">`)
+        );
+        if (!sustainalyticsIdIndex) {
+          throw new APIError(
+            404,
+            `Stock ${stock.ticker}: Cannot find Sustainalytics ID ${stock.sustainalyticsId} in XML.`
+          );
+        }
+        const sustainalyticsESGRiskLine =
+          sustainalyticsXMLLines[sustainalyticsIdIndex + 1];
+        sustainalyticsESGRisk = +sustainalyticsESGRiskLine
+          .substring(sustainalyticsESGRiskLine.indexOf(">") + 1)
+          .match(/(\d+(\.\d+)?)/g)[0];
+
+        await updateStock(stock.ticker, {
+          sustainalyticsESGRisk,
+        });
+        updatedStocks.push(await readStock(stock.ticker));
+      } catch (e) {
+        if (req.query.ticker) {
+          throw new APIError(
+            500,
+            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e.message}`
+          );
+        }
+        logger.warn(
+          PREFIX_CHROME +
+            chalk.yellowBright(
+              `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e.message}`
+            )
+        );
+        if (stock.sustainalyticsESGRisk) {
+          signal.sendMessage(
+            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e.message}`
+          );
+        }
+      }
+    }
+    if (updatedStocks.length === 0) {
+      return res.status(204).end();
+    } else {
       return res.status(200).json(updatedStocks);
     }
   }

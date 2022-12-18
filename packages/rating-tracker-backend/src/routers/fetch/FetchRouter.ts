@@ -22,8 +22,20 @@ class FetchRouter {
     this._router.get("/morningstar", async (req: Request, res: Response) => {
       await this._controller.fetchMorningstarData(req, res);
     });
+    this._router.get("/marketscreener", async (req: Request, res: Response) => {
+      await this._controller.fetchMarketScreenerData(req, res);
+    });
     this._router.get("/msci", async (req: Request, res: Response) => {
       await this._controller.fetchMSCIData(req, res);
+    });
+    this.router.get("/refinitiv", async (req: Request, res: Response) => {
+      await this._controller.fetchRefinitivData(req, res);
+    });
+    this._router.get("/sp", async (req: Request, res: Response) => {
+      await this._controller.fetchSPData(req, res);
+    });
+    this._router.get("/sustainalytics", async (req: Request, res: Response) => {
+      await this._controller.fetchSustainalyticsData(req, res);
     });
   }
 }

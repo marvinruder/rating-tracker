@@ -224,6 +224,19 @@ export const NebulaFighterTheme = createTheme({
       Defensive: "#65A432",
       Sensitive: "#4F88DE",
     },
+    consensus: {
+      0: darken("#ff1943", 0.4),
+      1: darken("#ff353b", 0.4),
+      2: darken("#ff5032", 0.4),
+      3: darken("#ff6c2a", 0.4),
+      4: darken("#ff8721", 0.4),
+      5: darken("#ffa319", 0.4),
+      6: darken("#dda51d", 0.4),
+      7: darken("#bba620", 0.4),
+      8: darken("#98a824", 0.4),
+      9: darken("#76a927", 0.4),
+      10: darken("#54ab2b", 0.4),
+    },
     msci: {
       Leader: "#007567",
       Average: "#FFB500",
@@ -232,6 +245,13 @@ export const NebulaFighterTheme = createTheme({
       Aligned2: "#fdc32d",
       Misaligned: "#f08908",
       StronglyMisaligned: "#e44261",
+    },
+    sustainalytics: {
+      negligible: "#333333",
+      low: "#654A06",
+      medium: "#A07708",
+      high: "#CA940C",
+      severe: "#FFBB0F",
     },
     switchSelector: {
       selected: themeColors.black,

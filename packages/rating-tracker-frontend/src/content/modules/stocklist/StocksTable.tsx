@@ -159,6 +159,28 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
               </TableCell>
               <TableCell>
                 <TableSortLabel
+                  active={sortBy === "analystConsensus"}
+                  direction={
+                    sortBy === "analystConsensus" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("analystConsensus")}
+                >
+                  Anlst Consns
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "analystTargetPrice"}
+                  direction={
+                    sortBy === "analystTargetPrice" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("analystTargetPrice")}
+                >
+                  Analyst Target
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
                   active={sortBy === "msciESGRating"}
                   direction={
                     sortBy === "msciESGRating" && sortDesc ? "desc" : "asc"
@@ -177,6 +199,52 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   onClick={handleSortLabelClicked("msciTemperature")}
                 >
                   MSCI Temp
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "refinitivESGScore"}
+                  direction={
+                    sortBy === "refinitivESGScore" || sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("refinitivESGScore")}
+                >
+                  Refinitiv
+                </TableSortLabel>
+                <br />
+                <TableSortLabel
+                  active={sortBy === "refinitivEmissions"}
+                  direction={
+                    sortBy === "refinitivEmissions" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("refinitivEmissions")}
+                  sx={{ flexDirection: "row-reverse" }}
+                >
+                  Emissions
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "spESGScore"}
+                  direction={
+                    sortBy === "spESGScore" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("spESGScore")}
+                >
+                  S&P
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "sustainalyticsESGRisk"}
+                  direction={
+                    sortBy === "sustainalyticsESGRisk" && sortDesc
+                      ? "desc"
+                      : "asc"
+                  }
+                  onClick={handleSortLabelClicked("sustainalyticsESGRisk")}
+                >
+                  Sustain-alytics
                 </TableSortLabel>
               </TableCell>
               <TableCell>

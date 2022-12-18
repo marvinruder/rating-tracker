@@ -14,6 +14,7 @@ export type { Sector } from "./lib/gics/Sector.js";
 export * from "./lib/gics/SuperSector.js";
 export type { SuperSector } from "./lib/gics/SuperSector.js";
 
+export * from "./lib/models/resource.js";
 export * from "./lib/models/session.js";
 export * from "./lib/models/stock.js";
 export * from "./lib/models/user.js";

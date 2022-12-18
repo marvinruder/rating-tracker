@@ -8,7 +8,8 @@ import { Style } from "../stylebox/Style.js";
 export class Stock {
   ticker: string;
   name: string;
-  country?: Country;
+  isin: string;
+  country: Country;
   industry?: Industry;
   size?: Size;
   style?: Style;
@@ -23,8 +24,22 @@ export class Stock {
   marketCap?: number;
   low52w?: number;
   high52w?: number;
+  marketScreenerId?: string;
+  marketScreenerLastFetch?: Date;
+  analystConsensus?: number;
+  analystCount?: number;
+  analystTargetPrice?: number;
   msciId?: string;
   msciLastFetch?: Date;
   msciESGRating?: MSCIESGRating;
   msciTemperature?: number;
+  ric?: string;
+  refinitivLastFetch?: Date;
+  refinitivESGScore?: number;
+  refinitivEmissions?: number;
+  spId?: number;
+  spLastFetch?: Date;
+  spESGScore?: number;
+  sustainalyticsId?: string;
+  sustainalyticsESGRisk?: number;
 }

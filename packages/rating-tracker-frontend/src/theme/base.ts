@@ -100,6 +100,19 @@ declare module "@mui/material/styles" {
         dark: string;
       };
       sector: Record<SuperSector, string>;
+      consensus: {
+        0: string;
+        1: string;
+        2: string;
+        3: string;
+        4: string;
+        5: string;
+        6: string;
+        7: string;
+        8: string;
+        9: string;
+        10: string;
+      };
       msci: {
         Leader: string;
         Average: string;
@@ -108,6 +121,13 @@ declare module "@mui/material/styles" {
         Aligned2: string;
         Misaligned: string;
         StronglyMisaligned: string;
+      };
+      sustainalytics: {
+        negligible: string;
+        low: string;
+        medium: string;
+        high: string;
+        severe: string;
       };
       switchSelector: {
         selected: string;
@@ -234,6 +254,19 @@ declare module "@mui/material/styles" {
         dark: string;
       };
       sector: Record<SuperSector, string>;
+      consensus: {
+        0: string;
+        1: string;
+        2: string;
+        3: string;
+        4: string;
+        5: string;
+        6: string;
+        7: string;
+        8: string;
+        9: string;
+        10: string;
+      };
       msci: {
         Leader: string;
         Average: string;
@@ -242,6 +275,13 @@ declare module "@mui/material/styles" {
         Aligned2: string;
         Misaligned: string;
         StronglyMisaligned: string;
+      };
+      sustainalytics: {
+        negligible: string;
+        low: string;
+        medium: string;
+        high: string;
+        severe: string;
       };
       switchSelector: {
         selected: string;
