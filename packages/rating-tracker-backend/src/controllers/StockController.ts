@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import { Stock } from "../models/stock.js";
 import exampleStocks from "../lib/exampleStocks.js";
 import {
+  createResource,
+  readResource,
+} from "../redis/repositories/resource/resourceRepository.js";
+import {
   createStock,
   deleteStock,
   readAllStocks,
@@ -17,17 +21,14 @@ import {
   isSortableAttribute,
   isStyle,
   msciESGRatingArray,
+  Resource,
   sizeArray,
   styleArray,
 } from "rating-tracker-commons";
 import APIError from "../lib/apiError.js";
+import axios from "axios";
 
 class StockController {
-  async get(req: Request, res: Response) {
-    const stock = await readStock(req.params[0]);
-    return res.status(200).json(stock);
-  }
-
   async getList(req: Request, res: Response) {
     let stocks = (await readAllStocks()).map(
       (stockEntity) => new Stock(stockEntity)
@@ -162,6 +163,69 @@ class StockController {
       stocks: stocks,
       count: length,
     });
+  }
+
+  async getLogo(req: Request, res: Response) {
+    const stock = await readStock(req.params[0]);
+    let logoResource: Resource;
+    const url = `https://assets.traderepublic.com/img/logos/${stock.isin}/${
+      req.query.dark ? "dark" : "light"
+    }.svg`;
+    try {
+      logoResource = await readResource(url);
+    } catch (e) {
+      await axios
+        .get(url)
+        .then(async (response) => {
+          let maxAge: number;
+          try {
+            maxAge =
+              +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
+            /* istanbul ignore next */
+            if (isNaN(maxAge)) {
+              throw new TypeError();
+            }
+          } catch (e) {
+            /* istanbul ignore next */
+            maxAge = 60 * 60 * 24;
+          }
+          await createResource(
+            {
+              url,
+              fetchDate: new Date(response.headers["date"]),
+              content: response.data,
+            },
+            maxAge
+          );
+          logoResource = await readResource(url);
+        })
+        .catch(async () => {
+          await createResource(
+            {
+              url,
+              fetchDate: new Date(),
+              content: `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>`,
+            },
+            60 * 60 * 24
+          );
+          logoResource = await readResource(url);
+        });
+    }
+    res.set("Content-Type", "image/svg+xml");
+    res.set(
+      "Cache-Control",
+      `max-age=${
+        (60 * 60 * 24 -
+          (new Date().getTime() - logoResource.fetchDate.getTime()) / 1000) |
+        0
+      }`
+    );
+    return res.status(200).send(logoResource.content);
+  }
+
+  async get(req: Request, res: Response) {
+    const stock = await readStock(req.params[0]);
+    return res.status(200).json(stock);
   }
 
   async fillWithExampleData(res: Response) {

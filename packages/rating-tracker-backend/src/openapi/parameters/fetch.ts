@@ -11,7 +11,7 @@ const detach: OpenAPIV3.ParameterObject = {
   },
 };
 
-const skip: OpenAPIV3.ParameterObject = {
+const noSkip: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "noSkip",
   description:
@@ -22,4 +22,4 @@ const skip: OpenAPIV3.ParameterObject = {
   },
 };
 
-export { detach, skip };
+export { detach, noSkip };

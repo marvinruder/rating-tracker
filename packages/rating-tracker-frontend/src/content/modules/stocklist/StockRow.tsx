@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  Avatar,
   Box,
   Button,
   Chip,
@@ -47,6 +48,7 @@ import axios from "axios";
 import {
   baseUrl,
   fetchAPI,
+  logoEndpoint,
   marketScreenerEndpoint,
   morningstarEndpoint,
   msciEndpoint,
@@ -477,18 +479,38 @@ const StockRow = (props: StockRowProps) => {
   return props.stock ? (
     <TableRow hover sx={{ height: 59 }}>
       <TableCell>
-        <Typography
-          variant="body1"
-          fontWeight="bold"
-          color="text.primary"
-          width={160}
-          noWrap
-        >
-          {props.stock.name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" width={160} noWrap>
-          {props.stock.ticker} | {props.stock.isin}
-        </Typography>
+        <span style={{ display: "flex", alignItems: "center" }}>
+          <Avatar
+            sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
+            src={
+              baseUrl +
+              stockAPI +
+              logoEndpoint +
+              `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`
+            }
+            alt=" "
+          />
+          <span style={{ width: 8 }} />
+          <div>
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              color="text.primary"
+              width={160}
+              noWrap
+            >
+              {props.stock.name}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              width={160}
+              noWrap
+            >
+              {props.stock.ticker} | {props.stock.isin}
+            </Typography>
+          </div>
+        </span>
       </TableCell>
       <TableCell>
         <Typography
@@ -1146,12 +1168,18 @@ const StockRow = (props: StockRowProps) => {
     <TableRow hover>
       {/* Stock */}
       <TableCell>
-        <Typography variant="body1">
-          <Skeleton width={160} />
-        </Typography>
-        <Typography variant="body2">
-          <Skeleton width={160} />
-        </Typography>
+        <span style={{ display: "flex", alignItems: "center" }}>
+          <Skeleton variant="circular" width={40} height={40} />
+          <span style={{ width: 8 }} />
+          <div>
+            <Typography variant="body1">
+              <Skeleton width={160} />
+            </Typography>
+            <Typography variant="body2">
+              <Skeleton width={160} />
+            </Typography>
+          </div>
+        </span>
       </TableCell>
       {/* Country */}
       <TableCell>
