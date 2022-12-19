@@ -174,11 +174,10 @@ describe("Stock API", () => {
             typeof res.body.stocks[i + 1].lastClose == "number"
           ) {
             expect(
-              res.body.stocks[i].lastClose /
-                res.body.stocks[i].morningstarFairValue
+              res.body.stocks[i].lastClose / res.body.stocks[i][sortCriterion]
             ).toBeLessThanOrEqual(
               res.body.stocks[i + 1].lastClose /
-                res.body.stocks[i + 1].morningstarFairValue
+                res.body.stocks[i + 1][sortCriterion]
             );
           }
         }
@@ -270,23 +269,6 @@ describe("Stock API", () => {
       .get("/api/stock/logo/doesNotExist")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
-  });
-
-  it("creates example stocks", async () => {
-    await expectRouteToBePrivate(
-      "/api/stock/fillWithExampleData",
-      requestWithSupertest.put
-    );
-    let res = await requestWithSupertest
-      .delete("/api/stock/exampleAAPL")
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(204);
-    await expectStockListLengthToBe(10);
-    res = await requestWithSupertest
-      .put("/api/stock/fillWithExampleData")
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(201);
-    await expectStockListLengthToBe(11);
   });
 
   it("creates a stock", async () => {

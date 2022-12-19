@@ -29,8 +29,8 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
-  const [sortBy, setSortBy] = useState<SortableAttribute>("name");
-  const [sortDesc, setSortDesc] = useState<boolean>(false);
+  const [sortBy, setSortBy] = useState<SortableAttribute>("totalScore");
+  const [sortDesc, setSortDesc] = useState<boolean>(true);
   const { setNotification } = useNotification();
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
         },
       })
       .then((res) => {
-        setStocks(res.data.stocks);
+        setStocks(res.data.stocks.map((stock: any) => new Stock(stock)));
         setCount(res.data.count);
       })
       .catch((e) => {
@@ -133,6 +133,37 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
               </TableCell>
               <TableCell>Sector</TableCell>
               <TableCell>Industry</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "totalScore"}
+                  direction={
+                    sortBy === "totalScore" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("totalScore")}
+                >
+                  Score
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "financialScore"}
+                  direction={
+                    sortBy === "financialScore" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("financialScore")}
+                >
+                  Financial
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "esgScore"}
+                  direction={sortBy === "esgScore" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("esgScore")}
+                >
+                  ESG
+                </TableSortLabel>
+              </TableCell>
               <TableCell>
                 <TableSortLabel
                   active={sortBy === "starRating"}

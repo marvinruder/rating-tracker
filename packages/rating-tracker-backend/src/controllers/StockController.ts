@@ -118,10 +118,10 @@ class StockController {
           stocks.sort(
             (a, b) =>
               (a[sortBy] && a.lastClose
-                ? a.lastClose / a[sortBy]
+                ? a.getPercentageToLastClose(sortBy)
                 : Number.MAX_VALUE) -
               (b[sortBy] && b.lastClose
-                ? b.lastClose / b[sortBy]
+                ? b.getPercentageToLastClose(sortBy)
                 : Number.MAX_VALUE)
           );
           break;
@@ -148,6 +148,15 @@ class StockController {
                 ? msciESGRatingArray.indexOf(b.msciESGRating)
                 : 7)
           );
+          break;
+        case "financialScore":
+          stocks.sort((a, b) => a.getFinancialScore() - b.getFinancialScore());
+          break;
+        case "esgScore":
+          stocks.sort((a, b) => a.getESGScore() - b.getESGScore());
+          break;
+        case "totalScore":
+          stocks.sort((a, b) => a.getTotalScore() - b.getTotalScore());
           break;
       }
       if (String(req.query.sortDesc).toLowerCase() === "true") {
@@ -232,13 +241,6 @@ class StockController {
     return res.status(200).json(stock);
   }
 
-  async fillWithExampleData(res: Response) {
-    for (const stock of exampleStocks) {
-      await createStock(stock);
-    }
-    return res.status(201).end();
-  }
-
   async put(req: Request, res: Response) {
     const ticker = req.params[0];
     const { name, country, isin } = req.query;
@@ -249,7 +251,7 @@ class StockController {
       isCountry(country) &&
       typeof isin === "string"
     ) {
-      if (await createStock({ ticker, name, country, isin })) {
+      if (await createStock(new Stock({ ticker, name, country, isin }))) {
         return res.status(201).end();
       } else {
         throw new APIError(409, "A stock with that ticker exists already.");
