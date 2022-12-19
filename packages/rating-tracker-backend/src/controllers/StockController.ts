@@ -118,10 +118,12 @@ class StockController {
             (a, b) =>
               (a[sortBy] && a.lastClose
                 ? a.getPercentageToLastClose(sortBy)
-                : Number.MAX_VALUE) -
+                : /* istanbul ignore next */
+                  Number.MAX_VALUE) -
               (b[sortBy] && b.lastClose
                 ? b.getPercentageToLastClose(sortBy)
-                : Number.MAX_VALUE)
+                : /* istanbul ignore next */
+                  Number.MAX_VALUE)
           );
           break;
         case "52w":
