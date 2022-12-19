@@ -22,6 +22,9 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import SectorIcon from "../../../components/SectorIcon";
@@ -94,6 +97,21 @@ const StockRow = (props: StockRowProps) => {
           : props.stock.msciTemperature <= 3.2
           ? theme.colors.msci.Misaligned
           : theme.colors.msci.StronglyMisaligned,
+    },
+  }));
+  const GreenIconChip = styled(Chip)(() => ({
+    ".MuiChip-icon": {
+      color: theme.colors.sector.Defensive,
+    },
+  }));
+  const YellowIconChip = styled(Chip)(() => ({
+    ".MuiChip-icon": {
+      color: theme.colors.msci.Average,
+    },
+  }));
+  const BlueIconChip = styled(Chip)(() => ({
+    ".MuiChip-icon": {
+      color: theme.colors.primary.main,
     },
   }));
 
@@ -613,6 +631,39 @@ const StockRow = (props: StockRowProps) => {
         </Typography>
       </TableCell>
       <TableCell>
+        <BlueIconChip
+          icon={<EmojiEventsIcon />}
+          label={
+            <strong>
+              {Math.round(Math.max(0, 100 * props.stock.getTotalScore()))}
+            </strong>
+          }
+          sx={{ width: 84, fontSize: 18 }}
+        />
+      </TableCell>
+      <TableCell>
+        <YellowIconChip
+          icon={<PriceCheckIcon />}
+          label={
+            <strong>
+              {Math.round(Math.max(0, 100 * props.stock.getFinancialScore()))}
+            </strong>
+          }
+          sx={{ width: 84, fontSize: 18 }}
+        />
+      </TableCell>
+      <TableCell>
+        <GreenIconChip
+          icon={<NaturePeopleIcon />}
+          label={
+            <strong>
+              {Math.round(Math.max(0, 100 * props.stock.getESGScore()))}
+            </strong>
+          }
+          sx={{ width: 84, fontSize: 18 }}
+        />
+      </TableCell>
+      <TableCell>
         <StarRating value={props.stock.starRating} />
       </TableCell>
       <TableCell>
@@ -642,8 +693,7 @@ const StockRow = (props: StockRowProps) => {
                 ? "+"
                 : ""
             }${Math.round(
-              100 *
-                (props.stock.lastClose / props.stock.morningstarFairValue - 1)
+              props.stock.getPercentageToLastClose("morningstarFairValue")
             )}\u2009%`}
         </Typography>
       </TableCell>
@@ -711,7 +761,6 @@ const StockRow = (props: StockRowProps) => {
           {props.stock.analystTargetPrice &&
             props.stock.analystCount &&
             props.stock.lastClose &&
-            // eslint-disable-next-line no-irregular-whitespace
             `n\u2009=\u2009${props.stock.analystCount}`}
         </Typography>
         <Typography
@@ -727,7 +776,7 @@ const StockRow = (props: StockRowProps) => {
             `${
               props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""
             }${Math.round(
-              100 * (props.stock.lastClose / props.stock.analystTargetPrice - 1)
+              props.stock.getPercentageToLastClose("analystTargetPrice")
             )}\u2009%`}
         </Typography>
       </TableCell>

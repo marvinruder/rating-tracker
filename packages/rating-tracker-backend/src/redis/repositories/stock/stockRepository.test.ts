@@ -36,14 +36,16 @@ afterAll((done) => {
 
 describe("CRUD methods for single stock that are difficult to test otherwise", () => {
   it("updates a single stock", async () => {
-    await createStock({
-      ticker: "NEWSTOCK",
-      name: "New Stock Inc.",
-      isin: "US123456789",
-      country: "US",
-    });
+    await createStock(
+      new Stock({
+        ticker: "NEWSTOCK",
+        name: "New Stock Inc.",
+        isin: "US123456789",
+        country: "US",
+      })
+    );
 
-    const newValues: Omit<Stock, "ticker"> = {
+    const newValues: Partial<Omit<Stock, "ticker">> = {
       name: "Updated Stock",
       country: "CA",
       isin: "CA012345678",

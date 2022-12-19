@@ -15,6 +15,9 @@ export const sortableAttributeArray = [
   "refinitivEmissions",
   "spESGScore",
   "sustainalyticsESGRisk",
+  "financialScore",
+  "esgScore",
+  "totalScore",
 ] as const;
 
 export type SortableAttribute = typeof sortableAttributeArray[number];

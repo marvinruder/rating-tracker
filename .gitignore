@@ -20,7 +20,6 @@ packages/*/.vite
 # local dev environment
 packages/rating-tracker-backend/local-dev/nginx/certs
 packages/rating-tracker-backend/local-dev/nginx/dhparam
-packages/rating-tracker-backend/local-dev/nginx/nginx.conf
 packages/rating-tracker-backend/local-dev/redis
 packages/rating-tracker-backend/local-dev/signal-cli
 

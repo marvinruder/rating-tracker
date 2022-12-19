@@ -21,7 +21,9 @@ dotenv.config({
 
 const rpName = "Rating Tracker";
 const rpID = `${process.env.DOMAIN}`;
-const origin = `https://${process.env.SUBDOMAIN}.${rpID}`;
+const origin = `https://${
+  process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""
+}${rpID}`;
 
 const currentChallenges = {};
 

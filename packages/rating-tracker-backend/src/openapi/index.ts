@@ -1,6 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 import { components } from "./components.js";
-import * as fillWithExampleDataEndpoint from "./paths/stock/fillWithExampleDataEndpoint.js";
 import * as listEndpoint from "./paths/stock/listEndpoint.js";
 import * as morningstarEndpoint from "./paths/fetch/morningstarEndpoint.js";
 import * as marketScreenerEndpoint from "./paths/fetch/marketScreenerEndpoint.js";
@@ -36,7 +35,6 @@ export const openapiDocument: OpenAPIV3.Document = {
     "/api/auth/register": registerEndpoint,
     "/api/auth/signIn": signInEndpoint,
     "/api/stock/list": listEndpoint,
-    "/api/stock/fillWithExampleData": fillWithExampleDataEndpoint,
     "/api/stock/{ticker}": stockEndpoint,
     "/api/stock/logo/{ticker}": logoEndpoint,
     "/api/fetch/morningstar": morningstarEndpoint,
