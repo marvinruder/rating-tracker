@@ -13,7 +13,7 @@ const TRANSITION_DURATION = 350;
 const NotificationSnackbar = (props: NotificationSnackbarProps) => {
   const [snackbarShown, setSnackbarShown] = useState<boolean>(false);
   const { notification, setNotification } = useNotification();
-  useEffect(() => setSnackbarShown(notification != undefined), [notification]);
+  useEffect(() => setSnackbarShown(notification !== undefined), [notification]);
 
   const closeNotification = () => {
     setSnackbarShown(false);

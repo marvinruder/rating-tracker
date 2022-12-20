@@ -70,13 +70,13 @@ export class Stock {
     const percentageToLastClose = this.getPercentageToLastClose(
       "morningstarFairValue"
     );
-    return percentageToLastClose != undefined
+    return percentageToLastClose !== undefined
       ? -percentageToLastClose / 50
       : undefined;
   }
 
   private getAnalystConsensusScore(): number | undefined {
-    if (this.analystCount && this.analystConsensus != undefined) {
+    if (this.analystCount && this.analystConsensus !== undefined) {
       if (this.analystCount >= 10) {
         return (this.analystConsensus - 5) / 5;
       } else {
@@ -157,25 +157,25 @@ export class Stock {
   }
 
   private getRefinitivESGScore(): number | undefined {
-    return this.refinitivESGScore != undefined
+    return this.refinitivESGScore !== undefined
       ? (this.refinitivESGScore - 50) / 50
       : undefined;
   }
 
   private getRefinitivEmissionsScore(): number | undefined {
-    return this.refinitivEmissions != undefined
+    return this.refinitivEmissions !== undefined
       ? (this.refinitivEmissions - 50) / 50
       : undefined;
   }
 
   private getSPESGScore(): number | undefined {
-    return this.spESGScore != undefined
+    return this.spESGScore !== undefined
       ? (this.spESGScore - 50) / 50
       : undefined;
   }
 
   private getSustainalyticsESGRiskScore(): number | undefined {
-    return this.sustainalyticsESGRisk != undefined
+    return this.sustainalyticsESGRisk !== undefined
       ? 1 - this.sustainalyticsESGRisk / 20
       : undefined;
   }
