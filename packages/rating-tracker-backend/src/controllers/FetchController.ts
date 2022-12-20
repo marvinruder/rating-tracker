@@ -222,9 +222,7 @@ class FetchController {
             .getText());
           if (isNaN(dividendYieldPercent)) {
             dividendYieldPercent = undefined;
-            throw TypeError(
-              `Extracted dividend yield “${dividendYieldPercent}” is no valid number.`
-            );
+            throw TypeError(`Extracted dividend yield is no valid number.`);
           }
         } catch (e) {
           logger.warn(
@@ -245,7 +243,7 @@ class FetchController {
           if (isNaN(priceEarningRatio)) {
             priceEarningRatio = undefined;
             throw TypeError(
-              `Extracted price earning ratio “${priceEarningRatio}” is no valid number.`
+              `Extracted price earning ratio is no valid number.`
             );
           }
         } catch (e) {
@@ -290,9 +288,7 @@ class FetchController {
           ).replaceAll(",", "");
           if (isNaN(lastClose)) {
             lastClose = undefined;
-            throw TypeError(
-              `Extracted last close “${lastClose}” is no valid number.`
-            );
+            throw TypeError(`Extracted last close is no valid number.`);
           }
         } catch (e) {
           logger.warn(
@@ -317,7 +313,7 @@ class FetchController {
           if (isNaN(morningstarFairValue)) {
             morningstarFairValue = undefined;
             throw TypeError(
-              `Extracted Morningstar Fair Value “${morningstarFairValue}” is no valid number.`
+              `Extracted Morningstar Fair Value is no valid number.`
             );
           }
         } catch (e) {
@@ -350,7 +346,7 @@ class FetchController {
           if (isNaN(marketCap)) {
             marketCap = undefined;
             throw TypeError(
-              `Extracted market capitalization “${marketCap}” is no valid number.`
+              `Extracted market capitalization is no valid number.`
             );
           }
         } catch (e) {
@@ -375,15 +371,11 @@ class FetchController {
           high52w = +range52wTexts[1];
           if (isNaN(low52w)) {
             low52w = undefined;
-            throw TypeError(
-              `Extracted 52 week low “${low52w}” is no valid number.`
-            );
+            throw TypeError(`Extracted 52 week low is no valid number.`);
           }
           if (isNaN(high52w)) {
             high52w = undefined;
-            throw TypeError(
-              `Extracted 52 week high “${high52w}” is no valid number.`
-            );
+            throw TypeError(`Extracted 52 week high is no valid number.`);
           }
         } catch (e) {
           logger.warn(
