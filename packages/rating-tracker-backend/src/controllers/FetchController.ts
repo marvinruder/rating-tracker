@@ -369,13 +369,12 @@ class FetchController {
             .split(" - ");
           low52w = +range52wTexts[0];
           high52w = +range52wTexts[1];
-          if (isNaN(low52w)) {
+          if (isNaN(low52w) || isNaN(high52w)) {
             low52w = undefined;
-            throw TypeError(`Extracted 52 week low is no valid number.`);
-          }
-          if (isNaN(high52w)) {
             high52w = undefined;
-            throw TypeError(`Extracted 52 week high is no valid number.`);
+            throw TypeError(
+              `Extracted 52 week low or high is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
