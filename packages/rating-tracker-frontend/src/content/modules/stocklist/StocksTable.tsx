@@ -26,7 +26,7 @@ import useNotification from "../../../helpers/useNotification";
 const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [page, setPage] = useState<number>(0);
   const [count, setCount] = useState<number>(-1);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(25);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<SortableAttribute>("totalScore");
@@ -337,7 +337,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
         onRowsPerPageChange={handleRowsPerPageChange}
         page={page}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
+        rowsPerPageOptions={[5, 10, 25, 50, 100, { label: "All", value: -1 }]}
         showFirstButton
         showLastButton
         labelRowsPerPage={

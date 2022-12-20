@@ -221,7 +221,9 @@ class FetchController {
             .findElement(By.id("Col0Yield"))
             .getText());
           if (isNaN(dividendYieldPercent)) {
-            dividendYieldPercent = 0;
+            throw TypeError(
+              `Extracted dividend yield “${dividendYieldPercent}” is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
@@ -240,7 +242,9 @@ class FetchController {
             await driver.findElement(By.id("Col0PE")).getText()
           ).replaceAll(",", "");
           if (isNaN(priceEarningRatio)) {
-            priceEarningRatio = 0;
+            throw TypeError(
+              `Extracted price earning ratio “${priceEarningRatio}” is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
@@ -283,7 +287,9 @@ class FetchController {
             await driver.findElement(By.id("Col0LastClose")).getText()
           ).replaceAll(",", "");
           if (isNaN(lastClose)) {
-            lastClose = 0;
+            throw TypeError(
+              `Extracted last close “${lastClose}” is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
@@ -306,7 +312,9 @@ class FetchController {
             .split(/\s+/)[0]
             .replaceAll(",", "");
           if (isNaN(morningstarFairValue)) {
-            morningstarFairValue = 0;
+            throw TypeError(
+              `Extracted Morningstar Fair Value “${morningstarFairValue}” is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
@@ -336,7 +344,9 @@ class FetchController {
             marketCap = +marketCapText;
           }
           if (isNaN(marketCap)) {
-            marketCap = 0;
+            throw TypeError(
+              `Extracted market capitalization “${marketCap}” is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
@@ -357,12 +367,16 @@ class FetchController {
             .replaceAll(",", "")
             .split(" - ");
           low52w = +range52wTexts[0];
-          if (isNaN(low52w)) {
-            low52w = 0;
-          }
           high52w = +range52wTexts[1];
+          if (isNaN(low52w)) {
+            throw TypeError(
+              `Extracted 52 week low “${low52w}” is no valid number.`
+            );
+          }
           if (isNaN(high52w)) {
-            high52w = 0;
+            throw TypeError(
+              `Extracted 52 week high “${high52w}” is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(

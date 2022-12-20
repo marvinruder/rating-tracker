@@ -468,6 +468,7 @@ const AddStock = (props: AddStockProps) => {
                           country: possibleCountry,
                         });
                       });
+                      setCountryError(false);
                     }
                   }
                   setIsinError(false);
