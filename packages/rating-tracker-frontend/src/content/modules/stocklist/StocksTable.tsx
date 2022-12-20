@@ -94,7 +94,20 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
       setSortDesc(!sortDesc);
     } else {
       setSortBy(attribute);
-      setSortDesc(attribute === "size");
+      setSortDesc(
+        [
+          "size",
+          "totalScore",
+          "financialScore",
+          "esgScore",
+          "starRating",
+          "analystConsensus",
+          "refinitivESGScore",
+          "refinitivEmissions",
+          "spESGScore",
+          "dividendYieldPercent",
+        ].includes(attribute)
+      );
     }
   };
 
@@ -137,7 +150,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                 <TableSortLabel
                   active={sortBy === "totalScore"}
                   direction={
-                    sortBy === "totalScore" && sortDesc ? "desc" : "asc"
+                    sortBy !== "totalScore" || sortDesc ? "desc" : "asc"
                   }
                   onClick={handleSortLabelClicked("totalScore")}
                 >
@@ -148,7 +161,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                 <TableSortLabel
                   active={sortBy === "financialScore"}
                   direction={
-                    sortBy === "financialScore" && sortDesc ? "desc" : "asc"
+                    sortBy !== "financialScore" || sortDesc ? "desc" : "asc"
                   }
                   onClick={handleSortLabelClicked("financialScore")}
                 >
@@ -158,7 +171,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
               <TableCell>
                 <TableSortLabel
                   active={sortBy === "esgScore"}
-                  direction={sortBy === "esgScore" && sortDesc ? "desc" : "asc"}
+                  direction={sortBy !== "esgScore" || sortDesc ? "desc" : "asc"}
                   onClick={handleSortLabelClicked("esgScore")}
                 >
                   ESG
@@ -168,7 +181,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                 <TableSortLabel
                   active={sortBy === "starRating"}
                   direction={
-                    sortBy === "starRating" && sortDesc ? "desc" : "asc"
+                    sortBy !== "starRating" || sortDesc ? "desc" : "asc"
                   }
                   onClick={handleSortLabelClicked("starRating")}
                 >
@@ -192,7 +205,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                 <TableSortLabel
                   active={sortBy === "analystConsensus"}
                   direction={
-                    sortBy === "analystConsensus" && sortDesc ? "desc" : "asc"
+                    sortBy !== "analystConsensus" || sortDesc ? "desc" : "asc"
                   }
                   onClick={handleSortLabelClicked("analystConsensus")}
                 >
@@ -236,7 +249,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                 <TableSortLabel
                   active={sortBy === "refinitivESGScore"}
                   direction={
-                    sortBy === "refinitivESGScore" || sortDesc ? "desc" : "asc"
+                    sortBy !== "refinitivESGScore" || sortDesc ? "desc" : "asc"
                   }
                   onClick={handleSortLabelClicked("refinitivESGScore")}
                 >
@@ -246,7 +259,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                 <TableSortLabel
                   active={sortBy === "refinitivEmissions"}
                   direction={
-                    sortBy === "refinitivEmissions" && sortDesc ? "desc" : "asc"
+                    sortBy !== "refinitivEmissions" || sortDesc ? "desc" : "asc"
                   }
                   onClick={handleSortLabelClicked("refinitivEmissions")}
                   sx={{ flexDirection: "row-reverse" }}
@@ -258,7 +271,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                 <TableSortLabel
                   active={sortBy === "spESGScore"}
                   direction={
-                    sortBy === "spESGScore" && sortDesc ? "desc" : "asc"
+                    sortBy !== "spESGScore" || sortDesc ? "desc" : "asc"
                   }
                   onClick={handleSortLabelClicked("spESGScore")}
                 >
@@ -291,7 +304,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                 <TableSortLabel
                   active={sortBy === "dividendYieldPercent"}
                   direction={
-                    sortBy === "dividendYieldPercent" && sortDesc
+                    sortBy !== "dividendYieldPercent" || sortDesc
                       ? "desc"
                       : "asc"
                   }
