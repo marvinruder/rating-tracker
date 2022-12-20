@@ -102,7 +102,7 @@ class StockController {
         case "refinitivESGScore":
         case "refinitivEmissions":
         case "spESGScore":
-          stocks.sort((a, b) => (a[sortBy] ?? 0) - (b[sortBy] ?? 0));
+          stocks.sort((a, b) => (a[sortBy] ?? -1) - (b[sortBy] ?? -1));
           break;
         case "priceEarningRatio":
         case "msciTemperature":

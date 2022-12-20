@@ -161,7 +161,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract industry: ${e.message}`
               )
           );
-          if (stock.industry) {
+          if (stock.industry !== undefined) {
             errorMessage += `\n\tUnable to extract industry: ${e.message}`;
           }
         }
@@ -193,7 +193,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract size and style: ${e.message}`
               )
           );
-          if (stock.size || stock.style) {
+          if (stock.size !== undefined || stock.style !== undefined) {
             errorMessage += `\n\tUnable to extract size and style: ${e.message}`;
           }
         }
@@ -211,7 +211,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract star rating: ${e.message}`
               )
           );
-          if (stock.starRating) {
+          if (stock.starRating !== undefined) {
             errorMessage += `\n\tUnable to extract star rating: ${e.message}`;
           }
         }
@@ -221,7 +221,8 @@ class FetchController {
             .findElement(By.id("Col0Yield"))
             .getText());
           if (isNaN(dividendYieldPercent)) {
-            dividendYieldPercent = 0;
+            dividendYieldPercent = undefined;
+            throw TypeError(`Extracted dividend yield is no valid number.`);
           }
         } catch (e) {
           logger.warn(
@@ -230,7 +231,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract dividend yield: ${e.message}`
               )
           );
-          if (stock.dividendYieldPercent) {
+          if (stock.dividendYieldPercent !== undefined) {
             errorMessage += `\n\tUnable to extract dividend yield: ${e.message}`;
           }
         }
@@ -240,7 +241,10 @@ class FetchController {
             await driver.findElement(By.id("Col0PE")).getText()
           ).replaceAll(",", "");
           if (isNaN(priceEarningRatio)) {
-            priceEarningRatio = 0;
+            priceEarningRatio = undefined;
+            throw TypeError(
+              `Extracted price earning ratio is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
@@ -249,7 +253,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e.message}`
               )
           );
-          if (stock.priceEarningRatio) {
+          if (stock.priceEarningRatio !== undefined) {
             errorMessage += `\n\tUnable to extract price earning ratio: ${e.message}`;
           }
         }
@@ -273,7 +277,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract currency: ${e.message}`
               )
           );
-          if (stock.currency) {
+          if (stock.currency !== undefined) {
             errorMessage += `\n\tUnable to extract currency: ${e.message}`;
           }
         }
@@ -283,7 +287,8 @@ class FetchController {
             await driver.findElement(By.id("Col0LastClose")).getText()
           ).replaceAll(",", "");
           if (isNaN(lastClose)) {
-            lastClose = 0;
+            lastClose = undefined;
+            throw TypeError(`Extracted last close is no valid number.`);
           }
         } catch (e) {
           logger.warn(
@@ -292,7 +297,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract last close: ${e.message}`
               )
           );
-          if (stock.lastClose) {
+          if (stock.lastClose !== undefined) {
             errorMessage += `\n\tUnable to extract last close: ${e.message}`;
           }
         }
@@ -306,7 +311,10 @@ class FetchController {
             .split(/\s+/)[0]
             .replaceAll(",", "");
           if (isNaN(morningstarFairValue)) {
-            morningstarFairValue = 0;
+            morningstarFairValue = undefined;
+            throw TypeError(
+              `Extracted Morningstar Fair Value is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
@@ -315,7 +323,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e.message}`
               )
           );
-          if (stock.morningstarFairValue) {
+          if (stock.morningstarFairValue !== undefined) {
             errorMessage += `\n\tUnable to extract Morningstar Fair Value: ${e.message}`;
           }
         }
@@ -336,7 +344,10 @@ class FetchController {
             marketCap = +marketCapText;
           }
           if (isNaN(marketCap)) {
-            marketCap = 0;
+            marketCap = undefined;
+            throw TypeError(
+              `Extracted market capitalization is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
@@ -345,7 +356,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e.message}`
               )
           );
-          if (stock.marketCap) {
+          if (stock.marketCap !== undefined) {
             errorMessage += `\n\tUnable to extract Market Capitalization: ${e.message}`;
           }
         }
@@ -357,12 +368,13 @@ class FetchController {
             .replaceAll(",", "")
             .split(" - ");
           low52w = +range52wTexts[0];
-          if (isNaN(low52w)) {
-            low52w = 0;
-          }
           high52w = +range52wTexts[1];
-          if (isNaN(high52w)) {
-            high52w = 0;
+          if (isNaN(low52w) || isNaN(high52w)) {
+            low52w = undefined;
+            high52w = undefined;
+            throw TypeError(
+              `Extracted 52 week low or high is no valid number.`
+            );
           }
         } catch (e) {
           logger.warn(
@@ -371,7 +383,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e.message}`
               )
           );
-          if (stock.low52w || stock.high52w) {
+          if (stock.low52w !== undefined || stock.high52w !== undefined) {
             errorMessage += `\n\tUnable to extract 52 week price range: ${e.message}`;
           }
         }
@@ -509,7 +521,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e.message}`
               )
           );
-          if (stock.analystConsensus) {
+          if (stock.analystConsensus !== undefined) {
             errorMessage += `\n\tUnable to extract Analyst Consensus: ${e.message}`;
           }
         }
@@ -525,7 +537,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e.message}`
               )
           );
-          if (stock.analystCount) {
+          if (stock.analystCount !== undefined) {
             errorMessage += `\n\tUnable to extract Analyst Count: ${e.message}`;
           }
         }
@@ -556,7 +568,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e.message}`
               )
           );
-          if (stock.analystTargetPrice) {
+          if (stock.analystTargetPrice !== undefined) {
             errorMessage += `\n\tUnable to extract Analyst Target Price: ${e.message}`;
           }
         }
@@ -678,7 +690,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e.message}`
               )
           );
-          if (stock.msciESGRating) {
+          if (stock.msciESGRating !== undefined) {
             errorMessage += `\n\tUnable to extract MSCI ESG Rating: ${e.message}`;
           }
         }
@@ -696,7 +708,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e.message}`
               )
           );
-          if (stock.msciTemperature) {
+          if (stock.msciTemperature !== undefined) {
             errorMessage += `\n\tUnable to extract MSCI Implied Temperature Rise: ${e.message}`;
           }
         }
@@ -817,7 +829,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e.message}`
               )
           );
-          if (stock.refinitivESGScore) {
+          if (stock.refinitivESGScore !== undefined) {
             errorMessage += `\n\tUnable to extract Refinitiv ESG Score: ${e.message}`;
           }
         }
@@ -832,7 +844,7 @@ class FetchController {
                 `Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e.message}`
               )
           );
-          if (stock.refinitivEmissions) {
+          if (stock.refinitivEmissions !== undefined) {
             errorMessage += `\n\tUnable to extract Refinitiv Emissions: ${e.message}`;
           }
         }
@@ -956,7 +968,7 @@ class FetchController {
               `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e.message}`
             )
         );
-        if (stock.spESGScore) {
+        if (stock.spESGScore !== undefined) {
           signal.sendMessage(
             `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e.message}`
           );
@@ -1090,7 +1102,7 @@ class FetchController {
               `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e.message}`
             )
         );
-        if (stock.sustainalyticsESGRisk) {
+        if (stock.sustainalyticsESGRisk !== undefined) {
           signal.sendMessage(
             `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e.message}`
           );
