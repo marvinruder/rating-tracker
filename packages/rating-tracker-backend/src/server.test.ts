@@ -1,14 +1,26 @@
 import { jest } from "@jest/globals";
 
 jest.unstable_mockModule(
-  "./redis/repositories/stock/stockRepositoryBase",
+  "./lib/logger",
+  async () => await import("./lib/__mocks__/logger")
+);
+
+jest.unstable_mockModule(
+  "./redis/repositories/resource/resourceRepositoryBase",
   async () =>
-    await import("./redis/repositories/stock/__mocks__/stockRepositoryBase")
+    await import(
+      "./redis/repositories/resource/__mocks__/resourceRepositoryBase"
+    )
 );
 jest.unstable_mockModule(
   "./redis/repositories/session/sessionRepositoryBase",
   async () =>
     await import("./redis/repositories/session/__mocks__/sessionRepositoryBase")
+);
+jest.unstable_mockModule(
+  "./redis/repositories/stock/stockRepositoryBase",
+  async () =>
+    await import("./redis/repositories/stock/__mocks__/stockRepositoryBase")
 );
 jest.unstable_mockModule(
   "./redis/repositories/user/userRepositoryBase",
@@ -147,24 +159,25 @@ describe("Stock API", () => {
         .get(`/api/stock/list?sortBy=${sortCriterion}`)
         .set("Cookie", ["authToken=exampleSessionID"]);
       expect(res.status).toBe(200);
-      if (sortCriterion === "morningstarFairValue") {
+      if (
+        ["morningstarFairValue", "analystTargetPrice"].includes(sortCriterion)
+      ) {
         for (let i = 0; i < res.body.count - 1; i++) {
           if (
-            res.body.stocks[i].morningstarFairValue &&
-            res.body.stocks[i + 1].morningstarFairValue &&
-            typeof res.body.stocks[i].morningstarFairValue == "number" &&
-            typeof res.body.stocks[i + 1].morningstarFairValue == "number" &&
+            res.body.stocks[i][sortCriterion] &&
+            res.body.stocks[i + 1][sortCriterion] &&
+            typeof res.body.stocks[i][sortCriterion] == "number" &&
+            typeof res.body.stocks[i + 1][sortCriterion] == "number" &&
             res.body.stocks[i].lastClose &&
             res.body.stocks[i + 1].lastClose &&
             typeof res.body.stocks[i].lastClose == "number" &&
             typeof res.body.stocks[i + 1].lastClose == "number"
           ) {
             expect(
-              res.body.stocks[i].lastClose /
-                res.body.stocks[i].morningstarFairValue
+              res.body.stocks[i].lastClose / res.body.stocks[i][sortCriterion]
             ).toBeLessThanOrEqual(
               res.body.stocks[i + 1].lastClose /
-                res.body.stocks[i + 1].morningstarFairValue
+                res.body.stocks[i + 1][sortCriterion]
             );
           }
         }
@@ -230,30 +243,41 @@ describe("Stock API", () => {
     expect(resPagination.body.stocks).toHaveLength(5);
   });
 
-  it("creates example stocks", async () => {
-    await expectRouteToBePrivate(
-      "/api/stock/fillWithExampleData",
-      requestWithSupertest.put
-    );
+  it("provides stock logos", async () => {
+    await expectRouteToBePrivate("/api/stock/logo/exampleAAPL");
     let res = await requestWithSupertest
-      .delete("/api/stock/exampleAAPL")
+      .get("/api/stock/logo/exampleAAPL")
       .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(204);
-    await expectStockListLengthToBe(10);
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch("image/svg+xml");
+    expect(res.body.toString()).toMatch(
+      `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">`
+    );
+
+    // attempting to read the logo of a stock for which no logo exists returns an empty SVG file
     res = await requestWithSupertest
-      .put("/api/stock/fillWithExampleData")
+      .get("/api/stock/logo/exampleNULL")
       .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(201);
-    await expectStockListLengthToBe(11);
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch("image/svg+xml");
+    expect(res.body.toString()).toMatch(
+      `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>`
+    );
+
+    // attempting to read a non-existent stock’s logo results in an error
+    res = await requestWithSupertest
+      .get("/api/stock/logo/doesNotExist")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
   });
 
   it("creates a stock", async () => {
     await expectRouteToBePrivate(
-      "/api/stock/NEWSTOCK?name=New%20Stock&country=GB",
+      "/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321",
       requestWithSupertest.put
     );
     let res = await requestWithSupertest
-      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB")
+      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(201);
     await expectStockListLengthToBe(12);
@@ -267,7 +291,7 @@ describe("Stock API", () => {
 
     // attempting to create the same stock again results in an error
     res = await requestWithSupertest
-      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB")
+      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(409);
     await expectStockListLengthToBe(12);

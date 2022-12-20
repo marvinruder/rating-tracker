@@ -7,13 +7,15 @@ dotenv.config({
 
 const servers: OpenAPIV3.ServerObject[] = [
   {
-    url: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+    url: `https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
+      process.env.DOMAIN
+    }`,
     description: "via HTTPS",
   },
 ];
 
 /* istanbul ignore next */
-process.env.NODE_ENV === "dev" &&
+process.env.NODE_ENV === "development" &&
   servers.push({
     url: `http://localhost:${process.env.PORT}/`,
     description: "Local server",

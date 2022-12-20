@@ -21,12 +21,9 @@ class StockRouter {
     this._router.get("/list", async (req: Request, res: Response) => {
       await this._controller.getList(req, res);
     });
-    this._router.put(
-      "/fillWithExampleData",
-      async (req: Request, res: Response) => {
-        await this._controller.fillWithExampleData(res);
-      }
-    );
+    this._router.get("/logo/*", async (req: Request, res: Response) => {
+      await this._controller.getLogo(req, res);
+    });
     this._router.get("/*", async (req: Request, res: Response) => {
       await this._controller.get(req, res);
     });

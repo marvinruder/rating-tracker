@@ -61,9 +61,12 @@ const put: OpenAPIV3.OperationObject = {
       required: true,
     },
     {
+      ...stock.isin,
+      required: true,
+    },
+    {
       ...stock.country,
       required: true,
-      allowReserved: false,
       schema: {
         $ref: "#/components/schemas/Country",
       },
@@ -90,13 +93,32 @@ const patch: OpenAPIV3.OperationObject = {
     stock.name,
     {
       ...stock.country,
-      allowReserved: false,
       schema: {
         $ref: "#/components/schemas/Country",
       },
     },
     {
       ...stock.morningstarId,
+      allowEmptyValue: true,
+    },
+    {
+      ...stock.marketScreenerId,
+      allowEmptyValue: true,
+    },
+    {
+      ...stock.msciId,
+      allowEmptyValue: true,
+    },
+    {
+      ...stock.ric,
+      allowEmptyValue: true,
+    },
+    {
+      ...stock.spId,
+      allowEmptyValue: true,
+    },
+    {
+      ...stock.sustainalyticsId,
       allowEmptyValue: true,
     },
   ],

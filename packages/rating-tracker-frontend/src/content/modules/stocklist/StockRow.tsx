@@ -1,7 +1,9 @@
 import {
   Autocomplete,
+  Avatar,
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -20,7 +22,11 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import ThermostatIcon from "@mui/icons-material/Thermostat";
 import SectorIcon from "../../../components/SectorIcon";
 import StarRating from "../../../components/StarRating";
 import StyleBox from "../../../components/StyleBox";
@@ -45,8 +51,14 @@ import axios from "axios";
 import {
   baseUrl,
   fetchAPI,
+  logoEndpoint,
+  marketScreenerEndpoint,
   morningstarEndpoint,
+  msciEndpoint,
+  refinitivEndpoint,
+  spEndpoint,
   stockAPI,
+  sustainalyticsEndpoint,
 } from "../../../endpoints";
 import useNotification from "../../../helpers/useNotification";
 import { useState } from "react";
@@ -75,6 +87,34 @@ const Range52WSlider = styled(Slider)(({ theme }) => ({
 }));
 
 const StockRow = (props: StockRowProps) => {
+  const TemperatureChip = styled(Chip)(() => ({
+    ".MuiChip-icon": {
+      color:
+        props.stock.msciTemperature <= 1.5
+          ? theme.colors.msci.Aligned1
+          : props.stock.msciTemperature <= 2.0
+          ? theme.colors.msci.Aligned2
+          : props.stock.msciTemperature <= 3.2
+          ? theme.colors.msci.Misaligned
+          : theme.colors.msci.StronglyMisaligned,
+    },
+  }));
+  const GreenIconChip = styled(Chip)(() => ({
+    ".MuiChip-icon": {
+      color: theme.colors.sector.Defensive,
+    },
+  }));
+  const YellowIconChip = styled(Chip)(() => ({
+    ".MuiChip-icon": {
+      color: theme.colors.msci.Average,
+    },
+  }));
+  const BlueIconChip = styled(Chip)(() => ({
+    ".MuiChip-icon": {
+      color: theme.colors.primary.main,
+    },
+  }));
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
@@ -90,6 +130,29 @@ const StockRow = (props: StockRowProps) => {
   );
   const [morningstarIdRequestInProgress, setMorningstarIdRequestInProgress] =
     useState<boolean>(false);
+  const [marketScreenerId, setMarketScreenerId] = useState<string>(
+    props.stock?.marketScreenerId
+  );
+  const [
+    marketScreenerIdRequestInProgress,
+    setMarketScreenerIdRequestInProgress,
+  ] = useState<boolean>(false);
+  const [msciId, setMsciId] = useState<string>(props.stock?.msciId);
+  const [msciIdRequestInProgress, setMsciIdRequestInProgress] =
+    useState<boolean>(false);
+  const [ric, setRic] = useState<string>(props.stock?.ric);
+  const [ricRequestInProgress, setRicRequestInProgress] =
+    useState<boolean>(false);
+  const [spId, setSpId] = useState<number>(props.stock?.spId);
+  const [spIdRequestInProgress, setSpIdRequestInProgress] =
+    useState<boolean>(false);
+  const [sustainalyticsId, setSustainalyticsId] = useState<string>(
+    props.stock?.sustainalyticsId
+  );
+  const [
+    sustainalyticsIdRequestInProgress,
+    setSustainalyticsIdRequestInProgress,
+  ] = useState<boolean>(false);
   const theme = useTheme();
   const { setNotification } = useNotification();
 
@@ -110,6 +173,17 @@ const StockRow = (props: StockRowProps) => {
             morningstarId:
               morningstarId !== props.stock.morningstarId
                 ? morningstarId
+                : undefined,
+            marketScreenerId:
+              marketScreenerId !== props.stock.marketScreenerId
+                ? marketScreenerId
+                : undefined,
+            msciId: msciId !== props.stock.msciId ? msciId : undefined,
+            ric: ric !== props.stock.ric ? ric : undefined,
+            spId: spId !== props.stock.spId ? spId : undefined,
+            sustainalyticsId:
+              sustainalyticsId !== props.stock.sustainalyticsId
+                ? sustainalyticsId
                 : undefined,
           },
         })
@@ -133,7 +207,7 @@ const StockRow = (props: StockRowProps) => {
       (setMorningstarIdRequestInProgress(true),
       axios
         .patch(baseUrl + stockAPI + `/${props.stock.ticker}`, undefined, {
-          params: { morningstarId: morningstarId },
+          params: { morningstarId },
         })
         .then(() => {
           if (morningstarId) {
@@ -162,6 +236,222 @@ const StockRow = (props: StockRowProps) => {
           setNotification({
             severity: "error",
             title: "Error while adding Morningstar ID",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+        }));
+  };
+
+  const patchStockMarketScreenerId = () => {
+    props.stock &&
+      props.getStocks &&
+      (setMarketScreenerIdRequestInProgress(true),
+      axios
+        .patch(baseUrl + stockAPI + `/${props.stock.ticker}`, undefined, {
+          params: { marketScreenerId },
+        })
+        .then(() => {
+          if (marketScreenerId) {
+            axios
+              .get(baseUrl + fetchAPI + marketScreenerEndpoint, {
+                params: { ticker: props.stock.ticker, noSkip: true },
+              })
+              .then(() => {})
+              .catch((e) => {
+                setNotification({
+                  severity: "error",
+                  title:
+                    "Error while fetching information from Market Screener",
+                  message:
+                    e.response?.status && e.response?.data?.message
+                      ? `${e.response.status}: ${e.response.data.message}`
+                      : e.message ?? "No additional information available.",
+                });
+              })
+              .finally(() => setMarketScreenerIdRequestInProgress(false));
+          } else {
+            setMarketScreenerIdRequestInProgress(false);
+          }
+        })
+        .catch((e) => {
+          setMarketScreenerIdRequestInProgress(false);
+          setNotification({
+            severity: "error",
+            title: "Error while adding Market Screener ID",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+        }));
+  };
+
+  const patchStockMsciId = () => {
+    props.stock &&
+      props.getStocks &&
+      (setMsciIdRequestInProgress(true),
+      axios
+        .patch(baseUrl + stockAPI + `/${props.stock.ticker}`, undefined, {
+          params: { msciId },
+        })
+        .then(() => {
+          if (msciId) {
+            axios
+              .get(baseUrl + fetchAPI + msciEndpoint, {
+                params: { ticker: props.stock.ticker, noSkip: true },
+              })
+              .then(() => {})
+              .catch((e) => {
+                setNotification({
+                  severity: "error",
+                  title: "Error while fetching information from MSCI",
+                  message:
+                    e.response?.status && e.response?.data?.message
+                      ? `${e.response.status}: ${e.response.data.message}`
+                      : e.message ?? "No additional information available.",
+                });
+              })
+              .finally(() => setMsciIdRequestInProgress(false));
+          } else {
+            setMsciIdRequestInProgress(false);
+          }
+        })
+        .catch((e) => {
+          setMsciIdRequestInProgress(false);
+          setNotification({
+            severity: "error",
+            title: "Error while adding MSCI ID",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+        }));
+  };
+
+  const patchStockRic = () => {
+    props.stock &&
+      props.getStocks &&
+      (setRicRequestInProgress(true),
+      axios
+        .patch(baseUrl + stockAPI + `/${props.stock.ticker}`, undefined, {
+          params: { ric },
+        })
+        .then(() => {
+          if (ric) {
+            axios
+              .get(baseUrl + fetchAPI + refinitivEndpoint, {
+                params: { ticker: props.stock.ticker, noSkip: true },
+              })
+              .then(() => {})
+              .catch((e) => {
+                setNotification({
+                  severity: "error",
+                  title: "Error while fetching information from Refinitiv",
+                  message:
+                    e.response?.status && e.response?.data?.message
+                      ? `${e.response.status}: ${e.response.data.message}`
+                      : e.message ?? "No additional information available.",
+                });
+              })
+              .finally(() => setRicRequestInProgress(false));
+          } else {
+            setRicRequestInProgress(false);
+          }
+        })
+        .catch((e) => {
+          setRicRequestInProgress(false);
+          setNotification({
+            severity: "error",
+            title: "Error while adding RIC",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+        }));
+  };
+
+  const patchStockSpId = () => {
+    props.stock &&
+      props.getStocks &&
+      (setSpIdRequestInProgress(true),
+      axios
+        .patch(baseUrl + stockAPI + `/${props.stock.ticker}`, undefined, {
+          params: { spId },
+        })
+        .then(() => {
+          if (spId) {
+            axios
+              .get(baseUrl + fetchAPI + spEndpoint, {
+                params: { ticker: props.stock.ticker, noSkip: true },
+              })
+              .then(() => {})
+              .catch((e) => {
+                setNotification({
+                  severity: "error",
+                  title: "Error while fetching information from S&P",
+                  message:
+                    e.response?.status && e.response?.data?.message
+                      ? `${e.response.status}: ${e.response.data.message}`
+                      : e.message ?? "No additional information available.",
+                });
+              })
+              .finally(() => setSpIdRequestInProgress(false));
+          } else {
+            setSpIdRequestInProgress(false);
+          }
+        })
+        .catch((e) => {
+          setSpIdRequestInProgress(false);
+          setNotification({
+            severity: "error",
+            title: "Error while adding S&P ID",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+        }));
+  };
+
+  const patchStockSustainalyticsId = () => {
+    props.stock &&
+      props.getStocks &&
+      (setSustainalyticsIdRequestInProgress(true),
+      axios
+        .patch(baseUrl + stockAPI + `/${props.stock.ticker}`, undefined, {
+          params: { sustainalyticsId },
+        })
+        .then(() => {
+          if (sustainalyticsId) {
+            axios
+              .get(baseUrl + fetchAPI + sustainalyticsEndpoint, {
+                params: { ticker: props.stock.ticker },
+              })
+              .then(() => {})
+              .catch((e) => {
+                setNotification({
+                  severity: "error",
+                  title: "Error while fetching information from Sustainalytics",
+                  message:
+                    e.response?.status && e.response?.data?.message
+                      ? `${e.response.status}: ${e.response.data.message}`
+                      : e.message ?? "No additional information available.",
+                });
+              })
+              .finally(() => setSustainalyticsIdRequestInProgress(false));
+          } else {
+            setSustainalyticsIdRequestInProgress(false);
+          }
+        })
+        .catch((e) => {
+          setSustainalyticsIdRequestInProgress(false);
+          setNotification({
+            severity: "error",
+            title: "Error while adding Sustainalytics ID",
             message:
               e.response?.status && e.response?.data?.message
                 ? `${e.response.status}: ${e.response.data.message}`
@@ -207,18 +497,38 @@ const StockRow = (props: StockRowProps) => {
   return props.stock ? (
     <TableRow hover sx={{ height: 59 }}>
       <TableCell>
-        <Typography
-          variant="body1"
-          fontWeight="bold"
-          color="text.primary"
-          width={160}
-          noWrap
-        >
-          {props.stock.name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" width={160} noWrap>
-          {props.stock.ticker}
-        </Typography>
+        <span style={{ display: "flex", alignItems: "center" }}>
+          <Avatar
+            sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
+            src={
+              baseUrl +
+              stockAPI +
+              logoEndpoint +
+              `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`
+            }
+            alt=" "
+          />
+          <span style={{ width: 8 }} />
+          <div>
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              color="text.primary"
+              width={160}
+              noWrap
+            >
+              {props.stock.name}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              width={160}
+              noWrap
+            >
+              {props.stock.ticker} | {props.stock.isin}
+            </Typography>
+          </div>
+        </span>
       </TableCell>
       <TableCell>
         <Typography
@@ -321,6 +631,39 @@ const StockRow = (props: StockRowProps) => {
         </Typography>
       </TableCell>
       <TableCell>
+        <BlueIconChip
+          icon={<EmojiEventsIcon />}
+          label={
+            <strong>
+              {Math.round(Math.max(0, 100 * props.stock.getTotalScore()))}
+            </strong>
+          }
+          sx={{ width: 84, fontSize: 18 }}
+        />
+      </TableCell>
+      <TableCell>
+        <YellowIconChip
+          icon={<PriceCheckIcon />}
+          label={
+            <strong>
+              {Math.round(Math.max(0, 100 * props.stock.getFinancialScore()))}
+            </strong>
+          }
+          sx={{ width: 84, fontSize: 18 }}
+        />
+      </TableCell>
+      <TableCell>
+        <GreenIconChip
+          icon={<NaturePeopleIcon />}
+          label={
+            <strong>
+              {Math.round(Math.max(0, 100 * props.stock.getESGScore()))}
+            </strong>
+          }
+          sx={{ width: 84, fontSize: 18 }}
+        />
+      </TableCell>
+      <TableCell>
         <StarRating value={props.stock.starRating} />
       </TableCell>
       <TableCell>
@@ -350,10 +693,178 @@ const StockRow = (props: StockRowProps) => {
                 ? "+"
                 : ""
             }${Math.round(
-              100 *
-                (props.stock.lastClose / props.stock.morningstarFairValue - 1)
-            )} %`}
+              props.stock.getPercentageToLastClose("morningstarFairValue")
+            )}\u2009%`}
         </Typography>
+      </TableCell>
+      <TableCell>
+        {props.stock.analystConsensus && (
+          <Chip
+            label={<strong>{props.stock.analystConsensus}</strong>}
+            sx={{
+              backgroundColor:
+                props.stock.analystConsensus <= 0.5
+                  ? theme.colors.consensus[0]
+                  : props.stock.analystConsensus <= 1.5
+                  ? theme.colors.consensus[1]
+                  : props.stock.analystConsensus <= 2.5
+                  ? theme.colors.consensus[2]
+                  : props.stock.analystConsensus <= 3.5
+                  ? theme.colors.consensus[3]
+                  : props.stock.analystConsensus <= 4.5
+                  ? theme.colors.consensus[4]
+                  : props.stock.analystConsensus <= 5.5
+                  ? theme.colors.consensus[5]
+                  : props.stock.analystConsensus <= 6.5
+                  ? theme.colors.consensus[6]
+                  : props.stock.analystConsensus <= 7.5
+                  ? theme.colors.consensus[7]
+                  : props.stock.analystConsensus <= 8.5
+                  ? theme.colors.consensus[8]
+                  : props.stock.analystConsensus <= 9.5
+                  ? theme.colors.consensus[9]
+                  : theme.colors.consensus[10],
+              opacity:
+                props.stock.analystCount < 10
+                  ? props.stock.analystCount / 10
+                  : 1,
+              width: 60,
+            }}
+            size="small"
+          />
+        )}
+      </TableCell>
+      <TableCell>
+        <Typography
+          variant="body1"
+          fontWeight="bold"
+          color="text.primary"
+          sx={{
+            opacity:
+              props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
+          }}
+          width={90}
+          noWrap
+        >
+          <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
+          <span style={{ float: "right" }}>
+            {props.stock.analystTargetPrice?.toFixed(2) ?? "–"}
+          </span>
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          width={45}
+          sx={{ textAlign: "left", display: "inline-block" }}
+          noWrap
+        >
+          {props.stock.analystTargetPrice &&
+            props.stock.analystCount &&
+            props.stock.lastClose &&
+            `n\u2009=\u2009${props.stock.analystCount}`}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          width={45}
+          sx={{ textAlign: "right", display: "inline-block" }}
+          noWrap
+        >
+          {props.stock.analystTargetPrice &&
+            props.stock.analystCount &&
+            props.stock.lastClose &&
+            `${
+              props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""
+            }${Math.round(
+              props.stock.getPercentageToLastClose("analystTargetPrice")
+            )}\u2009%`}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        {props.stock.msciESGRating && (
+          <Chip
+            label={<strong>{props.stock.msciESGRating}</strong>}
+            sx={{
+              backgroundColor: ["AAA", "AA"].includes(props.stock.msciESGRating)
+                ? theme.colors.msci.Leader
+                : ["B", "CCC"].includes(props.stock.msciESGRating)
+                ? theme.colors.msci.Laggard
+                : theme.colors.msci.Average,
+              color: theme.colors.alpha.trueWhite[100],
+              width: 48,
+            }}
+            size="small"
+          />
+        )}
+      </TableCell>
+      <TableCell>
+        {props.stock.msciTemperature && (
+          <TemperatureChip
+            icon={<ThermostatIcon />}
+            label={<strong>{props.stock.msciTemperature + "°C"}</strong>}
+            size="small"
+            sx={{ width: 72 }}
+          />
+        )}
+      </TableCell>
+      <TableCell>
+        <div style={{ minWidth: 90, display: "flex", alignItems: "center" }}>
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+            color="text.primary"
+            width={45}
+            fontSize={18}
+            sx={{ textAlign: "left", display: "inline-block" }}
+            noWrap
+          >
+            {props.stock.refinitivESGScore}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            width={45}
+            fontSize={18}
+            sx={{ textAlign: "right", display: "inline-block" }}
+            noWrap
+          >
+            {props.stock.refinitivEmissions}
+          </Typography>
+        </div>
+      </TableCell>
+      <TableCell>
+        <Typography
+          variant="body1"
+          fontWeight="bold"
+          color="text.primary"
+          width={48}
+          fontSize={18}
+          noWrap
+          align="right"
+        >
+          {props.stock.spESGScore}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        {props.stock.sustainalyticsESGRisk && (
+          <Chip
+            label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
+            sx={{
+              backgroundColor:
+                props.stock.sustainalyticsESGRisk < 10
+                  ? theme.colors.sustainalytics.negligible
+                  : props.stock.sustainalyticsESGRisk < 20
+                  ? theme.colors.sustainalytics.low
+                  : props.stock.sustainalyticsESGRisk < 30
+                  ? theme.colors.sustainalytics.medium
+                  : props.stock.sustainalyticsESGRisk < 40
+                  ? theme.colors.sustainalytics.high
+                  : theme.colors.sustainalytics.severe,
+              width: 64,
+            }}
+            size="small"
+          />
+        )}
       </TableCell>
       <TableCell>
         {props.stock.lastClose && props.stock.low52w && props.stock.high52w && (
@@ -368,10 +879,17 @@ const StockRow = (props: StockRowProps) => {
             min={props.stock.low52w}
             max={props.stock.high52w}
             marks={[
-              { value: props.stock.low52w, label: props.stock.low52w },
-              { value: props.stock.high52w, label: props.stock.high52w },
+              {
+                value: props.stock.low52w,
+                label: props.stock.low52w?.toFixed(2),
+              },
+              {
+                value: props.stock.high52w,
+                label: props.stock.high52w?.toFixed(2),
+              },
             ]}
             valueLabelDisplay="on"
+            valueLabelFormat={(value) => value.toFixed(2)}
             disabled
           />
         )}
@@ -385,7 +903,7 @@ const StockRow = (props: StockRowProps) => {
           noWrap
         >
           {props.stock.dividendYieldPercent ?? "–"}
-          {" %"}
+          {"\u2009%"}
         </Typography>
       </TableCell>
       <TableCell>
@@ -499,13 +1017,21 @@ const StockRow = (props: StockRowProps) => {
                   isCountry(value) &&
                   (setCountry(value), setCountryError(false))
                 }
-                filterOptions={(options) =>
-                  options.filter((option) =>
-                    countryName[option]
-                      .toUpperCase()
-                      .startsWith(countryInputValue?.trim().toUpperCase())
-                  )
-                }
+                filterOptions={(options) => {
+                  const currentInputValue = countryInputValue
+                    .trim()
+                    .toUpperCase();
+                  const filteredOptions = options.filter(
+                    (option) =>
+                      countryName[option]
+                        .toUpperCase()
+                        .startsWith(countryInputValue.trim().toUpperCase()) &&
+                      option != currentInputValue
+                  );
+                  isCountry(currentInputValue) &&
+                    filteredOptions.unshift(currentInputValue);
+                  return filteredOptions;
+                }}
                 disableClearable
                 renderInput={(params) => (
                   <TextField {...params} label="Country" error={countryError} />
@@ -530,6 +1056,139 @@ const StockRow = (props: StockRowProps) => {
                   size="small"
                   loading={morningstarIdRequestInProgress}
                   onClick={patchStockMorningstarId}
+                  disabled={requestInProgress}
+                  variant="contained"
+                  startIcon={<PublishedWithChangesIcon />}
+                >
+                  {"Update and fetch"}
+                </LoadingButton>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} container spacing={1} alignItems="center">
+              <Grid item xs={7.5}>
+                <TextField
+                  onChange={(event) => {
+                    setMarketScreenerId(event.target.value);
+                  }}
+                  label="MarketScreener ID"
+                  value={marketScreenerId}
+                  placeholder={"e.g. APPLE-INC-4849"}
+                  sx={{ maxWidth: "300px" }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item>
+                <LoadingButton
+                  size="small"
+                  loading={marketScreenerIdRequestInProgress}
+                  onClick={patchStockMarketScreenerId}
+                  disabled={requestInProgress}
+                  variant="contained"
+                  startIcon={<PublishedWithChangesIcon />}
+                >
+                  {"Update and fetch"}
+                </LoadingButton>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} container spacing={1} alignItems="center">
+              <Grid item xs={7.5}>
+                <TextField
+                  onChange={(event) => {
+                    setMsciId(event.target.value);
+                  }}
+                  label="MSCI ID"
+                  value={msciId}
+                  placeholder={"e.g. apple-inc/IID000000002157615"}
+                  sx={{ maxWidth: "300px" }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item>
+                <LoadingButton
+                  size="small"
+                  loading={msciIdRequestInProgress}
+                  onClick={patchStockMsciId}
+                  disabled={requestInProgress}
+                  variant="contained"
+                  startIcon={<PublishedWithChangesIcon />}
+                >
+                  {"Update and fetch"}
+                </LoadingButton>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} container spacing={1} alignItems="center">
+              <Grid item xs={7.5}>
+                <TextField
+                  onChange={(event) => {
+                    setRic(event.target.value);
+                  }}
+                  label="RIC"
+                  value={ric}
+                  placeholder={"e.g. AAPL.O"}
+                  sx={{ maxWidth: "300px" }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item>
+                <LoadingButton
+                  size="small"
+                  loading={ricRequestInProgress}
+                  onClick={patchStockRic}
+                  disabled={requestInProgress}
+                  variant="contained"
+                  startIcon={<PublishedWithChangesIcon />}
+                >
+                  {"Update and fetch"}
+                </LoadingButton>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} container spacing={1} alignItems="center">
+              <Grid item xs={7.5}>
+                <TextField
+                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  onChange={(event) => {
+                    if (!isNaN(+event.target.value)) {
+                      setSpId(+event.target.value);
+                    }
+                  }}
+                  label="S&P ID"
+                  value={spId}
+                  placeholder={"e.g. 4004205"}
+                  sx={{ maxWidth: "300px" }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item>
+                <LoadingButton
+                  size="small"
+                  loading={spIdRequestInProgress}
+                  onClick={patchStockSpId}
+                  disabled={requestInProgress}
+                  variant="contained"
+                  startIcon={<PublishedWithChangesIcon />}
+                >
+                  {"Update and fetch"}
+                </LoadingButton>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} container spacing={1} alignItems="center">
+              <Grid item xs={7.5}>
+                <TextField
+                  onChange={(event) => {
+                    setSustainalyticsId(event.target.value);
+                  }}
+                  label="Sustainalytics ID"
+                  value={sustainalyticsId}
+                  placeholder={"e.g. apple-inc/1007903183"}
+                  sx={{ maxWidth: "300px" }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item>
+                <LoadingButton
+                  size="small"
+                  loading={sustainalyticsIdRequestInProgress}
+                  onClick={patchStockSustainalyticsId}
                   disabled={requestInProgress}
                   variant="contained"
                   startIcon={<PublishedWithChangesIcon />}
@@ -563,14 +1222,22 @@ const StockRow = (props: StockRowProps) => {
     </TableRow>
   ) : (
     <TableRow hover>
+      {/* Stock */}
       <TableCell>
-        <Typography variant="body1">
-          <Skeleton width={160} />
-        </Typography>
-        <Typography variant="body2">
-          <Skeleton width={160} />
-        </Typography>
+        <span style={{ display: "flex", alignItems: "center" }}>
+          <Skeleton variant="circular" width={40} height={40} />
+          <span style={{ width: 8 }} />
+          <div>
+            <Typography variant="body1">
+              <Skeleton width={160} />
+            </Typography>
+            <Typography variant="body2">
+              <Skeleton width={160} />
+            </Typography>
+          </div>
+        </span>
       </TableCell>
+      {/* Country */}
       <TableCell>
         <Typography variant="body1">
           <Skeleton width={125} />
@@ -579,6 +1246,7 @@ const StockRow = (props: StockRowProps) => {
           <Skeleton width={125} />
         </Typography>
       </TableCell>
+      {/* Size|Style */}
       <TableCell>
         <Skeleton
           variant="rectangular"
@@ -586,12 +1254,16 @@ const StockRow = (props: StockRowProps) => {
           height={2.75 * (theme.typography.body1.fontSize as number)}
         />
       </TableCell>
+      {/* Sector */}
       <TableCell>
         <Typography variant="body1" display={"flex"}>
           <Skeleton
             variant="rectangular"
-            width={1.75 * (theme.typography.body1.fontSize as number)}
-            height={1.75 * (theme.typography.body1.fontSize as number)}
+            width={1.55 * (theme.typography.body1.fontSize as number)}
+            height={1.55 * (theme.typography.body1.fontSize as number)}
+            sx={{
+              m: `${0.1 * (theme.typography.body1.fontSize as number)}px`,
+            }}
           />
           <span style={{ width: 6 }} />
           <Skeleton width={105} />
@@ -599,13 +1271,17 @@ const StockRow = (props: StockRowProps) => {
         <Typography variant="body2" display={"flex"}>
           <Skeleton
             variant="rectangular"
-            width={1.75 * (theme.typography.body1.fontSize as number)}
-            height={1.75 * (theme.typography.body1.fontSize as number)}
+            width={1.55 * (theme.typography.body1.fontSize as number)}
+            height={1.55 * (theme.typography.body1.fontSize as number)}
+            sx={{
+              m: `${0.1 * (theme.typography.body1.fontSize as number)}px`,
+            }}
           />
           <span style={{ width: 6 }} />
           <Skeleton width={105} />
         </Typography>
       </TableCell>
+      {/* Industry */}
       <TableCell>
         <Typography variant="body1">
           <Skeleton width={150} />
@@ -614,6 +1290,7 @@ const StockRow = (props: StockRowProps) => {
           <Skeleton width={150} />
         </Typography>
       </TableCell>
+      {/* Star Rating */}
       <TableCell>
         <span style={{ whiteSpace: "nowrap" }}>
           {[...Array(5).keys()].map((index) => {
@@ -633,6 +1310,7 @@ const StockRow = (props: StockRowProps) => {
           })}
         </span>
       </TableCell>
+      {/* Fair Value */}
       <TableCell>
         <Typography variant="body1">
           <Skeleton width={90} />
@@ -641,24 +1319,72 @@ const StockRow = (props: StockRowProps) => {
           <Skeleton width={90} />
         </Typography>
       </TableCell>
+      {/* Analyst Consensus */}
+      <TableCell>
+        <Skeleton variant="rounded" width={60} height={24} />
+      </TableCell>
+      {/* Analyst Target */}
+      <TableCell>
+        <Typography variant="body1">
+          <Skeleton width={90} />
+        </Typography>
+        <Typography variant="body2">
+          <Skeleton width={90} />
+        </Typography>
+      </TableCell>
+      {/* MSCI ESG */}
+      <TableCell>
+        <Skeleton width={48} height={24} />
+      </TableCell>
+      {/* MSCI Temp */}
+      <TableCell>
+        <Skeleton width={72} height={24} />
+      </TableCell>
+      {/* Refinitiv + Emissions */}
+      <TableCell>
+        <div style={{ minWidth: 90, display: "flex", alignItems: "center" }}>
+          <Typography variant="body1" fontSize={18}>
+            <Skeleton width={30} />
+          </Typography>
+          <div style={{ width: 30 }} />
+          <Typography variant="body2" fontSize={18}>
+            <Skeleton width={30} />
+          </Typography>
+        </div>
+      </TableCell>
+      {/* S&P */}
+      <TableCell>
+        <Typography variant="body1" fontSize={18}>
+          <Skeleton width={48} />
+        </Typography>
+      </TableCell>
+      {/* Sustainalytics ESG Risk */}
+      <TableCell>
+        <Skeleton variant="rounded" width={64} height={24} />
+      </TableCell>
+      {/* 52W Range */}
       <TableCell>
         <Skeleton variant="rectangular" width={150} height={42} />
       </TableCell>
+      {/* Div Yield */}
       <TableCell>
         <Typography variant="body1">
           <Skeleton width={45} />
         </Typography>
       </TableCell>
+      {/* P/E */}
       <TableCell>
         <Typography variant="body1">
           <Skeleton width={45} />
         </Typography>
       </TableCell>
+      {/* Market Cap */}
       <TableCell>
         <Typography variant="body1">
           <Skeleton width={75} />
         </Typography>
       </TableCell>
+      {/* Actions */}
       {props.getStocks && (
         <TableCell align="right">
           <Skeleton

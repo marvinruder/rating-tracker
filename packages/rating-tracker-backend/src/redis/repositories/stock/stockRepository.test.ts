@@ -1,10 +1,14 @@
 import { jest } from "@jest/globals";
 
 jest.unstable_mockModule(
-  "../../signal/signalBase",
-  async () => await import("../../../signal/__mocks__/signalBase")
+  "../../../lib/logger",
+  async () => await import("../../../lib/__mocks__/logger")
 );
 
+jest.unstable_mockModule(
+  "../../../signal/signalBase",
+  async () => await import("../../../signal/__mocks__/signalBase")
+);
 jest.unstable_mockModule(
   "./stockRepositoryBase",
   async () => await import("./__mocks__/stockRepositoryBase")
@@ -32,18 +36,23 @@ afterAll((done) => {
 
 describe("CRUD methods for single stock that are difficult to test otherwise", () => {
   it("updates a single stock", async () => {
-    await createStock({
-      ticker: "NEWSTOCK",
-      name: "New Stock Inc.",
-    });
+    await createStock(
+      new Stock({
+        ticker: "NEWSTOCK",
+        name: "New Stock Inc.",
+        isin: "US123456789",
+        country: "US",
+      })
+    );
 
-    const newValues: Omit<Stock, "ticker"> = {
+    const newValues: Partial<Omit<Stock, "ticker">> = {
       name: "Updated Stock",
       country: "CA",
+      isin: "CA012345678",
       industry: "LumberWoodProduction",
       size: "Mid",
       style: "Blend",
-      morningstarId: "CA012345678",
+      morningstarId: "0P012345678",
       morningstarLastFetch: new Date(),
       starRating: 4,
       dividendYieldPercent: 3.61,
@@ -54,6 +63,24 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       marketCap: 67800000000,
       low52w: 101.23,
       high52w: 145.67,
+      marketScreenerId: "NEW-STOCK-238712974",
+      marketScreenerLastFetch: new Date(),
+      analystConsensus: 2.5,
+      analystCount: 5,
+      analystTargetPrice: 150,
+      msciId: "new-stock/IID000001238712974",
+      msciLastFetch: new Date(),
+      msciESGRating: "BB",
+      msciTemperature: 2.1,
+      ric: "NEWSTOCK.OQ",
+      refinitivLastFetch: new Date(),
+      refinitivESGScore: 74,
+      refinitivEmissions: 23,
+      spId: 4123456,
+      spLastFetch: new Date(),
+      spESGScore: 78,
+      sustainalyticsId: "newstock/1238712974",
+      sustainalyticsESGRisk: 31.2,
     };
 
     await updateStock("NEWSTOCK", newValues);

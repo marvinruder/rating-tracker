@@ -36,6 +36,7 @@ const sortDesc: OpenAPIV3.ParameterObject = {
   description: "Whether to sort descending.",
   schema: {
     type: "boolean",
+    example: false,
   },
 };
 
@@ -59,12 +60,21 @@ const name: OpenAPIV3.ParameterObject = {
   },
 };
 
+const isin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "isin",
+  description: "The ISIN of a stock.",
+  schema: {
+    type: "string",
+    example: "US0378331005",
+  },
+};
+
 const country: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "country",
   description: "A country a stock is based in.",
   explode: false,
-  allowReserved: true,
   schema: {
     type: "array",
     items: {
@@ -78,7 +88,6 @@ const industry: OpenAPIV3.ParameterObject = {
   name: "industry",
   description: "An industry a stock operates in.",
   explode: false,
-  allowReserved: true,
   schema: {
     type: "array",
     items: {
@@ -115,6 +124,56 @@ const morningstarId: OpenAPIV3.ParameterObject = {
   },
 };
 
+const marketScreenerId: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "marketScreenerId",
+  description: "The identifier of a stock used by Market Screener",
+  schema: {
+    type: "string",
+    example: "APPLE-INC-4849",
+  },
+};
+
+const msciId: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "msciId",
+  description: "The identifier of a stock used by MSCI",
+  schema: {
+    type: "string",
+    example: "apple-inc/IID000000002157615",
+  },
+};
+
+const ric: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "ric",
+  description: "The Reuters Instrument Code of a stock used by Refintiv",
+  schema: {
+    type: "string",
+    example: "AAPL.O",
+  },
+};
+
+const spId: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "spId",
+  description: "The identifier of a stock used by Standard & Poor's",
+  schema: {
+    type: "integer",
+    example: "4004205",
+  },
+};
+
+const sustainalyticsId: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "sustainalyticsId",
+  description: "The identifier of a stock used by Sustainalytics",
+  schema: {
+    type: "string",
+    example: "apple-inc/1007903183",
+  },
+};
+
 export {
   offset,
   count,
@@ -122,9 +181,15 @@ export {
   sortDesc,
   ticker,
   name,
+  isin,
   country,
   industry,
   size,
   style,
   morningstarId,
+  marketScreenerId,
+  msciId,
+  ric,
+  spId,
+  sustainalyticsId,
 };

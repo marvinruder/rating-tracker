@@ -29,8 +29,8 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
-  const [sortBy, setSortBy] = useState<SortableAttribute>("name");
-  const [sortDesc, setSortDesc] = useState<boolean>(false);
+  const [sortBy, setSortBy] = useState<SortableAttribute>("totalScore");
+  const [sortDesc, setSortDesc] = useState<boolean>(true);
   const { setNotification } = useNotification();
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
         },
       })
       .then((res) => {
-        setStocks(res.data.stocks);
+        setStocks(res.data.stocks.map((stock: any) => new Stock(stock)));
         setCount(res.data.count);
       })
       .catch((e) => {
@@ -135,6 +135,37 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
               <TableCell>Industry</TableCell>
               <TableCell>
                 <TableSortLabel
+                  active={sortBy === "totalScore"}
+                  direction={
+                    sortBy === "totalScore" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("totalScore")}
+                >
+                  Score
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "financialScore"}
+                  direction={
+                    sortBy === "financialScore" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("financialScore")}
+                >
+                  Financial
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "esgScore"}
+                  direction={sortBy === "esgScore" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("esgScore")}
+                >
+                  ESG
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
                   active={sortBy === "starRating"}
                   direction={
                     sortBy === "starRating" && sortDesc ? "desc" : "asc"
@@ -155,6 +186,96 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   onClick={handleSortLabelClicked("morningstarFairValue")}
                 >
                   Fair Value
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "analystConsensus"}
+                  direction={
+                    sortBy === "analystConsensus" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("analystConsensus")}
+                >
+                  Anlst Consns
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "analystTargetPrice"}
+                  direction={
+                    sortBy === "analystTargetPrice" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("analystTargetPrice")}
+                >
+                  Analyst Target
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "msciESGRating"}
+                  direction={
+                    sortBy === "msciESGRating" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("msciESGRating")}
+                >
+                  MSCI ESG
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "msciTemperature"}
+                  direction={
+                    sortBy === "msciTemperature" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("msciTemperature")}
+                >
+                  MSCI Temp
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "refinitivESGScore"}
+                  direction={
+                    sortBy === "refinitivESGScore" || sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("refinitivESGScore")}
+                >
+                  Refinitiv
+                </TableSortLabel>
+                <br />
+                <TableSortLabel
+                  active={sortBy === "refinitivEmissions"}
+                  direction={
+                    sortBy === "refinitivEmissions" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("refinitivEmissions")}
+                  sx={{ flexDirection: "row-reverse" }}
+                >
+                  Emissions
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "spESGScore"}
+                  direction={
+                    sortBy === "spESGScore" && sortDesc ? "desc" : "asc"
+                  }
+                  onClick={handleSortLabelClicked("spESGScore")}
+                >
+                  S&P
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === "sustainalyticsESGRisk"}
+                  direction={
+                    sortBy === "sustainalyticsESGRisk" && sortDesc
+                      ? "desc"
+                      : "asc"
+                  }
+                  onClick={handleSortLabelClicked("sustainalyticsESGRisk")}
+                >
+                  Sustain-alytics
                 </TableSortLabel>
               </TableCell>
               <TableCell>
