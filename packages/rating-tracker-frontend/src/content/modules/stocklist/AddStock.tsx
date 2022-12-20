@@ -386,7 +386,7 @@ const AddStock = (props: AddStockProps) => {
     axios
       .get(baseUrl + stockAPI + `/${stock.ticker}`)
       .then((res) => {
-        setStock(res.data);
+        setStock(new Stock(res.data));
         handleNext();
       })
       .catch((e) => {
