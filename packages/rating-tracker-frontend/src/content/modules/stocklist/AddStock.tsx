@@ -47,12 +47,14 @@ import useNotification from "../../../helpers/useNotification";
 
 const AddStock = (props: AddStockProps) => {
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [stock, setStock] = useState<Stock>({
-    ticker: "",
-    name: "",
-    isin: "",
-    country: undefined,
-  });
+  const [stock, setStock] = useState<Stock>(
+    new Stock({
+      ticker: "",
+      name: "",
+      isin: "",
+      country: undefined,
+    })
+  );
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [countryInputValue, setCountryInputValue] = useState<string>("");
   const [tickerError, setTickerError] = useState<boolean>(false);
@@ -348,7 +350,7 @@ const AddStock = (props: AddStockProps) => {
         if (stock.sustainalyticsId) {
           axios
             .get(baseUrl + fetchAPI + sustainalyticsEndpoint, {
-              params: { ticker: stock.ticker, noSkip: true },
+              params: { ticker: stock.ticker },
             })
             .then(() => {})
             .catch((e) => {
@@ -414,7 +416,10 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return { ...prevStock, ticker: event.target.value };
+                    return new Stock({
+                      ...prevStock,
+                      ticker: event.target.value,
+                    });
                   });
                   setTickerError(false);
                 }}
@@ -430,7 +435,10 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return { ...prevStock, name: event.target.value };
+                    return new Stock({
+                      ...prevStock,
+                      name: event.target.value,
+                    });
                   });
                   setNameError(false);
                 }}
@@ -446,13 +454,19 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return { ...prevStock, isin: event.target.value };
+                    return new Stock({
+                      ...prevStock,
+                      isin: event.target.value,
+                    });
                   });
                   if (!stock.country && event.target.value.length >= 2) {
                     const possibleCountry = event.target.value.substring(0, 2);
                     if (isCountry(possibleCountry)) {
                       setStock((prevStock) => {
-                        return { ...prevStock, country: possibleCountry };
+                        return new Stock({
+                          ...prevStock,
+                          country: possibleCountry,
+                        });
                       });
                     }
                   }
@@ -484,7 +498,7 @@ const AddStock = (props: AddStockProps) => {
                 onChange={(_, value) =>
                   isCountry(value) &&
                   (setStock((prevStock) => {
-                    return { ...prevStock, country: value };
+                    return new Stock({ ...prevStock, country: value });
                   }),
                   setCountryError(false))
                 }
@@ -539,7 +553,10 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return { ...prevStock, morningstarId: event.target.value };
+                    return new Stock({
+                      ...prevStock,
+                      morningstarId: event.target.value,
+                    });
                   });
                 }}
                 label="Morningstar ID"
@@ -566,10 +583,10 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return {
+                    return new Stock({
                       ...prevStock,
                       marketScreenerId: event.target.value,
-                    };
+                    });
                   });
                 }}
                 label="Market Screener ID"
@@ -596,7 +613,10 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return { ...prevStock, msciId: event.target.value };
+                    return new Stock({
+                      ...prevStock,
+                      msciId: event.target.value,
+                    });
                   });
                 }}
                 label="MSCI ID"
@@ -623,7 +643,7 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return { ...prevStock, ric: event.target.value };
+                    return new Stock({ ...prevStock, ric: event.target.value });
                   });
                 }}
                 label="RIC"
@@ -652,7 +672,10 @@ const AddStock = (props: AddStockProps) => {
                 onChange={(event) => {
                   if (!isNaN(+event.target.value)) {
                     setStock((prevStock) => {
-                      return { ...prevStock, spId: +event.target.value };
+                      return new Stock({
+                        ...prevStock,
+                        spId: +event.target.value,
+                      });
                     });
                   }
                 }}
@@ -680,10 +703,10 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return {
+                    return new Stock({
                       ...prevStock,
                       sustainalyticsId: event.target.value,
-                    };
+                    });
                   });
                 }}
                 label="Sustainalytics ID"

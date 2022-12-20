@@ -429,7 +429,7 @@ const StockRow = (props: StockRowProps) => {
           if (sustainalyticsId) {
             axios
               .get(baseUrl + fetchAPI + sustainalyticsEndpoint, {
-                params: { ticker: props.stock.ticker, noSkip: true },
+                params: { ticker: props.stock.ticker },
               })
               .then(() => {})
               .catch((e) => {
