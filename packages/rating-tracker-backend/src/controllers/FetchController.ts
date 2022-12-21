@@ -518,74 +518,90 @@ class FetchController {
 
         let errorMessage = `Error while fetching MarketScreener data for stock ${stock.ticker}:`;
 
-        const consensusTableDiv = await driver.findElement(
-          By.xpath(XPATH_CONSENSUS_DIV)
-        );
-
         try {
-          analystConsensus = +(
-            await (
-              await consensusTableDiv.findElement(
-                By.xpath(XPATH_CONSENSUS_NOTE)
-              )
-            ).getAttribute("title")
-          ).match(/(\d+(\.\d+)?)/g)[0];
-        } catch (e) {
-          logger.warn(
-            PREFIX_CHROME +
-              chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e.message}`
-              )
+          const consensusTableDiv = await driver.findElement(
+            By.xpath(XPATH_CONSENSUS_DIV)
           );
-          if (stock.analystConsensus !== undefined) {
-            errorMessage += `\n\tUnable to extract Analyst Consensus: ${e.message}`;
-          }
-        }
 
-        try {
-          analystCount = +(await (
-            await consensusTableDiv.findElement(By.xpath(XPATH_ANALYST_COUNT))
-          ).getText());
-        } catch (e) {
-          logger.warn(
-            PREFIX_CHROME +
-              chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e.message}`
-              )
-          );
-          if (stock.analystCount !== undefined) {
-            errorMessage += `\n\tUnable to extract Analyst Count: ${e.message}`;
-          }
-        }
-
-        try {
-          if (!stock.lastClose) {
-            throw new Error(
-              "No Last Close price available to compare spread against."
-            );
-          }
-          analystTargetPrice =
-            stock.lastClose *
-            (+(
+          try {
+            analystConsensus = +(
               await (
                 await consensusTableDiv.findElement(
-                  By.xpath(XPATH_SPREAD_AVERAGE_TARGET)
+                  By.xpath(XPATH_CONSENSUS_NOTE)
                 )
-              ).getText()
-            )
-              .replaceAll(",", ".")
-              .match(/(\-)?\d+(\.\d+)?/g)[0] /
-              100 +
-              1);
+              ).getAttribute("title")
+            ).match(/(\d+(\.\d+)?)/g)[0];
+          } catch (e) {
+            logger.warn(
+              PREFIX_CHROME +
+                chalk.yellowBright(
+                  `Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e.message}`
+                )
+            );
+            if (stock.analystConsensus !== undefined) {
+              errorMessage += `\n\tUnable to extract Analyst Consensus: ${e.message}`;
+            }
+          }
+
+          try {
+            analystCount = +(await (
+              await consensusTableDiv.findElement(By.xpath(XPATH_ANALYST_COUNT))
+            ).getText());
+          } catch (e) {
+            logger.warn(
+              PREFIX_CHROME +
+                chalk.yellowBright(
+                  `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e.message}`
+                )
+            );
+            if (stock.analystCount !== undefined) {
+              errorMessage += `\n\tUnable to extract Analyst Count: ${e.message}`;
+            }
+          }
+
+          try {
+            if (!stock.lastClose) {
+              throw new Error(
+                "No Last Close price available to compare spread against."
+              );
+            }
+            analystTargetPrice =
+              stock.lastClose *
+              (+(
+                await (
+                  await consensusTableDiv.findElement(
+                    By.xpath(XPATH_SPREAD_AVERAGE_TARGET)
+                  )
+                ).getText()
+              )
+                .replaceAll(",", ".")
+                .match(/(\-)?\d+(\.\d+)?/g)[0] /
+                100 +
+                1);
+          } catch (e) {
+            logger.warn(
+              PREFIX_CHROME +
+                chalk.yellowBright(
+                  `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e.message}`
+                )
+            );
+            if (stock.analystTargetPrice !== undefined) {
+              errorMessage += `\n\tUnable to extract Analyst Target Price: ${e.message}`;
+            }
+          }
         } catch (e) {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e.message}`
+                `Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e.message}`
               )
           );
-          if (stock.analystTargetPrice !== undefined) {
-            errorMessage += `\n\tUnable to extract Analyst Target Price: ${e.message}`;
+          if (
+            stock.analystConsensus !== undefined ||
+            stock.analystCount !== undefined ||
+            stock.analystTargetPrice !== undefined
+          ) {
+            errorMessage += `\n\tUnable to extract Analyst Information: ${e.message}`;
           }
         }
 
