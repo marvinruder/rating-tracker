@@ -199,11 +199,15 @@ class FetchController {
         }
 
         try {
-          starRating = +(
+          const starRatingString = (
             await driver
               .findElement(By.xpath(XPATH_STAR_RATING))
               .getAttribute("alt")
           ).replaceAll(/\D/g, "");
+          if (starRatingString.length === 0 || isNaN(+starRatingString)) {
+            throw TypeError(`Extracted star rating is no valid number.`);
+          }
+          starRating = +starRatingString;
         } catch (e) {
           logger.warn(
             PREFIX_CHROME +
@@ -217,13 +221,16 @@ class FetchController {
         }
 
         try {
-          dividendYieldPercent = +(await driver
+          const dividendYieldPercentString = await driver
             .findElement(By.id("Col0Yield"))
-            .getText());
-          if (isNaN(dividendYieldPercent)) {
-            dividendYieldPercent = undefined;
+            .getText();
+          if (
+            dividendYieldPercentString.length === 0 ||
+            isNaN(+dividendYieldPercentString)
+          ) {
             throw TypeError(`Extracted dividend yield is no valid number.`);
           }
+          dividendYieldPercent = +dividendYieldPercentString;
         } catch (e) {
           logger.warn(
             PREFIX_CHROME +
@@ -237,15 +244,18 @@ class FetchController {
         }
 
         try {
-          priceEarningRatio = +(
+          const priceEarningRatioString = (
             await driver.findElement(By.id("Col0PE")).getText()
           ).replaceAll(",", "");
-          if (isNaN(priceEarningRatio)) {
-            priceEarningRatio = undefined;
+          if (
+            priceEarningRatioString.length === 0 ||
+            isNaN(+priceEarningRatioString)
+          ) {
             throw TypeError(
               `Extracted price earning ratio is no valid number.`
             );
           }
+          priceEarningRatio = +priceEarningRatioString;
         } catch (e) {
           logger.warn(
             PREFIX_CHROME +
@@ -283,13 +293,13 @@ class FetchController {
         }
 
         try {
-          lastClose = +(
+          const lastCloseString = (
             await driver.findElement(By.id("Col0LastClose")).getText()
           ).replaceAll(",", "");
-          if (isNaN(lastClose)) {
-            lastClose = undefined;
+          if (lastCloseString.length === 0 || isNaN(+lastCloseString)) {
             throw TypeError(`Extracted last close is no valid number.`);
           }
+          lastClose = +lastCloseString;
         } catch (e) {
           logger.warn(
             PREFIX_CHROME +
@@ -303,19 +313,22 @@ class FetchController {
         }
 
         try {
-          morningstarFairValue = +(
+          const morningstarFairValueString = (
             await driver
               .findElement(By.xpath(XPATH_MORNINGSTAR_FAIR_VALUE))
               .getText()
           )
             .split(/\s+/)[0]
             .replaceAll(",", "");
-          if (isNaN(morningstarFairValue)) {
-            morningstarFairValue = undefined;
+          if (
+            morningstarFairValueString.length === 0 ||
+            isNaN(+morningstarFairValueString)
+          ) {
             throw TypeError(
               `Extracted Morningstar Fair Value is no valid number.`
             );
           }
+          morningstarFairValue = +morningstarFairValueString;
         } catch (e) {
           logger.warn(
             PREFIX_CHROME +
@@ -343,7 +356,7 @@ class FetchController {
           } else {
             marketCap = +marketCapText;
           }
-          if (isNaN(marketCap)) {
+          if (!marketCapText.match(/\d+/) || isNaN(marketCap)) {
             marketCap = undefined;
             throw TypeError(
               `Extracted market capitalization is no valid number.`
@@ -362,20 +375,23 @@ class FetchController {
         }
 
         try {
-          const range52wTexts = (
+          const range52wStrings = (
             await driver.findElement(By.id("Col0WeekRange")).getText()
           )
             .replaceAll(",", "")
             .split(" - ");
-          low52w = +range52wTexts[0];
-          high52w = +range52wTexts[1];
-          if (isNaN(low52w) || isNaN(high52w)) {
-            low52w = undefined;
-            high52w = undefined;
+          if (
+            range52wStrings[0].length === 0 ||
+            range52wStrings[1].length === 0 ||
+            isNaN(+range52wStrings[0]) ||
+            isNaN(+range52wStrings[1])
+          ) {
             throw TypeError(
               `Extracted 52 week low or high is no valid number.`
             );
           }
+          low52w = +range52wStrings[0];
+          high52w = +range52wStrings[1];
         } catch (e) {
           logger.warn(
             PREFIX_CHROME +
