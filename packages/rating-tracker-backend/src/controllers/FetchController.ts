@@ -1280,7 +1280,7 @@ class FetchController {
         if (!sustainalyticsIdIndex) {
           throw new APIError(
             404,
-            `Stock ${stock.ticker}: Cannot find Sustainalytics ID ${stock.sustainalyticsId} in XML.`
+            `Cannot find Sustainalytics ID ${stock.sustainalyticsId} in XML.`
           );
         }
         const sustainalyticsESGRiskLine =
