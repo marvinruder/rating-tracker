@@ -1137,6 +1137,21 @@ class FetchController {
         await driver.get(
           `https://www.spglobal.com/esg/scores/results?cid=${stock.spId}`
         );
+
+        const lockedContent = await driver.findElements(
+          By.className("lock__content")
+        );
+        if (
+          lockedContent.length > 0 &&
+          (await lockedContent[0].getText()).includes(
+            "This company's ESG Score and underlying data are available via our premium channels"
+          )
+        ) {
+          throw new Error(
+            "This stock’s ESG Score is available for S&P Premium subscribers only."
+          );
+        }
+
         spESGScore = +(await (
           await driver.findElement(By.id("esg-score"))
         ).getText());
