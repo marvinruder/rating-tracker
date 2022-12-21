@@ -390,14 +390,27 @@ const StockRow = (props: StockRowProps) => {
               })
               .then(() => {})
               .catch((e) => {
-                setNotification({
-                  severity: "error",
-                  title: "Error while fetching information from S&P",
-                  message:
-                    e.response?.status && e.response?.data?.message
-                      ? `${e.response.status}: ${e.response.data.message}`
-                      : e.message ?? "No additional information available.",
-                });
+                if (
+                  (e.response?.data?.message as string | undefined)?.includes(
+                    "This stock’s ESG Score is available for S&P Premium subscribers only"
+                  )
+                ) {
+                  setNotification({
+                    severity: "warning",
+                    title: `Unable to fetch S&P Information for stock “${props.stock.name}” (${props.stock.ticker})`,
+                    message:
+                      "This stock’s ESG Score is available for S&P Premium subscribers only",
+                  });
+                } else {
+                  setNotification({
+                    severity: "error",
+                    title: "Error while fetching information from S&P",
+                    message:
+                      e.response?.status && e.response?.data?.message
+                        ? `${e.response.status}: ${e.response.data.message}`
+                        : e.message ?? "No additional information available.",
+                  });
+                }
               })
               .finally(() => setSpIdRequestInProgress(false));
           } else {
@@ -492,6 +505,48 @@ const StockRow = (props: StockRowProps) => {
     } else {
       return props.stock.marketCap.toPrecision(3);
     }
+  };
+
+  const navigateToMorningstar = () => {
+    props.stock.morningstarId &&
+      window.open(
+        `https://tools.morningstar.co.uk/uk/stockreport/default.aspx?Site=us&id=${props.stock.morningstarId}&LanguageId=en-US&SecurityToken=${props.stock.morningstarId}]3]0]E0WWE$$ALL`
+      );
+  };
+
+  const navigateToMarketScreener = () => {
+    props.stock.marketScreenerId &&
+      window.open(
+        `https://www.marketscreener.com/quote/stock/${props.stock.marketScreenerId}/`
+      );
+  };
+
+  const navigateToMSCI = () => {
+    props.stock.msciId &&
+      window.open(
+        `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${props.stock.msciId}`
+      );
+  };
+
+  const navigateToRefinitiv = () => {
+    props.stock.ric && navigator.clipboard.writeText(props.stock.name);
+    window.open("https://www.refinitiv.com/en/sustainable-finance/esg-scores");
+  };
+
+  const navigateToSP = () => {
+    props.stock.spId &&
+      window.open(
+        `https://www.spglobal.com/esg/scores/results?cid=${String(
+          props.stock.spId
+        )}`
+      );
+  };
+
+  const navigateToSustainalytics = () => {
+    props.stock.sustainalyticsId &&
+      window.open(
+        `https://www.sustainalytics.com/esg-rating/${props.stock.sustainalyticsId}`
+      );
   };
 
   return props.stock ? (
@@ -664,151 +719,206 @@ const StockRow = (props: StockRowProps) => {
         />
       </TableCell>
       <TableCell>
-        <StarRating value={props.stock.starRating} />
+        <span
+          onClick={navigateToMorningstar}
+          style={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
+        >
+          <StarRating value={props.stock.starRating} />
+        </span>
       </TableCell>
       <TableCell>
-        <Typography
-          variant="body1"
-          fontWeight="bold"
-          color="text.primary"
-          width={90}
-          noWrap
+        <span
+          onClick={navigateToMorningstar}
+          style={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
         >
-          <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
-          <span style={{ float: "right" }}>
-            {props.stock.morningstarFairValue?.toFixed(2) ?? "–"}
-          </span>
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          width={90}
-          sx={{ textAlign: "right" }}
-          noWrap
-        >
-          {props.stock.morningstarFairValue &&
-            props.stock.lastClose &&
-            `${
-              props.stock.lastClose > props.stock.morningstarFairValue
-                ? "+"
-                : ""
-            }${Math.round(
-              props.stock.getPercentageToLastClose("morningstarFairValue")
-            )}\u2009%`}
-        </Typography>
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+            color="text.primary"
+            width={90}
+            noWrap
+          >
+            <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
+            <span style={{ float: "right" }}>
+              {props.stock.morningstarFairValue?.toFixed(2) ?? "–"}
+            </span>
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            width={90}
+            sx={{ textAlign: "right" }}
+            noWrap
+          >
+            {props.stock.morningstarFairValue &&
+              props.stock.lastClose &&
+              `${
+                props.stock.lastClose > props.stock.morningstarFairValue
+                  ? "+"
+                  : ""
+              }${Math.round(
+                props.stock.getPercentageToLastClose("morningstarFairValue")
+              )}\u2009%`}
+          </Typography>
+        </span>
       </TableCell>
       <TableCell>
         {props.stock.analystConsensus && (
-          <Chip
-            label={<strong>{props.stock.analystConsensus}</strong>}
+          <span
+            onClick={navigateToMarketScreener}
+            style={{
+              cursor: props.stock.marketScreenerId ? "pointer" : undefined,
+            }}
+          >
+            <Chip
+              label={<strong>{props.stock.analystConsensus}</strong>}
+              style={{ cursor: "inherit" }}
+              sx={{
+                backgroundColor:
+                  props.stock.analystConsensus <= 0.5
+                    ? theme.colors.consensus[0]
+                    : props.stock.analystConsensus <= 1.5
+                    ? theme.colors.consensus[1]
+                    : props.stock.analystConsensus <= 2.5
+                    ? theme.colors.consensus[2]
+                    : props.stock.analystConsensus <= 3.5
+                    ? theme.colors.consensus[3]
+                    : props.stock.analystConsensus <= 4.5
+                    ? theme.colors.consensus[4]
+                    : props.stock.analystConsensus <= 5.5
+                    ? theme.colors.consensus[5]
+                    : props.stock.analystConsensus <= 6.5
+                    ? theme.colors.consensus[6]
+                    : props.stock.analystConsensus <= 7.5
+                    ? theme.colors.consensus[7]
+                    : props.stock.analystConsensus <= 8.5
+                    ? theme.colors.consensus[8]
+                    : props.stock.analystConsensus <= 9.5
+                    ? theme.colors.consensus[9]
+                    : theme.colors.consensus[10],
+                opacity:
+                  props.stock.analystCount < 10
+                    ? props.stock.analystCount / 10
+                    : 1,
+                width: 60,
+              }}
+              size="small"
+            />
+          </span>
+        )}
+      </TableCell>
+      <TableCell>
+        <span
+          onClick={navigateToMarketScreener}
+          style={{
+            cursor: props.stock.marketScreenerId ? "pointer" : undefined,
+          }}
+        >
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+            color="text.primary"
             sx={{
-              backgroundColor:
-                props.stock.analystConsensus <= 0.5
-                  ? theme.colors.consensus[0]
-                  : props.stock.analystConsensus <= 1.5
-                  ? theme.colors.consensus[1]
-                  : props.stock.analystConsensus <= 2.5
-                  ? theme.colors.consensus[2]
-                  : props.stock.analystConsensus <= 3.5
-                  ? theme.colors.consensus[3]
-                  : props.stock.analystConsensus <= 4.5
-                  ? theme.colors.consensus[4]
-                  : props.stock.analystConsensus <= 5.5
-                  ? theme.colors.consensus[5]
-                  : props.stock.analystConsensus <= 6.5
-                  ? theme.colors.consensus[6]
-                  : props.stock.analystConsensus <= 7.5
-                  ? theme.colors.consensus[7]
-                  : props.stock.analystConsensus <= 8.5
-                  ? theme.colors.consensus[8]
-                  : props.stock.analystConsensus <= 9.5
-                  ? theme.colors.consensus[9]
-                  : theme.colors.consensus[10],
               opacity:
                 props.stock.analystCount < 10
                   ? props.stock.analystCount / 10
                   : 1,
-              width: 60,
             }}
-            size="small"
-          />
-        )}
-      </TableCell>
-      <TableCell>
-        <Typography
-          variant="body1"
-          fontWeight="bold"
-          color="text.primary"
-          sx={{
-            opacity:
-              props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
-          }}
-          width={90}
-          noWrap
-        >
-          <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
-          <span style={{ float: "right" }}>
-            {props.stock.analystTargetPrice?.toFixed(2) ?? "–"}
-          </span>
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          width={45}
-          sx={{ textAlign: "left", display: "inline-block" }}
-          noWrap
-        >
-          {props.stock.analystTargetPrice &&
-            props.stock.analystCount &&
-            props.stock.lastClose &&
-            `n\u2009=\u2009${props.stock.analystCount}`}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          width={45}
-          sx={{ textAlign: "right", display: "inline-block" }}
-          noWrap
-        >
-          {props.stock.analystTargetPrice &&
-            props.stock.analystCount &&
-            props.stock.lastClose &&
-            `${
-              props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""
-            }${Math.round(
-              props.stock.getPercentageToLastClose("analystTargetPrice")
-            )}\u2009%`}
-        </Typography>
+            width={90}
+            noWrap
+          >
+            <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
+            <span style={{ float: "right" }}>
+              {props.stock.analystTargetPrice?.toFixed(2) ?? "–"}
+            </span>
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            width={45}
+            sx={{ textAlign: "left", display: "inline-block" }}
+            noWrap
+          >
+            {props.stock.analystTargetPrice &&
+              props.stock.analystCount &&
+              props.stock.lastClose &&
+              `n\u2009=\u2009${props.stock.analystCount}`}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            width={45}
+            sx={{ textAlign: "right", display: "inline-block" }}
+            noWrap
+          >
+            {props.stock.analystTargetPrice &&
+              props.stock.analystCount &&
+              props.stock.lastClose &&
+              `${
+                props.stock.lastClose > props.stock.analystTargetPrice
+                  ? "+"
+                  : ""
+              }${Math.round(
+                props.stock.getPercentageToLastClose("analystTargetPrice")
+              )}\u2009%`}
+          </Typography>
+        </span>
       </TableCell>
       <TableCell>
         {props.stock.msciESGRating && (
-          <Chip
-            label={<strong>{props.stock.msciESGRating}</strong>}
-            sx={{
-              backgroundColor: ["AAA", "AA"].includes(props.stock.msciESGRating)
-                ? theme.colors.msci.Leader
-                : ["B", "CCC"].includes(props.stock.msciESGRating)
-                ? theme.colors.msci.Laggard
-                : theme.colors.msci.Average,
-              color: theme.colors.alpha.trueWhite[100],
-              width: 48,
+          <span
+            onClick={navigateToMSCI}
+            style={{
+              cursor: props.stock.msciId ? "pointer" : undefined,
             }}
-            size="small"
-          />
+          >
+            <Chip
+              label={<strong>{props.stock.msciESGRating}</strong>}
+              style={{ cursor: "inherit" }}
+              sx={{
+                backgroundColor: ["AAA", "AA"].includes(
+                  props.stock.msciESGRating
+                )
+                  ? theme.colors.msci.Leader
+                  : ["B", "CCC"].includes(props.stock.msciESGRating)
+                  ? theme.colors.msci.Laggard
+                  : theme.colors.msci.Average,
+                color: theme.colors.alpha.trueWhite[100],
+                width: 48,
+              }}
+              size="small"
+            />
+          </span>
         )}
       </TableCell>
       <TableCell>
         {props.stock.msciTemperature && (
-          <TemperatureChip
-            icon={<ThermostatIcon />}
-            label={<strong>{props.stock.msciTemperature + "°C"}</strong>}
-            size="small"
-            sx={{ width: 72 }}
-          />
+          <span
+            onClick={navigateToMSCI}
+            style={{
+              cursor: props.stock.msciId ? "pointer" : undefined,
+            }}
+          >
+            <TemperatureChip
+              icon={<ThermostatIcon />}
+              label={<strong>{props.stock.msciTemperature + "°C"}</strong>}
+              size="small"
+              sx={{ width: 72 }}
+              style={{ cursor: "inherit" }}
+            />
+          </span>
         )}
       </TableCell>
       <TableCell>
-        <div style={{ minWidth: 90, display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            minWidth: 90,
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+          onClick={navigateToRefinitiv}
+        >
           <Typography
             variant="body1"
             fontWeight="bold"
@@ -833,37 +943,52 @@ const StockRow = (props: StockRowProps) => {
         </div>
       </TableCell>
       <TableCell>
-        <Typography
-          variant="body1"
-          fontWeight="bold"
-          color="text.primary"
-          width={48}
-          fontSize={18}
-          noWrap
-          align="right"
+        <span
+          onClick={navigateToSP}
+          style={{
+            cursor: props.stock.spId ? "pointer" : undefined,
+          }}
         >
-          {props.stock.spESGScore}
-        </Typography>
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+            color="text.primary"
+            width={48}
+            fontSize={18}
+            noWrap
+            align="right"
+          >
+            {props.stock.spESGScore}
+          </Typography>
+        </span>
       </TableCell>
       <TableCell>
         {props.stock.sustainalyticsESGRisk && (
-          <Chip
-            label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
-            sx={{
-              backgroundColor:
-                props.stock.sustainalyticsESGRisk < 10
-                  ? theme.colors.sustainalytics.negligible
-                  : props.stock.sustainalyticsESGRisk < 20
-                  ? theme.colors.sustainalytics.low
-                  : props.stock.sustainalyticsESGRisk < 30
-                  ? theme.colors.sustainalytics.medium
-                  : props.stock.sustainalyticsESGRisk < 40
-                  ? theme.colors.sustainalytics.high
-                  : theme.colors.sustainalytics.severe,
-              width: 64,
+          <span
+            onClick={navigateToSustainalytics}
+            style={{
+              cursor: props.stock.sustainalyticsId ? "pointer" : undefined,
             }}
-            size="small"
-          />
+          >
+            <Chip
+              label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
+              style={{ cursor: "inherit" }}
+              sx={{
+                backgroundColor:
+                  props.stock.sustainalyticsESGRisk < 10
+                    ? theme.colors.sustainalytics.negligible
+                    : props.stock.sustainalyticsESGRisk < 20
+                    ? theme.colors.sustainalytics.low
+                    : props.stock.sustainalyticsESGRisk < 30
+                    ? theme.colors.sustainalytics.medium
+                    : props.stock.sustainalyticsESGRisk < 40
+                    ? theme.colors.sustainalytics.high
+                    : theme.colors.sustainalytics.severe,
+                width: 64,
+              }}
+              size="small"
+            />
+          </span>
         )}
       </TableCell>
       <TableCell>
