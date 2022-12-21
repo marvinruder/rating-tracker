@@ -162,7 +162,15 @@ class FetchController {
               )
           );
           if (stock.industry !== undefined) {
-            errorMessage += `\n\tUnable to extract industry: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of industry failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract industry: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -194,7 +202,15 @@ class FetchController {
               )
           );
           if (stock.size !== undefined || stock.style !== undefined) {
-            errorMessage += `\n\tUnable to extract size and style: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of size and style failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract size and style: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -216,7 +232,15 @@ class FetchController {
               )
           );
           if (stock.starRating !== undefined) {
-            errorMessage += `\n\tUnable to extract star rating: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of star rating failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract star rating: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -239,7 +263,15 @@ class FetchController {
               )
           );
           if (stock.dividendYieldPercent !== undefined) {
-            errorMessage += `\n\tUnable to extract dividend yield: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of dividend yield failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract dividend yield: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -264,7 +296,15 @@ class FetchController {
               )
           );
           if (stock.priceEarningRatio !== undefined) {
-            errorMessage += `\n\tUnable to extract price earning ratio: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of price earning ratio failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract price earning ratio: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -288,7 +328,15 @@ class FetchController {
               )
           );
           if (stock.currency !== undefined) {
-            errorMessage += `\n\tUnable to extract currency: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of currency failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract currency: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -308,7 +356,15 @@ class FetchController {
               )
           );
           if (stock.lastClose !== undefined) {
-            errorMessage += `\n\tUnable to extract last close: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of last close failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract last close: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -337,7 +393,15 @@ class FetchController {
               )
           );
           if (stock.morningstarFairValue !== undefined) {
-            errorMessage += `\n\tUnable to extract Morningstar Fair Value: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of Morningstar Fair Value failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract Morningstar Fair Value: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -370,7 +434,15 @@ class FetchController {
               )
           );
           if (stock.marketCap !== undefined) {
-            errorMessage += `\n\tUnable to extract Market Capitalization: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of Market Capitalization failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract Market Capitalization: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -400,7 +472,15 @@ class FetchController {
               )
           );
           if (stock.low52w !== undefined || stock.high52w !== undefined) {
-            errorMessage += `\n\tUnable to extract 52 week price range: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of 52 week price range failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract 52 week price range: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -430,7 +510,9 @@ class FetchController {
           await driver.quit();
           throw new APIError(
             502,
-            `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e.message}`
+            `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
           );
         }
         logger.warn(
@@ -440,7 +522,9 @@ class FetchController {
             )
         );
         signal.sendMessage(
-          `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e.message}`
+          `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
+            String(e.message).split(/[\n:{]/)[0]
+          }`
         );
       }
     }
@@ -539,7 +623,15 @@ class FetchController {
                 )
             );
             if (stock.analystConsensus !== undefined) {
-              errorMessage += `\n\tUnable to extract Analyst Consensus: ${e.message}`;
+              logger.error(
+                PREFIX_CHROME +
+                  chalk.redBright(
+                    `Stock ${stock.ticker}: Extraction of analyst consensus failed unexpectedly. This incident will be reported.`
+                  )
+              );
+              errorMessage += `\n\tUnable to extract Analyst Consensus: ${
+                String(e.message).split(/[\n:{]/)[0]
+              }`;
             }
           }
 
@@ -555,7 +647,15 @@ class FetchController {
                 )
             );
             if (stock.analystCount !== undefined) {
-              errorMessage += `\n\tUnable to extract Analyst Count: ${e.message}`;
+              logger.error(
+                PREFIX_CHROME +
+                  chalk.redBright(
+                    `Stock ${stock.ticker}: Extraction of analyst count failed unexpectedly. This incident will be reported.`
+                  )
+              );
+              errorMessage += `\n\tUnable to extract Analyst Count: ${
+                String(e.message).split(/[\n:{]/)[0]
+              }`;
             }
           }
 
@@ -586,7 +686,15 @@ class FetchController {
                 )
             );
             if (stock.analystTargetPrice !== undefined) {
-              errorMessage += `\n\tUnable to extract Analyst Target Price: ${e.message}`;
+              logger.error(
+                PREFIX_CHROME +
+                  chalk.redBright(
+                    `Stock ${stock.ticker}: Extraction of analyst target price failed unexpectedly. This incident will be reported.`
+                  )
+              );
+              errorMessage += `\n\tUnable to extract Analyst Target Price: ${
+                String(e.message).split(/[\n:{]/)[0]
+              }`;
             }
           }
         } catch (e) {
@@ -601,7 +709,15 @@ class FetchController {
             stock.analystCount !== undefined ||
             stock.analystTargetPrice !== undefined
           ) {
-            errorMessage += `\n\tUnable to extract Analyst Information: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract Analyst Information: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -622,7 +738,9 @@ class FetchController {
           await driver.quit();
           throw new APIError(
             502,
-            `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e.message}`
+            `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
           );
         }
         logger.warn(
@@ -632,7 +750,9 @@ class FetchController {
             )
         );
         signal.sendMessage(
-          `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e.message}`
+          `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
+            String(e.message).split(/[\n:{]/)[0]
+          }`
         );
       }
     }
@@ -723,7 +843,15 @@ class FetchController {
               )
           );
           if (stock.msciESGRating !== undefined) {
-            errorMessage += `\n\tUnable to extract MSCI ESG Rating: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of MSCI ESG Rating failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract MSCI ESG Rating: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -741,7 +869,15 @@ class FetchController {
               )
           );
           if (stock.msciTemperature !== undefined) {
-            errorMessage += `\n\tUnable to extract MSCI Implied Temperature Rise: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of MSCI Implied Temperature Rise failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract MSCI Implied Temperature Rise: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -764,7 +900,9 @@ class FetchController {
           await driver.quit();
           throw new APIError(
             502,
-            `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
+            `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
           );
         }
         logger.warn(
@@ -774,7 +912,9 @@ class FetchController {
             )
         );
         signal.sendMessage(
-          `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
+          `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
+            String(e.message).split(/[\n:{]/)[0]
+          }`
         );
       }
     }
@@ -862,7 +1002,15 @@ class FetchController {
               )
           );
           if (stock.refinitivESGScore !== undefined) {
-            errorMessage += `\n\tUnable to extract Refinitiv ESG Score: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of Refinitiv ESG Score failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract Refinitiv ESG Score: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -877,7 +1025,15 @@ class FetchController {
               )
           );
           if (stock.refinitivEmissions !== undefined) {
-            errorMessage += `\n\tUnable to extract Refinitiv Emissions: ${e.message}`;
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of Refinitiv Emissions failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract Refinitiv Emissions: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
           }
         }
 
@@ -897,7 +1053,9 @@ class FetchController {
           await driver.quit();
           throw new APIError(
             502,
-            `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e.message}`
+            `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
           );
         }
         logger.warn(
@@ -907,7 +1065,9 @@ class FetchController {
             )
         );
         signal.sendMessage(
-          `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e.message}`
+          `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
+            String(e.message).split(/[\n:{]/)[0]
+          }`
         );
       }
     }
@@ -991,7 +1151,9 @@ class FetchController {
           await driver.quit();
           throw new APIError(
             502,
-            `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e.message}`
+            `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
           );
         }
         logger.warn(
@@ -1001,8 +1163,16 @@ class FetchController {
             )
         );
         if (stock.spESGScore !== undefined) {
+          logger.error(
+            PREFIX_CHROME +
+              chalk.redBright(
+                `Stock ${stock.ticker}: Extraction of S&P ESG Score failed unexpectedly. This incident will be reported.`
+              )
+          );
           signal.sendMessage(
-            `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e.message}`
+            `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
           );
         }
       }
@@ -1089,7 +1259,9 @@ class FetchController {
     } catch (e) {
       throw new APIError(
         502,
-        `Unable to fetch Sustainalytics information: ${e.message}`
+        `Unable to fetch Sustainalytics information: ${
+          String(e.message).split(/[\n:{]/)[0]
+        }`
       );
     }
 
@@ -1125,7 +1297,11 @@ class FetchController {
         if (req.query.ticker) {
           throw new APIError(
             500,
-            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e.message}`
+            `Stock ${
+              stock.ticker
+            }: Unable to extract Sustainalytics ESG Risk: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
           );
         }
         logger.warn(
@@ -1135,8 +1311,18 @@ class FetchController {
             )
         );
         if (stock.sustainalyticsESGRisk !== undefined) {
+          logger.error(
+            PREFIX_CHROME +
+              chalk.redBright(
+                `Stock ${stock.ticker}: Extraction of Sustainalytics ESG Risk failed unexpectedly. This incident will be reported.`
+              )
+          );
           signal.sendMessage(
-            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e.message}`
+            `Stock ${
+              stock.ticker
+            }: Unable to extract Sustainalytics ESG Risk: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
           );
         }
       }
