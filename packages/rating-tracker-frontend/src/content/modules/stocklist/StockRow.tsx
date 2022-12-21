@@ -390,14 +390,27 @@ const StockRow = (props: StockRowProps) => {
               })
               .then(() => {})
               .catch((e) => {
-                setNotification({
-                  severity: "error",
-                  title: "Error while fetching information from S&P",
-                  message:
-                    e.response?.status && e.response?.data?.message
-                      ? `${e.response.status}: ${e.response.data.message}`
-                      : e.message ?? "No additional information available.",
-                });
+                if (
+                  (e.response?.data?.message as string | undefined)?.includes(
+                    "This stock’s ESG Score is available for S&P Premium subscribers only"
+                  )
+                ) {
+                  setNotification({
+                    severity: "warning",
+                    title: `Unable to fetch S&P Information for stock “${props.stock.name}” (${props.stock.ticker})`,
+                    message:
+                      "This stock’s ESG Score is available for S&P Premium subscribers only",
+                  });
+                } else {
+                  setNotification({
+                    severity: "error",
+                    title: "Error while fetching information from S&P",
+                    message:
+                      e.response?.status && e.response?.data?.message
+                        ? `${e.response.status}: ${e.response.data.message}`
+                        : e.message ?? "No additional information available.",
+                  });
+                }
               })
               .finally(() => setSpIdRequestInProgress(false));
           } else {
