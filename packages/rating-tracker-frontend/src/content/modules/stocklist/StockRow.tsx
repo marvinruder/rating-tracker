@@ -1290,6 +1290,16 @@ const StockRow = (props: StockRowProps) => {
           <Skeleton width={150} />
         </Typography>
       </TableCell>
+      {/* Scores */}
+      <TableCell>
+        <Skeleton variant="rounded" width={84} height={32} />
+      </TableCell>
+      <TableCell>
+        <Skeleton variant="rounded" width={84} height={32} />
+      </TableCell>
+      <TableCell>
+        <Skeleton variant="rounded" width={84} height={32} />
+      </TableCell>
       {/* Star Rating */}
       <TableCell>
         <span style={{ whiteSpace: "nowrap" }}>
