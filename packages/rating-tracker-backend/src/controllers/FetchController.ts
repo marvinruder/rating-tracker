@@ -150,7 +150,7 @@ class FetchController {
           if (isIndustry(industryString)) {
             industry = industryString;
           } else {
-            throw TypeError(
+            throw new TypeError(
               `Extracted industry “${industryString}” is no valid industry.`
             );
           }
@@ -183,14 +183,14 @@ class FetchController {
           if (isSize(sizeAndStyle[0])) {
             size = sizeAndStyle[0];
           } else {
-            throw TypeError(
+            throw new TypeError(
               `Extracted size “${sizeAndStyle[0]}” is no valid size.`
             );
           }
           if (isStyle(sizeAndStyle[1])) {
             style = sizeAndStyle[1];
           } else {
-            throw TypeError(
+            throw new TypeError(
               `Extracted style “${sizeAndStyle[1]}” is no valid style.`
             );
           }
@@ -221,7 +221,7 @@ class FetchController {
               .getAttribute("alt")
           ).replaceAll(/\D/g, "");
           if (starRatingString.length === 0 || isNaN(+starRatingString)) {
-            throw TypeError(`Extracted star rating is no valid number.`);
+            throw new TypeError(`Extracted star rating is no valid number.`);
           }
           starRating = +starRatingString;
         } catch (e) {
@@ -252,7 +252,7 @@ class FetchController {
             dividendYieldPercentString.length === 0 ||
             isNaN(+dividendYieldPercentString)
           ) {
-            throw TypeError(`Extracted dividend yield is no valid number.`);
+            throw new TypeError(`Extracted dividend yield is no valid number.`);
           }
           dividendYieldPercent = +dividendYieldPercentString;
         } catch (e) {
@@ -283,7 +283,7 @@ class FetchController {
             priceEarningRatioString.length === 0 ||
             isNaN(+priceEarningRatioString)
           ) {
-            throw TypeError(
+            throw new TypeError(
               `Extracted price earning ratio is no valid number.`
             );
           }
@@ -316,7 +316,7 @@ class FetchController {
           if (isCurrency(currencyString)) {
             currency = currencyString;
           } else {
-            throw TypeError(
+            throw new TypeError(
               `Extracted currency code “${currencyString}” is no valid currency code.`
             );
           }
@@ -345,7 +345,7 @@ class FetchController {
             await driver.findElement(By.id("Col0LastClose")).getText()
           ).replaceAll(",", "");
           if (lastCloseString.length === 0 || isNaN(+lastCloseString)) {
-            throw TypeError(`Extracted last close is no valid number.`);
+            throw new TypeError(`Extracted last close is no valid number.`);
           }
           lastClose = +lastCloseString;
         } catch (e) {
@@ -380,7 +380,7 @@ class FetchController {
             morningstarFairValueString.length === 0 ||
             isNaN(+morningstarFairValueString)
           ) {
-            throw TypeError(
+            throw new TypeError(
               `Extracted Morningstar Fair Value is no valid number.`
             );
           }
@@ -422,7 +422,7 @@ class FetchController {
           }
           if (!marketCapText.match(/\d+/) || isNaN(marketCap)) {
             marketCap = undefined;
-            throw TypeError(
+            throw new TypeError(
               `Extracted market capitalization is no valid number.`
             );
           }
@@ -458,7 +458,7 @@ class FetchController {
             isNaN(+range52wStrings[0]) ||
             isNaN(+range52wStrings[1])
           ) {
-            throw TypeError(
+            throw new TypeError(
               `Extracted 52 week low or high is no valid number.`
             );
           }
