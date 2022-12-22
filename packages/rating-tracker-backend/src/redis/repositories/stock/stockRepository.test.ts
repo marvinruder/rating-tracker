@@ -19,6 +19,7 @@ const { createStock, readStock, updateStock } = await import(
 );
 import dotenv from "dotenv";
 import { initStockRepository } from "./__mocks__/stockRepositoryBase";
+import { sentMessages } from "../../../signal/__mocks__/signalBase";
 import { Stock } from "../../../models/stock";
 
 dotenv.config({
@@ -107,6 +108,9 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
         expect(updatedStock[k]).toBe(newValues[k]);
       }
     }
+
+    expect(sentMessages[0]).toMatch("🟢");
+    expect(sentMessages[1]).toMatch("🔴");
 
     expect(updatedStock.ticker).toMatch("NEWSTOCK");
     expect(updatedStock.name).toMatch("Updated Stock");
