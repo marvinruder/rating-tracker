@@ -84,10 +84,26 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
     };
 
     await updateStock("NEWSTOCK", newValues);
+
+    const slightlyWorseValues: Partial<Omit<Stock, "ticker">> = {
+      starRating: 3,
+      morningstarFairValue: 150,
+      analystConsensus: 2.3,
+      analystTargetPrice: 145,
+      msciESGRating: "B",
+      msciTemperature: 2.2,
+      refinitivESGScore: 73,
+      refinitivEmissions: 22,
+      spESGScore: 77,
+      sustainalyticsESGRisk: 31.5,
+    };
+    await updateStock("NEWSTOCK", slightlyWorseValues);
     const updatedStock = await readStock("NEWSTOCK");
     let k: keyof typeof newValues;
     for (k in newValues) {
-      if (k in newValues) {
+      if (k in slightlyWorseValues) {
+        expect(updatedStock[k]).toBe(slightlyWorseValues[k]);
+      } else {
         expect(updatedStock[k]).toBe(newValues[k]);
       }
     }
