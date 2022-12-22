@@ -4,6 +4,10 @@ import { fetch, fetchAll, remove, save } from "./stockRepositoryBase.js";
 import chalk from "chalk";
 import * as signal from "../../../signal/signal.js";
 import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
+import { MSCIESGRating, msciESGRatingArray } from "rating-tracker-commons";
+
+const SIGNAL_PREFIX_BETTER = "🟢 ";
+const SIGNAL_PREFIX_WORSE = "🔴 ";
 
 export const createStock = async (stock: Stock): Promise<boolean> => {
   const existingStock = await fetch(stock.ticker);
@@ -77,7 +81,11 @@ export const updateStock = async (
           };
           switch (k) {
             case "starRating":
-              signalMessage += `\n\tStar Rating changed from ${
+              signalMessage += `\n\t${
+                (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
+                  ? SIGNAL_PREFIX_BETTER
+                  : SIGNAL_PREFIX_WORSE
+              }Star Rating changed from ${
                 "★".repeat(stockEntity[k] ?? 0) +
                 "☆".repeat(5 - stockEntity[k] ?? 0)
               } to ${
@@ -89,14 +97,23 @@ export const updateStock = async (
               const currency = newValues.currency ?? stockEntity.currency ?? "";
               const lastClose =
                 newValues.lastClose ?? stockEntity.lastClose ?? 0;
-              signalMessage += `\n\tMorningstar Fair Value changed from ${currency} ${
+              signalMessage += `\n\t${
+                (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
+                  ? SIGNAL_PREFIX_BETTER
+                  : SIGNAL_PREFIX_WORSE
+              }Morningstar Fair Value changed from ${currency} ${
                 stockEntity[k] ?? 0
               } to ${currency} ${
                 newValues[k] ?? 0
               } (last close ${currency} ${lastClose})`;
               break;
             case "msciTemperature":
-              signalMessage += `\n\tMSCI Implied Temperature Rise changed from ${
+              signalMessage += `\n\t${
+                (newValues[k] ?? Number.MAX_VALUE) <
+                (stockEntity[k] ?? Number.MAX_VALUE)
+                  ? SIGNAL_PREFIX_BETTER
+                  : SIGNAL_PREFIX_WORSE
+              }MSCI Implied Temperature Rise changed from ${
                 stockEntity[k] ?? "N/A"
               }°C to ${newValues[k] ?? "N/A"}°C`;
               break;
@@ -106,9 +123,42 @@ export const updateStock = async (
             case "refinitivEmissions":
             case "spESGScore":
             case "sustainalyticsESGRisk":
-              signalMessage += `\n\t${parameterPrettyNames[k]} changed from ${
-                stockEntity[k] ?? "N/A"
-              } to ${newValues[k] ?? "N/A"}`;
+              let signalPrefix = "";
+              switch (k) {
+                case "msciESGRating":
+                  signalPrefix =
+                    (newValues.msciESGRating
+                      ? msciESGRatingArray.indexOf(newValues.msciESGRating)
+                      : /* istanbul ignore next */
+                        7) <
+                    (stockEntity.msciESGRating
+                      ? msciESGRatingArray.indexOf(
+                          stockEntity.msciESGRating as MSCIESGRating
+                        )
+                      : /* istanbul ignore next */
+                        7)
+                      ? SIGNAL_PREFIX_BETTER
+                      : SIGNAL_PREFIX_WORSE;
+                  break;
+                case "sustainalyticsESGRisk":
+                  signalPrefix =
+                    (newValues.sustainalyticsESGRisk ?? Number.MAX_VALUE) <
+                    (stockEntity.sustainalyticsESGRisk ?? Number.MAX_VALUE)
+                      ? SIGNAL_PREFIX_BETTER
+                      : SIGNAL_PREFIX_WORSE;
+                  break;
+                default:
+                  signalPrefix =
+                    (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
+                      ? SIGNAL_PREFIX_BETTER
+                      : SIGNAL_PREFIX_WORSE;
+                  break;
+              }
+              signalMessage += `\n\t${signalPrefix}${
+                parameterPrettyNames[k]
+              } changed from ${stockEntity[k] ?? "N/A"} to ${
+                newValues[k] ?? "N/A"
+              }`;
               break;
             default:
               break;

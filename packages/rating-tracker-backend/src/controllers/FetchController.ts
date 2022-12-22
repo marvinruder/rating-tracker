@@ -31,6 +31,8 @@ import {
 } from "../redis/repositories/resource/resourceRepository.js";
 import axios from "axios";
 
+const SIGNAL_PREFIX_ERROR = "⚠️ ";
+
 const XPATH_INDUSTRY =
   "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.." as const;
 const XPATH_SIZE_STYLE =
@@ -485,7 +487,7 @@ class FetchController {
         }
 
         if (errorMessage.includes("\n")) {
-          signal.sendMessage(errorMessage);
+          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
         }
         await updateStock(stock.ticker, {
           industry,
@@ -522,9 +524,10 @@ class FetchController {
             )
         );
         signal.sendMessage(
-          `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
-            String(e.message).split(/[\n:{]/)[0]
-          }`
+          SIGNAL_PREFIX_ERROR +
+            `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
         );
       }
     }
@@ -722,7 +725,7 @@ class FetchController {
         }
 
         if (errorMessage.includes("\n")) {
-          signal.sendMessage(errorMessage);
+          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
         }
         await updateStock(stock.ticker, {
           marketScreenerLastFetch: errorMessage.includes("\n")
@@ -750,9 +753,10 @@ class FetchController {
             )
         );
         signal.sendMessage(
-          `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
-            String(e.message).split(/[\n:{]/)[0]
-          }`
+          SIGNAL_PREFIX_ERROR +
+            `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
         );
       }
     }
@@ -887,7 +891,7 @@ class FetchController {
             new Date().getTime() - stock.msciLastFetch.getTime() >
               1000 * 60 * 60 * 24 * 10) // 7 days + 3 more tries
         ) {
-          signal.sendMessage(errorMessage);
+          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
         }
         await updateStock(stock.ticker, {
           msciLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
@@ -912,9 +916,10 @@ class FetchController {
             )
         );
         signal.sendMessage(
-          `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
-            String(e.message).split(/[\n:{]/)[0]
-          }`
+          SIGNAL_PREFIX_ERROR +
+            `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
         );
       }
     }
@@ -1038,7 +1043,7 @@ class FetchController {
         }
 
         if (errorMessage.includes("\n")) {
-          signal.sendMessage(errorMessage);
+          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
         }
         await updateStock(stock.ticker, {
           refinitivLastFetch: errorMessage.includes("\n")
@@ -1065,9 +1070,10 @@ class FetchController {
             )
         );
         signal.sendMessage(
-          `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
-            String(e.message).split(/[\n:{]/)[0]
-          }`
+          SIGNAL_PREFIX_ERROR +
+            `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`
         );
       }
     }
@@ -1185,9 +1191,10 @@ class FetchController {
               )
           );
           signal.sendMessage(
-            `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
-              String(e.message).split(/[\n:{]/)[0]
-            }`
+            SIGNAL_PREFIX_ERROR +
+              `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
+                String(e.message).split(/[\n:{]/)[0]
+              }`
           );
         }
       }
@@ -1333,11 +1340,12 @@ class FetchController {
               )
           );
           signal.sendMessage(
-            `Stock ${
-              stock.ticker
-            }: Unable to extract Sustainalytics ESG Risk: ${
-              String(e.message).split(/[\n:{]/)[0]
-            }`
+            SIGNAL_PREFIX_ERROR +
+              `Stock ${
+                stock.ticker
+              }: Unable to extract Sustainalytics ESG Risk: ${
+                String(e.message).split(/[\n:{]/)[0]
+              }`
           );
         }
       }

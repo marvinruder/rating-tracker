@@ -19,6 +19,7 @@ const { createStock, readStock, updateStock } = await import(
 );
 import dotenv from "dotenv";
 import { initStockRepository } from "./__mocks__/stockRepositoryBase";
+import { sentMessages } from "../../../signal/__mocks__/signalBase";
 import { Stock } from "../../../models/stock";
 
 dotenv.config({
@@ -84,13 +85,38 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
     };
 
     await updateStock("NEWSTOCK", newValues);
+
+    const slightlyWorseValues: Partial<Omit<Stock, "ticker">> = {
+      starRating: 3,
+      morningstarFairValue: 150,
+      analystConsensus: 2.3,
+      analystTargetPrice: 145,
+      msciESGRating: "B",
+      msciTemperature: 2.2,
+      refinitivESGScore: 73,
+      refinitivEmissions: 22,
+      spESGScore: 77,
+      sustainalyticsESGRisk: 31.5,
+    };
+    await updateStock("NEWSTOCK", slightlyWorseValues);
     const updatedStock = await readStock("NEWSTOCK");
     let k: keyof typeof newValues;
     for (k in newValues) {
-      if (k in newValues) {
+      if (k in slightlyWorseValues) {
+        expect(updatedStock[k]).toBe(slightlyWorseValues[k]);
+      } else {
         expect(updatedStock[k]).toBe(newValues[k]);
       }
     }
+
+    await updateStock("NEWSTOCK", newValues);
+
+    expect(sentMessages[0]).toMatch("🟢");
+    expect(sentMessages[1]).toMatch("🔴");
+    expect(sentMessages[2]).toMatch("🟢");
+    expect(sentMessages[0]).not.toMatch("🔴");
+    expect(sentMessages[1]).not.toMatch("🟢");
+    expect(sentMessages[2]).not.toMatch("🔴");
 
     expect(updatedStock.ticker).toMatch("NEWSTOCK");
     expect(updatedStock.name).toMatch("Updated Stock");

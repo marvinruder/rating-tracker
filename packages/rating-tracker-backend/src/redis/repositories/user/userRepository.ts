@@ -27,7 +27,7 @@ export const createUser = async (user: User): Promise<boolean> => {
       )
   );
   signal.sendMessage(
-    `New user “${user.name}” (email ${user.email}) registered.`
+    `🆕👤 New user “${user.name}” (email ${user.email}) registered.`
   );
   return true;
 };
