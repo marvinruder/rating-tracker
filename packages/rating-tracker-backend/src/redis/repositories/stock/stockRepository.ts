@@ -82,7 +82,7 @@ export const updateStock = async (
           switch (k) {
             case "starRating":
               signalMessage += `\n\t${
-                newValues[k] ?? 0 > stockEntity[k] ?? 0
+                (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
                   ? SIGNAL_PREFIX_BETTER
                   : SIGNAL_PREFIX_WORSE
               }Star Rating changed from ${
@@ -98,7 +98,7 @@ export const updateStock = async (
               const lastClose =
                 newValues.lastClose ?? stockEntity.lastClose ?? 0;
               signalMessage += `\n\t${
-                newValues[k] ?? 0 > stockEntity[k] ?? 0
+                (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
                   ? SIGNAL_PREFIX_BETTER
                   : SIGNAL_PREFIX_WORSE
               }Morningstar Fair Value changed from ${currency} ${
@@ -109,7 +109,8 @@ export const updateStock = async (
               break;
             case "msciTemperature":
               signalMessage += `\n\t${
-                newValues[k] ?? 0 < stockEntity[k] ?? 0
+                (newValues[k] ?? Number.MAX_VALUE) <
+                (stockEntity[k] ?? Number.MAX_VALUE)
                   ? SIGNAL_PREFIX_BETTER
                   : SIGNAL_PREFIX_WORSE
               }MSCI Implied Temperature Rise changed from ${
@@ -128,12 +129,14 @@ export const updateStock = async (
                   signalPrefix =
                     (newValues.msciESGRating
                       ? msciESGRatingArray.indexOf(newValues.msciESGRating)
-                      : 7) <
+                      : /* istanbul ignore next */
+                        7) <
                     (stockEntity.msciESGRating
                       ? msciESGRatingArray.indexOf(
                           stockEntity.msciESGRating as MSCIESGRating
                         )
-                      : 7)
+                      : /* istanbul ignore next */
+                        7)
                       ? SIGNAL_PREFIX_BETTER
                       : SIGNAL_PREFIX_WORSE;
                   break;
@@ -146,7 +149,7 @@ export const updateStock = async (
                   break;
                 default:
                   signalPrefix =
-                    newValues[k] ?? 0 > stockEntity[k] ?? 0
+                    (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
                       ? SIGNAL_PREFIX_BETTER
                       : SIGNAL_PREFIX_WORSE;
                   break;

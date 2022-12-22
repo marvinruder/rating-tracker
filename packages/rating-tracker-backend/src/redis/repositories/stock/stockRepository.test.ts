@@ -109,8 +109,14 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       }
     }
 
+    await updateStock("NEWSTOCK", newValues);
+
     expect(sentMessages[0]).toMatch("🟢");
     expect(sentMessages[1]).toMatch("🔴");
+    expect(sentMessages[2]).toMatch("🟢");
+    expect(sentMessages[0]).not.toMatch("🔴");
+    expect(sentMessages[1]).not.toMatch("🟢");
+    expect(sentMessages[2]).not.toMatch("🔴");
 
     expect(updatedStock.ticker).toMatch("NEWSTOCK");
     expect(updatedStock.name).toMatch("Updated Stock");
