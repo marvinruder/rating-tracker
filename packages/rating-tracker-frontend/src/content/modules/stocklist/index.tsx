@@ -33,7 +33,7 @@ function StocklistModule() {
 
   return (
     <>
-      <PageTitleWrapper>
+      <PageTitleWrapper maxWidth={false}>
         <PageHeader
           applyFilters={applyFilters}
           triggerRefetch={triggerRefetch}
@@ -46,7 +46,7 @@ function StocklistModule() {
           }
         />
       </PageTitleWrapper>
-      <Container maxWidth="lg">
+      <Container maxWidth={false}>
         <Grid
           container
           direction="row"

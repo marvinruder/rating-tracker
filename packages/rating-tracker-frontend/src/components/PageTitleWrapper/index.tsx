@@ -11,18 +11,24 @@ const PageTitle = styled(Box)(
 
 interface PageTitleWrapperProps {
   children?: ReactNode;
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
 }
 
-const PageTitleWrapper: FC<PageTitleWrapperProps> = ({ children }) => {
+const PageTitleWrapper: FC<PageTitleWrapperProps> = ({
+  children,
+  maxWidth,
+}) => {
+  if (maxWidth === undefined) maxWidth = "lg";
   return (
     <PageTitle className="MuiPageTitle-wrapper">
-      <Container maxWidth="lg">{children}</Container>
+      <Container maxWidth={maxWidth}>{children}</Container>
     </PageTitle>
   );
 };
 
 PageTitleWrapper.propTypes = {
   children: PropTypes.node.isRequired,
+  maxWidth: PropTypes.oneOf(["xs", "sm", "md", "lg", "xl", false]),
 };
 
 export default PageTitleWrapper;
