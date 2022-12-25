@@ -25,11 +25,9 @@ export const createStock = async (stock: Stock): Promise<boolean> => {
     });
     logger.info(
       PREFIX_REDIS +
-        chalk.greenBright(
-          `Created stock “${stock.name}” with entity ID ${await save(
-            stockEntity
-          )}.`
-        )
+        `Created stock “${stock.name}” with entity ID ${await save(
+          stockEntity
+        )}.`
     );
     return true;
   }
@@ -55,22 +53,22 @@ export const updateStock = async (
   const stockEntity = await fetch(ticker);
   if (stockEntity && stockEntity.name) {
     let signalMessage = `Updates for ${stockEntity.name} (${ticker}):`;
-    logger.info(PREFIX_REDIS + chalk.greenBright(`Updating stock ${ticker}…`));
+    logger.info(PREFIX_REDIS + `Updating stock ${ticker}…`);
     let isNewData = false;
     for (k in newValues) {
-      if (
-        k in newValues &&
-        newValues[k] !== undefined &&
-        newValues[k] !== undefined
-      ) {
+      if (k in newValues && newValues[k] !== undefined) {
         if (newValues[k] !== stockEntity[k]) {
           isNewData = true;
-          logger.info(
-            PREFIX_REDIS +
-              chalk.greenBright(
+          if (newValues[k] === null) {
+            logger.info(
+              PREFIX_REDIS + `    Property ${k} removed (was ${stockEntity[k]})`
+            );
+          } else {
+            logger.info(
+              PREFIX_REDIS +
                 `    Property ${k} updated from ${stockEntity[k]} to ${newValues[k]}`
-              )
-          );
+            );
+          }
           const parameterPrettyNames = {
             analystConsensus: "Analyst Consensus",
             msciESGRating: "MSCI ESG Rating",
@@ -230,10 +228,7 @@ export const deleteStock = async (ticker: string) => {
   if (stockEntity && stockEntity.name) {
     const name = new Stock(stockEntity).name;
     await remove(stockEntity.entityId);
-    logger.info(
-      PREFIX_REDIS +
-        chalk.greenBright(`Deleted stock “${name}” (ticker ${ticker}).`)
-    );
+    logger.info(PREFIX_REDIS + `Deleted stock “${name}” (ticker ${ticker}).`);
   } else {
     throw new APIError(404, `Stock ${ticker} not found.`);
   }

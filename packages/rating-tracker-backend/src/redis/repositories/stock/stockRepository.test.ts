@@ -97,15 +97,21 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       refinitivEmissions: 22,
       spESGScore: 77,
       sustainalyticsESGRisk: 31.5,
+      dividendYieldPercent: null,
     };
     await updateStock("NEWSTOCK", slightlyWorseValues);
     const updatedStock = await readStock("NEWSTOCK");
     let k: keyof typeof newValues;
     for (k in newValues) {
-      if (k in slightlyWorseValues) {
-        expect(updatedStock[k]).toBe(slightlyWorseValues[k]);
+      if (slightlyWorseValues[k] === null) {
+        expect(updatedStock[k]).not.toBeNull();
+        expect(updatedStock[k]).toBeUndefined();
       } else {
-        expect(updatedStock[k]).toBe(newValues[k]);
+        if (k in slightlyWorseValues) {
+          expect(updatedStock[k]).toBe(slightlyWorseValues[k]);
+        } else {
+          expect(updatedStock[k]).toBe(newValues[k]);
+        }
       }
     }
 

@@ -28,9 +28,7 @@ export const createResource = async (
   });
   logger.info(
     PREFIX_REDIS +
-      chalk.greenBright(
-        `Created resource with entity ID ${await save(resourceEntity)}.`
-      )
+      `Created resource with entity ID ${await save(resourceEntity)}.`
   );
   ttlInSeconds && (await expire(resource.url, ttlInSeconds));
   return true;
