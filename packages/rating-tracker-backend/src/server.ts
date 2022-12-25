@@ -144,75 +144,77 @@ server.app.use(async (req, res, next) => {
   next();
 });
 
-server.app.use(
-  responseTime((req: Request, res: Response, time) => {
-    chalk
-      .white(
-        chalk.whiteBright.bgGreen(" \uf898 ") +
-          chalk.bgGrey.green("") +
-          chalk.bgGrey(
-            chalk.cyanBright(" \uf5ef " + new Date().toISOString()) +
-              "  " +
-              chalk.yellow(
-                res.locals.user
-                  ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})`
-                  : /* istanbul ignore next */
-                  req.cookies.bypassAuthenticationForInternalRequestsToken ===
-                    bypassAuthenticationForInternalRequestsToken
-                  ? "\ufba7 cron"
-                  : "\uf21b"
-              ) +
-              "  " +
-              // use reverse proxy that sets this header to prevent CWE-134
-              chalk.magentaBright("\uf98c" + req.headers["x-real-ip"]) +
-              " "
-          ) +
-          chalk.grey("") +
-          "\n ├─" +
-          highlightMethod(req.method) +
-          chalk.bgGrey(
-            ` ${req.originalUrl
-              .slice(
-                1,
-                req.originalUrl.indexOf("?") == -1
-                  ? undefined
-                  : req.originalUrl.indexOf("?")
-              )
-              .replaceAll("/", "  ")} `
-          ) +
-          chalk.grey("") +
-          Object.entries(req.cookies)
-            .map(
-              ([key, value]) =>
-                "\n ├─" +
-                chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) +
-                chalk.grey("") +
-                " " +
-                value
-            )
-            .join(" ") +
-          Object.entries(req.query)
-            .map(
-              ([key, value]) =>
-                "\n ├─" +
-                chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) +
-                chalk.grey("") +
-                " " +
-                value
-            )
-            .join(" ") +
-          "\n ╰─" +
-          statusCodeDescription(res.statusCode) +
-          ` after ${Math.round(time)} ms`
-      )
-      .split("\n")
-      .forEach((line) => logger.info(line));
-    logger.info("");
-  })
-);
-
 server.app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(openapiDocument));
 server.app.get("/api-spec/v3", (_, res) => res.json(openapiDocument));
+
+server.app.use(
+  responseTime((req: Request, res: Response, time) => {
+    if (!req.originalUrl.startsWith("/api/stock/logo")) {
+      chalk
+        .white(
+          chalk.whiteBright.bgGreen(" \uf898 ") +
+            chalk.bgGrey.green("") +
+            chalk.bgGrey(
+              chalk.cyanBright(" \uf5ef " + new Date().toISOString()) +
+                "  " +
+                chalk.yellow(
+                  res.locals.user
+                    ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})`
+                    : /* istanbul ignore next */
+                    req.cookies.bypassAuthenticationForInternalRequestsToken ===
+                      bypassAuthenticationForInternalRequestsToken
+                    ? "\ufba7 cron"
+                    : "\uf21b"
+                ) +
+                "  " +
+                // use reverse proxy that sets this header to prevent CWE-134
+                chalk.magentaBright("\uf98c" + req.headers["x-real-ip"]) +
+                " "
+            ) +
+            chalk.grey("") +
+            "\n ├─" +
+            highlightMethod(req.method) +
+            chalk.bgGrey(
+              ` ${req.originalUrl
+                .slice(
+                  1,
+                  req.originalUrl.indexOf("?") == -1
+                    ? undefined
+                    : req.originalUrl.indexOf("?")
+                )
+                .replaceAll("/", "  ")} `
+            ) +
+            chalk.grey("") +
+            Object.entries(req.cookies)
+              .map(
+                ([key, value]) =>
+                  "\n ├─" +
+                  chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) +
+                  chalk.grey("") +
+                  " " +
+                  value
+              )
+              .join(" ") +
+            Object.entries(req.query)
+              .map(
+                ([key, value]) =>
+                  "\n ├─" +
+                  chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) +
+                  chalk.grey("") +
+                  " " +
+                  value
+              )
+              .join(" ") +
+            "\n ╰─" +
+            statusCodeDescription(res.statusCode) +
+            ` after ${Math.round(time)} ms`
+        )
+        .split("\n")
+        .forEach((line) => logger.info(line));
+      logger.info("");
+    }
+  })
+);
 
 server.app.use(
   OpenApiValidator.middleware({
