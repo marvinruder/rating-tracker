@@ -27,11 +27,9 @@ export const createSession = async (session: Session): Promise<boolean> => {
   });
   logger.info(
     PREFIX_REDIS +
-      chalk.greenBright(
-        `Created session for “${session.email}” with entity ID ${await save(
-          sessionEntity
-        )}.`
-      )
+      `Created session for “${session.email}” with entity ID ${await save(
+        sessionEntity
+      )}.`
   );
   await refresh(session.sessionID);
   return true;
@@ -63,7 +61,7 @@ export const refreshSessionAndFetchUser = async (
 //     const email = new Session(sessionEntity).email;
 //     await remove(sessionEntity.entityId);
 //     logger.info(PREFIX_REDIS +
-//       chalk.greenBright(`Deleted session “${email}” (sessionID ${sessionID}).`)
+//       `Deleted session “${email}” (sessionID ${sessionID}).`
 //     );
 //   } else {
 //     throw new APIError(404, `Session ${sessionID} not found.`);

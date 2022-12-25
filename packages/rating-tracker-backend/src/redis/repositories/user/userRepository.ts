@@ -22,9 +22,7 @@ export const createUser = async (user: User): Promise<boolean> => {
   });
   logger.info(
     PREFIX_REDIS +
-      chalk.greenBright(
-        `Created user “${user.name}” with entity ID ${await save(userEntity)}.`
-      )
+      `Created user “${user.name}” with entity ID ${await save(userEntity)}.`
   );
   signal.sendMessage(
     `🆕👤 New user “${user.name}” (email ${user.email}) registered.`
@@ -57,7 +55,7 @@ export const updateUser = async (
   let k: keyof typeof newValues;
   const userEntity = await fetch(email);
   if (userEntity && userEntity.name) {
-    logger.info(chalk.greenBright(PREFIX_REDIS + `Updating user ${email}…`));
+    logger.info(PREFIX_REDIS + `Updating user ${email}…`);
     let isNewData = false;
     for (k in newValues) {
       if (k in newValues && newValues[k]) {
@@ -65,9 +63,7 @@ export const updateUser = async (
           isNewData = true;
           logger.info(
             PREFIX_REDIS +
-              chalk.greenBright(
-                `    Property ${k} updated from ${userEntity[k]} to ${newValues[k]}`
-              )
+              `    Property ${k} updated from ${userEntity[k]} to ${newValues[k]}`
           );
           switch (k) {
             case "name":
@@ -101,7 +97,7 @@ export const updateUser = async (
 //   if (userEntity && userEntity.name) {
 //     const name = new User(userEntity).name;
 //     await remove(userEntity.entityId);
-//     logger.info(PREFIX_REDIS + chalk.greenBright(`Deleted user “${name}” (email ${email}).`));
+//     logger.info(PREFIX_REDIS + `Deleted user “${name}” (email ${email}).`);
 //   } else {
 //     throw new APIError(404, `User ${email} not found.`);
 //   }
