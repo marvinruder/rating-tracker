@@ -11037,7 +11037,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-switch-selector", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.2.1"],\
             ["react-tsparticles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.7.1"],\
             ["tsparticles", "npm:2.7.1"],\
-            ["tsparticles-engine", "npm:2.7.0"],\
+            ["tsparticles-engine", "npm:2.7.1"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
             ["vite", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:4.0.3"],\
             ["vite-plugin-html", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:3.2.0"],\
@@ -12671,13 +12671,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["tsparticles-engine", [\
-        ["npm:2.7.0", {\
-          "packageLocation": "./.yarn/unplugged/tsparticles-engine-npm-2.7.0-a16a4f6c08/node_modules/tsparticles-engine/",\
-          "packageDependencies": [\
-            ["tsparticles-engine", "npm:2.7.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:2.7.1", {\
           "packageLocation": "./.yarn/unplugged/tsparticles-engine-npm-2.7.1-0ba47f847b/node_modules/tsparticles-engine/",\
           "packageDependencies": [\
