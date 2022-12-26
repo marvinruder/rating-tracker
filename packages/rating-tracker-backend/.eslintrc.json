@@ -11,7 +11,7 @@
     },
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": "./packages/rating-tracker-backend/tsconfig.json"
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
