@@ -13,12 +13,6 @@ node {
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
         }
 
-        // stage('Create yarn caches') {
-        //     nodejs(nodeJSInstallationName: 'node19') {
-        //         sh 'yarn'
-        //     }
-        // }
-
         stage ('Run Tests') {
             docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
             sh """
@@ -53,12 +47,8 @@ node {
             sh """
             docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true
+            docker image prune --filter label=stage=build -f
             """
-            if (env.BRANCH_NAME == 'main') {
-                sh "docker rmi $imagename:$main_tag || true"
-            } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
-                sh "docker rmi $imagename:$branch_tag || true"
-            }
         }
     }
 }
