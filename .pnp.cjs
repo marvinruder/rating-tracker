@@ -11031,7 +11031,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-apexcharts", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:1.4.0"],\
             ["react-custom-scrollbars-2", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:4.5.0"],\
             ["react-dom", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:18.2.0"],\
-            ["react-particles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.7.0"],\
+            ["react-particles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.7.1"],\
             ["react-router", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:6.6.1"],\
             ["react-router-dom", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:6.6.1"],\
             ["react-switch-selector", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.2.1"],\
@@ -11166,21 +11166,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["react-particles", [\
-        ["npm:2.7.0", {\
-          "packageLocation": "./.yarn/unplugged/react-particles-virtual-39e71bf718/node_modules/react-particles/",\
+        ["npm:2.7.1", {\
+          "packageLocation": "./.yarn/unplugged/react-particles-virtual-c6553634db/node_modules/react-particles/",\
           "packageDependencies": [\
-            ["react-particles", "npm:2.7.0"]\
+            ["react-particles", "npm:2.7.1"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.7.0", {\
-          "packageLocation": "./.yarn/unplugged/react-particles-virtual-39e71bf718/node_modules/react-particles/",\
+        ["virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.7.1", {\
+          "packageLocation": "./.yarn/unplugged/react-particles-virtual-c6553634db/node_modules/react-particles/",\
           "packageDependencies": [\
-            ["react-particles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.7.0"],\
+            ["react-particles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.7.1"],\
             ["@types/react", "npm:18.0.26"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["react", "npm:18.2.0"],\
-            ["tsparticles-engine", "npm:2.7.0"]\
+            ["tsparticles-engine", "npm:2.7.1"]\
           ],\
           "packagePeers": [\
             "@types/react",\
@@ -12675,6 +12675,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/unplugged/tsparticles-engine-npm-2.7.0-a16a4f6c08/node_modules/tsparticles-engine/",\
           "packageDependencies": [\
             ["tsparticles-engine", "npm:2.7.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:2.7.1", {\
+          "packageLocation": "./.yarn/unplugged/tsparticles-engine-npm-2.7.1-0ba47f847b/node_modules/tsparticles-engine/",\
+          "packageDependencies": [\
+            ["tsparticles-engine", "npm:2.7.1"]\
           ],\
           "linkType": "HARD"\
         }]\
