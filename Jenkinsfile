@@ -13,23 +13,23 @@ node {
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
         }
 
-        stage('Create yarn caches') {
-            nodejs(nodeJSInstallationName: 'node19') {
-                sh 'yarn'
-            }
-        }
+        // stage('Create yarn caches') {
+        //     nodejs(nodeJSInstallationName: 'node19') {
+        //         sh 'yarn'
+        //     }
+        // }
 
         stage ('Run Tests') {
             docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
             sh """
             id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
-            docker cp \$id:/app/packages/rating-tracker-backend/coverage .
+            docker cp \$id:/app/. .
             docker rm -v \$id
             curl -Os https://uploader.codecov.io/latest/linux/codecov
             chmod +x ./codecov
             """
             withCredentials([string(credentialsId: 'codecov-token-rating-tracker', variable: 'CODECOV_TOKEN')]) {
-                sh "./codecov -s coverage -C $GIT_COMMIT_HASH"
+                sh "./codecov -s packages/rating-tracker-backend/coverage -C $GIT_COMMIT_HASH"
             }
         }
 

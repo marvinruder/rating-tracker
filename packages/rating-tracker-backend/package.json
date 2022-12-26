@@ -9,10 +9,10 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": "19.2.0"
+    "node": "19.3.0"
   },
   "scripts": {
-    "dev:tsc": "tsc --watch --preserveWatchOutput",
+    "dev:tsc": "tsc -w --preserveWatchOutput",
     "dev:nginx": "docker compose -f local-dev/docker-compose.yml up nginx",
     "dev:redis": "docker compose -f local-dev/docker-compose.yml up redis",
     "dev:selenium": "docker compose -f local-dev/docker-compose.yml up selenium",
@@ -68,7 +68,6 @@
     "jest": "29.3.1",
     "prettier": "2.8.1",
     "supertest": "6.3.3",
-    "ts-jest": "29.0.3",
-    "ts-node": "10.9.1"
+    "ts-jest": "29.0.3"
   }
 }

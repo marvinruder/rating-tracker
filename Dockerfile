@@ -18,6 +18,9 @@ RUN cp -r /build/packages/rating-tracker-frontend/dist /build/packages/rating-tr
 RUN rm -r /build/packages/rating-tracker-frontend
 RUN echo -e "\033[0;34m➤\033[0m YN0019: \033[0;35m$(yarn | grep -c 'appears to be unused - removing') packages\033[0m appear to be unused - removing"
 RUN find /build/packages -type f '(' -name "*.d.ts*" -o -name "*.tsbuildinfo" ')' -delete
+RUN rm -r \
+  /build/.yarn/cache/typescript-* \
+  /build/.yarn/unplugged/node-gyp-*
 
 # Create directories for run container and copy only necessary files
 RUN mkdir -p /build/app/packages/rating-tracker-backend /build/app/packages/rating-tracker-commons /build/app/.yarn && \
