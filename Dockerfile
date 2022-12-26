@@ -1,4 +1,5 @@
 FROM node:19.3.0-alpine as build
+LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -14,7 +15,7 @@ RUN yarn build
 # Copy static frontend files into backend for serving
 RUN cp -r /build/packages/rating-tracker-frontend/dist /build/packages/rating-tracker-backend/public
 
-# Delete frontend code, caches only used by frontend, and unused TypeScript output
+# Delete frontend code, caches only used by frontend, unused TypeScript output and build tools in yarn cache
 RUN rm -r /build/packages/rating-tracker-frontend
 RUN echo -e "\033[0;34m➤\033[0m YN0019: \033[0;35m$(yarn | grep -c 'appears to be unused - removing') packages\033[0m appear to be unused - removing"
 RUN find /build/packages -type f '(' -name "*.d.ts*" -o -name "*.tsbuildinfo" ')' -delete
