@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
-import { Builder, By, Capabilities } from "selenium-webdriver";
+import { Builder, By, Capabilities, WebDriver } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
 import APIError from "../lib/apiError.js";
 import { Stock } from "../models/stock.js";
@@ -54,18 +54,38 @@ const URL_SUSTAINALYTICS =
   "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings";
 
 class FetchController {
-  getDriver(pageLoadStrategy: "normal" | "eager" | "none" = "eager") {
+  async getDriver(pageLoadStrategy: "normal" | "eager" | "none" = "eager") {
     const url = process.env.SELENIUM_URL;
 
     const capabilities = new Capabilities();
     capabilities.setBrowserName("chrome");
     capabilities.setPageLoadStrategy(pageLoadStrategy);
 
-    return new Builder()
+    return await new Builder()
       .usingServer(url)
       .withCapabilities(capabilities)
       .setChromeOptions(new Options().headless())
-      .build();
+      .build()
+      .then((driver) => driver)
+      .catch((e) => {
+        throw new APIError(
+          502,
+          `Unable to connect to Selenium WebDriver: ${e.message}`
+        );
+      });
+  }
+
+  async quitDriver(driver: WebDriver) {
+    try {
+      await driver.quit();
+    } catch (e) {
+      logger.warn(
+        PREFIX_CHROME +
+          chalk.yellowBright(
+            `Unable to shut down Selenium WebDriver gracefully: ${e}`
+          )
+      );
+    }
   }
 
   async fetchMorningstarData(req: Request, res: Response) {
@@ -103,7 +123,10 @@ class FetchController {
     }
 
     const updatedStocks: Stock[] = [];
-    const driver = this.getDriver();
+    let successfulCount = 0;
+    let errorCount = 0;
+    let consecutiveErrorCount = 0;
+    const driver = await this.getDriver();
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -515,6 +538,12 @@ class FetchController {
 
         if (errorMessage.includes("\n")) {
           signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          errorCount += 1;
+          consecutiveErrorCount += 1;
+        } else {
+          successfulCount += 1;
+          consecutiveErrorCount = 0;
         }
         await updateStock(stock.ticker, {
           industry,
@@ -535,8 +564,10 @@ class FetchController {
         });
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
+        errorCount += 1;
+        consecutiveErrorCount += 1;
         if (req.query.ticker) {
-          await driver.quit();
+          await this.quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
@@ -544,9 +575,9 @@ class FetchController {
             }`
           );
         }
-        logger.warn(
+        logger.error(
           PREFIX_CHROME +
-            chalk.yellowBright(
+            chalk.redBright(
               `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e}`
             )
         );
@@ -556,9 +587,23 @@ class FetchController {
               String(e.message).split(/[\n:{]/)[0]
             }`
         );
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
+      if (consecutiveErrorCount >= 5) {
+        logger.error(
+          PREFIX_CHROME +
+            chalk.redBright(
+              `Aborting fetching information from Morningstar after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            )
+        );
+        signal.sendMessage(
+          SIGNAL_PREFIX_ERROR +
+            `Aborting fetching information from Morningstar after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+        );
+        break;
       }
     }
-    await driver.quit();
+    await this.quitDriver(driver);
     if (updatedStocks.length === 0) {
       return res.status(204).end();
     } else {
@@ -601,7 +646,10 @@ class FetchController {
     }
 
     const updatedStocks: Stock[] = [];
-    const driver = this.getDriver();
+    let successfulCount = 0;
+    let errorCount = 0;
+    let consecutiveErrorCount = 0;
+    const driver = await this.getDriver();
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -753,6 +801,12 @@ class FetchController {
 
         if (errorMessage.includes("\n")) {
           signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          errorCount += 1;
+          consecutiveErrorCount += 1;
+        } else {
+          successfulCount += 1;
+          consecutiveErrorCount = 0;
         }
         await updateStock(stock.ticker, {
           marketScreenerLastFetch: errorMessage.includes("\n")
@@ -764,8 +818,10 @@ class FetchController {
         });
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
+        errorCount += 1;
+        consecutiveErrorCount += 1;
         if (req.query.ticker) {
-          await driver.quit();
+          await this.quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
@@ -773,9 +829,9 @@ class FetchController {
             }`
           );
         }
-        logger.warn(
+        logger.error(
           PREFIX_CHROME +
-            chalk.yellowBright(
+            chalk.redBright(
               `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e}`
             )
         );
@@ -785,9 +841,23 @@ class FetchController {
               String(e.message).split(/[\n:{]/)[0]
             }`
         );
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
+      if (consecutiveErrorCount >= 5) {
+        logger.error(
+          PREFIX_CHROME +
+            chalk.redBright(
+              `Aborting fetching information from MarketScreener after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            )
+        );
+        signal.sendMessage(
+          SIGNAL_PREFIX_ERROR +
+            `Aborting fetching information from MarketScreener after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+        );
+        break;
       }
     }
-    await driver.quit();
+    await this.quitDriver(driver);
     if (updatedStocks.length === 0) {
       return res.status(204).end();
     } else {
@@ -827,7 +897,10 @@ class FetchController {
     }
 
     const updatedStocks: Stock[] = [];
-    const driver = this.getDriver("normal");
+    let successfulCount = 0;
+    let errorCount = 0;
+    let consecutiveErrorCount = 0;
+    const driver = await this.getDriver("normal");
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -912,13 +985,20 @@ class FetchController {
           }
         }
 
-        if (
-          errorMessage.includes("\n") &&
-          (!stock.msciLastFetch ||
+        if (errorMessage.includes("\n")) {
+          if (
+            !stock.msciLastFetch ||
             new Date().getTime() - stock.msciLastFetch.getTime() >
-              1000 * 60 * 60 * 24 * 10) // 7 days + 3 more tries
-        ) {
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
+              1000 * 60 * 60 * 24 * 10 // 7 days + 3 more tries
+          ) {
+            signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
+          }
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          errorCount += 1;
+          consecutiveErrorCount += 1;
+        } else {
+          successfulCount += 1;
+          consecutiveErrorCount = 0;
         }
         await updateStock(stock.ticker, {
           msciLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
@@ -927,8 +1007,10 @@ class FetchController {
         });
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
+        errorCount += 1;
+        consecutiveErrorCount += 1;
         if (req.query.ticker) {
-          await driver.quit();
+          await this.quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
@@ -936,9 +1018,9 @@ class FetchController {
             }`
           );
         }
-        logger.warn(
+        logger.error(
           PREFIX_CHROME +
-            chalk.yellowBright(
+            chalk.redBright(
               `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e}`
             )
         );
@@ -948,9 +1030,23 @@ class FetchController {
               String(e.message).split(/[\n:{]/)[0]
             }`
         );
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
+      if (consecutiveErrorCount >= 10) {
+        logger.error(
+          PREFIX_CHROME +
+            chalk.redBright(
+              `Aborting fetching information from MSCI after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            )
+        );
+        signal.sendMessage(
+          SIGNAL_PREFIX_ERROR +
+            `Aborting fetching information from MSCI after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+        );
+        break;
       }
     }
-    await driver.quit();
+    await this.quitDriver(driver);
     if (updatedStocks.length === 0) {
       return res.status(204).end();
     } else {
@@ -990,7 +1086,10 @@ class FetchController {
     }
 
     const updatedStocks: Stock[] = [];
-    const driver = this.getDriver();
+    let successfulCount = 0;
+    let errorCount = 0;
+    let consecutiveErrorCount = 0;
+    const driver = await this.getDriver("none");
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1071,6 +1170,12 @@ class FetchController {
 
         if (errorMessage.includes("\n")) {
           signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          errorCount += 1;
+          consecutiveErrorCount += 1;
+        } else {
+          successfulCount += 1;
+          consecutiveErrorCount = 0;
         }
         await updateStock(stock.ticker, {
           refinitivLastFetch: errorMessage.includes("\n")
@@ -1081,8 +1186,10 @@ class FetchController {
         });
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {
+        errorCount += 1;
+        consecutiveErrorCount += 1;
         if (req.query.ticker) {
-          await driver.quit();
+          await this.quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
@@ -1090,9 +1197,9 @@ class FetchController {
             }`
           );
         }
-        logger.warn(
+        logger.error(
           PREFIX_CHROME +
-            chalk.yellowBright(
+            chalk.redBright(
               `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e}`
             )
         );
@@ -1102,9 +1209,23 @@ class FetchController {
               String(e.message).split(/[\n:{]/)[0]
             }`
         );
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
+      if (consecutiveErrorCount >= 5) {
+        logger.error(
+          PREFIX_CHROME +
+            chalk.redBright(
+              `Aborting fetching information from Refinitiv after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            )
+        );
+        signal.sendMessage(
+          SIGNAL_PREFIX_ERROR +
+            `Aborting fetching information from Refinitiv after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+        );
+        break;
       }
     }
-    await driver.quit();
+    await this.quitDriver(driver);
     if (updatedStocks.length === 0) {
       return res.status(204).end();
     } else {
@@ -1144,7 +1265,10 @@ class FetchController {
     }
 
     const updatedStocks: Stock[] = [];
-    const driver = this.getDriver();
+    let successfulCount = 0;
+    let errorCount = 0;
+    let consecutiveErrorCount = 0;
+    const driver = await this.getDriver();
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1194,9 +1318,11 @@ class FetchController {
           spESGScore,
         });
         updatedStocks.push(await readStock(stock.ticker));
+        successfulCount += 1;
+        consecutiveErrorCount = 0;
       } catch (e) {
         if (req.query.ticker) {
-          await driver.quit();
+          await this.quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
@@ -1223,10 +1349,29 @@ class FetchController {
                 String(e.message).split(/[\n:{]/)[0]
               }`
           );
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          errorCount += 1;
+          consecutiveErrorCount += 1;
+        } else {
+          successfulCount += 1;
+          consecutiveErrorCount = 0;
         }
       }
+      if (consecutiveErrorCount >= 5) {
+        logger.error(
+          PREFIX_CHROME +
+            chalk.redBright(
+              `Aborting fetching information from S&P after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            )
+        );
+        signal.sendMessage(
+          SIGNAL_PREFIX_ERROR +
+            `Aborting fetching information from S&P after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+        );
+        break;
+      }
     }
-    await driver.quit();
+    await this.quitDriver(driver);
     if (updatedStocks.length === 0) {
       return res.status(204).end();
     } else {
@@ -1263,6 +1408,9 @@ class FetchController {
     }
 
     const updatedStocks: Stock[] = [];
+    let successfulCount = 0;
+    let errorCount = 0;
+    let consecutiveErrorCount = 0;
     let sustainalyticsXMLResource: Resource;
     try {
       try {
@@ -1342,6 +1490,8 @@ class FetchController {
           sustainalyticsESGRisk,
         });
         updatedStocks.push(await readStock(stock.ticker));
+        successfulCount += 1;
+        consecutiveErrorCount = 0;
       } catch (e) {
         if (req.query.ticker) {
           throw new APIError(
@@ -1374,7 +1524,25 @@ class FetchController {
                 String(e.message).split(/[\n:{]/)[0]
               }`
           );
+          errorCount += 1;
+          consecutiveErrorCount += 1;
+        } else {
+          successfulCount += 1;
+          consecutiveErrorCount = 0;
         }
+      }
+      if (consecutiveErrorCount >= 10) {
+        logger.error(
+          PREFIX_CHROME +
+            chalk.redBright(
+              `Aborting extracting information from Sustainalytics after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            )
+        );
+        signal.sendMessage(
+          SIGNAL_PREFIX_ERROR +
+            `Aborting extracting information from Sustainalytics after ${consecutiveErrorCount} consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+        );
+        break;
       }
     }
     if (updatedStocks.length === 0) {
