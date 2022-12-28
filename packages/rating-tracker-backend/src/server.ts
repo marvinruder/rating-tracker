@@ -246,7 +246,7 @@ server.app.use(
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 server.app.use((err, _, res, next) => {
-  logger.error(PREFIX_NODEJS + chalk.redBright(err.message));
+  logger.error(PREFIX_NODEJS + chalk.redBright(err));
   // format error
   res.status(err.status || 500).json({
     message: err.message,

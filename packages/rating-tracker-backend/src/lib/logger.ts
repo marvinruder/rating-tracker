@@ -16,6 +16,8 @@ export const PREFIX_REDIS =
   chalk.whiteBright.bgRed(" \ue76d ") + chalk.red(" ");
 export const PREFIX_CHROME =
   chalk.whiteBright.bgBlueBright(" \ufc0d ") + chalk.blueBright(" ");
+export const PREFIX_SIGNAL =
+  chalk.whiteBright.bgBlue(" \uf868 ") + chalk.blue(" ");
 
 const levelIcons = {
   10: chalk.gray(" \uf002 "),

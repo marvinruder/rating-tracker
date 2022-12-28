@@ -160,7 +160,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract industry: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract industry: ${e}`
               )
           );
           if (stock.industry !== undefined) {
@@ -200,7 +200,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract size and style: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract size and style: ${e}`
               )
           );
           if (stock.size !== undefined || stock.style !== undefined) {
@@ -230,7 +230,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract star rating: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract star rating: ${e}`
               )
           );
           if (stock.starRating !== undefined) {
@@ -267,7 +267,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract dividend yield: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`
               )
           );
           if (stock.dividendYieldPercent !== undefined) {
@@ -304,7 +304,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`
               )
           );
           if (stock.priceEarningRatio !== undefined) {
@@ -336,7 +336,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract currency: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract currency: ${e}`
               )
           );
           if (stock.currency !== undefined) {
@@ -368,7 +368,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract last close: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract last close: ${e}`
               )
           );
           if (stock.lastClose !== undefined) {
@@ -409,7 +409,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`
               )
           );
           if (stock.morningstarFairValue !== undefined) {
@@ -454,7 +454,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`
               )
           );
           if (stock.marketCap !== undefined) {
@@ -497,7 +497,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`
               )
           );
           if (stock.low52w !== undefined || stock.high52w !== undefined) {
@@ -547,7 +547,7 @@ class FetchController {
         logger.warn(
           PREFIX_CHROME +
             chalk.yellowBright(
-              `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e.message}`
+              `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e}`
             )
         );
         signal.sendMessage(
@@ -649,7 +649,7 @@ class FetchController {
             logger.warn(
               PREFIX_CHROME +
                 chalk.yellowBright(
-                  `Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e.message}`
+                  `Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`
                 )
             );
             if (stock.analystConsensus !== undefined) {
@@ -673,7 +673,7 @@ class FetchController {
             logger.warn(
               PREFIX_CHROME +
                 chalk.yellowBright(
-                  `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e.message}`
+                  `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`
                 )
             );
             if (stock.analystCount !== undefined) {
@@ -712,7 +712,7 @@ class FetchController {
             logger.warn(
               PREFIX_CHROME +
                 chalk.yellowBright(
-                  `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e.message}`
+                  `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`
                 )
             );
             if (stock.analystTargetPrice !== undefined) {
@@ -731,7 +731,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e.message}`
+                `Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`
               )
           );
           if (
@@ -776,7 +776,7 @@ class FetchController {
         logger.warn(
           PREFIX_CHROME +
             chalk.yellowBright(
-              `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e.message}`
+              `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e}`
             )
         );
         signal.sendMessage(
@@ -870,7 +870,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`
               )
           );
           if (stock.msciESGRating !== undefined) {
@@ -896,7 +896,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`
               )
           );
           if (stock.msciTemperature !== undefined) {
@@ -939,7 +939,7 @@ class FetchController {
         logger.warn(
           PREFIX_CHROME +
             chalk.yellowBright(
-              `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e.message}`
+              `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e}`
             )
         );
         signal.sendMessage(
@@ -1030,7 +1030,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`
               )
           );
           if (stock.refinitivESGScore !== undefined) {
@@ -1053,7 +1053,7 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME +
               chalk.yellowBright(
-                `Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e.message}`
+                `Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`
               )
           );
           if (stock.refinitivEmissions !== undefined) {
@@ -1093,7 +1093,7 @@ class FetchController {
         logger.warn(
           PREFIX_CHROME +
             chalk.yellowBright(
-              `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e.message}`
+              `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e}`
             )
         );
         signal.sendMessage(
@@ -1207,7 +1207,7 @@ class FetchController {
         logger.warn(
           PREFIX_CHROME +
             chalk.yellowBright(
-              `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e.message}`
+              `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`
             )
         );
         if (stock.spESGScore !== undefined) {
@@ -1356,7 +1356,7 @@ class FetchController {
         logger.warn(
           PREFIX_CHROME +
             chalk.yellowBright(
-              `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e.message}`
+              `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`
             )
         );
         if (stock.sustainalyticsESGRisk !== undefined) {
