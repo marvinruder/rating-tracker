@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import { SessionEntity, sessionSchema } from "../../../../models/session.js";
 
-export const sessionTTLInSeconds = 600;
+export const sessionTTLInSeconds = 1800;
 
 let sessionRepository: Map<string, SessionEntity>;
 

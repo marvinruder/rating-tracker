@@ -13,6 +13,7 @@ import * as statusEndpoint from "./paths/statusEndpoint.js";
 import * as logoEndpoint from "./paths/stock/logo/index.js";
 import * as stockEndpoint from "./paths/stock/index.js";
 import * as signInEndpoint from "./paths/auth/signInEndpoint.js";
+import * as resourceEndpoint from "./paths/resource/index.js";
 import { servers } from "./servers.js";
 
 export const openapiDocument: OpenAPIV3.Document = {
@@ -43,6 +44,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     "/api/fetch/refinitiv": refinitivEndpoint,
     "/api/fetch/sp": spEndpoint,
     "/api/fetch/sustainalytics": sustainalyticsEndpoint,
+    "/api/resource/{id}": resourceEndpoint,
     "/api/status": statusEndpoint,
     "/api/session": sessionEndpoint,
   },

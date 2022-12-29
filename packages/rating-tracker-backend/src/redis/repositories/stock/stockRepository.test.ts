@@ -86,6 +86,8 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
 
     await updateStock("NEWSTOCK", newValues);
 
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
     const slightlyWorseValues: Partial<Omit<Stock, "ticker">> = {
       starRating: 3,
       morningstarFairValue: 150,
@@ -98,6 +100,11 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       spESGScore: 77,
       sustainalyticsESGRisk: 31.5,
       dividendYieldPercent: null,
+      morningstarLastFetch: new Date(),
+      marketScreenerLastFetch: new Date(),
+      msciLastFetch: new Date(),
+      refinitivLastFetch: new Date(),
+      spLastFetch: new Date(),
     };
     await updateStock("NEWSTOCK", slightlyWorseValues);
     const updatedStock = await readStock("NEWSTOCK");

@@ -1,5 +1,9 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 
+const ok: OpenAPIV3.ResponseObject = {
+  description: "OK",
+};
+
 const okObject: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -59,7 +63,7 @@ const okStockListWithCount: OpenAPIV3.ResponseObject = {
 };
 
 const okOperational: OpenAPIV3.ResponseObject = {
-  description: "operational",
+  description: "OK",
   content: {
     "application/json": {
       schema: {
@@ -88,6 +92,7 @@ const noContent: OpenAPIV3.ResponseObject = {
 };
 
 export {
+  ok,
   okObject,
   okSVG,
   okStock,

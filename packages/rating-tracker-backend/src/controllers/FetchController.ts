@@ -1,7 +1,13 @@
 /* istanbul ignore file */
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
-import { Builder, By, Capabilities, WebDriver } from "selenium-webdriver";
+import {
+  Builder,
+  By,
+  Capabilities,
+  until,
+  WebDriver,
+} from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
 import APIError from "../lib/apiError.js";
 import { Stock } from "../models/stock.js";
@@ -30,6 +36,11 @@ import {
   readResource,
 } from "../redis/repositories/resource/resourceRepository.js";
 import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config({
+  path: ".env.local",
+});
 
 const SIGNAL_PREFIX_ERROR = "⚠️ ";
 
@@ -50,21 +61,24 @@ const XPATH_ANALYST_COUNT =
 const XPATH_SPREAD_AVERAGE_TARGET =
   "//div/table/tbody/tr/td[contains(text(), 'Spread / Average Target')]/following-sibling::td" as const;
 
+const XPATH_SP_PANEL =
+  "//*/div[@class='panel-set__first-column']/h2[@id='company-name']/.." as const;
+
 const URL_SUSTAINALYTICS =
   "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings";
 
 class FetchController {
-  async getDriver(pageLoadStrategy: "normal" | "eager" | "none" = "eager") {
+  async getDriver() {
     const url = process.env.SELENIUM_URL;
-
-    const capabilities = new Capabilities();
-    capabilities.setBrowserName("chrome");
-    capabilities.setPageLoadStrategy(pageLoadStrategy);
 
     return await new Builder()
       .usingServer(url)
-      .withCapabilities(capabilities)
-      .setChromeOptions(new Options().headless())
+      .withCapabilities(
+        new Capabilities().setBrowserName("chrome").setPageLoadStrategy("eager")
+      )
+      .setChromeOptions(
+        new Options().headless().addArguments("window-size=1080x3840")
+      )
       .build()
       .then((driver) => driver)
       .catch((e) => {
@@ -85,6 +99,38 @@ class FetchController {
             `Unable to shut down Selenium WebDriver gracefully: ${e}`
           )
       );
+    }
+  }
+
+  async takeScreenshot(
+    driver: WebDriver,
+    stock: Stock,
+    dataProvider: string
+  ): Promise<string> {
+    const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date()
+      .getTime()
+      .toString()}.png`;
+    try {
+      const screenshot = await driver.takeScreenshot();
+      await createResource(
+        {
+          url: screenshotID,
+          fetchDate: new Date(),
+          content: screenshot,
+        },
+        60 * 60 * 24
+      );
+      return `For additional information, see https://${
+        process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""
+      }${process.env.DOMAIN}/api/resource/${screenshotID}.`;
+    } catch (e) {
+      logger.warn(
+        PREFIX_CHROME +
+          chalk.yellowBright(
+            `Unable to take screenshot “${screenshotID}”: ${e}`
+          )
+      );
+      return "";
     }
   }
 
@@ -162,6 +208,10 @@ class FetchController {
       try {
         await driver.get(
           `https://tools.morningstar.co.uk/uk/stockreport/default.aspx?Site=us&id=${stock.morningstarId}&LanguageId=en-US&SecurityToken=${stock.morningstarId}]3]0]E0WWE$$ALL`
+        );
+        await driver.wait(
+          until.elementLocated(By.id("SnapshotContent")),
+          15000
         );
 
         let errorMessage = `Error while fetching Morningstar data for ${stock.name} (${stock.ticker}):`;
@@ -537,6 +587,11 @@ class FetchController {
         }
 
         if (errorMessage.includes("\n")) {
+          errorMessage += `\n${await this.takeScreenshot(
+            driver,
+            stock,
+            "morningstar"
+          )}`;
           signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
           await new Promise((resolve) => setTimeout(resolve, 3000));
           errorCount += 1;
@@ -585,7 +640,7 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
               String(e.message).split(/[\n:{]/)[0]
-            }`
+            }\n${await this.takeScreenshot(driver, stock, "morningstar")}`
         );
         await new Promise((resolve) => setTimeout(resolve, 3000));
       }
@@ -642,7 +697,7 @@ class FetchController {
       return res.status(204).end();
     }
     if (req.query.detach) {
-      res.status(202);
+      res.sendStatus(202);
     }
 
     const updatedStocks: Stock[] = [];
@@ -677,6 +732,7 @@ class FetchController {
         await driver.get(
           `https://www.marketscreener.com/quote/stock/${stock.marketScreenerId}/`
         );
+        await driver.wait(until.elementLocated(By.id("zbCenter")), 5000);
 
         let errorMessage = `Error while fetching MarketScreener data for stock ${stock.ticker}:`;
 
@@ -800,6 +856,11 @@ class FetchController {
         }
 
         if (errorMessage.includes("\n")) {
+          errorMessage += `\n${await this.takeScreenshot(
+            driver,
+            stock,
+            "marketscreener"
+          )}`;
           signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
           await new Promise((resolve) => setTimeout(resolve, 3000));
           errorCount += 1;
@@ -839,7 +900,7 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
               String(e.message).split(/[\n:{]/)[0]
-            }`
+            }\n${await this.takeScreenshot(driver, stock, "marketscreener")}`
         );
         await new Promise((resolve) => setTimeout(resolve, 3000));
       }
@@ -900,7 +961,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver("normal");
+    const driver = await this.getDriver();
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -925,9 +986,12 @@ class FetchController {
 
       try {
         await driver.manage().deleteAllCookies();
-        await new Promise((resolve) => setTimeout(resolve, 2000));
         await driver.get(
           `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${stock.msciId}`
+        );
+        await driver.wait(
+          until.elementsLocated(By.className("esg-expandable")),
+          10000
         );
 
         let errorMessage = `Error while fetching MSCI information for ${stock.name} (${stock.ticker}):`;
@@ -986,13 +1050,12 @@ class FetchController {
         }
 
         if (errorMessage.includes("\n")) {
-          if (
-            !stock.msciLastFetch ||
-            new Date().getTime() - stock.msciLastFetch.getTime() >
-              1000 * 60 * 60 * 24 * 10 // 7 days + 3 more tries
-          ) {
-            signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
-          }
+          errorMessage += `\n${await this.takeScreenshot(
+            driver,
+            stock,
+            "msci"
+          )}`;
+          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
           await new Promise((resolve) => setTimeout(resolve, 3000));
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -1028,7 +1091,7 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
               String(e.message).split(/[\n:{]/)[0]
-            }`
+            }\n${await this.takeScreenshot(driver, stock, "msci")}`
         );
         await new Promise((resolve) => setTimeout(resolve, 3000));
       }
@@ -1082,14 +1145,14 @@ class FetchController {
       return res.status(204).end();
     }
     if (req.query.detach) {
-      res.status(202);
+      res.sendStatus(202);
     }
 
     const updatedStocks: Stock[] = [];
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver("none");
+    const driver = await this.getDriver();
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1116,6 +1179,7 @@ class FetchController {
         await driver.get(
           `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`
         );
+        await driver.wait(until.elementLocated(By.css("pre")), 5000);
 
         const refinitivJSON = JSON.parse(
           await (await driver.findElement(By.css("pre"))).getText()
@@ -1169,6 +1233,11 @@ class FetchController {
         }
 
         if (errorMessage.includes("\n")) {
+          errorMessage += `\n${await this.takeScreenshot(
+            driver,
+            stock,
+            "refinitiv"
+          )}`;
           signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
           await new Promise((resolve) => setTimeout(resolve, 3000));
           errorCount += 1;
@@ -1207,7 +1276,7 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
               String(e.message).split(/[\n:{]/)[0]
-            }`
+            }\n${await this.takeScreenshot(driver, stock, "refinitiv")}`
         );
         await new Promise((resolve) => setTimeout(resolve, 3000));
       }
@@ -1261,7 +1330,7 @@ class FetchController {
       return res.status(204).end();
     }
     if (req.query.detach) {
-      res.status(202);
+      res.sendStatus(202);
     }
 
     const updatedStocks: Stock[] = [];
@@ -1294,6 +1363,7 @@ class FetchController {
         await driver.get(
           `https://www.spglobal.com/esg/scores/results?cid=${stock.spId}`
         );
+        await driver.wait(until.elementLocated(By.xpath(XPATH_SP_PANEL)), 5000);
 
         const lockedContent = await driver.findElements(
           By.className("lock__content")
@@ -1347,7 +1417,7 @@ class FetchController {
             SIGNAL_PREFIX_ERROR +
               `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
                 String(e.message).split(/[\n:{]/)[0]
-              }`
+              }\n${await this.takeScreenshot(driver, stock, "sp")}`
           );
           await new Promise((resolve) => setTimeout(resolve, 3000));
           errorCount += 1;
@@ -1404,7 +1474,7 @@ class FetchController {
       return res.status(204).end();
     }
     if (req.query.detach) {
-      res.status(202);
+      res.sendStatus(202);
     }
 
     const updatedStocks: Stock[] = [];

@@ -2,7 +2,7 @@
 import { SessionEntity, sessionSchema } from "../../../models/session.js";
 import client from "../../Client.js";
 
-export const sessionTTLInSeconds = 600;
+export const sessionTTLInSeconds = 1800;
 
 export const sessionRepository = client.fetchRepository(sessionSchema);
 
