@@ -460,3 +460,25 @@ describe("Authentication API", () => {
     expect(res.status).toBe(429);
   });
 });
+
+describe("Resource API", () => {
+  it("does not provide resources of unknown type", async () => {
+    await expectRouteToBePrivate("/api/resource/odd.exe");
+    const res = await requestWithSupertest
+      .get("/api/resource/odd.exe")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(501);
+    expect(res.body.message).toMatch(
+      "Resources of this type cannot be fetched using this API endpoint"
+    );
+  });
+
+  it("fails to provide not-existent resource", async () => {
+    await expectRouteToBePrivate("/api/resource/doesNotExist.png");
+    const res = await requestWithSupertest
+      .get("/api/resource/doesNotExist.png")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+    expect(res.body.message).toMatch("not found");
+  });
+});

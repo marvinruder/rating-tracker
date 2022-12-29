@@ -1,6 +1,7 @@
 import { Router } from "express";
 import AuthRouter from "./auth/AuthRouter.js";
 import FetchRouter from "./fetch/FetchRouter.js";
+import ResourceRouter from "./resource/ResourceRouter.js";
 import StockRouter from "./stock/StockRouter.js";
 
 class PublicRouter {
@@ -30,6 +31,7 @@ class PrivateRouter {
   private _router = Router();
   private _subrouterFetch = FetchRouter;
   private _subrouterStock = StockRouter;
+  private _subrouterResource = ResourceRouter;
 
   get router() {
     return this._router;
@@ -45,6 +47,7 @@ class PrivateRouter {
   private _configure() {
     this._router.use("/fetch", this._subrouterFetch);
     this._router.use("/stock", this._subrouterStock);
+    this._router.use("/resource", this._subrouterResource);
     this._router.head("/session", (_, res) => {
       return res.sendStatus(204);
     });

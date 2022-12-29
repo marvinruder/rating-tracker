@@ -66,7 +66,15 @@ export const updateStock = async (
           } else {
             logger.info(
               PREFIX_REDIS +
-                `    Property ${k} updated from ${stockEntity[k]} to ${newValues[k]}`
+                `    Property ${k} updated from ${
+                  stockEntity[k] instanceof Date
+                    ? (stockEntity[k] as Date).toISOString()
+                    : stockEntity[k]
+                } to ${
+                  newValues[k] instanceof Date
+                    ? (newValues[k] as Date).toISOString()
+                    : newValues[k]
+                }`
             );
           }
           const parameterPrettyNames = {

@@ -259,24 +259,6 @@ if (process.env.AUTO_FETCH_SCHEDULE) {
   new cron.CronJob(
     process.env.AUTO_FETCH_SCHEDULE,
     async () => {
-      await axios.get(
-        `http://localhost:${process.env.PORT}/api/fetch/morningstar`,
-        {
-          params: { detach: "true" },
-          headers: {
-            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-          },
-        }
-      );
-      await axios.get(
-        `http://localhost:${process.env.PORT}/api/fetch/marketscreener`,
-        {
-          params: { detach: "true" },
-          headers: {
-            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-          },
-        }
-      );
       await axios.get(`http://localhost:${process.env.PORT}/api/fetch/msci`, {
         params: { detach: "true" },
         headers: {
@@ -300,6 +282,24 @@ if (process.env.AUTO_FETCH_SCHEDULE) {
       });
       await axios.get(
         `http://localhost:${process.env.PORT}/api/fetch/sustainalytics`,
+        {
+          params: { detach: "true" },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        }
+      );
+      await axios.get(
+        `http://localhost:${process.env.PORT}/api/fetch/marketscreener`,
+        {
+          params: { detach: "false" },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        }
+      );
+      await axios.get(
+        `http://localhost:${process.env.PORT}/api/fetch/morningstar`,
         {
           params: { detach: "true" },
           headers: {
