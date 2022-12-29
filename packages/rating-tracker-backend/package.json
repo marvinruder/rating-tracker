@@ -29,7 +29,7 @@
   "dependencies": {
     "@simplewebauthn/server": "6.2.2",
     "@simplewebauthn/typescript-types": "6.3.0-alpha.1",
-    "axios": "1.2.1",
+    "axios": "1.2.2",
     "chalk": "5.2.0",
     "cookie-parser": "1.4.6",
     "cron": "2.1.0",
