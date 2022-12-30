@@ -1176,6 +1176,7 @@ class FetchController {
       let refinitivEmissions: number;
 
       try {
+        await driver.manage().deleteAllCookies();
         await driver.get(
           `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`
         );
@@ -1184,6 +1185,13 @@ class FetchController {
         const refinitivJSON = JSON.parse(
           await (await driver.findElement(By.css("pre"))).getText()
         );
+
+        if (
+          refinitivJSON.status &&
+          refinitivJSON.status.limitExceeded === true
+        ) {
+          throw new Error("Limit exceeded.");
+        }
 
         let errorMessage = `Error while fetching Refinitiv information for stock ${stock.ticker}:`;
 
@@ -1260,11 +1268,24 @@ class FetchController {
         if (req.query.ticker) {
           await this.quitDriver(driver);
           throw new APIError(
-            502,
+            (e as Error).message.includes("Limit exceeded") ? 429 : 502,
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
               String(e.message).split(/[\n:{]/)[0]
             }`
           );
+        }
+        if ((e as Error).message.includes("Limit exceeded")) {
+          logger.error(
+            PREFIX_CHROME +
+              chalk.redBright(
+                `Aborting fetching information from Refinitiv after exceeding limit (${successfulCount} successful fetches). Will continue next time.`
+              )
+          );
+          signal.sendMessage(
+            SIGNAL_PREFIX_ERROR +
+              `Aborting fetching information from Refinitiv after exceeding limit (${successfulCount} successful fetches). Will continue next time.`
+          );
+          break;
         }
         logger.error(
           PREFIX_CHROME +
@@ -1544,7 +1565,7 @@ class FetchController {
             line.startsWith(`<a data-href="/${stock.sustainalyticsId}`) &&
             sustainalyticsXMLLines[index + 1].startsWith(`<div class="col-2">`)
         );
-        if (!sustainalyticsIdIndex) {
+        if (sustainalyticsIdIndex === -1) {
           throw new APIError(
             404,
             `Cannot find Sustainalytics ID ${stock.sustainalyticsId} in XML.`
@@ -1565,7 +1586,7 @@ class FetchController {
       } catch (e) {
         if (req.query.ticker) {
           throw new APIError(
-            500,
+            (e as APIError).status ?? 500,
             `Stock ${
               stock.ticker
             }: Unable to extract Sustainalytics ESG Risk: ${

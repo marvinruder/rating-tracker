@@ -3,7 +3,7 @@ import * as user from "../../parameters/user.js";
 import {
   badRequest,
   forbidden,
-  tooManyRequests,
+  tooManyRequestsHTML,
 } from "../../responses/clientError.js";
 import { internalServerError } from "../../responses/serverError.js";
 import { created, okObject } from "../../responses/success.js";
@@ -21,7 +21,7 @@ const get: OpenAPIV3.OperationObject = {
   responses: {
     "200": okObject,
     "403": forbidden,
-    "429": tooManyRequests,
+    "429": tooManyRequestsHTML,
   },
 };
 
@@ -38,7 +38,7 @@ const post: OpenAPIV3.OperationObject = {
     "201": created,
     "400": badRequest,
     "403": forbidden,
-    "429": tooManyRequests,
+    "429": tooManyRequestsHTML,
     "500": internalServerError,
   },
 };

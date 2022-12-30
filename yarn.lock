@@ -2962,12 +2962,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/selenium-webdriver@npm:4.1.9":
-  version: 4.1.9
-  resolution: "@types/selenium-webdriver@npm:4.1.9"
+"@types/selenium-webdriver@npm:4.1.10":
+  version: 4.1.10
+  resolution: "@types/selenium-webdriver@npm:4.1.10"
   dependencies:
     "@types/ws": "*"
-  checksum: 2c2b6eb2a100ce32b828ee2a6d7ec54eb2748e4c342150b616b61d4676df7c04ba86fe914c634fd55a99df4bd990c114a53d83a0a8299dfeef8a683ffc41a7f4
+  checksum: 9641eaeb7bbbeee4a109c584af95fbb8b5d512831f185060b62f85d5c263ce3ca84963868083cd2e808c1a072c48cd1e5738f023c69e8ec0f572bda4633d22d2
   languageName: node
   linkType: hard
 
@@ -8130,7 +8130,7 @@ __metadata:
     "@types/express": 4.17.15
     "@types/jest": 29.2.4
     "@types/node": 18.11.18
-    "@types/selenium-webdriver": 4.1.9
+    "@types/selenium-webdriver": 4.1.10
     "@types/supertest": 2.0.12
     "@types/validator": 13.7.10
     "@typescript-eslint/eslint-plugin": 5.47.1
