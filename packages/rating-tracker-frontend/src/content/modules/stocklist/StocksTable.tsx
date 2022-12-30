@@ -11,7 +11,7 @@ import {
   TableSortLabel,
   Typography,
 } from "@mui/material";
-import { Stock } from "rating-tracker-commons";
+import { MSCIESGRating, Stock } from "rating-tracker-commons";
 import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
 import {
   Country,
@@ -47,8 +47,38 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
           sortBy: sortBy,
           sortDesc: sortDesc,
           name: props.filter.name ? props.filter.name : undefined,
-          size: props.filter.size,
-          style: props.filter.style,
+          totalScoreMin: props.filter.totalScoreMin,
+          totalScoreMax: props.filter.totalScoreMax,
+          financialScoreMin: props.filter.financialScoreMin,
+          financialScoreMax: props.filter.financialScoreMax,
+          esgScoreMin: props.filter.esgScoreMin,
+          esgScoreMax: props.filter.esgScoreMax,
+          dividendYieldPercentMin: props.filter.dividendYieldPercentMin,
+          dividendYieldPercentMax: props.filter.dividendYieldPercentMax,
+          priceEarningRatioMin: props.filter.priceEarningRatioMin,
+          priceEarningRatioMax: props.filter.priceEarningRatioMax,
+          starRatingMin: props.filter.starRatingMin,
+          starRatingMax: props.filter.starRatingMax,
+          morningstarFairValueDiffMin: props.filter.morningstarFairValueDiffMin,
+          morningstarFairValueDiffMax: props.filter.morningstarFairValueDiffMax,
+          analystConsensusMin: props.filter.analystConsensusMin,
+          analystConsensusMax: props.filter.analystConsensusMax,
+          analystCountMin: props.filter.analystCountMin,
+          analystCountMax: props.filter.analystCountMax,
+          analystTargetDiffMin: props.filter.analystTargetDiffMin,
+          analystTargetDiffMax: props.filter.analystTargetDiffMax,
+          msciESGRatingMin: props.filter.msciESGRatingMin,
+          msciESGRatingMax: props.filter.msciESGRatingMax,
+          msciTemperatureMin: props.filter.msciTemperatureMin,
+          msciTemperatureMax: props.filter.msciTemperatureMax,
+          refinitivESGScoreMin: props.filter.refinitivESGScoreMin,
+          refinitivESGScoreMax: props.filter.refinitivESGScoreMax,
+          refinitivEmissionsMin: props.filter.refinitivEmissionsMin,
+          refinitivEmissionsMax: props.filter.refinitivEmissionsMax,
+          spESGScoreMin: props.filter.spESGScoreMin,
+          spESGScoreMax: props.filter.spESGScoreMax,
+          sustainalyticsESGRiskMin: props.filter.sustainalyticsESGRiskMin,
+          sustainalyticsESGRiskMax: props.filter.sustainalyticsESGRiskMax,
           country:
             props.filter.countries?.length > 0
               ? props.filter.countries.join(",")
@@ -57,6 +87,8 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
             props.filter.industries?.length > 0
               ? props.filter.industries.join(",")
               : undefined,
+          size: props.filter.size,
+          style: props.filter.style,
         },
       })
       .then((res) => {
@@ -372,10 +404,42 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
 
 export interface StockFilter {
   name?: string;
-  size?: Size;
-  style?: Style;
+  totalScoreMin?: number;
+  totalScoreMax?: number;
+  financialScoreMin?: number;
+  financialScoreMax?: number;
+  esgScoreMin?: number;
+  esgScoreMax?: number;
+  dividendYieldPercentMin?: number;
+  dividendYieldPercentMax?: number;
+  priceEarningRatioMin?: number;
+  priceEarningRatioMax?: number;
+  starRatingMin?: number;
+  starRatingMax?: number;
+  morningstarFairValueDiffMin?: number;
+  morningstarFairValueDiffMax?: number;
+  analystConsensusMin?: number;
+  analystConsensusMax?: number;
+  analystCountMin?: number;
+  analystCountMax?: number;
+  analystTargetDiffMin?: number;
+  analystTargetDiffMax?: number;
+  msciESGRatingMin?: MSCIESGRating;
+  msciESGRatingMax?: MSCIESGRating;
+  msciTemperatureMin?: number;
+  msciTemperatureMax?: number;
+  refinitivESGScoreMin?: number;
+  refinitivESGScoreMax?: number;
+  refinitivEmissionsMin?: number;
+  refinitivEmissionsMax?: number;
+  spESGScoreMin?: number;
+  spESGScoreMax?: number;
+  sustainalyticsESGRiskMin?: number;
+  sustainalyticsESGRiskMax?: number;
   countries?: Country[];
   industries?: Industry[];
+  size?: Size;
+  style?: Style;
 }
 
 interface StocksTableProps {

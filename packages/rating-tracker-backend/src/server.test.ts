@@ -1,4 +1,10 @@
 import { jest } from "@jest/globals";
+import { sortableAttributeArray } from "rating-tracker-commons";
+import supertest, { CallbackHandler, Test } from "supertest";
+import { Stock } from "./models/stock";
+import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
+import { initStockRepository } from "./redis/repositories/stock/__mocks__/stockRepositoryBase";
+import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
 
 jest.unstable_mockModule(
   "./lib/logger",
@@ -29,12 +35,6 @@ jest.unstable_mockModule(
 );
 
 const { listener, server } = await import("./server");
-import supertest, { CallbackHandler, Test } from "supertest";
-import { Stock } from "./models/stock";
-import { initStockRepository } from "./redis/repositories/stock/__mocks__/stockRepositoryBase";
-import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
-import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
-import { sortableAttributeArray } from "rating-tracker-commons";
 
 const requestWithSupertest = supertest(server.app);
 
@@ -153,6 +153,152 @@ describe("Stock API", () => {
     expect(res.body.count).toBe(1);
     expect(res.body.stocks).toHaveLength(1);
     expect(res.body.stocks[0].ticker).toMatch("TSM");
+
+    res = await requestWithSupertest
+      .get("/api/stock/list?starRatingMin=3&starRatingMax=4&sortBy=name")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(5);
+    expect(res.body.stocks).toHaveLength(5);
+    expect(res.body.stocks[0].name).toMatch("Allianz");
+    expect(res.body.stocks[1].name).toMatch("Apple");
+    expect(res.body.stocks[2].name).toMatch("Danone");
+    expect(res.body.stocks[3].name).toMatch("Iberdrola");
+    expect(res.body.stocks[4].name).toMatch("MercadoLibre");
+
+    res = await requestWithSupertest
+      .get(
+        "/api/stock/list?dividendYieldPercentMin=1.5&dividendYieldPercentMax=5&sortBy=name"
+      )
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(5);
+    expect(res.body.stocks).toHaveLength(5);
+    expect(res.body.stocks[0].name).toMatch("Danone");
+    expect(res.body.stocks[1].name).toMatch("Iberdrola");
+    expect(res.body.stocks[2].name).toMatch("Newmont");
+    expect(res.body.stocks[3].name).toMatch("Ørsted");
+    expect(res.body.stocks[4].name).toMatch("Taiwan Semiconductor");
+
+    res = await requestWithSupertest
+      .get(
+        "/api/stock/list?priceEarningRatioMin=10&priceEarningRatioMax=20&sortBy=name"
+      )
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(4);
+    expect(res.body.stocks).toHaveLength(4);
+    expect(res.body.stocks[0].name).toMatch("Allianz");
+    expect(res.body.stocks[1].name).toMatch("Iberdrola");
+    expect(res.body.stocks[2].name).toMatch("Ørsted");
+    expect(res.body.stocks[3].name).toMatch("Taiwan Semiconductor");
+
+    res = await requestWithSupertest
+      .get(
+        "/api/stock/list?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name"
+      )
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(7);
+    expect(res.body.stocks).toHaveLength(7);
+    expect(res.body.stocks[0].name).toMatch("Allianz");
+    expect(res.body.stocks[1].name).toMatch("Apple");
+    expect(res.body.stocks[2].name).toMatch("Danone");
+    expect(res.body.stocks[3].name).toMatch("Iberdrola");
+    expect(res.body.stocks[4].name).toMatch("MercadoLibre");
+    expect(res.body.stocks[5].name).toMatch("Newmont");
+    expect(res.body.stocks[6].name).toMatch("Ørsted");
+
+    res = await requestWithSupertest
+      .get(
+        "/api/stock/list?analystConsensusMin=7&analystConsensusMax=8.5&analystCountMin=20&analystCountMax=40&sortBy=name"
+      )
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(4);
+    expect(res.body.stocks).toHaveLength(4);
+    expect(res.body.stocks[0].name).toMatch("Iberdrola");
+    expect(res.body.stocks[1].name).toMatch("MercadoLibre");
+    expect(res.body.stocks[2].name).toMatch("Novo Nordisk");
+    expect(res.body.stocks[3].name).toMatch("Ørsted");
+
+    res = await requestWithSupertest
+      .get(
+        "/api/stock/list?analystTargetDiffMin=-20&analystTargetDiffMax=10&sortBy=name"
+      )
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(5);
+    expect(res.body.stocks).toHaveLength(5);
+    expect(res.body.stocks[0].name).toMatch("Allianz");
+    expect(res.body.stocks[1].name).toMatch("Danone");
+    expect(res.body.stocks[2].name).toMatch("Iberdrola");
+    expect(res.body.stocks[3].name).toMatch("Newmont");
+    expect(res.body.stocks[4].name).toMatch("Novo Nordisk");
+
+    res = await requestWithSupertest
+      .get("/api/stock/list?msciESGRatingMin=AA&msciESGRatingMax=A&sortBy=name")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(3);
+    expect(res.body.stocks).toHaveLength(3);
+    expect(res.body.stocks[0].name).toMatch("Allianz");
+    expect(res.body.stocks[1].name).toMatch("MercadoLibre");
+    expect(res.body.stocks[2].name).toMatch("Newmont");
+
+    res = await requestWithSupertest
+      .get(
+        "/api/stock/list?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name"
+      )
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(3);
+    expect(res.body.stocks).toHaveLength(3);
+    expect(res.body.stocks[0].name).toMatch("Iberdrola");
+    expect(res.body.stocks[1].name).toMatch("Ørsted");
+    expect(res.body.stocks[2].name).toMatch("Taiwan Semiconductor");
+
+    res = await requestWithSupertest
+      .get(
+        "/api/stock/list?refinitivESGScoreMin=70&refinitivESGScoreMax=80&refinitivEmissionsMin=80&refinitivEmissionsMax=90&sortBy=name"
+      )
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(1);
+    expect(res.body.stocks).toHaveLength(1);
+    expect(res.body.stocks[0].name).toMatch("Ørsted");
+
+    res = await requestWithSupertest
+      .get(
+        "/api/stock/list?spESGScoreMin=50&spESGScoreMax=85&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name"
+      )
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(2);
+    expect(res.body.stocks).toHaveLength(2);
+    expect(res.body.stocks[0].name).toMatch("Newmont");
+    expect(res.body.stocks[1].name).toMatch("Novo Nordisk");
+
+    res = await requestWithSupertest
+      .get(
+        "/api/stock/list?financialScoreMin=0&financialScoreMax=50&esgScoreMin=40&esgScoreMax=60&sortBy=name"
+      )
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(2);
+    expect(res.body.stocks).toHaveLength(2);
+    expect(res.body.stocks[0].name).toMatch("Danone");
+    expect(res.body.stocks[1].name).toMatch("Newmont");
+
+    res = await requestWithSupertest
+      .get("/api/stock/list?totalScoreMin=40&totalScoreMax=60&sortBy=name")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(3);
+    expect(res.body.stocks).toHaveLength(3);
+    expect(res.body.stocks[0].name).toMatch("Allianz");
+    expect(res.body.stocks[1].name).toMatch("Kion");
+    expect(res.body.stocks[2].name).toMatch("Ørsted");
 
     sortableAttributeArray.forEach(async (sortCriterion) => {
       res = await requestWithSupertest

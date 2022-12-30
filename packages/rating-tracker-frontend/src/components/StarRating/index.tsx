@@ -27,9 +27,9 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
     <span style={{ whiteSpace: "nowrap" }}>
       {[...Array(5).keys()].map((index) => {
         return (value as number) > index ? (
-          <StarIcon key={index} />
+          <StarIcon key={index} fontSize={props.size} />
         ) : (
-          <StarOutlineIcon key={index} />
+          <StarOutlineIcon key={index} fontSize={props.size} />
         );
       })}
     </span>
@@ -38,6 +38,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
 
 interface StarRatingProps {
   value?: number;
+  size?: "small" | "medium" | "large" | "inherit";
 }
 
 export default StarRating;

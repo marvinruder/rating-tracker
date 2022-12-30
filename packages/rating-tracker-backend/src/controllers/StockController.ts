@@ -16,6 +16,7 @@ import {
   Industry,
   isCountry,
   isIndustry,
+  isMSCIESGRating,
   isSize,
   isSortableAttribute,
   isStyle,
@@ -71,6 +72,300 @@ class StockController {
       const style = req.query.style;
       if (typeof style === "string" && isStyle(style)) {
         stocks = stocks.filter((stock) => style === stock.style);
+      }
+    }
+    if (req.query.starRatingMin !== undefined) {
+      const starRatingMin = Number(req.query.starRatingMin);
+      if (!isNaN(starRatingMin)) {
+        stocks = stocks.filter(
+          (stock) => (stock.starRating ?? -1) >= starRatingMin
+        );
+      }
+    }
+    if (req.query.starRatingMax !== undefined) {
+      const starRatingMax = Number(req.query.starRatingMax);
+      if (!isNaN(starRatingMax)) {
+        stocks = stocks.filter(
+          (stock) => (stock.starRating ?? -1) <= starRatingMax
+        );
+      }
+    }
+    if (req.query.dividendYieldPercentMin !== undefined) {
+      const dividendYieldPercentMin = Number(req.query.dividendYieldPercentMin);
+      if (!isNaN(dividendYieldPercentMin)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.dividendYieldPercent ?? -1) >= dividendYieldPercentMin
+        );
+      }
+    }
+    if (req.query.dividendYieldPercentMax !== undefined) {
+      const dividendYieldPercentMax = Number(req.query.dividendYieldPercentMax);
+      if (!isNaN(dividendYieldPercentMax)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.dividendYieldPercent ?? -1) <= dividendYieldPercentMax
+        );
+      }
+    }
+    if (req.query.priceEarningRatioMin !== undefined) {
+      const priceEarningRatioMin = Number(req.query.priceEarningRatioMin);
+      if (!isNaN(priceEarningRatioMin)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.priceEarningRatio ?? Number.MAX_VALUE) >=
+            priceEarningRatioMin
+        );
+      }
+    }
+    if (req.query.priceEarningRatioMax !== undefined) {
+      const priceEarningRatioMax = Number(req.query.priceEarningRatioMax);
+      if (!isNaN(priceEarningRatioMax)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.priceEarningRatio ?? Number.MAX_VALUE) <=
+            priceEarningRatioMax
+        );
+      }
+    }
+    if (req.query.morningstarFairValueDiffMin !== undefined) {
+      const morningstarFairValueDiffMin = Number(
+        req.query.morningstarFairValueDiffMin
+      );
+      if (!isNaN(morningstarFairValueDiffMin)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.morningstarFairValue && stock.lastClose
+              ? stock.getPercentageToLastClose("morningstarFairValue")
+              : Number.MAX_VALUE) >= morningstarFairValueDiffMin
+        );
+      }
+    }
+    if (req.query.morningstarFairValueDiffMax !== undefined) {
+      const morningstarFairValueDiffMax = Number(
+        req.query.morningstarFairValueDiffMax
+      );
+      if (!isNaN(morningstarFairValueDiffMax)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.morningstarFairValue && stock.lastClose
+              ? stock.getPercentageToLastClose("morningstarFairValue")
+              : Number.MAX_VALUE) <= morningstarFairValueDiffMax
+        );
+      }
+    }
+    if (req.query.analystConsensusMin !== undefined) {
+      const analystConsensusMin = Number(req.query.analystConsensusMin);
+      if (!isNaN(analystConsensusMin)) {
+        stocks = stocks.filter(
+          (stock) => (stock.analystConsensus ?? -1) >= analystConsensusMin
+        );
+      }
+    }
+    if (req.query.analystConsensusMax !== undefined) {
+      const analystConsensusMax = Number(req.query.analystConsensusMax);
+      if (!isNaN(analystConsensusMax)) {
+        stocks = stocks.filter(
+          (stock) => (stock.analystConsensus ?? -1) <= analystConsensusMax
+        );
+      }
+    }
+    if (req.query.analystCountMin !== undefined) {
+      const analystCountMin = Number(req.query.analystCountMin);
+      if (!isNaN(analystCountMin)) {
+        stocks = stocks.filter(
+          (stock) => (stock.analystCount ?? -1) >= analystCountMin
+        );
+      }
+    }
+    if (req.query.analystCountMax !== undefined) {
+      const analystCountMax = Number(req.query.analystCountMax);
+      if (!isNaN(analystCountMax)) {
+        stocks = stocks.filter(
+          (stock) => (stock.analystCount ?? -1) <= analystCountMax
+        );
+      }
+    }
+    if (req.query.analystTargetDiffMin !== undefined) {
+      const analystTargetDiffMin = Number(req.query.analystTargetDiffMin);
+      if (!isNaN(analystTargetDiffMin)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.analystTargetPrice && stock.lastClose
+              ? stock.getPercentageToLastClose("analystTargetPrice")
+              : Number.MAX_VALUE) >= analystTargetDiffMin
+        );
+      }
+    }
+    if (req.query.analystTargetDiffMax !== undefined) {
+      const analystTargetDiffMax = Number(req.query.analystTargetDiffMax);
+      if (!isNaN(analystTargetDiffMax)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.analystTargetPrice && stock.lastClose
+              ? stock.getPercentageToLastClose("analystTargetPrice")
+              : Number.MAX_VALUE) <= analystTargetDiffMax
+        );
+      }
+    }
+    if (req.query.msciESGRatingMin !== undefined) {
+      const msciESGRatingMin = req.query.msciESGRatingMin as string;
+      if (isMSCIESGRating(msciESGRatingMin)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.msciESGRating
+              ? msciESGRatingArray.indexOf(stock.msciESGRating)
+              : 7) >= msciESGRatingArray.indexOf(msciESGRatingMin)
+        );
+      }
+    }
+    if (req.query.msciESGRatingMax !== undefined) {
+      const msciESGRatingMax = req.query.msciESGRatingMax as string;
+      if (isMSCIESGRating(msciESGRatingMax)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.msciESGRating
+              ? msciESGRatingArray.indexOf(stock.msciESGRating)
+              : 7) <= msciESGRatingArray.indexOf(msciESGRatingMax)
+        );
+      }
+    }
+    if (req.query.msciTemperatureMin !== undefined) {
+      const msciTemperatureMin = Number(req.query.msciTemperatureMin);
+      if (!isNaN(msciTemperatureMin)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.msciTemperature ?? Number.MAX_VALUE) >= msciTemperatureMin
+        );
+      }
+    }
+    if (req.query.msciTemperatureMax !== undefined) {
+      const msciTemperatureMax = Number(req.query.msciTemperatureMax);
+      if (!isNaN(msciTemperatureMax)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.msciTemperature ?? Number.MAX_VALUE) <= msciTemperatureMax
+        );
+      }
+    }
+    if (req.query.refinitivESGScoreMin !== undefined) {
+      const refinitivESGScoreMin = Number(req.query.refinitivESGScoreMin);
+      if (!isNaN(refinitivESGScoreMin)) {
+        stocks = stocks.filter(
+          (stock) => (stock.refinitivESGScore ?? -1) >= refinitivESGScoreMin
+        );
+      }
+    }
+    if (req.query.refinitivESGScoreMax !== undefined) {
+      const refinitivESGScoreMax = Number(req.query.refinitivESGScoreMax);
+      if (!isNaN(refinitivESGScoreMax)) {
+        stocks = stocks.filter(
+          (stock) => (stock.refinitivESGScore ?? -1) <= refinitivESGScoreMax
+        );
+      }
+    }
+    if (req.query.refinitivEmissionsMin !== undefined) {
+      const refinitivEmissionsMin = Number(req.query.refinitivEmissionsMin);
+      if (!isNaN(refinitivEmissionsMin)) {
+        stocks = stocks.filter(
+          (stock) => (stock.refinitivEmissions ?? -1) >= refinitivEmissionsMin
+        );
+      }
+    }
+    if (req.query.refinitivEmissionsMax !== undefined) {
+      const refinitivEmissionsMax = Number(req.query.refinitivEmissionsMax);
+      if (!isNaN(refinitivEmissionsMax)) {
+        stocks = stocks.filter(
+          (stock) => (stock.refinitivEmissions ?? -1) <= refinitivEmissionsMax
+        );
+      }
+    }
+    if (req.query.spESGScoreMin !== undefined) {
+      const spESGScoreMin = Number(req.query.spESGScoreMin);
+      if (!isNaN(spESGScoreMin)) {
+        stocks = stocks.filter(
+          (stock) => (stock.spESGScore ?? -1) >= spESGScoreMin
+        );
+      }
+    }
+    if (req.query.spESGScoreMax !== undefined) {
+      const spESGScoreMax = Number(req.query.spESGScoreMax);
+      if (!isNaN(spESGScoreMax)) {
+        stocks = stocks.filter(
+          (stock) => (stock.spESGScore ?? -1) <= spESGScoreMax
+        );
+      }
+    }
+    if (req.query.sustainalyticsESGRiskMin !== undefined) {
+      const sustainalyticsESGRiskMin = Number(
+        req.query.sustainalyticsESGRiskMin
+      );
+      if (!isNaN(sustainalyticsESGRiskMin)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) >=
+            sustainalyticsESGRiskMin
+        );
+      }
+    }
+    if (req.query.sustainalyticsESGRiskMax !== undefined) {
+      const sustainalyticsESGRiskMax = Number(
+        req.query.sustainalyticsESGRiskMax
+      );
+      if (!isNaN(sustainalyticsESGRiskMax)) {
+        stocks = stocks.filter(
+          (stock) =>
+            (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) <=
+            sustainalyticsESGRiskMax
+        );
+      }
+    }
+    if (req.query.financialScoreMin !== undefined) {
+      const financialScoreMin = Number(req.query.financialScoreMin);
+      if (!isNaN(financialScoreMin)) {
+        stocks = stocks.filter(
+          (stock) => 100 * stock.getFinancialScore() >= financialScoreMin
+        );
+      }
+    }
+    if (req.query.financialScoreMax !== undefined) {
+      const financialScoreMax = Number(req.query.financialScoreMax);
+      if (!isNaN(financialScoreMax)) {
+        stocks = stocks.filter(
+          (stock) => 100 * stock.getFinancialScore() <= financialScoreMax
+        );
+      }
+    }
+    if (req.query.esgScoreMin !== undefined) {
+      const esgScoreMin = Number(req.query.esgScoreMin);
+      if (!isNaN(esgScoreMin)) {
+        stocks = stocks.filter(
+          (stock) => 100 * stock.getESGScore() >= esgScoreMin
+        );
+      }
+    }
+    if (req.query.esgScoreMax !== undefined) {
+      const esgScoreMax = Number(req.query.esgScoreMax);
+      if (!isNaN(esgScoreMax)) {
+        stocks = stocks.filter(
+          (stock) => 100 * stock.getESGScore() <= esgScoreMax
+        );
+      }
+    }
+    if (req.query.totalScoreMin !== undefined) {
+      const totalScoreMin = Number(req.query.totalScoreMin);
+      if (!isNaN(totalScoreMin)) {
+        stocks = stocks.filter(
+          (stock) => 100 * stock.getTotalScore() >= totalScoreMin
+        );
+      }
+    }
+    if (req.query.totalScoreMax !== undefined) {
+      const totalScoreMax = Number(req.query.totalScoreMax);
+      if (!isNaN(totalScoreMax)) {
+        stocks = stocks.filter(
+          (stock) => 100 * stock.getTotalScore() <= totalScoreMax
+        );
       }
     }
 

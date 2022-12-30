@@ -174,6 +174,328 @@ const sustainalyticsId: OpenAPIV3.ParameterObject = {
   },
 };
 
+const starRatingMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "starRatingMin",
+  description: "The minimum star rating of a stock.",
+  schema: {
+    type: "number",
+    example: 1,
+  },
+};
+
+const starRatingMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "starRatingMax",
+  description: "The maximum star rating of a stock.",
+  schema: {
+    type: "number",
+    example: 5,
+  },
+};
+
+const dividendYieldPercentMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "dividendYieldPercentMin",
+  description: "The minimum dividend yield of a stock.",
+  schema: {
+    type: "number",
+    example: 0.3,
+  },
+};
+
+const dividendYieldPercentMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "dividendYieldPercentMax",
+  description: "The maximum dividend yield of a stock.",
+  schema: {
+    type: "number",
+    example: 7.1,
+  },
+};
+
+const priceEarningRatioMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "priceEarningRatioMin",
+  description: "The minimum price-earning ratio of a stock.",
+  schema: {
+    type: "number",
+    example: 10,
+  },
+};
+
+const priceEarningRatioMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "priceEarningRatioMax",
+  description: "The maximum price-earning ratio of a stock.",
+  schema: {
+    type: "number",
+    example: 30,
+  },
+};
+
+const morningstarFairValueDiffMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "morningstarFairValueDiffMin",
+  description:
+    "The minimum difference between a stock’s fair value and its price.",
+  schema: {
+    type: "number",
+    example: -40,
+  },
+};
+
+const morningstarFairValueDiffMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "morningstarFairValueDiffMax",
+  description:
+    "The maximum difference between a stock’s fair value and its price.",
+  schema: {
+    type: "number",
+    example: 10,
+  },
+};
+
+const analystConsensusMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "analystConsensusMin",
+  description: "The minimum analyst consensus of a stock.",
+  schema: {
+    type: "number",
+    example: 5.5,
+  },
+};
+
+const analystConsensusMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "analystConsensusMax",
+  description: "The maximum analyst consensus of a stock.",
+  schema: {
+    type: "number",
+    example: 9.5,
+  },
+};
+
+const analystTargetDiffMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "analystTargetDiffMin",
+  description:
+    "The minimum difference between a stock’s analyst target price and its price.",
+  schema: {
+    type: "number",
+    example: -40,
+  },
+};
+
+const analystTargetDiffMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "analystTargetDiffMax",
+  description:
+    "The maximum difference between a stock’s analyst target price and its price.",
+  schema: {
+    type: "number",
+    example: 10,
+  },
+};
+
+const analystCountMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "analystCountMin",
+  description: "The minimum number of analysts that cover a stock.",
+  schema: {
+    type: "number",
+    example: 5,
+  },
+};
+
+const analystCountMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "analystCountMax",
+  description: "The maximum number of analysts that cover a stock.",
+  schema: {
+    type: "number",
+    example: 20,
+  },
+};
+
+const msciESGRatingMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "msciESGRatingMin",
+  description: "The minimum MSCI ESG rating of a stock.",
+  schema: {
+    $ref: "#/components/schemas/MSCIESGRating",
+  },
+};
+
+const msciESGRatingMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "msciESGRatingMax",
+  description: "The maximum MSCI ESG rating of a stock.",
+  schema: {
+    $ref: "#/components/schemas/MSCIESGRating",
+  },
+};
+
+const msciTemperatureMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "msciTemperatureMin",
+  description: "The minimum MSCI Implied Temperature Rise of a stock.",
+  schema: {
+    type: "number",
+    example: 1.2,
+  },
+};
+
+const msciTemperatureMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "msciTemperatureMax",
+  description: "The maximum MSCI Implied Temperature Rise of a stock.",
+  schema: {
+    type: "number",
+    example: 1.8,
+  },
+};
+
+const refinitivESGScoreMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "refinitivESGScoreMin",
+  description: "The minimum Refinitiv ESG score of a stock.",
+  schema: {
+    type: "number",
+    example: 50,
+  },
+};
+
+const refinitivESGScoreMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "refinitivESGScoreMax",
+  description: "The maximum Refinitiv ESG score of a stock.",
+  schema: {
+    type: "number",
+    example: 95,
+  },
+};
+
+const refinitivEmissionsMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "refinitivEmissionsMin",
+  description: "The minimum Refinitiv Emissions rating of a stock.",
+  schema: {
+    type: "number",
+    example: 50,
+  },
+};
+
+const refinitivEmissionsMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "refinitivEmissionsMax",
+  description: "The maximum Refinitiv Emissions rating of a stock.",
+  schema: {
+    type: "number",
+    example: 95,
+  },
+};
+
+const spESGScoreMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "spESGScoreMin",
+  description: "The minimum S&P ESG score of a stock.",
+  schema: {
+    type: "number",
+    example: 50,
+  },
+};
+
+const spESGScoreMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "spESGScoreMax",
+  description: "The maximum S&P ESG score of a stock.",
+  schema: {
+    type: "number",
+    example: 95,
+  },
+};
+
+const sustainalyticsESGRiskMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "sustainalyticsESGRiskMin",
+  description: "The minimum Sustainalytics ESG risk rating of a stock.",
+  schema: {
+    type: "number",
+    example: 2.5,
+  },
+};
+
+const sustainalyticsESGRiskMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "sustainalyticsESGRiskMax",
+  description: "The maximum Sustainalytics ESG risk rating of a stock.",
+  schema: {
+    type: "number",
+    example: 19.5,
+  },
+};
+
+const financialScoreMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "financialScoreMin",
+  description: "The minimum financial score of a stock.",
+  schema: {
+    type: "number",
+    example: 50,
+  },
+};
+
+const financialScoreMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "financialScoreMax",
+  description: "The maximum financial score of a stock.",
+  schema: {
+    type: "number",
+    example: 95,
+  },
+};
+
+const esgScoreMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "esgScoreMin",
+  description: "The minimum ESG score of a stock.",
+  schema: {
+    type: "number",
+    example: 50,
+  },
+};
+
+const esgScoreMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "esgScoreMax",
+  description: "The maximum ESG score of a stock.",
+  schema: {
+    type: "number",
+    example: 95,
+  },
+};
+
+const totalScoreMin: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "totalScoreMin",
+  description: "The minimum total score of a stock.",
+  schema: {
+    type: "number",
+    example: 50,
+  },
+};
+
+const totalScoreMax: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "totalScoreMax",
+  description: "The maximum total score of a stock.",
+  schema: {
+    type: "number",
+    example: 95,
+  },
+};
+
 export {
   offset,
   count,
@@ -192,4 +514,36 @@ export {
   ric,
   spId,
   sustainalyticsId,
+  starRatingMin,
+  starRatingMax,
+  dividendYieldPercentMin,
+  dividendYieldPercentMax,
+  priceEarningRatioMin,
+  priceEarningRatioMax,
+  morningstarFairValueDiffMin,
+  morningstarFairValueDiffMax,
+  analystConsensusMin,
+  analystConsensusMax,
+  analystCountMin,
+  analystCountMax,
+  analystTargetDiffMin,
+  analystTargetDiffMax,
+  msciESGRatingMin,
+  msciESGRatingMax,
+  msciTemperatureMin,
+  msciTemperatureMax,
+  refinitivESGScoreMin,
+  refinitivESGScoreMax,
+  refinitivEmissionsMin,
+  refinitivEmissionsMax,
+  spESGScoreMin,
+  spESGScoreMax,
+  sustainalyticsESGRiskMin,
+  sustainalyticsESGRiskMax,
+  financialScoreMin,
+  financialScoreMax,
+  esgScoreMin,
+  esgScoreMax,
+  totalScoreMin,
+  totalScoreMax,
 };
