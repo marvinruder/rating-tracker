@@ -55,10 +55,21 @@ const conflict: OpenAPIV3.ResponseObject = {
   },
 };
 
-const tooManyRequests: OpenAPIV3.ResponseObject = {
+const tooManyRequestsHTML: OpenAPIV3.ResponseObject = {
   description: "Too Many Requests",
   content: {
     "text/html": {},
+  },
+};
+
+const tooManyRequestsJSONError: OpenAPIV3.ResponseObject = {
+  description: "Too Many Requests",
+  content: {
+    "application/json": {
+      schema: {
+        $ref: "#/components/schemas/Error",
+      },
+    },
   },
 };
 
@@ -68,5 +79,6 @@ export {
   forbidden,
   notFound,
   conflict,
-  tooManyRequests,
+  tooManyRequestsHTML,
+  tooManyRequestsJSONError,
 };

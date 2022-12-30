@@ -2,7 +2,7 @@ import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 import {
   badRequest,
   forbidden,
-  tooManyRequests,
+  tooManyRequestsHTML,
 } from "../../responses/clientError.js";
 import { internalServerError } from "../../responses/serverError.js";
 import { noContent, okObject } from "../../responses/success.js";
@@ -15,7 +15,7 @@ const get: OpenAPIV3.OperationObject = {
     "Get information required for authenticating as a registered user via WebAuthn standard",
   responses: {
     "200": okObject,
-    "429": tooManyRequests,
+    "429": tooManyRequestsHTML,
   },
 };
 
@@ -28,7 +28,7 @@ const post: OpenAPIV3.OperationObject = {
     "204": noContent,
     "400": badRequest,
     "403": forbidden,
-    "429": tooManyRequests,
+    "429": tooManyRequestsHTML,
     "500": internalServerError,
   },
 };
