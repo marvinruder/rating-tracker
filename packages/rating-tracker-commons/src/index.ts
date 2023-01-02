@@ -32,3 +32,6 @@ export type { Currency } from "./lib/Currency.js";
 
 export * from "./lib/SortableAttribute.js";
 export type { SortableAttribute } from "./lib/SortableAttribute.js";
+
+export * from "./lib/StockListColumn.js";
+export type { StockListColumn } from "./lib/StockListColumn.js";
