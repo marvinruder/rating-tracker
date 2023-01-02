@@ -20,7 +20,7 @@ import {
   SortableAttribute,
   Style,
 } from "rating-tracker-commons";
-import StockRow from "./StockRow";
+import StockRow from "../../../components/StockRow";
 import useNotification from "../../../helpers/useNotification";
 
 const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
@@ -46,7 +46,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
           count: rowsPerPage > 0 ? rowsPerPage : undefined,
           sortBy: sortBy,
           sortDesc: sortDesc,
-          name: props.filter.name ? props.filter.name : undefined,
           totalScoreMin: props.filter.totalScoreMin,
           totalScoreMax: props.filter.totalScoreMax,
           financialScoreMin: props.filter.financialScoreMin,
@@ -357,7 +356,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                 </TableSortLabel>
               </TableCell>
               <TableCell>Market Cap</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -403,7 +402,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
 };
 
 export interface StockFilter {
-  name?: string;
   totalScoreMin?: number;
   totalScoreMax?: number;
   financialScoreMin?: number;

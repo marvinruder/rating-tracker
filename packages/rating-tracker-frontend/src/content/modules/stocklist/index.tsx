@@ -1,6 +1,6 @@
 import PageHeader from "./PageHeader";
 import PageTitleWrapper from "../../../components/PageTitleWrapper";
-import { Card, Grid, Container } from "@mui/material";
+import { Card, Container } from "@mui/material";
 import Footer from "../../../components/Footer";
 
 import StocksTable, { StockFilter } from "./StocksTable";
@@ -13,7 +13,7 @@ import {
   MSCIESGRating,
 } from "rating-tracker-commons";
 
-function StocklistModule() {
+const StocklistModule = () => {
   const [filter, setFilter] = useState<StockFilter>({});
   const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
 
@@ -22,7 +22,6 @@ function StocklistModule() {
   };
 
   const applyFilters = (
-    name?: string,
     totalScoreMin?: number,
     totalScoreMax?: number,
     financialScoreMin?: number,
@@ -61,7 +60,6 @@ function StocklistModule() {
     style?: Style
   ) => {
     setFilter({
-      name: name ? name : "",
       totalScoreMin,
       totalScoreMax,
       financialScoreMin,
@@ -108,7 +106,6 @@ function StocklistModule() {
           applyFilters={applyFilters}
           triggerRefetch={triggerRefetch}
           filtersInUse={
-            !!filter.name ||
             !!filter.totalScoreMin ||
             !!filter.totalScoreMax ||
             !!filter.financialScoreMin ||
@@ -153,23 +150,13 @@ function StocklistModule() {
         />
       </PageTitleWrapper>
       <Container maxWidth={false}>
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={3}
-        >
-          <Grid item xs={12}>
-            <Card>
-              <StocksTable filter={filter} triggerRefetch={refetchTrigger} />
-            </Card>
-          </Grid>
-        </Grid>
+        <Card>
+          <StocksTable filter={filter} triggerRefetch={refetchTrigger} />
+        </Card>
       </Container>
       <Footer />
     </>
   );
-}
+};
 
 export default StocklistModule;

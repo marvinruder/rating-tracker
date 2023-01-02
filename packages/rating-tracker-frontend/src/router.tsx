@@ -23,6 +23,7 @@ import LoginApp from "./content/applications/Users/login";
 // Modules
 
 const Stocklist = loader(lazy(() => import("./content/modules/stocklist")));
+const Stock = loader(lazy(() => import("./content/modules/stock")));
 
 import Status404 from "./content/pages/Status/Status404";
 import Status500 from "./content/pages/Status/Status500";
@@ -68,24 +69,23 @@ const routes: RouteObject[] = [
     children: [
       {
         path: "/",
-        element: <Navigate to="/dashboards/stocklist" replace />,
+        element: <Navigate to="/stocklist" replace />,
       },
       {
-        path: "overview",
-        element: <Navigate to="/" replace />,
+        path: "stocklist",
+        element: (
+          <AuthWrapper>
+            <Stocklist />
+          </AuthWrapper>
+        ),
       },
       {
-        path: "dashboards",
-        children: [
-          {
-            path: "stocklist",
-            element: (
-              <AuthWrapper>
-                <Stocklist />
-              </AuthWrapper>
-            ),
-          },
-        ],
+        path: "stock/:ticker",
+        element: (
+          <AuthWrapper>
+            <Stock />
+          </AuthWrapper>
+        ),
       },
     ],
   },

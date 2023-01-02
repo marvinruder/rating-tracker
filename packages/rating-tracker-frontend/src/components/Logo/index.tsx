@@ -46,16 +46,9 @@ function Logo() {
           <QueryStatsIcon fontSize="inherit" />
         </Badge>
       </LogoSignWrapper>
-      <Box
-        component="span"
-        sx={{
-          display: { xs: "none", sm: "inline-block" },
-        }}
-      >
-        <LogoTextWrapper display={"flex"} alignItems={"flex-end"}>
-          <LogoText>{packageInfo.title}</LogoText>
-        </LogoTextWrapper>
-      </Box>
+      <LogoTextWrapper display={"flex"} alignItems={"flex-end"}>
+        <LogoText>{packageInfo.title}</LogoText>
+      </LogoTextWrapper>
     </LogoWrapper>
   );
 }
