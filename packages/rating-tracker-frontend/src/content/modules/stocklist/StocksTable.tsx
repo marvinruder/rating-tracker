@@ -11,7 +11,7 @@ import {
   TableSortLabel,
   Typography,
 } from "@mui/material";
-import { MSCIESGRating, Stock } from "rating-tracker-commons";
+import { MSCIESGRating, Stock, StockListColumn } from "rating-tracker-commons";
 import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
 import {
   Country,
@@ -142,12 +142,19 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
     }
   };
 
+  const displayColumn = (column: StockListColumn): "none" | undefined => {
+    if (props.columns && !props.columns.includes(column)) {
+      return "none";
+    }
+    return undefined;
+  };
+
   return (
     <>
       <TableContainer>
         <Table size="small">
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ height: 52.5 }}>
               <TableCell>
                 <TableSortLabel
                   active={sortBy === "name"}
@@ -157,8 +164,18 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Stock
                 </TableSortLabel>
               </TableCell>
-              <TableCell>Country</TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Country"),
+                }}
+              >
+                Country
+              </TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Size and Style"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "size"}
                   direction={sortBy !== "size" || sortDesc ? "desc" : "asc"}
@@ -175,9 +192,25 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Style
                 </TableSortLabel>
               </TableCell>
-              <TableCell>Sector</TableCell>
-              <TableCell>Industry</TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Sector"),
+                }}
+              >
+                Sector
+              </TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Industry"),
+                }}
+              >
+                Industry
+              </TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Total Score"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "totalScore"}
                   direction={
@@ -188,7 +221,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Score
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Financial Score"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "financialScore"}
                   direction={
@@ -199,7 +236,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Financial
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("ESG Score"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "esgScore"}
                   direction={sortBy !== "esgScore" || sortDesc ? "desc" : "asc"}
@@ -208,7 +249,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   ESG
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Star Rating"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "starRating"}
                   direction={
@@ -219,7 +264,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Star Rating
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Morningstar Fair Value"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "morningstarFairValue"}
                   direction={
@@ -232,7 +281,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Fair Value
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Analyst Consensus"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "analystConsensus"}
                   direction={
@@ -243,7 +296,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Anlst Consns
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Analyst Target Price"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "analystTargetPrice"}
                   direction={
@@ -254,7 +311,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Analyst Target
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("MSCI ESG Rating"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "msciESGRating"}
                   direction={
@@ -265,7 +326,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   MSCI ESG
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("MSCI Implied Temperature Rise"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "msciTemperature"}
                   direction={
@@ -276,7 +341,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   MSCI Temp
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Refinitiv ESG Information"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "refinitivESGScore"}
                   direction={
@@ -298,7 +367,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Emissions
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("S&P ESG Score"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "spESGScore"}
                   direction={
@@ -309,7 +382,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   S&P
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Sustainalytics ESG Risk"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "sustainalyticsESGRisk"}
                   direction={
@@ -322,7 +399,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Sustain-alytics
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("52 Week Range"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "52w"}
                   direction={sortBy === "52w" && sortDesc ? "desc" : "asc"}
@@ -331,7 +412,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   52W Range
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Dividend Yield (%)"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "dividendYieldPercent"}
                   direction={
@@ -344,7 +429,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Div Yield
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("P / E Ratio"),
+                }}
+              >
                 <TableSortLabel
                   active={sortBy === "priceEarningRatio"}
                   direction={
@@ -355,7 +444,13 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   P/E
                 </TableSortLabel>
               </TableCell>
-              <TableCell>Market Cap</TableCell>
+              <TableCell
+                sx={{
+                  display: displayColumn("Market Capitalization"),
+                }}
+              >
+                Market Cap
+              </TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -366,10 +461,17 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                     stock={stock}
                     getStocks={getStocks}
                     key={stock.ticker}
+                    columns={props.columns}
                   />
                 ))
               : [...Array(rowsPerPage > 0 ? rowsPerPage : 100)].map(
-                  (_undef, key) => <StockRow getStocks={getStocks} key={key} />
+                  (_undef, key) => (
+                    <StockRow
+                      key={key}
+                      getStocks={getStocks}
+                      columns={props.columns}
+                    />
+                  )
                 )}
           </TableBody>
         </Table>
@@ -443,6 +545,7 @@ export interface StockFilter {
 interface StocksTableProps {
   filter: StockFilter;
   triggerRefetch?: boolean;
+  columns?: StockListColumn[];
 }
 
 export default StocksTable;

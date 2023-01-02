@@ -11,14 +11,24 @@ import {
   useMediaQuery,
   Slider,
   DialogContent,
+  Checkbox,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListItemButton,
+  DialogActions,
+  Divider,
 } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/Add";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ClearIcon from "@mui/icons-material/Clear";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import TuneIcon from "@mui/icons-material/Tune";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import TableRowsIcon from "@mui/icons-material/TableRows";
 import { FC, useState } from "react";
 import {
   Country,
@@ -40,6 +50,7 @@ import {
   sectorName,
   Size,
   sizeArray,
+  StockListColumn,
   Style,
   styleArray,
   SuperRegion,
@@ -53,9 +64,11 @@ import React from "react";
 import NestedCheckboxList from "../../../components/NestedCheckboxList";
 import AddStock from "../../../components/AddStock";
 import StarRating from "../../../components/StarRating";
+import { stockListColumnArray } from "rating-tracker-commons";
 
 const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
+  const [columnFilterOpen, setColumnFilterOpen] = useState<boolean>(false);
 
   const [totalScoreInput, setTotalScoreInput] = useState<number[]>([0, 100]);
   const [financialScoreInput, setFinancialScoreInput] = useState<number[]>([
@@ -210,10 +223,18 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           <TuneIcon />
         </IconButton>
         <IconButton
+          sx={{ ml: 1, mt: 1 }}
+          color="primary"
+          onClick={() => setColumnFilterOpen(true)}
+        >
+          <FilterListIcon />
+        </IconButton>
+        <IconButton
           sx={{ display: !props.filtersInUse && "none", ml: 1, mt: 1 }}
           color="error"
           onClick={() => {
             props.applyFilters();
+            props.setColumnFilter([...stockListColumnArray]);
             setTotalScoreInput([0, 100]);
             setFinancialScoreInput([0, 100]);
             setEsgScoreInput([0, 100]);
@@ -247,427 +268,508 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           open={filterOpen}
           maxWidth="lg"
         >
-          <DialogTitle sx={{ pb: "0px" }}>
+          <DialogTitle>
             <Typography variant="h3">Filter Stocks</Typography>
           </DialogTitle>
-          <Grid container width={filterContainerWidth}>
-            <Grid item width={300} order={1}>
-              <DialogTitle>
-                <Typography variant="h4">Overall Scores</Typography>
-              </DialogTitle>
-              <DialogContent
-                sx={{ width: 300, pb: "1px" }}
-                style={{ paddingTop: "20px", marginTop: "-20px" }}
-              >
-                <Typography variant="h5">Total Score</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={totalScoreInput}
-                  min={0}
-                  max={100}
-                  onChange={(_, newValue: number[]) =>
-                    setTotalScoreInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-                <Typography variant="h5">Financial Score</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={financialScoreInput}
-                  min={0}
-                  max={100}
-                  onChange={(_, newValue: number[]) =>
-                    setFinancialScoreInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-                <Typography variant="h5">ESG Score</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={esgScoreInput}
-                  min={0}
-                  max={100}
-                  onChange={(_, newValue: number[]) =>
-                    setEsgScoreInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-              </DialogContent>
-              <DialogTitle>
-                <Typography variant="h4">Core Financials</Typography>
-              </DialogTitle>
-              <DialogContent
-                sx={{ width: 300, pb: "1px" }}
-                style={{ paddingTop: "20px", marginTop: "-20px" }}
-              >
-                <Typography variant="h5">Dividend Yield</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={dividendYieldPercentInput}
-                  min={0}
-                  max={20}
-                  step={0.5}
-                  onChange={(_, newValue: number[]) =>
-                    setDividendYieldPercentInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => `${value}\u2009%`}
-                />
-                <Typography variant="h5">Price / Earning Ratio</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={priceEarningRatioInput}
-                  min={0}
-                  max={100}
-                  onChange={(_, newValue: number[]) =>
-                    setPriceEarningRatioInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-              </DialogContent>
-            </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 3 : 2}>
-              <DialogTitle>
-                <Typography variant="h4">Financial Ratings</Typography>
-              </DialogTitle>
-              <DialogContent
-                sx={{ width: 300 }}
-                style={{ paddingTop: "20px", marginTop: "-20px" }}
-              >
-                <Typography variant="h5">Star Rating</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={starRatingInput}
-                  min={0}
-                  max={5}
-                  step={1}
-                  marks
-                  onChange={(_, newValue: number[]) =>
-                    setStarRatingInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => (
-                    <span style={{ fontSize: 12, margin: -8 }}>
-                      <StarRating value={value} size="inherit" />
-                    </span>
-                  )}
-                />
-                <Typography variant="h5">
-                  Morningstar Fair Value Difference
-                </Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={morningstarFairValueDiffInput}
-                  min={-50}
-                  max={50}
-                  onChange={(_, newValue: number[]) =>
-                    setMorningstarFairValueDiffInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => `${value}\u2009%`}
-                />
-                <Typography variant="h5">Analyst Consensus</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={analystConsensusInput}
-                  min={0}
-                  max={10}
-                  step={0.1}
-                  onChange={(_, newValue: number[]) =>
-                    setAnalystConsensusInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-                <Typography variant="h5">Analyst Count</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={analystCountInput}
-                  min={0}
-                  max={60}
-                  onChange={(_, newValue: number[]) =>
-                    setAnalystCountInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-                <Typography variant="h5">Analyst Target Difference</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={analystTargetDiffInput}
-                  min={-50}
-                  max={50}
-                  onChange={(_, newValue: number[]) =>
-                    setAnalystTargetDiffInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => `${value}\u2009%`}
-                />
-              </DialogContent>
-            </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 4 : 3}>
-              <DialogTitle>
-                <Typography variant="h4">ESG Ratings</Typography>
-              </DialogTitle>
-              <DialogContent
-                sx={{ width: 300 }}
-                style={{ paddingTop: "20px", marginTop: "-20px" }}
-              >
-                <Typography variant="h5">MSCI ESG Rating</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={msciESGRatingInput.map((value) =>
-                    value === "None"
-                      ? 7
-                      : msciESGRatingArray.findIndex(
-                          (element) => element === value
-                        )
-                  )}
-                  min={0}
-                  max={7}
-                  step={1}
-                  marks
-                  onChange={(_, newValue: number[]) =>
-                    setMsciESGRatingInput(
-                      newValue.map((value) =>
-                        value === 7 ? "None" : msciESGRatingArray[value]
-                      )
-                    )
-                  }
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={(value) =>
-                    value === 7 ? "None" : msciESGRatingArray[value]
-                  }
-                />
-                <Typography variant="h5">
-                  MSCI Implied Temperature Rise
-                </Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={msciTemperatureInput}
-                  min={1}
-                  max={4}
-                  step={0.1}
-                  onChange={(_, newValue: number[]) =>
-                    setMsciTemperatureInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-                <Typography variant="h5">Refinitiv ESG Score</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={refinitivESGScoreInput}
-                  min={0}
-                  max={100}
-                  onChange={(_, newValue: number[]) =>
-                    setRefinitivESGScoreInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-                <Typography variant="h5">Refinitiv Emissions</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={refinitivEmissionsInput}
-                  min={0}
-                  max={100}
-                  onChange={(_, newValue: number[]) =>
-                    setRefinitivEmissionsInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-                <Typography variant="h5">S&P ESG Score</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={spESGScoreInput}
-                  min={0}
-                  max={100}
-                  onChange={(_, newValue: number[]) =>
-                    setSpESGScoreInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-                <Typography variant="h5">Sustainalytics ESG Risk</Typography>
-                <Slider
-                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={sustainalyticsESGRiskInput}
-                  min={0}
-                  max={50}
-                  onChange={(_, newValue: number[]) =>
-                    setSustainalyticsESGRiskInput(newValue)
-                  }
-                  valueLabelDisplay="auto"
-                />
-              </DialogContent>
-            </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 5 : 4}>
-              <DialogTitle>
-                <Typography variant="h4">Region</Typography>
-              </DialogTitle>
-              <NestedCheckboxList<SuperRegion, Region, Country, never>
-                firstLevelElements={superRegionArray}
-                firstLevelLabels={superRegionName}
-                getSecondLevelElements={getRegionsInSuperRegion}
-                secondLevelLabels={regionName}
-                getThirdLevelElements={getCountriesInRegion}
-                thirdLevelLabels={countryNameWithFlag}
-                height={180}
-                selectedLastLevelElements={countryInput}
-                setSelectedLastLevelElements={setCountryInput}
-              />
-            </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 6 : 5}>
-              <DialogTitle>
-                <Typography variant="h4">Industry</Typography>
-              </DialogTitle>
-              <NestedCheckboxList<SuperSector, Sector, IndustryGroup, Industry>
-                firstLevelElements={superSectorArray}
-                firstLevelLabels={superSectorName}
-                getSecondLevelElements={getSectorsInSuperSector}
-                secondLevelLabels={sectorName}
-                getThirdLevelElements={getIndustryGroupsInSector}
-                thirdLevelLabels={industryGroupName}
-                getFourthLevelElements={getIndustriesInGroup}
-                fourthLevelLabels={industryName}
-                height={180}
-                selectedLastLevelElements={industryInput}
-                setSelectedLastLevelElements={setIndustryInput}
-              />
-            </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 2 : 6}>
-              <DialogTitle>
-                <Typography variant="h4">Style</Typography>
-              </DialogTitle>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <Grid
-                  container
-                  columns={7}
-                  width="175px"
-                  ml="51.5px"
-                  mr="71.5px"
+          <Divider />
+          <DialogContent sx={{ p: 0 }}>
+            <Grid container width={filterContainerWidth} mb={2}>
+              <Grid item width={300} order={1}>
+                <DialogTitle>
+                  <Typography variant="h4">Overall Scores</Typography>
+                </DialogTitle>
+                <DialogContent
+                  sx={{ width: 300, pb: "1px" }}
+                  style={{ paddingTop: "20px", marginTop: "-20px" }}
                 >
-                  <Grid xs={1} item>
-                    <Tooltip title="Clear selection" arrow>
-                      <IconButton
-                        sx={{
-                          ml: "0px",
-                          mr: "15px",
-                          mb: "5px",
-                          width: "20px",
-                          height: "20px",
-                          borderRadius: 20,
-                          visibility:
-                            styleboxInput.size || styleboxInput.style
-                              ? "visible"
-                              : "hidden",
-                        }}
-                        onClick={() => setStyleboxInput({})}
-                      >
-                        <ClearIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </Grid>
-                  {styleArray.map((style) => (
-                    <Grid key={style} xs={2} item>
-                      <Tooltip title={`All ${style}`} arrow>
+                  <Typography variant="h5">Total Score</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={totalScoreInput}
+                    min={0}
+                    max={100}
+                    onChange={(_, newValue: number[]) =>
+                      setTotalScoreInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="h5">Financial Score</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={financialScoreInput}
+                    min={0}
+                    max={100}
+                    onChange={(_, newValue: number[]) =>
+                      setFinancialScoreInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="h5">ESG Score</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={esgScoreInput}
+                    min={0}
+                    max={100}
+                    onChange={(_, newValue: number[]) =>
+                      setEsgScoreInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                </DialogContent>
+                <DialogTitle>
+                  <Typography variant="h4">Core Financials</Typography>
+                </DialogTitle>
+                <DialogContent
+                  sx={{ width: 300, pb: "1px" }}
+                  style={{ paddingTop: "20px", marginTop: "-20px" }}
+                >
+                  <Typography variant="h5">Dividend Yield</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={dividendYieldPercentInput}
+                    min={0}
+                    max={20}
+                    step={0.5}
+                    onChange={(_, newValue: number[]) =>
+                      setDividendYieldPercentInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={(value) => `${value}\u2009%`}
+                  />
+                  <Typography variant="h5">Price / Earning Ratio</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={priceEarningRatioInput}
+                    min={0}
+                    max={100}
+                    onChange={(_, newValue: number[]) =>
+                      setPriceEarningRatioInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                </DialogContent>
+              </Grid>
+              <Grid item order={filterContainerWidth === 600 ? 3 : 2}>
+                <DialogTitle>
+                  <Typography variant="h4">Financial Ratings</Typography>
+                </DialogTitle>
+                <DialogContent
+                  sx={{ width: 300 }}
+                  style={{ paddingTop: "20px", marginTop: "-20px" }}
+                >
+                  <Typography variant="h5">Star Rating</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={starRatingInput}
+                    min={0}
+                    max={5}
+                    step={1}
+                    marks
+                    onChange={(_, newValue: number[]) =>
+                      setStarRatingInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={(value) => (
+                      <span style={{ fontSize: 12, margin: -8 }}>
+                        <StarRating value={value} size="inherit" />
+                      </span>
+                    )}
+                  />
+                  <Typography variant="h5">
+                    Morningstar Fair Value Difference
+                  </Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={morningstarFairValueDiffInput}
+                    min={-50}
+                    max={50}
+                    onChange={(_, newValue: number[]) =>
+                      setMorningstarFairValueDiffInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={(value) => `${value}\u2009%`}
+                  />
+                  <Typography variant="h5">Analyst Consensus</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={analystConsensusInput}
+                    min={0}
+                    max={10}
+                    step={0.1}
+                    onChange={(_, newValue: number[]) =>
+                      setAnalystConsensusInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="h5">Analyst Count</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={analystCountInput}
+                    min={0}
+                    max={60}
+                    onChange={(_, newValue: number[]) =>
+                      setAnalystCountInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="h5">
+                    Analyst Target Difference
+                  </Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={analystTargetDiffInput}
+                    min={-50}
+                    max={50}
+                    onChange={(_, newValue: number[]) =>
+                      setAnalystTargetDiffInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={(value) => `${value}\u2009%`}
+                  />
+                </DialogContent>
+              </Grid>
+              <Grid item order={filterContainerWidth === 600 ? 4 : 3}>
+                <DialogTitle>
+                  <Typography variant="h4">ESG Ratings</Typography>
+                </DialogTitle>
+                <DialogContent
+                  sx={{ width: 300 }}
+                  style={{ paddingTop: "20px", marginTop: "-20px" }}
+                >
+                  <Typography variant="h5">MSCI ESG Rating</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={msciESGRatingInput.map((value) =>
+                      value === "None"
+                        ? 7
+                        : msciESGRatingArray.findIndex(
+                            (element) => element === value
+                          )
+                    )}
+                    min={0}
+                    max={7}
+                    step={1}
+                    marks
+                    onChange={(_, newValue: number[]) =>
+                      setMsciESGRatingInput(
+                        newValue.map((value) =>
+                          value === 7 ? "None" : msciESGRatingArray[value]
+                        )
+                      )
+                    }
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={(value) =>
+                      value === 7 ? "None" : msciESGRatingArray[value]
+                    }
+                  />
+                  <Typography variant="h5">
+                    MSCI Implied Temperature Rise
+                  </Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={msciTemperatureInput}
+                    min={1}
+                    max={4}
+                    step={0.1}
+                    onChange={(_, newValue: number[]) =>
+                      setMsciTemperatureInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="h5">Refinitiv ESG Score</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={refinitivESGScoreInput}
+                    min={0}
+                    max={100}
+                    onChange={(_, newValue: number[]) =>
+                      setRefinitivESGScoreInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="h5">Refinitiv Emissions</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={refinitivEmissionsInput}
+                    min={0}
+                    max={100}
+                    onChange={(_, newValue: number[]) =>
+                      setRefinitivEmissionsInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="h5">S&P ESG Score</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={spESGScoreInput}
+                    min={0}
+                    max={100}
+                    onChange={(_, newValue: number[]) =>
+                      setSpESGScoreInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="h5">Sustainalytics ESG Risk</Typography>
+                  <Slider
+                    sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                    value={sustainalyticsESGRiskInput}
+                    min={0}
+                    max={50}
+                    onChange={(_, newValue: number[]) =>
+                      setSustainalyticsESGRiskInput(newValue)
+                    }
+                    valueLabelDisplay="auto"
+                  />
+                </DialogContent>
+              </Grid>
+              <Grid item order={filterContainerWidth === 600 ? 5 : 4}>
+                <DialogTitle>
+                  <Typography variant="h4">Region</Typography>
+                </DialogTitle>
+                <NestedCheckboxList<SuperRegion, Region, Country, never>
+                  firstLevelElements={superRegionArray}
+                  firstLevelLabels={superRegionName}
+                  getSecondLevelElements={getRegionsInSuperRegion}
+                  secondLevelLabels={regionName}
+                  getThirdLevelElements={getCountriesInRegion}
+                  thirdLevelLabels={countryNameWithFlag}
+                  height={180}
+                  selectedLastLevelElements={countryInput}
+                  setSelectedLastLevelElements={setCountryInput}
+                />
+              </Grid>
+              <Grid item order={filterContainerWidth === 600 ? 6 : 5}>
+                <DialogTitle>
+                  <Typography variant="h4">Industry</Typography>
+                </DialogTitle>
+                <NestedCheckboxList<
+                  SuperSector,
+                  Sector,
+                  IndustryGroup,
+                  Industry
+                >
+                  firstLevelElements={superSectorArray}
+                  firstLevelLabels={superSectorName}
+                  getSecondLevelElements={getSectorsInSuperSector}
+                  secondLevelLabels={sectorName}
+                  getThirdLevelElements={getIndustryGroupsInSector}
+                  thirdLevelLabels={industryGroupName}
+                  getFourthLevelElements={getIndustriesInGroup}
+                  fourthLevelLabels={industryName}
+                  height={180}
+                  selectedLastLevelElements={industryInput}
+                  setSelectedLastLevelElements={setIndustryInput}
+                />
+              </Grid>
+              <Grid item order={filterContainerWidth === 600 ? 2 : 6}>
+                <DialogTitle>
+                  <Typography variant="h4">Style</Typography>
+                </DialogTitle>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Grid
+                    container
+                    columns={7}
+                    width="175px"
+                    ml="51.5px"
+                    mr="71.5px"
+                  >
+                    <Grid xs={1} item>
+                      <Tooltip title="Clear selection" arrow>
                         <IconButton
                           sx={{
-                            ml: "15px",
+                            ml: "0px",
                             mr: "15px",
                             mb: "5px",
                             width: "20px",
                             height: "20px",
                             borderRadius: 20,
+                            visibility:
+                              styleboxInput.size || styleboxInput.style
+                                ? "visible"
+                                : "hidden",
                           }}
-                          onClick={() =>
-                            setStyleboxInput({
-                              size: undefined,
-                              style: style,
-                            })
-                          }
+                          onClick={() => setStyleboxInput({})}
                         >
-                          <ArrowDropDownIcon />
+                          <ClearIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
                     </Grid>
-                  ))}
-                  {Array.from(sizeArray)
-                    .reverse()
-                    .map((size) => {
-                      return (
-                        <React.Fragment key={"fragment" + size}>
-                          <Grid key={size} xs={1} item>
-                            <Tooltip title={`All ${size}`} arrow>
-                              <IconButton
-                                sx={{
-                                  mt: "15px",
-                                  mb: "15px",
-                                  mr: "5px",
-                                  width: "20px",
-                                  height: "20px",
-                                  borderRadius: 20,
-                                }}
-                                onClick={() =>
-                                  setStyleboxInput({
-                                    size: size,
-                                    style: undefined,
-                                  })
-                                }
+                    {styleArray.map((style) => (
+                      <Grid key={style} xs={2} item>
+                        <Tooltip title={`All ${style}`} arrow>
+                          <IconButton
+                            sx={{
+                              ml: "15px",
+                              mr: "15px",
+                              mb: "5px",
+                              width: "20px",
+                              height: "20px",
+                              borderRadius: 20,
+                            }}
+                            onClick={() =>
+                              setStyleboxInput({
+                                size: undefined,
+                                style: style,
+                              })
+                            }
+                          >
+                            <ArrowDropDownIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
+                    ))}
+                    {Array.from(sizeArray)
+                      .reverse()
+                      .map((size) => {
+                        return (
+                          <React.Fragment key={"fragment" + size}>
+                            <Grid key={size} xs={1} item>
+                              <Tooltip title={`All ${size}`} arrow>
+                                <IconButton
+                                  sx={{
+                                    mt: "15px",
+                                    mb: "15px",
+                                    mr: "5px",
+                                    width: "20px",
+                                    height: "20px",
+                                    borderRadius: 20,
+                                  }}
+                                  onClick={() =>
+                                    setStyleboxInput({
+                                      size: size,
+                                      style: undefined,
+                                    })
+                                  }
+                                >
+                                  <ArrowRightIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Grid>
+                            {styleArray.map((style) => (
+                              <Tooltip
+                                title={`${size}-${style}`}
+                                key={size + style}
+                                arrow
                               >
-                                <ArrowRightIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Grid>
-                          {styleArray.map((style) => (
-                            <Tooltip
-                              title={`${size}-${style}`}
-                              key={size + style}
-                              arrow
-                            >
-                              <Grid
-                                xs={2}
-                                sx={{
-                                  backgroundColor:
-                                    (styleboxInput.size == size ||
-                                      !styleboxInput.size) &&
-                                    (styleboxInput.style == style ||
-                                      !styleboxInput.style) &&
-                                    (styleboxInput.size || styleboxInput.style)
-                                      ? theme.colors.alpha.black[100]
-                                      : theme.colors.alpha.white[100],
-                                  height: "50px",
-                                  outline: `1px solid ${theme.colors.alpha.black[100]}`,
-                                }}
-                                onClick={() =>
-                                  setStyleboxInput({
-                                    size: size,
-                                    style: style,
-                                  })
-                                }
-                                item
-                              />
-                            </Tooltip>
-                          ))}
-                        </React.Fragment>
-                      );
-                    })}
-                </Grid>
-              </Box>
+                                <Grid
+                                  xs={2}
+                                  sx={{
+                                    backgroundColor:
+                                      (styleboxInput.size == size ||
+                                        !styleboxInput.size) &&
+                                      (styleboxInput.style == style ||
+                                        !styleboxInput.style) &&
+                                      (styleboxInput.size ||
+                                        styleboxInput.style)
+                                        ? theme.colors.alpha.black[100]
+                                        : theme.colors.alpha.white[100],
+                                    height: "50px",
+                                    outline: `1px solid ${theme.colors.alpha.black[100]}`,
+                                  }}
+                                  onClick={() =>
+                                    setStyleboxInput({
+                                      size: size,
+                                      style: style,
+                                    })
+                                  }
+                                  item
+                                />
+                              </Tooltip>
+                            ))}
+                          </React.Fragment>
+                        );
+                      })}
+                  </Grid>
+                </Box>
+              </Grid>
             </Grid>
-          </Grid>
-          <Button
-            onClick={() => {
-              applyFiltersUsingState();
-              setFilterOpen(false);
-            }}
-            startIcon={<PublishedWithChangesIcon />}
-            color="success"
-            sx={{ borderRadius: 0, mt: 2 }}
-          >
-            Apply
-          </Button>
+          </DialogContent>
+          <DialogActions sx={{ p: 0 }}>
+            <Button
+              onClick={() => {
+                applyFiltersUsingState();
+                setFilterOpen(false);
+              }}
+              startIcon={<PublishedWithChangesIcon />}
+              color="success"
+              sx={{ width: "100%", borderRadius: 0 }}
+            >
+              Apply
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          onClose={() => setColumnFilterOpen(false)}
+          open={columnFilterOpen}
+        >
+          <DialogTitle minWidth={300}>
+            <Typography variant="h3" pb={2}>
+              Filter Columns
+            </Typography>
+            <Button
+              sx={{ width: "50%", pb: 1 }}
+              onClick={() => props.setColumnFilter([])}
+            >
+              Deselect All
+            </Button>
+            <Button
+              sx={{ width: "50%", pb: 1 }}
+              onClick={() => props.setColumnFilter([...stockListColumnArray])}
+            >
+              Select All
+            </Button>
+          </DialogTitle>
+          <Divider />
+          <DialogContent sx={{ py: 1 }}>
+            <List disablePadding>
+              {stockListColumnArray.map((column) => {
+                return (
+                  <ListItem key={column} sx={{ px: 0 }} dense>
+                    <ListItemButton
+                      role={undefined}
+                      onClick={() =>
+                        props.setColumnFilter((prevColumnFilter) => [
+                          ...prevColumnFilter.filter(
+                            (prevColumn) => prevColumn !== column
+                          ),
+                          ...(prevColumnFilter.includes(column)
+                            ? []
+                            : [column]),
+                        ])
+                      }
+                      sx={{ px: 0 }}
+                      dense
+                    >
+                      <ListItemIcon sx={{ minWidth: 32 }}>
+                        <Checkbox
+                          checked={props.columnFilter.includes(column)}
+                          sx={{ p: 0 }}
+                          disableRipple
+                        />
+                      </ListItemIcon>
+                      <ListItemText primary={column} />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </DialogContent>
+          <DialogActions sx={{ p: 0 }}>
+            <Button
+              onClick={() => {
+                setColumnFilterOpen(false);
+              }}
+              startIcon={<TableRowsIcon />}
+              sx={{ width: "100%", borderRadius: 0 }}
+            >
+              View Table
+            </Button>
+          </DialogActions>
         </Dialog>
       </Grid>
     </Grid>
@@ -713,6 +815,8 @@ interface PageHeaderProps {
     size?: Size,
     style?: Style
   ) => void;
+  columnFilter: StockListColumn[];
+  setColumnFilter: React.Dispatch<React.SetStateAction<StockListColumn[]>>;
   filtersInUse: boolean;
   triggerRefetch: () => void;
 }

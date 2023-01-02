@@ -11,10 +11,16 @@ import {
   Country,
   Industry,
   MSCIESGRating,
+  StockListColumn,
+  stockListColumnArray,
 } from "rating-tracker-commons";
 
 const StocklistModule = () => {
   const [filter, setFilter] = useState<StockFilter>({});
+  const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([
+    ...stockListColumnArray,
+  ]);
+
   const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
 
   const triggerRefetch = () => {
@@ -104,8 +110,11 @@ const StocklistModule = () => {
       <PageTitleWrapper maxWidth={false}>
         <PageHeader
           applyFilters={applyFilters}
+          columnFilter={columnFilter}
+          setColumnFilter={setColumnFilter}
           triggerRefetch={triggerRefetch}
           filtersInUse={
+            columnFilter.length < stockListColumnArray.length ||
             !!filter.totalScoreMin ||
             !!filter.totalScoreMax ||
             !!filter.financialScoreMin ||
@@ -151,7 +160,11 @@ const StocklistModule = () => {
       </PageTitleWrapper>
       <Container maxWidth={false}>
         <Card>
-          <StocksTable filter={filter} triggerRefetch={refetchTrigger} />
+          <StocksTable
+            filter={filter}
+            triggerRefetch={refetchTrigger}
+            columns={columnFilter}
+          />
         </Card>
       </Container>
       <Footer />

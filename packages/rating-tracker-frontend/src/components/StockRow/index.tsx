@@ -37,6 +37,7 @@ import {
   sectorName,
   sectorOfIndustryGroup,
   Stock,
+  StockListColumn,
   superSectorName,
   superSectorOfSector,
 } from "rating-tracker-commons";
@@ -91,6 +92,13 @@ const StockRow = (props: StockRowProps) => {
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
+  const displayColumn = (column: StockListColumn): "none" | undefined => {
+    if (props.columns && !props.columns.includes(column)) {
+      return "none";
+    }
+    return undefined;
+  };
+
   return props.stock ? (
     <TableRow hover sx={{ height: 59 }}>
       <TableCell>
@@ -134,7 +142,11 @@ const StockRow = (props: StockRowProps) => {
           </Box>
         </span>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Country"),
+        }}
+      >
         <Typography
           variant="body1"
           fontWeight="bold"
@@ -149,7 +161,11 @@ const StockRow = (props: StockRowProps) => {
             regionName[regionOfCountry[props.stock.country]]}
         </Typography>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Size and Style"),
+        }}
+      >
         <Tooltip
           title={
             props.stock.size && props.stock.style
@@ -173,7 +189,11 @@ const StockRow = (props: StockRowProps) => {
           </Box>
         </Tooltip>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Sector"),
+        }}
+      >
         <span
           style={{
             display: "flex",
@@ -219,7 +239,11 @@ const StockRow = (props: StockRowProps) => {
           </Typography>
         </span>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Industry"),
+        }}
+      >
         <Typography
           variant="body1"
           fontWeight="bold"
@@ -234,7 +258,11 @@ const StockRow = (props: StockRowProps) => {
             industryGroupName[groupOfIndustry[props.stock.industry]]}
         </Typography>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Total Score"),
+        }}
+      >
         <BlueIconChip
           icon={<EmojiEventsIcon />}
           label={
@@ -245,7 +273,11 @@ const StockRow = (props: StockRowProps) => {
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Financial Score"),
+        }}
+      >
         <YellowIconChip
           icon={<PriceCheckIcon />}
           label={
@@ -256,7 +288,11 @@ const StockRow = (props: StockRowProps) => {
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("ESG Score"),
+        }}
+      >
         <GreenIconChip
           icon={<NaturePeopleIcon />}
           label={
@@ -267,7 +303,11 @@ const StockRow = (props: StockRowProps) => {
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Star Rating"),
+        }}
+      >
         <span
           onClick={() => navigateToMorningstar(props.stock)}
           style={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
@@ -275,7 +315,11 @@ const StockRow = (props: StockRowProps) => {
           <StarRating value={props.stock.starRating} />
         </span>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Morningstar Fair Value"),
+        }}
+      >
         <span
           onClick={() => navigateToMorningstar(props.stock)}
           style={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
@@ -311,7 +355,11 @@ const StockRow = (props: StockRowProps) => {
           </Typography>
         </span>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Analyst Consensus"),
+        }}
+      >
         {props.stock.analystConsensus && (
           <span
             onClick={() => navigateToMarketScreener(props.stock)}
@@ -356,7 +404,11 @@ const StockRow = (props: StockRowProps) => {
           </span>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Analyst Target Price"),
+        }}
+      >
         <span
           onClick={() => navigateToMarketScreener(props.stock)}
           style={{
@@ -413,7 +465,11 @@ const StockRow = (props: StockRowProps) => {
           </Typography>
         </span>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("MSCI ESG Rating"),
+        }}
+      >
         {props.stock.msciESGRating && (
           <span
             onClick={() => navigateToMSCI(props.stock)}
@@ -440,7 +496,11 @@ const StockRow = (props: StockRowProps) => {
           </span>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("MSCI Implied Temperature Rise"),
+        }}
+      >
         {props.stock.msciTemperature && (
           <span
             onClick={() => navigateToMSCI(props.stock)}
@@ -458,7 +518,11 @@ const StockRow = (props: StockRowProps) => {
           </span>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Refinitiv ESG Information"),
+        }}
+      >
         <Box
           sx={{
             minWidth: 90,
@@ -491,7 +555,11 @@ const StockRow = (props: StockRowProps) => {
           </Typography>
         </Box>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("S&P ESG Score"),
+        }}
+      >
         <span
           onClick={() => navigateToSP(props.stock)}
           style={{
@@ -511,7 +579,11 @@ const StockRow = (props: StockRowProps) => {
           </Typography>
         </span>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Sustainalytics ESG Risk"),
+        }}
+      >
         {props.stock.sustainalyticsESGRisk && (
           <span
             onClick={() => navigateToSustainalytics(props.stock)}
@@ -540,7 +612,11 @@ const StockRow = (props: StockRowProps) => {
           </span>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("52 Week Range"),
+        }}
+      >
         {props.stock.lastClose && props.stock.low52w && props.stock.high52w && (
           <Range52WSlider
             size="small"
@@ -568,7 +644,11 @@ const StockRow = (props: StockRowProps) => {
           />
         )}
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Dividend Yield (%)"),
+        }}
+      >
         <Typography
           variant="body1"
           color="text.primary"
@@ -580,7 +660,11 @@ const StockRow = (props: StockRowProps) => {
           {"\u2009%"}
         </Typography>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("P / E Ratio"),
+        }}
+      >
         <Typography
           variant="body1"
           color="text.primary"
@@ -591,7 +675,11 @@ const StockRow = (props: StockRowProps) => {
           {props.stock.priceEarningRatio ?? "–"}
         </Typography>
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Market Capitalization"),
+        }}
+      >
         <Typography variant="body1" color="text.primary" width={75} noWrap>
           <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
           <span style={{ float: "right" }}>
@@ -710,7 +798,7 @@ const StockRow = (props: StockRowProps) => {
       </Dialog>
     </TableRow>
   ) : (
-    <TableRow hover>
+    <TableRow hover sx={{ height: 59 }}>
       {/* Stock */}
       <TableCell>
         <span style={{ display: "flex", alignItems: "center" }}>
@@ -727,7 +815,11 @@ const StockRow = (props: StockRowProps) => {
         </span>
       </TableCell>
       {/* Country */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Country"),
+        }}
+      >
         <Typography variant="body1">
           <Skeleton width={125} />
         </Typography>
@@ -736,7 +828,11 @@ const StockRow = (props: StockRowProps) => {
         </Typography>
       </TableCell>
       {/* Size|Style */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Size and Style"),
+        }}
+      >
         <Skeleton
           variant="rectangular"
           width={2.75 * (theme.typography.body1.fontSize as number)}
@@ -744,7 +840,11 @@ const StockRow = (props: StockRowProps) => {
         />
       </TableCell>
       {/* Sector */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Sector"),
+        }}
+      >
         <Typography variant="body1" display={"flex"}>
           <Skeleton
             variant="rectangular"
@@ -771,7 +871,11 @@ const StockRow = (props: StockRowProps) => {
         </Typography>
       </TableCell>
       {/* Industry */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Industry"),
+        }}
+      >
         <Typography variant="body1">
           <Skeleton width={150} />
         </Typography>
@@ -780,17 +884,33 @@ const StockRow = (props: StockRowProps) => {
         </Typography>
       </TableCell>
       {/* Scores */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Total Score"),
+        }}
+      >
         <Skeleton variant="rounded" width={84} height={32} />
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Financial Score"),
+        }}
+      >
         <Skeleton variant="rounded" width={84} height={32} />
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("ESG Score"),
+        }}
+      >
         <Skeleton variant="rounded" width={84} height={32} />
       </TableCell>
       {/* Star Rating */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Star Rating"),
+        }}
+      >
         <span style={{ whiteSpace: "nowrap" }}>
           {[...Array(5).keys()].map((index) => {
             return (
@@ -810,7 +930,11 @@ const StockRow = (props: StockRowProps) => {
         </span>
       </TableCell>
       {/* Fair Value */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Morningstar Fair Value"),
+        }}
+      >
         <Typography variant="body1">
           <Skeleton width={90} />
         </Typography>
@@ -819,11 +943,20 @@ const StockRow = (props: StockRowProps) => {
         </Typography>
       </TableCell>
       {/* Analyst Consensus */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Analyst Consensus"),
+        }}
+      >
+        {" "}
         <Skeleton variant="rounded" width={60} height={24} />
       </TableCell>
       {/* Analyst Target */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Analyst Target Price"),
+        }}
+      >
         <Typography variant="body1">
           <Skeleton width={90} />
         </Typography>
@@ -832,15 +965,27 @@ const StockRow = (props: StockRowProps) => {
         </Typography>
       </TableCell>
       {/* MSCI ESG */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("MSCI ESG Rating"),
+        }}
+      >
         <Skeleton variant="rounded" width={48} height={24} />
       </TableCell>
       {/* MSCI Temp */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("MSCI Implied Temperature Rise"),
+        }}
+      >
         <Skeleton variant="rounded" width={72} height={24} />
       </TableCell>
       {/* Refinitiv + Emissions */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Refinitiv ESG Information"),
+        }}
+      >
         <Box sx={{ minWidth: 90, display: "flex", alignItems: "center" }}>
           <Typography variant="body1" fontSize={18}>
             <Skeleton width={30} />
@@ -852,33 +997,57 @@ const StockRow = (props: StockRowProps) => {
         </Box>
       </TableCell>
       {/* S&P */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("S&P ESG Score"),
+        }}
+      >
         <Typography variant="body1" fontSize={18}>
           <Skeleton width={48} />
         </Typography>
       </TableCell>
       {/* Sustainalytics ESG Risk */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Sustainalytics ESG Risk"),
+        }}
+      >
         <Skeleton variant="rounded" width={64} height={24} />
       </TableCell>
       {/* 52W Range */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("52 Week Range"),
+        }}
+      >
         <Skeleton variant="rectangular" width={150} height={42} />
       </TableCell>
       {/* Div Yield */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Dividend Yield (%)"),
+        }}
+      >
         <Typography variant="body1">
           <Skeleton width={45} />
         </Typography>
       </TableCell>
       {/* P/E */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("P / E Ratio"),
+        }}
+      >
         <Typography variant="body1">
           <Skeleton width={45} />
         </Typography>
       </TableCell>
       {/* Market Cap */}
-      <TableCell>
+      <TableCell
+        sx={{
+          display: displayColumn("Market Capitalization"),
+        }}
+      >
         <Typography variant="body1">
           <Skeleton width={75} />
         </Typography>
@@ -913,6 +1082,7 @@ const StockRow = (props: StockRowProps) => {
 interface StockRowProps {
   stock?: Stock;
   getStocks?: () => void;
+  columns?: StockListColumn[];
 }
 
 export default StockRow;
