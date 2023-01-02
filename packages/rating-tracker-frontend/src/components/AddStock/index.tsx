@@ -11,9 +11,6 @@ import {
   StepContent,
   StepLabel,
   Stepper,
-  Table,
-  TableBody,
-  TableContainer,
   TextField,
   Typography,
   useMediaQuery,
@@ -42,8 +39,8 @@ import {
   Stock,
 } from "rating-tracker-commons";
 import { useState } from "react";
-import StockRow from "../StockRow";
 import useNotification from "../../helpers/useNotification";
+import StockDetails from "../StockDetails";
 
 const AddStock = (props: AddStockProps) => {
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -775,17 +772,16 @@ const AddStock = (props: AddStockProps) => {
       content: (
         <>
           <Typography variant="h4" sx={{ mb: 2 }}>
-            Here’s your new stock:
+            Here’s all we could find about your new stock:
           </Typography>
-          {/* TODO: Check extracted data */}
-          <TableContainer>
-            <Table size="small">
-              <TableBody>
-                {/* TODO: Replace with Stock Details Page */}
-                <StockRow stock={stock} />
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <Box
+            sx={{
+              ml: useMediaQuery("(min-width:664px)") ? "-24px" : "-56px",
+              mr: "-32px",
+            }}
+          >
+            <StockDetails stock={stock} maxWidth={600} />
+          </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             Please check whether all expected fields are filled. If a field is
             not filled, an alert will not be raised when the information cannot
@@ -803,7 +799,7 @@ const AddStock = (props: AddStockProps) => {
         <Typography variant="h3">Add a new Stock</Typography>
       </DialogTitle>
       <DialogContent
-        sx={{ width: useMediaQuery("(min-width:664px)") ? 600 : 320 }}
+        sx={{ width: useMediaQuery("(min-width:664px)") ? 632 : 324 }}
       >
         <Stepper
           activeStep={activeStep}

@@ -79,13 +79,16 @@ const StockDetails = (props: StockDetailsProps) => {
     +useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")
   ) {
     case 2:
-      detailsContainerWidth = 900;
+      detailsContainerWidth =
+        props.maxWidth && props.maxWidth < 900 ? props.maxWidth : 900;
       break;
     case 1:
-      detailsContainerWidth = 600;
+      detailsContainerWidth =
+        props.maxWidth && props.maxWidth < 600 ? props.maxWidth : 600;
       break;
     case 0:
-      detailsContainerWidth = 300;
+      detailsContainerWidth =
+        props.maxWidth && props.maxWidth < 300 ? props.maxWidth : 300;
       break;
   }
 
@@ -932,6 +935,7 @@ const StockDetails = (props: StockDetailsProps) => {
 
 interface StockDetailsProps {
   stock?: Stock;
+  maxWidth?: 600 | 300;
 }
 
 export default StockDetails;

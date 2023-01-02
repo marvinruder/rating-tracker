@@ -237,7 +237,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
         >
           <ClearIcon />
         </IconButton>
-        <Dialog open={addStockOpen}>
+        <Dialog maxWidth="lg" open={addStockOpen}>
           <AddStock
             onClose={() => (setAddStockOpen(false), props.triggerRefetch())}
           />
