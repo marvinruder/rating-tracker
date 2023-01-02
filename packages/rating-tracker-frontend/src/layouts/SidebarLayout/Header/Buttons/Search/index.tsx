@@ -5,6 +5,7 @@ import React, {
   useState,
   ReactElement,
   ChangeEvent,
+  useEffect,
 } from "react";
 import {
   Avatar,
@@ -78,7 +79,7 @@ const HoverListItem = styled(ListItem)(
     `
 );
 
-function HeaderSearch() {
+const HeaderSearch = () => {
   const [searchValue, setSearchValue] = useState("");
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [count, setCount] = useState<number>(0);
@@ -86,6 +87,25 @@ function HeaderSearch() {
 
   const { setNotification } = useNotification();
   const theme = useTheme();
+
+  useEffect(() => {
+    const isSearchShortcut = (e: KeyboardEvent) =>
+      (e.ctrlKey || e.metaKey) && (e.key === "f" || e.key === "F");
+
+    const searchShortcutHandler = (e: KeyboardEvent) => {
+      if (isSearchShortcut(e)) {
+        setOpen(true);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    window.addEventListener("keydown", searchShortcutHandler);
+
+    return () => {
+      window.removeEventListener("keydown", searchShortcutHandler);
+    };
+  }, []);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchValue(event.target.value);
@@ -302,6 +322,6 @@ function HeaderSearch() {
       </DialogWrapper>
     </>
   );
-}
+};
 
 export default HeaderSearch;
