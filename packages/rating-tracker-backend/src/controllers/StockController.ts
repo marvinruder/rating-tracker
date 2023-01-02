@@ -37,9 +37,9 @@ class StockController {
     // Filtering
     if (req.query.name) {
       stocks = stocks.filter((stock) =>
-        stock.name
+        (stock.ticker + " " + stock.name)
           .toLowerCase()
-          .includes((req.query.name as string).toLowerCase())
+          .includes((req.query.name as string).toLowerCase().trim())
       );
     }
     if (req.query.country) {

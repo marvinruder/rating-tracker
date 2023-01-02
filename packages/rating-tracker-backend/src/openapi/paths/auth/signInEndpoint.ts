@@ -2,6 +2,7 @@ import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 import {
   badRequest,
   forbidden,
+  notFound,
   tooManyRequestsHTML,
 } from "../../responses/clientError.js";
 import { internalServerError } from "../../responses/serverError.js";
@@ -28,6 +29,7 @@ const post: OpenAPIV3.OperationObject = {
     "204": noContent,
     "400": badRequest,
     "403": forbidden,
+    "404": notFound,
     "429": tooManyRequestsHTML,
     "500": internalServerError,
   },

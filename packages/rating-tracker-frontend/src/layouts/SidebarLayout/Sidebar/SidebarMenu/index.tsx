@@ -166,7 +166,7 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Dashboards
+              Modules
             </ListSubheader>
           }
         >
@@ -177,7 +177,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/dashboards/stocklist"
+                  to="/stocklist"
                   startIcon={<TableRowsIcon />}
                 >
                   Stock List

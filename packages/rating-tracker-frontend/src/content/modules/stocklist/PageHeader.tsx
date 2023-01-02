@@ -1,11 +1,11 @@
 import {
+  Box,
   Typography,
   Button,
   Grid,
   Tooltip,
   Dialog,
   DialogTitle,
-  TextField,
   IconButton,
   useTheme,
   useMediaQuery,
@@ -51,13 +51,11 @@ import {
 } from "rating-tracker-commons";
 import React from "react";
 import NestedCheckboxList from "../../../components/NestedCheckboxList";
-import AddStock from "./AddStock";
+import AddStock from "../../../components/AddStock";
 import StarRating from "../../../components/StarRating";
 
 const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
-
-  const [stockNameInput, setStockNameInput] = useState<string>("");
 
   const [totalScoreInput, setTotalScoreInput] = useState<number[]>([0, 100]);
   const [financialScoreInput, setFinancialScoreInput] = useState<number[]>([
@@ -129,7 +127,6 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
 
   const applyFiltersUsingState = () => {
     props.applyFilters(
-      stockNameInput,
       totalScoreInput[0] !== 0 ? totalScoreInput[0] : undefined,
       totalScoreInput[1] !== 100 ? totalScoreInput[1] : undefined,
       financialScoreInput[0] !== 0 ? financialScoreInput[0] : undefined,
@@ -197,31 +194,26 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           This list shows all stocks currently available in this service
         </Typography>
       </Grid>
-      <Grid item>
-        <Button
-          sx={{ mt: 1, mb: 1, ml: 2 }}
-          variant="contained"
-          startIcon={<AddIcon />}
+      <Grid item ml="auto">
+        <IconButton
+          sx={{ ml: 1, mt: 1 }}
+          color="primary"
           onClick={() => setAddStockOpen(true)}
         >
-          New Stock
-        </Button>
-        <Button
-          sx={{ mt: 1, mb: 1, ml: 2 }}
-          variant="contained"
-          startIcon={<TuneIcon />}
+          <AddIcon />
+        </IconButton>
+        <IconButton
+          sx={{ ml: 1, mt: 1 }}
+          color="primary"
           onClick={() => setFilterOpen(true)}
         >
-          Filter Stocks
-        </Button>
-        <Button
-          sx={{ display: !props.filtersInUse && "none", mt: 1, mb: 1, ml: 2 }}
-          variant="contained"
+          <TuneIcon />
+        </IconButton>
+        <IconButton
+          sx={{ display: !props.filtersInUse && "none", ml: 1, mt: 1 }}
           color="error"
-          startIcon={<ClearIcon />}
           onClick={() => {
             props.applyFilters();
-            setStockNameInput("");
             setTotalScoreInput([0, 100]);
             setFinancialScoreInput([0, 100]);
             setEsgScoreInput([0, 100]);
@@ -243,8 +235,8 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
             setIndustryInput([]);
           }}
         >
-          Clear Filters
-        </Button>
+          <ClearIcon />
+        </IconButton>
         <Dialog open={addStockOpen}>
           <AddStock
             onClose={() => (setAddStockOpen(false), props.triggerRefetch())}
@@ -260,38 +252,6 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           </DialogTitle>
           <Grid container width={filterContainerWidth}>
             <Grid item width={300} order={1}>
-              <DialogTitle>
-                <Typography variant="h4">Name</Typography>
-              </DialogTitle>
-              <TextField
-                onChange={(event) => {
-                  setStockNameInput(event.target.value);
-                }}
-                value={stockNameInput}
-                placeholder={"e.g. Apple Inc."}
-                sx={{ width: "100%", pl: "25px", pr: "25px" }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    applyFiltersUsingState();
-                    setFilterOpen(false);
-                  }
-                }}
-                InputProps={{
-                  sx: { pr: "5px" },
-                  endAdornment: (
-                    <IconButton
-                      size="small"
-                      sx={{
-                        borderRadius: 24,
-                        visibility: stockNameInput ? "visible" : "hidden",
-                      }}
-                      onClick={() => setStockNameInput("")}
-                    >
-                      <ClearIcon fontSize="small" />
-                    </IconButton>
-                  ),
-                }}
-              />
               <DialogTitle>
                 <Typography variant="h4">Overall Scores</Typography>
               </DialogTitle>
@@ -575,8 +535,8 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
               <DialogTitle>
                 <Typography variant="h4">Style</Typography>
               </DialogTitle>
-              <div
-                style={{
+              <Box
+                sx={{
                   display: "flex",
                   justifyContent: "center",
                 }}
@@ -592,7 +552,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     <Tooltip title="Clear selection" arrow>
                       <IconButton
                         sx={{
-                          ml: "15px",
+                          ml: "0px",
                           mr: "15px",
                           mb: "5px",
                           width: "20px",
@@ -694,7 +654,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                       );
                     })}
                 </Grid>
-              </div>
+              </Box>
             </Grid>
           </Grid>
           <Button
@@ -716,7 +676,6 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
 
 interface PageHeaderProps {
   applyFilters: (
-    name?: string,
     totalScoreMin?: number,
     totalScoreMax?: number,
     financialScoreMin?: number,

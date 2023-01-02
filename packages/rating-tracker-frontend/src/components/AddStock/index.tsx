@@ -33,7 +33,7 @@ import {
   spEndpoint,
   stockAPI,
   sustainalyticsEndpoint,
-} from "../../../endpoints";
+} from "../../endpoints";
 import {
   countryArray,
   countryName,
@@ -42,8 +42,8 @@ import {
   Stock,
 } from "rating-tracker-commons";
 import { useState } from "react";
-import StockRow from "./StockRow";
-import useNotification from "../../../helpers/useNotification";
+import StockRow from "../StockRow";
+import useNotification from "../../helpers/useNotification";
 
 const AddStock = (props: AddStockProps) => {
   const [activeStep, setActiveStep] = useState<number>(0);
