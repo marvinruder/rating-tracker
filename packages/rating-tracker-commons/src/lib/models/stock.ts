@@ -42,6 +42,7 @@ export class Stock {
   spESGScore?: number;
   sustainalyticsId?: string;
   sustainalyticsESGRisk?: number;
+  description?: string;
 
   constructor(stock?: Partial<Stock>) {
     if (stock) {

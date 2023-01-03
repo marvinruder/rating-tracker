@@ -82,6 +82,8 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       spESGScore: 78,
       sustainalyticsId: "newstock/1238712974",
       sustainalyticsESGRisk: 31.2,
+      description:
+        "This is a long description of the stock, which is not used in the app. It is only used for testing purposes.",
     };
 
     await updateStock("NEWSTOCK", newValues);

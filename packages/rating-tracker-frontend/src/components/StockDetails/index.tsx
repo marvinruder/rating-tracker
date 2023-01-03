@@ -929,6 +929,25 @@ const StockDetails = (props: StockDetailsProps) => {
           </Grid>
         </DialogContent>
       </Grid>
+      <Grid item width={300} order={6} px="24px" pt="14px" pb="20px">
+        <Typography variant="body1">
+          {props.stock ? (
+            <>{props.stock.description}</>
+          ) : (
+            <>
+              <Skeleton variant="text" width="100%" />
+              <Skeleton variant="text" width="86%" />
+              <Skeleton variant="text" width="93%" />
+              <Skeleton variant="text" width="97%" />
+              <Skeleton variant="text" width="94%" />
+              <Skeleton variant="text" width="91%" />
+              <Skeleton variant="text" width="89%" />
+              <Skeleton variant="text" width="98%" />
+              <Skeleton variant="text" width="53%" />
+            </>
+          )}
+        </Typography>
+      </Grid>
     </Grid>
   );
 };

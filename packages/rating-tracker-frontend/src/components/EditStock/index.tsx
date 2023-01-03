@@ -115,7 +115,7 @@ const EditStock = (props: EditStockProps) => {
                 : e.message ?? "No additional information available.",
           });
         })
-        .finally(() => setRequestInProgress(false)));
+        .finally(() => (setRequestInProgress(false), props.onClose())));
   };
 
   const patchStockMorningstarId = () => {
