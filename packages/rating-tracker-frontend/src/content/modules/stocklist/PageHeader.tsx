@@ -275,13 +275,10 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           <DialogContent sx={{ p: 0 }}>
             <Grid container width={filterContainerWidth} mb={2}>
               <Grid item width={300} order={1}>
-                <DialogTitle>
-                  <Typography variant="h4">Overall Scores</Typography>
-                </DialogTitle>
-                <DialogContent
-                  sx={{ width: 300, pb: "1px" }}
-                  style={{ paddingTop: "20px", marginTop: "-20px" }}
-                >
+                <Typography variant="h4" px="24px" py="16px">
+                  Overall Scores
+                </Typography>
+                <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
                   <Typography variant="h5">Total Score</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -315,14 +312,11 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
-                </DialogContent>
-                <DialogTitle>
-                  <Typography variant="h4">Core Financials</Typography>
-                </DialogTitle>
-                <DialogContent
-                  sx={{ width: 300, pb: "1px" }}
-                  style={{ paddingTop: "20px", marginTop: "-20px" }}
-                >
+                </Box>
+                <Typography variant="h4" px="24px" py="16px" pt="0px">
+                  Core Financials
+                </Typography>
+                <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
                   <Typography variant="h5">Dividend Yield</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -347,16 +341,13 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
-                </DialogContent>
+                </Box>
               </Grid>
               <Grid item order={filterContainerWidth === 600 ? 3 : 2}>
-                <DialogTitle>
-                  <Typography variant="h4">Financial Ratings</Typography>
-                </DialogTitle>
-                <DialogContent
-                  sx={{ width: 300 }}
-                  style={{ paddingTop: "20px", marginTop: "-20px" }}
-                >
+                <Typography variant="h4" px="24px" py="16px">
+                  Financial Ratings
+                </Typography>
+                <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
                   <Typography variant="h5">Star Rating</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -370,9 +361,9 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value) => (
-                      <span style={{ fontSize: 12, margin: -8 }}>
+                      <Box sx={{ fontSize: 12 }}>
                         <StarRating value={value} size="inherit" />
-                      </span>
+                      </Box>
                     )}
                   />
                   <Typography variant="h5">
@@ -426,16 +417,13 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value) => `${value}\u2009%`}
                   />
-                </DialogContent>
+                </Box>
               </Grid>
               <Grid item order={filterContainerWidth === 600 ? 4 : 3}>
-                <DialogTitle>
-                  <Typography variant="h4">ESG Ratings</Typography>
-                </DialogTitle>
-                <DialogContent
-                  sx={{ width: 300 }}
-                  style={{ paddingTop: "20px", marginTop: "-20px" }}
-                >
+                <Typography variant="h4" px="24px" py="16px">
+                  ESG Ratings
+                </Typography>
+                <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
                   <Typography variant="h5">MSCI ESG Rating</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -520,7 +508,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
-                </DialogContent>
+                </Box>
               </Grid>
               <Grid item order={filterContainerWidth === 600 ? 5 : 4}>
                 <DialogTitle>

@@ -1,5 +1,6 @@
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import { Box } from "@mui/material";
 
 const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
   let value: 0 | 1 | 2 | 3 | 4 | 5;
@@ -24,7 +25,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
       break;
   }
   return (
-    <span style={{ whiteSpace: "nowrap" }}>
+    <Box sx={{ whiteSpace: "nowrap" }}>
       {[...Array(5).keys()].map((index) => {
         return (value as number) > index ? (
           <StarIcon key={index} fontSize={props.size} />
@@ -32,7 +33,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
           <StarOutlineIcon key={index} fontSize={props.size} />
         );
       })}
-    </span>
+    </Box>
   );
 };
 
