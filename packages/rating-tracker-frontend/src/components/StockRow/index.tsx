@@ -102,9 +102,9 @@ const StockRow = (props: StockRowProps) => {
   return props.stock ? (
     <TableRow hover sx={{ height: 59 }}>
       <TableCell>
-        <span
+        <Box
           onClick={() => setDetailsDialogOpen(true)}
-          style={{
+          sx={{
             display: "flex",
             alignItems: "center",
             cursor: "pointer",
@@ -120,7 +120,7 @@ const StockRow = (props: StockRowProps) => {
             }
             alt=" "
           />
-          <span style={{ width: 8 }} />
+          <Box width={8} />
           <Box>
             <Typography
               variant="body1"
@@ -140,7 +140,7 @@ const StockRow = (props: StockRowProps) => {
               {props.stock.ticker} | {props.stock.isin}
             </Typography>
           </Box>
-        </span>
+        </Box>
       </TableCell>
       <TableCell
         sx={{
@@ -194,8 +194,8 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Sector"),
         }}
       >
-        <span
-          style={{
+        <Box
+          sx={{
             display: "flex",
             alignItems: "center",
           }}
@@ -207,16 +207,16 @@ const StockRow = (props: StockRowProps) => {
               type={"Sector"}
             />
           )}
-          <span style={{ width: 6 }} />
+          <Box width={6} />
           <Typography variant="body1" fontWeight="bold" width={105} noWrap>
             {props.stock.industry &&
               sectorName[
                 sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
               ]}
           </Typography>
-        </span>
-        <span
-          style={{
+        </Box>
+        <Box
+          sx={{
             display: "flex",
             alignItems: "center",
           }}
@@ -228,7 +228,7 @@ const StockRow = (props: StockRowProps) => {
               type={"SuperSector"}
             />
           )}
-          <span style={{ width: 6 }} />
+          <Box width={6} />
           <Typography variant="body2" color="text.secondary" width={105} noWrap>
             {props.stock.industry &&
               superSectorName[
@@ -237,7 +237,7 @@ const StockRow = (props: StockRowProps) => {
                 ]
               ]}
           </Typography>
-        </span>
+        </Box>
       </TableCell>
       <TableCell
         sx={{
@@ -308,21 +308,21 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Star Rating"),
         }}
       >
-        <span
+        <Box
           onClick={() => navigateToMorningstar(props.stock)}
-          style={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
+          sx={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
         >
           <StarRating value={props.stock.starRating} />
-        </span>
+        </Box>
       </TableCell>
       <TableCell
         sx={{
           display: displayColumn("Morningstar Fair Value"),
         }}
       >
-        <span
+        <Box
           onClick={() => navigateToMorningstar(props.stock)}
-          style={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
+          sx={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
         >
           <Typography
             variant="body1"
@@ -331,10 +331,10 @@ const StockRow = (props: StockRowProps) => {
             width={90}
             noWrap
           >
-            <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
-            <span style={{ float: "right" }}>
+            <Box sx={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
+            <Box sx={{ float: "right" }}>
               {props.stock.morningstarFairValue?.toFixed(2) ?? "–"}
-            </span>
+            </Box>
           </Typography>
           <Typography
             variant="body2"
@@ -353,7 +353,7 @@ const StockRow = (props: StockRowProps) => {
                 props.stock.getPercentageToLastClose("morningstarFairValue")
               )}\u2009%`}
           </Typography>
-        </span>
+        </Box>
       </TableCell>
       <TableCell
         sx={{
@@ -361,9 +361,9 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         {props.stock.analystConsensus && (
-          <span
+          <Box
             onClick={() => navigateToMarketScreener(props.stock)}
-            style={{
+            sx={{
               cursor: props.stock.marketScreenerId ? "pointer" : undefined,
             }}
           >
@@ -401,7 +401,7 @@ const StockRow = (props: StockRowProps) => {
               }}
               size="small"
             />
-          </span>
+          </Box>
         )}
       </TableCell>
       <TableCell
@@ -409,9 +409,9 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Analyst Target Price"),
         }}
       >
-        <span
+        <Box
           onClick={() => navigateToMarketScreener(props.stock)}
-          style={{
+          sx={{
             cursor: props.stock.marketScreenerId ? "pointer" : undefined,
           }}
         >
@@ -428,10 +428,10 @@ const StockRow = (props: StockRowProps) => {
             width={90}
             noWrap
           >
-            <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
-            <span style={{ float: "right" }}>
+            <Box style={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
+            <Box style={{ float: "right" }}>
               {props.stock.analystTargetPrice?.toFixed(2) ?? "–"}
-            </span>
+            </Box>
           </Typography>
           <Typography
             variant="body2"
@@ -463,7 +463,7 @@ const StockRow = (props: StockRowProps) => {
                 props.stock.getPercentageToLastClose("analystTargetPrice")
               )}\u2009%`}
           </Typography>
-        </span>
+        </Box>
       </TableCell>
       <TableCell
         sx={{
@@ -471,9 +471,9 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         {props.stock.msciESGRating && (
-          <span
+          <Box
             onClick={() => navigateToMSCI(props.stock)}
-            style={{
+            sx={{
               cursor: props.stock.msciId ? "pointer" : undefined,
             }}
           >
@@ -493,7 +493,7 @@ const StockRow = (props: StockRowProps) => {
               }}
               size="small"
             />
-          </span>
+          </Box>
         )}
       </TableCell>
       <TableCell
@@ -502,9 +502,9 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         {props.stock.msciTemperature && (
-          <span
+          <Box
             onClick={() => navigateToMSCI(props.stock)}
-            style={{
+            sx={{
               cursor: props.stock.msciId ? "pointer" : undefined,
             }}
           >
@@ -515,7 +515,7 @@ const StockRow = (props: StockRowProps) => {
               sx={{ width: 72 }}
               style={{ cursor: "inherit" }}
             />
-          </span>
+          </Box>
         )}
       </TableCell>
       <TableCell
@@ -560,9 +560,9 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("S&P ESG Score"),
         }}
       >
-        <span
+        <Box
           onClick={() => navigateToSP(props.stock)}
-          style={{
+          sx={{
             cursor: props.stock.spId ? "pointer" : undefined,
           }}
         >
@@ -577,7 +577,7 @@ const StockRow = (props: StockRowProps) => {
           >
             {props.stock.spESGScore}
           </Typography>
-        </span>
+        </Box>
       </TableCell>
       <TableCell
         sx={{
@@ -585,9 +585,9 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         {props.stock.sustainalyticsESGRisk && (
-          <span
+          <Box
             onClick={() => navigateToSustainalytics(props.stock)}
-            style={{
+            sx={{
               cursor: props.stock.sustainalyticsId ? "pointer" : undefined,
             }}
           >
@@ -609,7 +609,7 @@ const StockRow = (props: StockRowProps) => {
               }}
               size="small"
             />
-          </span>
+          </Box>
         )}
       </TableCell>
       <TableCell
@@ -681,10 +681,10 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         <Typography variant="body1" color="text.primary" width={75} noWrap>
-          <span style={{ float: "left" }}>{props.stock.currency ?? ""}</span>
-          <span style={{ float: "right" }}>
+          <Box sx={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
+          <Box sx={{ float: "right" }}>
             {props.stock.marketCap ? formatMarketCap(props.stock) : "–"}
-          </span>
+          </Box>
         </Typography>
       </TableCell>
       {props.getStocks && (
@@ -801,9 +801,9 @@ const StockRow = (props: StockRowProps) => {
     <TableRow hover sx={{ height: 59 }}>
       {/* Stock */}
       <TableCell>
-        <span style={{ display: "flex", alignItems: "center" }}>
+        <Box style={{ display: "flex", alignItems: "center" }}>
           <Skeleton variant="circular" width={40} height={40} />
-          <span style={{ width: 8 }} />
+          <Box width={8} />
           <Box>
             <Typography variant="body1">
               <Skeleton width={160} />
@@ -812,7 +812,7 @@ const StockRow = (props: StockRowProps) => {
               <Skeleton width={160} />
             </Typography>
           </Box>
-        </span>
+        </Box>
       </TableCell>
       {/* Country */}
       <TableCell
@@ -854,7 +854,7 @@ const StockRow = (props: StockRowProps) => {
               m: `${0.1 * (theme.typography.body1.fontSize as number)}px`,
             }}
           />
-          <span style={{ width: 6 }} />
+          <Box width={6} />
           <Skeleton width={105} />
         </Typography>
         <Typography variant="body2" display={"flex"}>
@@ -866,7 +866,7 @@ const StockRow = (props: StockRowProps) => {
               m: `${0.1 * (theme.typography.body1.fontSize as number)}px`,
             }}
           />
-          <span style={{ width: 6 }} />
+          <Box width={6} />
           <Skeleton width={105} />
         </Typography>
       </TableCell>
@@ -911,7 +911,7 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Star Rating"),
         }}
       >
-        <span style={{ whiteSpace: "nowrap" }}>
+        <Box sx={{ whiteSpace: "nowrap" }}>
           {[...Array(5).keys()].map((index) => {
             return (
               <Skeleton
@@ -927,7 +927,7 @@ const StockRow = (props: StockRowProps) => {
               />
             );
           })}
-        </span>
+        </Box>
       </TableCell>
       {/* Fair Value */}
       <TableCell
