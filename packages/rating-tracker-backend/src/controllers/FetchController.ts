@@ -51,6 +51,8 @@ const XPATH_SIZE_STYLE =
 const XPATH_STAR_RATING = "//*/img[@class='starsImg']" as const;
 const XPATH_MORNINGSTAR_FAIR_VALUE =
   "//*/datapoint[@id='FairValueEstimate']" as const;
+const XPATH_DESCRIPTION =
+  "//*/div[@id='CompanyProfile']/div[1][not(.//h3)]" as const;
 
 const XPATH_CONSENSUS_DIV =
   "//*/div[@class='tabTitleLeftWhite']/b[contains(text(), 'Consensus')]/../../../.." as const;
@@ -204,6 +206,7 @@ class FetchController {
       let marketCap: number;
       let low52w: number;
       let high52w: number;
+      let description: string;
 
       try {
         await driver.get(
@@ -586,6 +589,30 @@ class FetchController {
           }
         }
 
+        try {
+          description = await driver
+            .findElement(By.xpath(XPATH_DESCRIPTION))
+            .getText();
+        } catch (e) {
+          logger.warn(
+            PREFIX_CHROME +
+              chalk.yellowBright(
+                `Stock ${stock.ticker}: Unable to extract description: ${e}`
+              )
+          );
+          if (stock.description !== undefined) {
+            logger.error(
+              PREFIX_CHROME +
+                chalk.redBright(
+                  `Stock ${stock.ticker}: Extraction of description failed unexpectedly. This incident will be reported.`
+                )
+            );
+            errorMessage += `\n\tUnable to extract description: ${
+              String(e.message).split(/[\n:{]/)[0]
+            }`;
+          }
+        }
+
         if (errorMessage.includes("\n")) {
           errorMessage += `\n${await this.takeScreenshot(
             driver,
@@ -616,6 +643,7 @@ class FetchController {
           marketCap,
           low52w,
           high52w,
+          description,
         });
         updatedStocks.push(await readStock(stock.ticker));
       } catch (e) {

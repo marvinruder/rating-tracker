@@ -67,6 +67,7 @@ export class Stock extends CommonsStock {
       this.sustainalyticsId = stock.sustainalyticsId;
     if (stock.sustainalyticsESGRisk != null)
       this.sustainalyticsESGRisk = stock.sustainalyticsESGRisk;
+    if (stock.description != null) this.description = stock.description;
   }
 }
 
@@ -106,6 +107,7 @@ export interface StockEntity {
   spESGScore: number;
   sustainalyticsId: string;
   sustainalyticsESGRisk: number;
+  description: string;
 }
 
 export class StockEntity extends Entity {}
@@ -146,4 +148,5 @@ export const stockSchema = new Schema(StockEntity, {
   spESGScore: { type: "number" },
   sustainalyticsId: { type: "string" },
   sustainalyticsESGRisk: { type: "number" },
+  description: { type: "string" },
 });

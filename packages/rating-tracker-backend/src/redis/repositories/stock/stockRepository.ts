@@ -183,6 +183,7 @@ export const updateStock = async (
             case "msciESGRating":
             case "ric":
             case "sustainalyticsId":
+            case "description":
               stockEntity[k] = newValues[k];
               break;
             case "morningstarLastFetch":
