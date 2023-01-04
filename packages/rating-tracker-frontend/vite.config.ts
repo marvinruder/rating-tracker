@@ -7,16 +7,20 @@ import { createHtmlPlugin } from "vite-plugin-html";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { dependencies } from "./package.json";
+import fs from "fs";
+import path from "path";
 
 const chunkList = ["@mui/material"];
 
-function renderChunks(deps: Record<string, string>) {
+const renderChunks = (deps: Record<string, string>) => {
   const chunks = {};
   Object.keys(deps).forEach((key) => {
     if (chunkList.includes(key)) chunks[key] = [key];
   });
   return chunks;
-}
+};
+
+const fontCSS = fs.readFileSync("src/fonts.css", "utf-8");
 
 export default mergeConfig(
   defineViteConfig({
@@ -55,6 +59,7 @@ export default mergeConfig(
               process.env.NODE_ENV === "development"
                 ? '<script src="http://localhost:8097"></script>'
                 : "",
+            fontsCSS: `<style type="text/css">${fontCSS}</style>`,
           },
         },
         verbose: process.env.NODE_ENV === "development",
