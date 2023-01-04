@@ -48,7 +48,7 @@ const AuthWrapper = ({
   return done ? (
     authed ? (
       isLoginPage ? (
-        <Navigate to="/" replace />
+        <Navigate to="/stocklist" replace />
       ) : (
         children
       )
@@ -69,7 +69,7 @@ const routes: RouteObject[] = [
     children: [
       {
         path: "/",
-        element: <Navigate to="/stocklist" replace />,
+        element: <Navigate to="/login" replace />,
       },
       {
         path: "stocklist",
