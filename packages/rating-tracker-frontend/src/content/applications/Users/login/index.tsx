@@ -129,7 +129,7 @@ const LoginApp = () => {
               sx={{
                 display: "flex",
                 justifyContent: "center",
-                fontSize: 92,
+                fontSize: 80,
               }}
             >
               <QueryStatsIcon fontSize="inherit" />
