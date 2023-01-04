@@ -64,6 +64,10 @@ const AuthWrapper = ({
 
 const routes: RouteObject[] = [
   {
+    path: "/",
+    element: <Navigate to="/login" replace />,
+  },
+  {
     path: "",
     element: <SidebarLayout />,
     children: [
@@ -84,10 +88,6 @@ const routes: RouteObject[] = [
         ),
       },
     ],
-  },
-  {
-    path: "/",
-    element: <Navigate to="/login" replace />,
   },
   {
     path: "login",
