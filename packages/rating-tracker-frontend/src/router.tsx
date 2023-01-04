@@ -68,10 +68,6 @@ const routes: RouteObject[] = [
     element: <SidebarLayout />,
     children: [
       {
-        path: "/",
-        element: <Navigate to="/login" replace />,
-      },
-      {
         path: "stocklist",
         element: (
           <AuthWrapper>
@@ -88,6 +84,10 @@ const routes: RouteObject[] = [
         ),
       },
     ],
+  },
+  {
+    path: "/",
+    element: <Navigate to="/login" replace />,
   },
   {
     path: "login",
