@@ -1,12 +1,11 @@
 import {
-  Avatar,
+  Box,
   Button,
   Card,
   CardContent,
   Grid,
   TextField,
   Typography,
-  useTheme,
 } from "@mui/material";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
@@ -24,7 +23,6 @@ import { useNavigate } from "react-router";
 import useNotification from "../../../../helpers/useNotification";
 
 const LoginApp = () => {
-  const theme = useTheme();
   const navigate = useNavigate();
   const [action, setAction] = useState<string>("signIn");
   const [email, setEmail] = useState<string>("");
@@ -127,16 +125,15 @@ const LoginApp = () => {
       <CardContent>
         <Grid container direction={"column"} spacing={2} padding={1}>
           <Grid item>
-            <Avatar
+            <Box
               sx={{
-                m: "auto",
-                height: 64,
-                width: 64,
-                color: theme.palette.text.primary,
+                display: "flex",
+                justifyContent: "center",
+                fontSize: 92,
               }}
             >
-              <QueryStatsIcon fontSize="large" />
-            </Avatar>
+              <QueryStatsIcon fontSize="inherit" />
+            </Box>
           </Grid>
           <Grid item>
             <Typography variant="h3" textAlign={"center"}>
