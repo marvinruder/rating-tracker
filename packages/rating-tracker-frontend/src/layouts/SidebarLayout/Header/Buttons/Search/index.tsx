@@ -111,12 +111,22 @@ const HeaderSearch = () => {
     setSearchValue(event.target.value);
 
     if (event.target.value) {
-      getStocks(event.target.value);
+      setStocksFinal(false);
     } else {
       setStocks([]);
       setCount(0);
     }
   };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchValue) {
+        getStocks(searchValue);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchValue]);
 
   const [open, setOpen] = useState(false);
 
@@ -132,7 +142,6 @@ const HeaderSearch = () => {
   };
 
   const getStocks = (currentSearchValue: string) => {
-    setStocksFinal(false);
     axios
       .get(baseUrl + stockAPI + stockListEndpoint, {
         params: {
