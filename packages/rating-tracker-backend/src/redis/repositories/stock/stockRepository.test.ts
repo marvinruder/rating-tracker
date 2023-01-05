@@ -110,8 +110,7 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
     };
     await updateStock("NEWSTOCK", slightlyWorseValues);
     const updatedStock = await readStock("NEWSTOCK");
-    let k: keyof typeof newValues;
-    for (k in newValues) {
+    for (const k in newValues) {
       if (slightlyWorseValues[k] === null) {
         expect(updatedStock[k]).not.toBeNull();
         expect(updatedStock[k]).toBeUndefined();

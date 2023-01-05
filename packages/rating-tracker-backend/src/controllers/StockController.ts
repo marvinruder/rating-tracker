@@ -76,7 +76,7 @@ class StockController {
     }
     if (req.query.starRatingMin !== undefined) {
       const starRatingMin = Number(req.query.starRatingMin);
-      if (!isNaN(starRatingMin)) {
+      if (!Number.isNaN(starRatingMin)) {
         stocks = stocks.filter(
           (stock) => (stock.starRating ?? -1) >= starRatingMin
         );
@@ -84,7 +84,7 @@ class StockController {
     }
     if (req.query.starRatingMax !== undefined) {
       const starRatingMax = Number(req.query.starRatingMax);
-      if (!isNaN(starRatingMax)) {
+      if (!Number.isNaN(starRatingMax)) {
         stocks = stocks.filter(
           (stock) => (stock.starRating ?? -1) <= starRatingMax
         );
@@ -92,7 +92,7 @@ class StockController {
     }
     if (req.query.dividendYieldPercentMin !== undefined) {
       const dividendYieldPercentMin = Number(req.query.dividendYieldPercentMin);
-      if (!isNaN(dividendYieldPercentMin)) {
+      if (!Number.isNaN(dividendYieldPercentMin)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.dividendYieldPercent ?? -1) >= dividendYieldPercentMin
@@ -101,7 +101,7 @@ class StockController {
     }
     if (req.query.dividendYieldPercentMax !== undefined) {
       const dividendYieldPercentMax = Number(req.query.dividendYieldPercentMax);
-      if (!isNaN(dividendYieldPercentMax)) {
+      if (!Number.isNaN(dividendYieldPercentMax)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.dividendYieldPercent ?? -1) <= dividendYieldPercentMax
@@ -110,7 +110,7 @@ class StockController {
     }
     if (req.query.priceEarningRatioMin !== undefined) {
       const priceEarningRatioMin = Number(req.query.priceEarningRatioMin);
-      if (!isNaN(priceEarningRatioMin)) {
+      if (!Number.isNaN(priceEarningRatioMin)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.priceEarningRatio ?? Number.MAX_VALUE) >=
@@ -120,7 +120,7 @@ class StockController {
     }
     if (req.query.priceEarningRatioMax !== undefined) {
       const priceEarningRatioMax = Number(req.query.priceEarningRatioMax);
-      if (!isNaN(priceEarningRatioMax)) {
+      if (!Number.isNaN(priceEarningRatioMax)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.priceEarningRatio ?? Number.MAX_VALUE) <=
@@ -132,7 +132,7 @@ class StockController {
       const morningstarFairValueDiffMin = Number(
         req.query.morningstarFairValueDiffMin
       );
-      if (!isNaN(morningstarFairValueDiffMin)) {
+      if (!Number.isNaN(morningstarFairValueDiffMin)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.morningstarFairValue && stock.lastClose
@@ -145,7 +145,7 @@ class StockController {
       const morningstarFairValueDiffMax = Number(
         req.query.morningstarFairValueDiffMax
       );
-      if (!isNaN(morningstarFairValueDiffMax)) {
+      if (!Number.isNaN(morningstarFairValueDiffMax)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.morningstarFairValue && stock.lastClose
@@ -156,7 +156,7 @@ class StockController {
     }
     if (req.query.analystConsensusMin !== undefined) {
       const analystConsensusMin = Number(req.query.analystConsensusMin);
-      if (!isNaN(analystConsensusMin)) {
+      if (!Number.isNaN(analystConsensusMin)) {
         stocks = stocks.filter(
           (stock) => (stock.analystConsensus ?? -1) >= analystConsensusMin
         );
@@ -164,7 +164,7 @@ class StockController {
     }
     if (req.query.analystConsensusMax !== undefined) {
       const analystConsensusMax = Number(req.query.analystConsensusMax);
-      if (!isNaN(analystConsensusMax)) {
+      if (!Number.isNaN(analystConsensusMax)) {
         stocks = stocks.filter(
           (stock) => (stock.analystConsensus ?? -1) <= analystConsensusMax
         );
@@ -172,7 +172,7 @@ class StockController {
     }
     if (req.query.analystCountMin !== undefined) {
       const analystCountMin = Number(req.query.analystCountMin);
-      if (!isNaN(analystCountMin)) {
+      if (!Number.isNaN(analystCountMin)) {
         stocks = stocks.filter(
           (stock) => (stock.analystCount ?? -1) >= analystCountMin
         );
@@ -180,7 +180,7 @@ class StockController {
     }
     if (req.query.analystCountMax !== undefined) {
       const analystCountMax = Number(req.query.analystCountMax);
-      if (!isNaN(analystCountMax)) {
+      if (!Number.isNaN(analystCountMax)) {
         stocks = stocks.filter(
           (stock) => (stock.analystCount ?? -1) <= analystCountMax
         );
@@ -188,7 +188,7 @@ class StockController {
     }
     if (req.query.analystTargetDiffMin !== undefined) {
       const analystTargetDiffMin = Number(req.query.analystTargetDiffMin);
-      if (!isNaN(analystTargetDiffMin)) {
+      if (!Number.isNaN(analystTargetDiffMin)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.analystTargetPrice && stock.lastClose
@@ -199,7 +199,7 @@ class StockController {
     }
     if (req.query.analystTargetDiffMax !== undefined) {
       const analystTargetDiffMax = Number(req.query.analystTargetDiffMax);
-      if (!isNaN(analystTargetDiffMax)) {
+      if (!Number.isNaN(analystTargetDiffMax)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.analystTargetPrice && stock.lastClose
@@ -232,7 +232,7 @@ class StockController {
     }
     if (req.query.msciTemperatureMin !== undefined) {
       const msciTemperatureMin = Number(req.query.msciTemperatureMin);
-      if (!isNaN(msciTemperatureMin)) {
+      if (!Number.isNaN(msciTemperatureMin)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.msciTemperature ?? Number.MAX_VALUE) >= msciTemperatureMin
@@ -241,7 +241,7 @@ class StockController {
     }
     if (req.query.msciTemperatureMax !== undefined) {
       const msciTemperatureMax = Number(req.query.msciTemperatureMax);
-      if (!isNaN(msciTemperatureMax)) {
+      if (!Number.isNaN(msciTemperatureMax)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.msciTemperature ?? Number.MAX_VALUE) <= msciTemperatureMax
@@ -250,7 +250,7 @@ class StockController {
     }
     if (req.query.refinitivESGScoreMin !== undefined) {
       const refinitivESGScoreMin = Number(req.query.refinitivESGScoreMin);
-      if (!isNaN(refinitivESGScoreMin)) {
+      if (!Number.isNaN(refinitivESGScoreMin)) {
         stocks = stocks.filter(
           (stock) => (stock.refinitivESGScore ?? -1) >= refinitivESGScoreMin
         );
@@ -258,7 +258,7 @@ class StockController {
     }
     if (req.query.refinitivESGScoreMax !== undefined) {
       const refinitivESGScoreMax = Number(req.query.refinitivESGScoreMax);
-      if (!isNaN(refinitivESGScoreMax)) {
+      if (!Number.isNaN(refinitivESGScoreMax)) {
         stocks = stocks.filter(
           (stock) => (stock.refinitivESGScore ?? -1) <= refinitivESGScoreMax
         );
@@ -266,7 +266,7 @@ class StockController {
     }
     if (req.query.refinitivEmissionsMin !== undefined) {
       const refinitivEmissionsMin = Number(req.query.refinitivEmissionsMin);
-      if (!isNaN(refinitivEmissionsMin)) {
+      if (!Number.isNaN(refinitivEmissionsMin)) {
         stocks = stocks.filter(
           (stock) => (stock.refinitivEmissions ?? -1) >= refinitivEmissionsMin
         );
@@ -274,7 +274,7 @@ class StockController {
     }
     if (req.query.refinitivEmissionsMax !== undefined) {
       const refinitivEmissionsMax = Number(req.query.refinitivEmissionsMax);
-      if (!isNaN(refinitivEmissionsMax)) {
+      if (!Number.isNaN(refinitivEmissionsMax)) {
         stocks = stocks.filter(
           (stock) => (stock.refinitivEmissions ?? -1) <= refinitivEmissionsMax
         );
@@ -282,7 +282,7 @@ class StockController {
     }
     if (req.query.spESGScoreMin !== undefined) {
       const spESGScoreMin = Number(req.query.spESGScoreMin);
-      if (!isNaN(spESGScoreMin)) {
+      if (!Number.isNaN(spESGScoreMin)) {
         stocks = stocks.filter(
           (stock) => (stock.spESGScore ?? -1) >= spESGScoreMin
         );
@@ -290,7 +290,7 @@ class StockController {
     }
     if (req.query.spESGScoreMax !== undefined) {
       const spESGScoreMax = Number(req.query.spESGScoreMax);
-      if (!isNaN(spESGScoreMax)) {
+      if (!Number.isNaN(spESGScoreMax)) {
         stocks = stocks.filter(
           (stock) => (stock.spESGScore ?? -1) <= spESGScoreMax
         );
@@ -300,7 +300,7 @@ class StockController {
       const sustainalyticsESGRiskMin = Number(
         req.query.sustainalyticsESGRiskMin
       );
-      if (!isNaN(sustainalyticsESGRiskMin)) {
+      if (!Number.isNaN(sustainalyticsESGRiskMin)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) >=
@@ -312,7 +312,7 @@ class StockController {
       const sustainalyticsESGRiskMax = Number(
         req.query.sustainalyticsESGRiskMax
       );
-      if (!isNaN(sustainalyticsESGRiskMax)) {
+      if (!Number.isNaN(sustainalyticsESGRiskMax)) {
         stocks = stocks.filter(
           (stock) =>
             (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) <=
@@ -322,7 +322,7 @@ class StockController {
     }
     if (req.query.financialScoreMin !== undefined) {
       const financialScoreMin = Number(req.query.financialScoreMin);
-      if (!isNaN(financialScoreMin)) {
+      if (!Number.isNaN(financialScoreMin)) {
         stocks = stocks.filter(
           (stock) => 100 * stock.getFinancialScore() >= financialScoreMin
         );
@@ -330,7 +330,7 @@ class StockController {
     }
     if (req.query.financialScoreMax !== undefined) {
       const financialScoreMax = Number(req.query.financialScoreMax);
-      if (!isNaN(financialScoreMax)) {
+      if (!Number.isNaN(financialScoreMax)) {
         stocks = stocks.filter(
           (stock) => 100 * stock.getFinancialScore() <= financialScoreMax
         );
@@ -338,7 +338,7 @@ class StockController {
     }
     if (req.query.esgScoreMin !== undefined) {
       const esgScoreMin = Number(req.query.esgScoreMin);
-      if (!isNaN(esgScoreMin)) {
+      if (!Number.isNaN(esgScoreMin)) {
         stocks = stocks.filter(
           (stock) => 100 * stock.getESGScore() >= esgScoreMin
         );
@@ -346,7 +346,7 @@ class StockController {
     }
     if (req.query.esgScoreMax !== undefined) {
       const esgScoreMax = Number(req.query.esgScoreMax);
-      if (!isNaN(esgScoreMax)) {
+      if (!Number.isNaN(esgScoreMax)) {
         stocks = stocks.filter(
           (stock) => 100 * stock.getESGScore() <= esgScoreMax
         );
@@ -354,7 +354,7 @@ class StockController {
     }
     if (req.query.totalScoreMin !== undefined) {
       const totalScoreMin = Number(req.query.totalScoreMin);
-      if (!isNaN(totalScoreMin)) {
+      if (!Number.isNaN(totalScoreMin)) {
         stocks = stocks.filter(
           (stock) => 100 * stock.getTotalScore() >= totalScoreMin
         );
@@ -362,7 +362,7 @@ class StockController {
     }
     if (req.query.totalScoreMax !== undefined) {
       const totalScoreMax = Number(req.query.totalScoreMax);
-      if (!isNaN(totalScoreMax)) {
+      if (!Number.isNaN(totalScoreMax)) {
         stocks = stocks.filter(
           (stock) => 100 * stock.getTotalScore() <= totalScoreMax
         );
@@ -463,10 +463,13 @@ class StockController {
     // Pagination
     let offset: number = parseInt(req.query.offset as string);
     const count: number = parseInt(req.query.count as string);
-    if (isNaN(offset)) {
+    if (Number.isNaN(offset)) {
       offset = 0;
     }
-    stocks = stocks.slice(offset, isNaN(count) ? undefined : offset + count);
+    stocks = stocks.slice(
+      offset,
+      Number.isNaN(count) ? undefined : offset + count
+    );
 
     return res.status(200).json({
       stocks: stocks,
@@ -491,7 +494,7 @@ class StockController {
             maxAge =
               +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
             /* istanbul ignore next */
-            if (isNaN(maxAge)) {
+            if (Number.isNaN(maxAge)) {
               throw new TypeError();
             }
           } catch (e) {

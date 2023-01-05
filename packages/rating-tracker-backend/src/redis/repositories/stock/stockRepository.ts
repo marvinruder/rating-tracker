@@ -55,6 +55,7 @@ export const updateStock = async (
     let signalMessage = `Updates for ${stockEntity.name} (${ticker}):`;
     logger.info(PREFIX_REDIS + `Updating stock ${ticker}…`);
     let isNewData = false;
+    // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
     for (k in newValues) {
       if (k in newValues && newValues[k] !== undefined) {
         if (newValues[k] !== stockEntity[k]) {
@@ -190,6 +191,7 @@ export const updateStock = async (
             case "marketScreenerLastFetch":
             case "msciLastFetch":
             case "refinitivLastFetch":
+            // deepcode ignore DuplicateCaseBody: Reassignment must happen per type
             case "spLastFetch":
               stockEntity[k] = newValues[k];
               break;
@@ -209,6 +211,7 @@ export const updateStock = async (
             case "refinitivEmissions":
             case "spId":
             case "spESGScore":
+            // deepcode ignore DuplicateCaseBody: Reassignment must happen per type
             case "sustainalyticsESGRisk":
               stockEntity[k] = newValues[k];
               break;

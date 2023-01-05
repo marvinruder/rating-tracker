@@ -298,7 +298,10 @@ class FetchController {
               .findElement(By.xpath(XPATH_STAR_RATING))
               .getAttribute("alt")
           ).replaceAll(/\D/g, "");
-          if (starRatingString.length === 0 || isNaN(+starRatingString)) {
+          if (
+            starRatingString.length === 0 ||
+            Number.isNaN(+starRatingString)
+          ) {
             throw new TypeError(`Extracted star rating is no valid number.`);
           }
           starRating = +starRatingString;
@@ -331,7 +334,7 @@ class FetchController {
           } else {
             if (
               dividendYieldPercentString.length === 0 ||
-              isNaN(+dividendYieldPercentString)
+              Number.isNaN(+dividendYieldPercentString)
             ) {
               throw new TypeError(
                 `Extracted dividend yield is no valid number.`
@@ -368,7 +371,7 @@ class FetchController {
           } else {
             if (
               priceEarningRatioString.length === 0 ||
-              isNaN(+priceEarningRatioString)
+              Number.isNaN(+priceEarningRatioString)
             ) {
               throw new TypeError(
                 `Extracted price earning ratio is no valid number.`
@@ -435,7 +438,10 @@ class FetchController {
           if (lastCloseString === "-") {
             lastClose = null;
           } else {
-            if (lastCloseString.length === 0 || isNaN(+lastCloseString)) {
+            if (
+              lastCloseString.length === 0 ||
+              Number.isNaN(+lastCloseString)
+            ) {
               throw new TypeError(`Extracted last close is no valid number.`);
             }
             lastClose = +lastCloseString;
@@ -473,7 +479,7 @@ class FetchController {
           } else {
             if (
               morningstarFairValueString.length === 0 ||
-              isNaN(+morningstarFairValueString)
+              Number.isNaN(+morningstarFairValueString)
             ) {
               throw new TypeError(
                 `Extracted Morningstar Fair Value is no valid number.`
@@ -519,7 +525,7 @@ class FetchController {
             } else {
               marketCap = +marketCapText;
             }
-            if (!marketCapText.match(/\d+/) || isNaN(marketCap)) {
+            if (!marketCapText.match(/\d+/) || Number.isNaN(marketCap)) {
               marketCap = undefined;
               throw new TypeError(
                 `Extracted market capitalization is no valid number.`
@@ -559,8 +565,8 @@ class FetchController {
             if (
               range52wStrings[0].length === 0 ||
               range52wStrings[1].length === 0 ||
-              isNaN(+range52wStrings[0]) ||
-              isNaN(+range52wStrings[1])
+              Number.isNaN(+range52wStrings[0]) ||
+              Number.isNaN(+range52wStrings[1])
             ) {
               throw new TypeError(
                 `Extracted 52 week low or high is no valid number.`
@@ -1570,6 +1576,9 @@ class FetchController {
               60 * 60 * 24 * 7
             );
             sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
+          })
+          .catch((e) => {
+            throw e;
           });
       }
     } catch (e) {

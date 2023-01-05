@@ -681,7 +681,7 @@ const AddStock = (props: AddStockProps) => {
               <TextField
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 onChange={(event) => {
-                  if (!isNaN(+event.target.value)) {
+                  if (!Number.isNaN(+event.target.value)) {
                     setStock((prevStock) => {
                       return new Stock({
                         ...prevStock,
