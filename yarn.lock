@@ -1725,10 +1725,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/browser@npm:6.2.2":
-  version: 6.2.2
-  resolution: "@simplewebauthn/browser@npm:6.2.2"
-  checksum: 896de5ff32cf2f5bf3f1fe35da83755a07affc66be94c888ab47360f9850b1ac8c8a60efe3c780a3747942e9f4f41728401c8bda3bfa47e4f90120c85f4f9b65
+"@simplewebauthn/browser@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@simplewebauthn/browser@npm:7.0.0"
+  checksum: eb8d7e2d923649c116275cc9bfbabfa27a180cd33dbf9d6a28c7aa9460ea79cd25204c9a7d76ed8cc24764da4a09b5939209aa30e9b295b9d54e497bb9b652a4
   languageName: node
   linkType: hard
 
@@ -6028,10 +6028,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:^1.23.x":
-  version: 1.28.0
-  resolution: "luxon@npm:1.28.0"
-  checksum: 5250cb9f138b6048eeb0b3a9044a4ac994d0058f680c72a0da4b6aeaec8612460385639cba2b1052ef6d5564879e9ed144d686f26d9d97b38ab920d82e18281c
+"luxon@npm:1.28.1":
+  version: 1.28.1
+  resolution: "luxon@npm:1.28.1"
+  checksum: 2c62999adea79645fd1e931d685f61aeb33eda7f39fbf79b84261a233b62f9590f48336654ee9efd405848bd9e13dc7fe087c701b7126187201a88998dc68b04
   languageName: node
   linkType: hard
 
@@ -7198,7 +7198,7 @@ __metadata:
     "@mui/icons-material": 5.11.0
     "@mui/lab": 5.0.0-alpha.114
     "@mui/material": 5.11.3
-    "@simplewebauthn/browser": 6.2.2
+    "@simplewebauthn/browser": 7.0.0
     "@types/node": 18.11.18
     "@types/react": 18.0.26
     "@types/react-dom": 18.0.10
