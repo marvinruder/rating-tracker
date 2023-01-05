@@ -1,6 +1,8 @@
 const { randomUUID } = await import("node:crypto");
-import SimpleWebAuthnServer from "@simplewebauthn/server";
-import { AuthenticatorDevice } from "@simplewebauthn/typescript-types";
+import SimpleWebAuthnServer, {
+  VerifiedAuthenticationResponse,
+  VerifiedRegistrationResponse,
+} from "@simplewebauthn/server";
 import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
@@ -60,10 +62,10 @@ class AuthController {
     const name = req.query.name;
     if (typeof email === "string" && typeof name === "string") {
       const expectedChallenge: string = currentChallenges[email];
-      let verification;
+      let verification: VerifiedRegistrationResponse;
       try {
         verification = await SimpleWebAuthnServer.verifyRegistrationResponse({
-          credential: req.body,
+          response: req.body,
           expectedChallenge,
           expectedOrigin: origin,
           expectedRPID: rpID,
@@ -75,18 +77,15 @@ class AuthController {
 
       const { verified } = verification;
       const { registrationInfo } = verification;
-      const {
-        credentialPublicKey,
-        credentialID,
-        counter,
-      }: AuthenticatorDevice = registrationInfo;
+      const { credentialPublicKey, credentialID, counter } = registrationInfo;
       if (
         !(await createUser({
           email,
           name,
           accessRights: 0,
-          credentialID: credentialID.toString("base64"),
-          credentialPublicKey: credentialPublicKey.toString("base64"),
+          credentialID: Buffer.from(credentialID).toString("base64"),
+          credentialPublicKey:
+            Buffer.from(credentialPublicKey).toString("base64"),
           counter,
         }))
       ) {
@@ -116,10 +115,10 @@ class AuthController {
     const email = req.body.response.userHandle;
     const user = await readUser(email);
 
-    let verification;
+    let verification: VerifiedAuthenticationResponse;
     try {
       verification = await SimpleWebAuthnServer.verifyAuthenticationResponse({
-        credential: req.body,
+        response: req.body,
         expectedChallenge: currentChallenges[req.body.challenge],
         expectedOrigin: origin,
         expectedRPID: rpID,
