@@ -2585,15 +2585,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@simplewebauthn/typescript-types", [\
-        ["npm:6.3.0-alpha.1", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-typescript-types-npm-6.3.0-alpha.1-629da05c10-726bcfbbfa.zip/node_modules/@simplewebauthn/typescript-types/",\
-          "packageDependencies": [\
-            ["@simplewebauthn/typescript-types", "npm:6.3.0-alpha.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@sinclair/typebox", [\
         ["npm:0.24.51", {\
           "packageLocation": "./.yarn/cache/@sinclair-typebox-npm-0.24.51-cdde4a266f-fd0d855e74.zip/node_modules/@sinclair/typebox/",\
@@ -8956,7 +8947,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rating-tracker-backend", "workspace:packages/rating-tracker-backend"],\
             ["@jest/globals", "npm:29.3.1"],\
             ["@simplewebauthn/server", "npm:7.0.0"],\
-            ["@simplewebauthn/typescript-types", "npm:6.3.0-alpha.1"],\
             ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.15"],\
             ["@types/jest", "npm:29.2.5"],\

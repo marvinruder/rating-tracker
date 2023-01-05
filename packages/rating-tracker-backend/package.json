@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@simplewebauthn/server": "7.0.0",
-    "@simplewebauthn/typescript-types": "6.3.0-alpha.1",
     "axios": "1.2.2",
     "chalk": "5.2.0",
     "cookie-parser": "1.4.6",

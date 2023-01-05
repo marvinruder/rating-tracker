@@ -1757,13 +1757,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/typescript-types@npm:6.3.0-alpha.1":
-  version: 6.3.0-alpha.1
-  resolution: "@simplewebauthn/typescript-types@npm:6.3.0-alpha.1"
-  checksum: 726bcfbbfa11c61b4d4ff41f48ba00b543259dcff3c72c5d094bddb5ecf6fcaa4d826a4c4e684c83c198f6f0d54043728ed98ccf0248e98472a04bb8d94f3fc7
-  languageName: node
-  linkType: hard
-
 "@sinclair/typebox@npm:^0.24.1":
   version: 0.24.51
   resolution: "@sinclair/typebox@npm:0.24.51"
@@ -7141,7 +7134,6 @@ __metadata:
   dependencies:
     "@jest/globals": 29.3.1
     "@simplewebauthn/server": 7.0.0
-    "@simplewebauthn/typescript-types": 6.3.0-alpha.1
     "@types/cron": 2.0.0
     "@types/express": 4.17.15
     "@types/jest": 29.2.5
