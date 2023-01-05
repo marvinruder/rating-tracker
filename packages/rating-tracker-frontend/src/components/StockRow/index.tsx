@@ -343,8 +343,10 @@ const StockRow = (props: StockRowProps) => {
             sx={{ textAlign: "right" }}
             noWrap
           >
-            {props.stock.morningstarFairValue &&
-              props.stock.lastClose &&
+            {props.stock.morningstarFairValue !== undefined &&
+              props.stock.lastClose !== undefined &&
+              props.stock.getPercentageToLastClose("morningstarFairValue") !==
+                undefined &&
               `${
                 props.stock.lastClose > props.stock.morningstarFairValue
                   ? "+"
@@ -360,7 +362,7 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Analyst Consensus"),
         }}
       >
-        {props.stock.analystConsensus && (
+        {props.stock.analystConsensus !== undefined && (
           <Box
             onClick={() => navigateToMarketScreener(props.stock)}
             sx={{
@@ -440,9 +442,9 @@ const StockRow = (props: StockRowProps) => {
             sx={{ textAlign: "left", display: "inline-block" }}
             noWrap
           >
-            {props.stock.analystTargetPrice &&
-              props.stock.analystCount &&
-              props.stock.lastClose &&
+            {props.stock.analystTargetPrice !== undefined &&
+              props.stock.analystCount !== undefined &&
+              props.stock.lastClose !== undefined &&
               `n\u2009=\u2009${props.stock.analystCount}`}
           </Typography>
           <Typography
@@ -452,9 +454,11 @@ const StockRow = (props: StockRowProps) => {
             sx={{ textAlign: "right", display: "inline-block" }}
             noWrap
           >
-            {props.stock.analystTargetPrice &&
-              props.stock.analystCount &&
-              props.stock.lastClose &&
+            {props.stock.analystTargetPrice !== undefined &&
+              props.stock.analystCount !== undefined &&
+              props.stock.lastClose !== undefined &&
+              props.stock.getPercentageToLastClose("analystTargetPrice") !==
+                undefined &&
               `${
                 props.stock.lastClose > props.stock.analystTargetPrice
                   ? "+"
@@ -501,7 +505,7 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("MSCI Implied Temperature Rise"),
         }}
       >
-        {props.stock.msciTemperature && (
+        {props.stock.msciTemperature !== undefined && (
           <Box
             onClick={() => navigateToMSCI(props.stock)}
             sx={{
@@ -528,7 +532,7 @@ const StockRow = (props: StockRowProps) => {
             minWidth: 90,
             display: "flex",
             alignItems: "center",
-            cursor: "pointer",
+            cursor: props.stock.ric ? "pointer" : undefined,
           }}
           onClick={() => navigateToRefinitiv(props.stock)}
         >
@@ -584,7 +588,7 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Sustainalytics ESG Risk"),
         }}
       >
-        {props.stock.sustainalyticsESGRisk && (
+        {props.stock.sustainalyticsESGRisk !== undefined && (
           <Box
             onClick={() => navigateToSustainalytics(props.stock)}
             sx={{
@@ -617,32 +621,34 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("52 Week Range"),
         }}
       >
-        {props.stock.lastClose && props.stock.low52w && props.stock.high52w && (
-          <Range52WSlider
-            size="small"
-            sx={{
-              mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
-              mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
-              width: 150,
-            }}
-            value={props.stock.lastClose}
-            min={props.stock.low52w}
-            max={props.stock.high52w}
-            marks={[
-              {
-                value: props.stock.low52w,
-                label: props.stock.low52w?.toFixed(2),
-              },
-              {
-                value: props.stock.high52w,
-                label: props.stock.high52w?.toFixed(2),
-              },
-            ]}
-            valueLabelDisplay="on"
-            valueLabelFormat={(value) => value.toFixed(2)}
-            disabled
-          />
-        )}
+        {props.stock.lastClose !== undefined &&
+          props.stock.low52w !== undefined &&
+          props.stock.high52w !== undefined && (
+            <Range52WSlider
+              size="small"
+              sx={{
+                mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
+                mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
+                width: 150,
+              }}
+              value={props.stock.lastClose}
+              min={props.stock.low52w}
+              max={props.stock.high52w}
+              marks={[
+                {
+                  value: props.stock.low52w,
+                  label: props.stock.low52w?.toFixed(2),
+                },
+                {
+                  value: props.stock.high52w,
+                  label: props.stock.high52w?.toFixed(2),
+                },
+              ]}
+              valueLabelDisplay="on"
+              valueLabelFormat={(value) => value.toFixed(2)}
+              disabled
+            />
+          )}
       </TableCell>
       <TableCell
         sx={{
@@ -683,7 +689,9 @@ const StockRow = (props: StockRowProps) => {
         <Typography variant="body1" color="text.primary" width={75} noWrap>
           <Box sx={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
           <Box sx={{ float: "right" }}>
-            {props.stock.marketCap ? formatMarketCap(props.stock) : "–"}
+            {props.stock.marketCap !== undefined
+              ? formatMarketCap(props.stock)
+              : "–"}
           </Box>
         </Typography>
       </TableCell>

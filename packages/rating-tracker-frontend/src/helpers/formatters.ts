@@ -10,7 +10,7 @@ const formatMarketCap = (stock: Stock) => {
   } else if (stock.marketCap > 1e3) {
     return (stock.marketCap / 1e3).toPrecision(3) + " k";
   } else {
-    return stock.marketCap.toPrecision(3);
+    return stock.marketCap.toFixed(0);
   }
 };
 
