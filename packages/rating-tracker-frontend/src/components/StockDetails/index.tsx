@@ -296,7 +296,9 @@ const StockDetails = (props: StockDetailsProps) => {
               {props.stock ? (
                 <>
                   {props.stock.currency ?? ""}{" "}
-                  {props.stock.marketCap ? formatMarketCap(props.stock) : "–"}
+                  {props.stock.marketCap !== undefined
+                    ? formatMarketCap(props.stock)
+                    : "–"}
                 </>
               ) : (
                 <Skeleton width={60} sx={{ ml: "auto" }} />
@@ -309,9 +311,9 @@ const StockDetails = (props: StockDetailsProps) => {
           <Grid item xs={7.5}>
             {props.stock ? (
               <>
-                {props.stock?.lastClose &&
-                  props.stock?.low52w &&
-                  props.stock.high52w && (
+                {props.stock?.lastClose !== undefined &&
+                  props.stock?.low52w !== undefined &&
+                  props.stock?.high52w !== undefined && (
                     <Range52WSlider
                       size="small"
                       sx={{
@@ -507,8 +509,11 @@ const StockDetails = (props: StockDetailsProps) => {
               >
                 {props.stock ? (
                   <>
-                    {props.stock?.morningstarFairValue &&
-                      props.stock?.lastClose &&
+                    {props?.stock.morningstarFairValue !== undefined &&
+                      props?.stock.lastClose !== undefined &&
+                      props?.stock.getPercentageToLastClose(
+                        "morningstarFairValue"
+                      ) !== undefined &&
                       `${
                         props.stock?.lastClose >
                         props.stock?.morningstarFairValue
@@ -534,7 +539,7 @@ const StockDetails = (props: StockDetailsProps) => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock?.analystConsensus && (
+                {props.stock?.analystConsensus !== undefined && (
                   <Box
                     onClick={() => navigateToMarketScreener(props.stock)}
                     sx={{
@@ -629,9 +634,12 @@ const StockDetails = (props: StockDetailsProps) => {
               >
                 {props.stock ? (
                   <>
-                    {props.stock?.analystTargetPrice &&
-                      props.stock?.analystCount &&
-                      props.stock?.lastClose &&
+                    {props.stock?.analystTargetPrice !== undefined &&
+                      props.stock?.analystCount !== undefined &&
+                      props.stock?.lastClose !== undefined &&
+                      props.stock?.getPercentageToLastClose(
+                        "analystTargetPrice"
+                      ) !== undefined &&
                       `${
                         props.stock.lastClose > props.stock.analystTargetPrice
                           ? "+"
@@ -655,9 +663,12 @@ const StockDetails = (props: StockDetailsProps) => {
             <Typography variant="body1" sx={{ textAlign: "right" }}>
               {props.stock ? (
                 <>
-                  {props.stock?.analystTargetPrice &&
-                    props.stock?.analystCount &&
-                    props.stock?.lastClose &&
+                  {props.stock?.analystTargetPrice !== undefined &&
+                    props.stock?.analystCount !== undefined &&
+                    props.stock?.lastClose !== undefined &&
+                    props.stock?.getPercentageToLastClose(
+                      "analystTargetPrice"
+                    ) !== undefined &&
                     `n\u2009=\u2009${props.stock?.analystCount}`}
                 </>
               ) : (
@@ -722,7 +733,7 @@ const StockDetails = (props: StockDetailsProps) => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.msciTemperature && (
+                {props.stock.msciTemperature !== undefined && (
                   <Box
                     onClick={() => navigateToMSCI(props.stock)}
                     sx={{
@@ -758,7 +769,7 @@ const StockDetails = (props: StockDetailsProps) => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.refinitivESGScore && (
+                {props.stock.refinitivESGScore !== undefined && (
                   <Box
                     onClick={() => navigateToRefinitiv(props.stock)}
                     sx={{
@@ -793,7 +804,7 @@ const StockDetails = (props: StockDetailsProps) => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.refinitivEmissions && (
+                {props.stock.refinitivEmissions !== undefined && (
                   <Box
                     onClick={() => navigateToRefinitiv(props.stock)}
                     sx={{
@@ -828,7 +839,7 @@ const StockDetails = (props: StockDetailsProps) => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.spESGScore && (
+                {props.stock.spESGScore !== undefined && (
                   <Box
                     onClick={() => navigateToSP(props.stock)}
                     sx={{
@@ -865,7 +876,7 @@ const StockDetails = (props: StockDetailsProps) => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.sustainalyticsESGRisk && (
+                {props.stock.sustainalyticsESGRisk !== undefined && (
                   <Box
                     onClick={() => navigateToSustainalytics(props.stock)}
                     sx={{
