@@ -227,8 +227,10 @@ export class Stock {
   public getPercentageToLastClose(
     attribute: "morningstarFairValue" | "analystTargetPrice"
   ): number | undefined {
-    return this[attribute] && this.lastClose
-      ? 100 * (this.lastClose / this[attribute] - 1)
-      : undefined;
+    const result =
+      this[attribute] && this.lastClose
+        ? 100 * (this.lastClose / this[attribute] - 1)
+        : undefined;
+    return isNaN(result) ? undefined : result;
   }
 }
