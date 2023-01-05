@@ -27,7 +27,7 @@
     "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix"
   },
   "dependencies": {
-    "@simplewebauthn/server": "6.2.2",
+    "@simplewebauthn/server": "7.0.0",
     "@simplewebauthn/typescript-types": "6.3.0-alpha.1",
     "axios": "1.2.2",
     "chalk": "5.2.0",
