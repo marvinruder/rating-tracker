@@ -2469,10 +2469,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/browser", [\
-        ["npm:6.2.2", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-browser-npm-6.2.2-7c81165d0d-896de5ff32.zip/node_modules/@simplewebauthn/browser/",\
+        ["npm:7.0.0", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-browser-npm-7.0.0-93e13e1065-eb8d7e2d92.zip/node_modules/@simplewebauthn/browser/",\
           "packageDependencies": [\
-            ["@simplewebauthn/browser", "npm:6.2.2"]\
+            ["@simplewebauthn/browser", "npm:7.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9037,7 +9037,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mui/icons-material", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:5.11.0"],\
             ["@mui/lab", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:5.0.0-alpha.114"],\
             ["@mui/material", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:5.11.3"],\
-            ["@simplewebauthn/browser", "npm:6.2.2"],\
+            ["@simplewebauthn/browser", "npm:7.0.0"],\
             ["@types/node", "npm:18.11.18"],\
             ["@types/react", "npm:18.0.26"],\
             ["@types/react-dom", "npm:18.0.10"],\
