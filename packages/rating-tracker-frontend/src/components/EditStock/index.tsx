@@ -558,7 +558,7 @@ const EditStock = (props: EditStockProps) => {
               <TextField
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 onChange={(event) => {
-                  if (!isNaN(+event.target.value)) {
+                  if (!Number.isNaN(+event.target.value)) {
                     setSpId(+event.target.value);
                   }
                 }}

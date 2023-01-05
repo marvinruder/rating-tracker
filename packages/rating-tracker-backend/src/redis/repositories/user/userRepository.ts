@@ -57,6 +57,7 @@ export const updateUser = async (
   if (userEntity && userEntity.name) {
     logger.info(PREFIX_REDIS + `Updating user ${email}…`);
     let isNewData = false;
+    // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
     for (k in newValues) {
       if (k in newValues && newValues[k]) {
         if (newValues[k] !== userEntity[k]) {
@@ -72,6 +73,7 @@ export const updateUser = async (
               userEntity[k] = newValues[k];
               break;
             case "accessRights":
+            // deepcode ignore DuplicateCaseBody: Reassignment must happen per type
             case "counter":
               userEntity[k] = newValues[k];
               break;

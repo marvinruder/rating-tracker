@@ -20,7 +20,7 @@ const renderChunks = (deps: Record<string, string>) => {
   return chunks;
 };
 
-const fontCSS = fs.readFileSync("src/fonts.css", "utf-8");
+const fontCSS = fs.readFileSync("src/fonts.css", "utf8");
 
 export default mergeConfig(
   defineViteConfig({

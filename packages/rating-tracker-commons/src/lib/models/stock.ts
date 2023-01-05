@@ -56,12 +56,11 @@ export class Stock {
         return -1;
       case 2:
         return -0.5;
-      case 3:
-        return 0;
       case 4:
         return 0.5;
       case 5:
         return 1;
+      case 3:
       default:
         return 0;
     }
@@ -231,6 +230,6 @@ export class Stock {
       this[attribute] && this.lastClose
         ? 100 * (this.lastClose / this[attribute] - 1)
         : undefined;
-    return isNaN(result) ? undefined : result;
+    return Number.isNaN(result) ? undefined : result;
   }
 }

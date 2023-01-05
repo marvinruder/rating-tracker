@@ -266,6 +266,7 @@ export const regionOfCountry: Record<Country, Region> = {
   KP: "AsiaEmerging",
   MP: "AsiaEmerging",
   PK: "AsiaEmerging",
+  // deepcode ignore NoHardcodedPasswords: PW is the country code for Palau
   PW: "AsiaEmerging",
   PG: "AsiaEmerging",
   PH: "AsiaEmerging",
