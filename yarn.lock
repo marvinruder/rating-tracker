@@ -6960,12 +6960,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.1":
-  version: 2.8.1
-  resolution: "prettier@npm:2.8.1"
+"prettier@npm:2.8.2":
+  version: 2.8.2
+  resolution: "prettier@npm:2.8.2"
   bin:
     prettier: bin-prettier.js
-  checksum: 4f21a0f1269f76fb36f54e9a8a1ea4c11e27478958bf860661fb4b6d7ac69aac1581f8724fa98ea3585e56d42a2ea317a17ff6e3324f40cb11ff9e20b73785cc
+  checksum: 740c56c2128d587d656ea1dde9bc9c3503dfc94db4f3ac387259215eeb2e216680bdad9d18a0c9feecc6b42cfa188d6fa777df4c36c1d00cedd4199074fbfbd2
   languageName: node
   linkType: hard
 
@@ -7161,7 +7161,7 @@ __metadata:
     jest: 29.3.1
     pino: 8.8.0
     pino-pretty: 9.1.1
-    prettier: 2.8.1
+    prettier: 2.8.2
     rating-tracker-commons: "workspace:*"
     redis: 4.5.1
     redis-om: 0.3.6
@@ -7184,7 +7184,7 @@ __metadata:
     eslint-config-google: 0.14.0
     eslint-config-prettier: 8.6.0
     eslint-plugin-prettier: 4.2.1
-    prettier: 2.8.1
+    prettier: 2.8.2
     typescript: 4.9.4
   languageName: unknown
   linkType: soft
@@ -7217,7 +7217,7 @@ __metadata:
     nprogress: 0.2.0
     numeral: 2.0.6
     particlesjs: 2.2.3
-    prettier: 2.8.1
+    prettier: 2.8.2
     prop-types: 15.8.1
     rating-tracker-commons: "workspace:*"
     react: 18.2.0
@@ -7244,7 +7244,7 @@ __metadata:
   dependencies:
     concurrently: 7.6.0
     eslint: 8.31.0
-    prettier: 2.8.1
+    prettier: 2.8.2
     typescript: 4.9.4
   languageName: unknown
   linkType: soft
