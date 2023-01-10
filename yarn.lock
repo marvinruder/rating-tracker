@@ -3345,12 +3345,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cron@npm:2.1.0":
-  version: 2.1.0
-  resolution: "cron@npm:2.1.0"
+"cron@npm:2.2.0":
+  version: 2.2.0
+  resolution: "cron@npm:2.2.0"
   dependencies:
-    luxon: ^1.23.x
-  checksum: 9395875c091f56db7964491c249cb143d2e4ba77560d7132da783943c1b0537ef1814eb8f552c81eda5a2aa153216dd3f5b7ff63e372a68a063fcfafe8231f91
+    luxon: ^3.2.1
+  checksum: 53905d0f55e052742cf4fed34598a4ebfc311f4f9143c90384225bb4376fa639cd12f485cbf5d3dca00db377bf5117f27a1cae405f15e4745d1f69808e4fb9ac
   languageName: node
   linkType: hard
 
@@ -7147,7 +7147,7 @@ __metadata:
     chalk: 5.2.0
     concurrently: 7.6.0
     cookie-parser: 1.4.6
-    cron: 2.1.0
+    cron: 2.2.0
     date-fns: 2.29.3
     dotenv: 16.0.3
     eslint: 8.31.0
