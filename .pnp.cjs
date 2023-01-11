@@ -8982,7 +8982,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["selenium-webdriver", "npm:4.7.1"],\
             ["supertest", "npm:6.3.3"],\
             ["swagger-ui-express", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.6.0"],\
-            ["ts-jest", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.0.3"],\
+            ["ts-jest", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.0.4"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
           ],\
           "linkType": "SOFT"\
@@ -10430,17 +10430,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["ts-jest", [\
-        ["npm:29.0.3", {\
-          "packageLocation": "./.yarn/cache/ts-jest-npm-29.0.3-c1e6bc8a8a-541e51776d.zip/node_modules/ts-jest/",\
+        ["npm:29.0.4", {\
+          "packageLocation": "./.yarn/cache/ts-jest-npm-29.0.4-0eb9b60dee-c3daa71835.zip/node_modules/ts-jest/",\
           "packageDependencies": [\
-            ["ts-jest", "npm:29.0.3"]\
+            ["ts-jest", "npm:29.0.4"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-6a4c0b7aec/0/cache/ts-jest-npm-29.0.3-c1e6bc8a8a-541e51776d.zip/node_modules/ts-jest/",\
+        ["virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.0.4", {\
+          "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-6e5b714c05/0/cache/ts-jest-npm-29.0.4-0eb9b60dee-c3daa71835.zip/node_modules/ts-jest/",\
           "packageDependencies": [\
-            ["ts-jest", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.0.3"],\
+            ["ts-jest", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.0.4"],\
             ["@babel/core", null],\
             ["@jest/types", null],\
             ["@types/babel-jest", null],\
@@ -10455,7 +10455,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-json-stable-stringify", "npm:2.1.0"],\
             ["jest", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:29.3.1"],\
             ["jest-util", "npm:29.3.1"],\
-            ["json5", "npm:2.2.2"],\
+            ["json5", "npm:2.2.3"],\
             ["lodash.memoize", "npm:4.1.2"],\
             ["make-error", "npm:1.3.6"],\
             ["semver", "npm:7.3.8"],\
