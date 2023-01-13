@@ -43,6 +43,7 @@ dotenv.config({
 });
 
 const SIGNAL_PREFIX_ERROR = "⚠️ ";
+const SIGNAL_PREFIX_INFO = "ℹ️ ";
 
 const XPATH_INDUSTRY =
   "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.." as const;
@@ -1001,7 +1002,7 @@ class FetchController {
         !req.query.noSkip &&
         stock.msciLastFetch &&
         new Date().getTime() - stock.msciLastFetch.getTime() <
-          1000 * 60 * 60 * 24 * 7
+          1000 * 60 * 60 * 24 * 14
       ) {
         logger.info(
           PREFIX_CHROME +
@@ -1015,11 +1016,27 @@ class FetchController {
         );
         continue;
       }
+      if (successfulCount > 50) {
+        logger.info(
+          PREFIX_CHROME +
+            chalk.greenBright(
+              `Successfully fetched MSCI information for ${successfulCount} stocks (${errorCount} errors). Pausing now to avoid rate limiting. Will continue next time.`
+            )
+        );
+        signal.sendMessage(
+          SIGNAL_PREFIX_INFO +
+            `Successfully fetched MSCI information for ${successfulCount} stocks (${errorCount} errors). Pausing now to avoid rate limiting. Will continue next time.`
+        );
+        break;
+      }
       let msciESGRating: MSCIESGRating;
       let msciTemperature: number;
 
       try {
         await driver.manage().deleteAllCookies();
+        if (successfulCount > 0 || errorCount > 0) {
+          await new Promise((resolve) => setTimeout(resolve, 15000));
+        }
         await driver.get(
           `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${stock.msciId}`
         );
