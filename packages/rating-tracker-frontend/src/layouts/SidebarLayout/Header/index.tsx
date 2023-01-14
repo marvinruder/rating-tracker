@@ -3,24 +3,22 @@ import { useContext } from "react";
 import {
   Box,
   alpha,
-  Stack,
   lighten,
-  Divider,
   IconButton,
   Tooltip,
   styled,
   useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+
 import { SidebarContext } from "../../../contexts/SidebarContext";
 
 import HeaderButtons from "./Buttons";
 import HeaderUserbox from "./Userbox";
-import HeaderMenu from "./Menu";
 
 const HeaderWrapper = styled(Box)(
   ({ theme }) => `
-        height: ${theme.header.height};
+        // height: ${theme.header.height};
         color: ${theme.header.textColor};
         right: 0;
         z-index: 6;
@@ -65,6 +63,7 @@ function Header() {
         component="span"
         sx={{
           mr: 1,
+          my: 1,
           display: "inline-block",
           visibility: { lg: "hidden", xs: "visible" },
         }}

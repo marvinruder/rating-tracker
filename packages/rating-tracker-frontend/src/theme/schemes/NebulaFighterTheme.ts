@@ -280,7 +280,7 @@ export const NebulaFighterTheme = createTheme({
     width: "290px",
   },
   header: {
-    height: "80px",
+    height: "60px",
     background: themeColors.primaryAlt,
     boxShadow: "0px 1px 0px #383838",
     textColor: colors.secondary.main,
