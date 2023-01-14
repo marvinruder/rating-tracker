@@ -48,14 +48,15 @@ import EditStock from "../EditStock";
 import StockDetails from "../StockDetails";
 import formatMarketCap from "../../helpers/formatters";
 import {
-  navigateToMorningstar,
-  navigateToMarketScreener,
-  navigateToMSCI,
-  navigateToRefinitiv,
-  navigateToSP,
-  navigateToSustainalytics,
+  MorningstarNavigator,
+  MarketScreenerNavigator,
+  MSCINavigator,
+  RefinitivNavigator,
+  SPNavigator,
+  SustainalyticsNavigator,
 } from "../../helpers/navigators";
 import Range52WSlider from "../Range52WSlider";
+import { NavLink } from "react-router-dom";
 
 const StockRow = (props: StockRowProps) => {
   const theme = useTheme();
@@ -308,22 +309,16 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Star Rating"),
         }}
       >
-        <Box
-          onClick={() => navigateToMorningstar(props.stock)}
-          sx={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
-        >
+        <MorningstarNavigator stock={props.stock}>
           <StarRating value={props.stock.starRating} />
-        </Box>
+        </MorningstarNavigator>
       </TableCell>
       <TableCell
         sx={{
           display: displayColumn("Morningstar Fair Value"),
         }}
       >
-        <Box
-          onClick={() => navigateToMorningstar(props.stock)}
-          sx={{ cursor: props.stock.morningstarId ? "pointer" : undefined }}
-        >
+        <MorningstarNavigator stock={props.stock}>
           <Typography
             variant="body1"
             fontWeight="bold"
@@ -355,7 +350,7 @@ const StockRow = (props: StockRowProps) => {
                 props.stock.getPercentageToLastClose("morningstarFairValue")
               )}\u2009%`}
           </Typography>
-        </Box>
+        </MorningstarNavigator>
       </TableCell>
       <TableCell
         sx={{
@@ -363,12 +358,7 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         {props.stock.analystConsensus !== undefined && (
-          <Box
-            onClick={() => navigateToMarketScreener(props.stock)}
-            sx={{
-              cursor: props.stock.marketScreenerId ? "pointer" : undefined,
-            }}
-          >
+          <MarketScreenerNavigator stock={props.stock}>
             <Chip
               label={<strong>{props.stock.analystConsensus}</strong>}
               style={{ cursor: "inherit" }}
@@ -403,7 +393,7 @@ const StockRow = (props: StockRowProps) => {
               }}
               size="small"
             />
-          </Box>
+          </MarketScreenerNavigator>
         )}
       </TableCell>
       <TableCell
@@ -411,12 +401,7 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Analyst Target Price"),
         }}
       >
-        <Box
-          onClick={() => navigateToMarketScreener(props.stock)}
-          sx={{
-            cursor: props.stock.marketScreenerId ? "pointer" : undefined,
-          }}
-        >
+        <MarketScreenerNavigator stock={props.stock}>
           <Typography
             variant="body1"
             fontWeight="bold"
@@ -467,7 +452,7 @@ const StockRow = (props: StockRowProps) => {
                 props.stock.getPercentageToLastClose("analystTargetPrice")
               )}\u2009%`}
           </Typography>
-        </Box>
+        </MarketScreenerNavigator>
       </TableCell>
       <TableCell
         sx={{
@@ -475,12 +460,7 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         {props.stock.msciESGRating && (
-          <Box
-            onClick={() => navigateToMSCI(props.stock)}
-            sx={{
-              cursor: props.stock.msciId ? "pointer" : undefined,
-            }}
-          >
+          <MSCINavigator stock={props.stock}>
             <Chip
               label={<strong>{props.stock.msciESGRating}</strong>}
               style={{ cursor: "inherit" }}
@@ -497,7 +477,7 @@ const StockRow = (props: StockRowProps) => {
               }}
               size="small"
             />
-          </Box>
+          </MSCINavigator>
         )}
       </TableCell>
       <TableCell
@@ -506,12 +486,7 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         {props.stock.msciTemperature !== undefined && (
-          <Box
-            onClick={() => navigateToMSCI(props.stock)}
-            sx={{
-              cursor: props.stock.msciId ? "pointer" : undefined,
-            }}
-          >
+          <MSCINavigator stock={props.stock}>
             <TemperatureChip
               icon={<ThermostatIcon />}
               label={<strong>{props.stock.msciTemperature + "°C"}</strong>}
@@ -519,7 +494,7 @@ const StockRow = (props: StockRowProps) => {
               sx={{ width: 72 }}
               style={{ cursor: "inherit" }}
             />
-          </Box>
+          </MSCINavigator>
         )}
       </TableCell>
       <TableCell
@@ -527,49 +502,44 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Refinitiv ESG Information"),
         }}
       >
-        <Box
-          sx={{
-            minWidth: 90,
-            display: "flex",
-            alignItems: "center",
-            cursor: props.stock.ric ? "pointer" : undefined,
-          }}
-          onClick={() => navigateToRefinitiv(props.stock)}
-        >
-          <Typography
-            variant="body1"
-            fontWeight="bold"
-            color="text.primary"
-            width={45}
-            fontSize={18}
-            sx={{ textAlign: "left", display: "inline-block" }}
-            noWrap
+        <RefinitivNavigator stock={props.stock}>
+          <Box
+            sx={{
+              minWidth: 90,
+              display: "flex",
+              alignItems: "center",
+            }}
           >
-            {props.stock.refinitivESGScore}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            width={45}
-            fontSize={18}
-            sx={{ textAlign: "right", display: "inline-block" }}
-            noWrap
-          >
-            {props.stock.refinitivEmissions}
-          </Typography>
-        </Box>
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              color="text.primary"
+              width={45}
+              fontSize={18}
+              sx={{ textAlign: "left", display: "inline-block" }}
+              noWrap
+            >
+              {props.stock.refinitivESGScore}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              width={45}
+              fontSize={18}
+              sx={{ textAlign: "right", display: "inline-block" }}
+              noWrap
+            >
+              {props.stock.refinitivEmissions}
+            </Typography>
+          </Box>
+        </RefinitivNavigator>
       </TableCell>
       <TableCell
         sx={{
           display: displayColumn("S&P ESG Score"),
         }}
       >
-        <Box
-          onClick={() => navigateToSP(props.stock)}
-          sx={{
-            cursor: props.stock.spId ? "pointer" : undefined,
-          }}
-        >
+        <SPNavigator stock={props.stock}>
           <Typography
             variant="body1"
             fontWeight="bold"
@@ -581,7 +551,7 @@ const StockRow = (props: StockRowProps) => {
           >
             {props.stock.spESGScore}
           </Typography>
-        </Box>
+        </SPNavigator>
       </TableCell>
       <TableCell
         sx={{
@@ -589,12 +559,7 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         {props.stock.sustainalyticsESGRisk !== undefined && (
-          <Box
-            onClick={() => navigateToSustainalytics(props.stock)}
-            sx={{
-              cursor: props.stock.sustainalyticsId ? "pointer" : undefined,
-            }}
-          >
+          <SustainalyticsNavigator stock={props.stock}>
             <Chip
               label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
               style={{ cursor: "inherit" }}
@@ -613,7 +578,7 @@ const StockRow = (props: StockRowProps) => {
               }}
               size="small"
             />
-          </Box>
+          </SustainalyticsNavigator>
         )}
       </TableCell>
       <TableCell
@@ -699,10 +664,10 @@ const StockRow = (props: StockRowProps) => {
         <TableCell style={{ whiteSpace: "nowrap" }}>
           <Tooltip title="Open in new tab" arrow>
             <IconButton
+              component={NavLink}
+              to={`/stock/${props.stock.ticker}`}
+              target="_blank"
               size="small"
-              onClick={() =>
-                window.open(`/#/stock/${props.stock.ticker}`, "_blank")
-              }
             >
               <OpenInNewIcon fontSize="small" />
             </IconButton>
