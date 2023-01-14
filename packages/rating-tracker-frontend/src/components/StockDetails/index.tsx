@@ -31,12 +31,12 @@ import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import {
-  navigateToMarketScreener,
-  navigateToMorningstar,
-  navigateToMSCI,
-  navigateToRefinitiv,
-  navigateToSP,
-  navigateToSustainalytics,
+  MorningstarNavigator,
+  MarketScreenerNavigator,
+  MSCINavigator,
+  RefinitivNavigator,
+  SPNavigator,
+  SustainalyticsNavigator,
 } from "../../helpers/navigators";
 import StarRating from "../StarRating";
 
@@ -448,35 +448,35 @@ const StockDetails = (props: StockDetailsProps) => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Box
-              onClick={() => navigateToMorningstar(props.stock)}
-              sx={{
-                cursor: props.stock?.morningstarId ? "pointer" : undefined,
-                ml: "1.5px",
-                mt: "4px",
-                height: "24px",
-              }}
-            >
-              {props.stock ? (
-                <StarRating value={props.stock.starRating} />
-              ) : (
-                [...Array(5).keys()].map((index) => {
-                  return (
-                    <Skeleton
-                      key={index}
-                      sx={{
-                        m: "2px",
-                        display: "inline-block",
-                        verticalAlign: "middle",
-                      }}
-                      variant="circular"
-                      width={20}
-                      height={20}
-                    />
-                  );
-                })
-              )}
-            </Box>
+            <MorningstarNavigator stock={props.stock}>
+              <Box
+                sx={{
+                  ml: "1.5px",
+                  mt: "4px",
+                  height: "24px",
+                }}
+              >
+                {props.stock ? (
+                  <StarRating value={props.stock.starRating} />
+                ) : (
+                  [...Array(5).keys()].map((index) => {
+                    return (
+                      <Skeleton
+                        key={index}
+                        sx={{
+                          m: "2px",
+                          display: "inline-block",
+                          verticalAlign: "middle",
+                        }}
+                        variant="circular"
+                        width={20}
+                        height={20}
+                      />
+                    );
+                  })
+                )}
+              </Box>
+            </MorningstarNavigator>
           </Grid>
           <Grid item xs={6}>
             <Typography variant="h5" height="35px">
@@ -486,12 +486,7 @@ const StockDetails = (props: StockDetailsProps) => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Box
-              onClick={() => navigateToMorningstar(props.stock)}
-              sx={{
-                cursor: props.stock?.morningstarId ? "pointer" : undefined,
-              }}
-            >
+            <MorningstarNavigator stock={props.stock}>
               <Typography variant="body1" sx={{ textAlign: "right" }}>
                 {props.stock ? (
                   <>
@@ -529,7 +524,7 @@ const StockDetails = (props: StockDetailsProps) => {
                   <Skeleton width={45} sx={{ ml: "auto" }} />
                 )}
               </Typography>
-            </Box>
+            </MorningstarNavigator>
           </Grid>
           <Grid item xs={6}>
             <Typography variant="h5" height="19px" mt="5px">
@@ -540,14 +535,7 @@ const StockDetails = (props: StockDetailsProps) => {
             {props.stock ? (
               <>
                 {props.stock?.analystConsensus !== undefined && (
-                  <Box
-                    onClick={() => navigateToMarketScreener(props.stock)}
-                    sx={{
-                      cursor: props.stock.marketScreenerId
-                        ? "pointer"
-                        : undefined,
-                    }}
-                  >
+                  <MarketScreenerNavigator stock={props.stock}>
                     <Chip
                       label={<strong>{props.stock.analystConsensus}</strong>}
                       style={{ cursor: "inherit" }}
@@ -583,7 +571,7 @@ const StockDetails = (props: StockDetailsProps) => {
                       }}
                       size="small"
                     />
-                  </Box>
+                  </MarketScreenerNavigator>
                 )}
               </>
             ) : (
@@ -601,12 +589,7 @@ const StockDetails = (props: StockDetailsProps) => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Box
-              onClick={() => navigateToMarketScreener(props.stock)}
-              sx={{
-                cursor: props.stock?.marketScreenerId ? "pointer" : undefined,
-              }}
-            >
+            <MarketScreenerNavigator stock={props.stock}>
               <Typography
                 variant="body1"
                 sx={{
@@ -654,7 +637,7 @@ const StockDetails = (props: StockDetailsProps) => {
                   <Skeleton width={45} sx={{ ml: "auto" }} />
                 )}
               </Typography>
-            </Box>
+            </MarketScreenerNavigator>
           </Grid>
           <Grid item xs={6}>
             <Typography variant="h5">Analyst Count</Typography>
@@ -692,12 +675,7 @@ const StockDetails = (props: StockDetailsProps) => {
             {props.stock ? (
               <>
                 {props.stock.msciESGRating && (
-                  <Box
-                    onClick={() => navigateToMSCI(props.stock)}
-                    sx={{
-                      cursor: props.stock.msciId ? "pointer" : undefined,
-                    }}
-                  >
+                  <MSCINavigator stock={props.stock}>
                     <Chip
                       label={<strong>{props.stock.msciESGRating}</strong>}
                       style={{ cursor: "inherit" }}
@@ -715,7 +693,7 @@ const StockDetails = (props: StockDetailsProps) => {
                       }}
                       size="small"
                     />
-                  </Box>
+                  </MSCINavigator>
                 )}
               </>
             ) : (
@@ -734,12 +712,7 @@ const StockDetails = (props: StockDetailsProps) => {
             {props.stock ? (
               <>
                 {props.stock.msciTemperature !== undefined && (
-                  <Box
-                    onClick={() => navigateToMSCI(props.stock)}
-                    sx={{
-                      cursor: props.stock.msciId ? "pointer" : undefined,
-                    }}
-                  >
+                  <MSCINavigator stock={props.stock}>
                     <TemperatureChip
                       icon={<ThermostatIcon />}
                       label={
@@ -749,7 +722,7 @@ const StockDetails = (props: StockDetailsProps) => {
                       sx={{ width: 72, ml: "49.5px", mt: "4px" }}
                       style={{ cursor: "inherit" }}
                     />
-                  </Box>
+                  </MSCINavigator>
                 )}
               </>
             ) : (
@@ -770,12 +743,7 @@ const StockDetails = (props: StockDetailsProps) => {
             {props.stock ? (
               <>
                 {props.stock.refinitivESGScore !== undefined && (
-                  <Box
-                    onClick={() => navigateToRefinitiv(props.stock)}
-                    sx={{
-                      cursor: props.stock.ric ? "pointer" : undefined,
-                    }}
-                  >
+                  <RefinitivNavigator stock={props.stock}>
                     <Typography
                       variant="body1"
                       fontSize={18}
@@ -783,7 +751,7 @@ const StockDetails = (props: StockDetailsProps) => {
                     >
                       {props.stock.refinitivESGScore}
                     </Typography>
-                  </Box>
+                  </RefinitivNavigator>
                 )}
               </>
             ) : (
@@ -805,12 +773,7 @@ const StockDetails = (props: StockDetailsProps) => {
             {props.stock ? (
               <>
                 {props.stock.refinitivEmissions !== undefined && (
-                  <Box
-                    onClick={() => navigateToRefinitiv(props.stock)}
-                    sx={{
-                      cursor: props.stock.ric ? "pointer" : undefined,
-                    }}
-                  >
+                  <RefinitivNavigator stock={props.stock}>
                     <Typography
                       variant="body1"
                       fontSize={18}
@@ -818,7 +781,7 @@ const StockDetails = (props: StockDetailsProps) => {
                     >
                       {props.stock.refinitivEmissions}
                     </Typography>
-                  </Box>
+                  </RefinitivNavigator>
                 )}
               </>
             ) : (
@@ -840,12 +803,7 @@ const StockDetails = (props: StockDetailsProps) => {
             {props.stock ? (
               <>
                 {props.stock.spESGScore !== undefined && (
-                  <Box
-                    onClick={() => navigateToSP(props.stock)}
-                    sx={{
-                      cursor: props.stock.spId ? "pointer" : undefined,
-                    }}
-                  >
+                  <SPNavigator stock={props.stock}>
                     <Typography
                       variant="body1"
                       fontSize={18}
@@ -853,7 +811,7 @@ const StockDetails = (props: StockDetailsProps) => {
                     >
                       {props.stock.spESGScore}
                     </Typography>
-                  </Box>
+                  </SPNavigator>
                 )}
               </>
             ) : (
@@ -877,14 +835,7 @@ const StockDetails = (props: StockDetailsProps) => {
             {props.stock ? (
               <>
                 {props.stock.sustainalyticsESGRisk !== undefined && (
-                  <Box
-                    onClick={() => navigateToSustainalytics(props.stock)}
-                    sx={{
-                      cursor: props.stock.sustainalyticsId
-                        ? "pointer"
-                        : undefined,
-                    }}
-                  >
+                  <SustainalyticsNavigator stock={props.stock}>
                     <Chip
                       label={
                         <strong>{props.stock.sustainalyticsESGRisk}</strong>
@@ -907,7 +858,7 @@ const StockDetails = (props: StockDetailsProps) => {
                       }}
                       size="small"
                     />
-                  </Box>
+                  </SustainalyticsNavigator>
                 )}
               </>
             ) : (

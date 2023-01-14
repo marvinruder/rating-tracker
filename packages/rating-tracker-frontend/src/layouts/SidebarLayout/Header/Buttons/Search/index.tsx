@@ -39,6 +39,7 @@ import {
 import { emojiFlag, Stock } from "rating-tracker-commons";
 import useNotification from "../../../../../helpers/useNotification";
 import SectorIcon from "../../../../../components/SectorIcon/";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: ReactElement<any, any> },
@@ -66,19 +67,6 @@ const DialogTitleWrapper = styled(DialogTitle)(
 `
 );
 
-const HoverListItem = styled(ListItem)(
-  ({ theme }) => `
-  &.MuiListItem-root {
-    padding-top: 13.5px;
-    padding-bottom: 13.5px;
-  }
-
-  &.MuiListItem-root:hover {
-    background-color: ${theme.colors.alpha.black[5]};
-  }
-    `
-);
-
 const HeaderSearch = () => {
   const [searchValue, setSearchValue] = useState("");
   const [stocks, setStocks] = useState<Stock[]>([]);
@@ -87,6 +75,7 @@ const HeaderSearch = () => {
 
   const { setNotification } = useNotification();
   const theme = useTheme();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const isSearchShortcut = (e: KeyboardEvent) =>
@@ -100,12 +89,33 @@ const HeaderSearch = () => {
       }
     };
 
+    const enterKeyHandler = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        if (stocks.length) {
+          handleClose();
+          navigate(`/stock/${stocks[0].ticker}`);
+        }
+      }
+    };
+
+    const escapeKeyHandler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    window.addEventListener("keydown", escapeKeyHandler, true);
     window.addEventListener("keydown", searchShortcutHandler);
+    window.addEventListener("keydown", enterKeyHandler);
 
     return () => {
+      window.removeEventListener("keydown", escapeKeyHandler);
       window.removeEventListener("keydown", searchShortcutHandler);
+      window.removeEventListener("keydown", enterKeyHandler);
     };
-  }, []);
+  }, [stocks]);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchValue(event.target.value);
@@ -139,6 +149,10 @@ const HeaderSearch = () => {
     setStocks([]);
     setCount(0);
     setOpen(false);
+    const activeElement = document.activeElement;
+    if (activeElement instanceof HTMLElement) {
+      activeElement.blur();
+    }
   };
 
   const getStocks = (currentSearchValue: string) => {
@@ -246,18 +260,20 @@ const HeaderSearch = () => {
                 <Divider />
               </>
             )}
-            {/* TODO: Make this a skeleton */}
             <List disablePadding>
               {stocksFinal
                 ? stocks.map((stock) => (
                     <React.Fragment key={stock.ticker}>
-                      <HoverListItem
-                        style={{
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          handleClose();
-                          window.open(`/#/stock/${stock.ticker}`, "_self");
+                      <ListItem
+                        component={NavLink}
+                        to={`/stock/${stock.ticker}`}
+                        onClick={handleClose}
+                        sx={{
+                          py: 1.5,
+                          color: "inherit",
+                          "&:hover": {
+                            background: theme.palette.action.hover,
+                          },
                         }}
                       >
                         <ListItemAvatar>
@@ -295,13 +311,13 @@ const HeaderSearch = () => {
                             type={"Sector"}
                           />
                         </Box>
-                      </HoverListItem>
+                      </ListItem>
                       <Divider component="li" />
                     </React.Fragment>
                   ))
                 : [...Array(count || 1)].map((_, index) => (
                     <React.Fragment key={index}>
-                      <HoverListItem>
+                      <ListItem sx={{ py: 1.5 }}>
                         <ListItemAvatar>
                           <Skeleton variant="circular" width={40} height={40} />
                         </ListItemAvatar>
@@ -321,7 +337,7 @@ const HeaderSearch = () => {
                           height={24}
                           sx={{ ml: 1 }}
                         />
-                      </HoverListItem>
+                      </ListItem>
                       <Divider component="li" />
                     </React.Fragment>
                   ))}
