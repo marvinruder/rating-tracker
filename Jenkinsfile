@@ -1,4 +1,4 @@
-node {
+pipeline {
     withEnv([
         'imagename=marvinruder/rating-tracker',
         'main_tag=latest',
