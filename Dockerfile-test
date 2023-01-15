@@ -6,10 +6,11 @@ ENV SIGNAL_URL http://127.0.0.1:8080
 ENV SIGNAL_SENDER +493012345678
 ENV SIGNAL_RECIPIENT "+4915101234567 +4915201234567"
 
-WORKDIR /app
+WORKDIR /workdir
 
 COPY . .
-RUN yarn && \
+
+RUN \
   yarn workspace rating-tracker-commons build && \
   yarn test
 

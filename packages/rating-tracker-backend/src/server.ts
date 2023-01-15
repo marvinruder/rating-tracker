@@ -1,4 +1,4 @@
-const { randomUUID } = await import("node:crypto");
+import { randomUUID } from "node:crypto";
 import cookieParser from "cookie-parser";
 import * as cron from "cron";
 import dotenv from "dotenv";

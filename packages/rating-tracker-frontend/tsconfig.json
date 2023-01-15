@@ -3,7 +3,8 @@
   "compilerOptions": {
     "types": ["vite/client"],
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "rootDir": "."
   },
   "include": ["src", "package.json"]
 }

@@ -1,0 +1,9 @@
+FROM node:19.4.0-alpine as yarn
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
+
+COPY . .
+RUN yarn
+
+ENTRYPOINT [ "/bin/sh" ]
