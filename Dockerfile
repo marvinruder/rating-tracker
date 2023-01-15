@@ -7,7 +7,7 @@ WORKDIR /build
 
 COPY . .
 
-RUN du -hs .
+RUN du -hs .yarn/sdks/typescript/bin
 
 # Build
 RUN yarn workspaces focus --production && \

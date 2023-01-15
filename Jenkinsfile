@@ -27,7 +27,7 @@ node {
 
             test: {
                 stage ('Run Tests') {
-                    sh "du -hs ."
+                    sh "du -hs .yarn/sdks/typescript/bin"
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
@@ -44,7 +44,7 @@ node {
 
             build: {
                 stage ('Build Docker Image') {
-                    sh "du -hs ."
+                    sh "du -hs .yarn/sdks/typescript/bin"
                     image = docker.build("$imagename:build-$GIT_COMMIT_HASH")
                 }
             }
