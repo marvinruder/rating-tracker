@@ -1,5 +1,7 @@
 FROM node:19.4.0-alpine as test
-WORKDIR /app
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
 
 COPY . .
 RUN yarn
