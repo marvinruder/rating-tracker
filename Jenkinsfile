@@ -18,7 +18,7 @@ node {
             docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f Dockerfile-yarn .")
             sh """
             id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
-            docker cp \$id:/app/. .
+            docker cp \$id:/workdir/. .
             docker rm -v \$id
             """
         }
@@ -31,7 +31,7 @@ node {
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
-                    docker cp \$id:/app/. .
+                    docker cp \$id:/workdir/. .
                     docker rm -v \$id
                     curl -Os https://uploader.codecov.io/latest/linux/codecov
                     chmod +x ./codecov
