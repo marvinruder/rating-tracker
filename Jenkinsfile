@@ -41,7 +41,7 @@ node {
 
         parallel(
 
-            codecov {
+            codecov: {
                 stage ('Publish Codecov results') {
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
@@ -56,7 +56,7 @@ node {
                 }
             },
 
-            dockerhub {
+            dockerhub: {
                 stage ('Publish Docker Image') {
                     docker.withRegistry('', 'dockerhub') {
                         if (env.BRANCH_NAME == 'main') {
