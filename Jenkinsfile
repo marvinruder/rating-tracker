@@ -30,13 +30,13 @@ node {
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
-                    docker cp \$id:/workdir/. .
+                    docker cp \$id:/workdir/packages/rating-tracker-backend/. .
                     docker rm -v \$id
                     curl -Os https://uploader.codecov.io/latest/linux/codecov
                     chmod +x ./codecov
                     """
                     withCredentials([string(credentialsId: 'codecov-token-rating-tracker', variable: 'CODECOV_TOKEN')]) {
-                        sh "./codecov -s packages/rating-tracker-backend/coverage -C $GIT_COMMIT_HASH"
+                        sh "./codecov -s coverage -C $GIT_COMMIT_HASH"
                     }
                 }
             },
