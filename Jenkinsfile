@@ -28,6 +28,21 @@ node {
             test: {
                 stage ('Run Tests') {
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
+                }
+            },
+
+            build: {
+                stage ('Build Docker Image') {
+                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH")
+                }
+            }
+
+        )
+
+        parallel(
+
+            codecov {
+                stage ('Publish Codecov results') {
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
                     docker cp \$id:/workdir/packages/rating-tracker-backend/. .
@@ -41,23 +56,18 @@ node {
                 }
             },
 
-            build: {
-                stage ('Build Docker Image') {
-                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH")
+            dockerhub {
+                stage ('Publish Docker Image') {
+                    docker.withRegistry('', 'dockerhub') {
+                        if (env.BRANCH_NAME == 'main') {
+                            image.push(main_tag)
+                        } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
+                            image.push(branch_tag)
+                        }
+                    }
                 }
             }
-
         )
-
-        stage ('Publish Docker Image') {
-            docker.withRegistry('', 'dockerhub') {
-                if (env.BRANCH_NAME == 'main') {
-                    image.push(main_tag)
-                } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
-                    image.push(branch_tag)
-                }
-            }
-        }
 
         stage ('Cleanup') {
             sh """
