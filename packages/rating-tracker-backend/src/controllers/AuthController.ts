@@ -1,4 +1,4 @@
-const { randomUUID } = await import("node:crypto");
+import { randomUUID } from "node:crypto";
 import SimpleWebAuthnServer, {
   VerifiedAuthenticationResponse,
   VerifiedRegistrationResponse,

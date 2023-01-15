@@ -8,18 +8,29 @@ WORKDIR /build
 COPY . .
 
 # Build
-RUN yarn workspaces focus --production
-RUN yarn
-RUN yarn build
+RUN yarn workspaces focus --production && \
+  yarn && \
+  yarn build
 
 # Copy static frontend files into backend for serving
 RUN cp -r /build/packages/rating-tracker-frontend/dist /build/packages/rating-tracker-backend/public
 
 # Delete frontend code, caches only used by frontend, unused TypeScript output and build tools in yarn cache
-RUN rm -r /build/packages/rating-tracker-frontend
-RUN echo -e "\033[0;34m➤\033[0m YN0019: \033[0;35m$(yarn | grep -c 'appears to be unused - removing') packages\033[0m appear to be unused - removing"
-RUN find /build/packages -type f '(' -name "*.d.ts*" -o -name "*.tsbuildinfo" ')' -delete
-RUN rm -r \
+RUN rm -r /build/packages/rating-tracker-frontend && \
+  echo -e "\033[0;34m➤\033[0m YN0019: \033[0;35m$(yarn | grep -c 'appears to be unused - removing') packages\033[0m appear to be unused - removing"
+RUN find /build/packages -type f '(' -name "*.d.ts*" -o -name "*.tsbuildinfo" ')' -delete && \
+  rm -r \
+  /build/.yarn/cache/@babel-* \
+  /build/.yarn/cache/@eslint-* \
+  /build/.yarn/cache/@istanbuljs-* \
+  /build/.yarn/cache/@jest-* \
+  /build/.yarn/cache/@types-* \
+  /build/.yarn/cache/@typescript-* \
+  /build/.yarn/cache/babel-* \
+  /build/.yarn/cache/eslint-* \
+  /build/.yarn/cache/istanbul-* \
+  /build/.yarn/cache/node-gyp-* \
+  /build/.yarn/cache/prettier-* \
   /build/.yarn/cache/typescript-* \
   /build/.yarn/unplugged/node-gyp-*
 
@@ -33,9 +44,9 @@ RUN mkdir -p /build/app/packages/rating-tracker-backend /build/app/packages/rati
   tail -1 .yarnrc.yml > /build/app/.yarnrc.yml
 
 FROM node:19.4.0-alpine as run
-RUN apk add --no-cache dumb-init
 ENV NODE_ENV production
-USER node
 WORKDIR /app
+RUN apk add --no-cache dumb-init
+USER node
 COPY --from=build --chown=node:node /build/app .
 CMD [ "dumb-init", "yarn", "start" ]
