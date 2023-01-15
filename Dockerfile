@@ -7,6 +7,8 @@ WORKDIR /build
 
 COPY . .
 
+RUN du -hs .
+
 # Build
 RUN yarn workspaces focus --production && \
   # yarn && \

@@ -9,6 +9,7 @@ ENV SIGNAL_RECIPIENT "+4915101234567 +4915201234567"
 WORKDIR /app
 
 COPY . .
+RUN du -hs .
 RUN \
   # yarn && \
   yarn workspace rating-tracker-commons build && \

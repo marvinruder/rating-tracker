@@ -27,6 +27,7 @@ node {
 
             test: {
                 stage ('Run Tests') {
+                    sh "du -hs ."
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
@@ -43,6 +44,7 @@ node {
 
             build: {
                 stage ('Build Docker Image') {
+                    sh "du -hs ."
                     image = docker.build("$imagename:build-$GIT_COMMIT_HASH")
                 }
             }
