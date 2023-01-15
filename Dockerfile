@@ -7,12 +7,9 @@ WORKDIR /workdir
 
 COPY . .
 
-RUN du -hs .yarn/sdks/typescript/bin
-
 # Build
-RUN yarn workspaces focus --production && \
-  # yarn && \
-  yarn build
+RUN yarn build && \
+  yarn workspaces focus --production
 
 # Copy static frontend files into backend for serving
 RUN cp -r /workdir/packages/rating-tracker-frontend/dist /workdir/packages/rating-tracker-backend/public
