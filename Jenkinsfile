@@ -13,7 +13,9 @@ node {
             checkout scm
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
         }
+
         parallel(
+
             test: {
                 stage ('Run Tests') {
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
@@ -28,13 +30,14 @@ node {
                         sh "./codecov -s packages/rating-tracker-backend/coverage -C $GIT_COMMIT_HASH"
                     }
                 }
-            }
+            },
 
             build: {
                 stage ('Build Docker Image') {
                     image = docker.build("$imagename:build-$GIT_COMMIT_HASH")
                 }
             }
+
         )
 
         stage ('Publish Docker Image') {
