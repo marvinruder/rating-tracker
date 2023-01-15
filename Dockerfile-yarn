@@ -1,0 +1,7 @@
+FROM node:19.4.0-alpine as test
+WORKDIR /app
+
+COPY . .
+RUN yarn
+
+ENTRYPOINT [ "/bin/sh" ]

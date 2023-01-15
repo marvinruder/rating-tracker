@@ -14,6 +14,15 @@ node {
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
         }
 
+        stage ('Install dependencies') {
+            docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f Dockerfile-yarn .")
+            sh """
+            id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
+            docker cp \$id:/app/. .
+            docker rm -v \$id
+            """
+        }
+
         parallel(
 
             test: {
@@ -52,6 +61,7 @@ node {
 
         stage ('Cleanup') {
             sh """
+            docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true
             docker image prune --filter label=stage=build -f

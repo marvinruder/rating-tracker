@@ -9,7 +9,7 @@ COPY . .
 
 # Build
 RUN yarn workspaces focus --production && \
-  yarn && \
+  # yarn && \
   yarn build
 
 # Copy static frontend files into backend for serving
