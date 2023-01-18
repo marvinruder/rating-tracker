@@ -7224,7 +7224,7 @@ __metadata:
     react-apexcharts: 1.4.0
     react-custom-scrollbars-2: 4.5.0
     react-dom: 18.2.0
-    react-particles: 2.7.1
+    react-particles: 2.8.0
     react-router: 6.6.2
     react-router-dom: 6.6.2
     react-switch-selector: 2.2.1
@@ -7326,15 +7326,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-particles@npm:2.7.1":
-  version: 2.7.1
-  resolution: "react-particles@npm:2.7.1"
+"react-particles@npm:2.8.0":
+  version: 2.8.0
+  resolution: "react-particles@npm:2.8.0"
   dependencies:
     fast-deep-equal: ^3.1.3
-    tsparticles-engine: ^2.7.1
+    tsparticles-engine: ^2.8.0
   peerDependencies:
     react: ">=16"
-  checksum: d15b77255fa399a9c206551fccff942a75095dc42399c4cf47bb238ea9a9c1d60a4da4d5b32245faae4fcd90f31d6ceec109501f992e154237bb6b9075434a3f
+  checksum: 1bafa64f65dc8b6cc82355af5b0fd012245d90577f16386629c0e51fb96ebccd6d1b010a27862866a29604c6fadf096070531fd0f79fb99b15e1d3dc5ee22d8e
   languageName: node
   linkType: hard
 
@@ -8533,6 +8533,13 @@ __metadata:
   version: 2.7.1
   resolution: "tsparticles-engine@npm:2.7.1"
   checksum: 0a56d6013367805827fa957fb2c5c1b0533b0def537a47c7fbbb57c45f15307fd3cb289b50218f47d1f2c081fd960a155c6f78d6692ec5d11fde576f782b2d07
+  languageName: node
+  linkType: hard
+
+"tsparticles-engine@npm:^2.8.0":
+  version: 2.8.0
+  resolution: "tsparticles-engine@npm:2.8.0"
+  checksum: 100635a3456b62fc74baea157945d731ba6a02ad0e4e352ebbaf14f2a81d6c553e5807c93611c830676d8a0bd1c5e9a16039fbb1139d1e0a9611db175af50257
   languageName: node
   linkType: hard
 
