@@ -2810,10 +2810,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/jest", [\
-        ["npm:29.2.5", {\
-          "packageLocation": "./.yarn/cache/@types-jest-npm-29.2.5-d5d1737a1f-d668470f00.zip/node_modules/@types/jest/",\
+        ["npm:29.2.6", {\
+          "packageLocation": "./.yarn/cache/@types-jest-npm-29.2.6-6feedd29f5-90190ac830.zip/node_modules/@types/jest/",\
           "packageDependencies": [\
-            ["@types/jest", "npm:29.2.5"],\
+            ["@types/jest", "npm:29.2.6"],\
             ["expect", "npm:29.3.1"],\
             ["pretty-format", "npm:29.3.1"]\
           ],\
@@ -8949,7 +8949,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@simplewebauthn/server", "npm:7.0.0"],\
             ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.15"],\
-            ["@types/jest", "npm:29.2.5"],\
+            ["@types/jest", "npm:29.2.6"],\
             ["@types/node", "npm:18.11.18"],\
             ["@types/selenium-webdriver", "npm:4.1.10"],\
             ["@types/supertest", "npm:2.0.12"],\
@@ -10446,7 +10446,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel-jest", null],\
             ["@types/babel__core", null],\
             ["@types/esbuild", null],\
-            ["@types/jest", "npm:29.2.5"],\
+            ["@types/jest", "npm:29.2.6"],\
             ["@types/jest__types", null],\
             ["@types/typescript", null],\
             ["babel-jest", null],\
