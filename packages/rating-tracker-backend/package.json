@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@simplewebauthn/server": "7.0.0",
-    "axios": "1.2.2",
+    "axios": "1.2.3",
     "chalk": "5.2.0",
     "cookie-parser": "1.4.6",
     "cron": "2.2.0",
