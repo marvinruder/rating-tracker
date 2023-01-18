@@ -56,7 +56,7 @@
     "react-router-dom": "6.6.2",
     "react-switch-selector": "2.2.1",
     "react-tsparticles": "2.8.0",
-    "tsparticles": "2.7.1",
+    "tsparticles": "2.8.0",
     "tsparticles-engine": "2.7.1",
     "vite": "4.0.4",
     "vite-plugin-html": "3.2.0",
