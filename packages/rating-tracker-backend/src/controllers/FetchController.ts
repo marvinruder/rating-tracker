@@ -71,17 +71,17 @@ const URL_SUSTAINALYTICS =
   "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings";
 
 class FetchController {
-  async getDriver() {
+  async getDriver(headless?: boolean) {
     const url = process.env.SELENIUM_URL;
+    const options = new Options().addArguments("window-size=1080x3840");
+    headless && options.headless();
 
     return await new Builder()
       .usingServer(url)
       .withCapabilities(
         new Capabilities().setBrowserName("chrome").setPageLoadStrategy("eager")
       )
-      .setChromeOptions(
-        new Options().headless().addArguments("window-size=1080x3840")
-      )
+      .setChromeOptions(options)
       .build()
       .then((driver) => driver)
       .catch((e) => {
@@ -175,7 +175,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver();
+    const driver = await this.getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -739,7 +739,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver();
+    const driver = await this.getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1203,7 +1203,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver();
+    const driver = await this.getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1409,7 +1409,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver();
+    const driver = await this.getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
