@@ -2,7 +2,7 @@ import { Sector, sectorArray } from "./Sector.js";
 
 export const superSectorArray = ["Cyclical", "Defensive", "Sensitive"] as const;
 
-export type SuperSector = typeof superSectorArray[number];
+export type SuperSector = (typeof superSectorArray)[number];
 
 export function isSuperSector(s: string): s is SuperSector {
   return superSectorArray.includes(s as SuperSector);
@@ -14,13 +14,22 @@ export const superSectorName: Record<SuperSector, string> = {
   Sensitive: "Sensitive",
 };
 
+export const superSectorDescription: Record<SuperSector, string> = {
+  Cyclical:
+    "The cyclical Super Sector includes industries significantly affected by economic shifts. When the economy is prosperous, these industries tend to expand, and when the economy is in a downturn they tend to shrink.",
+  Defensive:
+    "The defensive Super Sector includes industries that are relatively immune to economic cycles. These industries provide services that consumers require in both good and bad times, such as healthcare and utilities.",
+  Sensitive:
+    "The sensitive Super Sector includes industries that ebb and flow with the overall economy, but not severely. Sensitive industries fall between defensive and cyclical, as they are not immune to a poor economy, but they also may not be as severely affected as industries in the cyclical Super Sector.",
+};
+
 export const superSectorOfSector: Record<Sector, SuperSector> = {
   BasicMaterials: "Cyclical",
   ConsumerCyclical: "Cyclical",
   FinancialServices: "Cyclical",
   RealEstate: "Cyclical",
   ConsumerDefensive: "Defensive",
-  HealthCare: "Defensive",
+  Healthcare: "Defensive",
   Utilities: "Defensive",
   CommunicationServices: "Sensitive",
   Energy: "Sensitive",

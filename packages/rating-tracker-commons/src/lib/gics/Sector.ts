@@ -6,7 +6,7 @@ export const sectorArray = [
   "FinancialServices",
   "RealEstate",
   "ConsumerDefensive",
-  "HealthCare",
+  "Healthcare",
   "Utilities",
   "CommunicationServices",
   "Energy",
@@ -14,7 +14,7 @@ export const sectorArray = [
   "Technology",
 ] as const;
 
-export type Sector = typeof sectorArray[number];
+export type Sector = (typeof sectorArray)[number];
 
 export function isSector(s: string): s is Sector {
   return sectorArray.includes(s as Sector);
@@ -26,12 +26,36 @@ export const sectorName: Record<Sector, string> = {
   FinancialServices: "Financial Services",
   RealEstate: "Real Estate",
   ConsumerDefensive: "Consumer Defensive",
-  HealthCare: "Health Care",
+  Healthcare: "Healthcare",
   Utilities: "Utilities",
   CommunicationServices: "Communication Services",
   Energy: "Energy",
   Industrials: "Industrials",
   Technology: "Technology",
+};
+
+export const sectorDescription: Record<Sector, string> = {
+  BasicMaterials:
+    "Companies that manufacture chemicals, building materials, and paper products. This sector also includes companies engaged in commodities exploration and processing.",
+  ConsumerCyclical:
+    "This sector includes retail stores, auto and auto-parts manufacturers, restaurants, lodging facilities, specialty retail and travel companies.",
+  FinancialServices:
+    "Companies that provide financial services include banks, savings and loans, asset management companies, credit services, investment brokerage firms, and insurance companies.",
+  RealEstate:
+    "This sector includes companies that develop, acquire, manage, and operate real estate properties.",
+  ConsumerDefensive:
+    "Companies that manufacture food, beverages, household and personal products, packaging, or tobacco. Also includes companies that provide services such as education and training services.",
+  Healthcare:
+    "This sector includes biotechnology, pharmaceuticals, research services, home healthcare, hospitals, long-term-care facilities, and medical equipment and supplies. Also include pharmaceutical retailers and companies which provide health information services.",
+  Utilities: "Electric, gas, and water utilities.",
+  CommunicationServices:
+    "Companies that provide communication services using fixed-line networks or those that provide wireless access and services. Also includes companies that provide advertising & marketing services, entertainment content and services, as well as interactive media and content provider over internet or through software.",
+  Energy:
+    "Companies that produce or refine oil and gas, oilfield-services and equipment companies, and pipeline operators. This sector also includes companies that mine thermal coal and uranium.",
+  Industrials:
+    "Companies that manufacture machinery, hand-held tools, and industrial products. This sector also includes aerospace and defense firms as well as companies engaged in transportation services.",
+  Technology:
+    "Companies engaged in the design, development, and support of computer operating systems and applications. This sector also includes companies that make computer equipment, data storage products, networking products, semiconductors, and components.",
 };
 
 export const sectorOfIndustryGroup: Record<IndustryGroup, Sector> = {
@@ -64,13 +88,13 @@ export const sectorOfIndustryGroup: Record<IndustryGroup, Sector> = {
   Education: "ConsumerDefensive",
   RetailDefensive: "ConsumerDefensive",
   TobaccoProducts: "ConsumerDefensive",
-  Biotechnology: "HealthCare",
-  DrugManufacturers: "HealthCare",
-  HealthcarePlans: "HealthCare",
-  HealthcareProvidersServices: "HealthCare",
-  MedicalDevicesInstruments: "HealthCare",
-  MedicalDiagnosticsResearch: "HealthCare",
-  MedicalDistribution: "HealthCare",
+  Biotechnology: "Healthcare",
+  DrugManufacturers: "Healthcare",
+  HealthcarePlans: "Healthcare",
+  HealthcareProvidersServices: "Healthcare",
+  MedicalDevicesInstruments: "Healthcare",
+  MedicalDiagnosticsResearch: "Healthcare",
+  MedicalDistribution: "Healthcare",
   UtilitiesIndependentPowerProducers: "Utilities",
   UtilitiesRegulated: "Utilities",
   TelecommunicationServices: "CommunicationServices",

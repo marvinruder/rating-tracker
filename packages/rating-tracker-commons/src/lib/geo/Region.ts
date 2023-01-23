@@ -14,7 +14,7 @@ export const regionArray = [
   "AsiaEmerging",
 ] as const;
 
-export type Region = typeof regionArray[number];
+export type Region = (typeof regionArray)[number];
 
 export function isRegion(s: string): s is Region {
   return regionArray.includes(s as Region);

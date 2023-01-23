@@ -30,14 +30,17 @@ import StyleBox from "../StyleBox";
 import {
   countryNameWithFlag,
   groupOfIndustry,
+  industryDescription,
   industryGroupName,
   industryName,
   regionName,
   regionOfCountry,
+  sectorDescription,
   sectorName,
   sectorOfIndustryGroup,
   Stock,
   StockListColumn,
+  superSectorDescription,
   superSectorName,
   superSectorOfSector,
 } from "rating-tracker-commons";
@@ -210,10 +213,23 @@ const StockRow = (props: StockRowProps) => {
           )}
           <Box width={6} />
           <Typography variant="body1" fontWeight="bold" width={105} noWrap>
-            {props.stock.industry &&
-              sectorName[
-                sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
-              ]}
+            <Tooltip
+              title={
+                props.stock.industry &&
+                sectorDescription[
+                  sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
+                ]
+              }
+              arrow
+              disableInteractive
+            >
+              <Box display="inline-block">
+                {props.stock.industry &&
+                  sectorName[
+                    sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
+                  ]}
+              </Box>
+            </Tooltip>
           </Typography>
         </Box>
         <Box
@@ -231,12 +247,29 @@ const StockRow = (props: StockRowProps) => {
           )}
           <Box width={6} />
           <Typography variant="body2" color="text.secondary" width={105} noWrap>
-            {props.stock.industry &&
-              superSectorName[
-                superSectorOfSector[
-                  sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
+            <Tooltip
+              title={
+                props.stock.industry &&
+                superSectorDescription[
+                  superSectorOfSector[
+                    sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
+                  ]
                 ]
-              ]}
+              }
+              arrow
+              disableInteractive
+            >
+              <Box display="inline-block">
+                {props.stock.industry &&
+                  superSectorName[
+                    superSectorOfSector[
+                      sectorOfIndustryGroup[
+                        groupOfIndustry[props.stock.industry]
+                      ]
+                    ]
+                  ]}
+              </Box>
+            </Tooltip>
           </Typography>
         </Box>
       </TableCell>
@@ -252,7 +285,17 @@ const StockRow = (props: StockRowProps) => {
           width={150}
           noWrap
         >
-          {props.stock.industry && industryName[props.stock.industry]}
+          <Tooltip
+            title={
+              props.stock.industry && industryDescription[props.stock.industry]
+            }
+            arrow
+            disableInteractive
+          >
+            <Box display="inline-block">
+              {props.stock.industry && industryName[props.stock.industry]}
+            </Box>
+          </Tooltip>
         </Typography>
         <Typography variant="body2" color="text.secondary" width={150} noWrap>
           {props.stock.industry &&
