@@ -1016,7 +1016,7 @@ class FetchController {
         );
         continue;
       }
-      if (successfulCount > 50) {
+      if (successfulCount >= 50) {
         logger.info(
           PREFIX_CHROME +
             chalk.greenBright(

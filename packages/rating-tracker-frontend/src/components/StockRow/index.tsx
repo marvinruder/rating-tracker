@@ -29,15 +29,19 @@ import StarRating from "../StarRating";
 import StyleBox from "../StyleBox";
 import {
   countryNameWithFlag,
+  currencyName,
   groupOfIndustry,
+  industryDescription,
   industryGroupName,
   industryName,
   regionName,
   regionOfCountry,
+  sectorDescription,
   sectorName,
   sectorOfIndustryGroup,
   Stock,
   StockListColumn,
+  superSectorDescription,
   superSectorName,
   superSectorOfSector,
 } from "rating-tracker-commons";
@@ -195,49 +199,68 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Sector"),
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <Box display="flex" alignItems="center" width={132}>
           {props.stock.industry && (
             <SectorIcon
               industry={props.stock.industry}
               length={1.75 * (theme.typography.body1.fontSize as number)}
-              type={"Sector"}
+              type="Sector"
             />
           )}
           <Box width={6} />
-          <Typography variant="body1" fontWeight="bold" width={105} noWrap>
-            {props.stock.industry &&
-              sectorName[
+          <Tooltip
+            title={
+              props.stock.industry &&
+              sectorDescription[
                 sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
-              ]}
-          </Typography>
+              ]
+            }
+            arrow
+            placement="left"
+          >
+            <Typography variant="body1" fontWeight="bold" maxWidth={105} noWrap>
+              {props.stock.industry &&
+                sectorName[
+                  sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
+                ]}
+            </Typography>
+          </Tooltip>
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <Box display="flex" alignItems="center" width={132}>
           {props.stock.industry && (
             <SectorIcon
               industry={props.stock.industry}
               length={1.75 * (theme.typography.body2.fontSize as number)}
-              type={"SuperSector"}
+              type="SuperSector"
             />
           )}
           <Box width={6} />
-          <Typography variant="body2" color="text.secondary" width={105} noWrap>
-            {props.stock.industry &&
-              superSectorName[
+          <Tooltip
+            title={
+              props.stock.industry &&
+              superSectorDescription[
                 superSectorOfSector[
                   sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
                 ]
-              ]}
-          </Typography>
+              ]
+            }
+            arrow
+            placement="left"
+          >
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              maxWidth={105}
+              noWrap
+            >
+              {props.stock.industry &&
+                superSectorName[
+                  superSectorOfSector[
+                    sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
+                  ]
+                ]}
+            </Typography>
+          </Tooltip>
         </Box>
       </TableCell>
       <TableCell
@@ -245,15 +268,26 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Industry"),
         }}
       >
-        <Typography
-          variant="body1"
-          fontWeight="bold"
-          color="text.primary"
-          width={150}
-          noWrap
-        >
-          {props.stock.industry && industryName[props.stock.industry]}
-        </Typography>
+        <Box width={150}>
+          <Tooltip
+            title={
+              props.stock.industry && industryDescription[props.stock.industry]
+            }
+            arrow
+            placement="right"
+          >
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              color="text.primary"
+              maxWidth={150}
+              width="max-content"
+              noWrap
+            >
+              {props.stock.industry && industryName[props.stock.industry]}
+            </Typography>
+          </Tooltip>
+        </Box>
         <Typography variant="body2" color="text.secondary" width={150} noWrap>
           {props.stock.industry &&
             industryGroupName[groupOfIndustry[props.stock.industry]]}
@@ -326,7 +360,14 @@ const StockRow = (props: StockRowProps) => {
             width={90}
             noWrap
           >
-            <Box sx={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
+            <Tooltip
+              title={props.stock.currency && currencyName[props.stock.currency]}
+              arrow
+            >
+              <Box sx={{ float: "left" }} display="inline-block">
+                {props.stock.currency ?? ""}
+              </Box>
+            </Tooltip>
             <Box sx={{ float: "right" }}>
               {props.stock.morningstarFairValue?.toFixed(2) ?? "–"}
             </Box>
@@ -415,7 +456,14 @@ const StockRow = (props: StockRowProps) => {
             width={90}
             noWrap
           >
-            <Box style={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
+            <Tooltip
+              title={props.stock.currency && currencyName[props.stock.currency]}
+              arrow
+            >
+              <Box sx={{ float: "left" }} display="inline-block">
+                {props.stock.currency ?? ""}
+              </Box>
+            </Tooltip>
             <Box style={{ float: "right" }}>
               {props.stock.analystTargetPrice?.toFixed(2) ?? "–"}
             </Box>
@@ -652,7 +700,14 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         <Typography variant="body1" color="text.primary" width={75} noWrap>
-          <Box sx={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
+          <Tooltip
+            title={props.stock.currency && currencyName[props.stock.currency]}
+            arrow
+          >
+            <Box sx={{ float: "left" }} display="inline-block">
+              {props.stock.currency ?? ""}
+            </Box>
+          </Tooltip>
           <Box sx={{ float: "right" }}>
             {props.stock.marketCap !== undefined
               ? formatMarketCap(props.stock)

@@ -21,4 +21,4 @@ export const stockListColumnArray = [
   "Market Capitalization",
 ] as const;
 
-export type StockListColumn = typeof stockListColumnArray[number];
+export type StockListColumn = (typeof stockListColumnArray)[number];

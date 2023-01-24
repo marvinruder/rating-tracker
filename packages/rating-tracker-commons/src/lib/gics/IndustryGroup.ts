@@ -58,7 +58,7 @@ export const industryGroupArray = [
   "Semiconductors",
 ] as const;
 
-export type IndustryGroup = typeof industryGroupArray[number];
+export type IndustryGroup = (typeof industryGroupArray)[number];
 
 export function isIndustryGroup(s: string): s is IndustryGroup {
   return industryGroupArray.includes(s as IndustryGroup);

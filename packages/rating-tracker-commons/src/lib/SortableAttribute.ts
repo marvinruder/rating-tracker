@@ -20,7 +20,7 @@ export const sortableAttributeArray = [
   "totalScore",
 ] as const;
 
-export type SortableAttribute = typeof sortableAttributeArray[number];
+export type SortableAttribute = (typeof sortableAttributeArray)[number];
 
 export function isSortableAttribute(s: string): s is SortableAttribute {
   return sortableAttributeArray.includes(s as SortableAttribute);

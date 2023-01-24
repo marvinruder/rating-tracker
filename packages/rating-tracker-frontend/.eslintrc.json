@@ -26,5 +26,6 @@
     "react/react-in-jsx-scope": 0,
     "max-len": 0,
     "require-jsdoc": 0
-  }
+  },
+  "exclude": ["vite.config.ts"]
 }

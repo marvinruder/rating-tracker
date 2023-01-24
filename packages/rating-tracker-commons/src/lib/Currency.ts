@@ -182,7 +182,7 @@ export const currencyArray = [
   "ZWL",
 ] as const;
 
-export type Currency = typeof currencyArray[number];
+export type Currency = (typeof currencyArray)[number];
 
 export function isCurrency(s: string): s is Currency {
   return currencyArray.includes(s as Currency);

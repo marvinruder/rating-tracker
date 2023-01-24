@@ -249,7 +249,7 @@ export const countryArray = [
   "ZW",
 ] as const;
 
-export type Country = typeof countryArray[number];
+export type Country = (typeof countryArray)[number];
 
 export function isCountry(s: string): s is Country {
   return countryArray.includes(s as Country);
