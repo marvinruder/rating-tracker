@@ -3051,10 +3051,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/validator", [\
-        ["npm:13.7.10", {\
-          "packageLocation": "./.yarn/cache/@types-validator-npm-13.7.10-80d6b32ae6-7b142c0801.zip/node_modules/@types/validator/",\
+        ["npm:13.7.11", {\
+          "packageLocation": "./.yarn/cache/@types-validator-npm-13.7.11-ec16f185a3-fbf981a798.zip/node_modules/@types/validator/",\
           "packageDependencies": [\
-            ["@types/validator", "npm:13.7.10"]\
+            ["@types/validator", "npm:13.7.11"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8974,7 +8974,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:18.11.18"],\
             ["@types/selenium-webdriver", "npm:4.1.10"],\
             ["@types/supertest", "npm:2.0.12"],\
-            ["@types/validator", "npm:13.7.10"],\
+            ["@types/validator", "npm:13.7.11"],\
             ["@typescript-eslint/eslint-plugin", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:5.49.0"],\
             ["@typescript-eslint/parser", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:5.49.0"],\
             ["axios", "npm:1.2.3"],\
