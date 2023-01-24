@@ -198,7 +198,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                     title={
                       <>
                         <Typography variant="body1" paddingBottom={1}>
-                          The Size of the company based on its market
+                          The Size of a company based on its market
                           capitalization and geographic area.
                         </Typography>
                         <Typography variant="body2">
@@ -225,10 +225,11 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                     title={
                       <Typography variant="body1">
                         The Style category based on the value and growth
-                        characteristics of the company.
+                        characteristics of a company.
                       </Typography>
                     }
                     arrow
+                    placement="bottom"
                   >
                     <Box display="inline-block">Style</Box>
                   </Tooltip>
@@ -493,8 +494,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                       <>
                         <Typography variant="body1" paddingBottom={1}>
                           The average analyst target price is the average of the
-                          estimated price targets of analysts who cover the
-                          stock.
+                          estimated price targets of analysts who cover a stock.
                         </Typography>
                         <Typography variant="body2">
                           The percentage difference between the stock’s current
@@ -636,6 +636,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                       </>
                     }
                     arrow
+                    placement="bottom"
                   >
                     <Box display="inline-block">Emissions</Box>
                   </Tooltip>

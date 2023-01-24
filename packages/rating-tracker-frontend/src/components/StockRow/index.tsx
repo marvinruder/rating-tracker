@@ -215,7 +215,7 @@ const StockRow = (props: StockRowProps) => {
               ]
             }
             arrow
-            disableInteractive
+            placement="left"
           >
             <Typography variant="body1" fontWeight="bold" maxWidth={105} noWrap>
               {props.stock.industry &&
@@ -244,7 +244,7 @@ const StockRow = (props: StockRowProps) => {
               ]
             }
             arrow
-            disableInteractive
+            placement="left"
           >
             <Typography
               variant="body2"
@@ -273,7 +273,7 @@ const StockRow = (props: StockRowProps) => {
               props.stock.industry && industryDescription[props.stock.industry]
             }
             arrow
-            disableInteractive
+            placement="right"
           >
             <Typography
               variant="body1"
