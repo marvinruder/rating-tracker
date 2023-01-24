@@ -198,79 +198,68 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Sector"),
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <Box display="flex" alignItems="center" width={132}>
           {props.stock.industry && (
             <SectorIcon
               industry={props.stock.industry}
               length={1.75 * (theme.typography.body1.fontSize as number)}
-              type={"Sector"}
+              type="Sector"
             />
           )}
           <Box width={6} />
-          <Typography variant="body1" fontWeight="bold" width={105} noWrap>
-            <Tooltip
-              title={
-                props.stock.industry &&
-                sectorDescription[
+          <Tooltip
+            title={
+              props.stock.industry &&
+              sectorDescription[
+                sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
+              ]
+            }
+            arrow
+            disableInteractive
+          >
+            <Typography variant="body1" fontWeight="bold" maxWidth={105} noWrap>
+              {props.stock.industry &&
+                sectorName[
                   sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
-                ]
-              }
-              arrow
-              disableInteractive
-            >
-              <Box display="inline-block">
-                {props.stock.industry &&
-                  sectorName[
-                    sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
-                  ]}
-              </Box>
-            </Tooltip>
-          </Typography>
+                ]}
+            </Typography>
+          </Tooltip>
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <Box display="flex" alignItems="center" width={132}>
           {props.stock.industry && (
             <SectorIcon
               industry={props.stock.industry}
               length={1.75 * (theme.typography.body2.fontSize as number)}
-              type={"SuperSector"}
+              type="SuperSector"
             />
           )}
           <Box width={6} />
-          <Typography variant="body2" color="text.secondary" width={105} noWrap>
-            <Tooltip
-              title={
-                props.stock.industry &&
-                superSectorDescription[
+          <Tooltip
+            title={
+              props.stock.industry &&
+              superSectorDescription[
+                superSectorOfSector[
+                  sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
+                ]
+              ]
+            }
+            arrow
+            disableInteractive
+          >
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              maxWidth={105}
+              noWrap
+            >
+              {props.stock.industry &&
+                superSectorName[
                   superSectorOfSector[
                     sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
                   ]
-                ]
-              }
-              arrow
-              disableInteractive
-            >
-              <Box display="inline-block">
-                {props.stock.industry &&
-                  superSectorName[
-                    superSectorOfSector[
-                      sectorOfIndustryGroup[
-                        groupOfIndustry[props.stock.industry]
-                      ]
-                    ]
-                  ]}
-              </Box>
-            </Tooltip>
-          </Typography>
+                ]}
+            </Typography>
+          </Tooltip>
         </Box>
       </TableCell>
       <TableCell
@@ -278,13 +267,7 @@ const StockRow = (props: StockRowProps) => {
           display: displayColumn("Industry"),
         }}
       >
-        <Typography
-          variant="body1"
-          fontWeight="bold"
-          color="text.primary"
-          width={150}
-          noWrap
-        >
+        <Box width={150}>
           <Tooltip
             title={
               props.stock.industry && industryDescription[props.stock.industry]
@@ -292,11 +275,18 @@ const StockRow = (props: StockRowProps) => {
             arrow
             disableInteractive
           >
-            <Box display="inline-block">
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              color="text.primary"
+              maxWidth={150}
+              width="max-content"
+              noWrap
+            >
               {props.stock.industry && industryName[props.stock.industry]}
-            </Box>
+            </Typography>
           </Tooltip>
-        </Typography>
+        </Box>
         <Typography variant="body2" color="text.secondary" width={150} noWrap>
           {props.stock.industry &&
             industryGroupName[groupOfIndustry[props.stock.industry]]}
