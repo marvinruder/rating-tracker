@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import {
   countryNameWithFlag,
+  currencyName,
   groupOfIndustry,
   industryDescription,
   industryGroupName,
@@ -409,7 +410,16 @@ const StockDetails = (props: StockDetailsProps) => {
             <Typography variant="body1" sx={{ textAlign: "right" }}>
               {props.stock ? (
                 <>
-                  {props.stock.currency ?? ""}{" "}
+                  <Tooltip
+                    title={
+                      props.stock.currency && currencyName[props.stock.currency]
+                    }
+                    arrow
+                  >
+                    <Box display="inline-block">
+                      {props.stock.currency ?? ""}
+                    </Box>
+                  </Tooltip>{" "}
                   {props.stock.marketCap !== undefined
                     ? formatMarketCap(props.stock)
                     : "–"}
@@ -715,7 +725,17 @@ const StockDetails = (props: StockDetailsProps) => {
               <Typography variant="body1" sx={{ textAlign: "right" }}>
                 {props.stock ? (
                   <>
-                    {props.stock?.currency ?? ""}{" "}
+                    <Tooltip
+                      title={
+                        props.stock.currency &&
+                        currencyName[props.stock.currency]
+                      }
+                      arrow
+                    >
+                      <Box display="inline-block">
+                        {props.stock.currency ?? ""}
+                      </Box>
+                    </Tooltip>{" "}
                     {props.stock?.morningstarFairValue?.toFixed(2) ?? "–"}
                   </>
                 ) : (
@@ -869,7 +889,17 @@ const StockDetails = (props: StockDetailsProps) => {
               >
                 {props.stock ? (
                   <>
-                    {props.stock?.currency ?? ""}{" "}
+                    <Tooltip
+                      title={
+                        props.stock.currency &&
+                        currencyName[props.stock.currency]
+                      }
+                      arrow
+                    >
+                      <Box display="inline-block">
+                        {props.stock.currency ?? ""}
+                      </Box>
+                    </Tooltip>{" "}
                     {props.stock?.analystTargetPrice?.toFixed(2) ?? "–"}
                   </>
                 ) : (

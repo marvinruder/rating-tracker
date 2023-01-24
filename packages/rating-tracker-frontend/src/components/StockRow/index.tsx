@@ -29,6 +29,7 @@ import StarRating from "../StarRating";
 import StyleBox from "../StyleBox";
 import {
   countryNameWithFlag,
+  currencyName,
   groupOfIndustry,
   industryDescription,
   industryGroupName,
@@ -359,7 +360,14 @@ const StockRow = (props: StockRowProps) => {
             width={90}
             noWrap
           >
-            <Box sx={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
+            <Tooltip
+              title={props.stock.currency && currencyName[props.stock.currency]}
+              arrow
+            >
+              <Box sx={{ float: "left" }} display="inline-block">
+                {props.stock.currency ?? ""}
+              </Box>
+            </Tooltip>
             <Box sx={{ float: "right" }}>
               {props.stock.morningstarFairValue?.toFixed(2) ?? "–"}
             </Box>
@@ -448,7 +456,14 @@ const StockRow = (props: StockRowProps) => {
             width={90}
             noWrap
           >
-            <Box style={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
+            <Tooltip
+              title={props.stock.currency && currencyName[props.stock.currency]}
+              arrow
+            >
+              <Box sx={{ float: "left" }} display="inline-block">
+                {props.stock.currency ?? ""}
+              </Box>
+            </Tooltip>
             <Box style={{ float: "right" }}>
               {props.stock.analystTargetPrice?.toFixed(2) ?? "–"}
             </Box>
@@ -685,7 +700,14 @@ const StockRow = (props: StockRowProps) => {
         }}
       >
         <Typography variant="body1" color="text.primary" width={75} noWrap>
-          <Box sx={{ float: "left" }}>{props.stock.currency ?? ""}</Box>
+          <Tooltip
+            title={props.stock.currency && currencyName[props.stock.currency]}
+            arrow
+          >
+            <Box sx={{ float: "left" }} display="inline-block">
+              {props.stock.currency ?? ""}
+            </Box>
+          </Tooltip>
           <Box sx={{ float: "right" }}>
             {props.stock.marketCap !== undefined
               ? formatMarketCap(props.stock)
