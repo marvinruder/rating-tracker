@@ -1,4 +1,4 @@
-FROM node:19.4.0-alpine as yarn
+FROM node:19.5.0-alpine as yarn
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
