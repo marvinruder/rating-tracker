@@ -1,10 +1,18 @@
-/* istanbul ignore file */
 import { SessionEntity, sessionSchema } from "../../../../models/session.js";
 
+/**
+ * The time in seconds after which a session should expire.
+ */
 export const sessionTTLInSeconds = 1800;
 
+/**
+ * A mock repository for testing purposes.
+ */
 let sessionRepository: Map<string, SessionEntity>;
 
+/**
+ * Initializes the mock repository with one exemplary session.
+ */
 export const initSessionRepository = () => {
   sessionRepository = new Map<string, SessionEntity>();
   sessionRepository.set(
@@ -14,20 +22,44 @@ export const initSessionRepository = () => {
     })
   );
 };
+
+/**
+ * Fetch a session from the mock repository.
+ *
+ * @param {string} id The ID of the session to fetch.
+ * @return {SessionEntity} The session entity.
+ */
 export const fetch = (id: string) => {
   return sessionRepository.get(id);
 };
 
+/**
+ * Sets the expiration time of a session to the configured TTL.
+ *
+ * @return {void}
+ */
 // TODO implement when tested
 export const refresh = () => {
   return;
 };
 
+/**
+ * Save a session to the mock repository.
+ *
+ * @param {SessionEntity} sessionEntity The session entity to save.
+ * @return {string} The ID of the saved session.
+ */
 export const save = (sessionEntity: SessionEntity) => {
   sessionRepository.set(sessionEntity.entityId, sessionEntity);
   return sessionEntity.entityId;
 };
 
+/**
+ * Delete a session from the mock repository.
+ *
+ * @param {string} id The ID of the session to delete.
+ * @return {void}
+ */
 export const remove = (id: string) => {
   return sessionRepository.delete(id);
 };

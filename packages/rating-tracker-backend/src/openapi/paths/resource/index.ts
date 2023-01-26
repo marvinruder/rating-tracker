@@ -3,6 +3,9 @@ import { notFound, unauthorized } from "../../responses/clientError.js";
 import { notImplemented } from "../../responses/serverError.js";
 import { ok } from "../../responses/success.js";
 
+/**
+ * Get the specified resource
+ */
 const get: OpenAPIV3.OperationObject = {
   tags: ["Resource API"],
   operationId: "getResource",

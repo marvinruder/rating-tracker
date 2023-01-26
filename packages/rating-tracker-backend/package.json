@@ -8,9 +8,6 @@
   },
   "license": "MIT",
   "type": "module",
-  "engines": {
-    "node": "19.3.0"
-  },
   "scripts": {
     "dev:tsc": "tsc -w --preserveWatchOutput",
     "dev:nginx": "docker compose -f local-dev/docker-compose.yml up nginx",

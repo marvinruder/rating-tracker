@@ -7,6 +7,9 @@ import {
 import { created, noContent, okStock } from "../../responses/success.js";
 import * as stock from "../../parameters/stock.js";
 
+/**
+ * Get the specified stock
+ */
 const get: OpenAPIV3.OperationObject = {
   tags: ["Stock API"],
   operationId: "getStock",
@@ -26,6 +29,9 @@ const get: OpenAPIV3.OperationObject = {
   },
 };
 
+/**
+ * Delete the specified stock
+ */
 const deleteRequest: OpenAPIV3.OperationObject = {
   tags: ["Stock API"],
   operationId: "deleteStock",
@@ -45,6 +51,9 @@ const deleteRequest: OpenAPIV3.OperationObject = {
   },
 };
 
+/**
+ * Create the stock using the information provided.
+ */
 const put: OpenAPIV3.OperationObject = {
   tags: ["Stock API"],
   operationId: "createStock",
@@ -79,11 +88,14 @@ const put: OpenAPIV3.OperationObject = {
   },
 };
 
+/**
+ * Update the stock using the information provided.
+ */
 const patch: OpenAPIV3.OperationObject = {
   tags: ["Stock API"],
   operationId: "updateStock",
   summary: "Update Stock API",
-  description: "Upd atethe stock using the information provided.",
+  description: "Update the stock using the information provided.",
   parameters: [
     {
       ...stock.ticker,

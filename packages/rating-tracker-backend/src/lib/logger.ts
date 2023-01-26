@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* istanbul ignore file */ // We do not need to test the logger itself
 import pino from "pino";
 import pretty from "pino-pretty";
 import fs from "node:fs";
@@ -28,6 +28,9 @@ const levelIcons = {
   60: "\x07" + chalk.magentaBright(" \uf0e7 "),
 };
 
+/**
+ * The stream used to log messages to the standard output.
+ */
 const prettyStream = pretty({
   include: "level",
   customPrettifiers: {
@@ -35,19 +38,33 @@ const prettyStream = pretty({
   },
 });
 
-const getLogFileName = () => {
+/**
+ * Provides the path of the log file for the current day.
+ *
+ * @return {string} The path of the log file.
+ */
+const getLogFilePath = () => {
   return (
     process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).log"
   ).replaceAll("(DATE)", new Date().toISOString().split("T")[0]);
 };
 
+/**
+ * Creates a new stream to write to the log file.
+ *
+ * @return {fs.WriteStream} The stream to write to the log file.
+ */
 const getNewFileStream = () => {
-  return fs.createWriteStream(getLogFileName(), {
+  return fs.createWriteStream(getLogFilePath(), {
     flags: "a",
   });
 };
 
 let fileStream = getNewFileStream();
+
+/**
+ * A multistream which writes to both the standard output and the log file.
+ */
 const multistream = pino.multistream([
   {
     level: (process.env.LOG_LEVEL as pino.Level) ?? "info",
@@ -58,6 +75,10 @@ const multistream = pino.multistream([
     stream: fileStream,
   },
 ]);
+
+/**
+ * The logger used to log messages to both the standard output and the log file.
+ */
 const logger = pino(
   {
     level: process.env.LOG_LEVEL ?? "info",
@@ -65,6 +86,7 @@ const logger = pino(
   multistream
 );
 
+// Rotate the log file every day
 new cron.CronJob(
   "0 0 0 * * *",
   () => {

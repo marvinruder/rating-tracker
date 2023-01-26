@@ -2,6 +2,9 @@ import { Request, Response, Router } from "express";
 import ResourceController from "../../controllers/ResourceController.js";
 import "express-async-errors";
 
+/**
+ * Router for resource routes.
+ */
 class ResourceRouter {
   private _router = Router();
   private _controller = ResourceController;

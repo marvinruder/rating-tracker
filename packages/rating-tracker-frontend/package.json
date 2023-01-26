@@ -7,9 +7,6 @@
     "url": "https://mruder.dev"
   },
   "license": "MIT",
-  "engines": {
-    "node": "19.3.0"
-  },
   "scripts": {
     "dev:vite": "vite --host",
     "build": "vite build",

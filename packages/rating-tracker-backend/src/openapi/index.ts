@@ -16,6 +16,9 @@ import * as signInEndpoint from "./paths/auth/signInEndpoint.js";
 import * as resourceEndpoint from "./paths/resource/index.js";
 import { servers } from "./servers.js";
 
+/**
+ * The OpenAPI document describing all API endpoints.
+ */
 export const openapiDocument: OpenAPIV3.Document = {
   openapi: "3.0.0",
   info: {

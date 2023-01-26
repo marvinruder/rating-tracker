@@ -5,6 +5,11 @@ import { MSCIESGRating } from "../ratings/MSCI.js";
 import { Size } from "../stylebox/Size.js";
 import { Style } from "../stylebox/Style.js";
 
+/**
+ * A stock, with core information like its ticker, name, ISIN, country, industry, etc., financial information like its
+ * dividend yield, P/E ratio, market cap, etc., identifiers for external data providers, as well as financial and ESG
+ * ratings.
+ */
 export class Stock {
   ticker: string;
   name: string;

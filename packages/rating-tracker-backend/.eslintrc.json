@@ -19,8 +19,14 @@
     "require-await": ["error"],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error"],
-    "max-len": 0,
+    "max-len": [
+      "warn",
+      {
+        "code": 120
+      }
+    ],
     "new-cap": 0,
     "require-jsdoc": 0
-  }
+  },
+  "exclude": ["jest.config.ts"]
 }

@@ -55,6 +55,7 @@ const conflict: OpenAPIV3.ResponseObject = {
   },
 };
 
+// Used by Express.js rate limiting middleware
 const tooManyRequestsHTML: OpenAPIV3.ResponseObject = {
   description: "Too Many Requests",
   content: {
@@ -62,6 +63,7 @@ const tooManyRequestsHTML: OpenAPIV3.ResponseObject = {
   },
 };
 
+// Used to forward rate limiting errors from APIs such as Refinitiv
 const tooManyRequestsJSONError: OpenAPIV3.ResponseObject = {
   description: "Too Many Requests",
   content: {

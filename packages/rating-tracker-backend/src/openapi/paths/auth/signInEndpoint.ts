@@ -8,23 +8,29 @@ import {
 import { internalServerError } from "../../responses/serverError.js";
 import { noContent, okObject } from "../../responses/success.js";
 
+/**
+ * Get a challenge for authenticating as a registered user via WebAuthn standard
+ */
 const get: OpenAPIV3.OperationObject = {
   tags: ["Authentication API"],
   operationId: "getAuthenticationOptions",
   summary: "Get Authentication Options API",
   description:
-    "Get information required for authenticating as a registered user via WebAuthn standard",
+    "Get a challenge for authenticating as a registered user via WebAuthn standard",
   responses: {
     "200": okObject,
     "429": tooManyRequestsHTML,
   },
 };
 
+/**
+ * Post the response for a WebAuthn authentication challenge
+ */
 const post: OpenAPIV3.OperationObject = {
   tags: ["Authentication API"],
   operationId: "postAuthenticationResponse",
   summary: "Post Authentication Response API",
-  description: "Post the response for the WebAuthn authentication challenge",
+  description: "Post the response for a WebAuthn authentication challenge",
   responses: {
     "204": noContent,
     "400": badRequest,

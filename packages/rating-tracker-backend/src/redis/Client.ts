@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* istanbul ignore file */ // This file is mocked since tests must not depend on a running Redis instance
 import chalk from "chalk";
 import dotenv from "dotenv";
 import { createClient } from "redis";
@@ -9,8 +9,12 @@ dotenv.config({
   path: ".env.local",
 });
 
+// The URL of the Redis instance
 const url = process.env.REDIS_URL;
 
+/**
+ * The Redis client.
+ */
 export const redis = createClient({
   url: url,
   username: process.env.REDIS_USER,
@@ -21,6 +25,9 @@ redis.on("error", (err) =>
 );
 await redis.connect();
 
+/**
+ * The Redis OM client used throughout the application.
+ */
 const client = await new Client().use(redis);
 
 export default client;

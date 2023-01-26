@@ -1,5 +1,8 @@
 import { Stock } from "../models/stock.js";
 
+/**
+ * Example stocks for use in tests.
+ */
 const exampleStocks: Stock[] = [
   new Stock({
     ticker: "exampleALV",

@@ -1,5 +1,8 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 
+/**
+ * The email address of a user, used as their ID
+ */
 const email: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "email",
@@ -11,6 +14,9 @@ const email: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The common name of a user
+ */
 const name: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "name",

@@ -24,7 +24,12 @@
     "no-unused-vars": 0,
     "@typescript-eslint/no-unused-vars": ["warn"],
     "react/react-in-jsx-scope": 0,
-    "max-len": 0,
+    "max-len": [
+      "warn",
+      {
+        "code": 120
+      }
+    ],
     "require-jsdoc": 0
   },
   "exclude": ["vite.config.ts"]

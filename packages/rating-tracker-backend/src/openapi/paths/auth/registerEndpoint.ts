@@ -8,12 +8,15 @@ import {
 import { internalServerError } from "../../responses/serverError.js";
 import { created, okObject } from "../../responses/success.js";
 
+/**
+ * Get a challenge for registering a new user via WebAuthn standard
+ */
 const get: OpenAPIV3.OperationObject = {
   tags: ["Authentication API"],
   operationId: "getRegistrationOptions",
   summary: "Get Registration Options API",
   description:
-    "Get information required for registering a new user via WebAuthn standard",
+    "Get a challenge for registering a new user via WebAuthn standard",
   parameters: [
     { ...user.email, required: true },
     { ...user.name, required: true },
@@ -25,11 +28,14 @@ const get: OpenAPIV3.OperationObject = {
   },
 };
 
+/**
+ * Post the response for a WebAuthn registration challenge
+ */
 const post: OpenAPIV3.OperationObject = {
   tags: ["Authentication API"],
   operationId: "postRegistrationResponse",
   summary: "Post Registration Response API",
-  description: "Post the response for the WebAuthn registration challenge",
+  description: "Post the response for a WebAuthn registration challenge",
   parameters: [
     { ...user.email, required: true },
     { ...user.name, required: true },

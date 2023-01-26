@@ -5,10 +5,17 @@ import chalk from "chalk";
 import * as signal from "../../../signal/signal.js";
 import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
 
-/* istanbul ignore next */
+/**
+ * Create a user.
+ *
+ * @param {User} user The user to create.
+ * @return {boolean} Whether the user was created.
+ */
+/* istanbul ignore next */ // Since we cannot yet test the authentication process, we cannot create a valid User
 export const createUser = async (user: User): Promise<boolean> => {
-  const existingUser = await fetch(user.email);
+  const existingUser = await fetch(user.email); // Attempt to fetch an existing user with the same email address
   if (existingUser && existingUser.name) {
+    // If that worked, a user with the same email address already exists
     logger.warn(
       PREFIX_REDIS +
         chalk.yellowBright(
@@ -24,12 +31,20 @@ export const createUser = async (user: User): Promise<boolean> => {
     PREFIX_REDIS +
       `Created user “${user.name}” with entity ID ${await save(userEntity)}.`
   );
+  // Inform the admin of the new user via Signal messenger
   signal.sendMessage(
     `🆕👤 New user “${user.name}” (email ${user.email}) registered.`
   );
   return true;
 };
 
+/**
+ * Read a user.
+ *
+ * @param {string} email The email address of the user.
+ * @return {User} The user.
+ * @throws an {@link APIError} if the user does not exist.
+ */
 export const readUser = async (email: string) => {
   const userEntity = await fetch(email);
   if (userEntity && userEntity.name) {
@@ -39,6 +54,12 @@ export const readUser = async (email: string) => {
   throw new APIError(404, `User ${email} not found.`);
 };
 
+/**
+ * Check whether a user exists.
+ *
+ * @param {string} email The email address of the user.
+ * @return {boolean} Whether the user exists.
+ */
 export const userExists = async (email: string): Promise<boolean> => {
   const userEntity = await fetch(email);
   if (userEntity && userEntity.name) {
@@ -47,13 +68,20 @@ export const userExists = async (email: string): Promise<boolean> => {
   return false;
 };
 
-/* istanbul ignore next */
+/**
+ * Update a user.
+ *
+ * @param {string} email The email address of the user.
+ * @param {Partial<Omit<User, "email">>} newValues The new values for the user.
+ * @throws an {@link APIError} if the user does not exist.
+ */
+/* istanbul ignore next */ // This is only called after an authentication, which we cannot yet test
 export const updateUser = async (
   email: string,
   newValues: Partial<Omit<User, "email">>
 ) => {
-  let k: keyof typeof newValues;
-  const userEntity = await fetch(email);
+  let k: keyof typeof newValues; // all keys of new values
+  const userEntity = await fetch(email); // Fetch the user from Redis
   if (userEntity && userEntity.name) {
     logger.info(PREFIX_REDIS + `Updating user ${email}…`);
     let isNewData = false;
@@ -61,6 +89,7 @@ export const updateUser = async (
     for (k in newValues) {
       if (k in newValues && newValues[k]) {
         if (newValues[k] !== userEntity[k]) {
+          // New data is different from old data
           isNewData = true;
           logger.info(
             PREFIX_REDIS +
@@ -87,6 +116,7 @@ export const updateUser = async (
     if (isNewData) {
       await save(userEntity);
     } else {
+      // No new data was provided
       logger.info(PREFIX_REDIS + `No updates for user ${email}.`);
     }
   } else {

@@ -1,8 +1,14 @@
 import { StockEntity, stockSchema } from "../../../../models/stock.js";
 import exampleStocks from "../../../../lib/exampleStocks.js";
 
+/**
+ * A mock repository for testing purposes.
+ */
 let stockRepository: Map<string, StockEntity>;
 
+/**
+ * Initializes the mock repository with the {@link exampleStocks}.
+ */
 export const initStockRepository = () => {
   stockRepository = new Map<string, StockEntity>(
     exampleStocks.map((stock) => [
@@ -14,23 +20,51 @@ export const initStockRepository = () => {
 
 initStockRepository();
 
+/**
+ * Fetch a stock from the mock repository.
+ *
+ * @param {string} id The ID of the stock to fetch.
+ * @return {StockEntity} The stock entity.
+ */
 export const fetch = (id: string) => {
   return stockRepository.get(id);
 };
 
+/**
+ * Fetch all stocks from the mock repository.
+ *
+ * @return {StockEntity[]} A list of all stock entities.
+ */
 export const fetchAll = () => {
   return [...stockRepository.values()];
 };
 
+/**
+ * Save a stock to the mock repository.
+ *
+ * @param {StockEntity} stockEntity The stock entity to save.
+ * @return {string} The ID of the saved stock.
+ */
 export const save = (stockEntity: StockEntity) => {
   stockRepository.set(stockEntity.entityId, stockEntity);
   return stockEntity.entityId;
 };
 
+/**
+ * Count the number of stocks in the mock repository.
+ *
+ * @return {number} The number of stocks in the mock repository.
+ */
 export const count = () => {
   return stockRepository.size;
 };
 
+/**
+ * Delete a stock from the mock repository.
+ *
+ * @param {string} id The ID of the stock to delete.
+ * @return {void}
+ */
 export const remove = (id: string) => {
-  stockRepository.delete(id);
+  return stockRepository.delete(id);
 };

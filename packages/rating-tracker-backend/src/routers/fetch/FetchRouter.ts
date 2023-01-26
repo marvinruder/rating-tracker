@@ -3,6 +3,9 @@ import { Request, Response, Router } from "express";
 import FetchController from "../../controllers/FetchController.js";
 import "express-async-errors";
 
+/**
+ * Router for fetch routes.
+ */
 class FetchRouter {
   private _router = Router();
   private _controller = FetchController;
