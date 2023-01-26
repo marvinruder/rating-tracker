@@ -23,8 +23,17 @@ export class Resource extends CommonsResource {
  * A Redis entity of a {@link Resource}.
  */
 export interface ResourceEntity {
+  /**
+   * The URL of the resource, used as a unique identifier.
+   */
   url: string;
+  /**
+   * The date and time of the last fetch.
+   */
   fetchDate: Date;
+  /**
+   * The content of the resource.
+   */
   content: string;
 }
 

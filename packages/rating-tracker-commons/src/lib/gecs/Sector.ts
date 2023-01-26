@@ -1,5 +1,9 @@
+/* eslint-disable max-len */
 import { IndustryGroup, industryGroupArray } from "./IndustryGroup.js";
 
+/**
+ * An array of sectors in the Morningstar Global Equity Classification Structure.
+ */
 export const sectorArray = [
   "BasicMaterials",
   "ConsumerCyclical",
@@ -14,12 +18,24 @@ export const sectorArray = [
   "Technology",
 ] as const;
 
+/**
+ * A sector in the Morningstar Global Equity Classification Structure.
+ */
 export type Sector = (typeof sectorArray)[number];
 
+/**
+ * Checks if a string is a valid sector.
+ *
+ * @param {string} s The string to check.
+ * @return {boolean} True if the string is a valid sector.
+ */
 export function isSector(s: string): s is Sector {
   return sectorArray.includes(s as Sector);
 }
 
+/**
+ * A record of sector names for each sector.
+ */
 export const sectorName: Record<Sector, string> = {
   BasicMaterials: "Basic Materials",
   ConsumerCyclical: "Consumer Cyclical",
@@ -34,6 +50,9 @@ export const sectorName: Record<Sector, string> = {
   Technology: "Technology",
 };
 
+/**
+ * A record of descriptions for each sector.
+ */
 export const sectorDescription: Record<Sector, string> = {
   BasicMaterials:
     "Companies that manufacture chemicals, building materials, and paper products. This sector also includes companies engaged in commodities exploration and processing.",
@@ -58,6 +77,9 @@ export const sectorDescription: Record<Sector, string> = {
     "Companies engaged in the design, development, and support of computer operating systems and applications. This sector also includes companies that make computer equipment, data storage products, networking products, semiconductors, and components.",
 };
 
+/**
+ * A record associating each industry group with its sector.
+ */
 export const sectorOfIndustryGroup: Record<IndustryGroup, Sector> = {
   Agriculture: "BasicMaterials",
   BuildingMaterials: "BasicMaterials",
@@ -116,6 +138,12 @@ export const sectorOfIndustryGroup: Record<IndustryGroup, Sector> = {
   Semiconductors: "Technology",
 };
 
+/**
+ * Returns an array of all industry groups in a sector.
+ *
+ * @param {Sector} sector The sector to get industry groups for.
+ * @return {IndustryGroup[]} The array of industry groups in the sector.
+ */
 export const getIndustryGroupsInSector = (sector: Sector): IndustryGroup[] => {
   return industryGroupArray.filter(
     (industryGroup) => sectorOfIndustryGroup[industryGroup] == sector

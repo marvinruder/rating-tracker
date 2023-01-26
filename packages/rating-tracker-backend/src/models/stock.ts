@@ -85,41 +85,153 @@ export class Stock extends CommonsStock {
  * A Redis entity of a {@link Stock}.
  */
 export interface StockEntity {
+  /**
+   * The stock’s ticker symbol.
+   */
+  ticker: string;
+  /**
+   * The stock’s name.
+   */
   name: string;
+  /**
+   * The country of the company’s operational headquarters.
+   */
   country: string;
+  /**
+   * The stock’s International Securities Identification Number.
+   */
   isin: string;
+  /**
+   * The stock’s industry as part of the Morningstar Global Equity Classification Structure.
+   */
   industry: string;
+  /**
+   * The stock’s size as part of the Morningstar Style Box. Based on its market capitalization and geographic area.
+   */
   size: string;
+  /**
+   * The stock’s style as part of the Morningstar Style Box. Based on the value and growth characteristics of a company.
+   */
   style: string;
+  /**
+   * Morningstar’s identifier for the stock.
+   */
   morningstarId: string;
+  /**
+   * The date and time of the last fetch from Morningstar.
+   */
   morningstarLastFetch: Date;
+  /**
+   * Morningstar’s star rating of the stock.
+   */
   starRating: number;
+  /**
+   * The dividend yield of the stock, in percent.
+   */
   dividendYieldPercent: number;
+  /**
+   * The price-to-earnings ratio of the stock.
+   */
   priceEarningRatio: number;
+  /**
+   * The currency the stock is traded in.
+   */
   currency: string;
+  /**
+   * The stock’s price at the end of the previous trading day.
+   */
   lastClose: number;
+  /**
+   * Morningstar’s fair value estimate for the stock.
+   */
   morningstarFairValue: number;
+  /**
+   * The market capitalization of the stock.
+   */
   marketCap: number;
+  /**
+   * The lower bound of the 52-week range of the stock’s price.
+   */
   low52w: number;
+  /**
+   * The upper bound of the 52-week range of the stock’s price.
+   */
   high52w: number;
+  /**
+   * Market Screener’s identifier for the stock.
+   */
   marketScreenerId: string;
+  /**
+   * The date and time of the last fetch from Market Screener.
+   */
   marketScreenerLastFetch: Date;
+  /**
+   * The consensus of analysts’ opinions on the stock.
+   */
   analystConsensus: number;
+  /**
+   * The number of analysts that cover the stock.
+   */
   analystCount: number;
+  /**
+   * The average target price of analysts for the stock.
+   */
   analystTargetPrice: number;
+  /**
+   * MSCI’s identifier for the stock.
+   */
   msciId: string;
+  /**
+   * The date and time of the last fetch from MSCI.
+   */
   msciLastFetch: Date;
+  /**
+   * MSCI’s ESG rating of the stock.
+   */
   msciESGRating: string;
+  /**
+   * MSCI’s Implied Temperature rise of the stock.
+   */
   msciTemperature: number;
+  /**
+   * The Reuters Instrument Code of the stock, used by Refinitiv.
+   */
   ric: string;
+  /**
+   * The date and time of the last fetch from Refinitiv.
+   */
   refinitivLastFetch: Date;
+  /**
+   * Refinitiv’s ESG score of the stock.
+   */
   refinitivESGScore: number;
+  /**
+   * Refinitiv’s Emissions rating of the stock.
+   */
   refinitivEmissions: number;
+  /**
+   * Standard & Poor’s identifier for the stock.
+   */
   spId: number;
+  /**
+   * The date and time of the last fetch from Standard & Poor’s.
+   */
   spLastFetch: Date;
+  /**
+   * Standard & Poor’s ESG score of the stock.
+   */
   spESGScore: number;
+  /**
+   * Morningstar Sustainalytics’ identifier for the stock.
+   */
   sustainalyticsId: string;
+  /**
+   * Sustainalytics’ ESG risk of the stock.
+   */
   sustainalyticsESGRisk: number;
+  /**
+   * A description of the company.
+   */
   description: string;
 }
 

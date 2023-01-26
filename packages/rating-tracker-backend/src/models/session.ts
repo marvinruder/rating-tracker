@@ -22,7 +22,13 @@ export class Session extends CommonsSession {
  * A Redis entity of a {@link Session}.
  */
 export interface SessionEntity {
+  /**
+   * The ID of the session, used as a token in session cookies.
+   */
   sessionID: string;
+  /**
+   * The email address of the user.
+   */
   email: string;
 }
 

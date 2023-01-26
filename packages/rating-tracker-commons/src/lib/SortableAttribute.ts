@@ -1,3 +1,6 @@
+/**
+ * An array of attribute names by which a list of stocks can be sorted.
+ */
 export const sortableAttributeArray = [
   "name",
   "size",
@@ -20,8 +23,17 @@ export const sortableAttributeArray = [
   "totalScore",
 ] as const;
 
+/**
+ * An attribute name by which a list of stocks can be sorted.
+ */
 export type SortableAttribute = (typeof sortableAttributeArray)[number];
 
+/**
+ * Checks if a string is a valid attribute name by which a list of stocks can be sorted.
+ *
+ * @param {string} s The string to check.
+ * @return {boolean} True if the string is a valid attribute name by which a list of stocks can be sorted.
+ */
 export function isSortableAttribute(s: string): s is SortableAttribute {
   return sortableAttributeArray.includes(s as SortableAttribute);
 }

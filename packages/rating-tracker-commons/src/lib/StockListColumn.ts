@@ -1,3 +1,6 @@
+/**
+ * An array of column names in the frontend’s stock list table.
+ */
 export const stockListColumnArray = [
   "Country",
   "Size and Style",
@@ -21,4 +24,7 @@ export const stockListColumnArray = [
   "Market Capitalization",
 ] as const;
 
+/**
+ * A column name in the frontend’s stock list table.
+ */
 export type StockListColumn = (typeof stockListColumnArray)[number];

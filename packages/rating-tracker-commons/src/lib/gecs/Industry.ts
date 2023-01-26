@@ -1,3 +1,7 @@
+/* eslint-disable max-len */
+/**
+ * An array of industries in the Morningstar Global Equity Classification Structure.
+ */
 export const industryArray = [
   "AgriculturalInputs",
   "BuildingMaterials",
@@ -146,12 +150,24 @@ export const industryArray = [
   "Solar",
 ] as const;
 
+/**
+ * An industry in the Morningstar Global Equity Classification Structure.
+ */
 export type Industry = (typeof industryArray)[number];
 
+/**
+ * Checks if a string is a valid industry.
+ *
+ * @param {string} s The string to check.
+ * @return {boolean} True if the string is a valid industry.
+ */
 export function isIndustry(s: string): s is Industry {
   return industryArray.includes(s as Industry);
 }
 
+/**
+ * A record of industry names for each industry.
+ */
 export const industryName: Record<Industry, string> = {
   AgriculturalInputs: "Agricultural Inputs",
   BuildingMaterials: "Building Materials",
@@ -300,6 +316,9 @@ export const industryName: Record<Industry, string> = {
   Solar: "Solar",
 };
 
+/**
+ * A record of descriptions for each industry.
+ */
 export const industryDescription: Record<Industry, string> = {
   AgriculturalInputs:
     "Companies that manufacture nitrogenous and phosphatic fertilizers, pesticides, seed, and other agricultural chemical products.",

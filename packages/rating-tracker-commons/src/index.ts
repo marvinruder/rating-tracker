@@ -5,14 +5,14 @@ export type { Region } from "./lib/geo/Region.js";
 export * from "./lib/geo/SuperRegion.js";
 export type { SuperRegion } from "./lib/geo/SuperRegion.js";
 
-export * from "./lib/gics/Industry.js";
-export type { Industry } from "./lib/gics/Industry.js";
-export * from "./lib/gics/IndustryGroup.js";
-export type { IndustryGroup } from "./lib/gics/IndustryGroup.js";
-export * from "./lib/gics/Sector.js";
-export type { Sector } from "./lib/gics/Sector.js";
-export * from "./lib/gics/SuperSector.js";
-export type { SuperSector } from "./lib/gics/SuperSector.js";
+export * from "./lib/gecs/Industry.js";
+export type { Industry } from "./lib/gecs/Industry.js";
+export * from "./lib/gecs/IndustryGroup.js";
+export type { IndustryGroup } from "./lib/gecs/IndustryGroup.js";
+export * from "./lib/gecs/Sector.js";
+export type { Sector } from "./lib/gecs/Sector.js";
+export * from "./lib/gecs/SuperSector.js";
+export type { SuperSector } from "./lib/gecs/SuperSector.js";
 
 export * from "./lib/models/resource.js";
 export * from "./lib/models/session.js";
