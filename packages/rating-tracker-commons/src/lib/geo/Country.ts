@@ -261,7 +261,7 @@ export type Country = (typeof countryArray)[number];
  * Checks if a string is a valid ISO 3166-1 alpha-2 country code.
  *
  * @param {string} s The string to check.
- * @return {boolean} True if the string is a valid ISO 3166-1 alpha-2 country code.
+ * @returns {boolean} True if the string is a valid ISO 3166-1 alpha-2 country code.
  */
 export function isCountry(s: string): s is Country {
   return countryArray.includes(s as Country);
@@ -525,7 +525,7 @@ export const countryName: Record<Country, string> = {
  * Returns the emoji flag for a country.
  *
  * @param {Country} country The country
- * @return {string} An emoji of the country’s flag
+ * @returns {string} An emoji of the country’s flag
  */
 export const emojiFlag = (country: Country) =>
   country

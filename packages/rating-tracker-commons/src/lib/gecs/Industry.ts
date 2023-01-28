@@ -159,7 +159,7 @@ export type Industry = (typeof industryArray)[number];
  * Checks if a string is a valid industry.
  *
  * @param {string} s The string to check.
- * @return {boolean} True if the string is a valid industry.
+ * @returns {boolean} True if the string is a valid industry.
  */
 export function isIndustry(s: string): s is Industry {
   return industryArray.includes(s as Industry);

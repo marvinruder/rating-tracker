@@ -14,7 +14,7 @@ const SIGNAL_PREFIX_WORSE = "🔴 ";
  * Create a stock.
  *
  * @param {Stock} stock The stock to create.
- * @return {boolean} Whether the stock was created.
+ * @returns {boolean} Whether the stock was created.
  */
 export const createStock = async (stock: Stock): Promise<boolean> => {
   const existingStock = await fetch(stock.ticker); // Attempt to fetch an existing stock with the same ticker
@@ -45,7 +45,7 @@ export const createStock = async (stock: Stock): Promise<boolean> => {
  * Read a stock.
  *
  * @param {string} ticker The ticker of the stock.
- * @return {Stock} The stock.
+ * @returns {Stock} The stock.
  * @throws an {@link APIError} if the stock does not exist.
  */
 export const readStock = async (ticker: string) => {
@@ -59,7 +59,7 @@ export const readStock = async (ticker: string) => {
 /**
  * Read all stocks.
  *
- * @return {Stock[]} A list of all stocks.
+ * @returns {Stock[]} A list of all stocks.
  */
 export const readAllStocks = () => {
   return fetchAll();

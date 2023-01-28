@@ -12,7 +12,6 @@ import {
   Typography,
   Tooltip,
   Box,
-  useTheme,
 } from "@mui/material";
 import { MSCIESGRating, Stock, StockListColumn } from "rating-tracker-commons";
 import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
@@ -26,7 +25,15 @@ import {
 import StockRow from "../../../components/StockRow";
 import useNotification from "../../../helpers/useNotification";
 
-const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
+/**
+ * The stocks table component.
+ *
+ * @param {StocksTableProps} props The component props.
+ * @returns {JSX.Element} The stocks table component.
+ */
+const StocksTable: FC<StocksTableProps> = (
+  props: StocksTableProps
+): JSX.Element => {
   const [page, setPage] = useState<number>(0);
   const [count, setCount] = useState<number>(-1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(25);
@@ -35,53 +42,30 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
   const [sortBy, setSortBy] = useState<SortableAttribute>("totalScore");
   const [sortDesc, setSortDesc] = useState<boolean>(true);
   const { setNotification } = useNotification();
-  const theme = useTheme();
 
   useEffect(() => {
-    getStocks();
+    getStocks(); // Get stocks whenever pagination, sorting or filtering changes, or when explicitly requested.
   }, [page, rowsPerPage, sortBy, sortDesc, props.filter, props.triggerRefetch]);
 
+  /**
+   * Get the stocks from the backend.
+   */
   const getStocks = () => {
     setStocksFinal(false);
     axios
       .get(baseUrl + stockAPI + stockListEndpoint, {
         params: {
+          // Pagination
           offset: page * rowsPerPage,
           count: rowsPerPage > 0 ? rowsPerPage : undefined,
+          // Sorting
           sortBy: sortBy,
           sortDesc: sortDesc,
-          totalScoreMin: props.filter.totalScoreMin,
-          totalScoreMax: props.filter.totalScoreMax,
-          financialScoreMin: props.filter.financialScoreMin,
-          financialScoreMax: props.filter.financialScoreMax,
-          esgScoreMin: props.filter.esgScoreMin,
-          esgScoreMax: props.filter.esgScoreMax,
-          dividendYieldPercentMin: props.filter.dividendYieldPercentMin,
-          dividendYieldPercentMax: props.filter.dividendYieldPercentMax,
-          priceEarningRatioMin: props.filter.priceEarningRatioMin,
-          priceEarningRatioMax: props.filter.priceEarningRatioMax,
-          starRatingMin: props.filter.starRatingMin,
-          starRatingMax: props.filter.starRatingMax,
-          morningstarFairValueDiffMin: props.filter.morningstarFairValueDiffMin,
-          morningstarFairValueDiffMax: props.filter.morningstarFairValueDiffMax,
-          analystConsensusMin: props.filter.analystConsensusMin,
-          analystConsensusMax: props.filter.analystConsensusMax,
-          analystCountMin: props.filter.analystCountMin,
-          analystCountMax: props.filter.analystCountMax,
-          analystTargetDiffMin: props.filter.analystTargetDiffMin,
-          analystTargetDiffMax: props.filter.analystTargetDiffMax,
-          msciESGRatingMin: props.filter.msciESGRatingMin,
-          msciESGRatingMax: props.filter.msciESGRatingMax,
-          msciTemperatureMin: props.filter.msciTemperatureMin,
-          msciTemperatureMax: props.filter.msciTemperatureMax,
-          refinitivESGScoreMin: props.filter.refinitivESGScoreMin,
-          refinitivESGScoreMax: props.filter.refinitivESGScoreMax,
-          refinitivEmissionsMin: props.filter.refinitivEmissionsMin,
-          refinitivEmissionsMax: props.filter.refinitivEmissionsMax,
-          spESGScoreMin: props.filter.spESGScoreMin,
-          spESGScoreMax: props.filter.spESGScoreMax,
-          sustainalyticsESGRiskMin: props.filter.sustainalyticsESGRiskMin,
-          sustainalyticsESGRiskMax: props.filter.sustainalyticsESGRiskMax,
+          // Filtering
+          ...props.filter,
+          // Do not include raw country and industry arrays in the request.
+          countries: undefined,
+          industries: undefined,
           country:
             props.filter.countries?.length > 0
               ? props.filter.countries.join(",")
@@ -90,8 +74,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
             props.filter.industries?.length > 0
               ? props.filter.industries.join(",")
               : undefined,
-          size: props.filter.size,
-          style: props.filter.style,
         },
       })
       .then((res) => {
@@ -113,17 +95,34 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
       .finally(() => setStocksFinal(true));
   };
 
-  const handlePageChange = (event: any, newPage: number): void => {
+  /**
+   * Handle a click on one of the pagination buttons.
+   *
+   * @param {React.MouseEvent} _ The event.
+   * @param {number} newPage The new page.
+   */
+  const handlePageChange = (_: React.MouseEvent, newPage: number): void => {
     setPage(newPage);
   };
 
+  /**
+   * Handle a change in the number of rows per page, triggered by the row count dropdown.
+   *
+   * @param {ChangeEvent<HTMLInputElement>} event The event.
+   */
   const handleRowsPerPageChange = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setPage(0);
+    setPage(0); // Go to the first page to not get confused.
     setRowsPerPage(parseInt(event.target.value));
   };
 
+  /**
+   * Provides a handler for a click on one of the sort labels.
+   *
+   * @param {SortableAttribute} attribute The attribute having been clicked.
+   * @returns {() => void} The handler.
+   */
   const handleSortLabelClicked = (attribute: SortableAttribute) => () => {
     if (sortBy === attribute) {
       setSortDesc(!sortDesc);
@@ -146,10 +145,19 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
     }
   };
 
+  /**
+   * Returns an appropriate CSS `display` property value for a column. The value is derived from the
+   * columns filter values that are passed to the component.
+   *
+   * @param {StockListColumn} column The column for which the display value should be returned.
+   * @returns {"none" | undefined} The CSS `display` property value.
+   */
   const displayColumn = (column: StockListColumn): "none" | undefined => {
     if (props.columns && !props.columns.includes(column)) {
+      // If the filter is in use, but the column is not included, hide the column.
       return "none";
     }
+    // If unset, the column is visible.
     return undefined;
   };
 
@@ -159,6 +167,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
         <Table size="small">
           <TableHead>
             <TableRow sx={{ height: 52.5 }}>
+              {/* Name and Logo */}
               <TableCell>
                 <TableSortLabel
                   active={sortBy === "name"}
@@ -168,6 +177,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   Stock
                 </TableSortLabel>
               </TableCell>
+              {/* Country and Region */}
               <TableCell
                 sx={{
                   display: displayColumn("Country"),
@@ -184,6 +194,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   <Box display="inline-block">Country</Box>
                 </Tooltip>
               </TableCell>
+              {/* StyleBox */}
               <TableCell
                 sx={{
                   display: displayColumn("Size and Style"),
@@ -235,6 +246,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Sector */}
               <TableCell
                 sx={{
                   display: displayColumn("Sector"),
@@ -251,6 +263,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   <Box display="inline-block">Sector</Box>
                 </Tooltip>
               </TableCell>
+              {/* Industry */}
               <TableCell
                 sx={{
                   display: displayColumn("Industry"),
@@ -268,6 +281,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   <Box display="inline-block">Industry</Box>
                 </Tooltip>
               </TableCell>
+              {/* Total Score */}
               <TableCell
                 sx={{
                   display: displayColumn("Total Score"),
@@ -301,6 +315,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Financial Score */}
               <TableCell
                 sx={{
                   display: displayColumn("Financial Score"),
@@ -334,6 +349,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* ESG Score */}
               <TableCell
                 sx={{
                   display: displayColumn("ESG Score"),
@@ -364,6 +380,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Morningstar Star Rating */}
               <TableCell
                 sx={{
                   display: displayColumn("Star Rating"),
@@ -401,6 +418,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Morningstar Fair Value */}
               <TableCell
                 sx={{
                   display: displayColumn("Morningstar Fair Value"),
@@ -443,6 +461,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Analyst Consensus */}
               <TableCell
                 sx={{
                   display: displayColumn("Analyst Consensus"),
@@ -477,6 +496,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Analyst Target Price */}
               <TableCell
                 sx={{
                   display: displayColumn("Analyst Target Price"),
@@ -514,6 +534,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* MSCI ESG Rating */}
               <TableCell
                 sx={{
                   display: displayColumn("MSCI ESG Rating"),
@@ -549,6 +570,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* MSCI Implied Temperature Rise */}
               <TableCell
                 sx={{
                   display: displayColumn("MSCI Implied Temperature Rise"),
@@ -575,6 +597,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Refinitiv */}
               <TableCell
                 sx={{
                   display: displayColumn("Refinitiv ESG Information"),
@@ -642,6 +665,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* S&P ESG Score */}
               <TableCell
                 sx={{
                   display: displayColumn("S&P ESG Score"),
@@ -678,6 +702,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Sustainalytics ESG Risk */}
               <TableCell
                 sx={{
                   display: displayColumn("Sustainalytics ESG Risk"),
@@ -713,6 +738,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* 52 Week Range */}
               <TableCell
                 sx={{
                   display: displayColumn("52 Week Range"),
@@ -737,6 +763,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Dividend Yield */}
               <TableCell
                 sx={{
                   display: displayColumn("Dividend Yield (%)"),
@@ -764,6 +791,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* P/E Ratio */}
               <TableCell
                 sx={{
                   display: displayColumn("P / E Ratio"),
@@ -789,6 +817,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   </Tooltip>
                 </TableSortLabel>
               </TableCell>
+              {/* Market Cap */}
               <TableCell
                 sx={{
                   display: displayColumn("Market Capitalization"),
@@ -806,21 +835,29 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps) => {
                   <Box display="inline-block">Market Cap</Box>
                 </Tooltip>
               </TableCell>
+              {/* Actions */}
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {stocksFinal
-              ? stocks.map((stock) => (
-                  <StockRow
-                    stock={stock}
-                    getStocks={getStocks}
-                    key={stock.ticker}
-                    columns={props.columns}
-                  />
-                ))
+              ? stocks.map(
+                  (
+                    stock // Render stock rows
+                  ) => (
+                    <StockRow
+                      stock={stock}
+                      getStocks={getStocks}
+                      key={stock.ticker}
+                      columns={props.columns}
+                    />
+                  )
+                )
               : [...Array(rowsPerPage > 0 ? rowsPerPage : 100)].map(
-                  (_undef, key) => (
+                  (
+                    _undef,
+                    key // Render skeleton rows
+                  ) => (
                     <StockRow
                       key={key}
                       getStocks={getStocks}
@@ -897,9 +934,21 @@ export interface StockFilter {
   style?: Style;
 }
 
+/**
+ * Properties for the StocksTable component.
+ */
 interface StocksTableProps {
+  /**
+   * The filter to apply to the stocks.
+   */
   filter: StockFilter;
+  /**
+   * A variable that is toggled to trigger a refetch of the stocks.
+   */
   triggerRefetch?: boolean;
+  /**
+   * The columns to display. If unset, all columns will be displayed.
+   */
   columns?: StockListColumn[];
 }
 

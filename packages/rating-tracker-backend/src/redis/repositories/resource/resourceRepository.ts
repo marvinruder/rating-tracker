@@ -13,7 +13,7 @@ import { expire, fetch, save } from "./resourceRepositoryBase.js";
  *
  * @param {Resource} resource The resource to create.
  * @param {number} ttlInSeconds The time in seconds after which the resource should expire.
- * @return {boolean} Whether the resource was created.
+ * @returns {boolean} Whether the resource was created.
  */
 export const createResource = async (
   resource: Resource,
@@ -46,7 +46,7 @@ export const createResource = async (
  * Read a resource.
  *
  * @param {string} url The URL of the resource to read.
- * @return {Resource} The resource.
+ * @returns {Resource} The resource.
  * @throws an {@link APIError} if the resource does not exist.
  */
 export const readResource = async (url: string) => {

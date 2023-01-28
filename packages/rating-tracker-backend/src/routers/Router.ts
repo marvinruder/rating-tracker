@@ -11,10 +11,18 @@ class PublicRouter {
   private _router = Router();
   private _subrouterAuth = AuthRouter;
 
+  /**
+   * Get the router for all public routes.
+   *
+   * @returns {Router} The router for all public routes.
+   */
   get router() {
     return this._router;
   }
 
+  /**
+   * Creates a new public router.
+   */
   constructor() {
     this._configure();
   }
@@ -41,10 +49,18 @@ class PrivateRouter {
   private _subrouterStock = StockRouter;
   private _subrouterResource = ResourceRouter;
 
+  /**
+   * Get the router for all private routes.
+   *
+   * @returns {Router} The router for all private routes.
+   */
   get router() {
     return this._router;
   }
 
+  /**
+   * Creates a new private router.
+   */
   constructor() {
     this._configure();
   }

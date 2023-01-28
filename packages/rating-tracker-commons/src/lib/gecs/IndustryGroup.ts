@@ -70,7 +70,7 @@ export type IndustryGroup = (typeof industryGroupArray)[number];
  * Checks if a string is a valid industry group.
  *
  * @param {string} s The string to check.
- * @return {boolean} True if the string is a valid industry group.
+ * @returns {boolean} True if the string is a valid industry group.
  */
 export function isIndustryGroup(s: string): s is IndustryGroup {
   return industryGroupArray.includes(s as IndustryGroup);
@@ -292,7 +292,7 @@ export const groupOfIndustry: Record<Industry, IndustryGroup> = {
  * Returns an array of all industries in a industry group.
  *
  * @param {IndustryGroup} industryGroup The industry group to get industries for.
- * @return {Industry[]} The array of industries in the industry group.
+ * @returns {Industry[]} The array of industries in the industry group.
  */
 export const getIndustriesInGroup = (
   industryGroup: IndustryGroup

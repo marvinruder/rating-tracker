@@ -9,7 +9,7 @@ import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
  * Create a user.
  *
  * @param {User} user The user to create.
- * @return {boolean} Whether the user was created.
+ * @returns {boolean} Whether the user was created.
  */
 /* istanbul ignore next */ // Since we cannot yet test the authentication process, we cannot create a valid User
 export const createUser = async (user: User): Promise<boolean> => {
@@ -42,7 +42,7 @@ export const createUser = async (user: User): Promise<boolean> => {
  * Read a user.
  *
  * @param {string} email The email address of the user.
- * @return {User} The user.
+ * @returns {User} The user.
  * @throws an {@link APIError} if the user does not exist.
  */
 export const readUser = async (email: string) => {
@@ -58,7 +58,7 @@ export const readUser = async (email: string) => {
  * Check whether a user exists.
  *
  * @param {string} email The email address of the user.
- * @return {boolean} Whether the user exists.
+ * @returns {boolean} Whether the user exists.
  */
 export const userExists = async (email: string): Promise<boolean> => {
   const userEntity = await fetch(email);

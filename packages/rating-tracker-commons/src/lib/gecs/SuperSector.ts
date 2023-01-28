@@ -15,7 +15,7 @@ export type SuperSector = (typeof superSectorArray)[number];
  * Checks if a string is a valid super sector.
  *
  * @param {string} s The string to check.
- * @return {boolean} True if the string is a valid super sector.
+ * @returns {boolean} True if the string is a valid super sector.
  */
 export function isSuperSector(s: string): s is SuperSector {
   return superSectorArray.includes(s as SuperSector);
@@ -63,7 +63,7 @@ export const superSectorOfSector: Record<Sector, SuperSector> = {
  * Returns an array of all sectors in a super sector.
  *
  * @param {SuperSector} superSector The super sector to get  sectors for.
- * @return {Sector[]} The array of sectors in the super sector.
+ * @returns {Sector[]} The array of sectors in the super sector.
  */
 export const getSectorsInSuperSector = (superSector: SuperSector): Sector[] => {
   return sectorArray.filter(

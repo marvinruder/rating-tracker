@@ -7,7 +7,15 @@ import ParticleBackground from "./components/ParticleBackground";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import NotificationSnackbar from "./components/NotificationSnackbar";
 
-function App() {
+/**
+ * The Rating Tracker Application.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const App = (): JSX.Element => {
+  /**
+   * The routes to the different views.
+   */
   const content = useRoutes(router);
 
   return (
@@ -24,5 +32,6 @@ function App() {
       <ParticleBackground />
     </ThemeProvider>
   );
-}
+};
+
 export default App;

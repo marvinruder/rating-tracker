@@ -12,8 +12,20 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Fragment, useState } from "react";
 
+/**
+ * The state of a checkbox that can be either checked, unchecked or indeterminate.
+ */
 type CheckboxState = "unchecked" | "indeterminate" | "checked";
 
+/**
+ * A list of nested items that can be expanded and collapsed. Each item can be checked or unchecked, where checking or
+ * unchecking an item is equivalent to checking or unchecking all of its children. Up to four levels of nesting are
+ * supported.
+ *
+ * @param {NestedCheckboxListProps<FirstLevelType, SecondLevelType, ThirdLevelType, FourthLevelType>} props
+ * The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
 const NestedCheckboxList = <
   FirstLevelType extends string,
   SecondLevelType extends string,
@@ -26,15 +38,23 @@ const NestedCheckboxList = <
     ThirdLevelType,
     FourthLevelType
   >
-) => {
+): JSX.Element => {
   const theme = useTheme();
 
   const [openFirstLevel, setOpenFirstLevel] = useState<FirstLevelType[]>([]);
   const [openSecondLevel, setOpenSecondLevel] = useState<SecondLevelType[]>([]);
   const [openThirdLevel, setOpenThirdLevel] = useState<ThirdLevelType[]>([]);
 
+  /**
+   * Click handler for the first-level checkbox. If the first level element has children, then the children inherit the
+   * state of the parent.
+   *
+   * @param {FirstLevelType} firstLevelElement The first-level element that was clicked
+   */
   const clickFirstLevelCheckbox = (firstLevelElement: FirstLevelType) => {
     if (props.getFourthLevelElements) {
+      // The fourth level is the last level of nesting
+      // Get all fourth-level elements that are children of the first-level element
       const fourthLevelElements: FourthLevelType[] = props
         .getSecondLevelElements(firstLevelElement)
         .flatMap((secondLevelElement) =>
@@ -44,168 +64,246 @@ const NestedCheckboxList = <
           props.getFourthLevelElements(thirdLevelElement)
         );
       props.setSelectedLastLevelElements((prev) =>
-        getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked"
-          ? [...prev, ...fourthLevelElements]
-          : prev.filter((p) => !fourthLevelElements.includes(p))
+        getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked" // Previous state of the first-level element
+          ? // Check all fourth-level elements that are children of the first-level element
+            [...prev, ...fourthLevelElements]
+          : // Uncheck all fourth-level elements that are children of the first-level element
+            prev.filter((p) => !fourthLevelElements.includes(p))
       );
     } else if (props.getThirdLevelElements) {
+      // The third level is the last level of nesting
+      // Get all third-level elements that are children of the first-level element
       const thirdLevelElements: ThirdLevelType[] = props
         .getSecondLevelElements(firstLevelElement)
         .flatMap((secondLevelElement) =>
           props.getThirdLevelElements(secondLevelElement)
         );
       props.setSelectedLastLevelElements((prev) =>
-        getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked"
-          ? [...prev, ...thirdLevelElements]
-          : prev.filter((p) => !thirdLevelElements.includes(p))
+        getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked" // Previous state of the first-level element
+          ? // Check all third-level elements that are children of the first-level element
+            [...prev, ...thirdLevelElements]
+          : // Uncheck all third-level elements that are children of the first-level element
+            prev.filter((p) => !thirdLevelElements.includes(p))
       );
     } else if (props.getSecondLevelElements) {
+      // The second level is the last level of nesting
+      // Use all second-level elements that are children of the first-level element
       props.setSelectedLastLevelElements((prev) =>
-        getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked"
-          ? [...prev, ...props.getSecondLevelElements(firstLevelElement)]
+        getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked" // Previous state of the first-level element
+          ? // Check all second-level elements that are children of the first-level element
+            [...prev, ...props.getSecondLevelElements(firstLevelElement)]
           : prev.filter(
+              // Uncheck all second-level elements that are children of the first-level element
               (p) =>
                 !props.getSecondLevelElements(firstLevelElement).includes(p)
             )
       );
     } else {
-      props.setSelectedLastLevelElements((prev) =>
-        prev.includes(firstLevelElement)
-          ? prev.filter((p) => p != firstLevelElement)
-          : [...prev, firstLevelElement]
+      // The first level is the last level of nesting (= we have no nesting in the list)
+      props.setSelectedLastLevelElements(
+        (prev) =>
+          prev.includes(firstLevelElement) // Previous state of the first-level element
+            ? prev.filter((p) => p != firstLevelElement) // Uncheck the first-level element
+            : [...prev, firstLevelElement] // Check the first-level element
       );
     }
   };
 
+  /**
+   * Determines the state of a first-level checkbox based on the state of its children.
+   *
+   * @param {FirstLevelType} firstLevelElement The first-level element whose state is to be determined
+   * @returns {CheckboxState} The state of the first-level checkbox
+   */
   const getFirstLevelCheckboxStatus = (
     firstLevelElement: FirstLevelType
   ): CheckboxState => {
     if (props.getSecondLevelElements) {
+      // First-level elements have children
       const secondLevelElementStates: CheckboxState[] = props
         .getSecondLevelElements(firstLevelElement)
         .map((secondLevelElement) =>
           getSecondLevelCheckboxStatus(secondLevelElement)
         );
       if (secondLevelElementStates.every((state) => state === "checked")) {
-        return "checked";
+        return "checked"; // If all children are checked, then the parent is checked
       }
       if (secondLevelElementStates.every((state) => state === "unchecked")) {
-        return "unchecked";
+        return "unchecked"; // If all children are unchecked, then the parent is unchecked
       }
-      return "indeterminate";
+      return "indeterminate"; // In any other case, the parent is indeterminate
     } else {
+      // First-level elements have no children
       return props.selectedLastLevelElements.includes(firstLevelElement)
         ? "checked"
         : "unchecked";
     }
   };
 
+  /**
+   * Click handler for the second-level checkbox. If the second level element has children, then the children inherit
+   * the state of the parent.
+   *
+   * @param {SecondLevelType} secondLevelElement The second-level element that was clicked
+   */
   const clickSecondLevelCheckbox = (secondLevelElement: SecondLevelType) => {
     if (props.getFourthLevelElements) {
+      // The fourth level is the last level of nesting
+      // Get all fourth-level elements that are children of the second-level element
       const fourthLevelElements: FourthLevelType[] = props
         .getThirdLevelElements(secondLevelElement)
         .flatMap((thirdLevelElement) =>
           props.getFourthLevelElements(thirdLevelElement)
         );
       props.setSelectedLastLevelElements((prev) =>
-        getSecondLevelCheckboxStatus(secondLevelElement) === "unchecked"
-          ? [...prev, ...fourthLevelElements]
-          : prev.filter((p) => !fourthLevelElements.includes(p))
+        getSecondLevelCheckboxStatus(secondLevelElement) === "unchecked" // Previous state of the second-level element
+          ? // Check all fourth-level elements that are children of the second-level element
+            [...prev, ...fourthLevelElements]
+          : // Uncheck all fourth-level elements that are children of the second-level element
+            prev.filter((p) => !fourthLevelElements.includes(p))
       );
     } else if (props.getThirdLevelElements) {
+      // The third level is the last level of nesting
+      // Use all third-level elements that are children of the second-level element
       props.setSelectedLastLevelElements((prev) =>
-        getSecondLevelCheckboxStatus(secondLevelElement) === "unchecked"
-          ? [...prev, ...props.getThirdLevelElements(secondLevelElement)]
+        getSecondLevelCheckboxStatus(secondLevelElement) === "unchecked" // Previous state of the second-level element
+          ? // Check all third-level elements that are children of the second-level element
+            [...prev, ...props.getThirdLevelElements(secondLevelElement)]
           : prev.filter(
+              // Uncheck all third-level elements that are children of the second-level element
               (p) =>
                 !props.getThirdLevelElements(secondLevelElement).includes(p)
             )
       );
     } else {
-      props.setSelectedLastLevelElements((prev) =>
-        prev.includes(secondLevelElement)
-          ? prev.filter((p) => p != secondLevelElement)
-          : [...prev, secondLevelElement]
+      // The second level is the last level of nesting (= we have no further nesting in the list)
+      props.setSelectedLastLevelElements(
+        (prev) =>
+          prev.includes(secondLevelElement) // Previous state of the second-level element
+            ? prev.filter((p) => p != secondLevelElement) // Uncheck the second-level element
+            : [...prev, secondLevelElement] // Check the second-level element
       );
     }
   };
 
+  /**
+   * Determines the state of a second-level checkbox based on the state of its children.
+   *
+   * @param {SecondLevelType} secondLevelElement The second-level element whose state is to be determined
+   * @returns {CheckboxState} The state of the second-level checkbox
+   */
   const getSecondLevelCheckboxStatus = (
     secondLevelElement: SecondLevelType
   ): CheckboxState => {
     if (props.getThirdLevelElements) {
+      // Second-level elements have children
       const thirdLevelElementStates: CheckboxState[] = props
         .getThirdLevelElements(secondLevelElement)
         .map((thirdLevelElement) =>
           getThirdLevelCheckboxStatus(thirdLevelElement)
         );
       if (thirdLevelElementStates.every((state) => state === "checked")) {
-        return "checked";
+        return "checked"; // If all children are checked, then the parent is checked
       }
       if (thirdLevelElementStates.every((state) => state === "unchecked")) {
-        return "unchecked";
+        return "unchecked"; // If all children are unchecked, then the parent is unchecked
       }
-      return "indeterminate";
+      return "indeterminate"; // In any other case, the parent is indeterminate
     } else {
+      // Second-level elements have no children
       return props.selectedLastLevelElements.includes(secondLevelElement)
         ? "checked"
         : "unchecked";
     }
   };
 
+  /**
+   * Click handler for the third-level checkbox. If the third level element has children, then the children inherit the
+   * state of the parent.
+   *
+   * @param {ThirdLevelType} thirdLevelElement The third-level element that was clicked
+   */
   const clickThirdLevelCheckbox = (thirdLevelElement: ThirdLevelType) => {
     if (props.getFourthLevelElements) {
+      // The fourth level is the last level of nesting
+      // Use all fourth-level elements that are children of the third-level element
       props.setSelectedLastLevelElements((prev) =>
-        getThirdLevelCheckboxStatus(thirdLevelElement) === "unchecked"
-          ? [...prev, ...props.getFourthLevelElements(thirdLevelElement)]
+        getThirdLevelCheckboxStatus(thirdLevelElement) === "unchecked" // Previous state of the third-level element
+          ? // Check all fourth-level elements that are children of the third-level element
+            [...prev, ...props.getFourthLevelElements(thirdLevelElement)]
           : prev.filter(
+              // Uncheck all fourth-level elements that are children of the third-level element
               (p) =>
                 !props.getFourthLevelElements(thirdLevelElement).includes(p)
             )
       );
     } else {
-      props.setSelectedLastLevelElements((prev) =>
-        prev.includes(thirdLevelElement)
-          ? prev.filter((p) => p != thirdLevelElement)
-          : [...prev, thirdLevelElement]
+      // The third level is the last level of nesting (= we have no further nesting in the list)
+      props.setSelectedLastLevelElements(
+        (prev) =>
+          prev.includes(thirdLevelElement) // Previous state of the third-level element
+            ? prev.filter((p) => p != thirdLevelElement) // Uncheck the third-level element
+            : [...prev, thirdLevelElement] // Check the third-level element
       );
     }
   };
 
+  /**
+   * Determines the state of a third-level checkbox based on the state of its children.
+   *
+   * @param {ThirdLevelType} thirdLevelElement The third-level element whose state is to be determined
+   * @returns {CheckboxState} The state of the third-level checkbox
+   */
   const getThirdLevelCheckboxStatus = (
     thirdLevelElement: ThirdLevelType
   ): CheckboxState => {
     if (props.getFourthLevelElements) {
+      // Third-level elements have children
       const fourthLevelElementStates: CheckboxState[] = props
         .getFourthLevelElements(thirdLevelElement)
         .map((fourthLevelElement) =>
           getFourthLevelCheckboxStatus(fourthLevelElement)
         );
       if (fourthLevelElementStates.every((state) => state === "checked")) {
-        return "checked";
+        return "checked"; // If all children are checked, then the parent is checked
       }
       if (fourthLevelElementStates.every((state) => state === "unchecked")) {
-        return "unchecked";
+        return "unchecked"; // If all children are unchecked, then the parent is unchecked
       }
-      return "indeterminate";
+      return "indeterminate"; // In any other case, the parent is indeterminate
     } else {
+      // Third-level elements have no children
       return props.selectedLastLevelElements.includes(thirdLevelElement)
         ? "checked"
         : "unchecked";
     }
   };
 
+  /**
+   * Click handler for the fourth-level checkbox. Fourth-level elements have no children.
+   *
+   * @param {FourthLevelType} fourthLevelElement The fourth-level element that was clicked
+   */
   const clickFourthLevelCheckbox = (fourthLevelElement: FourthLevelType) => {
-    props.setSelectedLastLevelElements((prev) =>
-      prev.includes(fourthLevelElement)
-        ? prev.filter((p) => p != fourthLevelElement)
-        : [...prev, fourthLevelElement]
+    // The fourth level is always the last level of nesting
+    props.setSelectedLastLevelElements(
+      (prev) =>
+        prev.includes(fourthLevelElement) // Previous state of the fourth-level element
+          ? prev.filter((p) => p != fourthLevelElement) // Uncheck the fourth-level element
+          : [...prev, fourthLevelElement] // Check the fourth-level element
     );
   };
 
+  /**
+   * Determines the state of a fourth-level checkbox.
+   *
+   * @param {FourthLevelType} fourthLevelElement The fourth-level element whose state is to be determined
+   * @returns {CheckboxState} The state of the fourth-level checkbox
+   */
   const getFourthLevelCheckboxStatus = (
     fourthLevelElement: FourthLevelType
   ): CheckboxState => {
+    // Fourth-level elements never have children
     return props.selectedLastLevelElements.includes(fourthLevelElement)
       ? "checked"
       : "unchecked";
@@ -251,7 +349,8 @@ const NestedCheckboxList = <
                   : firstLevelElement
               }
             />
-            {props.getSecondLevelElements &&
+            {props.getSecondLevelElements && // We have a second level of nesting
+              // Check whether this first-level element is expanded
               (openFirstLevel.includes(firstLevelElement) ? (
                 <IconButton
                   sx={{ p: 0, mr: 2 }}
@@ -276,7 +375,7 @@ const NestedCheckboxList = <
                 </IconButton>
               ))}
           </ListItemButton>
-          {props.getSecondLevelElements && (
+          {props.getSecondLevelElements && ( // We have a second level of nesting
             <Collapse
               in={openFirstLevel.includes(firstLevelElement)}
               timeout="auto"
@@ -316,7 +415,8 @@ const NestedCheckboxList = <
                               : secondLevelElement
                           }
                         />
-                        {props.getThirdLevelElements &&
+                        {props.getThirdLevelElements && // We have a third level of nesting
+                          // Check whether this second-level element is expanded
                           (openSecondLevel.includes(secondLevelElement) ? (
                             <IconButton
                               sx={{ p: 0, mr: 2 }}
@@ -386,7 +486,8 @@ const NestedCheckboxList = <
                                           : thirdLevelElement
                                       }
                                     />
-                                    {props.getFourthLevelElements &&
+                                    {props.getFourthLevelElements && // We have a fourth level of nesting
+                                      // Check whether this third-level element is expanded
                                       (openThirdLevel.includes(
                                         thirdLevelElement
                                       ) ? (
@@ -484,37 +585,79 @@ const NestedCheckboxList = <
   );
 };
 
+/**
+ * Properties for the NestedCheckboxList component
+ */
 interface NestedCheckboxListProps<
   FirstLevelType extends string,
   SecondLevelType extends string,
   ThirdLevelType extends string,
   FourthLevelType extends string
 > {
+  /**
+   * The last-level elements that are currently selected. The parent elements states are derived from this.
+   */
   selectedLastLevelElements: (
     | FirstLevelType
     | SecondLevelType
     | ThirdLevelType
     | FourthLevelType
   )[];
+  /**
+   * A function that sets the last-level elements that are currently selected.
+   */
   setSelectedLastLevelElements:
     | React.Dispatch<React.SetStateAction<FirstLevelType[]>>
     | React.Dispatch<React.SetStateAction<SecondLevelType[]>>
     | React.Dispatch<React.SetStateAction<ThirdLevelType[]>>
     | React.Dispatch<React.SetStateAction<FourthLevelType[]>>;
+  /**
+   * The first-level elements to display.
+   */
   firstLevelElements: readonly FirstLevelType[];
+  /**
+   * A record of labels for the first-level elements.
+   */
   firstLevelLabels?: Record<FirstLevelType, String>;
+  /**
+   * A function that returns the second-level elements for a given first-level element. If there are no second-level
+   * elements, this function is omitted.
+   *
+   * @param {FirstLevelType} firstLevelElement The first-level element to get the second-level elements for.
+   * @returns {SecondLevelType[]} The second-level elements for the given first-level element.
+   */
   getSecondLevelElements?: (
     firstLevelElement: FirstLevelType
   ) => SecondLevelType[];
+  /**
+   * A record of labels for the second-level elements.
+   */
   secondLevelLabels?: Record<SecondLevelType, String>;
+  /**
+   * A function that returns the third-level elements for a given second-level element. If there are no third-level
+   * elements, this function is omitted.
+   */
   getThirdLevelElements?: (
     secondLevelElement: SecondLevelType
   ) => ThirdLevelType[];
+  /**
+   * A record of labels for the third-level elements.
+   */
   thirdLevelLabels?: Record<ThirdLevelType, String>;
+  /**
+   * A function that returns the fourth-level elements for a given third-level element. If there are no fourth-level
+   * elements, this function is omitted.
+   */
   getFourthLevelElements?: (
     thirdLevelElement: ThirdLevelType
   ) => FourthLevelType[];
+  /**
+   * A record of labels for the fourth-level elements.
+   */
   fourthLevelLabels?: Record<FourthLevelType, String>;
+  /**
+   * The height of the list in pixels.
+   */
   height: number;
 }
 

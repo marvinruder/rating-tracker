@@ -234,11 +234,14 @@ export interface StockEntity {
    */
   description: string;
 }
-
+/**
+ * A Redis entity of a {@link Stock}.
+ */
 export class StockEntity extends Entity {}
 
 /**
  * A Redis schema of a {@link StockEntity}.
+ *
  * @see {@link Stock}
  */
 export const stockSchema = new Schema(StockEntity, {

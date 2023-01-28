@@ -10,10 +10,13 @@ import {
   ListItem,
 } from "@mui/material";
 import { NavLink as RouterLink } from "react-router-dom";
-import { SidebarContext } from "../../../../contexts/SidebarContext";
+import SidebarContext from "../../../../contexts/SidebarContext";
 
 import TableRowsIcon from "@mui/icons-material/TableRows";
 
+/**
+ * A wrapper for the sidebar menu component.
+ */
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
   .MuiList-root {
@@ -35,6 +38,9 @@ const MenuWrapper = styled(Box)(
 `
 );
 
+/**
+ * A wrapper for the sidebar sub-menu component.
+ */
 const SubMenuWrapper = styled(Box)(
   ({ theme }) => `
     .MuiList-root {
@@ -156,7 +162,12 @@ const SubMenuWrapper = styled(Box)(
 `
 );
 
-function SidebarMenu() {
+/**
+ * The menu inside the sidebar.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const SidebarMenu = (): JSX.Element => {
   const { closeSidebar } = useContext(SidebarContext);
 
   return (
@@ -189,6 +200,6 @@ function SidebarMenu() {
       </MenuWrapper>
     </>
   );
-}
+};
 
 export default SidebarMenu;

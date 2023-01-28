@@ -174,7 +174,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its Morningstar star rating.
    *
-   * @return {number} The score, ranging from -1 (1 star) to 1 (5 stars).
+   * @returns {number} The score, ranging from -1 (1 star) to 1 (5 stars).
    */
   private getStarRatingScore(): number | undefined {
     switch (this.starRating) {
@@ -195,7 +195,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its Morningstar Fair Value Estimate.
    *
-   * @return {number} The score, ranging from -1 (premium of 50 percent or more) to 1 (discount of 50 percent or more).
+   * @returns {number} The score, ranging from -1 (premium of 50 percent or more) to 1 (discount of 50 percent or more).
    */
   private getMorningstarFairValueScore(): number | undefined {
     const percentageToLastClose = this.getPercentageToLastClose(
@@ -209,7 +209,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its analyst consensus.
    *
-   * @return {number} The score, ranging from -1 (consensus of 0) to 1 (consensus of 10).
+   * @returns {number} The score, ranging from -1 (consensus of 0) to 1 (consensus of 10).
    */
   private getAnalystConsensusScore(): number | undefined {
     if (this.analystCount && this.analystConsensus !== undefined) {
@@ -226,7 +226,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its analyst target price.
    *
-   * @return {number} The score, ranging from -1 (premium of 50 percent or more) to 1 (discount of 50 percent or more).
+   * @returns {number} The score, ranging from -1 (premium of 50 percent or more) to 1 (discount of 50 percent or more).
    */
   private getAnalystTargetPriceScore(): number | undefined {
     const percentageToLastClose =
@@ -245,7 +245,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its financial ratings.
    *
-   * @return {number} The score, ranging from -1 (poor) to 1 (excellent).
+   * @returns {number} The score, ranging from -1 (poor) to 1 (excellent).
    */
   public getFinancialScore(): number {
     const starRatingScore = this.getStarRatingScore();
@@ -279,7 +279,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its MSCI ESG rating.
    *
-   * @return {number} The score, ranging from -2 (CCC) to 1 (AAA).
+   * @returns {number} The score, ranging from -2 (CCC) to 1 (AAA).
    */
   private getMSCIESGRatingScore(): number | undefined {
     if (!this.msciESGRating) {
@@ -306,7 +306,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its MSCI Implied Temperature Rise.
    *
-   * @return {number} The score, ranging from -2 (4°C) to 1 (1°C).
+   * @returns {number} The score, ranging from -2 (4°C) to 1 (1°C).
    */
   private getMSCITemperatureScore(): number | undefined {
     return this.msciTemperature ? 2 - this.msciTemperature : undefined;
@@ -315,7 +315,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its Refinitiv ESG score.
    *
-   * @return {number} The score, ranging from -1 (0) to 1 (100).
+   * @returns {number} The score, ranging from -1 (0) to 1 (100).
    */
   private getRefinitivESGScore(): number | undefined {
     return this.refinitivESGScore !== undefined
@@ -326,7 +326,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its Refinitiv Emissions rating.
    *
-   * @return {number} The score, ranging from -1 (0) to 1 (100).
+   * @returns {number} The score, ranging from -1 (0) to 1 (100).
    */
   private getRefinitivEmissionsScore(): number | undefined {
     return this.refinitivEmissions !== undefined
@@ -337,7 +337,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its Standard & Poor’s ESG score.
    *
-   * @return {number} The score, ranging from -1 (0) to 1 (100).
+   * @returns {number} The score, ranging from -1 (0) to 1 (100).
    */
   private getSPESGScore(): number | undefined {
     return this.spESGScore !== undefined
@@ -348,7 +348,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its Sustainalytics ESG Risk score.
    *
-   * @return {number} The score, ranging from -1 (40) to 1 (0).
+   * @returns {number} The score, ranging from -1 (40) to 1 (0).
    */
   private getSustainalyticsESGRiskScore(): number | undefined {
     return this.sustainalyticsESGRisk !== undefined
@@ -359,7 +359,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on its ESG ratings.
    *
-   * @return {number} The score, ranging from -1 (poor) to 1 (excellent).
+   * @returns {number} The score, ranging from -1 (poor) to 1 (excellent).
    */
   public getESGScore(): number {
     const msciESGRatingScore = this.getMSCIESGRatingScore();
@@ -403,7 +403,7 @@ export class Stock {
   /**
    * Provides a score for the stock based on both its financial and ESG ratings.
    *
-   * @return {number} The score, ranging from -1 (poor) to 1 (excellent).
+   * @returns {number} The score, ranging from -1 (poor) to 1 (excellent).
    */
   public getTotalScore(): number {
     return this.getFinancialScore() * 0.5 + this.getESGScore() * 0.5;
@@ -414,7 +414,7 @@ export class Stock {
    * attribute.
    *
    * @param {"morningstarFairValue" | "analystTargetPrice"} attribute The attribute to compare to the last close.
-   * @return {number} The percentage difference.
+   * @returns {number} The percentage difference.
    */
   public getPercentageToLastClose(
     attribute: "morningstarFairValue" | "analystTargetPrice"

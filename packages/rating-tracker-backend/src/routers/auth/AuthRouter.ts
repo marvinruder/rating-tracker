@@ -15,10 +15,18 @@ class AuthRouter {
   private _router = Router();
   private _controller = AuthController;
 
+  /**
+   * Get the router for authentication routes.
+   *
+   * @returns {Router} The router for authentication routes.
+   */
   get router() {
     return this._router;
   }
 
+  /**
+   * Creates a new authentication router.
+   */
   constructor() {
     this._configure();
   }

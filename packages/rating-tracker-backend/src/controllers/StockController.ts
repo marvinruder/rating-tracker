@@ -37,7 +37,7 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a response containing the stock list and the total number of stocks after filtering, but before
+   * @returns {Response} a response containing the stock list and the total number of stocks after filtering, but before
    * pagination.
    */
   async getList(req: Request, res: Response) {
@@ -543,7 +543,7 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a response with the logo of the stock
+   * @returns {Response} a response with the logo of the stock
    */
   async getLogo(req: Request, res: Response) {
     const stock = await readStock(req.params[0]);
@@ -616,7 +616,7 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a response with the stock
+   * @returns {Response} a response with the stock
    */
   async get(req: Request, res: Response) {
     const stock = await readStock(req.params[0]);
@@ -628,8 +628,8 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a 201 response if the stock was created successfully
-   * @throw an {@link APIError} if a stock with the same ticker already exists
+   * @returns {Response} a 201 response if the stock was created successfully
+   * @throws an {@link APIError} if a stock with the same ticker already exists
    */
   async put(req: Request, res: Response) {
     const ticker = req.params[0];
@@ -654,7 +654,7 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a 204 response if the stock was updated successfully
+   * @returns {Response} a 204 response if the stock was updated successfully
    */
   async patch(req: Request, res: Response) {
     const ticker = req.params[0];
@@ -702,7 +702,7 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a 204 response if the stock was deleted successfully
+   * @returns {Response} a 204 response if the stock was deleted successfully
    */
   async delete(req: Request, res: Response) {
     await deleteStock(req.params[0]);

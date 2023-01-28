@@ -11,7 +11,7 @@ export const userRepository = client.fetchRepository(userSchema);
  * Fetch a user from the repository.
  *
  * @param {string} id The ID of the user to fetch.
- * @return {UserEntity} The user entity.
+ * @returns {UserEntity} The user entity.
  */
 export const fetch = (id: string) => {
   return userRepository.fetch(id);
@@ -21,7 +21,7 @@ export const fetch = (id: string) => {
  * Save a user to the repository.
  *
  * @param {UserEntity} userEntity The user entity to save.
- * @return {string} The ID of the saved user.
+ * @returns {string} The ID of the saved user.
  */
 export const save = (userEntity: UserEntity) => {
   return userRepository.save(userEntity);
@@ -31,7 +31,7 @@ export const save = (userEntity: UserEntity) => {
  * Delete a user from the repository.
  *
  * @param {string} id The ID of the user to delete.
- * @return {void}
+ * @returns {void}
  */
 export const remove = (id: string) => {
   return userRepository.remove(id);

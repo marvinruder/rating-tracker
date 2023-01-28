@@ -14,7 +14,7 @@ import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
  * Create a session.
  *
  * @param {Session} session The session to create.
- * @return {boolean} Whether the session was created.
+ * @returns {boolean} Whether the session was created.
  */
 /* istanbul ignore next */ // Since we cannot yet test the authentication process, we cannot create a valid Session
 export const createSession = async (session: Session): Promise<boolean> => {
@@ -46,7 +46,7 @@ export const createSession = async (session: Session): Promise<boolean> => {
  * Fetch a session from Redis, refresh it, and return the corresponding user.
  *
  * @param {string} sessionID The session ID.
- * @return {User} The user corresponding to the session.
+ * @returns {User} The user corresponding to the session.
  * @throws an {@link APIError} if the session does not exist.
  */
 export const refreshSessionAndFetchUser = async (

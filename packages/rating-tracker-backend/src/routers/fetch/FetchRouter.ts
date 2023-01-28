@@ -10,10 +10,18 @@ class FetchRouter {
   private _router = Router();
   private _controller = FetchController;
 
+  /**
+   * Get the router for fetch routes.
+   *
+   * @returns {Router} The router for fetch routes.
+   */
   get router() {
     return this._router;
   }
 
+  /**
+   * Creates a new fetch router.
+   */
   constructor() {
     this._configure();
   }

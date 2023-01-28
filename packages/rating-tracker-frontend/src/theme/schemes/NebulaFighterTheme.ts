@@ -1,6 +1,9 @@
 import { alpha, createTheme, darken } from "@mui/material";
 import "@mui/lab/themeAugmentation";
 
+/**
+ * The main colors used in the theme.
+ */
 const themeColors = {
   primary: "#2971D6",
   secondary: "#B0B0B0",
@@ -14,6 +17,9 @@ const themeColors = {
   trueWhite: "#ffffff",
 };
 
+/**
+ * A variety of colors used in the theme.
+ */
 const colors = {
   gradients: {
     blue1: "linear-gradient(135deg, #6B73FF 0%, #000DFF 100%)",
@@ -46,7 +52,9 @@ const colors = {
     card: "0px 0px 2px #828282",
     cardSm: "0px 0px 2px #828282",
     cardLg:
-      "0 0rem 14rem 0 rgb(255 255 255 / 10%), 0 0.8rem 2.3rem rgb(133 133 133 / 3%), 0 0.2rem 0.7rem rgb(38 38 38 / 15%)",
+      "0 0rem 14rem 0 rgb(255 255 255 / 10%), " +
+      "0 0.8rem 2.3rem rgb(133 133 133 / 3%), " +
+      "0 0.2rem 0.7rem rgb(38 38 38 / 15%)",
   },
   layout: {
     general: {
@@ -129,8 +137,10 @@ const colors = {
   },
 };
 
-export const NebulaFighterTheme = createTheme({
-  // direction: i18n.dir(),
+/**
+ * A dark theme for use during the night.
+ */
+const NebulaFighterTheme = createTheme({
   colors: {
     gradients: {
       blue1: colors.gradients.blue1,
@@ -1205,7 +1215,8 @@ export const NebulaFighterTheme = createTheme({
   },
   typography: {
     fontFamily:
-      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, ' +
+      '"Apple Color Emoji", "Segoe UI Emoji"',
     h1: {
       fontWeight: 700,
       fontSize: 30,
@@ -1288,3 +1299,5 @@ export const NebulaFighterTheme = createTheme({
     "none",
   ],
 });
+
+export default NebulaFighterTheme;

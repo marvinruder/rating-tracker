@@ -41,7 +41,7 @@ class AuthController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a response containing the registration challenge.
+   * @returns {Response} a response containing the registration challenge.
    * @throws an {@link APIError} if the user already exists.
    */
   async getRegistrationOptions(req: Request, res: Response) {
@@ -74,16 +74,16 @@ class AuthController {
     }
   }
 
+  // This function is not tested because it is difficult to mock creating a valid challenge response.
+  /* istanbul ignore next */
   /**
    * Verifies the registration response and creates a new user if the request is valid.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a response with status code 201 if the registration was successful.
+   * @returns {Response} a response with status code 201 if the registration was successful.
    * @throws an {@link APIError} if the registration failed or the user already exists.
    */
-  // This function is not tested because it is difficult to mock creating a valid challenge response.
-  /* istanbul ignore next */
   async postRegistrationResponse(req: Request, res: Response) {
     const email = req.query.email;
     const name = req.query.name;
@@ -141,7 +141,7 @@ class AuthController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a response containing the authentication challenge.
+   * @returns {Response} a response containing the authentication challenge.
    */
   getAuthenticationOptions(req: Request, res: Response) {
     const options = SimpleWebAuthnServer.generateAuthenticationOptions({
@@ -152,16 +152,17 @@ class AuthController {
     return res.status(200).json(options);
   }
 
+  // This function is not tested because it is difficult to mock creating a valid challenge response.
+  /* istanbul ignore next */
   /**
    * Verifies the authentication response and creates a session cookie if the challenge response is valid.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Response} a response with status code 204 and the session cookie set if the authentication was successful.
+   * @returns {Response} a response with status code 204 and the session cookie set if the authentication was
+   * successful.
    * @throws an {@link APIError} if the authentication failed or the user lacks access rights.
    */
-  // This function is not tested because it is difficult to mock creating a valid challenge response.
-  /* istanbul ignore next */
   async postAuthenticationResponse(req: Request, res: Response) {
     // We retrieve the user from Redis, who we identified by the email address in the challenge response.
     const email = req.body.response.userHandle;

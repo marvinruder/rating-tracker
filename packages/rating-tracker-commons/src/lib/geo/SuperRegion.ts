@@ -14,7 +14,7 @@ export type SuperRegion = (typeof superRegionArray)[number];
  * Checks if a string is a valid super region.
  *
  * @param {string} s The string to check.
- * @return {boolean} True if the string is a valid super region.
+ * @returns {boolean} True if the string is a valid super region.
  */
 export function isSuperRegion(s: string): s is SuperRegion {
   return superRegionArray.includes(s as SuperRegion);
@@ -50,7 +50,7 @@ export const superRegionOfRegion: Record<Region, SuperRegion> = {
  * Returns an array of all regions in a super region.
  *
  * @param {SuperRegion} superRegion The super region to get regions for.
- * @return {Region[]} The array of regions in the super given region.
+ * @returns {Region[]} The array of regions in the super given region.
  */
 export const getRegionsInSuperRegion = (superRegion: SuperRegion): Region[] => {
   return regionArray.filter(

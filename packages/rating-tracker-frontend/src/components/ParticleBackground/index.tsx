@@ -4,7 +4,12 @@ import Particles from "react-particles";
 import { loadFull } from "tsparticles";
 import { useTheme } from "@mui/material";
 
-const ParticleBackground = () => {
+/**
+ * The background of the page, showing particles.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const ParticleBackground = (): JSX.Element => {
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadFull(engine);
   }, []);
@@ -27,7 +32,7 @@ const ParticleBackground = () => {
             value: theme.palette.background.default,
           },
         },
-        fpsLimit: 120,
+        fpsLimit: 60,
         interactivity: {
           events: {
             onHover: {

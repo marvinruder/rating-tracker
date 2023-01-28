@@ -41,7 +41,7 @@ const prettyStream = pretty({
 /**
  * Provides the path of the log file for the current day.
  *
- * @return {string} The path of the log file.
+ * @returns {string} The path of the log file.
  */
 const getLogFilePath = () => {
   return (
@@ -52,7 +52,7 @@ const getLogFilePath = () => {
 /**
  * Creates a new stream to write to the log file.
  *
- * @return {fs.WriteStream} The stream to write to the log file.
+ * @returns {fs.WriteStream} The stream to write to the log file.
  */
 const getNewFileStream = () => {
   return fs.createWriteStream(getLogFilePath(), {

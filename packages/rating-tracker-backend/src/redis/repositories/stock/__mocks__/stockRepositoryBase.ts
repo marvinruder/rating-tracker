@@ -24,7 +24,7 @@ initStockRepository();
  * Fetch a stock from the mock repository.
  *
  * @param {string} id The ID of the stock to fetch.
- * @return {StockEntity} The stock entity.
+ * @returns {StockEntity} The stock entity.
  */
 export const fetch = (id: string) => {
   return stockRepository.get(id);
@@ -33,7 +33,7 @@ export const fetch = (id: string) => {
 /**
  * Fetch all stocks from the mock repository.
  *
- * @return {StockEntity[]} A list of all stock entities.
+ * @returns {StockEntity[]} A list of all stock entities.
  */
 export const fetchAll = () => {
   return [...stockRepository.values()];
@@ -43,7 +43,7 @@ export const fetchAll = () => {
  * Save a stock to the mock repository.
  *
  * @param {StockEntity} stockEntity The stock entity to save.
- * @return {string} The ID of the saved stock.
+ * @returns {string} The ID of the saved stock.
  */
 export const save = (stockEntity: StockEntity) => {
   stockRepository.set(stockEntity.entityId, stockEntity);
@@ -53,7 +53,7 @@ export const save = (stockEntity: StockEntity) => {
 /**
  * Count the number of stocks in the mock repository.
  *
- * @return {number} The number of stocks in the mock repository.
+ * @returns {number} The number of stocks in the mock repository.
  */
 export const count = () => {
   return stockRepository.size;
@@ -63,7 +63,7 @@ export const count = () => {
  * Delete a stock from the mock repository.
  *
  * @param {string} id The ID of the stock to delete.
- * @return {void}
+ * @returns {void}
  */
 export const remove = (id: string) => {
   return stockRepository.delete(id);

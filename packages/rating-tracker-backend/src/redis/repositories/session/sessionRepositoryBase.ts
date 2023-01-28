@@ -16,7 +16,7 @@ export const sessionRepository = client.fetchRepository(sessionSchema);
  * Fetch a session from the repository.
  *
  * @param {string} id The ID of the session to fetch.
- * @return {SessionEntity} The session entity.
+ * @returns {SessionEntity} The session entity.
  */
 export const fetch = (id: string) => {
   return sessionRepository.fetch(id);
@@ -26,7 +26,7 @@ export const fetch = (id: string) => {
  * Sets the expiration time of a session to the configured TTL.
  *
  * @param {string} id The ID of the session to refresh.
- * @return {void}
+ * @returns {void}
  */
 export const refresh = (id: string) => {
   return sessionRepository.expire(id, sessionTTLInSeconds);
@@ -36,7 +36,7 @@ export const refresh = (id: string) => {
  * Save a session to the repository.
  *
  * @param {SessionEntity} sessionEntity The session entity to save.
- * @return {string} The ID of the saved session.
+ * @returns {string} The ID of the saved session.
  */
 export const save = (sessionEntity: SessionEntity) => {
   return sessionRepository.save(sessionEntity);
@@ -46,7 +46,7 @@ export const save = (sessionEntity: SessionEntity) => {
  * Delete a session from the repository.
  *
  * @param {string} id The ID of the session to delete.
- * @return {void}
+ * @returns {void}
  */
 export const remove = (id: string) => {
   return sessionRepository.remove(id);

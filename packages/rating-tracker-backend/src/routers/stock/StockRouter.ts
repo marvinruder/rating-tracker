@@ -9,10 +9,18 @@ class StockRouter {
   private _router = Router();
   private _controller = StockController;
 
+  /**
+   * Get the router for stock routes.
+   *
+   * @returns {Router} The router for stock routes.
+   */
   get router() {
     return this._router;
   }
 
+  /**
+   * Creates a new stock router.
+   */
   constructor() {
     this._configure();
   }

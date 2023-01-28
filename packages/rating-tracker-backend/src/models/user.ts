@@ -51,10 +51,14 @@ export interface UserEntity {
   counter: number;
 }
 
+/**
+ * A Redis entity of a {@link User}.
+ */
 export class UserEntity extends Entity {}
 
 /**
  * A Redis schema of a {@link UserEntity}.
+ *
  * @see {@link User}
  */
 export const userSchema = new Schema(UserEntity, {

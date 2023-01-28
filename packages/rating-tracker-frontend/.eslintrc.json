@@ -3,7 +3,12 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended", "google", "prettier"],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:jsdoc/recommended",
+    "google",
+    "prettier"
+  ],
   "settings": {
     "react": {
       "version": "detect"
@@ -16,21 +21,23 @@
     },
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": "./packages/rating-tracker-frontend/tsconfig.json"
+    "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "plugins": ["react", "@typescript-eslint", "prettier", "jsdoc"],
   "rules": {
-    "prettier/prettier": ["error"],
+    "prettier/prettier": ["warn"],
     "no-unused-vars": 0,
     "@typescript-eslint/no-unused-vars": ["warn"],
     "react/react-in-jsx-scope": 0,
+    "require-jsdoc": 0,
+    "valid-jsdoc": 0,
+    "jsdoc/no-undefined-types": 0,
     "max-len": [
       "warn",
       {
         "code": 120
       }
-    ],
-    "require-jsdoc": 0
+    ]
   },
-  "exclude": ["vite.config.ts"]
+  "ignorePatterns": ["vite.config.ts"]
 }

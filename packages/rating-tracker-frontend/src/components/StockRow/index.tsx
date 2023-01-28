@@ -62,9 +62,19 @@ import {
 import Range52WSlider from "../Range52WSlider";
 import { NavLink } from "react-router-dom";
 
-const StockRow = (props: StockRowProps) => {
+/**
+ * This component displays information about a stock in a table row that is used in the stock list.
+ *
+ * @param {StockRowProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const StockRow = (props: StockRowProps): JSX.Element => {
   const theme = useTheme();
 
+  /**
+   * Displays a chip with a colored icon. The color depends on the value of the stock's
+   * MSCI Implied Temperature Rise and resembles the company’s alignment with the Paris Agreement.
+   */
   const TemperatureChip = styled(Chip)(() => ({
     ".MuiChip-icon": {
       color:
@@ -77,16 +87,25 @@ const StockRow = (props: StockRowProps) => {
           : theme.colors.msci.StronglyMisaligned,
     },
   }));
+  /**
+   * Displays a chip with a green icon.
+   */
   const GreenIconChip = styled(Chip)(() => ({
     ".MuiChip-icon": {
       color: theme.colors.sector.Defensive,
     },
   }));
+  /**
+   * Displays a chip with a yellow icon.
+   */
   const YellowIconChip = styled(Chip)(() => ({
     ".MuiChip-icon": {
       color: theme.colors.msci.Average,
     },
   }));
+  /**
+   * Displays a chip with a blue icon.
+   */
   const BlueIconChip = styled(Chip)(() => ({
     ".MuiChip-icon": {
       color: theme.colors.primary.main,
@@ -97,15 +116,26 @@ const StockRow = (props: StockRowProps) => {
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
+  /**
+   * Returns an appropriate CSS `display` property value for a column. The value is derived from the
+   * columns filter values that are passed to the component.
+   *
+   * @param {StockListColumn} column The column for which the display value should be returned.
+   * @returns {"none" | undefined} The CSS `display` property value.
+   */
   const displayColumn = (column: StockListColumn): "none" | undefined => {
     if (props.columns && !props.columns.includes(column)) {
+      // If the filter is in use, but the column is not included, hide the column.
       return "none";
     }
+    // If unset, the column is visible.
     return undefined;
   };
 
   return props.stock ? (
+    // Actual stock row
     <TableRow hover sx={{ height: 59 }}>
+      {/* Name and Logo */}
       <TableCell>
         <Box
           onClick={() => setDetailsDialogOpen(true)}
@@ -147,6 +177,7 @@ const StockRow = (props: StockRowProps) => {
           </Box>
         </Box>
       </TableCell>
+      {/* Country and Region */}
       <TableCell
         sx={{
           display: displayColumn("Country"),
@@ -166,6 +197,7 @@ const StockRow = (props: StockRowProps) => {
             regionName[regionOfCountry[props.stock.country]]}
         </Typography>
       </TableCell>
+      {/* StyleBox */}
       <TableCell
         sx={{
           display: displayColumn("Size and Style"),
@@ -194,6 +226,7 @@ const StockRow = (props: StockRowProps) => {
           </Box>
         </Tooltip>
       </TableCell>
+      {/* Sector */}
       <TableCell
         sx={{
           display: displayColumn("Sector"),
@@ -263,6 +296,7 @@ const StockRow = (props: StockRowProps) => {
           </Tooltip>
         </Box>
       </TableCell>
+      {/* Industry */}
       <TableCell
         sx={{
           display: displayColumn("Industry"),
@@ -293,6 +327,7 @@ const StockRow = (props: StockRowProps) => {
             industryGroupName[groupOfIndustry[props.stock.industry]]}
         </Typography>
       </TableCell>
+      {/* Total Score */}
       <TableCell
         sx={{
           display: displayColumn("Total Score"),
@@ -308,6 +343,7 @@ const StockRow = (props: StockRowProps) => {
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
+      {/* Financial Score */}
       <TableCell
         sx={{
           display: displayColumn("Financial Score"),
@@ -323,6 +359,7 @@ const StockRow = (props: StockRowProps) => {
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
+      {/* ESG Score */}
       <TableCell
         sx={{
           display: displayColumn("ESG Score"),
@@ -338,6 +375,7 @@ const StockRow = (props: StockRowProps) => {
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
+      {/* Morningstar Star Rating */}
       <TableCell
         sx={{
           display: displayColumn("Star Rating"),
@@ -347,6 +385,7 @@ const StockRow = (props: StockRowProps) => {
           <StarRating value={props.stock.starRating} />
         </MorningstarNavigator>
       </TableCell>
+      {/* Morningstar Fair Value */}
       <TableCell
         sx={{
           display: displayColumn("Morningstar Fair Value"),
@@ -393,6 +432,7 @@ const StockRow = (props: StockRowProps) => {
           </Typography>
         </MorningstarNavigator>
       </TableCell>
+      {/* Analyst Consensus */}
       <TableCell
         sx={{
           display: displayColumn("Analyst Consensus"),
@@ -437,6 +477,7 @@ const StockRow = (props: StockRowProps) => {
           </MarketScreenerNavigator>
         )}
       </TableCell>
+      {/* Analyst Target Price */}
       <TableCell
         sx={{
           display: displayColumn("Analyst Target Price"),
@@ -502,6 +543,7 @@ const StockRow = (props: StockRowProps) => {
           </Typography>
         </MarketScreenerNavigator>
       </TableCell>
+      {/* MSCI ESG Rating */}
       <TableCell
         sx={{
           display: displayColumn("MSCI ESG Rating"),
@@ -528,6 +570,7 @@ const StockRow = (props: StockRowProps) => {
           </MSCINavigator>
         )}
       </TableCell>
+      {/* MSCI Implied Temperature Rise */}
       <TableCell
         sx={{
           display: displayColumn("MSCI Implied Temperature Rise"),
@@ -545,6 +588,7 @@ const StockRow = (props: StockRowProps) => {
           </MSCINavigator>
         )}
       </TableCell>
+      {/* Refinitiv */}
       <TableCell
         sx={{
           display: displayColumn("Refinitiv ESG Information"),
@@ -582,6 +626,7 @@ const StockRow = (props: StockRowProps) => {
           </Box>
         </RefinitivNavigator>
       </TableCell>
+      {/* S&P ESG Score */}
       <TableCell
         sx={{
           display: displayColumn("S&P ESG Score"),
@@ -601,6 +646,7 @@ const StockRow = (props: StockRowProps) => {
           </Typography>
         </SPNavigator>
       </TableCell>
+      {/* Sustainalytics ESG Risk */}
       <TableCell
         sx={{
           display: displayColumn("Sustainalytics ESG Risk"),
@@ -629,6 +675,7 @@ const StockRow = (props: StockRowProps) => {
           </SustainalyticsNavigator>
         )}
       </TableCell>
+      {/* 52 Week Range */}
       <TableCell
         sx={{
           display: displayColumn("52 Week Range"),
@@ -663,6 +710,7 @@ const StockRow = (props: StockRowProps) => {
             />
           )}
       </TableCell>
+      {/* Dividend Yield */}
       <TableCell
         sx={{
           display: displayColumn("Dividend Yield (%)"),
@@ -679,6 +727,7 @@ const StockRow = (props: StockRowProps) => {
           {"\u2009%"}
         </Typography>
       </TableCell>
+      {/* P/E Ratio */}
       <TableCell
         sx={{
           display: displayColumn("P / E Ratio"),
@@ -694,6 +743,7 @@ const StockRow = (props: StockRowProps) => {
           {props.stock.priceEarningRatio ?? "–"}
         </Typography>
       </TableCell>
+      {/* Market Cap */}
       <TableCell
         sx={{
           display: displayColumn("Market Capitalization"),
@@ -715,6 +765,7 @@ const StockRow = (props: StockRowProps) => {
           </Box>
         </Typography>
       </TableCell>
+      {/* Actions */}
       {props.getStocks && (
         <TableCell style={{ whiteSpace: "nowrap" }}>
           <Tooltip title="Open in new tab" arrow>
@@ -747,6 +798,7 @@ const StockRow = (props: StockRowProps) => {
           </Tooltip>
         </TableCell>
       )}
+      {/* Details Dialog */}
       <Dialog
         open={detailsDialogOpen}
         onClose={() => setDetailsDialogOpen(false)}
@@ -802,6 +854,7 @@ const StockRow = (props: StockRowProps) => {
           <StockDetails stock={props.stock} />
         </DialogContent>
       </Dialog>
+      {/* Edit Dialog */}
       <Dialog
         open={editDialogOpen}
         onClose={() => (
@@ -814,6 +867,7 @@ const StockRow = (props: StockRowProps) => {
           onClose={() => setEditDialogOpen(false)}
         />
       </Dialog>
+      {/* Delete Dialog */}
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
@@ -826,6 +880,7 @@ const StockRow = (props: StockRowProps) => {
       </Dialog>
     </TableRow>
   ) : (
+    // Skeleton of a stock row
     <TableRow hover sx={{ height: 59 }}>
       {/* Stock */}
       <TableCell>
@@ -1107,9 +1162,21 @@ const StockRow = (props: StockRowProps) => {
   );
 };
 
+/**
+ * Properties for the StockRow component
+ */
 interface StockRowProps {
+  /**
+   * The stock to display
+   */
   stock?: Stock;
+  /**
+   * A method to update the stock list, e.g. after a stock was modified or deleted.
+   */
   getStocks?: () => void;
+  /**
+   * The columns to display
+   */
   columns?: StockListColumn[];
 }
 

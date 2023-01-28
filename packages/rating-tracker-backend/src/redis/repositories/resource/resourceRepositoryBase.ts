@@ -11,7 +11,7 @@ export const resourceRepository = client.fetchRepository(resourceSchema);
  * Fetch a resource from the repository.
  *
  * @param {string} id The ID of the resource to fetch.
- * @return {ResourceEntity} The resource entity.
+ * @returns {ResourceEntity} The resource entity.
  */
 export const fetch = (id: string) => {
   return resourceRepository.fetch(id);
@@ -21,7 +21,7 @@ export const fetch = (id: string) => {
  * Save a resource to the repository.
  *
  * @param {ResourceEntity} resourceEntity The resource entity to save.
- * @return {string} The ID of the saved resource.
+ * @returns {string} The ID of the saved resource.
  */
 export const save = (resourceEntity: ResourceEntity) => {
   return resourceRepository.save(resourceEntity);
@@ -32,7 +32,7 @@ export const save = (resourceEntity: ResourceEntity) => {
  *
  * @param {string} id The ID of the resource to expire.
  * @param {number} ttlInSeconds The time in seconds after which the resource should expire.
- * @return {void}
+ * @returns {void}
  */
 export const expire = (id: string, ttlInSeconds: number) => {
   return resourceRepository.expire(id, ttlInSeconds);
@@ -42,7 +42,7 @@ export const expire = (id: string, ttlInSeconds: number) => {
  * Delete a resource from the repository.
  *
  * @param {string} id The ID of the resource to delete.
- * @return {void}
+ * @returns {void}
  */
 export const remove = (id: string) => {
   return resourceRepository.remove(id);

@@ -15,13 +15,24 @@ const MainContent = styled(Box)(
 `
 );
 
-function Status500() {
+/**
+ * Shows a 500 Internal Server Error page.
+ *
+ * @returns {JSX.Element} The component.
+ */
+function Status500(): JSX.Element {
   const [pending, setPending] = useState(false);
+  /**
+   * Shows a loading indicator and reloads the page.
+   */
   function handleReload() {
     setPending(true);
     window.location.reload();
   }
 
+  /**
+   * Shows a loading indicator and goes back to the previous page.
+   */
   function handleBack() {
     setPending(true);
     window.history.back();

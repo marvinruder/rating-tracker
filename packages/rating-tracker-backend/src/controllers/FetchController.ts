@@ -79,7 +79,7 @@ class FetchController {
    * Creates and returns a new WebDriver instance.
    *
    * @param {boolean} headless whether to run the browser in headless mode
-   * @return {Promise<WebDriver>} a Promise that resolves to a WebDriver instance
+   * @returns {Promise<WebDriver>} a Promise that resolves to a WebDriver instance
    * @throws an {@link APIError} if the WebDriver cannot be created
    */
   async getDriver(headless?: boolean) {
@@ -111,7 +111,7 @@ class FetchController {
    * Shuts down the given WebDriver instance gracefully, deallocating all associated resources.
    *
    * @param {WebDriver} driver the WebDriver instance to shut down
-   * @return {Promise<void>} a Promise that resolves when the WebDriver has been shut down
+   * @returns {Promise<void>} a Promise that resolves when the WebDriver has been shut down
    * @throws an {@link APIError} if the WebDriver cannot be shut down gracefully
    */
   async quitDriver(driver: WebDriver) {
@@ -133,7 +133,7 @@ class FetchController {
    * @param {WebDriver} driver the WebDriver instance in use
    * @param {Stock} stock the affected stock
    * @param {string} dataProvider the name of the data provider
-   * @return {Promise<string>} a Promise that resolves to a string holding a general informational message and a URL to
+   * @returns {Promise<string>} a Promise that resolves to a string holding a general informational message and a URL to
    * the screenshot
    */
   async takeScreenshot(
@@ -173,7 +173,7 @@ class FetchController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @return {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
+   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchMorningstarData(req: Request, res: Response) {
@@ -232,7 +232,7 @@ class FetchController {
           PREFIX_CHROME +
             `Stock ${
               stock.ticker
-            }: Skipping since last successful fetch was ${formatDistance(
+            }: Skipping Morningstar fetch since last successful fetch was ${formatDistance(
               stock.morningstarLastFetch.getTime(),
               new Date().getTime(),
               { addSuffix: true }
@@ -794,7 +794,7 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @return {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
+   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchMarketScreenerData(req: Request, res: Response) {
@@ -1092,7 +1092,7 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @return {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
+   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchMSCIData(req: Request, res: Response) {
@@ -1148,7 +1148,7 @@ class FetchController {
           PREFIX_CHROME +
             `Stock ${
               stock.ticker
-            }: Skipping since last successful fetch was ${formatDistance(
+            }: Skipping MSCI fetch since last successful fetch was ${formatDistance(
               stock.msciLastFetch.getTime(),
               new Date().getTime(),
               { addSuffix: true }
@@ -1332,7 +1332,7 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @return {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
+   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchRefinitivData(req: Request, res: Response) {
@@ -1573,7 +1573,7 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @return {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
+   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchSPData(req: Request, res: Response) {
@@ -1745,7 +1745,7 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @return {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
+   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchSustainalyticsData(req: Request, res: Response) {

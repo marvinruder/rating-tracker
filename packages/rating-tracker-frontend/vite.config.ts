@@ -8,7 +8,6 @@ import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { dependencies } from "./package.json";
 import fs from "fs";
-import path from "path";
 
 const chunkList = ["@mui/material"];
 

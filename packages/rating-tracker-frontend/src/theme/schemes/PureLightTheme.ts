@@ -1,6 +1,9 @@
 import { alpha, createTheme, lighten, darken } from "@mui/material";
 import "@mui/lab/themeAugmentation";
 
+/**
+ * The main colors used in the theme.
+ */
 const themeColors = {
   primary: "#2971D6",
   secondary: "#878787",
@@ -13,6 +16,9 @@ const themeColors = {
   primaryAlt: "#2B2B2B",
 };
 
+/**
+ * A variety of colors used in the theme.
+ */
 const colors = {
   gradients: {
     blue1: "linear-gradient(135deg, #6B73FF 0%, #000DFF 100%)",
@@ -129,8 +135,10 @@ const colors = {
   },
 };
 
-export const PureLightTheme = createTheme({
-  // direction: i18n.dir(),
+/**
+ * A light theme for use during the day.
+ */
+const PureLightTheme = createTheme({
   colors: {
     gradients: {
       blue1: colors.gradients.blue1,
@@ -1200,7 +1208,8 @@ export const PureLightTheme = createTheme({
   },
   typography: {
     fontFamily:
-      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, ' +
+      '"Apple Color Emoji", "Segoe UI Emoji"',
     h1: {
       fontWeight: 700,
       fontSize: 30,
@@ -1283,3 +1292,5 @@ export const PureLightTheme = createTheme({
     "none",
   ],
 });
+
+export default PureLightTheme;

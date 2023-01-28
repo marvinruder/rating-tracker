@@ -34,7 +34,12 @@ const LogoText = styled(Box)(
 `
 );
 
-function Logo() {
+/**
+ * The Logo component, shown at the top of the sidebar. Contains the app name and version.
+ *
+ * @returns {JSX.Element} The Logo component
+ */
+const Logo = (): JSX.Element => {
   return (
     <LogoWrapper to="/">
       <LogoSignWrapper>
@@ -51,6 +56,6 @@ function Logo() {
       </LogoTextWrapper>
     </LogoWrapper>
   );
-}
+};
 
 export default Logo;

@@ -2,7 +2,12 @@ import { useEffect } from "react";
 import NProgress from "nprogress";
 import { Box, CircularProgress } from "@mui/material";
 
-function SuspenseLoader() {
+/**
+ * A component that renders a loading indicator.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const SuspenseLoader = (): JSX.Element => {
   useEffect(() => {
     NProgress.start();
 
@@ -27,6 +32,6 @@ function SuspenseLoader() {
       <CircularProgress size={64} disableShrink thickness={3} />
     </Box>
   );
-}
+};
 
 export default SuspenseLoader;

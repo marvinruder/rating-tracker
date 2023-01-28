@@ -6,7 +6,7 @@ const FooterWrapper = styled(Container)(
 `
 );
 
-function Footer() {
+const Footer = () => {
   return (
     <FooterWrapper className="footer-wrapper">
       <Box
@@ -18,7 +18,7 @@ function Footer() {
       >
         <Box>
           <Typography variant="subtitle1">
-            &copy; 2022 Marvin A. Ruder
+            &copy; 2022–2023 Marvin A. Ruder
           </Typography>
         </Box>
         <Typography
@@ -39,6 +39,6 @@ function Footer() {
       </Box>
     </FooterWrapper>
   );
-}
+};
 
 export default Footer;

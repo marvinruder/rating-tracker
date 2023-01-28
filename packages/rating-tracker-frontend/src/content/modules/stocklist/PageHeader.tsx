@@ -65,7 +65,14 @@ import NestedCheckboxList from "../../../components/NestedCheckboxList";
 import AddStock from "../../../components/AddStock";
 import StarRating from "../../../components/StarRating";
 import { stockListColumnArray } from "rating-tracker-commons";
+import { StockFilter } from "./StocksTable";
 
+/**
+ * A header for the stock list page. It contains the stock list filters and column filter.
+ *
+ * @param {PageHeaderProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
 const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [columnFilterOpen, setColumnFilterOpen] = useState<boolean>(false);
@@ -122,77 +129,123 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
 
   const [addStockOpen, setAddStockOpen] = useState<boolean>(false);
 
+  /**
+   * Possible widths for the filter container.
+   */
   let filterContainerWidth: 900 | 600 | 300;
 
   switch (
     +useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")
   ) {
     case 2:
+      // The screen is at least 964px wide.
       filterContainerWidth = 900;
       break;
     case 1:
+      // The screen is at least 664px, but less than 964px wide.
       filterContainerWidth = 600;
       break;
     case 0:
+      // The screen is less than 664px wide.
       filterContainerWidth = 300;
       break;
   }
 
-  const applyFiltersUsingState = () => {
-    props.applyFilters(
-      totalScoreInput[0] !== 0 ? totalScoreInput[0] : undefined,
-      totalScoreInput[1] !== 100 ? totalScoreInput[1] : undefined,
-      financialScoreInput[0] !== 0 ? financialScoreInput[0] : undefined,
-      financialScoreInput[1] !== 100 ? financialScoreInput[1] : undefined,
-      esgScoreInput[0] !== 0 ? esgScoreInput[0] : undefined,
-      esgScoreInput[1] !== 100 ? esgScoreInput[1] : undefined,
-      dividendYieldPercentInput[0] !== 0
-        ? dividendYieldPercentInput[0]
-        : undefined,
-      dividendYieldPercentInput[1] !== 20
-        ? dividendYieldPercentInput[1]
-        : undefined,
-      priceEarningRatioInput[0] !== 0 ? priceEarningRatioInput[0] : undefined,
-      priceEarningRatioInput[1] !== 100 ? priceEarningRatioInput[1] : undefined,
-      starRatingInput[0] !== 0 ? starRatingInput[0] : undefined,
-      starRatingInput[1] !== 5 ? starRatingInput[1] : undefined,
-      morningstarFairValueDiffInput[0] !== -50
-        ? morningstarFairValueDiffInput[0]
-        : undefined,
-      morningstarFairValueDiffInput[1] !== 50
-        ? morningstarFairValueDiffInput[1]
-        : undefined,
-      analystConsensusInput[0] !== 0 ? analystConsensusInput[0] : undefined,
-      analystConsensusInput[1] !== 10 ? analystConsensusInput[1] : undefined,
-      analystCountInput[0] !== 0 ? analystCountInput[0] : undefined,
-      analystCountInput[1] !== 60 ? analystCountInput[1] : undefined,
-      analystTargetDiffInput[0] !== -50 ? analystTargetDiffInput[0] : undefined,
-      analystTargetDiffInput[1] !== 50 ? analystTargetDiffInput[1] : undefined,
-      msciESGRatingInput[0] !== "AAA" && msciESGRatingInput[0] !== "None"
-        ? msciESGRatingInput[0]
-        : undefined,
-      msciESGRatingInput[1] !== "None" ? msciESGRatingInput[1] : undefined,
-      msciTemperatureInput[0] !== 1.0 ? msciTemperatureInput[0] : undefined,
-      msciTemperatureInput[1] !== 4.0 ? msciTemperatureInput[1] : undefined,
-      refinitivESGScoreInput[0] !== 0 ? refinitivESGScoreInput[0] : undefined,
-      refinitivESGScoreInput[1] !== 100 ? refinitivESGScoreInput[1] : undefined,
-      refinitivEmissionsInput[0] !== 0 ? refinitivEmissionsInput[0] : undefined,
-      refinitivEmissionsInput[1] !== 100
-        ? refinitivEmissionsInput[1]
-        : undefined,
-      spESGScoreInput[0] !== 0 ? spESGScoreInput[0] : undefined,
-      spESGScoreInput[1] !== 100 ? spESGScoreInput[1] : undefined,
-      sustainalyticsESGRiskInput[0] !== 0
-        ? sustainalyticsESGRiskInput[0]
-        : undefined,
-      sustainalyticsESGRiskInput[1] !== 50
-        ? sustainalyticsESGRiskInput[1]
-        : undefined,
-      countryInput,
-      industryInput,
-      styleboxInput.size,
-      styleboxInput.style
-    );
+  /**
+   * Applies the filters. If a filter is set to its default value (where it does not filter anything), it is not
+   * included in the filter object.
+   */
+  const applyFilters = () => {
+    props.setFilter({
+      totalScoreMin: totalScoreInput[0] !== 0 ? totalScoreInput[0] : undefined,
+      totalScoreMax:
+        totalScoreInput[1] !== 100 ? totalScoreInput[1] : undefined,
+      financialScoreMin:
+        financialScoreInput[0] !== 0 ? financialScoreInput[0] : undefined,
+      financialScoreMax:
+        financialScoreInput[1] !== 100 ? financialScoreInput[1] : undefined,
+      esgScoreMin: esgScoreInput[0] !== 0 ? esgScoreInput[0] : undefined,
+      esgScoreMax: esgScoreInput[1] !== 100 ? esgScoreInput[1] : undefined,
+      dividendYieldPercentMin:
+        dividendYieldPercentInput[0] !== 0
+          ? dividendYieldPercentInput[0]
+          : undefined,
+      dividendYieldPercentMax:
+        dividendYieldPercentInput[1] !== 20
+          ? dividendYieldPercentInput[1]
+          : undefined,
+      priceEarningRatioMin:
+        priceEarningRatioInput[0] !== 0 ? priceEarningRatioInput[0] : undefined,
+      priceEarningRatioMax:
+        priceEarningRatioInput[1] !== 100
+          ? priceEarningRatioInput[1]
+          : undefined,
+      starRatingMin: starRatingInput[0] !== 0 ? starRatingInput[0] : undefined,
+      starRatingMax: starRatingInput[1] !== 5 ? starRatingInput[1] : undefined,
+      morningstarFairValueDiffMin:
+        morningstarFairValueDiffInput[0] !== -50
+          ? morningstarFairValueDiffInput[0]
+          : undefined,
+      morningstarFairValueDiffMax:
+        morningstarFairValueDiffInput[1] !== 50
+          ? morningstarFairValueDiffInput[1]
+          : undefined,
+      analystConsensusMin:
+        analystConsensusInput[0] !== 0 ? analystConsensusInput[0] : undefined,
+      analystConsensusMax:
+        analystConsensusInput[1] !== 10 ? analystConsensusInput[1] : undefined,
+      analystCountMin:
+        analystCountInput[0] !== 0 ? analystCountInput[0] : undefined,
+      analystCountMax:
+        analystCountInput[1] !== 60 ? analystCountInput[1] : undefined,
+      analystTargetDiffMin:
+        analystTargetDiffInput[0] !== -50
+          ? analystTargetDiffInput[0]
+          : undefined,
+      analystTargetDiffMax:
+        analystTargetDiffInput[1] !== 50
+          ? analystTargetDiffInput[1]
+          : undefined,
+      msciESGRatingMin:
+        msciESGRatingInput[0] !== "AAA" && msciESGRatingInput[0] !== "None"
+          ? msciESGRatingInput[0]
+          : undefined,
+      msciESGRatingMax:
+        msciESGRatingInput[1] !== "None" ? msciESGRatingInput[1] : undefined,
+      msciTemperatureMin:
+        msciTemperatureInput[0] !== 1.0 ? msciTemperatureInput[0] : undefined,
+      msciTemperatureMax:
+        msciTemperatureInput[1] !== 4.0 ? msciTemperatureInput[1] : undefined,
+      refinitivESGScoreMin:
+        refinitivESGScoreInput[0] !== 0 ? refinitivESGScoreInput[0] : undefined,
+      refinitivESGScoreMax:
+        refinitivESGScoreInput[1] !== 100
+          ? refinitivESGScoreInput[1]
+          : undefined,
+      refinitivEmissionsMin:
+        refinitivEmissionsInput[0] !== 0
+          ? refinitivEmissionsInput[0]
+          : undefined,
+      refinitivEmissionsMax:
+        refinitivEmissionsInput[1] !== 100
+          ? refinitivEmissionsInput[1]
+          : undefined,
+      spESGScoreMin: spESGScoreInput[0] !== 0 ? spESGScoreInput[0] : undefined,
+      spESGScoreMax:
+        spESGScoreInput[1] !== 100 ? spESGScoreInput[1] : undefined,
+      sustainalyticsESGRiskMin:
+        sustainalyticsESGRiskInput[0] !== 0
+          ? sustainalyticsESGRiskInput[0]
+          : undefined,
+      sustainalyticsESGRiskMax:
+        sustainalyticsESGRiskInput[1] !== 50
+          ? sustainalyticsESGRiskInput[1]
+          : undefined,
+      countries: countryInput,
+      industries: industryInput,
+      size: styleboxInput.size,
+      style: styleboxInput.style,
+    });
   };
 
   const theme = useTheme();
@@ -233,7 +286,8 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           sx={{ display: !props.filtersInUse && "none", ml: 1, mt: 1 }}
           color="error"
           onClick={() => {
-            props.applyFilters();
+            // Reset all filters to their default values
+            props.setFilter({});
             props.setColumnFilter([...stockListColumnArray]);
             setTotalScoreInput([0, 100]);
             setFinancialScoreInput([0, 100]);
@@ -275,10 +329,12 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           <DialogContent sx={{ p: 0 }}>
             <Grid container width={filterContainerWidth} mb={2}>
               <Grid item width={300} order={1}>
+                {/* Overall Scores */}
                 <Typography variant="h4" px="24px" py="16px">
                   Overall Scores
                 </Typography>
                 <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
+                  {/* Total Score */}
                   <Typography variant="h5">Total Score</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -290,6 +346,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
+                  {/* Financial Score */}
                   <Typography variant="h5">Financial Score</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -301,6 +358,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
+                  {/* ESG Score */}
                   <Typography variant="h5">ESG Score</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -313,10 +371,12 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     valueLabelDisplay="auto"
                   />
                 </Box>
+                {/* Core Financials */}
                 <Typography variant="h4" px="24px" py="16px" pt="0px">
                   Core Financials
                 </Typography>
                 <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
+                  {/* Dividend Yield */}
                   <Typography variant="h5">Dividend Yield</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -330,6 +390,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value) => `${value}\u2009%`}
                   />
+                  {/* Price / Earning Ratio */}
                   <Typography variant="h5">Price / Earning Ratio</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -344,10 +405,12 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                 </Box>
               </Grid>
               <Grid item order={filterContainerWidth === 600 ? 3 : 2}>
+                {/* Financial Ratings */}
                 <Typography variant="h4" px="24px" py="16px">
                   Financial Ratings
                 </Typography>
                 <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
+                  {/* Star Rating */}
                   <Typography variant="h5">Star Rating</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -366,6 +429,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                       </Box>
                     )}
                   />
+                  {/* Morningstar Fair Value Difference */}
                   <Typography variant="h5">
                     Morningstar Fair Value Difference
                   </Typography>
@@ -380,6 +444,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value) => `${value}\u2009%`}
                   />
+                  {/* Analyst Consensus */}
                   <Typography variant="h5">Analyst Consensus</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -392,6 +457,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
+                  {/* Analyst Count */}
                   <Typography variant="h5">Analyst Count</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -403,6 +469,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
+                  {/* Analyst Target Difference */}
                   <Typography variant="h5">
                     Analyst Target Difference
                   </Typography>
@@ -420,10 +487,12 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                 </Box>
               </Grid>
               <Grid item order={filterContainerWidth === 600 ? 4 : 3}>
+                {/* ESG Ratings */}
                 <Typography variant="h4" px="24px" py="16px">
                   ESG Ratings
                 </Typography>
                 <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
+                  {/* MSCI ESG Rating */}
                   <Typography variant="h5">MSCI ESG Rating</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -450,6 +519,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                       value === 7 ? "None" : msciESGRatingArray[value]
                     }
                   />
+                  {/* MSCI Implied Temperature Rise */}
                   <Typography variant="h5">
                     MSCI Implied Temperature Rise
                   </Typography>
@@ -464,6 +534,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
+                  {/* Refinitiv ESG Score */}
                   <Typography variant="h5">Refinitiv ESG Score</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -475,6 +546,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
+                  {/* Refinitiv Emissions Rating */}
                   <Typography variant="h5">Refinitiv Emissions</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -486,6 +558,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
+                  {/* S&P ESG Score */}
                   <Typography variant="h5">S&P ESG Score</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -497,6 +570,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     }
                     valueLabelDisplay="auto"
                   />
+                  {/* Sustainalytics ESG Risk */}
                   <Typography variant="h5">Sustainalytics ESG Risk</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
@@ -511,6 +585,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                 </Box>
               </Grid>
               <Grid item order={filterContainerWidth === 600 ? 5 : 4}>
+                {/* Region */}
                 <DialogTitle>
                   <Typography variant="h4">Region</Typography>
                 </DialogTitle>
@@ -527,6 +602,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                 />
               </Grid>
               <Grid item order={filterContainerWidth === 600 ? 6 : 5}>
+                {/* Industry */}
                 <DialogTitle>
                   <Typography variant="h4">Industry</Typography>
                 </DialogTitle>
@@ -550,6 +626,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                 />
               </Grid>
               <Grid item order={filterContainerWidth === 600 ? 2 : 6}>
+                {/* StyleBox */}
                 <DialogTitle>
                   <Typography variant="h4">Style</Typography>
                 </DialogTitle>
@@ -680,7 +757,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           <DialogActions sx={{ p: 0 }}>
             <Button
               onClick={() => {
-                applyFiltersUsingState();
+                applyFilters();
                 setFilterOpen(false);
               }}
               startIcon={<PublishedWithChangesIcon />}
@@ -765,44 +842,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
 };
 
 interface PageHeaderProps {
-  applyFilters: (
-    totalScoreMin?: number,
-    totalScoreMax?: number,
-    financialScoreMin?: number,
-    financialScoreMax?: number,
-    esgScoreMin?: number,
-    esgScoreMax?: number,
-    dividendYieldPercentMin?: number,
-    dividendYieldPercentMax?: number,
-    priceEarningRatioMin?: number,
-    priceEarningRatioMax?: number,
-    starRatingMin?: number,
-    starRatingMax?: number,
-    morningstarFairValueDiffMin?: number,
-    morningstarFairValueDiffMax?: number,
-    analystConsensusMin?: number,
-    analystConsensusMax?: number,
-    analystCountMin?: number,
-    analystCountMax?: number,
-    analystTargetDiffMin?: number,
-    analystTargetDiffMax?: number,
-    msciESGRatingMin?: MSCIESGRating,
-    msciESGRatingMax?: MSCIESGRating,
-    msciTemperatureMin?: number,
-    msciTemperatureMax?: number,
-    refinitivESGScoreMin?: number,
-    refinitivESGScoreMax?: number,
-    refinitivEmissionsMin?: number,
-    refinitivEmissionsMax?: number,
-    spESGScoreMin?: number,
-    spESGScoreMax?: number,
-    sustainalyticsESGRiskMin?: number,
-    sustainalyticsESGRiskMax?: number,
-    countries?: Country[],
-    industries?: Industry[],
-    size?: Size,
-    style?: Style
-  ) => void;
+  setFilter: React.Dispatch<React.SetStateAction<StockFilter>>;
   columnFilter: StockListColumn[];
   setColumnFilter: React.Dispatch<React.SetStateAction<StockListColumn[]>>;
   filtersInUse: boolean;

@@ -26,7 +26,7 @@ export const initUserRepository = () => {
  * Fetch a user from the mock repository.
  *
  * @param {string} id The ID of the user to fetch.
- * @return {UserEntity} The user entity.
+ * @returns {UserEntity} The user entity.
  */
 export const fetch = (id: string) => {
   return userRepository.get(id);
@@ -36,7 +36,7 @@ export const fetch = (id: string) => {
  * Save a user to the mock repository.
  *
  * @param {UserEntity} userEntity The user entity to save.
- * @return {string} The ID of the saved user.
+ * @returns {string} The ID of the saved user.
  */
 export const save = (userEntity: UserEntity) => {
   userRepository.set(userEntity.entityId, userEntity);
@@ -47,7 +47,7 @@ export const save = (userEntity: UserEntity) => {
  * Delete a user from the mock repository.
  *
  * @param {string} id The ID of the user to delete.
- * @return {void}
+ * @returns {void}
  */
 export const remove = (id: string) => {
   return userRepository.delete(id);
