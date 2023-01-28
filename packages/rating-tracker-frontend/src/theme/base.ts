@@ -1,14 +1,13 @@
 import React from "react";
 
 import { Theme } from "@mui/material";
-import { NebulaFighterTheme } from "./schemes/NebulaFighterTheme";
-import { PureLightTheme } from "./schemes/PureLightTheme";
+import NebulaFighterTheme from "./schemes/NebulaFighterTheme";
+import PureLightTheme from "./schemes/PureLightTheme";
 import { SuperSector } from "rating-tracker-commons";
 
-export function themeCreator(theme: string): Theme {
-  return themeMap[theme];
-}
-
+/**
+ * An override to the styles of the MUI theme, allowing us to add our own custom properties.
+ */
 declare module "@mui/material/styles" {
   interface Theme {
     colors: {
@@ -99,7 +98,13 @@ declare module "@mui/material/styles" {
         main: string;
         dark: string;
       };
+      /**
+       * The colors Morningstar uses for each super sector.
+       */
       sector: Record<SuperSector, string>;
+      /**
+       * A color spectrum from red (0) to green (10) used for the analyst consensus.
+       */
       consensus: {
         0: string;
         1: string;
@@ -113,22 +118,52 @@ declare module "@mui/material/styles" {
         9: string;
         10: string;
       };
+      /**
+       * The colors MSCI uses for ratings and implied temperature rises.
+       */
       msci: {
+        /**
+         * The color used for MSCI ESG Rating leaders (AAA, AA).
+         */
         Leader: string;
+        /**
+         * The color used for MSCI ESG Rating averages (A, BBB, BB).
+         */
         Average: string;
+        /**
+         * The color used for MSCI ESG Rating laggards (B, CCC).
+         */
         Laggard: string;
+        /**
+         * The color used for companies that are aligned with the 1.5°C goal of the Paris Agreement.
+         */
         Aligned1: string;
+        /**
+         * The color used for companies that are aligned with the 2°C goal of the Paris Agreement.
+         */
         Aligned2: string;
+        /**
+         * The color used for companies that are misaligned with the goals of the Paris Agreement.
+         */
         Misaligned: string;
+        /**
+         * The color used for companies that are strongly misaligned with the goals of the Paris Agreement.
+         */
         StronglyMisaligned: string;
       };
+      /**
+       * The colors Sustainalytics uses for each risk level.
+       */
       sustainalytics: {
-        negligible: string;
+        negligible: string; // Grey
         low: string;
         medium: string;
         high: string;
-        severe: string;
+        severe: string; // Very intense yellow
       };
+      /**
+       * The colors used for the switch selector.
+       */
       switchSelector: {
         selected: string;
         unselected: string;
@@ -163,7 +198,6 @@ declare module "@mui/material/styles" {
     };
   }
 
-  // eslint-disable-next-line no-unused-vars
   interface ThemeOptions {
     colors: {
       gradients: {
@@ -253,7 +287,13 @@ declare module "@mui/material/styles" {
         main: string;
         dark: string;
       };
+      /**
+       * The colors Morningstar uses for each super sector.
+       */
       sector: Record<SuperSector, string>;
+      /**
+       * A color spectrum from red (0) to green (10) used for the analyst consensus.
+       */
       consensus: {
         0: string;
         1: string;
@@ -267,22 +307,52 @@ declare module "@mui/material/styles" {
         9: string;
         10: string;
       };
+      /**
+       * The colors MSCI uses for ratings and implied temperature rises.
+       */
       msci: {
+        /**
+         * The color used for MSCI ESG Rating leaders (AAA, AA).
+         */
         Leader: string;
+        /**
+         * The color used for MSCI ESG Rating averages (A, BBB, BB).
+         */
         Average: string;
+        /**
+         * The color used for MSCI ESG Rating laggards (B, CCC).
+         */
         Laggard: string;
+        /**
+         * The color used for companies that are aligned with the 1.5°C goal of the Paris Agreement.
+         */
         Aligned1: string;
+        /**
+         * The color used for companies that are aligned with the 2°C goal of the Paris Agreement.
+         */
         Aligned2: string;
+        /**
+         * The color used for companies that are misaligned with the goals of the Paris Agreement.
+         */
         Misaligned: string;
+        /**
+         * The color used for companies that are strongly misaligned with the goals of the Paris Agreement.
+         */
         StronglyMisaligned: string;
       };
+      /**
+       * The colors Sustainalytics uses for each risk level.
+       */
       sustainalytics: {
-        negligible: string;
+        negligible: string; // Grey
         low: string;
         medium: string;
         high: string;
-        severe: string;
+        severe: string; // Very intense yellow
       };
+      /**
+       * The colors used for the switch selector.
+       */
       switchSelector: {
         selected: string;
         unselected: string;
@@ -319,7 +389,20 @@ declare module "@mui/material/styles" {
   }
 }
 
+/**
+ * A map of all themes.
+ */
 const themeMap: { [key: string]: Theme } = {
   NebulaFighterTheme,
   PureLightTheme,
+};
+
+/**
+ * Creates a theme based on the theme name.
+ *
+ * @param {string} theme The name of the theme to create.
+ * @returns {Theme} The theme object.
+ */
+export const themeCreator = (theme: string): Theme => {
+  return themeMap[theme];
 };

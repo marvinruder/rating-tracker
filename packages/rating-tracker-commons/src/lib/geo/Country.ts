@@ -1,3 +1,6 @@
+/**
+ * An array of all ISO 3166-1 alpha-2 country codes.
+ */
 export const countryArray = [
   "AF",
   "AX",
@@ -249,12 +252,24 @@ export const countryArray = [
   "ZW",
 ] as const;
 
+/**
+ * A country, represented by its ISO 3166-1 alpha-2 code.
+ */
 export type Country = (typeof countryArray)[number];
 
+/**
+ * Checks if a string is a valid ISO 3166-1 alpha-2 country code.
+ *
+ * @param {string} s The string to check.
+ * @returns {boolean} True if the string is a valid ISO 3166-1 alpha-2 country code.
+ */
 export function isCountry(s: string): s is Country {
   return countryArray.includes(s as Country);
 }
 
+/**
+ * A record of country names for each country.
+ */
 export const countryName: Record<Country, string> = {
   AF: "Afghanistan",
   AX: "Åland Islands",
@@ -506,11 +521,23 @@ export const countryName: Record<Country, string> = {
   ZW: "Zimbabwe",
 };
 
-const alphaToFlagAlpha = (a: string) =>
-  String.fromCodePoint(0x1f1a5 + a.toUpperCase().codePointAt(0)!);
+/**
+ * Returns the emoji flag for a country.
+ *
+ * @param {Country} country The country
+ * @returns {string} An emoji of the country’s flag
+ */
 export const emojiFlag = (country: Country) =>
-  country.split("").map(alphaToFlagAlpha).join("");
+  country
+    .split("")
+    .map((a: string) =>
+      String.fromCodePoint(0x1f1a5 + a.toUpperCase().codePointAt(0)!)
+    )
+    .join("");
 
+/**
+ * A record of country names with emoji flags for each country.
+ */
 export const countryNameWithFlag: Record<Country, string> = { ...countryName };
 Object.entries(countryName).forEach(([key, value]) => {
   countryNameWithFlag[key] = emojiFlag(key as Country) + " " + value;

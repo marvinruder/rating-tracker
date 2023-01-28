@@ -10,11 +10,21 @@ import PageHeader from "./PageHeader";
 import useNotification from "../../../helpers/useNotification";
 import { useParams } from "react-router";
 
-const StockModule = () => {
+/**
+ * A module that displays the details of a stock.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const StockModule = (): JSX.Element => {
   const [stock, setStock] = useState<Stock>();
 
   const { setNotification } = useNotification();
 
+  /**
+   * Fetches the stock with the given ticker.
+   *
+   * @param {string} ticker The ticker of the stock to fetch.
+   */
   const getStock = (ticker: string) => {
     axios
       .get(baseUrl + stockAPI + `/${ticker}`)
@@ -39,18 +49,24 @@ const StockModule = () => {
     getStock(ticker);
   }, [ticker]);
 
+  /**
+   * Possible widths of the details card.
+   */
   let detailsCardWidth: 900 | 600 | 300;
 
   switch (
     +useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")
   ) {
     case 2:
+      // The screen is at least 964px wide.
       detailsCardWidth = 900;
       break;
     case 1:
+      // The screen is at least 664px, but less than 964px wide.
       detailsCardWidth = 600;
       break;
     case 0:
+      // The screen is less than 664px wide.
       detailsCardWidth = 300;
       break;
   }

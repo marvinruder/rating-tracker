@@ -1,5 +1,4 @@
-import { FC, ReactNode } from "react";
-import PropTypes from "prop-types";
+import { ReactNode } from "react";
 import { Box, Container, styled } from "@mui/material";
 
 const PageTitle = styled(Box)(
@@ -9,26 +8,33 @@ const PageTitle = styled(Box)(
   `
 );
 
-interface PageTitleWrapperProps {
-  children?: ReactNode;
-  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
-}
-
-const PageTitleWrapper: FC<PageTitleWrapperProps> = ({
-  children,
-  maxWidth,
-}) => {
-  if (maxWidth === undefined) maxWidth = "lg";
+/**
+ * The wrapper for a page title.
+ *
+ * @param {PageTitleWrapperProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const PageTitleWrapper = (props: PageTitleWrapperProps): JSX.Element => {
+  if (props.maxWidth === undefined) props.maxWidth = "lg";
   return (
     <PageTitle className="MuiPageTitle-wrapper">
-      <Container maxWidth={maxWidth}>{children}</Container>
+      <Container maxWidth={props.maxWidth}>{props.children}</Container>
     </PageTitle>
   );
 };
 
-PageTitleWrapper.propTypes = {
-  children: PropTypes.node.isRequired,
-  maxWidth: PropTypes.oneOf(["xs", "sm", "md", "lg", "xl", false]),
-};
+/**
+ * Properties for the PageTitleWrapper component.
+ */
+interface PageTitleWrapperProps {
+  /**
+   * The content of the component.
+   */
+  children?: ReactNode;
+  /**
+   * The maximum width of the container.
+   */
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
+}
 
 export default PageTitleWrapper;

@@ -3,6 +3,9 @@ import * as stock from "../../parameters/stock.js";
 import { unauthorized } from "../../responses/clientError.js";
 import { okStockListWithCount } from "../../responses/success.js";
 
+/**
+ * Get a list of stocks. Supports pagination.
+ */
 const get: OpenAPIV3.OperationObject = {
   tags: ["Stock API"],
   operationId: "getStockList",

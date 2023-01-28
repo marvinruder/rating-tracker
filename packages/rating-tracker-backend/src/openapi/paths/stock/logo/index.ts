@@ -4,6 +4,9 @@ import { notFound, unauthorized } from "../../../responses/clientError.js";
 import { badGateway } from "../../../responses/serverError.js";
 import { okSVG } from "../../../responses/success.js";
 
+/**
+ * Get the logo for the specified stock
+ */
 const get: OpenAPIV3.OperationObject = {
   tags: ["Stock API"],
   operationId: "getStockLogo",

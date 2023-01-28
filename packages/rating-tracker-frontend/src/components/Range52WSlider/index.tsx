@@ -1,5 +1,8 @@
 import { Slider, styled } from "@mui/material";
 
+/**
+ * A slider that is used to display a 52-week range.
+ */
 const Range52WSlider = styled(Slider)(({ theme }) => ({
   "@media (pointer: coarse)": {
     padding: "13px 0",

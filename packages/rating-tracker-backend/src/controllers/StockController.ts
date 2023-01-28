@@ -28,13 +28,25 @@ import {
 import APIError from "../lib/apiError.js";
 import axios from "axios";
 
+/**
+ * This class is responsible for providing stock data.
+ */
 class StockController {
+  /**
+   * Returns a list of stocks, which can be filtered, sorted and paginated.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   * @returns {Response} a response containing the stock list and the total number of stocks after filtering, but before
+   * pagination.
+   */
   async getList(req: Request, res: Response) {
+    // Read all stocks from Redis
     let stocks = (await readAllStocks()).map(
       (stockEntity) => new Stock(stockEntity)
     );
 
-    // Filtering
+    // Filter the list of stocks
     if (req.query.name) {
       stocks = stocks.filter((stock) =>
         (stock.ticker + " " + stock.name)
@@ -45,6 +57,7 @@ class StockController {
     if (req.query.country) {
       const countryParam = req.query.country;
       if (Array.isArray(countryParam)) {
+        // Multiple countries can be specified, one of which must match to the stock’s country.
         const countries: Country[] = [];
         countryParam.forEach(
           (country) => isCountry(country) && countries.push(country)
@@ -55,6 +68,7 @@ class StockController {
     if (req.query.industry) {
       const industryParam = req.query.industry;
       if (Array.isArray(industryParam)) {
+        // Multiple industries can be specified, one of which must match to the stock’s industry.
         const industries: Industry[] = [];
         industryParam.forEach(
           (industry) => isIndustry(industry) && industries.push(industry)
@@ -78,6 +92,7 @@ class StockController {
       const starRatingMin = Number(req.query.starRatingMin);
       if (!Number.isNaN(starRatingMin)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.starRating ?? -1) >= starRatingMin
         );
       }
@@ -86,6 +101,7 @@ class StockController {
       const starRatingMax = Number(req.query.starRatingMax);
       if (!Number.isNaN(starRatingMax)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.starRating ?? -1) <= starRatingMax
         );
       }
@@ -95,6 +111,7 @@ class StockController {
       if (!Number.isNaN(dividendYieldPercentMin)) {
         stocks = stocks.filter(
           (stock) =>
+            // larger is better – use -1 as default value
             (stock.dividendYieldPercent ?? -1) >= dividendYieldPercentMin
         );
       }
@@ -104,6 +121,7 @@ class StockController {
       if (!Number.isNaN(dividendYieldPercentMax)) {
         stocks = stocks.filter(
           (stock) =>
+            // larger is better – use -1 as default value
             (stock.dividendYieldPercent ?? -1) <= dividendYieldPercentMax
         );
       }
@@ -113,6 +131,7 @@ class StockController {
       if (!Number.isNaN(priceEarningRatioMin)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.priceEarningRatio ?? Number.MAX_VALUE) >=
             priceEarningRatioMin
         );
@@ -123,18 +142,21 @@ class StockController {
       if (!Number.isNaN(priceEarningRatioMax)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.priceEarningRatio ?? Number.MAX_VALUE) <=
             priceEarningRatioMax
         );
       }
     }
     if (req.query.morningstarFairValueDiffMin !== undefined) {
+      // Filter by percentage difference of fair value to last close
       const morningstarFairValueDiffMin = Number(
         req.query.morningstarFairValueDiffMin
       );
       if (!Number.isNaN(morningstarFairValueDiffMin)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.morningstarFairValue && stock.lastClose
               ? stock.getPercentageToLastClose("morningstarFairValue")
               : Number.MAX_VALUE) >= morningstarFairValueDiffMin
@@ -142,12 +164,14 @@ class StockController {
       }
     }
     if (req.query.morningstarFairValueDiffMax !== undefined) {
+      // Filter by percentage difference of fair value to last close
       const morningstarFairValueDiffMax = Number(
         req.query.morningstarFairValueDiffMax
       );
       if (!Number.isNaN(morningstarFairValueDiffMax)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.morningstarFairValue && stock.lastClose
               ? stock.getPercentageToLastClose("morningstarFairValue")
               : Number.MAX_VALUE) <= morningstarFairValueDiffMax
@@ -158,6 +182,7 @@ class StockController {
       const analystConsensusMin = Number(req.query.analystConsensusMin);
       if (!Number.isNaN(analystConsensusMin)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.analystConsensus ?? -1) >= analystConsensusMin
         );
       }
@@ -166,6 +191,7 @@ class StockController {
       const analystConsensusMax = Number(req.query.analystConsensusMax);
       if (!Number.isNaN(analystConsensusMax)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.analystConsensus ?? -1) <= analystConsensusMax
         );
       }
@@ -174,6 +200,7 @@ class StockController {
       const analystCountMin = Number(req.query.analystCountMin);
       if (!Number.isNaN(analystCountMin)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.analystCount ?? -1) >= analystCountMin
         );
       }
@@ -182,15 +209,18 @@ class StockController {
       const analystCountMax = Number(req.query.analystCountMax);
       if (!Number.isNaN(analystCountMax)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.analystCount ?? -1) <= analystCountMax
         );
       }
     }
     if (req.query.analystTargetDiffMin !== undefined) {
+      // Filter by percentage difference of analyst target price to last close
       const analystTargetDiffMin = Number(req.query.analystTargetDiffMin);
       if (!Number.isNaN(analystTargetDiffMin)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.analystTargetPrice && stock.lastClose
               ? stock.getPercentageToLastClose("analystTargetPrice")
               : Number.MAX_VALUE) >= analystTargetDiffMin
@@ -198,10 +228,12 @@ class StockController {
       }
     }
     if (req.query.analystTargetDiffMax !== undefined) {
+      // Filter by percentage difference of analyst target price to last close
       const analystTargetDiffMax = Number(req.query.analystTargetDiffMax);
       if (!Number.isNaN(analystTargetDiffMax)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.analystTargetPrice && stock.lastClose
               ? stock.getPercentageToLastClose("analystTargetPrice")
               : Number.MAX_VALUE) <= analystTargetDiffMax
@@ -213,6 +245,7 @@ class StockController {
       if (isMSCIESGRating(msciESGRatingMin)) {
         stocks = stocks.filter(
           (stock) =>
+            // Filter by index in array [AAA, ..., CCC]. Smaller is better – use largest number as default value
             (stock.msciESGRating
               ? msciESGRatingArray.indexOf(stock.msciESGRating)
               : 7) >= msciESGRatingArray.indexOf(msciESGRatingMin)
@@ -224,6 +257,7 @@ class StockController {
       if (isMSCIESGRating(msciESGRatingMax)) {
         stocks = stocks.filter(
           (stock) =>
+            // Filter by index in array [AAA, ..., CCC]. Smaller is better – use largest number as default value
             (stock.msciESGRating
               ? msciESGRatingArray.indexOf(stock.msciESGRating)
               : 7) <= msciESGRatingArray.indexOf(msciESGRatingMax)
@@ -235,6 +269,7 @@ class StockController {
       if (!Number.isNaN(msciTemperatureMin)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.msciTemperature ?? Number.MAX_VALUE) >= msciTemperatureMin
         );
       }
@@ -244,6 +279,7 @@ class StockController {
       if (!Number.isNaN(msciTemperatureMax)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.msciTemperature ?? Number.MAX_VALUE) <= msciTemperatureMax
         );
       }
@@ -252,6 +288,7 @@ class StockController {
       const refinitivESGScoreMin = Number(req.query.refinitivESGScoreMin);
       if (!Number.isNaN(refinitivESGScoreMin)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.refinitivESGScore ?? -1) >= refinitivESGScoreMin
         );
       }
@@ -260,6 +297,7 @@ class StockController {
       const refinitivESGScoreMax = Number(req.query.refinitivESGScoreMax);
       if (!Number.isNaN(refinitivESGScoreMax)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.refinitivESGScore ?? -1) <= refinitivESGScoreMax
         );
       }
@@ -268,6 +306,7 @@ class StockController {
       const refinitivEmissionsMin = Number(req.query.refinitivEmissionsMin);
       if (!Number.isNaN(refinitivEmissionsMin)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.refinitivEmissions ?? -1) >= refinitivEmissionsMin
         );
       }
@@ -276,6 +315,7 @@ class StockController {
       const refinitivEmissionsMax = Number(req.query.refinitivEmissionsMax);
       if (!Number.isNaN(refinitivEmissionsMax)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.refinitivEmissions ?? -1) <= refinitivEmissionsMax
         );
       }
@@ -284,6 +324,7 @@ class StockController {
       const spESGScoreMin = Number(req.query.spESGScoreMin);
       if (!Number.isNaN(spESGScoreMin)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.spESGScore ?? -1) >= spESGScoreMin
         );
       }
@@ -292,6 +333,7 @@ class StockController {
       const spESGScoreMax = Number(req.query.spESGScoreMax);
       if (!Number.isNaN(spESGScoreMax)) {
         stocks = stocks.filter(
+          // larger is better – use -1 as default value
           (stock) => (stock.spESGScore ?? -1) <= spESGScoreMax
         );
       }
@@ -303,6 +345,7 @@ class StockController {
       if (!Number.isNaN(sustainalyticsESGRiskMin)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) >=
             sustainalyticsESGRiskMin
         );
@@ -315,6 +358,7 @@ class StockController {
       if (!Number.isNaN(sustainalyticsESGRiskMax)) {
         stocks = stocks.filter(
           (stock) =>
+            // smaller is better – use very large number as default value
             (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) <=
             sustainalyticsESGRiskMax
         );
@@ -324,6 +368,7 @@ class StockController {
       const financialScoreMin = Number(req.query.financialScoreMin);
       if (!Number.isNaN(financialScoreMin)) {
         stocks = stocks.filter(
+          // score from function is between -1 and 1, filter input is between 0 and 100
           (stock) => 100 * stock.getFinancialScore() >= financialScoreMin
         );
       }
@@ -332,6 +377,7 @@ class StockController {
       const financialScoreMax = Number(req.query.financialScoreMax);
       if (!Number.isNaN(financialScoreMax)) {
         stocks = stocks.filter(
+          // score from function is between -1 and 1, filter input is between 0 and 100
           (stock) => 100 * stock.getFinancialScore() <= financialScoreMax
         );
       }
@@ -340,6 +386,7 @@ class StockController {
       const esgScoreMin = Number(req.query.esgScoreMin);
       if (!Number.isNaN(esgScoreMin)) {
         stocks = stocks.filter(
+          // score from function is between -1 and 1, filter input is between 0 and 100
           (stock) => 100 * stock.getESGScore() >= esgScoreMin
         );
       }
@@ -348,6 +395,7 @@ class StockController {
       const esgScoreMax = Number(req.query.esgScoreMax);
       if (!Number.isNaN(esgScoreMax)) {
         stocks = stocks.filter(
+          // score from function is between -1 and 1, filter input is between 0 and 100
           (stock) => 100 * stock.getESGScore() <= esgScoreMax
         );
       }
@@ -356,6 +404,7 @@ class StockController {
       const totalScoreMin = Number(req.query.totalScoreMin);
       if (!Number.isNaN(totalScoreMin)) {
         stocks = stocks.filter(
+          // score from function is between -1 and 1, filter input is between 0 and 100
           (stock) => 100 * stock.getTotalScore() >= totalScoreMin
         );
       }
@@ -364,15 +413,16 @@ class StockController {
       const totalScoreMax = Number(req.query.totalScoreMax);
       if (!Number.isNaN(totalScoreMax)) {
         stocks = stocks.filter(
+          // score from function is between -1 and 1, filter input is between 0 and 100
           (stock) => 100 * stock.getTotalScore() <= totalScoreMax
         );
       }
     }
 
-    // Counting
+    // Count all remaining stocks
     const length = stocks.length;
 
-    // Sorting
+    // Sort the list of remaining stocks
     const sortBy = req.query.sortBy;
     if (sortBy && typeof sortBy === "string" && isSortableAttribute(sortBy)) {
       switch (sortBy) {
@@ -383,11 +433,13 @@ class StockController {
           break;
         case "size":
           stocks.sort(
+            // Order: Small, Mid, Large
             (a, b) => sizeArray.indexOf(a.size) - sizeArray.indexOf(b.size)
           );
           break;
         case "style":
           stocks.sort(
+            // Order: Value, Blend, Growth
             (a, b) => styleArray.indexOf(a.style) - styleArray.indexOf(b.style)
           );
           break;
@@ -397,11 +449,13 @@ class StockController {
         case "refinitivESGScore":
         case "refinitivEmissions":
         case "spESGScore":
+          // larger is better – use -1 as default value
           stocks.sort((a, b) => (a[sortBy] ?? -1) - (b[sortBy] ?? -1));
           break;
         case "priceEarningRatio":
         case "msciTemperature":
         case "sustainalyticsESGRisk":
+          // smaller is better – use very large number as default value
           stocks.sort(
             (a, b) =>
               (a[sortBy] ?? Number.MAX_VALUE) - (b[sortBy] ?? Number.MAX_VALUE)
@@ -409,32 +463,35 @@ class StockController {
           break;
         case "morningstarFairValue":
         case "analystTargetPrice":
+          // smaller is better – use very large number as default value
           stocks.sort(
             (a, b) =>
               (a[sortBy] && a.lastClose
                 ? a.getPercentageToLastClose(sortBy)
-                : /* istanbul ignore next */
+                : /* istanbul ignore next */ // never reached in tests
                   Number.MAX_VALUE) -
               (b[sortBy] && b.lastClose
                 ? b.getPercentageToLastClose(sortBy)
-                : /* istanbul ignore next */
+                : /* istanbul ignore next */ // never reached in tests
                   Number.MAX_VALUE)
           );
           break;
         case "52w":
+          // sort by relative position of last close in 52W range
           stocks.sort(
             (a, b) =>
               (a.low52w && a.high52w && a.lastClose
                 ? (a.lastClose - a.low52w) / (a.high52w - a.low52w)
-                : /* istanbul ignore next */
+                : /* istanbul ignore next */ // never reached in tests
                   0) -
               (b.low52w && b.high52w && b.lastClose
                 ? (b.lastClose - b.low52w) / (b.high52w - b.low52w)
-                : /* istanbul ignore next */
+                : /* istanbul ignore next */ // never reached in tests
                   0)
           );
           break;
         case "msciESGRating":
+          // Sort by index in array [AAA, ..., CCC]. Smaller is better – use largest number as default value
           stocks.sort(
             (a, b) =>
               (a.msciESGRating
@@ -455,28 +512,39 @@ class StockController {
           stocks.sort((a, b) => a.getTotalScore() - b.getTotalScore());
           break;
       }
+      // We just sorted ascending. If descending is requested, simply reverse the list.
       if (String(req.query.sortDesc).toLowerCase() === "true") {
         stocks.reverse();
       }
     }
 
-    // Pagination
+    // Only return the subset (= page in list) of stocks requested by offset and count
     let offset: number = parseInt(req.query.offset as string);
     const count: number = parseInt(req.query.count as string);
     if (Number.isNaN(offset)) {
+      // If offset is not set, return the first page
       offset = 0;
     }
     stocks = stocks.slice(
       offset,
+      // If count is not set, return all remaining stocks
       Number.isNaN(count) ? undefined : offset + count
     );
 
+    // Respond with the list of stocks and the total count after filtering and before pagination
     return res.status(200).json({
       stocks: stocks,
       count: length,
     });
   }
 
+  /**
+   * Fetches the logo of a stock from Redis cache or TradeRepublic.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   * @returns {Response} a response with the logo of the stock
+   */
   async getLogo(req: Request, res: Response) {
     const stock = await readStock(req.params[0]);
     let logoResource: Resource;
@@ -484,23 +552,26 @@ class StockController {
       req.query.dark ? "dark" : "light"
     }.svg`;
     try {
+      // Try to read the logo from Redis cache first.
       logoResource = await readResource(url);
     } catch (e) {
+      // If the logo is not in the cache, fetch it from TradeRepublic and store it in the cache.
       await axios
         .get(url)
         .then(async (response) => {
           let maxAge: number;
           try {
-            maxAge =
+            maxAge = // Cache as long as TradeRepublic says using the max-age cache control directive
               +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
-            /* istanbul ignore next */
+            /* istanbul ignore next */ // Difficult to test, since TradeRepublic always returns a valid max-age
             if (Number.isNaN(maxAge)) {
               throw new TypeError();
             }
           } catch (e) {
-            /* istanbul ignore next */
+            /* istanbul ignore next */ // Difficult to test, since TradeRepublic always returns a valid max-age
             maxAge = 60 * 60 * 24;
           }
+          // Store the logo in the cache
           await createResource(
             {
               url,
@@ -509,14 +580,18 @@ class StockController {
             },
             maxAge
           );
+          // Read the logo as a Resource object
           logoResource = await readResource(url);
         })
         .catch(async () => {
+          // If the logo could not be fetched from TradeRepublic, use an empty SVG as a placeholder.
           await createResource(
             {
               url,
               fetchDate: new Date(),
-              content: `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>`,
+              content:
+                `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">` +
+                `</svg>`,
             },
             60 * 60 * 24
           );
@@ -527,6 +602,7 @@ class StockController {
     res.set(
       "Cache-Control",
       `max-age=${
+        // Allow client-side caching as long as the logo is valid in the cache
         (60 * 60 * 24 -
           (new Date().getTime() - logoResource.fetchDate.getTime()) / 1000) |
         0
@@ -535,11 +611,26 @@ class StockController {
     return res.status(200).send(logoResource.content);
   }
 
+  /**
+   * Reads a single stock from Redis.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   * @returns {Response} a response with the stock
+   */
   async get(req: Request, res: Response) {
     const stock = await readStock(req.params[0]);
     return res.status(200).json(stock);
   }
 
+  /**
+   * Creates a new stock in Redis.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   * @returns {Response} a 201 response if the stock was created successfully
+   * @throws an {@link APIError} if a stock with the same ticker already exists
+   */
   async put(req: Request, res: Response) {
     const ticker = req.params[0];
     const { name, country, isin } = req.query;
@@ -558,6 +649,13 @@ class StockController {
     }
   }
 
+  /**
+   * Updates a stock in Redis.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   * @returns {Response} a 204 response if the stock was updated successfully
+   */
   async patch(req: Request, res: Response) {
     const ticker = req.params[0];
     const {
@@ -599,6 +697,13 @@ class StockController {
     }
   }
 
+  /**
+   * Deletes a stock from Redis.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   * @returns {Response} a 204 response if the stock was deleted successfully
+   */
   async delete(req: Request, res: Response) {
     await deleteStock(req.params[0]);
     return res.status(204).end();

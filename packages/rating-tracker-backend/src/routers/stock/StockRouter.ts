@@ -2,14 +2,25 @@ import { Request, Response, Router } from "express";
 import StockController from "../../controllers/StockController.js";
 import "express-async-errors";
 
+/**
+ * Router for stock routes.
+ */
 class StockRouter {
   private _router = Router();
   private _controller = StockController;
 
+  /**
+   * Get the router for stock routes.
+   *
+   * @returns {Router} The router for stock routes.
+   */
   get router() {
     return this._router;
   }
 
+  /**
+   * Creates a new stock router.
+   */
   constructor() {
     this._configure();
   }

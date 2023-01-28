@@ -1,8 +1,13 @@
-/* istanbul ignore file */
 import { UserEntity, userSchema } from "../../../../models/user.js";
 
+/**
+ * A mock repository for testing purposes.
+ */
 let userRepository: Map<string, UserEntity>;
 
+/**
+ * Initializes the mock repository with one exemplary user.
+ */
 export const initUserRepository = () => {
   userRepository = new Map<string, UserEntity>();
   userRepository.set(
@@ -17,15 +22,33 @@ export const initUserRepository = () => {
   );
 };
 
+/**
+ * Fetch a user from the mock repository.
+ *
+ * @param {string} id The ID of the user to fetch.
+ * @returns {UserEntity} The user entity.
+ */
 export const fetch = (id: string) => {
   return userRepository.get(id);
 };
 
+/**
+ * Save a user to the mock repository.
+ *
+ * @param {UserEntity} userEntity The user entity to save.
+ * @returns {string} The ID of the saved user.
+ */
 export const save = (userEntity: UserEntity) => {
   userRepository.set(userEntity.entityId, userEntity);
   return userEntity.entityId;
 };
 
+/**
+ * Delete a user from the mock repository.
+ *
+ * @param {string} id The ID of the user to delete.
+ * @returns {void}
+ */
 export const remove = (id: string) => {
   return userRepository.delete(id);
 };

@@ -1,5 +1,8 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 
+/**
+ * Whether to immediately respond to the request and detach the fetch process from it
+ */
 const detach: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "detach",
@@ -11,6 +14,9 @@ const detach: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * Whether not to skip fetching date due to a recent successful fetch
+ */
 const noSkip: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "noSkip",

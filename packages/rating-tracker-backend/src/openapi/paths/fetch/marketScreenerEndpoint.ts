@@ -5,6 +5,9 @@ import { notFound, unauthorized } from "../../responses/clientError.js";
 import { badGateway } from "../../responses/serverError.js";
 import { accepted, noContent, okStockList } from "../../responses/success.js";
 
+/**
+ * Fetch information from Market Screener
+ */
 const get: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchMarketScreenerData",
@@ -14,7 +17,8 @@ const get: OpenAPIV3.OperationObject = {
     {
       ...stock.ticker,
       description:
-        "The ticker of a stock for which information is to be fetched. If not present, all stocks known to the system will be used",
+        "The ticker of a stock for which information is to be fetched. " +
+        "If not present, all stocks known to the system will be used",
     },
     fetch.detach,
     fetch.noSkip,

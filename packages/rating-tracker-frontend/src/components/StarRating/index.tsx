@@ -2,7 +2,15 @@ import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { Box } from "@mui/material";
 
-const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
+/**
+ * A component that displays a rating of 1 to 5 stars using full and empty star icons.
+ *
+ * @param {StarRatingProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const StarRating: React.FC<StarRatingProps> = (
+  props: StarRatingProps
+): JSX.Element => {
   let value: 0 | 1 | 2 | 3 | 4 | 5;
   switch (props.value) {
     case 1:
@@ -37,8 +45,17 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
   );
 };
 
+/**
+ * Properties for the StarRating component.
+ */
 interface StarRatingProps {
+  /**
+   * The rating value.
+   */
   value?: number;
+  /**
+   * The size of the stars.
+   */
   size?: "small" | "medium" | "large" | "inherit";
 }
 

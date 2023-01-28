@@ -20,7 +20,13 @@ import {
   logoEndpoint,
 } from "packages/rating-tracker-frontend/src/endpoints";
 
-const PageHeader = (props: PageHeaderProps) => {
+/**
+ * A header for the stock details page.
+ *
+ * @param {PageHeaderProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const PageHeader = (props: PageHeaderProps): JSX.Element => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 
@@ -30,7 +36,7 @@ const PageHeader = (props: PageHeaderProps) => {
     <>
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item sx={{ display: "flex", alignItems: "center" }}>
-          {props.stock ? (
+          {props.stock ? ( // Actual header with logo and name
             <>
               <Avatar
                 sx={{
@@ -58,6 +64,7 @@ const PageHeader = (props: PageHeaderProps) => {
               </Box>
             </>
           ) : (
+            // Skeleton
             <>
               <Skeleton
                 variant="circular"
@@ -122,8 +129,17 @@ const PageHeader = (props: PageHeaderProps) => {
   );
 };
 
+/**
+ * The properties of the PageHeader component.
+ */
 interface PageHeaderProps {
+  /**
+   * The stock to display.
+   */
   stock?: Stock;
+  /**
+   * A method to update the stock, e.g. after editing.
+   */
   getStock?: () => void;
 }
 

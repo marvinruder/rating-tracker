@@ -1,5 +1,8 @@
 import { Country, countryArray } from "./Country.js";
 
+/**
+ * An array of region identifiers.
+ */
 export const regionArray = [
   "NorthAmerica",
   "LatinAmerica",
@@ -14,12 +17,24 @@ export const regionArray = [
   "AsiaEmerging",
 ] as const;
 
+/**
+ * A region.
+ */
 export type Region = (typeof regionArray)[number];
 
+/**
+ * Checks if a string is a valid region.
+ *
+ * @param {string} s The string to check.
+ * @returns {boolean} True if the string is a valid region.
+ */
 export function isRegion(s: string): s is Region {
   return regionArray.includes(s as Region);
 }
 
+/**
+ * A record of region names for each region.
+ */
 export const regionName: Record<Region, string> = {
   NorthAmerica: "North America",
   LatinAmerica: "Latin America",
@@ -34,6 +49,9 @@ export const regionName: Record<Region, string> = {
   AsiaEmerging: "Asia Emerging",
 };
 
+/**
+ * A record associating each country with its region.
+ */
 export const regionOfCountry: Record<Country, Region> = {
   US: "NorthAmerica",
   CA: "NorthAmerica",
@@ -286,6 +304,12 @@ export const regionOfCountry: Record<Country, Region> = {
   WF: "AsiaEmerging",
 };
 
+/**
+ * Returns an array of all countries in a given region.
+ *
+ * @param {Region} region The region to get countries for.
+ * @returns {Country[]} The array of countries in the given region.
+ */
 export const getCountriesInRegion = (region: Region): Country[] => {
   return countryArray.filter((country) => regionOfCountry[country] == region);
 };

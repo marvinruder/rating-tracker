@@ -1,5 +1,8 @@
 import { Industry, industryArray } from "./Industry.js";
 
+/**
+ * An array of industry groups in the Morningstar Global Equity Classification Structure.
+ */
 export const industryGroupArray = [
   "Agriculture",
   "BuildingMaterials",
@@ -58,12 +61,24 @@ export const industryGroupArray = [
   "Semiconductors",
 ] as const;
 
+/**
+ * An industry group in the Morningstar Global Equity Classification Structure.
+ */
 export type IndustryGroup = (typeof industryGroupArray)[number];
 
+/**
+ * Checks if a string is a valid industry group.
+ *
+ * @param {string} s The string to check.
+ * @returns {boolean} True if the string is a valid industry group.
+ */
 export function isIndustryGroup(s: string): s is IndustryGroup {
   return industryGroupArray.includes(s as IndustryGroup);
 }
 
+/**
+ * A record of industry group names for each industry group.
+ */
 export const industryGroupName: Record<IndustryGroup, string> = {
   Agriculture: "Agriculture",
   BuildingMaterials: "Building Materials",
@@ -122,6 +137,9 @@ export const industryGroupName: Record<IndustryGroup, string> = {
   Semiconductors: "Semiconductors",
 };
 
+/**
+ * A record associating each industry with its industry group.
+ */
 export const groupOfIndustry: Record<Industry, IndustryGroup> = {
   AgriculturalInputs: "Agriculture",
   BuildingMaterials: "BuildingMaterials",
@@ -270,6 +288,12 @@ export const groupOfIndustry: Record<Industry, IndustryGroup> = {
   Solar: "Semiconductors",
 };
 
+/**
+ * Returns an array of all industries in a industry group.
+ *
+ * @param {IndustryGroup} industryGroup The industry group to get industries for.
+ * @returns {Industry[]} The array of industries in the industry group.
+ */
 export const getIndustriesInGroup = (
   industryGroup: IndustryGroup
 ): Industry[] => {

@@ -34,12 +34,19 @@ import {
 } from "../../endpoints";
 import useNotification from "../../helpers/useNotification";
 
-const EditStock = (props: EditStockProps) => {
+/**
+ * A dialog to edit a new stock in the backend.
+ *
+ * @param {EditStockProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const EditStock = (props: EditStockProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>(props.stock?.name);
-  const [nameError, setNameError] = useState<boolean>(false);
+  const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [country, setCountry] = useState<Country>(props.stock?.country);
-  const [countryError, setCountryError] = useState<boolean>(false);
+  const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
+  // The value of the text field in the country autocomplete.
   const [countryInputValue, setCountryInputValue] = useState<string>(
     countryName[props.stock?.country]
   );
@@ -73,11 +80,18 @@ const EditStock = (props: EditStockProps) => {
   ] = useState<boolean>(false);
   const { setNotification } = useNotification();
 
+  /**
+   * Checks for errors in the input fields.
+   */
   const validate = () => {
+    // The following fields are required.
     setNameError(!name);
     setCountryError(!country);
   };
 
+  /**
+   * Updates the stock in the backend.
+   */
   const updateStock = () => {
     props.stock &&
       props.getStocks &&
@@ -85,6 +99,7 @@ const EditStock = (props: EditStockProps) => {
       axios
         .patch(baseUrl + stockAPI + `/${props.stock.ticker}`, undefined, {
           params: {
+            // Only send the parameters that have changed.
             name: name !== props.stock.name ? name : undefined,
             country: country !== props.stock.country ? country : undefined,
             morningstarId:
@@ -104,7 +119,7 @@ const EditStock = (props: EditStockProps) => {
                 : undefined,
           },
         })
-        .then(props.getStocks)
+        .then(props.getStocks) // Update the stocks in the parent component.
         .catch((e) => {
           setNotification({
             severity: "error",
@@ -118,6 +133,9 @@ const EditStock = (props: EditStockProps) => {
         .finally(() => (setRequestInProgress(false), props.onClose())));
   };
 
+  /**
+   * Transmits the Morningstar ID to the server.
+   */
   const patchStockMorningstarId = () => {
     props.stock &&
       props.getStocks &&
@@ -128,6 +146,7 @@ const EditStock = (props: EditStockProps) => {
         })
         .then(() => {
           if (morningstarId) {
+            // If a Morningstar ID was set, we fetch data from Morningstar using the new ID.
             axios
               .get(baseUrl + fetchAPI + morningstarEndpoint, {
                 params: { ticker: props.stock.ticker, noSkip: true },
@@ -152,7 +171,7 @@ const EditStock = (props: EditStockProps) => {
           setMorningstarIdRequestInProgress(false);
           setNotification({
             severity: "error",
-            title: "Error while adding Morningstar ID",
+            title: "Error while setting Morningstar ID",
             message:
               e.response?.status && e.response?.data?.message
                 ? `${e.response.status}: ${e.response.data.message}`
@@ -161,6 +180,9 @@ const EditStock = (props: EditStockProps) => {
         }));
   };
 
+  /**
+   * Transmits the Market Screener ID to the server.
+   */
   const patchStockMarketScreenerId = () => {
     props.stock &&
       props.getStocks &&
@@ -171,6 +193,7 @@ const EditStock = (props: EditStockProps) => {
         })
         .then(() => {
           if (marketScreenerId) {
+            // If a Market Screener ID was set, we fetch data from Market Screener using the new ID.
             axios
               .get(baseUrl + fetchAPI + marketScreenerEndpoint, {
                 params: { ticker: props.stock.ticker, noSkip: true },
@@ -196,7 +219,7 @@ const EditStock = (props: EditStockProps) => {
           setMarketScreenerIdRequestInProgress(false);
           setNotification({
             severity: "error",
-            title: "Error while adding Market Screener ID",
+            title: "Error while setting Market Screener ID",
             message:
               e.response?.status && e.response?.data?.message
                 ? `${e.response.status}: ${e.response.data.message}`
@@ -205,6 +228,9 @@ const EditStock = (props: EditStockProps) => {
         }));
   };
 
+  /**
+   * Transmits the MSCI ID to the server.
+   */
   const patchStockMsciId = () => {
     props.stock &&
       props.getStocks &&
@@ -215,6 +241,7 @@ const EditStock = (props: EditStockProps) => {
         })
         .then(() => {
           if (msciId) {
+            // If an MSCI ID was set, we fetch data from MSCI using the new ID.
             axios
               .get(baseUrl + fetchAPI + msciEndpoint, {
                 params: { ticker: props.stock.ticker, noSkip: true },
@@ -239,7 +266,7 @@ const EditStock = (props: EditStockProps) => {
           setMsciIdRequestInProgress(false);
           setNotification({
             severity: "error",
-            title: "Error while adding MSCI ID",
+            title: "Error while setting MSCI ID",
             message:
               e.response?.status && e.response?.data?.message
                 ? `${e.response.status}: ${e.response.data.message}`
@@ -248,6 +275,9 @@ const EditStock = (props: EditStockProps) => {
         }));
   };
 
+  /**
+   * Transmits the Reuters Identifier Code (RIC) to the server.
+   */
   const patchStockRic = () => {
     props.stock &&
       props.getStocks &&
@@ -258,6 +288,7 @@ const EditStock = (props: EditStockProps) => {
         })
         .then(() => {
           if (ric) {
+            // If a RIC was set, we fetch data from Refinitiv using the new RIC.
             axios
               .get(baseUrl + fetchAPI + refinitivEndpoint, {
                 params: { ticker: props.stock.ticker, noSkip: true },
@@ -282,7 +313,7 @@ const EditStock = (props: EditStockProps) => {
           setRicRequestInProgress(false);
           setNotification({
             severity: "error",
-            title: "Error while adding RIC",
+            title: "Error while setting RIC",
             message:
               e.response?.status && e.response?.data?.message
                 ? `${e.response.status}: ${e.response.data.message}`
@@ -291,6 +322,9 @@ const EditStock = (props: EditStockProps) => {
         }));
   };
 
+  /**
+   * Transmits the S&P ID to the server.
+   */
   const patchStockSpId = () => {
     props.stock &&
       props.getStocks &&
@@ -301,6 +335,7 @@ const EditStock = (props: EditStockProps) => {
         })
         .then(() => {
           if (spId) {
+            // If an S&P ID was set, we fetch data from S&P using the new ID.
             axios
               .get(baseUrl + fetchAPI + spEndpoint, {
                 params: { ticker: props.stock.ticker, noSkip: true },
@@ -338,7 +373,7 @@ const EditStock = (props: EditStockProps) => {
           setSpIdRequestInProgress(false);
           setNotification({
             severity: "error",
-            title: "Error while adding S&P ID",
+            title: "Error while setting S&P ID",
             message:
               e.response?.status && e.response?.data?.message
                 ? `${e.response.status}: ${e.response.data.message}`
@@ -347,6 +382,9 @@ const EditStock = (props: EditStockProps) => {
         }));
   };
 
+  /**
+   * Transmits the Sustainalytics ID to the server.
+   */
   const patchStockSustainalyticsId = () => {
     props.stock &&
       props.getStocks &&
@@ -357,6 +395,7 @@ const EditStock = (props: EditStockProps) => {
         })
         .then(() => {
           if (sustainalyticsId) {
+            // If a Sustainalytics ID was set, we fetch data from Sustainalytics using the new ID.
             axios
               .get(baseUrl + fetchAPI + sustainalyticsEndpoint, {
                 params: { ticker: props.stock.ticker },
@@ -381,7 +420,7 @@ const EditStock = (props: EditStockProps) => {
           setSustainalyticsIdRequestInProgress(false);
           setNotification({
             severity: "error",
-            title: "Error while adding Sustainalytics ID",
+            title: "Error while setting Sustainalytics ID",
             message:
               e.response?.status && e.response?.data?.message
                 ? `${e.response.status}: ${e.response.data.message}`
@@ -432,6 +471,7 @@ const EditStock = (props: EditStockProps) => {
                 const currentInputValue = countryInputValue
                   .trim()
                   .toUpperCase();
+                // Filter the country names by the input value.
                 const filteredOptions = options.filter(
                   (option) =>
                     countryName[option]
@@ -439,6 +479,7 @@ const EditStock = (props: EditStockProps) => {
                       .startsWith(countryInputValue.trim().toUpperCase()) &&
                     option != currentInputValue
                 );
+                // If the text input is a valid country code, we show it as the first option.
                 isCountry(currentInputValue) &&
                   filteredOptions.unshift(currentInputValue);
                 return filteredOptions;
@@ -622,7 +663,7 @@ const EditStock = (props: EditStockProps) => {
           loading={requestInProgress}
           variant="contained"
           onClick={updateStock}
-          onMouseOver={validate}
+          onMouseOver={validate} // Validate input fields on hover
           disabled={nameError || countryError}
           startIcon={<PublishedWithChangesIcon />}
         >
@@ -633,9 +674,21 @@ const EditStock = (props: EditStockProps) => {
   );
 };
 
+/**
+ * Properties for the EditStock component.
+ */
 interface EditStockProps {
+  /**
+   * The stock to edit.
+   */
   stock: Stock;
-  getStocks: () => void;
+  /**
+   * A method to update the stock list after the stock was edited.
+   */
+  getStocks?: () => void;
+  /**
+   * A method that is called when the dialog is closed.
+   */
   onClose: () => void;
 }
 

@@ -4,6 +4,7 @@ const ok: OpenAPIV3.ResponseObject = {
   description: "OK",
 };
 
+// Generic object response
 const okObject: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -15,6 +16,7 @@ const okObject: OpenAPIV3.ResponseObject = {
   },
 };
 
+// Used for SVG logos
 const okSVG: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -62,6 +64,7 @@ const okStockListWithCount: OpenAPIV3.ResponseObject = {
   },
 };
 
+// Used for Status API endpoint
 const okOperational: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {

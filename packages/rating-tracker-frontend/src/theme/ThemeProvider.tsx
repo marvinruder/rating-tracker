@@ -1,22 +1,37 @@
-import React, { useEffect, useState } from "react";
+import { createContext, FC, useEffect, useState } from "react";
 import { ThemeProvider } from "@mui/material";
 import { themeCreator } from "./base";
 
-export const ThemeContext = React.createContext(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (themeName: string): void => {}
+/**
+ * An object provided by the theme context.
+ */
+type ThemeContextType = (themeName: string) => void;
+
+/**
+ * A context providing a theme for the application.
+ */
+export const ThemeContext = createContext<ThemeContextType>(
+  {} as ThemeContextType
 );
 
-type ThemeProviderWrapperProps = {
-  children: React.ReactNode;
-};
-
-const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = (
+/**
+ * A wrapped theme provider.
+ *
+ * @param {ThemeProviderWrapperProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const ThemeProviderWrapper: FC<ThemeProviderWrapperProps> = (
   props: ThemeProviderWrapperProps
 ) => {
   const curThemeName = localStorage.getItem("appTheme") || "NebulaFighterTheme";
   const [themeName, _setThemeName] = useState(curThemeName);
   const theme = themeCreator(themeName);
+
+  /**
+   * Sets the theme name.
+   *
+   * @param {string} themeName The name of the theme.
+   */
   const setThemeName = (themeName: string): void => {
     localStorage.setItem("appTheme", themeName);
     _setThemeName(themeName);
@@ -50,6 +65,13 @@ const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = (
       <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
     </ThemeContext.Provider>
   );
+};
+
+/**
+ * Properties for the theme provider wrapper.
+ */
+type ThemeProviderWrapperProps = {
+  children: React.ReactNode;
 };
 
 export default ThemeProviderWrapper;

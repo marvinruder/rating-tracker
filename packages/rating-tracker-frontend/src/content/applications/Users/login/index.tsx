@@ -22,27 +22,45 @@ import SwitchSelector from "../../../../components/SwitchSelector";
 import { useNavigate } from "react-router";
 import useNotification from "../../../../helpers/useNotification";
 
-const LoginApp = () => {
+/**
+ * This component renders the login page.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const LoginApp = (): JSX.Element => {
   const navigate = useNavigate();
-  const [action, setAction] = useState<string>("signIn");
+  const [action, setAction] = useState<"signIn" | "register">("signIn");
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [emailError, setEmailError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
   const { setNotification } = useNotification();
 
+  /**
+   * Validates the email input field.
+   *
+   * @returns {boolean} Whether the email input field contains a valid email address.
+   */
   const validateEmail = () => {
     return (
       document.getElementById("inputEmail") as HTMLInputElement
     ).reportValidity();
   };
 
+  /**
+   * Validates the name input field.
+   *
+   * @returns {boolean} Whether the name input field contains a valid name.
+   */
   const validateName = () => {
     return (
       document.getElementById("inputName") as HTMLInputElement
     ).reportValidity();
   };
 
+  /**
+   * Validates the input fields.
+   */
   const validate = () => {
     if (action === "register") {
       setEmailError(!validateEmail());
@@ -50,6 +68,13 @@ const LoginApp = () => {
     }
   };
 
+  /**
+   * Reports an error to the user using a notification snackbar.
+   *
+   * @param {AxiosError<any>} err The error to report.
+   * @param {string} task A description of the task that caused the error.
+   * @returns {void}
+   */
   const reportError = (err: AxiosError<any>, task: string) =>
     setNotification({
       severity: "error",
@@ -60,27 +85,36 @@ const LoginApp = () => {
           : err.message ?? "No additional information available.",
     });
 
+  /**
+   * Handles the click event of the login / register button.
+   */
   const onButtonClick = async () => {
     switch (action) {
       case "register":
+        // Validate input fields
         if (validateEmail() && validateName()) {
           try {
+            // Request registration challenge
             const res = await axios.get(baseUrl + authAPI + registerEndpoint, {
               params: { email, name },
             });
+            // Ask the browser to perform the WebAuthn registration and store a corresponding credential
             const authRes = await SimpleWebAuthnBrowser.startRegistration(
               res.data
             );
             try {
+              // Send the registration challenge response to the server
               await axios.post(baseUrl + authAPI + registerEndpoint, authRes, {
                 params: { email, name },
                 headers: { "Content-Type": "application/json" },
               });
+              // This is only reached if the registration was successful
               setNotification({
                 severity: "success",
                 title: "Welcome!",
                 message:
-                  "Your registration was successful. Please note that a manual activation of your account may still be necessary before you can access the page.",
+                  "Your registration was successful. Please note that a manual activation of your account may still " +
+                  "be necessary before you can access the page.",
               });
             } catch (err) {
               reportError(err, "processing registration response");
@@ -92,16 +126,20 @@ const LoginApp = () => {
         break;
       case "signIn":
         try {
+          // Request authentication challenge
           const res = await axios.get(baseUrl + authAPI + signInEndpoint);
+          // Ask the browser to perform the WebAuthn authentication
           const authRes = await SimpleWebAuthnBrowser.startAuthentication(
             res.data
           );
           try {
+            // Send the authentication challenge response to the server
             await axios.post(
               baseUrl + authAPI + signInEndpoint,
               { ...authRes, challenge: res.data.challenge },
               { headers: { "Content-Type": "application/json" } }
             );
+            // This is only reached if the authentication was successful
             setNotification({
               severity: "success",
               title: "Welcome back!",
@@ -114,8 +152,6 @@ const LoginApp = () => {
         } catch (err) {
           reportError(err, "requesting authentication challenge");
         }
-        break;
-      default:
         break;
     }
   };
@@ -206,7 +242,7 @@ const LoginApp = () => {
                 variant="contained"
                 disabled={action === "register" && (emailError || nameError)}
                 fullWidth
-                onMouseOver={validate}
+                onMouseOver={validate} // Validate input fields on hover
                 onClick={onButtonClick}
               >
                 {action === "signIn" ? "Sign in" : "Register"}

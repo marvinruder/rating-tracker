@@ -3,16 +3,30 @@ import rateLimit from "express-rate-limit";
 import "express-async-errors";
 import AuthController from "../../controllers/AuthController.js";
 
+/**
+ * Rate limiter for authentication routes.
+ */
 const authLimiter = rateLimit({ windowMs: 1000 * 60, max: 60 });
 
+/**
+ * Router for authentication routes.
+ */
 class AuthRouter {
   private _router = Router();
   private _controller = AuthController;
 
+  /**
+   * Get the router for authentication routes.
+   *
+   * @returns {Router} The router for authentication routes.
+   */
   get router() {
     return this._router;
   }
 
+  /**
+   * Creates a new authentication router.
+   */
   constructor() {
     this._configure();
   }
@@ -28,6 +42,7 @@ class AuthRouter {
         await this._controller.getRegistrationOptions(req, res);
       }
     );
+    // This function is not tested because it is difficult to mock creating a valid challenge response.
     /* istanbul ignore next */
     this._router.post(
       "/register",
@@ -43,6 +58,7 @@ class AuthRouter {
         await this._controller.getAuthenticationOptions(req, res);
       }
     );
+    // This function is not tested because it is difficult to mock creating a valid challenge response.
     /* istanbul ignore next */
     this._router.post(
       "/signIn",

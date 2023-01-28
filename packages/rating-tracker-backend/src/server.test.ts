@@ -211,7 +211,8 @@ describe("Stock API", () => {
 
     res = await requestWithSupertest
       .get(
-        "/api/stock/list?analystConsensusMin=7&analystConsensusMax=8.5&analystCountMin=20&analystCountMax=40&sortBy=name"
+        "/api/stock/list?analystConsensusMin=7&analystConsensusMax=8.5" +
+          "&analystCountMin=20&analystCountMax=40&sortBy=name"
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
@@ -260,7 +261,8 @@ describe("Stock API", () => {
 
     res = await requestWithSupertest
       .get(
-        "/api/stock/list?refinitivESGScoreMin=70&refinitivESGScoreMax=80&refinitivEmissionsMin=80&refinitivEmissionsMax=90&sortBy=name"
+        "/api/stock/list?refinitivESGScoreMin=70&refinitivESGScoreMax=80&" +
+          "refinitivEmissionsMin=80&refinitivEmissionsMax=90&sortBy=name"
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
@@ -270,7 +272,8 @@ describe("Stock API", () => {
 
     res = await requestWithSupertest
       .get(
-        "/api/stock/list?spESGScoreMin=50&spESGScoreMax=85&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name"
+        "/api/stock/list?spESGScoreMin=50&spESGScoreMax=85" +
+          "&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name"
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
@@ -319,6 +322,7 @@ describe("Stock API", () => {
             typeof res.body.stocks[i].lastClose == "number" &&
             typeof res.body.stocks[i + 1].lastClose == "number"
           ) {
+            // Stocks should be ordered by the ratio of the target price to the last close price (premium or discount)
             expect(
               res.body.stocks[i].lastClose / res.body.stocks[i][sortCriterion]
             ).toBeLessThanOrEqual(
@@ -343,6 +347,7 @@ describe("Stock API", () => {
             typeof res.body.stocks[i].lastClose == "number" &&
             typeof res.body.stocks[i + 1].lastClose == "number"
           ) {
+            // Stocks should be ordered by the relative position of the last close price within the 52 week range
             expect(
               (res.body.stocks[i].lastClose - res.body.stocks[i].low52w) /
                 (res.body.stocks[i].high52w - res.body.stocks[i].low52w)
@@ -361,6 +366,7 @@ describe("Stock API", () => {
             typeof res.body.stocks[i][sortCriterion] == "number" &&
             typeof res.body.stocks[i + 1][sortCriterion] == "number"
           ) {
+            // Stocks should be ordered by the sort criterion
             expect(res.body.stocks[i][sortCriterion]).toBeLessThanOrEqual(
               res.body.stocks[i + 1][sortCriterion]
             );
@@ -600,8 +606,10 @@ describe("Authentication API", () => {
   it("does not provide too many authentication challenges", async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for await (const _ of [...Array(60)]) {
+      // Request 60 authentication challenges
       await requestWithSupertest.get("/api/auth/signIn");
     }
+    // Those were too many. The rate limiter should now refuse to provide more.
     const res = await requestWithSupertest.get("/api/auth/signIn");
     expect(res.status).toBe(429);
   });

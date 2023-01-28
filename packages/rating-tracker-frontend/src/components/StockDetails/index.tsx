@@ -44,9 +44,19 @@ import {
 } from "../../helpers/navigators";
 import StarRating from "../StarRating";
 
-const StockDetails = (props: StockDetailsProps) => {
+/**
+ * This component displays detailed information about a stock in a grid.
+ *
+ * @param {StockDetailsProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const StockDetails = (props: StockDetailsProps): JSX.Element => {
   const theme = useTheme();
 
+  /**
+   * Displays a chip with a colored icon. The color depends on the value of the stock's
+   * MSCI Implied Temperature Rise and resembles the company’s alignment with the Paris Agreement.
+   */
   const TemperatureChip = styled(Chip)(() => ({
     ".MuiChip-icon": {
       color:
@@ -59,36 +69,51 @@ const StockDetails = (props: StockDetailsProps) => {
           : theme.colors.msci.StronglyMisaligned,
     },
   }));
+  /**
+   * Displays a chip with a green icon.
+   */
   const GreenIconChip = styled(Chip)(() => ({
     ".MuiChip-icon": {
       color: theme.colors.sector.Defensive,
     },
   }));
+  /**
+   * Displays a chip with a yellow icon.
+   */
   const YellowIconChip = styled(Chip)(() => ({
     ".MuiChip-icon": {
       color: theme.colors.msci.Average,
     },
   }));
+  /**
+   * Displays a chip with a blue icon.
+   */
   const BlueIconChip = styled(Chip)(() => ({
     ".MuiChip-icon": {
       color: theme.colors.primary.main,
     },
   }));
 
+  /**
+   * Possible widths of the details container.
+   */
   let detailsContainerWidth: 900 | 600 | 300;
 
   switch (
     +useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")
   ) {
     case 2:
+      // The screen is at least 964px wide.
       detailsContainerWidth =
         props.maxWidth && props.maxWidth < 900 ? props.maxWidth : 900;
       break;
     case 1:
+      // The screen is at least 664px, but less than 964px wide.
       detailsContainerWidth =
         props.maxWidth && props.maxWidth < 600 ? props.maxWidth : 600;
       break;
     case 0:
+      // The screen is less than 664px wide.
       detailsContainerWidth =
         props.maxWidth && props.maxWidth < 300 ? props.maxWidth : 300;
       break;
@@ -96,11 +121,13 @@ const StockDetails = (props: StockDetailsProps) => {
 
   return (
     <Grid container width={detailsContainerWidth} margin="auto">
+      {/* Key Figures */}
       <Grid item width={300} order={1}>
         <Typography variant="h4" px="24px" py="16px">
           Key Figures
         </Typography>
         <Grid container spacing={1} px="24px" pb="20px">
+          {/* Country */}
           <Grid item xs={3}>
             <Tooltip
               title={
@@ -123,6 +150,7 @@ const StockDetails = (props: StockDetailsProps) => {
               )}
             </Typography>
           </Grid>
+          {/* Region */}
           <Grid item xs={3}>
             <Typography variant="h5">Region</Typography>
           </Grid>
@@ -135,6 +163,7 @@ const StockDetails = (props: StockDetailsProps) => {
               )}
             </Typography>
           </Grid>
+          {/* Stylebox */}
           <Grid item xs={3}>
             <Tooltip
               title={
@@ -194,6 +223,7 @@ const StockDetails = (props: StockDetailsProps) => {
               />
             )}
           </Grid>
+          {/* Sector and industry */}
           <Grid item xs={3}>
             <Tooltip
               title={
@@ -336,11 +366,13 @@ const StockDetails = (props: StockDetailsProps) => {
           </Grid>
         </Grid>
       </Grid>
+      {/* Financial Data */}
       <Grid item width={300} order={detailsContainerWidth === 900 ? 2 : 5}>
         <Typography variant="h4" px="24px" py="16px">
           Financial Data
         </Typography>
         <Grid container spacing={1} px="24px" pb="20px">
+          {/* Dividend Yield */}
           <Grid item xs={4.5}>
             <Tooltip
               title={
@@ -367,6 +399,7 @@ const StockDetails = (props: StockDetailsProps) => {
               )}
             </Typography>
           </Grid>
+          {/* P/E Ratio */}
           <Grid item xs={4.5}>
             <Tooltip
               title={
@@ -392,6 +425,7 @@ const StockDetails = (props: StockDetailsProps) => {
               )}
             </Typography>
           </Grid>
+          {/* Market Cap */}
           <Grid item xs={4.5}>
             <Tooltip
               title={
@@ -429,6 +463,7 @@ const StockDetails = (props: StockDetailsProps) => {
               )}
             </Typography>
           </Grid>
+          {/* 52W Range */}
           <Grid item xs={4.5} mt="11.5px">
             <Tooltip
               title={
@@ -485,11 +520,13 @@ const StockDetails = (props: StockDetailsProps) => {
           </Grid>
         </Grid>
       </Grid>
+      {/* Overall Scores */}
       <Grid item width={300} order={detailsContainerWidth === 900 ? 3 : 2}>
         <Typography variant="h4" px="24px" py="16px">
           Overall Scores
         </Typography>
         <Grid container spacing={1} px="24px" pb="20px">
+          {/* Total Score */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -535,6 +572,7 @@ const StockDetails = (props: StockDetailsProps) => {
               />
             )}
           </Grid>
+          {/* Financial Score */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -579,6 +617,7 @@ const StockDetails = (props: StockDetailsProps) => {
               />
             )}
           </Grid>
+          {/* ESG Score */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -625,10 +664,12 @@ const StockDetails = (props: StockDetailsProps) => {
         </Grid>
       </Grid>
       <Grid item width={300} order={detailsContainerWidth === 900 ? 4 : 3}>
+        {/* Financial Ratings */}
         <Typography variant="h4" px="24px" py="16px">
           Financial Ratings
         </Typography>
         <Grid container spacing={1} px="24px" pb="20px">
+          {/* Morningstar Star Rating */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -689,6 +730,7 @@ const StockDetails = (props: StockDetailsProps) => {
               </Box>
             </MorningstarNavigator>
           </Grid>
+          {/* Morningstar Fair Value */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -771,6 +813,7 @@ const StockDetails = (props: StockDetailsProps) => {
               </Typography>
             </MorningstarNavigator>
           </Grid>
+          {/* Analyst Consensus */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -847,6 +890,7 @@ const StockDetails = (props: StockDetailsProps) => {
               />
             )}
           </Grid>
+          {/* Analyst Target Price */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -936,6 +980,7 @@ const StockDetails = (props: StockDetailsProps) => {
               </Typography>
             </MarketScreenerNavigator>
           </Grid>
+          {/* Analyst Count */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -968,11 +1013,13 @@ const StockDetails = (props: StockDetailsProps) => {
           </Grid>
         </Grid>
       </Grid>
+      {/* ESG Ratings */}
       <Grid item width={300} order={detailsContainerWidth === 900 ? 5 : 4}>
         <Typography variant="h4" px="24px" py="16px">
           ESG Ratings
         </Typography>
         <Grid container spacing={1} px="24px" pb="20px">
+          {/* MSCI ESG Rating */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -1032,6 +1079,7 @@ const StockDetails = (props: StockDetailsProps) => {
               />
             )}
           </Grid>
+          {/* MSCI Implied Temperature Rise */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -1075,6 +1123,7 @@ const StockDetails = (props: StockDetailsProps) => {
               />
             )}
           </Grid>
+          {/* Refinitiv ESG Score */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -1123,6 +1172,7 @@ const StockDetails = (props: StockDetailsProps) => {
               </Typography>
             )}
           </Grid>
+          {/* Refinitiv Emissions */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -1173,6 +1223,7 @@ const StockDetails = (props: StockDetailsProps) => {
               </Typography>
             )}
           </Grid>
+          {/* S&P ESG Score */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -1223,6 +1274,7 @@ const StockDetails = (props: StockDetailsProps) => {
               </Typography>
             )}
           </Grid>
+          {/* Sustainalytics ESG Risk */}
           <Grid item xs={6}>
             <Tooltip
               title={
@@ -1290,6 +1342,7 @@ const StockDetails = (props: StockDetailsProps) => {
           </Grid>
         </Grid>
       </Grid>
+      {/* Description */}
       <Grid item width={300} order={6} px="24px" pt="14px" pb="20px">
         <Typography variant="body1">
           {props.stock ? (
@@ -1313,8 +1366,17 @@ const StockDetails = (props: StockDetailsProps) => {
   );
 };
 
+/**
+ * Properties for the StockDetails component
+ */
 interface StockDetailsProps {
+  /**
+   * The stock to display details of.
+   */
   stock?: Stock;
+  /**
+   * The maximum width of the component.
+   */
   maxWidth?: 600 | 300;
 }
 

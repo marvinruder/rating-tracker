@@ -12,7 +12,12 @@ const MainContent = styled(Box)(
 `
 );
 
-function Status404() {
+/**
+ * Shows a 404 Not Found page.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const Status404 = (): JSX.Element => {
   return (
     <MainContent>
       <Container maxWidth="md">
@@ -25,6 +30,6 @@ function Status404() {
       </Container>
     </MainContent>
   );
-}
+};
 
 export default Status404;

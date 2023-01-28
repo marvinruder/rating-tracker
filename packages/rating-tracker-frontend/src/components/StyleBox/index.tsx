@@ -1,16 +1,21 @@
 import { FC } from "react";
 import { Size, Style } from "rating-tracker-commons";
 
-interface StyleBoxProps {
-  size: Size;
-  style: Style;
-  fill: React.CSSProperties["color"];
-  stroke: React.CSSProperties["color"];
-  length: number;
-}
-
+/**
+ * A component that renders a Morningstar StyleBox.
+ *
+ * @param {StyleBoxProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
 const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
-  const getSquare = (size: Size, style: Style) => {
+  /**
+   * Provides the path for the correct square representing the given size and style.
+   *
+   * @param {Size} size The size of the company, to be represented by the square.
+   * @param {Style} style The style of the company, to be represented by the square.
+   * @returns {JSX.Element} The path for the square.
+   */
+  const getSquare = (size: Size, style: Style): JSX.Element => {
     switch (size) {
       case "Small":
         switch (style) {
@@ -108,5 +113,31 @@ const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
     </svg>
   );
 };
+
+/**
+ * Properties for the StyleBox component.
+ */
+interface StyleBoxProps {
+  /**
+   * The size of the company, to be represented in the StyleBox.
+   */
+  size: Size;
+  /**
+   * The style of the company, to be represented in the StyleBox.
+   */
+  style: Style;
+  /**
+   * The color to fill the StyleBox with.
+   */
+  fill: React.CSSProperties["color"];
+  /**
+   * The color to be used for the stroke of the StyleBox.
+   */
+  stroke: React.CSSProperties["color"];
+  /**
+   * The width and height of the StyleBox.
+   */
+  length: number;
+}
 
 export default StyleBox;

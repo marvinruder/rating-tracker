@@ -1,10 +1,18 @@
 import { User as CommonsUser } from "rating-tracker-commons";
 import { Entity, Schema } from "redis-om";
 
+/**
+ * A user of the application. Contains WebAuthn credentials.
+ */
 export class User extends CommonsUser {
+  /**
+   * Creates a new {@link User} from its Redis entity.
+   *
+   * @param {UserEntity} userEntity The Redis entity of the user.
+   */
   constructor(userEntity: UserEntity) {
     super();
-    this.email = userEntity.entityId;
+    this.email = userEntity.entityId; // The email is used as the entity’s ID
     this.name = userEntity.name;
     this.accessRights = userEntity.accessRights;
     this.credentialID = userEntity.credentialID;
@@ -13,17 +21,46 @@ export class User extends CommonsUser {
   }
 }
 
+/**
+ * A Redis entity of a {@link User}.
+ */
 export interface UserEntity {
+  /**
+   * The email address of the user, used as a unique identifier.
+   */
   email: string;
+  /**
+   * The common name of the user.
+   */
   name: string;
+  /**
+   * The access rights of the user, encoded as a bitfield.
+   */
   accessRights: number;
+  /**
+   * The ID of the WebAuthn credential.
+   */
   credentialID: string;
+  /**
+   * The public key of the WebAuthn credential.
+   */
   credentialPublicKey: string;
+  /**
+   * The counter of the WebAuthn credential, indicating the number of times it has been used.
+   */
   counter: number;
 }
 
+/**
+ * A Redis entity of a {@link User}.
+ */
 export class UserEntity extends Entity {}
 
+/**
+ * A Redis schema of a {@link UserEntity}.
+ *
+ * @see {@link User}
+ */
 export const userSchema = new Schema(UserEntity, {
   name: { type: "string" },
   accessRights: { type: "number" },

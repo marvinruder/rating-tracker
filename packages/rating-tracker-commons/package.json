@@ -8,9 +8,6 @@
   },
   "license": "MIT",
   "type": "module",
-  "engines": {
-    "node": "19.3.0"
-  },
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
@@ -27,6 +24,7 @@
     "eslint": "8.32.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "8.6.0",
+    "eslint-plugin-jsdoc": "^39.6.9",
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.8.3"
   }

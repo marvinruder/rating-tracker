@@ -6,12 +6,20 @@ import * as signal from "../../../signal/signal.js";
 import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
 import { MSCIESGRating, msciESGRatingArray } from "rating-tracker-commons";
 
+// Emojis showing whether a change is good or bad. Used in the Signal message.
 const SIGNAL_PREFIX_BETTER = "🟢 ";
 const SIGNAL_PREFIX_WORSE = "🔴 ";
 
+/**
+ * Create a stock.
+ *
+ * @param {Stock} stock The stock to create.
+ * @returns {boolean} Whether the stock was created.
+ */
 export const createStock = async (stock: Stock): Promise<boolean> => {
-  const existingStock = await fetch(stock.ticker);
+  const existingStock = await fetch(stock.ticker); // Attempt to fetch an existing stock with the same ticker
   if (existingStock && existingStock.name) {
+    // If that worked, a stock with the same ticker already exists
     logger.warn(
       PREFIX_REDIS +
         chalk.yellowBright(
@@ -33,6 +41,13 @@ export const createStock = async (stock: Stock): Promise<boolean> => {
   }
 };
 
+/**
+ * Read a stock.
+ *
+ * @param {string} ticker The ticker of the stock.
+ * @returns {Stock} The stock.
+ * @throws an {@link APIError} if the stock does not exist.
+ */
 export const readStock = async (ticker: string) => {
   const stockEntity = await fetch(ticker);
   if (stockEntity && stockEntity.name) {
@@ -41,16 +56,28 @@ export const readStock = async (ticker: string) => {
   throw new APIError(404, `Stock ${ticker} not found.`);
 };
 
+/**
+ * Read all stocks.
+ *
+ * @returns {Stock[]} A list of all stocks.
+ */
 export const readAllStocks = () => {
   return fetchAll();
 };
 
+/**
+ * Update a stock.
+ *
+ * @param {string} ticker The ticker of the stock.
+ * @param {Partial<Omit<Stock, "ticker">>} newValues The new values for the stock.
+ * @throws an {@link APIError} if the stock does not exist.
+ */
 export const updateStock = async (
   ticker: string,
   newValues: Partial<Omit<Stock, "ticker">>
 ) => {
-  let k: keyof typeof newValues;
-  const stockEntity = await fetch(ticker);
+  let k: keyof typeof newValues; // all keys of new values
+  const stockEntity = await fetch(ticker); // Fetch the stock from Redis
   if (stockEntity && stockEntity.name) {
     let signalMessage = `Updates for ${stockEntity.name} (${ticker}):`;
     logger.info(PREFIX_REDIS + `Updating stock ${ticker}…`);
@@ -59,6 +86,7 @@ export const updateStock = async (
     for (k in newValues) {
       if (k in newValues && newValues[k] !== undefined) {
         if (newValues[k] !== stockEntity[k]) {
+          // New data is different from old data
           isNewData = true;
           if (newValues[k] === null) {
             logger.info(
@@ -68,6 +96,7 @@ export const updateStock = async (
             logger.info(
               PREFIX_REDIS +
                 `    Property ${k} updated from ${
+                  // Format dates as ISO strings
                   stockEntity[k] instanceof Date
                     ? (stockEntity[k] as Date).toISOString()
                     : stockEntity[k]
@@ -79,20 +108,23 @@ export const updateStock = async (
             );
           }
           const parameterPrettyNames = {
+            // Strings for the parameters used in the Signal message
             analystConsensus: "Analyst Consensus",
             msciESGRating: "MSCI ESG Rating",
             refinitivESGScore: "Refinitiv ESG Score",
-            refinitivEmissions: "Refinitiv Emissions Score",
+            refinitivEmissions: "Refinitiv Emissions Rating",
             spESGScore: "S&P ESG Score",
             sustainalyticsESGRisk: "Sustainalytics ESG Risk Score",
           };
           switch (k) {
             case "starRating":
               signalMessage += `\n\t${
+                // larger is better
                 (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
                   ? SIGNAL_PREFIX_BETTER
                   : SIGNAL_PREFIX_WORSE
               }Star Rating changed from ${
+                // Use cute tiny star characters to show the star rating
                 "★".repeat(stockEntity[k] ?? 0) +
                 "☆".repeat(5 - stockEntity[k] ?? 0)
               } to ${
@@ -105,6 +137,7 @@ export const updateStock = async (
               const lastClose =
                 newValues.lastClose ?? stockEntity.lastClose ?? 0;
               signalMessage += `\n\t${
+                // larger is better
                 (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
                   ? SIGNAL_PREFIX_BETTER
                   : SIGNAL_PREFIX_WORSE
@@ -116,6 +149,7 @@ export const updateStock = async (
               break;
             case "msciTemperature":
               signalMessage += `\n\t${
+                // smaller is better
                 (newValues[k] ?? Number.MAX_VALUE) <
                 (stockEntity[k] ?? Number.MAX_VALUE)
                   ? SIGNAL_PREFIX_BETTER
@@ -134,21 +168,23 @@ export const updateStock = async (
               switch (k) {
                 case "msciESGRating":
                   signalPrefix =
+                    // smaller index in array [AAA, ..., CCC] is better
                     (newValues.msciESGRating
                       ? msciESGRatingArray.indexOf(newValues.msciESGRating)
-                      : /* istanbul ignore next */
+                      : /* istanbul ignore next */ // This never occurs with our test dataset
                         7) <
                     (stockEntity.msciESGRating
                       ? msciESGRatingArray.indexOf(
                           stockEntity.msciESGRating as MSCIESGRating
                         )
-                      : /* istanbul ignore next */
+                      : /* istanbul ignore next */ // This never occurs with our test dataset
                         7)
                       ? SIGNAL_PREFIX_BETTER
                       : SIGNAL_PREFIX_WORSE;
                   break;
                 case "sustainalyticsESGRisk":
                   signalPrefix =
+                    // smaller is better
                     (newValues.sustainalyticsESGRisk ?? Number.MAX_VALUE) <
                     (stockEntity.sustainalyticsESGRisk ?? Number.MAX_VALUE)
                       ? SIGNAL_PREFIX_BETTER
@@ -156,6 +192,7 @@ export const updateStock = async (
                   break;
                 default:
                   signalPrefix =
+                    // larger is better for all other parameters
                     (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
                       ? SIGNAL_PREFIX_BETTER
                       : SIGNAL_PREFIX_WORSE;
@@ -224,10 +261,13 @@ export const updateStock = async (
     }
     if (isNewData) {
       await save(stockEntity);
+      // The message string contains a newline character if and only if a parameter changed for which we want to send a
+      // message
       if (signalMessage.includes("\n")) {
         signal.sendMessage(signalMessage);
       }
     } else {
+      // No new data was provided
       logger.info(PREFIX_REDIS + `No updates for stock ${ticker}.`);
     }
   } else {
@@ -235,6 +275,12 @@ export const updateStock = async (
   }
 };
 
+/**
+ * Delete a stock from Redis.
+ *
+ * @param {string} ticker The ticker of the stock to delete.
+ * @throws an {@link APIError} if the stock does not exist.
+ */
 export const deleteStock = async (ticker: string) => {
   const stockEntity = await fetch(ticker);
   if (stockEntity && stockEntity.name) {

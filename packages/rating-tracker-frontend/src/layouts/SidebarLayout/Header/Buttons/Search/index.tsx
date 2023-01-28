@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {
   forwardRef,
   Ref,
@@ -41,6 +40,9 @@ import useNotification from "../../../../../helpers/useNotification";
 import SectorIcon from "../../../../../components/SectorIcon/";
 import { NavLink, useNavigate } from "react-router-dom";
 
+/**
+ * A transition for sliding in the search bar.
+ */
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: ReactElement<any, any> },
   ref: Ref<unknown>
@@ -48,6 +50,9 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="down" ref={ref} {...props} />;
 });
 
+/**
+ * A wrapper for the search dialog.
+ */
 const DialogWrapper = styled(Dialog)(
   () => `
     .MuiDialog-container {
@@ -60,6 +65,9 @@ const DialogWrapper = styled(Dialog)(
 `
 );
 
+/**
+ * A wrapper for the search dialog’s title.
+ */
 const DialogTitleWrapper = styled(DialogTitle)(
   ({ theme }) => `
     background: ${theme.colors.alpha.black[5]};
@@ -67,7 +75,12 @@ const DialogTitleWrapper = styled(DialogTitle)(
 `
 );
 
-const HeaderSearch = () => {
+/**
+ * A search bar that can be activated from a button in the header.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const HeaderSearch = (): JSX.Element => {
   const [searchValue, setSearchValue] = useState("");
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [count, setCount] = useState<number>(0);
@@ -78,9 +91,20 @@ const HeaderSearch = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    /**
+     * Checks whether the search shortcut ⌘F or ⌃F was pressed.
+     *
+     * @param {KeyboardEvent} e The keyboard event.
+     * @returns {boolean} Whether the search shortcut was pressed.
+     */
     const isSearchShortcut = (e: KeyboardEvent) =>
       (e.ctrlKey || e.metaKey) && (e.key === "f" || e.key === "F");
 
+    /**
+     * Opens the search bar when the search shortcut is pressed.
+     *
+     * @param {KeyboardEvent} e The keyboard event.
+     */
     const searchShortcutHandler = (e: KeyboardEvent) => {
       if (isSearchShortcut(e)) {
         setOpen(true);
@@ -89,6 +113,11 @@ const HeaderSearch = () => {
       }
     };
 
+    /**
+     * Navigates to the first stock in the search results when the ↩︎ key is pressed.
+     *
+     * @param {KeyboardEvent} e The keyboard event.
+     */
     const enterKeyHandler = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         if (stocks.length) {
@@ -98,6 +127,11 @@ const HeaderSearch = () => {
       }
     };
 
+    /**
+     * Closes the search bar when the ⎋ key is pressed.
+     *
+     * @param {KeyboardEvent} e The keyboard event.
+     */
     const escapeKeyHandler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         handleClose();
@@ -117,6 +151,11 @@ const HeaderSearch = () => {
     };
   }, [stocks]);
 
+  /**
+   * Handles the change of the search input.
+   *
+   * @param {ChangeEvent<HTMLInputElement>} event The change event.
+   */
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchValue(event.target.value);
 
@@ -131,6 +170,7 @@ const HeaderSearch = () => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchValue) {
+        // Only search if the search value is not empty and the search input did not change in the last 300ms.
         getStocks(searchValue);
       }
     }, 300);
@@ -140,10 +180,16 @@ const HeaderSearch = () => {
 
   const [open, setOpen] = useState(false);
 
+  /**
+   * Handles a click on the search bar button in the header, which opens the search bar.
+   */
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  /**
+   * Handles a click on the close button in the search dialog.
+   */
   const handleClose = () => {
     setSearchValue("");
     setStocks([]);
@@ -155,6 +201,11 @@ const HeaderSearch = () => {
     }
   };
 
+  /**
+   * Fetches a list of stocks matching the search value.
+   *
+   * @param {string} currentSearchValue The current search value.
+   */
   const getStocks = (currentSearchValue: string) => {
     axios
       .get(baseUrl + stockAPI + stockListEndpoint, {

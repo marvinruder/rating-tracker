@@ -1,5 +1,8 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 
+/**
+ * The zero-based offset of a list. Used for pagination.
+ */
 const offset: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "offset",
@@ -10,17 +13,25 @@ const offset: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The number of entities to be returned. If omitted, all entities known to the service will be returned (maximum:
+ * 10000).
+ */
 const count: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "count",
   description:
-    "The number of entities to be returned. If omitted, all entities known to the service will be returned (maximum: 10000).",
+    "The number of entities to be returned. If omitted, all entities known to the service will be returned " +
+    "(maximum: 10000).",
   schema: {
     type: "number",
     example: 5,
   },
 };
 
+/**
+ * A parameter by which a list is to be sorted.
+ */
 const sortBy: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sortBy",
@@ -30,6 +41,9 @@ const sortBy: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * Whether to sort descending.
+ */
 const sortDesc: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sortDesc",
@@ -40,6 +54,9 @@ const sortDesc: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The ticker symbol of a stock.
+ */
 const ticker: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "ticker",
@@ -50,6 +67,9 @@ const ticker: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The name of a stock.
+ */
 const name: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "name",
@@ -60,6 +80,9 @@ const name: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The ISIN of a stock.
+ */
 const isin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "isin",
@@ -70,6 +93,9 @@ const isin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * A country a stock is based in.
+ */
 const country: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "country",
@@ -83,6 +109,9 @@ const country: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * An industry a stock operates in.
+ */
 const industry: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "industry",
@@ -96,6 +125,9 @@ const industry: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * A stock size.
+ */
 const size: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "size",
@@ -105,6 +137,9 @@ const size: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * A stock style.
+ */
 const style: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "style",
@@ -114,6 +149,9 @@ const style: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The identifier of a stock used by Morningstar.
+ */
 const morningstarId: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "morningstarId",
@@ -124,6 +162,9 @@ const morningstarId: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The identifier of a stock used by Market Screener.
+ */
 const marketScreenerId: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "marketScreenerId",
@@ -134,6 +175,9 @@ const marketScreenerId: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The identifier of a stock used by MSCI.
+ */
 const msciId: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciId",
@@ -144,6 +188,9 @@ const msciId: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The Reuters Instrument Code of a stock used by Refintiv.
+ */
 const ric: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "ric",
@@ -154,16 +201,22 @@ const ric: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The identifier of a stock used by Standard & Poor’s.
+ */
 const spId: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "spId",
-  description: "The identifier of a stock used by Standard & Poor's",
+  description: "The identifier of a stock used by Standard & Poor’s",
   schema: {
     type: "integer",
     example: "4004205",
   },
 };
 
+/**
+ * The identifier of a stock used by Sustainalytics.
+ */
 const sustainalyticsId: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sustainalyticsId",
@@ -174,6 +227,9 @@ const sustainalyticsId: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum star rating of a stock.
+ */
 const starRatingMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "starRatingMin",
@@ -184,6 +240,9 @@ const starRatingMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum star rating of a stock.
+ */
 const starRatingMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "starRatingMax",
@@ -194,6 +253,9 @@ const starRatingMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum dividend yield of a stock.
+ */
 const dividendYieldPercentMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "dividendYieldPercentMin",
@@ -204,6 +266,9 @@ const dividendYieldPercentMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum dividend yield of a stock.
+ */
 const dividendYieldPercentMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "dividendYieldPercentMax",
@@ -214,6 +279,9 @@ const dividendYieldPercentMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum price-earning ratio of a stock.
+ */
 const priceEarningRatioMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "priceEarningRatioMin",
@@ -224,6 +292,9 @@ const priceEarningRatioMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum price-earning ratio of a stock.
+ */
 const priceEarningRatioMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "priceEarningRatioMax",
@@ -234,6 +305,9 @@ const priceEarningRatioMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum difference between a stock’s fair value and its price.
+ */
 const morningstarFairValueDiffMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "morningstarFairValueDiffMin",
@@ -245,6 +319,9 @@ const morningstarFairValueDiffMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum difference between a stock’s fair value and its price.
+ */
 const morningstarFairValueDiffMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "morningstarFairValueDiffMax",
@@ -256,6 +333,9 @@ const morningstarFairValueDiffMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum analyst consensus of a stock.
+ */
 const analystConsensusMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystConsensusMin",
@@ -266,6 +346,9 @@ const analystConsensusMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum analyst consensus of a stock.
+ */
 const analystConsensusMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystConsensusMax",
@@ -276,6 +359,9 @@ const analystConsensusMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum difference between a stock’s analyst target price and its price.
+ */
 const analystTargetDiffMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystTargetDiffMin",
@@ -287,6 +373,9 @@ const analystTargetDiffMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum difference between a stock’s analyst target price and its price.
+ */
 const analystTargetDiffMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystTargetDiffMax",
@@ -298,6 +387,9 @@ const analystTargetDiffMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum number of analysts that cover a stock.
+ */
 const analystCountMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystCountMin",
@@ -308,6 +400,9 @@ const analystCountMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum number of analysts that cover a stock.
+ */
 const analystCountMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystCountMax",
@@ -318,6 +413,9 @@ const analystCountMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum MSCI ESG rating of a stock.
+ */
 const msciESGRatingMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciESGRatingMin",
@@ -327,6 +425,9 @@ const msciESGRatingMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum MSCI ESG rating of a stock.
+ */
 const msciESGRatingMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciESGRatingMax",
@@ -336,6 +437,9 @@ const msciESGRatingMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum MSCI Implied Temperature Rise of a stock.
+ */
 const msciTemperatureMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciTemperatureMin",
@@ -346,6 +450,9 @@ const msciTemperatureMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum MSCI Implied Temperature Rise of a stock.
+ */
 const msciTemperatureMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciTemperatureMax",
@@ -356,6 +463,9 @@ const msciTemperatureMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum Refinitiv ESG score of a stock.
+ */
 const refinitivESGScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "refinitivESGScoreMin",
@@ -366,6 +476,9 @@ const refinitivESGScoreMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum Refinitiv ESG score of a stock.
+ */
 const refinitivESGScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "refinitivESGScoreMax",
@@ -386,6 +499,9 @@ const refinitivEmissionsMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum Refinitiv Emissions rating of a stock.
+ */
 const refinitivEmissionsMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "refinitivEmissionsMax",
@@ -396,6 +512,9 @@ const refinitivEmissionsMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum S&P ESG score of a stock.
+ */
 const spESGScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "spESGScoreMin",
@@ -406,6 +525,9 @@ const spESGScoreMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum S&P ESG score of a stock.
+ */
 const spESGScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "spESGScoreMax",
@@ -416,6 +538,9 @@ const spESGScoreMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum Sustainalytics ESG risk rating of a stock.
+ */
 const sustainalyticsESGRiskMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sustainalyticsESGRiskMin",
@@ -426,6 +551,9 @@ const sustainalyticsESGRiskMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum Sustainalytics ESG risk rating of a stock.
+ */
 const sustainalyticsESGRiskMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sustainalyticsESGRiskMax",
@@ -436,6 +564,9 @@ const sustainalyticsESGRiskMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum financial score of a stock.
+ */
 const financialScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "financialScoreMin",
@@ -446,6 +577,9 @@ const financialScoreMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum financial score of a stock.
+ */
 const financialScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "financialScoreMax",
@@ -456,6 +590,9 @@ const financialScoreMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum ESG score of a stock.
+ */
 const esgScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "esgScoreMin",
@@ -466,6 +603,9 @@ const esgScoreMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum ESG score of a stock.
+ */
 const esgScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "esgScoreMax",
@@ -476,6 +616,9 @@ const esgScoreMax: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The minimum total score of a stock.
+ */
 const totalScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "totalScoreMin",
@@ -486,6 +629,9 @@ const totalScoreMin: OpenAPIV3.ParameterObject = {
   },
 };
 
+/**
+ * The maximum total score of a stock.
+ */
 const totalScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "totalScoreMax",

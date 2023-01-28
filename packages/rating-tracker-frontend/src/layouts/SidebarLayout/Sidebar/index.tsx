@@ -1,6 +1,5 @@
 import { useContext } from "react";
-import Scrollbar from "../../../components/Scrollbar";
-import { SidebarContext } from "../../../contexts/SidebarContext";
+import SidebarContext from "../../../contexts/SidebarContext";
 
 import {
   Box,
@@ -16,6 +15,9 @@ import {
 import SidebarMenu from "./SidebarMenu";
 import Logo from "../../../components/Logo";
 
+/**
+ * A wrapper for the sidebar component.
+ */
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `
         width: ${theme.sidebar.width};
@@ -28,7 +30,12 @@ const SidebarWrapper = styled(Box)(
 `
 );
 
-function Sidebar() {
+/**
+ * The sidebar of the sidebar layout.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const Sidebar = (): JSX.Element => {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   const closeSidebar = () => toggleSidebar();
   const theme = useTheme();
@@ -52,20 +59,19 @@ function Sidebar() {
             theme.palette.mode === "dark" ? theme.sidebar.boxShadow : "none",
         }}
       >
-        <Scrollbar>
-          <Box mt={3} mx={2}>
-            <Logo />
-          </Box>
-          <Divider
-            sx={{
-              mt: 3,
-              mx: 2,
-              background: theme.colors.alpha.trueWhite[10],
-            }}
-          />
-          <SidebarMenu />
-        </Scrollbar>
-        {/* <Divider
+        <Box mt={3} mx={2}>
+          <Logo />
+        </Box>
+        <Divider
+          sx={{
+            mt: 3,
+            mx: 2,
+            background: theme.colors.alpha.trueWhite[10],
+          }}
+        />
+        <SidebarMenu />
+        {/* This would display another area at the bottom of the sidebar.
+        <Divider
           sx={{
             background: theme.colors.alpha.trueWhite[10],
           }}
@@ -102,23 +108,21 @@ function Sidebar() {
                 : alpha(darken(theme.colors.alpha.black[100], 0.5), 0.85),
           }}
         >
-          <Scrollbar>
-            <Box mt={3} mx={2}>
-              <Logo />
-            </Box>
-            <Divider
-              sx={{
-                mt: 3,
-                mx: 2,
-                background: theme.colors.alpha.trueWhite[10],
-              }}
-            />
-            <SidebarMenu />
-          </Scrollbar>
+          <Box mt={3} mx={2}>
+            <Logo />
+          </Box>
+          <Divider
+            sx={{
+              mt: 3,
+              mx: 2,
+              background: theme.colors.alpha.trueWhite[10],
+            }}
+          />
+          <SidebarMenu />
         </SidebarWrapper>
       </Drawer>
     </>
   );
-}
+};
 
 export default Sidebar;

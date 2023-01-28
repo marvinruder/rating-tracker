@@ -42,8 +42,14 @@ import { useState } from "react";
 import useNotification from "../../helpers/useNotification";
 import StockDetails from "../StockDetails";
 
-const AddStock = (props: AddStockProps) => {
-  const [activeStep, setActiveStep] = useState<number>(0);
+/**
+ * A dialog to add a new stock to the backend.
+ *
+ * @param {AddStockProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const AddStock = (props: AddStockProps): JSX.Element => {
+  const [activeStep, setActiveStep] = useState<number>(0); // The dialog step to show.
   const [stock, setStock] = useState<Stock>(
     new Stock({
       ticker: "",
@@ -53,56 +59,73 @@ const AddStock = (props: AddStockProps) => {
     })
   );
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
+  // The value of the text field in the country autocomplete.
   const [countryInputValue, setCountryInputValue] = useState<string>("");
-  const [tickerError, setTickerError] = useState<boolean>(false);
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [isinError, setIsinError] = useState<boolean>(false);
-  const [countryError, setCountryError] = useState<boolean>(false);
+  const [tickerError, setTickerError] = useState<boolean>(false); // Error in the ticker text field.
+  const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
+  const [isinError, setIsinError] = useState<boolean>(false); // Error in the ISIN text field.
+  const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
   const [morningstarIdRequestInProgress, setMorningstarIdRequestInProgress] =
     useState<boolean>(false);
+  // Whether the Morningstar ID has been transmitted to the server.
   const [morningstarIdSet, setMorningstarIdSet] = useState<boolean>(false);
   const [
     marketScreenerIdRequestInProgress,
     setMarketScreenerIdRequestInProgress,
   ] = useState<boolean>(false);
+  // Whether the Market Screener ID has been transmitted to the server.
   const [marketScreenerIdSet, setMarketScreenerIdSet] =
     useState<boolean>(false);
   const [msciIdRequestInProgress, setMsciIdRequestInProgress] =
     useState<boolean>(false);
-  const [msciIdSet, setMsciIdSet] = useState<boolean>(false);
+  const [msciIdSet, setMsciIdSet] = useState<boolean>(false); // Whether the MSCI ID has been transmitted to the server.
   const { setNotification } = useNotification();
   const [ricRequestInProgress, setRicRequestInProgress] =
     useState<boolean>(false);
-  const [ricSet, setRicSet] = useState<boolean>(false);
+  const [ricSet, setRicSet] = useState<boolean>(false); //
   const [spIdRequestInProgress, setSpIdRequestInProgress] =
     useState<boolean>(false);
-  const [spIdSet, setSpIdSet] = useState<boolean>(false);
+  const [spIdSet, setSpIdSet] = useState<boolean>(false); // Whether the S&P ID has been transmitted to the server.
   const [
     sustainalyticsIdRequestInProgress,
     setSustainalyticsIdRequestInProgress,
   ] = useState<boolean>(false);
+  // Whether the Sustainalytics ID has been transmitted to the server.
   const [sustainalyticsIdSet, setSustainalyticsIdSet] =
     useState<boolean>(false);
 
+  /**
+   * Checks for errors in the input fields.
+   */
   const validate = () => {
+    // The following fields are required.
     setTickerError(!stock.ticker);
     setNameError(!stock.name);
     setIsinError(!stock.isin);
     setCountryError(!stock.country);
   };
 
+  /**
+   * Handles a click on the “Move to the next dialog step” button.
+   */
   const handleNext = () => {
     activeStep === steps.length - 1
-      ? props.onClose()
+      ? props.onClose() // Close if we are on the last step.
       : setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
+  /**
+   * Handles a click on the “Go back to the previous dialog step” button.
+   */
   const handleBack = () => {
     activeStep === 0
-      ? props.onClose()
+      ? props.onClose() // Close if we are on the first step.
       : setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  /**
+   * Transmits the stock to the server.
+   */
   const putStock = () => {
     setRequestInProgress(true);
     const { name, isin, country } = stock;
@@ -126,6 +149,9 @@ const AddStock = (props: AddStockProps) => {
       .finally(() => setRequestInProgress(false));
   };
 
+  /**
+   * Transmits the Morningstar ID to the server.
+   */
   const patchStockMorningstarId = () => {
     setMorningstarIdRequestInProgress(true);
     axios
@@ -133,8 +159,9 @@ const AddStock = (props: AddStockProps) => {
         params: { morningstarId: stock.morningstarId },
       })
       .then(() => {
-        setMorningstarIdSet(!!stock.morningstarId);
+        setMorningstarIdSet(!!stock.morningstarId); // Whether the Morningstar ID was empty
         if (stock.morningstarId) {
+          // If a Morningstar ID was set, we fetch data from Morningstar using the new ID.
           axios
             .get(baseUrl + fetchAPI + morningstarEndpoint, {
               params: { ticker: stock.ticker, noSkip: true },
@@ -159,7 +186,7 @@ const AddStock = (props: AddStockProps) => {
         setMorningstarIdRequestInProgress(false);
         setNotification({
           severity: "error",
-          title: "Error while adding Morningstar ID",
+          title: "Error while setting Morningstar ID",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`
@@ -168,6 +195,9 @@ const AddStock = (props: AddStockProps) => {
       });
   };
 
+  /**
+   * Transmits the Market Screener ID to the server.
+   */
   const patchStockMarketScreenerId = () => {
     setMarketScreenerIdRequestInProgress(true);
     axios
@@ -175,8 +205,9 @@ const AddStock = (props: AddStockProps) => {
         params: { marketScreenerId: stock.marketScreenerId },
       })
       .then(() => {
-        setMarketScreenerIdSet(!!stock.marketScreenerId);
+        setMarketScreenerIdSet(!!stock.marketScreenerId); // Whether the Market Screener ID was empty
         if (stock.marketScreenerId) {
+          // If a Market Screener ID was set, we fetch data from Market Screener using the new ID.
           axios
             .get(baseUrl + fetchAPI + marketScreenerEndpoint, {
               params: { ticker: stock.ticker, noSkip: true },
@@ -201,7 +232,7 @@ const AddStock = (props: AddStockProps) => {
         setMarketScreenerIdRequestInProgress(false);
         setNotification({
           severity: "error",
-          title: "Error while adding Market Screener ID",
+          title: "Error while setting Market Screener ID",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`
@@ -210,6 +241,9 @@ const AddStock = (props: AddStockProps) => {
       });
   };
 
+  /**
+   * Transmits the MSCI ID to the server.
+   */
   const patchStockMsciId = () => {
     setMsciIdRequestInProgress(true);
     axios
@@ -217,8 +251,9 @@ const AddStock = (props: AddStockProps) => {
         params: { msciId: stock.msciId },
       })
       .then(() => {
-        setMsciIdSet(!!stock.msciId);
+        setMsciIdSet(!!stock.msciId); // Whether the MSCI ID was empty
         if (stock.msciId) {
+          // If an MSCI ID was set, we fetch data from MSCI using the new ID.
           axios
             .get(baseUrl + fetchAPI + msciEndpoint, {
               params: { ticker: stock.ticker, noSkip: true },
@@ -243,7 +278,7 @@ const AddStock = (props: AddStockProps) => {
         setMsciIdRequestInProgress(false);
         setNotification({
           severity: "error",
-          title: "Error while adding MSCI ID",
+          title: "Error while setting MSCI ID",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`
@@ -252,6 +287,9 @@ const AddStock = (props: AddStockProps) => {
       });
   };
 
+  /**
+   * Transmits the Reuters Identifier Code (RIC) to the server.
+   */
   const patchStockRic = () => {
     setRicRequestInProgress(true);
     axios
@@ -259,8 +297,9 @@ const AddStock = (props: AddStockProps) => {
         params: { ric: stock.ric },
       })
       .then(() => {
-        setRicSet(!!stock.ric);
+        setRicSet(!!stock.ric); // Whether the RIC was empty
         if (stock.ric) {
+          // If a RIC was set, we fetch data from Refinitiv using the new RIC.
           axios
             .get(baseUrl + fetchAPI + refinitivEndpoint, {
               params: { ticker: stock.ticker, noSkip: true },
@@ -285,7 +324,7 @@ const AddStock = (props: AddStockProps) => {
         setRicRequestInProgress(false);
         setNotification({
           severity: "error",
-          title: "Error while adding RIC",
+          title: "Error while setting RIC",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`
@@ -294,6 +333,9 @@ const AddStock = (props: AddStockProps) => {
       });
   };
 
+  /**
+   * Transmits the Standard & Poor’s ID to the server.
+   */
   const patchStockSpId = () => {
     setSpIdRequestInProgress(true);
     axios
@@ -301,8 +343,9 @@ const AddStock = (props: AddStockProps) => {
         params: { spId: stock.spId },
       })
       .then(() => {
-        setSpIdSet(!!stock.spId);
+        setSpIdSet(!!stock.spId); // Whether the S&P ID was empty
         if (stock.spId) {
+          // If an S&P ID was set, we fetch data from S&P using the new ID.
           axios
             .get(baseUrl + fetchAPI + spEndpoint, {
               params: { ticker: stock.ticker, noSkip: true },
@@ -340,7 +383,7 @@ const AddStock = (props: AddStockProps) => {
         setSpIdRequestInProgress(false);
         setNotification({
           severity: "error",
-          title: "Error while adding S&P ID",
+          title: "Error while setting S&P ID",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`
@@ -349,6 +392,9 @@ const AddStock = (props: AddStockProps) => {
       });
   };
 
+  /**
+   * Transmits the Sustainalytics ID to the server.
+   */
   const patchStockSustainalyticsId = () => {
     setSustainalyticsIdRequestInProgress(true);
     axios
@@ -356,8 +402,9 @@ const AddStock = (props: AddStockProps) => {
         params: { sustainalyticsId: stock.sustainalyticsId },
       })
       .then(() => {
-        setSustainalyticsIdSet(!!stock.sustainalyticsId);
+        setSustainalyticsIdSet(!!stock.sustainalyticsId); // Whether the Sustainalytics ID was empty
         if (stock.sustainalyticsId) {
+          // If a Sustainalytics ID was set, we fetch data from Sustainalytics using the new ID.
           axios
             .get(baseUrl + fetchAPI + sustainalyticsEndpoint, {
               params: { ticker: stock.ticker },
@@ -382,7 +429,7 @@ const AddStock = (props: AddStockProps) => {
         setSustainalyticsIdRequestInProgress(false);
         setNotification({
           severity: "error",
-          title: "Error while adding Sustainalytics ID",
+          title: "Error while setting Sustainalytics ID",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`
@@ -391,6 +438,9 @@ const AddStock = (props: AddStockProps) => {
       });
   };
 
+  /**
+   * Fetches the newly created stock from the server and shows it.
+   */
   const getAndShowStock = () => {
     setRequestInProgress(true);
     axios
@@ -412,6 +462,9 @@ const AddStock = (props: AddStockProps) => {
       .finally(() => setRequestInProgress(false));
   };
 
+  /**
+   * The different steps to show in the stepper.
+   */
   const steps = [
     {
       // 0
@@ -470,8 +523,10 @@ const AddStock = (props: AddStockProps) => {
                     });
                   });
                   if (!stock.country && event.target.value.length >= 2) {
+                    // Extract country from ISIN
                     const possibleCountry = event.target.value.substring(0, 2);
                     if (isCountry(possibleCountry)) {
+                      // If the extracted country is valid, we set it as the stock’s country.
                       setStock((prevStock) => {
                         return new Stock({
                           ...prevStock,
@@ -517,6 +572,7 @@ const AddStock = (props: AddStockProps) => {
                   const currentInputValue = countryInputValue
                     .trim()
                     .toUpperCase();
+                  // Filter the country names by the input value.
                   const filteredOptions = options.filter(
                     (option) =>
                       countryName[option]
@@ -524,6 +580,7 @@ const AddStock = (props: AddStockProps) => {
                         .startsWith(countryInputValue.trim().toUpperCase()) &&
                       option != currentInputValue
                   );
+                  // If the text input is a valid country code, we show it as the first option.
                   isCountry(currentInputValue) &&
                     filteredOptions.unshift(currentInputValue);
                   return filteredOptions;
@@ -542,7 +599,7 @@ const AddStock = (props: AddStockProps) => {
           loading={requestInProgress}
           variant="contained"
           onClick={putStock}
-          onMouseOver={validate}
+          onMouseOver={validate} // Validate input fields on hover
           sx={{ mt: 1, ml: 1, float: "right" }}
           disabled={tickerError || nameError || countryError}
           startIcon={<AddBoxIcon />}
@@ -856,7 +913,13 @@ const AddStock = (props: AddStockProps) => {
   );
 };
 
+/**
+ * Properties for the AddStock component.
+ */
 interface AddStockProps {
+  /**
+   * A method that is called when the dialog is closed.
+   */
   onClose: () => void;
 }
 
