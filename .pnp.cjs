@@ -2429,26 +2429,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/iso-webcrypto", [\
-        ["npm:7.0.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-iso-webcrypto-npm-7.0.0-352babf4a0-2e72c9b634.zip/node_modules/@simplewebauthn/iso-webcrypto/",\
+        ["npm:7.0.1", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-iso-webcrypto-npm-7.0.1-bae5f6738c-a0434ef979.zip/node_modules/@simplewebauthn/iso-webcrypto/",\
           "packageDependencies": [\
-            ["@simplewebauthn/iso-webcrypto", "npm:7.0.0"]\
+            ["@simplewebauthn/iso-webcrypto", "npm:7.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@simplewebauthn/server", [\
-        ["npm:7.0.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-7.0.0-e34589f137-e3853956c2.zip/node_modules/@simplewebauthn/server/",\
+        ["npm:7.0.1", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-7.0.1-ac81233d49-65d567e649.zip/node_modules/@simplewebauthn/server/",\
           "packageDependencies": [\
-            ["@simplewebauthn/server", "npm:7.0.0"],\
+            ["@simplewebauthn/server", "npm:7.0.1"],\
             ["@hexagon/base64", "npm:1.1.25"],\
             ["@peculiar/asn1-android", "npm:2.3.3"],\
             ["@peculiar/asn1-ecc", "npm:2.3.4"],\
             ["@peculiar/asn1-rsa", "npm:2.3.4"],\
             ["@peculiar/asn1-schema", "npm:2.3.3"],\
             ["@peculiar/asn1-x509", "npm:2.3.4"],\
-            ["@simplewebauthn/iso-webcrypto", "npm:7.0.0"],\
+            ["@simplewebauthn/iso-webcrypto", "npm:7.0.1"],\
             ["cbor-x", "npm:1.5.1"],\
             ["cross-fetch", "npm:3.1.5"],\
             ["debug", "virtual:007f670de2e506a151fec572a83f2de9d546622ece352a4cf72e57296c0aa644478f43ac47fd07d8495ee7103d37c60645e444556d514defaeb66e67a086d21f#npm:4.3.4"]\
@@ -8886,7 +8886,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["rating-tracker-backend", "workspace:packages/rating-tracker-backend"],\
             ["@jest/globals", "npm:29.4.1"],\
-            ["@simplewebauthn/server", "npm:7.0.0"],\
+            ["@simplewebauthn/server", "npm:7.0.1"],\
             ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.16"],\
             ["@types/jest", "npm:29.4.0"],\

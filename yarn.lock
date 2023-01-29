@@ -1457,7 +1457,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@peculiar/asn1-android@npm:^2.1.7":
+"@peculiar/asn1-android@npm:^2.3.3":
   version: 2.3.3
   resolution: "@peculiar/asn1-android@npm:2.3.3"
   dependencies:
@@ -1492,7 +1492,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@peculiar/asn1-schema@npm:^2.1.7, @peculiar/asn1-schema@npm:^2.3.3":
+"@peculiar/asn1-schema@npm:^2.3.3":
   version: 2.3.3
   resolution: "@peculiar/asn1-schema@npm:2.3.3"
   dependencies:
@@ -1503,7 +1503,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@peculiar/asn1-x509@npm:^2.1.7, @peculiar/asn1-x509@npm:^2.3.4":
+"@peculiar/asn1-x509@npm:^2.3.4":
   version: 2.3.4
   resolution: "@peculiar/asn1-x509@npm:2.3.4"
   dependencies:
@@ -1603,28 +1603,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/iso-webcrypto@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@simplewebauthn/iso-webcrypto@npm:7.0.0"
-  checksum: 2e72c9b6343083fdf00868da12c51d5cd53c8374877fd96c7905bf0c8fa336658349d0c9bf8d968c71585156ce7afd5dec0f00ccc68134fae76e50346bbfa6e6
+"@simplewebauthn/iso-webcrypto@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "@simplewebauthn/iso-webcrypto@npm:7.0.1"
+  checksum: a0434ef979433e0f977c1b8a5a64749f512676bb20ee1daa60a187a6eb128646315b812556ff57b40eb24303557a435122c2687d075481bf6699cc22832c4c33
   languageName: node
   linkType: hard
 
-"@simplewebauthn/server@npm:7.0.0":
-  version: 7.0.0
-  resolution: "@simplewebauthn/server@npm:7.0.0"
+"@simplewebauthn/server@npm:7.0.1":
+  version: 7.0.1
+  resolution: "@simplewebauthn/server@npm:7.0.1"
   dependencies:
     "@hexagon/base64": ^1.1.25
-    "@peculiar/asn1-android": ^2.1.7
+    "@peculiar/asn1-android": ^2.3.3
     "@peculiar/asn1-ecc": ^2.3.4
     "@peculiar/asn1-rsa": ^2.3.4
-    "@peculiar/asn1-schema": ^2.1.7
-    "@peculiar/asn1-x509": ^2.1.7
-    "@simplewebauthn/iso-webcrypto": ^7.0.0
+    "@peculiar/asn1-schema": ^2.3.3
+    "@peculiar/asn1-x509": ^2.3.4
+    "@simplewebauthn/iso-webcrypto": ^7.0.1
     cbor-x: ^1.4.1
     cross-fetch: ^3.1.5
     debug: ^4.3.2
-  checksum: e3853956c2866337a54fd9175ce9e1a32b97ef9dac13f178ae3ab46a1b428ad36470d65e048a198a5e21a6b91160fbc1dfc7c80a79c30334ba483fcfa0745fca
+  checksum: 65d567e64922c6d64b6b8b2bfe1790ac92defffa34b0dd16d7f5972b506ee03a7750564d818f9bc51804a906fae998064b654c7a3f5add20d9a3b9a3d17b3019
   languageName: node
   linkType: hard
 
@@ -7054,7 +7054,7 @@ __metadata:
   resolution: "rating-tracker-backend@workspace:packages/rating-tracker-backend"
   dependencies:
     "@jest/globals": 29.4.1
-    "@simplewebauthn/server": 7.0.0
+    "@simplewebauthn/server": 7.0.1
     "@types/cron": 2.0.0
     "@types/express": 4.17.16
     "@types/jest": 29.4.0
