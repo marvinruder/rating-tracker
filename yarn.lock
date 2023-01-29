@@ -1596,10 +1596,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/browser@npm:7.0.0":
-  version: 7.0.0
-  resolution: "@simplewebauthn/browser@npm:7.0.0"
-  checksum: eb8d7e2d923649c116275cc9bfbabfa27a180cd33dbf9d6a28c7aa9460ea79cd25204c9a7d76ed8cc24764da4a09b5939209aa30e9b295b9d54e497bb9b652a4
+"@simplewebauthn/browser@npm:7.0.1":
+  version: 7.0.1
+  resolution: "@simplewebauthn/browser@npm:7.0.1"
+  checksum: eb8bfa81473b50eb6c0a1d066ba2e85e6dba7be32b5316abb41e7b6461a025d315532050ad3c13d13bc0d830fb3ffbb5417a61f353a5a8c304eaa5b28378f436
   languageName: node
   linkType: hard
 
@@ -7121,7 +7121,7 @@ __metadata:
     "@mui/icons-material": 5.11.0
     "@mui/lab": 5.0.0-alpha.117
     "@mui/material": 5.11.6
-    "@simplewebauthn/browser": 7.0.0
+    "@simplewebauthn/browser": 7.0.1
     "@types/node": 18.11.18
     "@types/react": 18.0.27
     "@types/react-dom": 18.0.10

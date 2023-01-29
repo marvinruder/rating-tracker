@@ -31,7 +31,7 @@
     "@mui/icons-material": "5.11.0",
     "@mui/lab": "5.0.0-alpha.117",
     "@mui/material": "5.11.6",
-    "@simplewebauthn/browser": "7.0.0",
+    "@simplewebauthn/browser": "7.0.1",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
     "@vitejs/plugin-react": "3.0.1",
