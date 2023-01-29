@@ -138,6 +138,7 @@ export const deleteUser = async (email: string) => {
     const name = new User(userEntity).name;
     await remove(userEntity.entityId);
     logger.info(PREFIX_REDIS + `Deleted user “${name}” (email ${email}).`);
+    /* istanbul ignore next */ // Not reached in current tests since a user can only delete themself
   } else {
     /* istanbul ignore next */ // Not reached in current tests since a user can only delete themself
     throw new APIError(404, `User ${email} not found.`);
