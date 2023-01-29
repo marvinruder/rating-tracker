@@ -1543,6 +1543,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@redis/client@npm:1.5.4":
+  version: 1.5.4
+  resolution: "@redis/client@npm:1.5.4"
+  dependencies:
+    cluster-key-slot: 1.1.2
+    generic-pool: 3.9.0
+    yallist: 4.0.0
+  checksum: 7324571e9f993dc03cbe1537041b7e3618ffe94c84ad0301920356dd65abc85d834b771872e0c86895a337b4d1702c2a7538754c767c4db59a2cd261fb346762
+  languageName: node
+  linkType: hard
+
 "@redis/graph@npm:1.1.0":
   version: 1.1.0
   resolution: "@redis/graph@npm:1.1.0"
@@ -7085,7 +7096,7 @@ __metadata:
     pino-pretty: 9.1.1
     prettier: 2.8.3
     rating-tracker-commons: "workspace:*"
-    redis: 4.6.2
+    redis: 4.6.3
     redis-om: 0.3.6
     response-time: 2.3.2
     selenium-webdriver: 4.8.0
@@ -7393,7 +7404,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:4.6.2, redis@npm:^4.0.4":
+"redis@npm:4.6.3":
+  version: 4.6.3
+  resolution: "redis@npm:4.6.3"
+  dependencies:
+    "@redis/bloom": 1.2.0
+    "@redis/client": 1.5.4
+    "@redis/graph": 1.1.0
+    "@redis/json": 1.0.4
+    "@redis/search": 1.1.1
+    "@redis/time-series": 1.0.4
+  checksum: b7ea9436942f1b8d6ea1c75826159f572867c746cc76e911ccefee1b71f627494bb0d5083f2c2b8e3e714cb2616e028ee2c90476b8df53e1e06a15764eb451fc
+  languageName: node
+  linkType: hard
+
+"redis@npm:^4.0.4":
   version: 4.6.2
   resolution: "redis@npm:4.6.2"
   dependencies:
