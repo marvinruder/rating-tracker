@@ -8,6 +8,7 @@ export const baseUrl =
  * The session API path.
  */
 export const sessionAPI = "/api/session";
+
 /**
  * The authentication API path.
  */
@@ -20,6 +21,7 @@ export const registerEndpoint = "/register";
  * The sign in endpoint.
  */
 export const signInEndpoint = "/signIn";
+
 /**
  * The stock API path.
  */
@@ -32,6 +34,7 @@ export const stockListEndpoint = "/list";
  * THe stock logo endpoint.
  */
 export const logoEndpoint = "/logo";
+
 /**
  * The fetch API path.
  */
@@ -60,3 +63,8 @@ export const spEndpoint = "/sp";
  * The Sustainalytics endpoint.
  */
 export const sustainalyticsEndpoint = "/sustainalytics";
+
+/**
+ * The user API path.
+ */
+export const userAPI = "/api/user";

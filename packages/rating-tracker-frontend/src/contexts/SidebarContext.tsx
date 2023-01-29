@@ -1,4 +1,7 @@
-import { FC, useState, createContext } from "react";
+import axios from "axios";
+import { User } from "rating-tracker-commons";
+import { FC, useState, createContext, useEffect } from "react";
+import { baseUrl, userAPI } from "../endpoints.js";
 
 /**
  * An object provided by the sidebar context.
@@ -16,6 +19,10 @@ type SidebarContextType = {
    * Closes the sidebar.
    */
   closeSidebar: () => void;
+  /**
+   * Information regarding the current user.
+   */
+  user: User;
 };
 
 /**
@@ -35,6 +42,7 @@ export const SidebarProvider: FC<SidebarProviderProps> = (
   props: SidebarProviderProps
 ) => {
   const [sidebarToggle, setSidebarToggle] = useState(false);
+  const [user, setUser] = useState<User>({} as User);
 
   /**
    * Toggles the sidebar.
@@ -50,9 +58,16 @@ export const SidebarProvider: FC<SidebarProviderProps> = (
     setSidebarToggle(false);
   };
 
+  useEffect(() => {
+    axios
+      .get(baseUrl + userAPI)
+      .then((response) => setUser(response.data))
+      .catch(() => {}); // We cannot access the Notification context from here
+  }, []);
+
   return (
     <SidebarContext.Provider
-      value={{ sidebarToggle, toggleSidebar, closeSidebar }}
+      value={{ sidebarToggle, toggleSidebar, closeSidebar, user }}
     >
       {props.children}
     </SidebarContext.Provider>

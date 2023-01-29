@@ -289,7 +289,7 @@ const PureLightTheme = createTheme({
     width: "290px",
   },
   header: {
-    height: "60px",
+    height: "76px",
     background: colors.alpha.white[100],
     boxShadow: colors.shadows.cardSm,
     textColor: colors.secondary.main,

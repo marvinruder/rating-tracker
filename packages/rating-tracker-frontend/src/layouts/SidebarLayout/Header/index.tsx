@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SidebarContext from "../../../contexts/SidebarContext";
 
 import HeaderButtons from "./Buttons";
+import HeaderUserbox from "./Userbox/index.js";
 
 /**
  * A wrapper for the header component.
@@ -84,6 +85,7 @@ const Header = (): JSX.Element => {
       </Box>
       <Box display="flex" alignItems="center">
         <HeaderButtons />
+        <HeaderUserbox />
       </Box>
     </HeaderWrapper>
   );
