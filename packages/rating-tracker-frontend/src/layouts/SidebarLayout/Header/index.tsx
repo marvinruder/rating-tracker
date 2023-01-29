@@ -14,7 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SidebarContext from "../../../contexts/SidebarContext";
 
 import HeaderButtons from "./Buttons";
-import HeaderUserbox from "./Userbox/index.js";
+import HeaderUserbox from "./Userbox";
 
 /**
  * A wrapper for the header component.

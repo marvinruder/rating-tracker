@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import axios, { AxiosError } from "axios";
 import {
@@ -21,6 +21,7 @@ import {
 import SwitchSelector from "../../../../components/SwitchSelector";
 import { useNavigate } from "react-router";
 import useNotification from "../../../../helpers/useNotification";
+import SidebarContext from "../../../../contexts/SidebarContext";
 
 /**
  * This component renders the login page.
@@ -35,6 +36,7 @@ const LoginApp = (): JSX.Element => {
   const [emailError, setEmailError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
   const { setNotification } = useNotification();
+  const { refetchUser } = useContext(SidebarContext);
 
   /**
    * Validates the email input field.
@@ -145,6 +147,7 @@ const LoginApp = (): JSX.Element => {
               title: "Welcome back!",
               message: "Authentication successful",
             });
+            refetchUser();
             navigate("/");
           } catch (err) {
             reportError(err, "processing authorization response");

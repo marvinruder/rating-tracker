@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import { Avatar, Box, Button, Hidden, Typography } from "@mui/material";
 
-import SidebarContext from "packages/rating-tracker-frontend/src/contexts/SidebarContext.js";
+import SidebarContext from "../../../../contexts/SidebarContext";
 
 const HeaderUserbox = (): JSX.Element => {
   const user = useContext(SidebarContext).user;
