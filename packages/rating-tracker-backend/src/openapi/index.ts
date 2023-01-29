@@ -14,6 +14,7 @@ import * as logoEndpoint from "./paths/stock/logo/index.js";
 import * as stockEndpoint from "./paths/stock/index.js";
 import * as signInEndpoint from "./paths/auth/signInEndpoint.js";
 import * as resourceEndpoint from "./paths/resource/index.js";
+import * as userEndpoint from "./paths/user/index.js";
 import { servers } from "./servers.js";
 
 /**
@@ -26,7 +27,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     version: "0.1.0",
     contact: {
       name: "Marvin A. Ruder",
-      email: "info@mruder.dev",
+      email: "ratingtracker@mruder.dev",
     },
     license: {
       name: "MIT",
@@ -50,6 +51,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     "/api/resource/{id}": resourceEndpoint,
     "/api/status": statusEndpoint,
     "/api/session": sessionEndpoint,
+    "/api/user": userEndpoint,
   },
   tags: [],
   components: components,

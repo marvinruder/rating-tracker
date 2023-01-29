@@ -11,6 +11,14 @@ export class User {
    */
   name: string;
   /**
+   * The base64-encoded avatar of the user.
+   */
+  avatar?: string;
+  /**
+   * The phone number of the user, used for Signal messages.
+   */
+  phone?: string;
+  /**
    * The access rights of the user, encoded as a bitfield.
    */
   accessRights: number;

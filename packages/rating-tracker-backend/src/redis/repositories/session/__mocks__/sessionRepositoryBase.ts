@@ -21,6 +21,12 @@ export const initSessionRepository = () => {
       email: "jane.doe@example.com",
     })
   );
+  sessionRepository.set(
+    "anotherExampleSessionID",
+    new SessionEntity(sessionSchema, "anotherExampleSessionID", {
+      email: "john.doe@example.com",
+    })
+  );
 };
 
 /**
