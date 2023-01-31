@@ -1532,14 +1532,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/client@npm:1.5.4":
-  version: 1.5.4
-  resolution: "@redis/client@npm:1.5.4"
+"@redis/client@npm:1.5.5":
+  version: 1.5.5
+  resolution: "@redis/client@npm:1.5.5"
   dependencies:
     cluster-key-slot: 1.1.2
     generic-pool: 3.9.0
     yallist: 4.0.0
-  checksum: 7324571e9f993dc03cbe1537041b7e3618ffe94c84ad0301920356dd65abc85d834b771872e0c86895a337b4d1702c2a7538754c767c4db59a2cd261fb346762
+  checksum: 16ae814ea1eb28cb7f30d4fda1aa3b0ab81de515e5c23e54092ecfaded3a30f261d5b2171eb63f153f059b69e885c5d86d802368b52c741eca443885d14c4b79
   languageName: node
   linkType: hard
 
@@ -7085,7 +7085,7 @@ __metadata:
     pino-pretty: 9.1.1
     prettier: 2.8.3
     rating-tracker-commons: "workspace:*"
-    redis: 4.6.3
+    redis: 4.6.4
     redis-om: 0.3.6
     response-time: 2.3.2
     selenium-webdriver: 4.8.0
@@ -7393,17 +7393,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:4.6.3, redis@npm:^4.0.4":
-  version: 4.6.3
-  resolution: "redis@npm:4.6.3"
+"redis@npm:4.6.4, redis@npm:^4.0.4":
+  version: 4.6.4
+  resolution: "redis@npm:4.6.4"
   dependencies:
     "@redis/bloom": 1.2.0
-    "@redis/client": 1.5.4
+    "@redis/client": 1.5.5
     "@redis/graph": 1.1.0
     "@redis/json": 1.0.4
     "@redis/search": 1.1.1
     "@redis/time-series": 1.0.4
-  checksum: b7ea9436942f1b8d6ea1c75826159f572867c746cc76e911ccefee1b71f627494bb0d5083f2c2b8e3e714cb2616e028ee2c90476b8df53e1e06a15764eb451fc
+  checksum: b9263985de512a381d419b471bf040989dda80df070d7f548669e6c241a33ca789273ed7834a74e2408b610bb20089ab210fe4493415cf269b8549a29824ccb2
   languageName: node
   linkType: hard
 
@@ -8921,17 +8921,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:*":
-  version: 4.9.4
-  resolution: "typescript@npm:4.9.4"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: e782fb9e0031cb258a80000f6c13530288c6d63f1177ed43f770533fdc15740d271554cdae86701c1dd2c83b082cea808b07e97fd68b38a172a83dbf9e0d0ef9
-  languageName: node
-  linkType: hard
-
-"typescript@npm:4.9.5":
+"typescript@npm:*, typescript@npm:4.9.5":
   version: 4.9.5
   resolution: "typescript@npm:4.9.5"
   bin:
@@ -8941,17 +8931,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@*#~builtin<compat/typescript>":
-  version: 4.9.4
-  resolution: "typescript@patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 1caaea6cb7f813e64345190fddc4e6c924d0b698ab81189b503763c4a18f7f5501c69362979d36e19c042d89d936443e768a78b0675690b35eb663d19e0eae71
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@4.9.5#~builtin<compat/typescript>":
+"typescript@patch:typescript@*#~builtin<compat/typescript>, typescript@patch:typescript@4.9.5#~builtin<compat/typescript>":
   version: 4.9.5
   resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=ad5954"
   bin:
