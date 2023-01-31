@@ -3,8 +3,10 @@
   "extends": ["config:base"],
   "automerge": true,
   "automergeType": "branch",
-  "timezone": "Europe/Berlin",
+  "automergeSchedule": ["after 7am every day"],
+  "timezone": "UTC",
   "assignees": ["ruder.marvin@icloud.com"],
   "updateLockFiles": true,
+  "postUpdateOptions": ["yarnDedupeHighest"],
   "rangeStrategy": "pin"
 }
