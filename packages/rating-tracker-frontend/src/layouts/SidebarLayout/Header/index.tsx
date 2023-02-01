@@ -8,6 +8,7 @@ import {
   Tooltip,
   styled,
   useTheme,
+  Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -85,6 +86,7 @@ const Header = (): JSX.Element => {
       </Box>
       <Box display="flex" alignItems="center">
         <HeaderButtons />
+        <Divider orientation="vertical" flexItem sx={{ m: 1 }} />
         <HeaderUserbox />
       </Box>
     </HeaderWrapper>

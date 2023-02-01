@@ -261,57 +261,65 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
         </Typography>
       </Grid>
       <Grid item ml="auto">
-        <IconButton
-          sx={{ ml: 1, mt: 1 }}
-          color="primary"
-          onClick={() => setAddStockOpen(true)}
-        >
-          <AddIcon />
-        </IconButton>
-        <IconButton
-          sx={{ ml: 1, mt: 1 }}
-          color="primary"
-          onClick={() => setFilterOpen(true)}
-        >
-          <TuneIcon />
-        </IconButton>
-        <IconButton
-          sx={{ ml: 1, mt: 1 }}
-          color="primary"
-          onClick={() => setColumnFilterOpen(true)}
-        >
-          <FilterListIcon />
-        </IconButton>
-        <IconButton
-          sx={{ display: !props.filtersInUse && "none", ml: 1, mt: 1 }}
-          color="error"
-          onClick={() => {
-            // Reset all filters to their default values
-            props.setFilter({});
-            props.setColumnFilter([...stockListColumnArray]);
-            setTotalScoreInput([0, 100]);
-            setFinancialScoreInput([0, 100]);
-            setEsgScoreInput([0, 100]);
-            setDividendYieldPercentInput([0, 20]);
-            setPriceEarningRatioInput([0, 100]);
-            setStarRatingInput([0, 5]);
-            setMorningstarFairValueDiffInput([-50, 50]);
-            setAnalystConsensusInput([0, 10]);
-            setAnalystCountInput([0, 60]);
-            setAnalystTargetDiffInput([-50, 50]);
-            setMsciESGRatingInput(["AAA", "None"]);
-            setMsciTemperatureInput([1.0, 4.0]);
-            setRefinitivESGScoreInput([0, 100]);
-            setRefinitivEmissionsInput([0, 100]);
-            setSpESGScoreInput([0, 100]);
-            setSustainalyticsESGRiskInput([0, 50]);
-            setStyleboxInput({});
-            setCountryInput([]);
-            setIndustryInput([]);
-          }}
-        >
-          <ClearIcon />
-        </IconButton>
+        <Tooltip arrow title="Add a new stock">
+          <IconButton
+            sx={{ ml: 1, mt: 1 }}
+            color="primary"
+            onClick={() => setAddStockOpen(true)}
+          >
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow title="Filter stock list">
+          <IconButton
+            sx={{ ml: 1, mt: 1 }}
+            color="primary"
+            onClick={() => setFilterOpen(true)}
+          >
+            <TuneIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow title="Filter columns">
+          <IconButton
+            sx={{ ml: 1, mt: 1 }}
+            color="primary"
+            onClick={() => setColumnFilterOpen(true)}
+          >
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow title="Clear all filters">
+          <IconButton
+            sx={{ display: !props.filtersInUse && "none", ml: 1, mt: 1 }}
+            color="error"
+            onClick={() => {
+              // Reset all filters to their default values
+              props.setFilter({});
+              props.setColumnFilter([...stockListColumnArray]);
+              setTotalScoreInput([0, 100]);
+              setFinancialScoreInput([0, 100]);
+              setEsgScoreInput([0, 100]);
+              setDividendYieldPercentInput([0, 20]);
+              setPriceEarningRatioInput([0, 100]);
+              setStarRatingInput([0, 5]);
+              setMorningstarFairValueDiffInput([-50, 50]);
+              setAnalystConsensusInput([0, 10]);
+              setAnalystCountInput([0, 60]);
+              setAnalystTargetDiffInput([-50, 50]);
+              setMsciESGRatingInput(["AAA", "None"]);
+              setMsciTemperatureInput([1.0, 4.0]);
+              setRefinitivESGScoreInput([0, 100]);
+              setRefinitivEmissionsInput([0, 100]);
+              setSpESGScoreInput([0, 100]);
+              setSustainalyticsESGRiskInput([0, 50]);
+              setStyleboxInput({});
+              setCountryInput([]);
+              setIndustryInput([]);
+            }}
+          >
+            <ClearIcon />
+          </IconButton>
+        </Tooltip>
         <Dialog maxWidth="lg" open={addStockOpen}>
           <AddStock
             onClose={() => (setAddStockOpen(false), props.triggerRefetch())}

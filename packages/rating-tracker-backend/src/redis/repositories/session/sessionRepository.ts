@@ -4,7 +4,7 @@ import {
   SessionEntity,
   sessionSchema,
 } from "../../../models/session.js";
-import { refresh, fetch, save } from "./sessionRepositoryBase.js";
+import { refresh, fetch, save, remove } from "./sessionRepositoryBase.js";
 import chalk from "chalk";
 import { User } from "../../../models/user.js";
 import { readUser } from "../user/userRepository.js";
@@ -69,15 +69,16 @@ export const refreshSessionAndFetchUser = async (
 //   }
 // };
 
-// export const deleteSession = async (sessionID: string) => {
-//   const sessionEntity = await fetch(sessionID);
-//   if (sessionEntity && sessionEntity.email) {
-//     const email = new Session(sessionEntity).email;
-//     await remove(sessionEntity.entityId);
-//     logger.info(PREFIX_REDIS +
-//       `Deleted session “${email}” (sessionID ${sessionID}).`
-//     );
-//   } else {
-//     throw new APIError(404, `Session ${sessionID} not found.`);
-//   }
-// };
+export const deleteSession = async (sessionID: string) => {
+  const sessionEntity = await fetch(sessionID);
+  /* istanbul ignore else  */ // Not reached in current tests since a user can only delete their current session
+  if (sessionEntity && sessionEntity.email) {
+    const email = new Session(sessionEntity).email;
+    await remove(sessionEntity.entityId);
+    logger.info(
+      PREFIX_REDIS + `Deleted session ${sessionID} for user “${email}”.`
+    );
+  } else {
+    throw new APIError(404, `Session ${sessionID} not found.`);
+  }
+};

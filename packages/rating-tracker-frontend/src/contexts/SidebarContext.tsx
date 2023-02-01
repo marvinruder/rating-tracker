@@ -46,7 +46,7 @@ export const SidebarProvider: FC<SidebarProviderProps> = (
   props: SidebarProviderProps
 ) => {
   const [sidebarToggle, setSidebarToggle] = useState(false);
-  const [user, setUser] = useState<User>({} as User);
+  const [user, setUser] = useState<User>(undefined);
   const [userToggle, setUserToggle] = useState(false);
   /**
    * Toggles the sidebar.

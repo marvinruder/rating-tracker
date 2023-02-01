@@ -3,7 +3,7 @@
   "extends": ["config:base"],
   "automerge": true,
   "automergeType": "branch",
-  "automergeSchedule": ["after 7am every day"],
+  "automergeSchedule": ["after 7am"],
   "timezone": "UTC",
   "assignees": ["ruder.marvin@icloud.com"],
   "updateLockFiles": true,

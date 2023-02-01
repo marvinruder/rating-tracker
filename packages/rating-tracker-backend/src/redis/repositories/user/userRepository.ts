@@ -87,7 +87,7 @@ export const updateUser = async (
     let isNewData = false;
     // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
     for (k in newValues) {
-      if (k in newValues && newValues[k]) {
+      if (k in newValues && newValues[k] !== undefined) {
         if (newValues[k] !== userEntity[k]) {
           // New data is different from old data
           isNewData = true;

@@ -76,7 +76,7 @@ const expectRouteToBePrivate = async (
   );
 };
 
-describe("Session Validation", () => {
+describe("Session API", () => {
   it("renews cookie when token is valid", async () => {
     const res = await requestWithSupertest
       .head("/api/session")
@@ -94,6 +94,20 @@ describe("Session Validation", () => {
       .set("Cookie", ["authToken=invalidSessionID"]);
     expect(res.status).toBe(401);
     expect(res.header["set-cookie"][0]).toMatch("authToken=;");
+  });
+
+  it("deletes session when signing out", async () => {
+    let res = await requestWithSupertest
+      .delete("/api/session")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    expect(res.header["set-cookie"][1]).toMatch("authToken=;");
+
+    // Check whether we can still access the current user
+    res = await requestWithSupertest
+      .get("/api/user")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(401);
   });
 });
 
@@ -646,7 +660,9 @@ describe("User API", () => {
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("jane.doe@example.com");
     expect(res.body.name).toBe("Jane Doe");
-    expect(res.body.avatar).toBe("U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U=");
+    expect(res.body.avatar).toBe(
+      "data:image/jpeg;base64,U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U="
+    );
     expect(res.body.phone).toBe("123456789");
     // Authentication-related fields should not be exposed
     expect(res.body.credentialID).toBeUndefined();
@@ -657,9 +673,10 @@ describe("User API", () => {
   it("updates current user’s information", async () => {
     await expectRouteToBePrivate("/api/user", requestWithSupertest.patch);
     let res = await requestWithSupertest
-      .patch(
-        "/api/user?name=Jane%20Doe%20II%2E&avatar=QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=&phone=987654321"
-      )
+      .patch("/api/user?name=Jane%20Doe%20II%2E&phone=987654321")
+      .send({
+        avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
+      })
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
@@ -670,7 +687,9 @@ describe("User API", () => {
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("jane.doe@example.com");
     expect(res.body.name).toBe("Jane Doe II.");
-    expect(res.body.avatar).toBe("QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=");
+    expect(res.body.avatar).toBe(
+      "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U="
+    );
     expect(res.body.phone).toBe("987654321");
   });
 

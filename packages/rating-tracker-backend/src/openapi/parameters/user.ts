@@ -28,19 +28,6 @@ const name: OpenAPIV3.ParameterObject = {
 };
 
 /**
- * The base64-encoded avatar of a user
- */
-const avatar: OpenAPIV3.ParameterObject = {
-  in: "query",
-  name: "avatar",
-  description: "The base64-encoded avatar of a user",
-  schema: {
-    type: "string",
-    format: "byte",
-  },
-};
-
-/**
  * The phone number of a user, used for Signal messages
  */
 const phone: OpenAPIV3.ParameterObject = {
@@ -53,4 +40,4 @@ const phone: OpenAPIV3.ParameterObject = {
   },
 };
 
-export { email, name, avatar, phone };
+export { email, name, phone };

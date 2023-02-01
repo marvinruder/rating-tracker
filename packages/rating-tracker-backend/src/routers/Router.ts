@@ -4,6 +4,7 @@ import FetchRouter from "./fetch/FetchRouter.js";
 import ResourceRouter from "./resource/ResourceRouter.js";
 import StockRouter from "./stock/StockRouter.js";
 import UserRouter from "./user/UserRouter.js";
+import SessionRouter from "./session/SessionRouter.js";
 
 /**
  * Router for all public routes.
@@ -50,6 +51,7 @@ class PrivateRouter {
   private _subrouterStock = StockRouter;
   private _subrouterResource = ResourceRouter;
   private _subrouterUser = UserRouter;
+  private _subrouterSession = SessionRouter;
 
   /**
    * Get the router for all private routes.
@@ -75,12 +77,7 @@ class PrivateRouter {
     this._router.use("/stock", this._subrouterStock);
     this._router.use("/resource", this._subrouterResource);
     this._router.use("/user", this._subrouterUser);
-    this._router.head("/session", (_, res) => {
-      // The trivial session route is implemented directly in the router.
-      // If not authenticated, a 401 response would have been returned before this route is reached here.
-      // If authenticated, this route is reached and a 204 response is returned.
-      return res.sendStatus(204);
-    });
+    this._router.use("/session", this._subrouterSession);
   }
 }
 

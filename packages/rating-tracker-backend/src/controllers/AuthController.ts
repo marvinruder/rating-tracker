@@ -204,9 +204,9 @@ class AuthController {
       const authToken = randomUUID();
       await createSession({ sessionID: authToken, email });
       res.cookie("authToken", authToken, {
-        maxAge: 1000 * sessionTTLInSeconds,
+        maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
         httpOnly: true,
-        secure: process.env.NODE_ENV !== "development",
+        secure: process.env.NODE_ENV !== "development", // allow plain HTTP in development
         sameSite: true,
       });
       return res.sendStatus(204);

@@ -34,7 +34,8 @@ class UserController {
    */
   async patch(req: Request, res: Response) {
     const user: User = res.locals.user;
-    const { name, avatar, phone } = req.query;
+    const { name, phone } = req.query;
+    const { avatar } = req.body;
     if (
       (typeof name === "string" || typeof name === "undefined") &&
       (typeof avatar === "string" || typeof avatar === "undefined") &&

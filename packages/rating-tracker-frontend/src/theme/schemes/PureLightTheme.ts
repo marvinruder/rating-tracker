@@ -430,8 +430,9 @@ const PureLightTheme = createTheme({
           background: colors.primary.lighter,
         },
         "#nprogress .spinner-icon": {
-          borderTopColor: colors.primary.lighter,
-          borderLeftColor: colors.primary.lighter,
+          display: "none",
+          // borderTopColor: colors.primary.lighter,
+          // borderLeftColor: colors.primary.lighter,
         },
         "#nprogress .peg": {
           boxShadow:

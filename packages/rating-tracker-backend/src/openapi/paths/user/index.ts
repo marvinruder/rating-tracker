@@ -45,14 +45,26 @@ const patch: OpenAPIV3.OperationObject = {
       allowEmptyValue: true,
     },
     {
-      ...user.avatar,
-      allowEmptyValue: true,
-    },
-    {
       ...user.phone,
       allowEmptyValue: true,
     },
   ],
+  requestBody: {
+    required: false,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            avatar: {
+              type: "string",
+              format: "binary",
+            },
+          },
+        },
+      },
+    },
+  },
   responses: {
     "204": noContent,
     "401": unauthorized,

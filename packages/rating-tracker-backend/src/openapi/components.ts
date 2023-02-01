@@ -254,7 +254,7 @@ export const components: OpenAPIV3.ComponentsObject = {
         avatar: {
           type: "string",
           description: "The base64-encoded avatar of the user.",
-          format: "byte",
+          format: "binary",
         },
         phone: {
           type: "string",
