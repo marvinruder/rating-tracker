@@ -21,7 +21,7 @@
     "start": "yarn workspace rating-tracker-backend start",
     "lint": "yarn workspaces foreach -pt run lint"
   },
-  "packageManager": "yarn@3.3.1",
+  "packageManager": "yarn@3.4.1",
   "dependencies": {
     "concurrently": "7.6.0"
   },
