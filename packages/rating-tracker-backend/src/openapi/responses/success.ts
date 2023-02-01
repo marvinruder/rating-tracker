@@ -1,10 +1,15 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 
+/**
+ * A response with a 200 OK status code and an empty body.
+ */
 const ok: OpenAPIV3.ResponseObject = {
   description: "OK",
 };
 
-// Generic object response
+/**
+ * A response with a 200 OK status code and a generic object body.
+ */
 const okObject: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -16,7 +21,9 @@ const okObject: OpenAPIV3.ResponseObject = {
   },
 };
 
-// Used for SVG logos
+/**
+ * A response with a 200 OK status code and an SVG body.
+ */
 const okSVG: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -28,6 +35,9 @@ const okSVG: OpenAPIV3.ResponseObject = {
   },
 };
 
+/**
+ * A response with a 200 OK status code and a Stock object body.
+ */
 const okStock: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -39,6 +49,9 @@ const okStock: OpenAPIV3.ResponseObject = {
   },
 };
 
+/**
+ * A response with a 200 OK status code and an array of Stock objects.
+ */
 const okStockList: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -53,6 +66,9 @@ const okStockList: OpenAPIV3.ResponseObject = {
   },
 };
 
+/**
+ * A response with a 200 OK status code and an object containing an array of Stock objects and a count.
+ */
 const okStockListWithCount: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -64,7 +80,9 @@ const okStockListWithCount: OpenAPIV3.ResponseObject = {
   },
 };
 
-// Used for Status API endpoint
+/**
+ * A response with a 200 OK status code and an object containing a status string.
+ */
 const okOperational: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
@@ -82,14 +100,37 @@ const okOperational: OpenAPIV3.ResponseObject = {
   },
 };
 
-const accepted: OpenAPIV3.ResponseObject = {
-  description: "Accepted",
+/**
+ * A response with a 200 OK status code and a User object body.
+ */
+const okUser: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "application/json": {
+      schema: {
+        $ref: "#/components/schemas/User",
+      },
+    },
+  },
 };
 
+/**
+ * A response with a 201 Created status code.
+ */
 const created: OpenAPIV3.ResponseObject = {
   description: "Created",
 };
 
+/**
+ * A response with a 202 Accepted status code.
+ */
+const accepted: OpenAPIV3.ResponseObject = {
+  description: "Accepted",
+};
+
+/**
+ * A response with a 204 No Content status code.
+ */
 const noContent: OpenAPIV3.ResponseObject = {
   description: "No Content",
 };
@@ -102,6 +143,7 @@ export {
   okStockList,
   okStockListWithCount,
   okOperational,
+  okUser,
   accepted,
   created,
   noContent,

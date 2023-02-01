@@ -9,7 +9,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { dependencies } from "./package.json";
 import fs from "fs";
 
-const chunkList = ["@mui/material"];
+const chunkList = ["@mui/material", "image-js"];
 
 const renderChunks = (deps: Record<string, string>) => {
   const chunks = {};

@@ -27,4 +27,17 @@ const name: OpenAPIV3.ParameterObject = {
   },
 };
 
-export { email, name };
+/**
+ * The phone number of a user, used for Signal messages
+ */
+const phone: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "phone",
+  description: "The phone number of a user, used for Signal messages",
+  schema: {
+    type: "string",
+    example: "+491234567890",
+  },
+};
+
+export { email, name, phone };

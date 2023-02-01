@@ -3,6 +3,7 @@ import {
   AlertProps,
   AlertTitle,
   Snackbar,
+  SnackbarCloseReason,
   SnackbarProps,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -29,14 +30,23 @@ const NotificationSnackbar = (
 
   /**
    * A callback that is called when the snackbar is closed.
+   *
+   * @param {Event | React.SyntheticEvent<any, Event>} _ The event that triggered the callback.
+   * @param {SnackbarCloseReason} reason The reason why the snackbar was closed.
    */
-  const closeNotification = () => {
-    setSnackbarShown(false);
-    setTimeout(() => {
-      // Delete the notification after the transition is finished to avoid a flash of a notification of the wrong
-      // severity.
-      setNotification(undefined);
-    }, TRANSITION_DURATION);
+  const closeNotification = (
+    _: Event | React.SyntheticEvent<any, Event>,
+    reason?: SnackbarCloseReason
+  ) => {
+    // Clickaway is not used intentionally, but sometimes fired anyhow, which we want to ignore.
+    if (reason !== "clickaway") {
+      setSnackbarShown(false);
+      setTimeout(() => {
+        // Delete the notification after the transition is finished to avoid a flash of a notification of the wrong
+        // severity.
+        setNotification(undefined);
+      }, TRANSITION_DURATION);
+    }
   };
 
   return (

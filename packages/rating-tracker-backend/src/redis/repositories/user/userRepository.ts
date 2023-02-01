@@ -1,6 +1,6 @@
 import APIError from "../../../lib/apiError.js";
 import { User, UserEntity, userSchema } from "../../../models/user.js";
-import { fetch, save } from "./userRepositoryBase.js";
+import { fetch, remove, save } from "./userRepositoryBase.js";
 import chalk from "chalk";
 import * as signal from "../../../signal/signal.js";
 import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
@@ -87,7 +87,7 @@ export const updateUser = async (
     let isNewData = false;
     // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
     for (k in newValues) {
-      if (k in newValues && newValues[k]) {
+      if (k in newValues && newValues[k] !== undefined) {
         if (newValues[k] !== userEntity[k]) {
           // New data is different from old data
           isNewData = true;
@@ -97,6 +97,8 @@ export const updateUser = async (
           );
           switch (k) {
             case "name":
+            case "avatar":
+            case "phone":
             case "credentialID":
             case "credentialPublicKey":
               userEntity[k] = newValues[k];
@@ -124,13 +126,20 @@ export const updateUser = async (
   }
 };
 
-// export const deleteUser = async (email: string) => {
-//   const userEntity = await fetch(email);
-//   if (userEntity && userEntity.name) {
-//     const name = new User(userEntity).name;
-//     await remove(userEntity.entityId);
-//     logger.info(PREFIX_REDIS + `Deleted user “${name}” (email ${email}).`);
-//   } else {
-//     throw new APIError(404, `User ${email} not found.`);
-//   }
-// };
+/**
+ * Delete a user.
+ *
+ * @param {string} email The email address of the user.
+ * @throws an {@link APIError} if the user does not exist.
+ */
+export const deleteUser = async (email: string) => {
+  const userEntity = await fetch(email);
+  /* istanbul ignore else */ // Not reached in current tests since a user can only delete themself
+  if (userEntity && userEntity.name) {
+    const name = new User(userEntity).name;
+    await remove(userEntity.entityId);
+    logger.info(PREFIX_REDIS + `Deleted user “${name}” (email ${email}).`);
+  } else {
+    throw new APIError(404, `User ${email} not found.`);
+  }
+};

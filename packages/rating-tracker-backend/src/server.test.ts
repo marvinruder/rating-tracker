@@ -76,7 +76,7 @@ const expectRouteToBePrivate = async (
   );
 };
 
-describe("Session Validation", () => {
+describe("Session API", () => {
   it("renews cookie when token is valid", async () => {
     const res = await requestWithSupertest
       .head("/api/session")
@@ -94,6 +94,20 @@ describe("Session Validation", () => {
       .set("Cookie", ["authToken=invalidSessionID"]);
     expect(res.status).toBe(401);
     expect(res.header["set-cookie"][0]).toMatch("authToken=;");
+  });
+
+  it("deletes session when signing out", async () => {
+    let res = await requestWithSupertest
+      .delete("/api/session")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    expect(res.header["set-cookie"][1]).toMatch("authToken=;");
+
+    // Check whether we can still access the current user
+    res = await requestWithSupertest
+      .get("/api/user")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(401);
   });
 });
 
@@ -556,15 +570,15 @@ describe("Swagger API", () => {
 describe("Authentication API", () => {
   it("provides a registration challenge", async () => {
     const res = await requestWithSupertest.get(
-      "/api/auth/register?email=john.doe%40example.com&name=John%20Doe"
+      "/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe"
     );
     expect(res.status).toBe(200);
     expect(typeof res.body.challenge).toBe("string");
     expect(typeof res.body.timeout).toBe("number");
     expect(res.body.rp.id).toBe(`${process.env.DOMAIN}`);
     expect(res.body.rp.name).toMatch("Rating Tracker");
-    expect(res.body.user.id).toBe("john.doe@example.com");
-    expect(res.body.user.name).toBe("John Doe");
+    expect(res.body.user.id).toBe("jim.doe@example.com");
+    expect(res.body.user.name).toBe("Jim Doe");
     expect(res.body.attestation).toBe("none");
     expect(res.body.excludeCredentials).toHaveLength(0);
     expect(res.body.authenticatorSelection.userVerification).toBe("required");
@@ -634,5 +648,68 @@ describe("Resource API", () => {
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("not found");
+  });
+});
+
+describe("User API", () => {
+  it("provides current user’s information", async () => {
+    await expectRouteToBePrivate("/api/user");
+    const res = await requestWithSupertest
+      .get("/api/user")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.email).toBe("jane.doe@example.com");
+    expect(res.body.name).toBe("Jane Doe");
+    expect(res.body.avatar).toBe(
+      "data:image/jpeg;base64,U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U="
+    );
+    expect(res.body.phone).toBe("123456789");
+    // Authentication-related fields should not be exposed
+    expect(res.body.credentialID).toBeUndefined();
+    expect(res.body.credentialPublicKey).toBeUndefined();
+    expect(res.body.counter).toBeUndefined();
+  });
+
+  it("updates current user’s information", async () => {
+    await expectRouteToBePrivate("/api/user", requestWithSupertest.patch);
+    let res = await requestWithSupertest
+      .patch("/api/user?name=Jane%20Doe%20II%2E&phone=987654321")
+      .send({
+        avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
+      })
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+
+    // Check that the changes were applied
+    res = await requestWithSupertest
+      .get("/api/user")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.email).toBe("jane.doe@example.com");
+    expect(res.body.name).toBe("Jane Doe II.");
+    expect(res.body.avatar).toBe(
+      "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U="
+    );
+    expect(res.body.phone).toBe("987654321");
+  });
+
+  it("disallows changing own access rights", async () => {
+    const res = await requestWithSupertest
+      .patch("/api/user?accessRights=255")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(400);
+  });
+
+  it("deletes the current user", async () => {
+    await expectRouteToBePrivate("/api/user", requestWithSupertest.delete);
+    let res = await requestWithSupertest
+      .delete("/api/user")
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+
+    // Check that the user was deleted
+    res = await requestWithSupertest
+      .head("/api/session")
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+    expect(res.status).toBe(401);
   });
 });

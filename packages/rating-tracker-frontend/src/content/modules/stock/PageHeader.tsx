@@ -7,6 +7,7 @@ import {
   Skeleton,
   Avatar,
   useTheme,
+  Tooltip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -87,20 +88,24 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
           )}
         </Grid>
         <Grid item ml="auto">
-          <IconButton
-            sx={{ ml: 1, mt: 1 }}
-            color="primary"
-            onClick={() => setEditDialogOpen(true)}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            sx={{ ml: 1, mt: 1 }}
-            color="error"
-            onClick={() => setDeleteDialogOpen(true)}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <Tooltip arrow title="Edit Stock">
+            <IconButton
+              sx={{ ml: 1, mt: 1 }}
+              color="primary"
+              onClick={() => setEditDialogOpen(true)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Delete Stock">
+            <IconButton
+              sx={{ ml: 1, mt: 1 }}
+              color="error"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
       <Dialog

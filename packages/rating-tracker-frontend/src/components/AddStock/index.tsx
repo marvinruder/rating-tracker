@@ -490,7 +490,6 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 label="Ticker symbol"
                 value={stock.ticker}
                 placeholder={"e.g. AAPL"}
-                sx={{ maxWidth: "300px" }}
                 fullWidth
               />
             </Grid>
@@ -509,7 +508,6 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 label="Stock name"
                 value={stock.name}
                 placeholder={"e.g. Apple Inc."}
-                sx={{ maxWidth: "300px" }}
                 fullWidth
               />
             </Grid>
@@ -542,13 +540,11 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 label="ISIN"
                 value={stock.isin}
                 placeholder={"e.g. US0378331005"}
-                sx={{ maxWidth: "300px" }}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12}>
               <Autocomplete
-                sx={{ maxWidth: "300px" }}
                 options={countryArray}
                 autoHighlight
                 getOptionLabel={(option) => countryNameWithFlag[option]}
@@ -617,7 +613,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
             Alright, now connect some data providers:
           </Typography>
           <Grid container spacing={1} alignItems="center">
-            <Grid item>
+            <Grid
+              item
+              width={{
+                xs: "100%",
+                sm: `calc(100% - ${morningstarIdSet ? 112 : 91}px)`,
+              }}
+            >
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
@@ -630,10 +632,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 label="Morningstar ID"
                 value={stock.morningstarId}
                 placeholder={"e.g. 0P000000GY"}
-                sx={{ maxWidth: "300px" }}
+                fullWidth
               />
             </Grid>
-            <Grid item>
+            <Grid item ml="auto">
               <LoadingButton
                 size="small"
                 loading={morningstarIdRequestInProgress}
@@ -647,7 +649,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item>
+            <Grid
+              item
+              width={{
+                xs: "100%",
+                sm: `calc(100% - ${marketScreenerIdSet ? 112 : 91}px)`,
+              }}
+            >
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
@@ -660,10 +668,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 label="Market Screener ID"
                 value={stock.marketScreenerId}
                 placeholder={"e.g. APPLE-INC-4849"}
-                sx={{ maxWidth: "300px" }}
+                fullWidth
               />
             </Grid>
-            <Grid item>
+            <Grid item ml="auto">
               <LoadingButton
                 size="small"
                 loading={marketScreenerIdRequestInProgress}
@@ -677,7 +685,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item>
+            <Grid
+              item
+              width={{
+                xs: "100%",
+                sm: `calc(100% - ${msciIdSet ? 112 : 91}px)`,
+              }}
+            >
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
@@ -690,10 +704,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 label="MSCI ID"
                 value={stock.msciId}
                 placeholder={"e.g. apple-inc/IID000000002157615"}
-                sx={{ maxWidth: "300px" }}
+                fullWidth
               />
             </Grid>
-            <Grid item>
+            <Grid item ml="auto">
               <LoadingButton
                 size="small"
                 loading={msciIdRequestInProgress}
@@ -707,7 +721,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item>
+            <Grid
+              item
+              width={{
+                xs: "100%",
+                sm: `calc(100% - ${ricSet ? 112 : 91}px)`,
+              }}
+            >
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
@@ -717,10 +737,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 label="RIC"
                 value={stock.ric}
                 placeholder={"e.g. AAPL.O"}
-                sx={{ maxWidth: "300px" }}
+                fullWidth
               />
             </Grid>
-            <Grid item>
+            <Grid item ml="auto">
               <LoadingButton
                 size="small"
                 loading={ricRequestInProgress}
@@ -734,7 +754,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item>
+            <Grid
+              item
+              width={{
+                xs: "100%",
+                sm: `calc(100% - ${spIdSet ? 112 : 91}px)`,
+              }}
+            >
               <TextField
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 onChange={(event) => {
@@ -750,10 +776,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 label="S&P ID"
                 value={stock.spId}
                 placeholder={"e.g. 4004205"}
-                sx={{ maxWidth: "300px" }}
+                fullWidth
               />
             </Grid>
-            <Grid item>
+            <Grid item ml="auto">
               <LoadingButton
                 size="small"
                 loading={spIdRequestInProgress}
@@ -767,7 +793,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item>
+            <Grid
+              item
+              width={{
+                xs: "100%",
+                sm: `calc(100% - ${sustainalyticsIdSet ? 112 : 91}px)`,
+              }}
+            >
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
@@ -780,10 +812,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 label="Sustainalytics ID"
                 value={stock.sustainalyticsId}
                 placeholder={"e.g. apple-inc/1007903183"}
-                sx={{ maxWidth: "300px" }}
+                fullWidth
               />
             </Grid>
-            <Grid item>
+            <Grid item ml="auto">
               <LoadingButton
                 size="small"
                 loading={sustainalyticsIdRequestInProgress}

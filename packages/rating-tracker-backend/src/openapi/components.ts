@@ -236,6 +236,39 @@ export const components: OpenAPIV3.ComponentsObject = {
       },
       required: ["stocks", "count"],
     },
+    User: {
+      type: "object",
+      description: "A user of the application.",
+      properties: {
+        email: {
+          type: "string",
+          description: "The email address of a user, used as their ID",
+          format: "email",
+          example: "jane.doe@example.com",
+        },
+        name: {
+          type: "string",
+          description: "The common name of the user.",
+          example: "Jane Doe",
+        },
+        avatar: {
+          type: "string",
+          description: "The base64-encoded avatar of the user.",
+          format: "binary",
+        },
+        phone: {
+          type: "string",
+          description:
+            "The phone number of the user, used for Signal messages.",
+          example: "+491234567890",
+        },
+        accessRights: {
+          type: "integer",
+          description: "The access rights of the user, encoded as a bitfield",
+          example: 1,
+        },
+      },
+    },
     Error: {
       type: "object",
       properties: {

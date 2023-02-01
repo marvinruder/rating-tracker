@@ -136,7 +136,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">Country</Typography>
             </Tooltip>
@@ -185,7 +185,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">StyleBox</Typography>
             </Tooltip>
@@ -232,7 +232,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">Industry</Typography>
             </Tooltip>
@@ -268,7 +268,9 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                       ]
                     }
                     arrow
-                    placement="right"
+                    placement={
+                      detailsContainerWidth === 300 ? "bottom" : "right"
+                    }
                   >
                     <Typography variant="body1">
                       {props.stock.industry &&
@@ -308,7 +310,9 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                       ]
                     }
                     arrow
-                    placement="right"
+                    placement={
+                      detailsContainerWidth === 300 ? "bottom" : "right"
+                    }
                   >
                     <Typography variant="body1">
                       {props.stock.industry &&
@@ -335,7 +339,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                     industryDescription[props.stock.industry]
                   }
                   arrow
-                  placement="right"
+                  placement={detailsContainerWidth === 300 ? "bottom" : "right"}
                 >
                   <Typography
                     variant="body1"
@@ -382,7 +386,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">Dividend Yield</Typography>
             </Tooltip>
@@ -409,7 +413,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">
                 P{"\u2009"}/{"\u2009"}E Ratio
@@ -435,7 +439,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">Market Cap</Typography>
             </Tooltip>
@@ -474,7 +478,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">52W Range</Typography>
             </Tooltip>
@@ -543,7 +547,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="8px">
                 Total Score
@@ -588,7 +592,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="8px">
                 Financial Score
@@ -634,7 +638,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="8px">
                 ESG Score
@@ -690,7 +694,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">
                 Morningstar
@@ -753,7 +757,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" height="35px">
                 Morningstar
@@ -831,7 +835,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" height="19px" mt="5px">
                 Analyst Consensus
@@ -912,7 +916,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" height="35px">
                 Analyst Target
@@ -989,7 +993,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">Analyst Count</Typography>
             </Tooltip>
@@ -1038,7 +1042,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="5px" height="19px">
                 MSCI ESG Rating
@@ -1090,7 +1094,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">
                 MSCI Implied Temperature Rise
@@ -1140,7 +1144,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="6px" height="21px">
                 Refinitiv ESG Score
@@ -1191,7 +1195,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="6px" height="21px">
                 Refinitiv Emissions
@@ -1242,7 +1246,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="6px" height="21px">
                 S&P ESG Score
@@ -1292,7 +1296,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement="left"
+              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
               <Typography variant="h5">
                 Sustainalytics

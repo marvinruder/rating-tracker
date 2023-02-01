@@ -1,5 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { unauthorized } from "../responses/clientError.js";
+import { notFound, unauthorized } from "../responses/clientError.js";
 import { noContent } from "../responses/success.js";
 
 /**
@@ -17,4 +17,20 @@ const head: OpenAPIV3.OperationObject = {
   },
 };
 
-export { head };
+/**
+ * Deletes the authentication token related to the session cookie.
+ */
+const deleteResponse: OpenAPIV3.OperationObject = {
+  tags: ["Session API"],
+  operationId: "session",
+  summary: "Session API",
+  description:
+    "Deletes the authentication token related to the session cookie.",
+  responses: {
+    "204": noContent,
+    "401": unauthorized,
+    "404": notFound,
+  },
+};
+
+export { head, deleteResponse as delete };

@@ -290,7 +290,7 @@ const NebulaFighterTheme = createTheme({
     width: "290px",
   },
   header: {
-    height: "60px",
+    height: "76px",
     background: themeColors.primaryAlt,
     boxShadow: "0px 1px 0px #383838",
     textColor: colors.secondary.main,
@@ -437,8 +437,9 @@ const NebulaFighterTheme = createTheme({
           background: colors.primary.lighter,
         },
         "#nprogress .spinner-icon": {
-          borderTopColor: colors.primary.lighter,
-          borderLeftColor: colors.primary.lighter,
+          display: "none",
+          // borderTopColor: colors.primary.lighter,
+          // borderLeftColor: colors.primary.lighter,
         },
         "#nprogress .peg": {
           boxShadow:

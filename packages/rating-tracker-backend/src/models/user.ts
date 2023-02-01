@@ -14,6 +14,8 @@ export class User extends CommonsUser {
     super();
     this.email = userEntity.entityId; // The email is used as the entity’s ID
     this.name = userEntity.name;
+    if (userEntity.avatar != null) this.avatar = userEntity.avatar;
+    if (userEntity.phone != null) this.phone = userEntity.phone;
     this.accessRights = userEntity.accessRights;
     this.credentialID = userEntity.credentialID;
     this.credentialPublicKey = userEntity.credentialPublicKey;
@@ -33,6 +35,14 @@ export interface UserEntity {
    * The common name of the user.
    */
   name: string;
+  /**
+   * The base64-encoded avatar of the user.
+   */
+  avatar: string;
+  /**
+   * The phone number of the user, used for Signal messages.
+   */
+  phone: string;
   /**
    * The access rights of the user, encoded as a bitfield.
    */
@@ -63,6 +73,8 @@ export class UserEntity extends Entity {}
  */
 export const userSchema = new Schema(UserEntity, {
   name: { type: "string" },
+  avatar: { type: "string" },
+  phone: { type: "string" },
   accessRights: { type: "number" },
   credentialID: { type: "string" },
   credentialPublicKey: { type: "string" },
