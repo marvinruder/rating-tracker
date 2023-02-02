@@ -19,7 +19,6 @@ import SidebarContext from "../../contexts/SidebarContext.js";
 import { baseUrl, userAPI } from "../../endpoints.js";
 import useNotification from "../../helpers/useNotification.js";
 import LoadingButton from "@mui/lab/LoadingButton";
-import Image from "image-js";
 
 /**
  * A dialog to edit the user’s own information.
@@ -118,37 +117,25 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       setProcessingAvatar(true);
-      // Wait 10ms to allow the circular progress indicator to render.
-      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const file = e.target.files?.[0];
       if (!file) {
         setProcessingAvatar(false);
         return;
       }
-      let image = await Image.load(await file.arrayBuffer());
-      image = (
-        image.width > image.height // Landscape
-          ? image.crop({
-              // Crop to a square by removing the excess width.
-              x: (image.width - image.height) / 2,
-              y: 0,
-              width: image.height,
-              height: image.height,
-            })
-          : // Portrait
-            image.crop({
-              // Crop to a square by removing the excess height.
-              x: 0,
-              y: (image.height - image.width) / 2,
-              width: image.width,
-              height: image.width,
-            })
-      ).resize({ width: 480, height: 480 }); // Resize to a comfortable size of 480x480px.
-      const blob = await image.toBlob("image/jpeg", 0.6);
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onload = () => setAvatar(reader.result?.toString());
+      // We need to use the browser version of Jimp here, since the Node version is not compatible with the browser.
+      // Unfortunately, type declarations are not available for this setup right now.
+      const Jimp = await import("jimp/browser/lib/jimp.js");
+      const image = await Jimp.read(await file.arrayBuffer());
+      image
+        .cover(480, 480) // Resize to a comfortable size of 480x480px while cutting off the excess.
+        .quality(60) // Reduce the quality to 60%.
+        .getBase64(Jimp.MIME_JPEG, (e: Error, src: string) => {
+          if (e) {
+            throw e;
+          }
+          avatar === src ? setProcessingAvatar(false) : setAvatar(src);
+        });
     } catch (e) {
       setNotification({
         severity: "error",

@@ -9,7 +9,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { dependencies } from "./package.json";
 import fs from "fs";
 
-const chunkList = ["@mui/material", "image-js"];
+const chunkList = ["@mui/material", "jimp"];
 
 const renderChunks = (deps: Record<string, string>) => {
   const chunks = {};
@@ -24,6 +24,7 @@ const fontCSS = fs.readFileSync("src/fonts.css", "utf8");
 export default mergeConfig(
   defineViteConfig({
     build: {
+      chunkSizeWarningLimit: 600,
       cssCodeSplit: false,
       rollupOptions: {
         output: {
