@@ -9,7 +9,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { dependencies } from "./package.json";
 import fs from "fs";
 
-const chunkList = ["@mui/material", "jimp"];
+const chunkList = ["@mui/material", "jimp/browser/lib/jimp.js"];
 
 const renderChunks = (deps: Record<string, string>) => {
   const chunks = {};
@@ -20,10 +20,7 @@ const renderChunks = (deps: Record<string, string>) => {
 };
 
 const fontCSS = fs.readFileSync("src/fonts.css", "utf8");
-const switchSelectorCSS = fs.readFileSync(
-  "src/components/SwitchSelector/switchSelector.css",
-  "utf8"
-);
+const switchSelectorCSS = fs.readFileSync("src/components/SwitchSelector/switchSelector.css", "utf8");
 const nprogressCSSPath = require.resolve("nprogress/nprogress.css");
 const nprogressCSS = fs.readFileSync(nprogressCSSPath, "utf8");
 
@@ -46,25 +43,14 @@ export default mergeConfig(
       tsconfigPaths(),
       createHtmlPlugin({
         minify: true,
-        entry:
-          process.env.NODE_ENV === "development"
-            ? "src/index.tsx"
-            : "index.tsx",
+        entry: process.env.NODE_ENV === "development" ? "src/index.tsx" : "index.tsx",
         template: "src/index.html",
         inject: {
           data: {
-            title:
-              process.env.NODE_ENV === "development"
-                ? "Development Preview – Rating Tracker"
-                : "Rating Tracker",
-            faviconPath:
-              process.env.NODE_ENV === "development"
-                ? "favicon-dev"
-                : "favicon",
+            title: process.env.NODE_ENV === "development" ? "Development Preview – Rating Tracker" : "Rating Tracker",
+            faviconPath: process.env.NODE_ENV === "development" ? "favicon-dev" : "favicon",
             reactDevTools:
-              process.env.NODE_ENV === "development"
-                ? '<script src="http://localhost:8097"></script>'
-                : "",
+              process.env.NODE_ENV === "development" ? '<script src="http://localhost:8097"></script>' : "",
             fontsCSS: `<style type="text/css">${fontCSS}</style>`,
             switchSelectorCSS: `<style type="text/css">${switchSelectorCSS}</style>`,
             nprogressCSS: `<style type="text/css">${nprogressCSS}</style>`,
