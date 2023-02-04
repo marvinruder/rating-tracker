@@ -1,7 +1,4 @@
-import axios from "axios";
-import { User } from "rating-tracker-commons";
-import { FC, useState, createContext, useEffect } from "react";
-import { baseUrl, userAPI } from "../endpoints";
+import { FC, useState, createContext } from "react";
 
 /**
  * An object provided by the sidebar context.
@@ -19,14 +16,6 @@ type SidebarContextType = {
    * Closes the sidebar.
    */
   closeSidebar: () => void;
-  /**
-   * Information regarding the current user.
-   */
-  user: User;
-  /**
-   * Triggers a refetch of the user information.
-   */
-  refetchUser: () => void;
 };
 
 /**
@@ -46,8 +35,7 @@ export const SidebarProvider: FC<SidebarProviderProps> = (
   props: SidebarProviderProps
 ) => {
   const [sidebarToggle, setSidebarToggle] = useState(false);
-  const [user, setUser] = useState<User>(undefined);
-  const [userToggle, setUserToggle] = useState(false);
+
   /**
    * Toggles the sidebar.
    */
@@ -62,25 +50,9 @@ export const SidebarProvider: FC<SidebarProviderProps> = (
     setSidebarToggle(false);
   };
 
-  /**
-   * Triggers a refetch of the user information.
-   */
-  const refetchUser = () => {
-    setUserToggle(!userToggle);
-  };
-
-  useEffect(() => {
-    axios
-      .get(baseUrl + userAPI)
-      .then((response) => {
-        setUser(response.data);
-      })
-      .catch(() => {}); // We cannot access the Notification context from here
-  }, [userToggle]);
-
   return (
     <SidebarContext.Provider
-      value={{ sidebarToggle, toggleSidebar, closeSidebar, user, refetchUser }}
+      value={{ sidebarToggle, toggleSidebar, closeSidebar }}
     >
       {props.children}
     </SidebarContext.Provider>

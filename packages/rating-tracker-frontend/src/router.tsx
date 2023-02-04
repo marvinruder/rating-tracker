@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState, useEffect } from "react";
+import { Suspense, lazy, useState, useEffect, createContext } from "react";
 import { Navigate } from "react-router-dom";
 import { RouteObject } from "react-router";
 
@@ -6,7 +6,7 @@ import SidebarLayout from "./layouts/SidebarLayout";
 
 import SuspenseLoader from "./components/SuspenseLoader";
 import axios from "axios";
-import { baseUrl, sessionAPI } from "./endpoints";
+import { baseUrl, userAPI } from "./endpoints";
 
 /**
  * A wrapper for lazy-loaded components that adds a suspense loader. While the component is loading, the suspense
@@ -72,34 +72,82 @@ import Status404 from "./content/pages/Status/Status404";
  * Since it is a fairly small component, we load it right away and do not use a suspense loader.
  */
 import Status500 from "./content/pages/Status/Status500";
+import { User } from "rating-tracker-commons";
+
+/**
+ * An object provided by the user context.
+ */
+type UserContextType = {
+  /**
+   * Information regarding the current user.
+   */
+  user: User;
+  /**
+   * Deletes the user information from the context.
+   */
+  clearUser: () => void;
+  /**
+   * Triggers a refetch of the user information.
+   */
+  refetchUser: () => void;
+};
+
+/**
+ * A context providing information about the current user.
+ */
+export const UserContext = createContext<UserContextType>(
+  {} as UserContextType
+);
 
 /**
  * A wrapper ensuring that the user is authenticated before displaying the page.
+ * Also provides a user context if the user is authenticated.
  *
  * @param {AuthWrapperProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
 const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
   const [done, setDone] = useState<boolean>(false);
-  const [authed, setAuthed] = useState<boolean>(false);
+  const [user, setUser] = useState<User>(undefined);
+  const [userToggle, setUserToggle] = useState(false);
+
+  /**
+   * Deletes the user information from the context.
+   */
+  const clearUser = () => {
+    setUser(undefined);
+  };
+
+  /**
+   * Triggers a refetch of the user information.
+   */
+  const refetchUser = () => {
+    setUserToggle(!userToggle);
+  };
+
   useEffect(() => {
     // Check if the user is authenticated
     axios
-      .head(baseUrl + sessionAPI)
-      .then((res) => setAuthed(res.status === 204))
+      .get(baseUrl + userAPI)
+      .then((response) => {
+        setUser(response.data);
+      })
       .catch(() => {})
       .finally(() => setDone(true));
-  }, []);
+  }, [userToggle]);
 
   return done ? (
     // If the request finished, evaluate the result
-    authed ? (
+    user ? (
       // If the user is authenticated, display the page
       props.isLoginPage ? (
         // If an authenticated user tries to access the login page, redirect them to the stock list
         <Navigate to="/stocklist" replace />
       ) : (
-        props.children // If any other page was requested, show it
+        // If any other page was requested, show it and provide the user context
+        <UserContext.Provider value={{ user, clearUser, refetchUser }}>
+          {props.children}
+        </UserContext.Provider>
       )
     ) : // If the user is not authenticated, show them the login page
     props.isLoginPage ? (
@@ -139,23 +187,21 @@ const routes: RouteObject[] = [
   {
     // Those pages will be displayed in the sidebar layout
     path: "",
-    element: <SidebarLayout />,
+    element: (
+      // Wrap the sidebar layout in the authentication wrapper which provides the user context, so that we can show the
+      // user information in the header.
+      <AuthWrapper>
+        <SidebarLayout />
+      </AuthWrapper>
+    ),
     children: [
       {
         path: "stocklist",
-        element: (
-          <AuthWrapper>
-            <Stocklist />
-          </AuthWrapper>
-        ),
+        element: <Stocklist />,
       },
       {
         path: "stock/:ticker",
-        element: (
-          <AuthWrapper>
-            <Stock />
-          </AuthWrapper>
-        ),
+        element: <Stock />,
       },
     ],
   },

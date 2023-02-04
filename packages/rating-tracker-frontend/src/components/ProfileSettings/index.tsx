@@ -15,9 +15,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import SidebarContext from "../../contexts/SidebarContext.js";
-import { baseUrl, userAPI } from "../../endpoints.js";
-import useNotification from "../../helpers/useNotification.js";
+import { UserContext } from "../../router";
+import { baseUrl, userAPI } from "../../endpoints";
+import useNotification from "../../helpers/useNotification";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 /**
@@ -27,21 +27,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
  * @returns {JSX.Element} The component.
  */
 const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
-  const { user, refetchUser } = useContext(SidebarContext);
+  const { user, refetchUser } = useContext(UserContext);
   const { setNotification } = useNotification();
-
-  if (!user) {
-    // This should not happen, since the profile button is disabled without a user being present, but if it does, we
-    // don’t want to crash the app.
-    setNotification({
-      severity: "error",
-      title: "Error while loading user",
-      message:
-        "User information is not available at this time. Please try again later.",
-    });
-    props.onClose();
-    return <></>;
-  }
 
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>(user.name);
