@@ -1,25 +1,12 @@
-import {
-  Box,
-  Grid,
-  Typography,
-  Dialog,
-  IconButton,
-  Skeleton,
-  Avatar,
-  useTheme,
-  Tooltip,
-} from "@mui/material";
+import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteStock from "packages/rating-tracker-frontend/src/components/DeleteStock";
-import EditStock from "packages/rating-tracker-frontend/src/components/EditStock";
-import { Stock } from "rating-tracker-commons";
-import { useState } from "react";
-import {
-  baseUrl,
-  stockAPI,
-  logoEndpoint,
-} from "packages/rating-tracker-frontend/src/endpoints";
+import DeleteStock from "../../../components/DeleteStock";
+import EditStock from "../../../components/EditStock";
+import { Stock, WRITE_STOCKS } from "rating-tracker-commons";
+import { useContext, useState } from "react";
+import { baseUrl, stockAPI, logoEndpoint } from "../../../endpoints";
+import { UserContext } from "../../../router.js";
 
 /**
  * A header for the stock details page.
@@ -31,6 +18,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 
+  const { user } = useContext(UserContext);
   const theme = useTheme();
 
   return (
@@ -47,12 +35,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
                   mr: "-8px",
                   background: "none",
                 }}
-                src={
-                  baseUrl +
-                  stockAPI +
-                  logoEndpoint +
-                  `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`
-                }
+                src={baseUrl + stockAPI + logoEndpoint + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
                 alt=" "
               />
               <Box>
@@ -88,47 +71,51 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
           )}
         </Grid>
         <Grid item ml="auto">
-          <Tooltip arrow title="Edit Stock">
-            <IconButton
-              sx={{ ml: 1, mt: 1 }}
-              color="primary"
-              onClick={() => setEditDialogOpen(true)}
-            >
-              <EditIcon />
-            </IconButton>
+          <Tooltip
+            arrow
+            title={
+              user.hasAccessRight(WRITE_STOCKS)
+                ? "Edit Stock"
+                : "You do not have the necessary access rights to update stocks."
+            }
+          >
+            <Box display="inline-block">
+              <IconButton
+                sx={{ ml: 1, mt: 1 }}
+                color="primary"
+                onClick={() => setEditDialogOpen(true)}
+                disabled={!user.hasAccessRight(WRITE_STOCKS)}
+              >
+                <EditIcon />
+              </IconButton>
+            </Box>
           </Tooltip>
-          <Tooltip arrow title="Delete Stock">
-            <IconButton
-              sx={{ ml: 1, mt: 1 }}
-              color="error"
-              onClick={() => setDeleteDialogOpen(true)}
-            >
-              <DeleteIcon />
-            </IconButton>
+          <Tooltip
+            arrow
+            title={
+              user.hasAccessRight(WRITE_STOCKS)
+                ? "Delete Stock"
+                : "You do not have the necessary access rights to delete stocks."
+            }
+          >
+            <Box display="inline-block">
+              <IconButton
+                sx={{ ml: 1, mt: 1 }}
+                color="error"
+                onClick={() => setDeleteDialogOpen(true)}
+                disabled={!user.hasAccessRight(WRITE_STOCKS)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
           </Tooltip>
         </Grid>
       </Grid>
-      <Dialog
-        open={editDialogOpen}
-        onClose={() => (
-          setEditDialogOpen(false), props.getStock && props.getStock()
-        )}
-      >
-        <EditStock
-          stock={props.stock}
-          getStocks={props.getStock}
-          onClose={() => setEditDialogOpen(false)}
-        />
+      <Dialog open={editDialogOpen} onClose={() => (setEditDialogOpen(false), props.getStock && props.getStock())}>
+        <EditStock stock={props.stock} getStocks={props.getStock} onClose={() => setEditDialogOpen(false)} />
       </Dialog>
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
-        <DeleteStock
-          stock={props.stock}
-          onClose={() => setDeleteDialogOpen(false)}
-          navigateTo="/stocklist"
-        />
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <DeleteStock stock={props.stock} onClose={() => setDeleteDialogOpen(false)} navigateTo="/stocklist" />
       </Dialog>
     </>
   );

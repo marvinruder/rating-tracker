@@ -1,15 +1,6 @@
 import { useContext } from "react";
 
-import {
-  Box,
-  alpha,
-  lighten,
-  IconButton,
-  Tooltip,
-  styled,
-  useTheme,
-  Divider,
-} from "@mui/material";
+import { Box, alpha, lighten, IconButton, Tooltip, styled, useTheme, Divider } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
 import SidebarContext from "../../../contexts/SidebarContext";
@@ -59,10 +50,7 @@ const Header = (): JSX.Element => {
                 lighten(theme.colors.primary.main, 0.7),
                 0.15
               )}, 0px 2px 8px -3px rgba(0, 0, 0, 0.2), 0px 5px 22px -4px rgba(0, 0, 0, .1)`
-            : `0px 2px 8px -3px ${alpha(
-                theme.colors.alpha.black[100],
-                0.2
-              )}, 0px 5px 22px -4px ${alpha(
+            : `0px 2px 8px -3px ${alpha(theme.colors.alpha.black[100], 0.2)}, 0px 5px 22px -4px ${alpha(
                 theme.colors.alpha.black[100],
                 0.1
               )}`,

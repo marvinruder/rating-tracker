@@ -21,9 +21,7 @@ const SwitchSelector = (props: SwitchSelectorProps): JSX.Element => {
           padding={0.5}
           variant="button"
           color={
-            props.value === option.value
-              ? theme.colors.switchSelector.selected
-              : theme.colors.switchSelector.unselected
+            props.value === option.value ? theme.colors.switchSelector.selected : theme.colors.switchSelector.unselected
           }
         >
           {option.label}

@@ -1,14 +1,4 @@
-import {
-  Box,
-  Grid,
-  Typography,
-  useTheme,
-  Tooltip,
-  Chip,
-  styled,
-  useMediaQuery,
-  Skeleton,
-} from "@mui/material";
+import { Box, Grid, Typography, useTheme, Tooltip, Chip, styled, useMediaQuery, Skeleton } from "@mui/material";
 import {
   countryNameWithFlag,
   currencyName,
@@ -99,23 +89,18 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
    */
   let detailsContainerWidth: 900 | 600 | 300;
 
-  switch (
-    +useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")
-  ) {
+  switch (+useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")) {
     case 2:
       // The screen is at least 964px wide.
-      detailsContainerWidth =
-        props.maxWidth && props.maxWidth < 900 ? props.maxWidth : 900;
+      detailsContainerWidth = props.maxWidth && props.maxWidth < 900 ? props.maxWidth : 900;
       break;
     case 1:
       // The screen is at least 664px, but less than 964px wide.
-      detailsContainerWidth =
-        props.maxWidth && props.maxWidth < 600 ? props.maxWidth : 600;
+      detailsContainerWidth = props.maxWidth && props.maxWidth < 600 ? props.maxWidth : 600;
       break;
     case 0:
       // The screen is less than 664px wide.
-      detailsContainerWidth =
-        props.maxWidth && props.maxWidth < 300 ? props.maxWidth : 300;
+      detailsContainerWidth = props.maxWidth && props.maxWidth < 300 ? props.maxWidth : 300;
       break;
   }
 
@@ -130,11 +115,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           {/* Country */}
           <Grid item xs={3}>
             <Tooltip
-              title={
-                <Typography variant="body1">
-                  The Country of the company’s operational headquarters.
-                </Typography>
-              }
+              title={<Typography variant="body1">The Country of the company’s operational headquarters.</Typography>}
               arrow
               placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
@@ -143,11 +124,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           <Grid item xs={9}>
             <Typography variant="body1">
-              {props.stock ? (
-                countryNameWithFlag[props.stock?.country]
-              ) : (
-                <Skeleton width={160} />
-              )}
+              {props.stock ? countryNameWithFlag[props.stock?.country] : <Skeleton width={160} />}
             </Typography>
           </Grid>
           {/* Region */}
@@ -156,11 +133,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           <Grid item xs={9}>
             <Typography variant="body1">
-              {props.stock ? (
-                regionName[regionOfCountry[props.stock?.country]]
-              ) : (
-                <Skeleton width={160} />
-              )}
+              {props.stock ? regionName[regionOfCountry[props.stock?.country]] : <Skeleton width={160} />}
             </Typography>
           </Grid>
           {/* Stylebox */}
@@ -169,18 +142,15 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The Size of a company is based on its market capitalization
-                    and geographic area.
+                    The Size of a company is based on its market capitalization and geographic area.
                   </Typography>
                   <Typography variant="body2" paddingBottom={2}>
-                    Large-cap stocks are defined as the group that accounts for
-                    the top 70% of the capitalization of each geographic area;
-                    mid-cap stocks represent the next 20%; and small-cap stocks
-                    represent the balance.
+                    Large-cap stocks are defined as the group that accounts for the top 70% of the capitalization of
+                    each geographic area; mid-cap stocks represent the next 20%; and small-cap stocks represent the
+                    balance.
                   </Typography>
                   <Typography variant="body1">
-                    The Style category is based on the value and growth
-                    characteristics of a company.
+                    The Style category is based on the value and growth characteristics of a company.
                   </Typography>
                 </>
               }
@@ -193,11 +163,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={9}>
             {props.stock ? (
               <Tooltip
-                title={
-                  props.stock.size && props.stock.style
-                    ? `${props.stock.size}-${props.stock.style}`
-                    : undefined
-                }
+                title={props.stock.size && props.stock.style ? `${props.stock.size}-${props.stock.style}` : undefined}
                 arrow
               >
                 <Box
@@ -226,11 +192,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           {/* Sector and industry */}
           <Grid item xs={3}>
             <Tooltip
-              title={
-                <Typography variant="body1">
-                  A fine-grained categorization of a company’s business.
-                </Typography>
-              }
+              title={<Typography variant="body1">A fine-grained categorization of a company’s business.</Typography>}
               arrow
               placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
@@ -249,9 +211,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   {props.stock.industry && (
                     <SectorIcon
                       industry={props.stock.industry}
-                      length={
-                        1.75 * (theme.typography.body2.fontSize as number)
-                      }
+                      length={1.75 * (theme.typography.body2.fontSize as number)}
                       type="SuperSector"
                     />
                   )}
@@ -260,26 +220,16 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                     title={
                       props.stock.industry &&
                       superSectorDescription[
-                        superSectorOfSector[
-                          sectorOfIndustryGroup[
-                            groupOfIndustry[props.stock.industry]
-                          ]
-                        ]
+                        superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]
                       ]
                     }
                     arrow
-                    placement={
-                      detailsContainerWidth === 300 ? "bottom" : "right"
-                    }
+                    placement={detailsContainerWidth === 300 ? "bottom" : "right"}
                   >
                     <Typography variant="body1">
                       {props.stock.industry &&
                         superSectorName[
-                          superSectorOfSector[
-                            sectorOfIndustryGroup[
-                              groupOfIndustry[props.stock.industry]
-                            ]
-                          ]
+                          superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]
                         ]}
                     </Typography>
                   </Tooltip>
@@ -293,9 +243,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   {props.stock.industry && (
                     <SectorIcon
                       industry={props.stock.industry}
-                      length={
-                        1.75 * (theme.typography.body1.fontSize as number)
-                      }
+                      length={1.75 * (theme.typography.body1.fontSize as number)}
                       type="Sector"
                     />
                   )}
@@ -303,50 +251,25 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   <Tooltip
                     title={
                       props.stock.industry &&
-                      sectorDescription[
-                        sectorOfIndustryGroup[
-                          groupOfIndustry[props.stock.industry]
-                        ]
-                      ]
+                      sectorDescription[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]
                     }
                     arrow
-                    placement={
-                      detailsContainerWidth === 300 ? "bottom" : "right"
-                    }
+                    placement={detailsContainerWidth === 300 ? "bottom" : "right"}
                   >
                     <Typography variant="body1">
-                      {props.stock.industry &&
-                        sectorName[
-                          sectorOfIndustryGroup[
-                            groupOfIndustry[props.stock.industry]
-                          ]
-                        ]}
+                      {props.stock.industry && sectorName[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]}
                     </Typography>
                   </Tooltip>
                 </Box>
-                <Typography
-                  variant="body1"
-                  ml={`${
-                    6 + 1.75 * (theme.typography.body1.fontSize as number)
-                  }px`}
-                >
-                  {props.stock.industry &&
-                    industryGroupName[groupOfIndustry[props.stock.industry]]}
+                <Typography variant="body1" ml={`${6 + 1.75 * (theme.typography.body1.fontSize as number)}px`}>
+                  {props.stock.industry && industryGroupName[groupOfIndustry[props.stock.industry]]}
                 </Typography>
                 <Tooltip
-                  title={
-                    props.stock.industry &&
-                    industryDescription[props.stock.industry]
-                  }
+                  title={props.stock.industry && industryDescription[props.stock.industry]}
                   arrow
                   placement={detailsContainerWidth === 300 ? "bottom" : "right"}
                 >
-                  <Typography
-                    variant="body1"
-                    ml={`${
-                      6 + 1.75 * (theme.typography.body1.fontSize as number)
-                    }px`}
-                  >
+                  <Typography variant="body1" ml={`${6 + 1.75 * (theme.typography.body1.fontSize as number)}px`}>
                     {props.stock.industry && industryName[props.stock.industry]}
                   </Typography>
                 </Tooltip>
@@ -381,8 +304,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Tooltip
               title={
                 <Typography variant="body1">
-                  The annual dividend per share divided by the current stock
-                  price.
+                  The annual dividend per share divided by the current stock price.
                 </Typography>
               }
               arrow
@@ -408,8 +330,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Tooltip
               title={
                 <Typography variant="body1">
-                  The company’s current market capitalization divided by its
-                  earnings.
+                  The company’s current market capitalization divided by its earnings.
                 </Typography>
               }
               arrow
@@ -422,11 +343,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           <Grid item xs={7.5}>
             <Typography variant="body1" sx={{ textAlign: "right" }}>
-              {props.stock ? (
-                <>{props.stock.priceEarningRatio ?? "–"}</>
-              ) : (
-                <Skeleton width={45} sx={{ ml: "auto" }} />
-              )}
+              {props.stock ? <>{props.stock.priceEarningRatio ?? "–"}</> : <Skeleton width={45} sx={{ ml: "auto" }} />}
             </Typography>
           </Grid>
           {/* Market Cap */}
@@ -434,8 +351,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Tooltip
               title={
                 <Typography variant="body1">
-                  The current price of a stock multiplied by the number of all
-                  its shares.
+                  The current price of a stock multiplied by the number of all its shares.
                 </Typography>
               }
               arrow
@@ -448,19 +364,10 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Typography variant="body1" sx={{ textAlign: "right" }}>
               {props.stock ? (
                 <>
-                  <Tooltip
-                    title={
-                      props.stock.currency && currencyName[props.stock.currency]
-                    }
-                    arrow
-                  >
-                    <Box display="inline-block">
-                      {props.stock.currency ?? ""}
-                    </Box>
+                  <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
+                    <Box display="inline-block">{props.stock.currency ?? ""}</Box>
                   </Tooltip>{" "}
-                  {props.stock.marketCap !== undefined
-                    ? formatMarketCap(props.stock)
-                    : "–"}
+                  {props.stock.marketCap !== undefined ? formatMarketCap(props.stock) : "–"}
                 </>
               ) : (
                 <Skeleton width={60} sx={{ ml: "auto" }} />
@@ -472,9 +379,8 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Tooltip
               title={
                 <Typography variant="body1">
-                  This range represents the lowest and highest price at which
-                  the stock has traded in the last 52 weeks, as well as the last
-                  price at the end of a trading day.
+                  This range represents the lowest and highest price at which the stock has traded in the last 52 weeks,
+                  as well as the last price at the end of a trading day.
                 </Typography>
               }
               arrow
@@ -492,12 +398,8 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                     <Range52WSlider
                       size="small"
                       sx={{
-                        mb: `${
-                          -0.5 * (theme.typography.body2.fontSize as number)
-                        }px`,
-                        mt: `${
-                          0.5 * (theme.typography.body2.fontSize as number)
-                        }px`,
+                        mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
+                        mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
                       }}
                       value={props.stock.lastClose}
                       min={props.stock.low52w}
@@ -536,13 +438,11 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    An overall score that combines the financial and ESG scores
-                    via equal weighting.
+                    An overall score that combines the financial and ESG scores via equal weighting.
                   </Typography>
                   <Typography variant="body2">
-                    Values range from 0 to 100, where a score of 0 indicates an
-                    average-performing company and a score of 100 indicates a
-                    company with perfect overall performance.
+                    Values range from 0 to 100, where a score of 0 indicates an average-performing company and a score
+                    of 100 indicates a company with perfect overall performance.
                   </Typography>
                 </>
               }
@@ -558,22 +458,11 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             {props.stock ? (
               <BlueIconChip
                 icon={<EmojiEventsIcon />}
-                label={
-                  <strong>
-                    {Math.round(
-                      Math.max(0, 100 * props.stock?.getTotalScore())
-                    )}
-                  </strong>
-                }
+                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.getTotalScore()))}</strong>}
                 sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
               />
             ) : (
-              <Skeleton
-                variant="rounded"
-                width={84}
-                height={32}
-                sx={{ ml: "auto" }}
-              />
+              <Skeleton variant="rounded" width={84} height={32} sx={{ ml: "auto" }} />
             )}
           </Grid>
           {/* Financial Score */}
@@ -585,9 +474,8 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                     A score that measures the financial strength of a company.
                   </Typography>
                   <Typography variant="body2">
-                    Values range from 0 to 100, where a score of 0 indicates an
-                    average-performing company and a score of 100 indicates a
-                    company with perfect financial performance.
+                    Values range from 0 to 100, where a score of 0 indicates an average-performing company and a score
+                    of 100 indicates a company with perfect financial performance.
                   </Typography>
                 </>
               }
@@ -603,22 +491,11 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             {props.stock ? (
               <YellowIconChip
                 icon={<PriceCheckIcon />}
-                label={
-                  <strong>
-                    {Math.round(
-                      Math.max(0, 100 * props.stock?.getFinancialScore())
-                    )}
-                  </strong>
-                }
+                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.getFinancialScore()))}</strong>}
                 sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
               />
             ) : (
-              <Skeleton
-                variant="rounded"
-                width={84}
-                height={32}
-                sx={{ ml: "auto" }}
-              />
+              <Skeleton variant="rounded" width={84} height={32} sx={{ ml: "auto" }} />
             )}
           </Grid>
           {/* ESG Score */}
@@ -627,13 +504,11 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    A score that measures the environmental, social, and
-                    governance (ESG) behavior of a company.
+                    A score that measures the environmental, social, and governance (ESG) behavior of a company.
                   </Typography>
                   <Typography variant="body2">
-                    Values range from 0 to 100, where a score of 0 indicates an
-                    average-behaving company and a score of 100 indicates a
-                    company with perfect ESG behavior.
+                    Values range from 0 to 100, where a score of 0 indicates an average-behaving company and a score of
+                    100 indicates a company with perfect ESG behavior.
                   </Typography>
                 </>
               }
@@ -649,20 +524,11 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             {props.stock ? (
               <GreenIconChip
                 icon={<NaturePeopleIcon />}
-                label={
-                  <strong>
-                    {Math.round(Math.max(0, 100 * props.stock?.getESGScore()))}
-                  </strong>
-                }
+                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.getESGScore()))}</strong>}
                 sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
               />
             ) : (
-              <Skeleton
-                variant="rounded"
-                width={84}
-                height={32}
-                sx={{ ml: "auto" }}
-              />
+              <Skeleton variant="rounded" width={84} height={32} sx={{ ml: "auto" }} />
             )}
           </Grid>
         </Grid>
@@ -679,17 +545,14 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The Morningstar star rating is determined by a stock’s
-                    current price, Morningstar’s estimate of the stock’s fair
-                    value, and the uncertainty rating of the fair value. The
-                    bigger the discount, the higher the star rating.
+                    The Morningstar star rating is determined by a stock’s current price, Morningstar’s estimate of the
+                    stock’s fair value, and the uncertainty rating of the fair value. The bigger the discount, the
+                    higher the star rating.
                   </Typography>
                   <Typography variant="body2">
-                    Four- and 5-star ratings mean the stock is undervalued,
-                    while a 3-star rating means it’s fairly valued, and 1- and
-                    2-star stocks are overvalued. When looking for investments,
-                    a 5-star stock is generally a better opportunity than a
-                    1-star stock.
+                    Four- and 5-star ratings mean the stock is undervalued, while a 3-star rating means it’s fairly
+                    valued, and 1- and 2-star stocks are overvalued. When looking for investments, a 5-star stock is
+                    generally a better opportunity than a 1-star stock.
                   </Typography>
                 </>
               }
@@ -740,19 +603,15 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The Morningstar Fair Value Estimate tells investors what the
-                    long-term intrinsic value of a stock is. It is calculated
-                    using a proprietary model that combines the company’s
-                    financial statements, analyst estimates, and other factors
-                    to determine the company’s fair value.
+                    The Morningstar Fair Value Estimate tells investors what the long-term intrinsic value of a stock
+                    is. It is calculated using a proprietary model that combines the company’s financial statements,
+                    analyst estimates, and other factors to determine the company’s fair value.
                   </Typography>
                   <Typography variant="body2">
-                    The percentage difference between the stock’s current price
-                    and the fair value estimate indicates the stock’s discount
-                    (negative percentage) or premium (positive percentage) to
-                    its fair value. A stock that is trading at a discount to its
-                    fair value is considered undervalued, while a stock trading
-                    at a premium to its fair value is considered overvalued.
+                    The percentage difference between the stock’s current price and the fair value estimate indicates
+                    the stock’s discount (negative percentage) or premium (positive percentage) to its fair value. A
+                    stock that is trading at a discount to its fair value is considered undervalued, while a stock
+                    trading at a premium to its fair value is considered overvalued.
                   </Typography>
                 </>
               }
@@ -771,16 +630,8 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <Typography variant="body1" sx={{ textAlign: "right" }}>
                 {props.stock ? (
                   <>
-                    <Tooltip
-                      title={
-                        props.stock.currency &&
-                        currencyName[props.stock.currency]
-                      }
-                      arrow
-                    >
-                      <Box display="inline-block">
-                        {props.stock.currency ?? ""}
-                      </Box>
+                    <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
+                      <Box display="inline-block">{props.stock.currency ?? ""}</Box>
                     </Tooltip>{" "}
                     {props.stock?.morningstarFairValue?.toFixed(2) ?? "–"}
                   </>
@@ -788,27 +639,14 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   <Skeleton width={90} sx={{ ml: "auto" }} />
                 )}
               </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ textAlign: "right" }}
-              >
+              <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
                 {props.stock ? (
                   <>
                     {props?.stock.morningstarFairValue !== undefined &&
                       props?.stock.lastClose !== undefined &&
-                      props?.stock.getPercentageToLastClose(
-                        "morningstarFairValue"
-                      ) !== undefined &&
-                      `${
-                        props.stock?.lastClose >
-                        props.stock?.morningstarFairValue
-                          ? "+"
-                          : ""
-                      }${Math.round(
-                        props.stock?.getPercentageToLastClose(
-                          "morningstarFairValue"
-                        )
+                      props?.stock.getPercentageToLastClose("morningstarFairValue") !== undefined &&
+                      `${props.stock?.lastClose > props.stock?.morningstarFairValue ? "+" : ""}${Math.round(
+                        props.stock?.getPercentageToLastClose("morningstarFairValue")
                       )}\u2009%`}
                   </>
                 ) : (
@@ -823,14 +661,12 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The consensus of analyst recommendations for a stock is
-                    calculated by aggregating the recommendations of analysts
-                    who cover the stock and then normalizing the data to a scale
-                    of 0 to 10.
+                    The consensus of analyst recommendations for a stock is calculated by aggregating the
+                    recommendations of analysts who cover the stock and then normalizing the data to a scale of 0 to 10.
                   </Typography>
                   <Typography variant="body2">
-                    A score of 0 indicates a strong sell recommendation, while a
-                    score of 10 indicates a strong buy recommendation.
+                    A score of 0 indicates a strong sell recommendation, while a score of 10 indicates a strong buy
+                    recommendation.
                   </Typography>
                 </>
               }
@@ -873,10 +709,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                             : props.stock.analystConsensus <= 9.5
                             ? theme.colors.consensus[9]
                             : theme.colors.consensus[10],
-                        opacity:
-                          props.stock.analystCount < 10
-                            ? props.stock.analystCount / 10
-                            : 1,
+                        opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
                         width: 60,
                         ml: "61.5px",
                       }}
@@ -886,12 +719,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 )}
               </>
             ) : (
-              <Skeleton
-                variant="rounded"
-                width={60}
-                height={24}
-                sx={{ ml: "auto" }}
-              />
+              <Skeleton variant="rounded" width={60} height={24} sx={{ ml: "auto" }} />
             )}
           </Grid>
           {/* Analyst Target Price */}
@@ -900,18 +728,15 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The average analyst target price is the average of the
-                    estimated price targets of analysts who cover a stock.
+                    The average analyst target price is the average of the estimated price targets of analysts who cover
+                    a stock.
                   </Typography>
                   <Typography variant="body2">
-                    The percentage difference between the stock’s current price
-                    and the average analyst target price indicates the stock’s
-                    discount (negative percentage) or premium (positive
-                    percentage) to its average analyst target price. A stock
-                    that is trading at a discount to its average analyst target
-                    price is considered undervalued, while a stock trading at a
-                    premium to its average analyst target price is considered
-                    overvalued.
+                    The percentage difference between the stock’s current price and the average analyst target price
+                    indicates the stock’s discount (negative percentage) or premium (positive percentage) to its average
+                    analyst target price. A stock that is trading at a discount to its average analyst target price is
+                    considered undervalued, while a stock trading at a premium to its average analyst target price is
+                    considered overvalued.
                   </Typography>
                 </>
               }
@@ -928,25 +753,14 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <Typography
                 variant="body1"
                 sx={{
-                  opacity:
-                    props.stock?.analystCount < 10
-                      ? props.stock?.analystCount / 10
-                      : 1,
+                  opacity: props.stock?.analystCount < 10 ? props.stock?.analystCount / 10 : 1,
                   float: "right",
                 }}
               >
                 {props.stock ? (
                   <>
-                    <Tooltip
-                      title={
-                        props.stock.currency &&
-                        currencyName[props.stock.currency]
-                      }
-                      arrow
-                    >
-                      <Box display="inline-block">
-                        {props.stock.currency ?? ""}
-                      </Box>
+                    <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
+                      <Box display="inline-block">{props.stock.currency ?? ""}</Box>
                     </Tooltip>{" "}
                     {props.stock?.analystTargetPrice?.toFixed(2) ?? "–"}
                   </>
@@ -955,27 +769,15 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 )}
               </Typography>
               <br />
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ textAlign: "right" }}
-              >
+              <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
                 {props.stock ? (
                   <>
                     {props.stock?.analystTargetPrice !== undefined &&
                       props.stock?.analystCount !== undefined &&
                       props.stock?.lastClose !== undefined &&
-                      props.stock?.getPercentageToLastClose(
-                        "analystTargetPrice"
-                      ) !== undefined &&
-                      `${
-                        props.stock.lastClose > props.stock.analystTargetPrice
-                          ? "+"
-                          : ""
-                      }${Math.round(
-                        props.stock.getPercentageToLastClose(
-                          "analystTargetPrice"
-                        )
+                      props.stock?.getPercentageToLastClose("analystTargetPrice") !== undefined &&
+                      `${props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""}${Math.round(
+                        props.stock.getPercentageToLastClose("analystTargetPrice")
                       )}\u2009%`}
                   </>
                 ) : (
@@ -987,11 +789,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           {/* Analyst Count */}
           <Grid item xs={6}>
             <Tooltip
-              title={
-                <Typography variant="body1">
-                  The number of analysts that cover a stock.
-                </Typography>
-              }
+              title={<Typography variant="body1">The number of analysts that cover a stock.</Typography>}
               arrow
               placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
@@ -1005,9 +803,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   {props.stock?.analystTargetPrice !== undefined &&
                     props.stock?.analystCount !== undefined &&
                     props.stock?.lastClose !== undefined &&
-                    props.stock?.getPercentageToLastClose(
-                      "analystTargetPrice"
-                    ) !== undefined &&
+                    props.stock?.getPercentageToLastClose("analystTargetPrice") !== undefined &&
                     `n\u2009=\u2009${props.stock?.analystCount}`}
                 </>
               ) : (
@@ -1029,15 +825,12 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The MSCI ESG Rating aims to measure a company’s management
-                    of financially relevant ESG risks and opportunities. MSCI
-                    uses a rules-based methodology to identify industry leaders
-                    and laggards according to their exposure to ESG risks and
-                    how well they manage those risks relative to peers.
+                    The MSCI ESG Rating aims to measure a company’s management of financially relevant ESG risks and
+                    opportunities. MSCI uses a rules-based methodology to identify industry leaders and laggards
+                    according to their exposure to ESG risks and how well they manage those risks relative to peers.
                   </Typography>
                   <Typography variant="body2">
-                    The ESG Ratings range from leader (AAA, AA), average (A,
-                    BBB, BB) to laggard (B, CCC).
+                    The ESG Ratings range from leader (AAA, AA), average (A, BBB, BB) to laggard (B, CCC).
                   </Typography>
                 </>
               }
@@ -1058,9 +851,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                       label={<strong>{props.stock.msciESGRating}</strong>}
                       style={{ cursor: "inherit" }}
                       sx={{
-                        backgroundColor: ["AAA", "AA"].includes(
-                          props.stock.msciESGRating
-                        )
+                        backgroundColor: ["AAA", "AA"].includes(props.stock.msciESGRating)
                           ? theme.colors.msci.Leader
                           : ["B", "CCC"].includes(props.stock.msciESGRating)
                           ? theme.colors.msci.Laggard
@@ -1075,12 +866,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 )}
               </>
             ) : (
-              <Skeleton
-                variant="rounded"
-                width={48}
-                height={24}
-                sx={{ ml: "auto" }}
-              />
+              <Skeleton variant="rounded" width={48} height={24} sx={{ ml: "auto" }} />
             )}
           </Grid>
           {/* MSCI Implied Temperature Rise */}
@@ -1088,17 +874,14 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Tooltip
               title={
                 <Typography variant="body1">
-                  The MSCI Implied Temperature Rise is a forward-looking metric
-                  designed to show the temperature alignment of a company with
-                  global temperature goals.
+                  The MSCI Implied Temperature Rise is a forward-looking metric designed to show the temperature
+                  alignment of a company with global temperature goals.
                 </Typography>
               }
               arrow
               placement={detailsContainerWidth === 300 ? "bottom" : "left"}
             >
-              <Typography variant="h5">
-                MSCI Implied Temperature Rise
-              </Typography>
+              <Typography variant="h5">MSCI Implied Temperature Rise</Typography>
             </Tooltip>
           </Grid>
           <Grid item xs={6}>
@@ -1108,9 +891,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   <MSCINavigator stock={props.stock}>
                     <TemperatureChip
                       icon={<ThermostatIcon />}
-                      label={
-                        <strong>{props.stock.msciTemperature + "°C"}</strong>
-                      }
+                      label={<strong>{props.stock.msciTemperature + "°C"}</strong>}
                       size="small"
                       sx={{ width: 72, ml: "49.5px", mt: "4px" }}
                       style={{ cursor: "inherit" }}
@@ -1119,12 +900,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 )}
               </>
             ) : (
-              <Skeleton
-                variant="rounded"
-                width={72}
-                height={24}
-                sx={{ mt: "4px", ml: "auto" }}
-              />
+              <Skeleton variant="rounded" width={72} height={24} sx={{ mt: "4px", ml: "auto" }} />
             )}
           </Grid>
           {/* Refinitiv ESG Score */}
@@ -1133,13 +909,12 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The Refinitiv ESG score measures a company’s ESG performance
-                    based on verifiable reported data in the public domain.
+                    The Refinitiv ESG score measures a company’s ESG performance based on verifiable reported data in
+                    the public domain.
                   </Typography>
                   <Typography variant="body2">
-                    Its values range from 0 to 100, with 0 being the lowest,
-                    indicating a poor ESG performance, and 100 being the
-                    highest, indicating an excellent ESG performance.
+                    Its values range from 0 to 100, with 0 being the lowest, indicating a poor ESG performance, and 100
+                    being the highest, indicating an excellent ESG performance.
                   </Typography>
                 </>
               }
@@ -1156,22 +931,14 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock.refinitivESGScore !== undefined && (
                   <RefinitivNavigator stock={props.stock}>
-                    <Typography
-                      variant="body1"
-                      fontSize={18}
-                      sx={{ float: "right" }}
-                    >
+                    <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
                       {props.stock.refinitivESGScore}
                     </Typography>
                   </RefinitivNavigator>
                 )}
               </>
             ) : (
-              <Typography
-                variant="body1"
-                fontSize={18}
-                sx={{ textAlign: "right" }}
-              >
+              <Typography variant="body1" fontSize={18} sx={{ textAlign: "right" }}>
                 <Skeleton width={30} sx={{ ml: "auto" }} />
               </Typography>
             )}
@@ -1182,15 +949,12 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The Refinitiv emission reduction score measures a company’s
-                    commitment and effectiveness towards reducing environmental
-                    emissions in its production and operational processes.
+                    The Refinitiv emission reduction score measures a company’s commitment and effectiveness towards
+                    reducing environmental emissions in its production and operational processes.
                   </Typography>
                   <Typography variant="body2">
-                    Its values range from 0 to 100, with 0 being the lowest,
-                    indicating poor emission reduction efforts, and 100 being
-                    the highest, indicating excellent emission reduction
-                    efforts.
+                    Its values range from 0 to 100, with 0 being the lowest, indicating poor emission reduction efforts,
+                    and 100 being the highest, indicating excellent emission reduction efforts.
                   </Typography>
                 </>
               }
@@ -1207,22 +971,14 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock.refinitivEmissions !== undefined && (
                   <RefinitivNavigator stock={props.stock}>
-                    <Typography
-                      variant="body1"
-                      fontSize={18}
-                      sx={{ float: "right" }}
-                    >
+                    <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
                       {props.stock.refinitivEmissions}
                     </Typography>
                   </RefinitivNavigator>
                 )}
               </>
             ) : (
-              <Typography
-                variant="body1"
-                fontSize={18}
-                sx={{ textAlign: "right" }}
-              >
+              <Typography variant="body1" fontSize={18} sx={{ textAlign: "right" }}>
                 <Skeleton width={30} sx={{ ml: "auto" }} />
               </Typography>
             )}
@@ -1233,15 +989,13 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The S&P Global ESG Score measures a companies’ exposure to
-                    and performance on key ESG risks and opportunities, the
-                    quality and completeness of their public disclosures, and
-                    their awareness of emerging but underreported ESG issues.
+                    The S&P Global ESG Score measures a companies’ exposure to and performance on key ESG risks and
+                    opportunities, the quality and completeness of their public disclosures, and their awareness of
+                    emerging but underreported ESG issues.
                   </Typography>
                   <Typography variant="body2">
-                    Its values range from 0 to 100, with 0 being the lowest,
-                    indicating a poor ESG performance, and 100 being the
-                    highest, indicating an excellent ESG performance.
+                    Its values range from 0 to 100, with 0 being the lowest, indicating a poor ESG performance, and 100
+                    being the highest, indicating an excellent ESG performance.
                   </Typography>
                 </>
               }
@@ -1258,22 +1012,14 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock.spESGScore !== undefined && (
                   <SPNavigator stock={props.stock}>
-                    <Typography
-                      variant="body1"
-                      fontSize={18}
-                      sx={{ float: "right" }}
-                    >
+                    <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
                       {props.stock.spESGScore}
                     </Typography>
                   </SPNavigator>
                 )}
               </>
             ) : (
-              <Typography
-                variant="body1"
-                fontSize={18}
-                sx={{ textAlign: "right" }}
-              >
+              <Typography variant="body1" fontSize={18} sx={{ textAlign: "right" }}>
                 <Skeleton width={30} sx={{ ml: "auto" }} />
               </Typography>
             )}
@@ -1284,14 +1030,12 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The Sustainalytics ESG Risk Rating measures the degree to
-                    which a company’s economic value is at risk driven by ESG
-                    factors.
+                    The Sustainalytics ESG Risk Rating measures the degree to which a company’s economic value is at
+                    risk driven by ESG factors.
                   </Typography>
                   <Typography variant="body2">
-                    Its values are distributed across five categories, where
-                    values below 10 indicate a negligible risk, and values above
-                    40 indicate a severe risk.
+                    Its values are distributed across five categories, where values below 10 indicate a negligible risk,
+                    and values above 40 indicate a severe risk.
                   </Typography>
                 </>
               }
@@ -1311,9 +1055,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 {props.stock.sustainalyticsESGRisk !== undefined && (
                   <SustainalyticsNavigator stock={props.stock}>
                     <Chip
-                      label={
-                        <strong>{props.stock.sustainalyticsESGRisk}</strong>
-                      }
+                      label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
                       style={{ cursor: "inherit" }}
                       sx={{
                         backgroundColor:
@@ -1336,12 +1078,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 )}
               </>
             ) : (
-              <Skeleton
-                variant="rounded"
-                width={64}
-                height={24}
-                sx={{ mt: "4px", ml: "auto" }}
-              />
+              <Skeleton variant="rounded" width={64} height={24} sx={{ mt: "4px", ml: "auto" }} />
             )}
           </Grid>
         </Grid>

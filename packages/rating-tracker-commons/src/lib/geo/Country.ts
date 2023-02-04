@@ -530,9 +530,7 @@ export const countryName: Record<Country, string> = {
 export const emojiFlag = (country: Country) =>
   country
     .split("")
-    .map((a: string) =>
-      String.fromCodePoint(0x1f1a5 + a.toUpperCase().codePointAt(0)!)
-    )
+    .map((a: string) => String.fromCodePoint(0x1f1a5 + a.toUpperCase().codePointAt(0)!))
     .join("");
 
 /**

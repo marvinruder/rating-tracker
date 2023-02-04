@@ -311,8 +311,7 @@ const priceEarningRatioMax: OpenAPIV3.ParameterObject = {
 const morningstarFairValueDiffMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "morningstarFairValueDiffMin",
-  description:
-    "The minimum difference between a stock’s fair value and its price.",
+  description: "The minimum difference between a stock’s fair value and its price.",
   schema: {
     type: "number",
     example: -40,
@@ -325,8 +324,7 @@ const morningstarFairValueDiffMin: OpenAPIV3.ParameterObject = {
 const morningstarFairValueDiffMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "morningstarFairValueDiffMax",
-  description:
-    "The maximum difference between a stock’s fair value and its price.",
+  description: "The maximum difference between a stock’s fair value and its price.",
   schema: {
     type: "number",
     example: 10,
@@ -365,8 +363,7 @@ const analystConsensusMax: OpenAPIV3.ParameterObject = {
 const analystTargetDiffMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystTargetDiffMin",
-  description:
-    "The minimum difference between a stock’s analyst target price and its price.",
+  description: "The minimum difference between a stock’s analyst target price and its price.",
   schema: {
     type: "number",
     example: -40,
@@ -379,8 +376,7 @@ const analystTargetDiffMin: OpenAPIV3.ParameterObject = {
 const analystTargetDiffMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystTargetDiffMax",
-  description:
-    "The maximum difference between a stock’s analyst target price and its price.",
+  description: "The maximum difference between a stock’s analyst target price and its price.",
   schema: {
     type: "number",
     example: 10,

@@ -332,15 +332,13 @@ export const industryDescription: Record<Industry, string> = {
     "Companies that grow timber, mill lumber, and manufacture wood and wood products for construction.",
   PaperPaperProducts:
     "Companies that manufacture and market paper and paper-related products from wood pulp and other fibers. Excludes companies that produce paper packaging products and are classified in the packaging and containers industry.",
-  Aluminum:
-    "Companies that produce, refine, market, and distribute aluminum and related aluminum-based products.",
+  Aluminum: "Companies that produce, refine, market, and distribute aluminum and related aluminum-based products.",
   Copper:
     "Companies engaged in the exploration, mining, smelting, and refining of copper ores and related copper products.",
   OtherIndustrialMetalsMining:
     "Companies that mine, refine, produce, smelt, and mill industrial ores, including copper, lead, zinc, radium, vanadium, nickel, tin, titanium, and other related materials.",
   Gold: "Companies principally engaged in gold exploration, mining, processing, extraction, and smelting.",
-  Silver:
-    "Companies principally engaged in silver exploration, mining, processing, extraction, and smelting.",
+  Silver: "Companies principally engaged in silver exploration, mining, processing, extraction, and smelting.",
   OtherPreciousMetalsMining:
     "Companies that mine, refine, produce, smelt, and mill precious metals, including silver, platinum, palladium, diamond, and other related minerals.",
   CokingCoal: "Companies that produce coking coal.",
@@ -348,8 +346,7 @@ export const industryDescription: Record<Industry, string> = {
     "Companies that produce steel plates, steel sheets, bar and rod materials, structural steel, steel pipes and tubes, and stainless steel.",
   AutoTruckDealerships:
     "Companies engaged in the specialty retail of new and used automobiles, trucks, and other vehicles through the operation and/or franchising of dealerships.",
-  AutoManufacturers:
-    "Leading worldwide designers and manufacturers of passenger cars and trucks.",
+  AutoManufacturers: "Leading worldwide designers and manufacturers of passenger cars and trucks.",
   AutoParts:
     "Companies that manufacture motor vehicle parts and accessories, including rubber and plastic products, such as tires and inner tubes, but do not manufacture complete car bodies.",
   RecreationalVehicles:
@@ -370,8 +367,7 @@ export const industryDescription: Record<Industry, string> = {
     "Companies that provide services of a personal nature or that are particularly structured for the individual or group being served, including veterinary services, funeral and cemetery services, child care services, portrait and photo services, tax preparation and legal services, and other miscellaneous personal services.",
   Restaurants:
     "Companies that own, operate, and franchise full-service restaurants that engage in the retail sale of prepared food and drink.",
-  ApparelRetail:
-    "Companies engaged in the retail sale of clothing, shoes, and accessories.",
+  ApparelRetail: "Companies engaged in the retail sale of clothing, shoes, and accessories.",
   DepartmentStores:
     "Companies engaged in the retail sale of a diverse mix of merchandise, emphasizing fashion apparel and accessories, home furnishings, electronics, and cosmetics.",
   HomeImprovementRetail:
@@ -390,16 +386,14 @@ export const industryDescription: Record<Industry, string> = {
     "Companies that develop, manage, own, and operate lodging facilities, including motels, extended-stay and full-service hotels, and economy hotels and inns.",
   ResortsCasinos:
     "Companies that own, operate, and manage resort properties, including beach clubs, time-share properties, and luxury resort hotels and that conduct casino gaming operations.",
-  TravelServices:
-    "Companies that offer travel-related products or services, including online travel services.",
+  TravelServices: "Companies that offer travel-related products or services, including online travel services.",
   AssetManagement:
     "Investment management firms offering diversified services such as asset administration, investment advice, portfolio or mutual fund management, money management, and venture capital.",
   BanksDiversified:
     "Global, diverse financial institutions serving the corporate and consumer needs of retail banking, investment banking, trust management, credit cards and mortgage banking.",
   BanksRegional:
     "Regional, diverse financial institutions serving the corporate, government, and consumer needs of retail banking, investment banking, trust management, credit cards, mortgage banking, savings and loan associations, building societies, cooperative banks, and homestead.",
-  MortgageFinance:
-    "Companies that originate, purchase, sell, and service home mortgage and equity loans.",
+  MortgageFinance: "Companies that originate, purchase, sell, and service home mortgage and equity loans.",
   CapitalMarkets:
     "Large, major investment houses offering investment banking, merchant banking, underwriting, brokerage, research, advisory, and trading services to broad-based national and international markets.",
   FinancialDataStockExchanges:
@@ -445,10 +439,8 @@ export const industryDescription: Record<Industry, string> = {
     "Self-administered real estate investment trusts engaged in the acquisition, management, and disposition of properties not classified elsewhere. Includes trusts that operate, lease, and invest in telecom towers, advertising spaces, timberland properties, and other properties not classified elsewhere.",
   REITDiversified:
     "Self-administered real estate investment trusts engaged in the acquisition, management, and disposition of diversified property holdings, with no specific portfolio composition.",
-  BeveragesBrewers:
-    "Companies that manufacture, sell, and distribute malt-based beverages, beers, and ales.",
-  BeveragesWineriesDistilleries:
-    "Companies that manufacture, sell, and distribute distilled liquors and wine.",
+  BeveragesBrewers: "Companies that manufacture, sell, and distribute malt-based beverages, beers, and ales.",
+  BeveragesWineriesDistilleries: "Companies that manufacture, sell, and distribute distilled liquors and wine.",
   BeveragesNonAlcoholic:
     "Companies that manufacture, sell, and distribute soft drinks, carbonated and spring water, fruit juices, and other nonalcoholic beverages.",
   Confectioners:
@@ -461,8 +453,7 @@ export const industryDescription: Record<Industry, string> = {
     "Companies that process and package food products, including frozen foods, grain products, canned foods, snack foods, health supplements, vitamins, and pet products.",
   EducationTrainingServices:
     "Companies that provide educational and training services, including college and junior-college courses, higher-education programs, technical and vocational training, and other education services.",
-  DiscountStores:
-    "Companies engaged in the retail sale of a variety of merchandise at low and discounted prices.",
+  DiscountStores: "Companies engaged in the retail sale of a variety of merchandise at low and discounted prices.",
   FoodDistribution:
     "Companies primarily engaged in the distribution and supply of food products, including packaged goods, meat, dairy products, frozen foods, and related groceries to grocery stores, restaurants, and other food-service centers.",
   GroceryStores:
@@ -495,12 +486,9 @@ export const industryDescription: Record<Industry, string> = {
     "Companies that own and operate merchant power generation facilities and sell electricity into retail and wholesale markets.",
   UtilitiesRenewable:
     "Companies that generate, produce, or transmit electric energy from renewable sources, including hydropower, wind, geothermal, biomass, solar, tidal, and wave.",
-  UtilitiesRegulatedWater:
-    "Companies that distribute water for sale, including water-treatment companies.",
-  UtilitiesRegulatedElectric:
-    "Companies that generate, transmit, or distribute electric energy for sale.",
-  UtilitiesRegulatedGas:
-    "Companies that transmit, store, or distribute natural gas.",
+  UtilitiesRegulatedWater: "Companies that distribute water for sale, including water-treatment companies.",
+  UtilitiesRegulatedElectric: "Companies that generate, transmit, or distribute electric energy for sale.",
+  UtilitiesRegulatedGas: "Companies that transmit, store, or distribute natural gas.",
   UtilitiesDiversified:
     "Companies engaged in the regulated generation, transmission, or distribution of electricity and natural gas, merchant power generation facilities, and energy marketing operations.",
   TelecomServices:
@@ -517,22 +505,18 @@ export const industryDescription: Record<Industry, string> = {
     "Companies that provide content, Internet navigation services, and reference guide information for the World Wide Web through its platforms, including social media, search engines, and networking platform companies.",
   ElectronicGamingMultimedia:
     "Companies that primarily develop or publish video games and other multimedia software applications for devices that include personal computers, video game systems, cellphones, tablets, and other portable media players.",
-  OilGasDrilling:
-    "Companies primarily engaged in the drilling for petroleum and natural gas.",
-  OilGasEP:
-    "Energy companies which are primarily engaged in oil and gas exploration and production.",
+  OilGasDrilling: "Companies primarily engaged in the drilling for petroleum and natural gas.",
+  OilGasEP: "Energy companies which are primarily engaged in oil and gas exploration and production.",
   OilGasIntegrated:
     "Major energy companies engaged in the diverse aspects of oil and gas operations, including crude oil and gas exploration, production, manufacturing, refining, marketing, and transportation.",
   OilGasMidstream:
     "Companies that own and operate oilfield pipelines and are involved in the gathering, processing, and transportation of natural crude petroleum.",
-  OilGasRefiningMarketing:
-    "Companies that refine, gather, market, and sell petroleum and petroleum products.",
+  OilGasRefiningMarketing: "Companies that refine, gather, market, and sell petroleum and petroleum products.",
   OilGasEquipmentServices:
     "Companies that provide oilfield services and equipment for activities such as contract drilling and seismic surveys. Also includes equipment and tool rental, pumping and processing services, and inspection and contracting services.",
   ThermalCoal:
     "Companies that mine thermal coal, which is used for generating energy. Excludes companies that mine coking coal to make steel.",
-  Uranium:
-    "Companies that mine, refine, produce, and mill uranium and uranium-related materials.",
+  Uranium: "Companies that mine, refine, produce, and mill uranium and uranium-related materials.",
   AerospaceDefense:
     "Companies that manufacture aerospace and defense products, including aircraft and aircraft parts, tanks, guided missiles, space vehicles, ships and marine equipment, and other aerospace and defense components and systems, as well as companies supporting these products through repair and maintenance services.",
   SpecialtyBusinessServices:
@@ -577,8 +561,7 @@ export const industryDescription: Record<Industry, string> = {
     "Companies that provide transportation of freight by line-haul railroad as well as related railroad equipment and repair services. Includes companies offering passenger services via railway and roadways.",
   MarineShipping:
     "Companies that transport freight and cargo via water and operate marine ports. Includes companies that provide passenger services via water.",
-  Trucking:
-    "Companies that provide local and long-haul trucking and transfer services for freight and cargo.",
+  Trucking: "Companies that provide local and long-haul trucking and transfer services for freight and cargo.",
   IntegratedFreightLogistics:
     "Companies that transport freight and cargo via diversified methods such as railroads, airlines, and waterways.",
   WasteManagement:
@@ -605,6 +588,5 @@ export const industryDescription: Record<Industry, string> = {
     "Companies that design, develop, manufacture, and market equipment, spare parts, tools, cleaning devices, and related materials for the semiconductor industry.",
   Semiconductors:
     "Semiconductor companies that design, manufacture, and market integrated circuits, microprocessors, logic devices, chipsets, and memory chips for a wide variety of users. Includes companies that design, manufacture, and market general-application integrated circuits and memory and memory-intensive products.",
-  Solar:
-    "Companies that design, manufacture, market, or install solar power systems and components.",
+  Solar: "Companies that design, manufacture, market, or install solar power systems and components.",
 };

@@ -8,9 +8,7 @@ import { Box } from "@mui/material";
  * @param {StarRatingProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const StarRating: React.FC<StarRatingProps> = (
-  props: StarRatingProps
-): JSX.Element => {
+const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps): JSX.Element => {
   let value: 0 | 1 | 2 | 3 | 4 | 5;
   switch (props.value) {
     case 1:

@@ -40,15 +40,11 @@ const colors = {
     black2: "linear-gradient(60deg, #29323c 0%, #485563 100%)",
   },
   shadows: {
-    success:
-      "0px 1px 4px rgba(68, 214, 0, 0.25), 0px 3px 12px 2px rgba(68, 214, 0, 0.35)",
-    error:
-      "0px 1px 4px rgba(255, 25, 67, 0.25), 0px 3px 12px 2px rgba(255, 25, 67, 0.35)",
+    success: "0px 1px 4px rgba(68, 214, 0, 0.25), 0px 3px 12px 2px rgba(68, 214, 0, 0.35)",
+    error: "0px 1px 4px rgba(255, 25, 67, 0.25), 0px 3px 12px 2px rgba(255, 25, 67, 0.35)",
     info: "0px 1px 4px rgba(51, 194, 255, 0.25), 0px 3px 12px 2px rgba(51, 194, 255, 0.35)",
-    primary:
-      "0px 1px 4px rgba(112, 99, 192, 0.25), 0px 3px 12px 2px rgba(61, 99, 153, 0.35)",
-    warning:
-      "0px 1px 4px rgba(255, 163, 25, 0.25), 0px 3px 12px 2px rgba(255, 163, 25, 0.35)",
+    primary: "0px 1px 4px rgba(112, 99, 192, 0.25), 0px 3px 12px 2px rgba(61, 99, 153, 0.35)",
+    warning: "0px 1px 4px rgba(255, 163, 25, 0.25), 0px 3px 12px 2px rgba(255, 163, 25, 0.35)",
     card: "0px 0px 2px #828282",
     cardSm: "0px 0px 2px #828282",
     cardLg:
@@ -442,11 +438,7 @@ const NebulaFighterTheme = createTheme({
           // borderLeftColor: colors.primary.lighter,
         },
         "#nprogress .peg": {
-          boxShadow:
-            "0 0 15px " +
-            colors.primary.lighter +
-            ", 0 0 8px" +
-            colors.primary.light,
+          boxShadow: "0 0 15px " + colors.primary.lighter + ", 0 0 8px" + colors.primary.light,
         },
         ":root": {
           "--swiper-theme-color": colors.primary.main,
@@ -960,10 +952,9 @@ const NebulaFighterTheme = createTheme({
           margin: 1,
         },
         root: {
-          ".MuiAutocomplete-inputRoot.MuiOutlinedInput-root .MuiAutocomplete-endAdornment":
-            {
-              right: 14,
-            },
+          ".MuiAutocomplete-inputRoot.MuiOutlinedInput-root .MuiAutocomplete-endAdornment": {
+            right: 14,
+          },
         },
         clearIndicator: {
           background: alpha(colors.error.lighter, 0.2),
@@ -1119,8 +1110,7 @@ const NebulaFighterTheme = createTheme({
           "& .MuiButtonBase-root": {
             position: "absolute",
             padding: 6,
-            transition:
-              "left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+            transition: "left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
           },
           "& .MuiIconButton-root": {
             borderRadius: 100,
@@ -1131,11 +1121,7 @@ const NebulaFighterTheme = createTheme({
         },
         thumb: {
           border: "1px solid " + colors.alpha.black[30],
-          boxShadow:
-            "0px 9px 14px " +
-            colors.alpha.black[10] +
-            ", 0px 2px 2px " +
-            colors.alpha.black[10],
+          boxShadow: "0px 9px 14px " + colors.alpha.black[10] + ", 0px 2px 2px " + colors.alpha.black[10],
         },
         track: {
           backgroundColor: colors.alpha.black[5],

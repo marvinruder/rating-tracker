@@ -29,7 +29,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import TuneIcon from "@mui/icons-material/Tune";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import TableRowsIcon from "@mui/icons-material/TableRows";
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import {
   Country,
   countryNameWithFlag,
@@ -59,6 +59,7 @@ import {
   SuperSector,
   superSectorArray,
   superSectorName,
+  WRITE_STOCKS,
 } from "rating-tracker-commons";
 import React from "react";
 import NestedCheckboxList from "../../../components/NestedCheckboxList";
@@ -66,6 +67,7 @@ import AddStock from "../../../components/AddStock";
 import StarRating from "../../../components/StarRating";
 import { stockListColumnArray } from "rating-tracker-commons";
 import { StockFilter } from "./StocksTable";
+import { UserContext } from "../../../router";
 
 /**
  * A header for the stock list page. It contains the stock list filters and column filter.
@@ -78,45 +80,24 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const [columnFilterOpen, setColumnFilterOpen] = useState<boolean>(false);
 
   const [totalScoreInput, setTotalScoreInput] = useState<number[]>([0, 100]);
-  const [financialScoreInput, setFinancialScoreInput] = useState<number[]>([
-    0, 100,
-  ]);
+  const [financialScoreInput, setFinancialScoreInput] = useState<number[]>([0, 100]);
   const [esgScoreInput, setEsgScoreInput] = useState<number[]>([0, 100]);
 
-  const [dividendYieldPercentInput, setDividendYieldPercentInput] = useState<
-    number[]
-  >([0, 20]);
-  const [priceEarningRatioInput, setPriceEarningRatioInput] = useState<
-    number[]
-  >([0, 100]);
+  const [dividendYieldPercentInput, setDividendYieldPercentInput] = useState<number[]>([0, 20]);
+  const [priceEarningRatioInput, setPriceEarningRatioInput] = useState<number[]>([0, 100]);
 
   const [starRatingInput, setStarRatingInput] = useState<number[]>([0, 5]);
-  const [morningstarFairValueDiffInput, setMorningstarFairValueDiffInput] =
-    useState<number[]>([-50, 50]);
-  const [analystConsensusInput, setAnalystConsensusInput] = useState<number[]>([
-    0, 10,
-  ]);
+  const [morningstarFairValueDiffInput, setMorningstarFairValueDiffInput] = useState<number[]>([-50, 50]);
+  const [analystConsensusInput, setAnalystConsensusInput] = useState<number[]>([0, 10]);
   const [analystCountInput, setAnalystCountInput] = useState<number[]>([0, 60]);
-  const [analystTargetDiffInput, setAnalystTargetDiffInput] = useState<
-    number[]
-  >([-50, 50]);
+  const [analystTargetDiffInput, setAnalystTargetDiffInput] = useState<number[]>([-50, 50]);
 
-  const [msciESGRatingInput, setMsciESGRatingInput] = useState<
-    (MSCIESGRating | "None")[]
-  >(["AAA", "None"]);
-  const [msciTemperatureInput, setMsciTemperatureInput] = useState<number[]>([
-    1.0, 4.0,
-  ]);
-  const [refinitivESGScoreInput, setRefinitivESGScoreInput] = useState<
-    number[]
-  >([0, 100]);
-  const [refinitivEmissionsInput, setRefinitivEmissionsInput] = useState<
-    number[]
-  >([0, 100]);
+  const [msciESGRatingInput, setMsciESGRatingInput] = useState<(MSCIESGRating | "None")[]>(["AAA", "None"]);
+  const [msciTemperatureInput, setMsciTemperatureInput] = useState<number[]>([1.0, 4.0]);
+  const [refinitivESGScoreInput, setRefinitivESGScoreInput] = useState<number[]>([0, 100]);
+  const [refinitivEmissionsInput, setRefinitivEmissionsInput] = useState<number[]>([0, 100]);
   const [spESGScoreInput, setSpESGScoreInput] = useState<number[]>([0, 100]);
-  const [sustainalyticsESGRiskInput, setSustainalyticsESGRiskInput] = useState<
-    number[]
-  >([0, 50]);
+  const [sustainalyticsESGRiskInput, setSustainalyticsESGRiskInput] = useState<number[]>([0, 50]);
 
   const [countryInput, setCountryInput] = useState<Country[]>([]);
 
@@ -129,14 +110,14 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
 
   const [addStockOpen, setAddStockOpen] = useState<boolean>(false);
 
+  const { user } = useContext(UserContext);
+
   /**
    * Possible widths for the filter container.
    */
   let filterContainerWidth: 900 | 600 | 300;
 
-  switch (
-    +useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")
-  ) {
+  switch (+useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")) {
     case 2:
       // The screen is at least 964px wide.
       filterContainerWidth = 900;
@@ -158,89 +139,40 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
   const applyFilters = () => {
     props.setFilter({
       totalScoreMin: totalScoreInput[0] !== 0 ? totalScoreInput[0] : undefined,
-      totalScoreMax:
-        totalScoreInput[1] !== 100 ? totalScoreInput[1] : undefined,
-      financialScoreMin:
-        financialScoreInput[0] !== 0 ? financialScoreInput[0] : undefined,
-      financialScoreMax:
-        financialScoreInput[1] !== 100 ? financialScoreInput[1] : undefined,
+      totalScoreMax: totalScoreInput[1] !== 100 ? totalScoreInput[1] : undefined,
+      financialScoreMin: financialScoreInput[0] !== 0 ? financialScoreInput[0] : undefined,
+      financialScoreMax: financialScoreInput[1] !== 100 ? financialScoreInput[1] : undefined,
       esgScoreMin: esgScoreInput[0] !== 0 ? esgScoreInput[0] : undefined,
       esgScoreMax: esgScoreInput[1] !== 100 ? esgScoreInput[1] : undefined,
-      dividendYieldPercentMin:
-        dividendYieldPercentInput[0] !== 0
-          ? dividendYieldPercentInput[0]
-          : undefined,
-      dividendYieldPercentMax:
-        dividendYieldPercentInput[1] !== 20
-          ? dividendYieldPercentInput[1]
-          : undefined,
-      priceEarningRatioMin:
-        priceEarningRatioInput[0] !== 0 ? priceEarningRatioInput[0] : undefined,
-      priceEarningRatioMax:
-        priceEarningRatioInput[1] !== 100
-          ? priceEarningRatioInput[1]
-          : undefined,
+      dividendYieldPercentMin: dividendYieldPercentInput[0] !== 0 ? dividendYieldPercentInput[0] : undefined,
+      dividendYieldPercentMax: dividendYieldPercentInput[1] !== 20 ? dividendYieldPercentInput[1] : undefined,
+      priceEarningRatioMin: priceEarningRatioInput[0] !== 0 ? priceEarningRatioInput[0] : undefined,
+      priceEarningRatioMax: priceEarningRatioInput[1] !== 100 ? priceEarningRatioInput[1] : undefined,
       starRatingMin: starRatingInput[0] !== 0 ? starRatingInput[0] : undefined,
       starRatingMax: starRatingInput[1] !== 5 ? starRatingInput[1] : undefined,
       morningstarFairValueDiffMin:
-        morningstarFairValueDiffInput[0] !== -50
-          ? morningstarFairValueDiffInput[0]
-          : undefined,
+        morningstarFairValueDiffInput[0] !== -50 ? morningstarFairValueDiffInput[0] : undefined,
       morningstarFairValueDiffMax:
-        morningstarFairValueDiffInput[1] !== 50
-          ? morningstarFairValueDiffInput[1]
-          : undefined,
-      analystConsensusMin:
-        analystConsensusInput[0] !== 0 ? analystConsensusInput[0] : undefined,
-      analystConsensusMax:
-        analystConsensusInput[1] !== 10 ? analystConsensusInput[1] : undefined,
-      analystCountMin:
-        analystCountInput[0] !== 0 ? analystCountInput[0] : undefined,
-      analystCountMax:
-        analystCountInput[1] !== 60 ? analystCountInput[1] : undefined,
-      analystTargetDiffMin:
-        analystTargetDiffInput[0] !== -50
-          ? analystTargetDiffInput[0]
-          : undefined,
-      analystTargetDiffMax:
-        analystTargetDiffInput[1] !== 50
-          ? analystTargetDiffInput[1]
-          : undefined,
+        morningstarFairValueDiffInput[1] !== 50 ? morningstarFairValueDiffInput[1] : undefined,
+      analystConsensusMin: analystConsensusInput[0] !== 0 ? analystConsensusInput[0] : undefined,
+      analystConsensusMax: analystConsensusInput[1] !== 10 ? analystConsensusInput[1] : undefined,
+      analystCountMin: analystCountInput[0] !== 0 ? analystCountInput[0] : undefined,
+      analystCountMax: analystCountInput[1] !== 60 ? analystCountInput[1] : undefined,
+      analystTargetDiffMin: analystTargetDiffInput[0] !== -50 ? analystTargetDiffInput[0] : undefined,
+      analystTargetDiffMax: analystTargetDiffInput[1] !== 50 ? analystTargetDiffInput[1] : undefined,
       msciESGRatingMin:
-        msciESGRatingInput[0] !== "AAA" && msciESGRatingInput[0] !== "None"
-          ? msciESGRatingInput[0]
-          : undefined,
-      msciESGRatingMax:
-        msciESGRatingInput[1] !== "None" ? msciESGRatingInput[1] : undefined,
-      msciTemperatureMin:
-        msciTemperatureInput[0] !== 1.0 ? msciTemperatureInput[0] : undefined,
-      msciTemperatureMax:
-        msciTemperatureInput[1] !== 4.0 ? msciTemperatureInput[1] : undefined,
-      refinitivESGScoreMin:
-        refinitivESGScoreInput[0] !== 0 ? refinitivESGScoreInput[0] : undefined,
-      refinitivESGScoreMax:
-        refinitivESGScoreInput[1] !== 100
-          ? refinitivESGScoreInput[1]
-          : undefined,
-      refinitivEmissionsMin:
-        refinitivEmissionsInput[0] !== 0
-          ? refinitivEmissionsInput[0]
-          : undefined,
-      refinitivEmissionsMax:
-        refinitivEmissionsInput[1] !== 100
-          ? refinitivEmissionsInput[1]
-          : undefined,
+        msciESGRatingInput[0] !== "AAA" && msciESGRatingInput[0] !== "None" ? msciESGRatingInput[0] : undefined,
+      msciESGRatingMax: msciESGRatingInput[1] !== "None" ? msciESGRatingInput[1] : undefined,
+      msciTemperatureMin: msciTemperatureInput[0] !== 1.0 ? msciTemperatureInput[0] : undefined,
+      msciTemperatureMax: msciTemperatureInput[1] !== 4.0 ? msciTemperatureInput[1] : undefined,
+      refinitivESGScoreMin: refinitivESGScoreInput[0] !== 0 ? refinitivESGScoreInput[0] : undefined,
+      refinitivESGScoreMax: refinitivESGScoreInput[1] !== 100 ? refinitivESGScoreInput[1] : undefined,
+      refinitivEmissionsMin: refinitivEmissionsInput[0] !== 0 ? refinitivEmissionsInput[0] : undefined,
+      refinitivEmissionsMax: refinitivEmissionsInput[1] !== 100 ? refinitivEmissionsInput[1] : undefined,
       spESGScoreMin: spESGScoreInput[0] !== 0 ? spESGScoreInput[0] : undefined,
-      spESGScoreMax:
-        spESGScoreInput[1] !== 100 ? spESGScoreInput[1] : undefined,
-      sustainalyticsESGRiskMin:
-        sustainalyticsESGRiskInput[0] !== 0
-          ? sustainalyticsESGRiskInput[0]
-          : undefined,
-      sustainalyticsESGRiskMax:
-        sustainalyticsESGRiskInput[1] !== 50
-          ? sustainalyticsESGRiskInput[1]
-          : undefined,
+      spESGScoreMax: spESGScoreInput[1] !== 100 ? spESGScoreInput[1] : undefined,
+      sustainalyticsESGRiskMin: sustainalyticsESGRiskInput[0] !== 0 ? sustainalyticsESGRiskInput[0] : undefined,
+      sustainalyticsESGRiskMax: sustainalyticsESGRiskInput[1] !== 50 ? sustainalyticsESGRiskInput[1] : undefined,
       countries: countryInput,
       industries: industryInput,
       size: styleboxInput.size,
@@ -256,35 +188,35 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
         <Typography variant="h3" component="h3" gutterBottom>
           Stock List
         </Typography>
-        <Typography variant="subtitle2">
-          This list shows all stocks currently available in this service
-        </Typography>
+        <Typography variant="subtitle2">This list shows all stocks currently available in this service</Typography>
       </Grid>
       <Grid item ml="auto">
-        <Tooltip arrow title="Add a new stock">
-          <IconButton
-            sx={{ ml: 1, mt: 1 }}
-            color="primary"
-            onClick={() => setAddStockOpen(true)}
-          >
-            <AddIcon />
-          </IconButton>
+        <Tooltip
+          arrow
+          title={
+            user.hasAccessRight(WRITE_STOCKS)
+              ? "Add a new stock"
+              : "You do not have the necessary access rights to create stocks."
+          }
+        >
+          <Box display="inline-block">
+            <IconButton
+              sx={{ ml: 1, mt: 1 }}
+              color="primary"
+              onClick={() => setAddStockOpen(true)}
+              disabled={!user.hasAccessRight(WRITE_STOCKS)}
+            >
+              <AddIcon />
+            </IconButton>
+          </Box>
         </Tooltip>
         <Tooltip arrow title="Filter stock list">
-          <IconButton
-            sx={{ ml: 1, mt: 1 }}
-            color="primary"
-            onClick={() => setFilterOpen(true)}
-          >
+          <IconButton sx={{ ml: 1, mt: 1 }} color="primary" onClick={() => setFilterOpen(true)}>
             <TuneIcon />
           </IconButton>
         </Tooltip>
         <Tooltip arrow title="Filter columns">
-          <IconButton
-            sx={{ ml: 1, mt: 1 }}
-            color="primary"
-            onClick={() => setColumnFilterOpen(true)}
-          >
+          <IconButton sx={{ ml: 1, mt: 1 }} color="primary" onClick={() => setColumnFilterOpen(true)}>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
@@ -321,15 +253,9 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
           </IconButton>
         </Tooltip>
         <Dialog maxWidth="lg" open={addStockOpen}>
-          <AddStock
-            onClose={() => (setAddStockOpen(false), props.triggerRefetch())}
-          />
+          <AddStock onClose={() => (setAddStockOpen(false), props.triggerRefetch())} />
         </Dialog>
-        <Dialog
-          onClose={() => setFilterOpen(false)}
-          open={filterOpen}
-          maxWidth="lg"
-        >
+        <Dialog onClose={() => setFilterOpen(false)} open={filterOpen} maxWidth="lg">
           <DialogTitle>
             <Typography variant="h3">Filter Stocks</Typography>
           </DialogTitle>
@@ -349,9 +275,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     value={totalScoreInput}
                     min={0}
                     max={100}
-                    onChange={(_, newValue: number[]) =>
-                      setTotalScoreInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setTotalScoreInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* Financial Score */}
@@ -361,9 +285,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     value={financialScoreInput}
                     min={0}
                     max={100}
-                    onChange={(_, newValue: number[]) =>
-                      setFinancialScoreInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setFinancialScoreInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* ESG Score */}
@@ -373,9 +295,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     value={esgScoreInput}
                     min={0}
                     max={100}
-                    onChange={(_, newValue: number[]) =>
-                      setEsgScoreInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setEsgScoreInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                 </Box>
@@ -392,9 +312,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     min={0}
                     max={20}
                     step={0.5}
-                    onChange={(_, newValue: number[]) =>
-                      setDividendYieldPercentInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setDividendYieldPercentInput(newValue)}
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value) => `${value}\u2009%`}
                   />
@@ -405,9 +323,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     value={priceEarningRatioInput}
                     min={0}
                     max={100}
-                    onChange={(_, newValue: number[]) =>
-                      setPriceEarningRatioInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setPriceEarningRatioInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                 </Box>
@@ -427,9 +343,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     max={5}
                     step={1}
                     marks
-                    onChange={(_, newValue: number[]) =>
-                      setStarRatingInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setStarRatingInput(newValue)}
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value) => (
                       <Box sx={{ fontSize: 12 }}>
@@ -438,17 +352,13 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     )}
                   />
                   {/* Morningstar Fair Value Difference */}
-                  <Typography variant="h5">
-                    Morningstar Fair Value Difference
-                  </Typography>
+                  <Typography variant="h5">Morningstar Fair Value Difference</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
                     value={morningstarFairValueDiffInput}
                     min={-50}
                     max={50}
-                    onChange={(_, newValue: number[]) =>
-                      setMorningstarFairValueDiffInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setMorningstarFairValueDiffInput(newValue)}
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value) => `${value}\u2009%`}
                   />
@@ -460,9 +370,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     min={0}
                     max={10}
                     step={0.1}
-                    onChange={(_, newValue: number[]) =>
-                      setAnalystConsensusInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setAnalystConsensusInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* Analyst Count */}
@@ -472,23 +380,17 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     value={analystCountInput}
                     min={0}
                     max={60}
-                    onChange={(_, newValue: number[]) =>
-                      setAnalystCountInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setAnalystCountInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* Analyst Target Difference */}
-                  <Typography variant="h5">
-                    Analyst Target Difference
-                  </Typography>
+                  <Typography variant="h5">Analyst Target Difference</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
                     value={analystTargetDiffInput}
                     min={-50}
                     max={50}
-                    onChange={(_, newValue: number[]) =>
-                      setAnalystTargetDiffInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setAnalystTargetDiffInput(newValue)}
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value) => `${value}\u2009%`}
                   />
@@ -505,41 +407,27 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
                     value={msciESGRatingInput.map((value) =>
-                      value === "None"
-                        ? 7
-                        : msciESGRatingArray.findIndex(
-                            (element) => element === value
-                          )
+                      value === "None" ? 7 : msciESGRatingArray.findIndex((element) => element === value)
                     )}
                     min={0}
                     max={7}
                     step={1}
                     marks
                     onChange={(_, newValue: number[]) =>
-                      setMsciESGRatingInput(
-                        newValue.map((value) =>
-                          value === 7 ? "None" : msciESGRatingArray[value]
-                        )
-                      )
+                      setMsciESGRatingInput(newValue.map((value) => (value === 7 ? "None" : msciESGRatingArray[value])))
                     }
                     valueLabelDisplay="auto"
-                    valueLabelFormat={(value) =>
-                      value === 7 ? "None" : msciESGRatingArray[value]
-                    }
+                    valueLabelFormat={(value) => (value === 7 ? "None" : msciESGRatingArray[value])}
                   />
                   {/* MSCI Implied Temperature Rise */}
-                  <Typography variant="h5">
-                    MSCI Implied Temperature Rise
-                  </Typography>
+                  <Typography variant="h5">MSCI Implied Temperature Rise</Typography>
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
                     value={msciTemperatureInput}
                     min={1}
                     max={4}
                     step={0.1}
-                    onChange={(_, newValue: number[]) =>
-                      setMsciTemperatureInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setMsciTemperatureInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* Refinitiv ESG Score */}
@@ -549,9 +437,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     value={refinitivESGScoreInput}
                     min={0}
                     max={100}
-                    onChange={(_, newValue: number[]) =>
-                      setRefinitivESGScoreInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setRefinitivESGScoreInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* Refinitiv Emissions Rating */}
@@ -561,9 +447,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     value={refinitivEmissionsInput}
                     min={0}
                     max={100}
-                    onChange={(_, newValue: number[]) =>
-                      setRefinitivEmissionsInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setRefinitivEmissionsInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* S&P ESG Score */}
@@ -573,9 +457,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     value={spESGScoreInput}
                     min={0}
                     max={100}
-                    onChange={(_, newValue: number[]) =>
-                      setSpESGScoreInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setSpESGScoreInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* Sustainalytics ESG Risk */}
@@ -585,9 +467,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     value={sustainalyticsESGRiskInput}
                     min={0}
                     max={50}
-                    onChange={(_, newValue: number[]) =>
-                      setSustainalyticsESGRiskInput(newValue)
-                    }
+                    onChange={(_, newValue: number[]) => setSustainalyticsESGRiskInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                 </Box>
@@ -614,12 +494,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                 <DialogTitle>
                   <Typography variant="h4">Industry</Typography>
                 </DialogTitle>
-                <NestedCheckboxList<
-                  SuperSector,
-                  Sector,
-                  IndustryGroup,
-                  Industry
-                >
+                <NestedCheckboxList<SuperSector, Sector, IndustryGroup, Industry>
                   firstLevelElements={superSectorArray}
                   firstLevelLabels={superSectorName}
                   getSecondLevelElements={getSectorsInSuperSector}
@@ -644,13 +519,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                     justifyContent: "center",
                   }}
                 >
-                  <Grid
-                    container
-                    columns={7}
-                    width="175px"
-                    ml="51.5px"
-                    mr="71.5px"
-                  >
+                  <Grid container columns={7} width="175px" ml="51.5px" mr="71.5px">
                     <Grid xs={1} item>
                       <Tooltip title="Clear selection" arrow>
                         <IconButton
@@ -661,10 +530,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                             width: "20px",
                             height: "20px",
                             borderRadius: 20,
-                            visibility:
-                              styleboxInput.size || styleboxInput.style
-                                ? "visible"
-                                : "hidden",
+                            visibility: styleboxInput.size || styleboxInput.style ? "visible" : "hidden",
                           }}
                           onClick={() => setStyleboxInput({})}
                         >
@@ -724,21 +590,14 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                               </Tooltip>
                             </Grid>
                             {styleArray.map((style) => (
-                              <Tooltip
-                                title={`${size}-${style}`}
-                                key={size + style}
-                                arrow
-                              >
+                              <Tooltip title={`${size}-${style}`} key={size + style} arrow>
                                 <Grid
                                   xs={2}
                                   sx={{
                                     backgroundColor:
-                                      (styleboxInput.size == size ||
-                                        !styleboxInput.size) &&
-                                      (styleboxInput.style == style ||
-                                        !styleboxInput.style) &&
-                                      (styleboxInput.size ||
-                                        styleboxInput.style)
+                                      (styleboxInput.size == size || !styleboxInput.size) &&
+                                      (styleboxInput.style == style || !styleboxInput.style) &&
+                                      (styleboxInput.size || styleboxInput.style)
                                         ? theme.colors.alpha.black[100]
                                         : theme.colors.alpha.white[100],
                                     height: "50px",
@@ -776,24 +635,15 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
             </Button>
           </DialogActions>
         </Dialog>
-        <Dialog
-          onClose={() => setColumnFilterOpen(false)}
-          open={columnFilterOpen}
-        >
+        <Dialog onClose={() => setColumnFilterOpen(false)} open={columnFilterOpen}>
           <DialogTitle minWidth={300}>
             <Typography variant="h3" pb={2}>
               Filter Columns
             </Typography>
-            <Button
-              sx={{ width: "50%", pb: 1 }}
-              onClick={() => props.setColumnFilter([])}
-            >
+            <Button sx={{ width: "50%", pb: 1 }} onClick={() => props.setColumnFilter([])}>
               Deselect All
             </Button>
-            <Button
-              sx={{ width: "50%", pb: 1 }}
-              onClick={() => props.setColumnFilter([...stockListColumnArray])}
-            >
+            <Button sx={{ width: "50%", pb: 1 }} onClick={() => props.setColumnFilter([...stockListColumnArray])}>
               Select All
             </Button>
           </DialogTitle>
@@ -807,23 +657,15 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
                       role={undefined}
                       onClick={() =>
                         props.setColumnFilter((prevColumnFilter) => [
-                          ...prevColumnFilter.filter(
-                            (prevColumn) => prevColumn !== column
-                          ),
-                          ...(prevColumnFilter.includes(column)
-                            ? []
-                            : [column]),
+                          ...prevColumnFilter.filter((prevColumn) => prevColumn !== column),
+                          ...(prevColumnFilter.includes(column) ? [] : [column]),
                         ])
                       }
                       sx={{ px: 0 }}
                       dense
                     >
                       <ListItemIcon sx={{ minWidth: 32 }}>
-                        <Checkbox
-                          checked={props.columnFilter.includes(column)}
-                          sx={{ p: 0 }}
-                          disableRipple
-                        />
+                        <Checkbox checked={props.columnFilter.includes(column)} sx={{ p: 0 }} disableRipple />
                       </ListItemIcon>
                       <ListItemText primary={column} />
                     </ListItemButton>

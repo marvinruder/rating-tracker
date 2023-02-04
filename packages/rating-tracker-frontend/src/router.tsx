@@ -15,9 +15,7 @@ import { baseUrl, userAPI } from "./endpoints";
  * @param {React.LazyExoticComponent<React.ComponentType<any>>} Component The component to wrap.
  * @returns {JSX.Element} The component.
  */
-const loader = (
-  Component: React.LazyExoticComponent<React.ComponentType<any>>
-) => {
+const loader = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => {
   /**
    * A wrapper for the suspense loader.
    *
@@ -95,9 +93,7 @@ type UserContextType = {
 /**
  * A context providing information about the current user.
  */
-export const UserContext = createContext<UserContextType>(
-  {} as UserContextType
-);
+export const UserContext = createContext<UserContextType>({} as UserContextType);
 
 /**
  * A wrapper ensuring that the user is authenticated before displaying the page.
@@ -130,7 +126,7 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
     axios
       .get(baseUrl + userAPI)
       .then((response) => {
-        setUser(response.data);
+        setUser(new User(response.data));
       })
       .catch(() => {})
       .finally(() => setDone(true));
@@ -145,9 +141,7 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
         <Navigate to="/stocklist" replace />
       ) : (
         // If any other page was requested, show it and provide the user context
-        <UserContext.Provider value={{ user, clearUser, refetchUser }}>
-          {props.children}
-        </UserContext.Provider>
+        <UserContext.Provider value={{ user, clearUser, refetchUser }}>{props.children}</UserContext.Provider>
       )
     ) : // If the user is not authenticated, show them the login page
     props.isLoginPage ? (

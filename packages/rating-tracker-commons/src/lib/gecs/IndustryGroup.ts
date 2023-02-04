@@ -294,10 +294,6 @@ export const groupOfIndustry: Record<Industry, IndustryGroup> = {
  * @param {IndustryGroup} industryGroup The industry group to get industries for.
  * @returns {Industry[]} The array of industries in the industry group.
  */
-export const getIndustriesInGroup = (
-  industryGroup: IndustryGroup
-): Industry[] => {
-  return industryArray.filter(
-    (industry) => groupOfIndustry[industry] == industryGroup
-  );
+export const getIndustriesInGroup = (industryGroup: IndustryGroup): Industry[] => {
+  return industryArray.filter((industry) => groupOfIndustry[industry] == industryGroup);
 };

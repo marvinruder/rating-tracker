@@ -20,15 +20,9 @@ class ResourceController {
       case "PNG":
         const resource = await readResource(resourceID);
         /* istanbul ignore next */ // We have not yet created suitable PNG test data.
-        return res
-          .setHeader("Content-Type", "image/png")
-          .status(200)
-          .send(Buffer.from(resource.content, "base64"));
+        return res.setHeader("Content-Type", "image/png").status(200).send(Buffer.from(resource.content, "base64"));
       default:
-        throw new APIError(
-          501,
-          "Resources of this type cannot be fetched using this API endpoint yet."
-        );
+        throw new APIError(501, "Resources of this type cannot be fetched using this API endpoint yet.");
     }
   }
 }

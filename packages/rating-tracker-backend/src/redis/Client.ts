@@ -20,9 +20,7 @@ export const redis = createClient({
   username: process.env.REDIS_USER,
   password: process.env.REDIS_PASS,
 });
-redis.on("error", (err) =>
-  logger.error(PREFIX_REDIS + chalk.redBright(`Redis Client: ${err}`))
-);
+redis.on("error", (err) => logger.error(PREFIX_REDIS + chalk.redBright(`Redis Client: ${err}`)));
 await redis.connect();
 
 /**

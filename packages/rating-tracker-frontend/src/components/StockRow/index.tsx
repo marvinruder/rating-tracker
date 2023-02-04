@@ -44,9 +44,10 @@ import {
   superSectorDescription,
   superSectorName,
   superSectorOfSector,
+  WRITE_STOCKS,
 } from "rating-tracker-commons";
 import { baseUrl, logoEndpoint, stockAPI } from "../../endpoints";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import DeleteStock from "../DeleteStock";
 import EditStock from "../EditStock";
 import StockDetails from "../StockDetails";
@@ -61,6 +62,7 @@ import {
 } from "../../helpers/navigators";
 import Range52WSlider from "../Range52WSlider";
 import { NavLink } from "react-router-dom";
+import { UserContext } from "../../router.js";
 
 /**
  * This component displays information about a stock in a table row that is used in the stock list.
@@ -69,6 +71,7 @@ import { NavLink } from "react-router-dom";
  * @returns {JSX.Element} The component.
  */
 const StockRow = (props: StockRowProps): JSX.Element => {
+  const { user } = useContext(UserContext);
   const theme = useTheme();
 
   /**
@@ -147,31 +150,15 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         >
           <Avatar
             sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
-            src={
-              baseUrl +
-              stockAPI +
-              logoEndpoint +
-              `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`
-            }
+            src={baseUrl + stockAPI + logoEndpoint + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
             alt=" "
           />
           <Box width={8} />
           <Box>
-            <Typography
-              variant="body1"
-              fontWeight="bold"
-              color="text.primary"
-              width={160}
-              noWrap
-            >
+            <Typography variant="body1" fontWeight="bold" color="text.primary" width={160} noWrap>
               {props.stock.name}
             </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              width={160}
-              noWrap
-            >
+            <Typography variant="body2" color="text.secondary" width={160} noWrap>
               {props.stock.ticker} | {props.stock.isin}
             </Typography>
           </Box>
@@ -183,18 +170,11 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("Country"),
         }}
       >
-        <Typography
-          variant="body1"
-          fontWeight="bold"
-          color="text.primary"
-          width={125}
-          noWrap
-        >
+        <Typography variant="body1" fontWeight="bold" color="text.primary" width={125} noWrap>
           {props.stock.country && countryNameWithFlag[props.stock.country]}
         </Typography>
         <Typography variant="body2" color="text.secondary" width={125} noWrap>
-          {props.stock.country &&
-            regionName[regionOfCountry[props.stock.country]]}
+          {props.stock.country && regionName[regionOfCountry[props.stock.country]]}
         </Typography>
       </TableCell>
       {/* StyleBox */}
@@ -204,11 +184,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         }}
       >
         <Tooltip
-          title={
-            props.stock.size && props.stock.style
-              ? `${props.stock.size}-${props.stock.style}`
-              : undefined
-          }
+          title={props.stock.size && props.stock.style ? `${props.stock.size}-${props.stock.style}` : undefined}
           arrow
         >
           <Box
@@ -243,19 +219,13 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <Box width={6} />
           <Tooltip
             title={
-              props.stock.industry &&
-              sectorDescription[
-                sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
-              ]
+              props.stock.industry && sectorDescription[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]
             }
             arrow
             placement="left"
           >
             <Typography variant="body1" fontWeight="bold" maxWidth={105} noWrap>
-              {props.stock.industry &&
-                sectorName[
-                  sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
-                ]}
+              {props.stock.industry && sectorName[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]}
             </Typography>
           </Tooltip>
         </Box>
@@ -271,27 +241,14 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <Tooltip
             title={
               props.stock.industry &&
-              superSectorDescription[
-                superSectorOfSector[
-                  sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
-                ]
-              ]
+              superSectorDescription[superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]]
             }
             arrow
             placement="left"
           >
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              maxWidth={105}
-              noWrap
-            >
+            <Typography variant="body2" color="text.secondary" maxWidth={105} noWrap>
               {props.stock.industry &&
-                superSectorName[
-                  superSectorOfSector[
-                    sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]
-                  ]
-                ]}
+                superSectorName[superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]]}
             </Typography>
           </Tooltip>
         </Box>
@@ -303,13 +260,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         }}
       >
         <Box width={150}>
-          <Tooltip
-            title={
-              props.stock.industry && industryDescription[props.stock.industry]
-            }
-            arrow
-            placement="right"
-          >
+          <Tooltip title={props.stock.industry && industryDescription[props.stock.industry]} arrow placement="right">
             <Typography
               variant="body1"
               fontWeight="bold"
@@ -323,8 +274,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           </Tooltip>
         </Box>
         <Typography variant="body2" color="text.secondary" width={150} noWrap>
-          {props.stock.industry &&
-            industryGroupName[groupOfIndustry[props.stock.industry]]}
+          {props.stock.industry && industryGroupName[groupOfIndustry[props.stock.industry]]}
         </Typography>
       </TableCell>
       {/* Total Score */}
@@ -335,11 +285,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       >
         <BlueIconChip
           icon={<EmojiEventsIcon />}
-          label={
-            <strong>
-              {Math.round(Math.max(0, 100 * props.stock.getTotalScore()))}
-            </strong>
-          }
+          label={<strong>{Math.round(Math.max(0, 100 * props.stock.getTotalScore()))}</strong>}
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
@@ -351,11 +297,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       >
         <YellowIconChip
           icon={<PriceCheckIcon />}
-          label={
-            <strong>
-              {Math.round(Math.max(0, 100 * props.stock.getFinancialScore()))}
-            </strong>
-          }
+          label={<strong>{Math.round(Math.max(0, 100 * props.stock.getFinancialScore()))}</strong>}
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
@@ -367,11 +309,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       >
         <GreenIconChip
           icon={<NaturePeopleIcon />}
-          label={
-            <strong>
-              {Math.round(Math.max(0, 100 * props.stock.getESGScore()))}
-            </strong>
-          }
+          label={<strong>{Math.round(Math.max(0, 100 * props.stock.getESGScore()))}</strong>}
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
@@ -392,41 +330,19 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         }}
       >
         <MorningstarNavigator stock={props.stock}>
-          <Typography
-            variant="body1"
-            fontWeight="bold"
-            color="text.primary"
-            width={90}
-            noWrap
-          >
-            <Tooltip
-              title={props.stock.currency && currencyName[props.stock.currency]}
-              arrow
-            >
+          <Typography variant="body1" fontWeight="bold" color="text.primary" width={90} noWrap>
+            <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
               <Box sx={{ float: "left" }} display="inline-block">
                 {props.stock.currency ?? ""}
               </Box>
             </Tooltip>
-            <Box sx={{ float: "right" }}>
-              {props.stock.morningstarFairValue?.toFixed(2) ?? "–"}
-            </Box>
+            <Box sx={{ float: "right" }}>{props.stock.morningstarFairValue?.toFixed(2) ?? "–"}</Box>
           </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            width={90}
-            sx={{ textAlign: "right" }}
-            noWrap
-          >
+          <Typography variant="body2" color="text.secondary" width={90} sx={{ textAlign: "right" }} noWrap>
             {props.stock.morningstarFairValue !== undefined &&
               props.stock.lastClose !== undefined &&
-              props.stock.getPercentageToLastClose("morningstarFairValue") !==
-                undefined &&
-              `${
-                props.stock.lastClose > props.stock.morningstarFairValue
-                  ? "+"
-                  : ""
-              }${Math.round(
+              props.stock.getPercentageToLastClose("morningstarFairValue") !== undefined &&
+              `${props.stock.lastClose > props.stock.morningstarFairValue ? "+" : ""}${Math.round(
                 props.stock.getPercentageToLastClose("morningstarFairValue")
               )}\u2009%`}
           </Typography>
@@ -466,10 +382,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                     : props.stock.analystConsensus <= 9.5
                     ? theme.colors.consensus[9]
                     : theme.colors.consensus[10],
-                opacity:
-                  props.stock.analystCount < 10
-                    ? props.stock.analystCount / 10
-                    : 1,
+                opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
                 width: 60,
               }}
               size="small"
@@ -489,25 +402,17 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             fontWeight="bold"
             color="text.primary"
             sx={{
-              opacity:
-                props.stock.analystCount < 10
-                  ? props.stock.analystCount / 10
-                  : 1,
+              opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
             }}
             width={90}
             noWrap
           >
-            <Tooltip
-              title={props.stock.currency && currencyName[props.stock.currency]}
-              arrow
-            >
+            <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
               <Box sx={{ float: "left" }} display="inline-block">
                 {props.stock.currency ?? ""}
               </Box>
             </Tooltip>
-            <Box style={{ float: "right" }}>
-              {props.stock.analystTargetPrice?.toFixed(2) ?? "–"}
-            </Box>
+            <Box style={{ float: "right" }}>{props.stock.analystTargetPrice?.toFixed(2) ?? "–"}</Box>
           </Typography>
           <Typography
             variant="body2"
@@ -531,13 +436,8 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             {props.stock.analystTargetPrice !== undefined &&
               props.stock.analystCount !== undefined &&
               props.stock.lastClose !== undefined &&
-              props.stock.getPercentageToLastClose("analystTargetPrice") !==
-                undefined &&
-              `${
-                props.stock.lastClose > props.stock.analystTargetPrice
-                  ? "+"
-                  : ""
-              }${Math.round(
+              props.stock.getPercentageToLastClose("analystTargetPrice") !== undefined &&
+              `${props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""}${Math.round(
                 props.stock.getPercentageToLastClose("analystTargetPrice")
               )}\u2009%`}
           </Typography>
@@ -555,9 +455,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
               label={<strong>{props.stock.msciESGRating}</strong>}
               style={{ cursor: "inherit" }}
               sx={{
-                backgroundColor: ["AAA", "AA"].includes(
-                  props.stock.msciESGRating
-                )
+                backgroundColor: ["AAA", "AA"].includes(props.stock.msciESGRating)
                   ? theme.colors.msci.Leader
                   : ["B", "CCC"].includes(props.stock.msciESGRating)
                   ? theme.colors.msci.Laggard
@@ -716,13 +614,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("Dividend Yield (%)"),
         }}
       >
-        <Typography
-          variant="body1"
-          color="text.primary"
-          width={45}
-          sx={{ textAlign: "right" }}
-          noWrap
-        >
+        <Typography variant="body1" color="text.primary" width={45} sx={{ textAlign: "right" }} noWrap>
           {props.stock.dividendYieldPercent ?? "–"}
           {"\u2009%"}
         </Typography>
@@ -733,13 +625,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("P / E Ratio"),
         }}
       >
-        <Typography
-          variant="body1"
-          color="text.primary"
-          width={45}
-          sx={{ textAlign: "right" }}
-          noWrap
-        >
+        <Typography variant="body1" color="text.primary" width={45} sx={{ textAlign: "right" }} noWrap>
           {props.stock.priceEarningRatio ?? "–"}
         </Typography>
       </TableCell>
@@ -750,60 +636,64 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         }}
       >
         <Typography variant="body1" color="text.primary" width={75} noWrap>
-          <Tooltip
-            title={props.stock.currency && currencyName[props.stock.currency]}
-            arrow
-          >
+          <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
             <Box sx={{ float: "left" }} display="inline-block">
               {props.stock.currency ?? ""}
             </Box>
           </Tooltip>
-          <Box sx={{ float: "right" }}>
-            {props.stock.marketCap !== undefined
-              ? formatMarketCap(props.stock)
-              : "–"}
-          </Box>
+          <Box sx={{ float: "right" }}>{props.stock.marketCap !== undefined ? formatMarketCap(props.stock) : "–"}</Box>
         </Typography>
       </TableCell>
       {/* Actions */}
       {props.getStocks && (
         <TableCell style={{ whiteSpace: "nowrap" }}>
           <Tooltip title="Open in new tab" arrow>
-            <IconButton
-              component={NavLink}
-              to={`/stock/${props.stock.ticker}`}
-              target="_blank"
-              size="small"
-            >
+            <IconButton component={NavLink} to={`/stock/${props.stock.ticker}`} target="_blank" size="small">
               <OpenInNewIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Edit Stock" arrow>
-            <IconButton
-              color="primary"
-              size="small"
-              onClick={() => setEditDialogOpen(true)}
-            >
-              <EditIcon fontSize="small" />
-            </IconButton>
+          <Tooltip
+            title={
+              user.hasAccessRight(WRITE_STOCKS)
+                ? "Edit Stock"
+                : "You do not have the necessary access rights to update stocks."
+            }
+            arrow
+          >
+            <Box display="inline-block">
+              <IconButton
+                color="primary"
+                size="small"
+                onClick={() => setEditDialogOpen(true)}
+                disabled={!user.hasAccessRight(WRITE_STOCKS)}
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
+            </Box>
           </Tooltip>
-          <Tooltip title="Delete Stock" arrow>
-            <IconButton
-              color="error"
-              size="small"
-              onClick={() => setDeleteDialogOpen(true)}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
+          <Tooltip
+            title={
+              user.hasAccessRight(WRITE_STOCKS)
+                ? "Delete Stock"
+                : "You do not have the necessary access rights to delete stocks."
+            }
+            arrow
+          >
+            <Box display="inline-block">
+              <IconButton
+                color="error"
+                size="small"
+                onClick={() => setDeleteDialogOpen(true)}
+                disabled={!user.hasAccessRight(WRITE_STOCKS)}
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </Box>
           </Tooltip>
         </TableCell>
       )}
       {/* Details Dialog */}
-      <Dialog
-        open={detailsDialogOpen}
-        onClose={() => setDetailsDialogOpen(false)}
-        maxWidth="lg"
-      >
+      <Dialog open={detailsDialogOpen} onClose={() => setDetailsDialogOpen(false)} maxWidth="lg">
         <DialogTitle style={{ paddingBottom: "0px" }}>
           <Grid container justifyContent="space-between">
             <Grid
@@ -822,12 +712,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                   mr: "-8px",
                   background: "none",
                 }}
-                src={
-                  baseUrl +
-                  stockAPI +
-                  logoEndpoint +
-                  `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`
-                }
+                src={baseUrl + stockAPI + logoEndpoint + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
                 alt=" "
               />
               <Box sx={{ my: 1 }}>
@@ -840,10 +725,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
               </Box>
             </Grid>
             <Grid item>
-              <IconButton
-                onClick={() => setDetailsDialogOpen(false)}
-                sx={{ ml: "auto", borderRadius: 20 }}
-              >
+              <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ ml: "auto", borderRadius: 20 }}>
                 <CloseIcon />
               </IconButton>
             </Grid>
@@ -855,28 +737,12 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         </DialogContent>
       </Dialog>
       {/* Edit Dialog */}
-      <Dialog
-        open={editDialogOpen}
-        onClose={() => (
-          setEditDialogOpen(false), props.getStocks && props.getStocks()
-        )}
-      >
-        <EditStock
-          stock={props.stock}
-          getStocks={props.getStocks}
-          onClose={() => setEditDialogOpen(false)}
-        />
+      <Dialog open={editDialogOpen} onClose={() => (setEditDialogOpen(false), props.getStocks && props.getStocks())}>
+        <EditStock stock={props.stock} getStocks={props.getStocks} onClose={() => setEditDialogOpen(false)} />
       </Dialog>
       {/* Delete Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
-        <DeleteStock
-          stock={props.stock}
-          getStocks={props.getStocks}
-          onClose={() => setDeleteDialogOpen(false)}
-        />
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <DeleteStock stock={props.stock} getStocks={props.getStocks} onClose={() => setDeleteDialogOpen(false)} />
       </Dialog>
     </TableRow>
   ) : (
@@ -1031,7 +897,6 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("Analyst Consensus"),
         }}
       >
-        {" "}
         <Skeleton variant="rounded" width={60} height={24} />
       </TableCell>
       {/* Analyst Target */}

@@ -1,22 +1,14 @@
 import { jest } from "@jest/globals";
 
-jest.unstable_mockModule(
-  "../../../lib/logger",
-  async () => await import("../../../lib/__mocks__/logger")
-);
+jest.unstable_mockModule("../../../lib/logger", async () => await import("../../../lib/__mocks__/logger"));
 
 jest.unstable_mockModule(
   "../../../signal/signalBase",
   async () => await import("../../../signal/__mocks__/signalBase")
 );
-jest.unstable_mockModule(
-  "./stockRepositoryBase",
-  async () => await import("./__mocks__/stockRepositoryBase")
-);
+jest.unstable_mockModule("./stockRepositoryBase", async () => await import("./__mocks__/stockRepositoryBase"));
 
-const { createStock, readStock, updateStock } = await import(
-  "./stockRepository"
-);
+const { createStock, readStock, updateStock } = await import("./stockRepository");
 import dotenv from "dotenv";
 import { initStockRepository } from "./__mocks__/stockRepositoryBase";
 import { sentMessages } from "../../../signal/__mocks__/signalBase";

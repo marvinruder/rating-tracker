@@ -54,9 +54,7 @@ const StockModule = (): JSX.Element => {
    */
   let detailsCardWidth: 900 | 600 | 300;
 
-  switch (
-    +useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")
-  ) {
+  switch (+useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")) {
     case 2:
       // The screen is at least 964px wide.
       detailsCardWidth = 900;

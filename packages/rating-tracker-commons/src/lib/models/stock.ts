@@ -198,12 +198,8 @@ export class Stock {
    * @returns {number} The score, ranging from -1 (premium of 50 percent or more) to 1 (discount of 50 percent or more).
    */
   private getMorningstarFairValueScore(): number | undefined {
-    const percentageToLastClose = this.getPercentageToLastClose(
-      "morningstarFairValue"
-    );
-    return percentageToLastClose !== undefined
-      ? -percentageToLastClose / 50
-      : undefined;
+    const percentageToLastClose = this.getPercentageToLastClose("morningstarFairValue");
+    return percentageToLastClose !== undefined ? -percentageToLastClose / 50 : undefined;
   }
 
   /**
@@ -229,8 +225,7 @@ export class Stock {
    * @returns {number} The score, ranging from -1 (premium of 50 percent or more) to 1 (discount of 50 percent or more).
    */
   private getAnalystTargetPriceScore(): number | undefined {
-    const percentageToLastClose =
-      this.getPercentageToLastClose("analystTargetPrice");
+    const percentageToLastClose = this.getPercentageToLastClose("analystTargetPrice");
     if (this.analystCount && percentageToLastClose !== undefined) {
       if (this.analystCount >= 10) {
         return -percentageToLastClose / 50;
@@ -318,9 +313,7 @@ export class Stock {
    * @returns {number} The score, ranging from -1 (0) to 1 (100).
    */
   private getRefinitivESGScore(): number | undefined {
-    return this.refinitivESGScore !== undefined
-      ? (this.refinitivESGScore - 50) / 50
-      : undefined;
+    return this.refinitivESGScore !== undefined ? (this.refinitivESGScore - 50) / 50 : undefined;
   }
 
   /**
@@ -329,9 +322,7 @@ export class Stock {
    * @returns {number} The score, ranging from -1 (0) to 1 (100).
    */
   private getRefinitivEmissionsScore(): number | undefined {
-    return this.refinitivEmissions !== undefined
-      ? (this.refinitivEmissions - 50) / 50
-      : undefined;
+    return this.refinitivEmissions !== undefined ? (this.refinitivEmissions - 50) / 50 : undefined;
   }
 
   /**
@@ -340,9 +331,7 @@ export class Stock {
    * @returns {number} The score, ranging from -1 (0) to 1 (100).
    */
   private getSPESGScore(): number | undefined {
-    return this.spESGScore !== undefined
-      ? (this.spESGScore - 50) / 50
-      : undefined;
+    return this.spESGScore !== undefined ? (this.spESGScore - 50) / 50 : undefined;
   }
 
   /**
@@ -351,9 +340,7 @@ export class Stock {
    * @returns {number} The score, ranging from -1 (40) to 1 (0).
    */
   private getSustainalyticsESGRiskScore(): number | undefined {
-    return this.sustainalyticsESGRisk !== undefined
-      ? 1 - this.sustainalyticsESGRisk / 20
-      : undefined;
+    return this.sustainalyticsESGRisk !== undefined ? 1 - this.sustainalyticsESGRisk / 20 : undefined;
   }
 
   /**
@@ -416,13 +403,8 @@ export class Stock {
    * @param {"morningstarFairValue" | "analystTargetPrice"} attribute The attribute to compare to the last close.
    * @returns {number} The percentage difference.
    */
-  public getPercentageToLastClose(
-    attribute: "morningstarFairValue" | "analystTargetPrice"
-  ): number | undefined {
-    const result =
-      this[attribute] && this.lastClose
-        ? 100 * (this.lastClose / this[attribute] - 1)
-        : undefined;
+  public getPercentageToLastClose(attribute: "morningstarFairValue" | "analystTargetPrice"): number | undefined {
+    const result = this[attribute] && this.lastClose ? 100 * (this.lastClose / this[attribute] - 1) : undefined;
     return Number.isNaN(result) ? undefined : result;
   }
 }

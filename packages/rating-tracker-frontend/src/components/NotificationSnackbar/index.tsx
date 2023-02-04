@@ -1,11 +1,4 @@
-import {
-  Alert,
-  AlertProps,
-  AlertTitle,
-  Snackbar,
-  SnackbarCloseReason,
-  SnackbarProps,
-} from "@mui/material";
+import { Alert, AlertProps, AlertTitle, Snackbar, SnackbarCloseReason, SnackbarProps } from "@mui/material";
 import { useEffect, useState } from "react";
 import useNotification from "../../helpers/useNotification";
 
@@ -20,9 +13,7 @@ const TRANSITION_DURATION = 350;
  * @param {NotificationSnackbarProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const NotificationSnackbar = (
-  props: NotificationSnackbarProps
-): JSX.Element => {
+const NotificationSnackbar = (props: NotificationSnackbarProps): JSX.Element => {
   const [snackbarShown, setSnackbarShown] = useState<boolean>(false);
   // The notification is provided by the NotificationContext.
   const { notification, setNotification } = useNotification();
@@ -34,10 +25,7 @@ const NotificationSnackbar = (
    * @param {Event | React.SyntheticEvent<any, Event>} _ The event that triggered the callback.
    * @param {SnackbarCloseReason} reason The reason why the snackbar was closed.
    */
-  const closeNotification = (
-    _: Event | React.SyntheticEvent<any, Event>,
-    reason?: SnackbarCloseReason
-  ) => {
+  const closeNotification = (_: Event | React.SyntheticEvent<any, Event>, reason?: SnackbarCloseReason) => {
     // Clickaway is not used intentionally, but sometimes fired anyhow, which we want to ignore.
     if (reason !== "clickaway") {
       setSnackbarShown(false);

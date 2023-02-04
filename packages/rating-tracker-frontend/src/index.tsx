@@ -11,9 +11,7 @@ import axios from "axios";
 axios.defaults.paramsSerializer = {
   encode: (value, defaultEncoder) => {
     const encodedValue = defaultEncoder(value);
-    return typeof encodedValue === "string"
-      ? encodedValue.replaceAll("+", "%20")
-      : encodedValue;
+    return typeof encodedValue === "string" ? encodedValue.replaceAll("+", "%20") : encodedValue;
   },
 };
 

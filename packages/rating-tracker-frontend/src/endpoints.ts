@@ -1,8 +1,7 @@
 /**
  * The FQDN of the backend server.
  */
-export const baseUrl =
-  document.location.protocol + "//" + document.location.hostname;
+export const baseUrl = document.location.protocol + "//" + document.location.hostname;
 
 /**
  * The session API path.

@@ -60,8 +60,7 @@ export const sectorDescription: Record<Sector, string> = {
     "This sector includes retail stores, auto and auto-parts manufacturers, restaurants, lodging facilities, specialty retail and travel companies.",
   FinancialServices:
     "Companies that provide financial services include banks, savings and loans, asset management companies, credit services, investment brokerage firms, and insurance companies.",
-  RealEstate:
-    "This sector includes companies that develop, acquire, manage, and operate real estate properties.",
+  RealEstate: "This sector includes companies that develop, acquire, manage, and operate real estate properties.",
   ConsumerDefensive:
     "Companies that manufacture food, beverages, household and personal products, packaging, or tobacco. Also includes companies that provide services such as education and training services.",
   Healthcare:
@@ -145,7 +144,5 @@ export const sectorOfIndustryGroup: Record<IndustryGroup, Sector> = {
  * @returns {IndustryGroup[]} The array of industry groups in the sector.
  */
 export const getIndustryGroupsInSector = (sector: Sector): IndustryGroup[] => {
-  return industryGroupArray.filter(
-    (industryGroup) => sectorOfIndustryGroup[industryGroup] == sector
-  );
+  return industryGroupArray.filter((industryGroup) => sectorOfIndustryGroup[industryGroup] == sector);
 };

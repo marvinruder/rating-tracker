@@ -12,17 +12,13 @@ export type NotificationContextType = {
   /**
    * A method to set the notification to be displayed.
    */
-  setNotification: React.Dispatch<
-    React.SetStateAction<Notification | undefined>
-  >;
+  setNotification: React.Dispatch<React.SetStateAction<Notification | undefined>>;
 };
 
 /**
  * A context providing a state for a notification to be displayed in various components.
  */
-const NotificationContext = createContext<NotificationContextType>(
-  {} as NotificationContextType
-);
+const NotificationContext = createContext<NotificationContextType>({} as NotificationContextType);
 
 /**
  * A provider for the notification context.
@@ -30,12 +26,8 @@ const NotificationContext = createContext<NotificationContextType>(
  * @param {NotificationProviderProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-export const NotificationProvider = (
-  props: NotificationProviderProps
-): JSX.Element => {
-  const [notification, setNotification] = useState<Notification | undefined>(
-    undefined
-  );
+export const NotificationProvider = (props: NotificationProviderProps): JSX.Element => {
+  const [notification, setNotification] = useState<Notification | undefined>(undefined);
 
   return (
     <NotificationContext.Provider

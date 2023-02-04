@@ -10,9 +10,7 @@ dotenv.config({
  */
 const servers: OpenAPIV3.ServerObject[] = [
   {
-    url: `https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
-      process.env.DOMAIN
-    }`,
+    url: `https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${process.env.DOMAIN}`,
     description: "via HTTPS",
   },
 ];

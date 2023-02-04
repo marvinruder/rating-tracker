@@ -21,9 +21,7 @@ type SidebarContextType = {
 /**
  * A context providing a state for a sidebar to be displayed as part of the sidebar layout.
  */
-const SidebarContext = createContext<SidebarContextType>(
-  {} as SidebarContextType
-);
+const SidebarContext = createContext<SidebarContextType>({} as SidebarContextType);
 
 /**
  * A provider for the sidebar context.
@@ -31,9 +29,7 @@ const SidebarContext = createContext<SidebarContextType>(
  * @param {SidebarProviderProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-export const SidebarProvider: FC<SidebarProviderProps> = (
-  props: SidebarProviderProps
-) => {
+export const SidebarProvider: FC<SidebarProviderProps> = (props: SidebarProviderProps) => {
   const [sidebarToggle, setSidebarToggle] = useState(false);
 
   /**
@@ -51,9 +47,7 @@ export const SidebarProvider: FC<SidebarProviderProps> = (
   };
 
   return (
-    <SidebarContext.Provider
-      value={{ sidebarToggle, toggleSidebar, closeSidebar }}
-    >
+    <SidebarContext.Provider value={{ sidebarToggle, toggleSidebar, closeSidebar }}>
       {props.children}
     </SidebarContext.Provider>
   );

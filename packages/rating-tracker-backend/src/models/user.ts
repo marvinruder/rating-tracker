@@ -6,13 +6,19 @@ import { Entity, Schema } from "redis-om";
  */
 export class User extends CommonsUser {
   /**
-   * Creates a new {@link User} from its Redis entity.
+   * Creates a new {@link User} from either its Redis entity or a partial User object.
    *
-   * @param {UserEntity} userEntity The Redis entity of the user.
+   * @param {UserEntity | Partial<User>} userEntity The Redis entity of the user or a partial User object.
    */
-  constructor(userEntity: UserEntity) {
+  constructor(userEntity: UserEntity | Partial<User>) {
     super();
-    this.email = userEntity.entityId; // The email is used as the entity’s ID
+    // Creating a user from a partial object is only done during registration, which is not currently tested
+    /* istanbul ignore else */
+    if (userEntity instanceof UserEntity) {
+      this.email = userEntity.entityId; // The email is used as the entity’s ID
+    } else {
+      this.email = userEntity.email;
+    }
     this.name = userEntity.name;
     if (userEntity.avatar != null) this.avatar = userEntity.avatar;
     if (userEntity.phone != null) this.phone = userEntity.phone;

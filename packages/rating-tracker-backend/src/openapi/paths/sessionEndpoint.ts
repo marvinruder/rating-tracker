@@ -24,8 +24,7 @@ const deleteResponse: OpenAPIV3.OperationObject = {
   tags: ["Session API"],
   operationId: "session",
   summary: "Session API",
-  description:
-    "Deletes the authentication token related to the session cookie.",
+  description: "Deletes the authentication token related to the session cookie.",
   responses: {
     "204": noContent,
     "401": unauthorized,

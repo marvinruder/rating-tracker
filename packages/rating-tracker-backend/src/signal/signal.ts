@@ -7,11 +7,7 @@ import { send } from "./signalBase.js";
  */
 export const sendMessage = (message: string) => {
   // Only send the message if the Signal Client URL, sender and recipients are specified in the environment variables
-  if (
-    process.env.SIGNAL_URL &&
-    process.env.SIGNAL_SENDER &&
-    process.env.SIGNAL_RECIPIENT
-  ) {
+  if (process.env.SIGNAL_URL && process.env.SIGNAL_SENDER && process.env.SIGNAL_RECIPIENT) {
     send(
       process.env.SIGNAL_URL,
       message,

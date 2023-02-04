@@ -11,10 +11,7 @@ let stockRepository: Map<string, StockEntity>;
  */
 export const initStockRepository = () => {
   stockRepository = new Map<string, StockEntity>(
-    exampleStocks.map((stock) => [
-      stock.ticker,
-      new StockEntity(stockSchema, stock.ticker, { ...stock }),
-    ])
+    exampleStocks.map((stock) => [stock.ticker, new StockEntity(stockSchema, stock.ticker, { ...stock })])
   );
 };
 

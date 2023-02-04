@@ -10,9 +10,7 @@ type ThemeContextType = (themeName: string) => void;
 /**
  * A context providing a theme for the application.
  */
-export const ThemeContext = createContext<ThemeContextType>(
-  {} as ThemeContextType
-);
+export const ThemeContext = createContext<ThemeContextType>({} as ThemeContextType);
 
 /**
  * A wrapped theme provider.
@@ -20,9 +18,7 @@ export const ThemeContext = createContext<ThemeContextType>(
  * @param {ThemeProviderWrapperProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const ThemeProviderWrapper: FC<ThemeProviderWrapperProps> = (
-  props: ThemeProviderWrapperProps
-) => {
+const ThemeProviderWrapper: FC<ThemeProviderWrapperProps> = (props: ThemeProviderWrapperProps) => {
   const curThemeName = localStorage.getItem("appTheme") || "NebulaFighterTheme";
   const [themeName, _setThemeName] = useState(curThemeName);
   const theme = themeCreator(themeName);
@@ -41,22 +37,14 @@ const ThemeProviderWrapper: FC<ThemeProviderWrapperProps> = (
     // Add listener to update styles
     window
       .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) =>
-        setThemeName(e.matches ? "NebulaFighterTheme" : "PureLightTheme")
-      );
+      .addEventListener("change", (e) => setThemeName(e.matches ? "NebulaFighterTheme" : "PureLightTheme"));
 
     // Setup dark/light mode for the first time
-    setThemeName(
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "NebulaFighterTheme"
-        : "PureLightTheme"
-    );
+    setThemeName(window.matchMedia("(prefers-color-scheme: dark)").matches ? "NebulaFighterTheme" : "PureLightTheme");
 
     // Remove listener
     return () => {
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .removeEventListener("change", () => {});
+      window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", () => {});
     };
   }, []);
 

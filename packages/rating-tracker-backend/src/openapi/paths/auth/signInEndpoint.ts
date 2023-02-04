@@ -1,10 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import {
-  badRequest,
-  forbidden,
-  notFound,
-  tooManyRequestsHTML,
-} from "../../responses/clientError.js";
+import { badRequest, forbidden, notFound, tooManyRequestsHTML } from "../../responses/clientError.js";
 import { internalServerError } from "../../responses/serverError.js";
 import { noContent, okObject } from "../../responses/success.js";
 
@@ -15,8 +10,7 @@ const get: OpenAPIV3.OperationObject = {
   tags: ["Authentication API"],
   operationId: "getAuthenticationOptions",
   summary: "Get Authentication Options API",
-  description:
-    "Get a challenge for authenticating as a registered user via WebAuthn standard",
+  description: "Get a challenge for authenticating as a registered user via WebAuthn standard",
   responses: {
     "200": okObject,
     "429": tooManyRequestsHTML,

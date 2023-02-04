@@ -13,8 +13,7 @@ export const components: OpenAPIV3.ComponentsObject = {
   schemas: {
     Country: {
       type: "string",
-      description:
-        "The 2-letter ISO 3166-1 country code of the country the stock is based in.",
+      description: "The 2-letter ISO 3166-1 country code of the country the stock is based in.",
       enum: Array.from(countryArray),
       example: "US",
     },
@@ -38,8 +37,7 @@ export const components: OpenAPIV3.ComponentsObject = {
     },
     Currency: {
       type: "string",
-      description:
-        "The 3-letter ISO 4217 currency code of the currency the stock is traded in.",
+      description: "The 3-letter ISO 4217 currency code of the currency the stock is traded in.",
       enum: Array.from(currencyArray),
       example: "USD",
     },
@@ -219,8 +217,7 @@ export const components: OpenAPIV3.ComponentsObject = {
     },
     StockListWithCount: {
       type: "object",
-      description:
-        "A stock list accompanied with the total number of available stocks",
+      description: "A stock list accompanied with the total number of available stocks",
       properties: {
         stocks: {
           type: "array",
@@ -258,8 +255,7 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         phone: {
           type: "string",
-          description:
-            "The phone number of the user, used for Signal messages.",
+          description: "The phone number of the user, used for Signal messages.",
           example: "+491234567890",
         },
         accessRights: {

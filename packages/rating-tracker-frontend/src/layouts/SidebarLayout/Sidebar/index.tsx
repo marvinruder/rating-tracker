@@ -1,16 +1,7 @@
 import { useContext } from "react";
 import SidebarContext from "../../../contexts/SidebarContext";
 
-import {
-  Box,
-  Drawer,
-  alpha,
-  styled,
-  Divider,
-  useTheme,
-  lighten,
-  darken,
-} from "@mui/material";
+import { Box, Drawer, alpha, styled, Divider, useTheme, lighten, darken } from "@mui/material";
 
 import SidebarMenu from "./SidebarMenu";
 import Logo from "../../../components/Logo";
@@ -55,8 +46,7 @@ const Sidebar = (): JSX.Element => {
             theme.palette.mode === "dark"
               ? alpha(lighten(theme.header.background, 0.1), 0.5)
               : alpha(darken(theme.colors.alpha.black[100], 0.5), 0.85),
-          boxShadow:
-            theme.palette.mode === "dark" ? theme.sidebar.boxShadow : "none",
+          boxShadow: theme.palette.mode === "dark" ? theme.sidebar.boxShadow : "none",
         }}
       >
         <Box mt={3} mx={2}>

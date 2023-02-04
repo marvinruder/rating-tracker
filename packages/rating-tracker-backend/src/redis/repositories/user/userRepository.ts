@@ -18,23 +18,16 @@ export const createUser = async (user: User): Promise<boolean> => {
     // If that worked, a user with the same email address already exists
     logger.warn(
       PREFIX_REDIS +
-        chalk.yellowBright(
-          `Skipping user “${user.name}” – existing already (entity ID ${existingUser.entityId}).`
-        )
+        chalk.yellowBright(`Skipping user “${user.name}” – existing already (entity ID ${existingUser.entityId}).`)
     );
     return false;
   }
   const userEntity = new UserEntity(userSchema, user.email, {
     ...user,
   });
-  logger.info(
-    PREFIX_REDIS +
-      `Created user “${user.name}” with entity ID ${await save(userEntity)}.`
-  );
+  logger.info(PREFIX_REDIS + `Created user “${user.name}” with entity ID ${await save(userEntity)}.`);
   // Inform the admin of the new user via Signal messenger
-  signal.sendMessage(
-    `🆕👤 New user “${user.name}” (email ${user.email}) registered.`
-  );
+  signal.sendMessage(`🆕👤 New user “${user.name}” (email ${user.email}) registered.`);
   return true;
 };
 
@@ -76,10 +69,7 @@ export const userExists = async (email: string): Promise<boolean> => {
  * @throws an {@link APIError} if the user does not exist.
  */
 /* istanbul ignore next */ // This is only called after an authentication, which we cannot yet test
-export const updateUser = async (
-  email: string,
-  newValues: Partial<Omit<User, "email">>
-) => {
+export const updateUser = async (email: string, newValues: Partial<Omit<User, "email">>) => {
   let k: keyof typeof newValues; // all keys of new values
   const userEntity = await fetch(email); // Fetch the user from Redis
   if (userEntity && userEntity.name) {
@@ -91,10 +81,7 @@ export const updateUser = async (
         if (newValues[k] !== userEntity[k]) {
           // New data is different from old data
           isNewData = true;
-          logger.info(
-            PREFIX_REDIS +
-              `    Property ${k} updated from ${userEntity[k]} to ${newValues[k]}`
-          );
+          logger.info(PREFIX_REDIS + `    Property ${k} updated from ${userEntity[k]} to ${newValues[k]}`);
           switch (k) {
             case "name":
             case "avatar":

@@ -1,9 +1,5 @@
 import APIError from "../../../lib/apiError.js";
-import {
-  Session,
-  SessionEntity,
-  sessionSchema,
-} from "../../../models/session.js";
+import { Session, SessionEntity, sessionSchema } from "../../../models/session.js";
 import { refresh, fetch, save, remove } from "./sessionRepositoryBase.js";
 import chalk from "chalk";
 import { User } from "../../../models/user.js";
@@ -21,23 +17,13 @@ export const createSession = async (session: Session): Promise<boolean> => {
   const existingSession = await fetch(session.sessionID); // Attempt to fetch an existing session with the same ID
   if (existingSession && existingSession.email) {
     // If that worked, a session with the same ID already exists
-    logger.warn(
-      PREFIX_REDIS +
-        chalk.yellowBright(
-          `Skipping session ${existingSession.entityId} – existing already.`
-        )
-    );
+    logger.warn(PREFIX_REDIS + chalk.yellowBright(`Skipping session ${existingSession.entityId} – existing already.`));
     return false;
   }
   const sessionEntity = new SessionEntity(sessionSchema, session.sessionID, {
     ...session,
   });
-  logger.info(
-    PREFIX_REDIS +
-      `Created session for “${session.email}” with entity ID ${await save(
-        sessionEntity
-      )}.`
-  );
+  logger.info(PREFIX_REDIS + `Created session for “${session.email}” with entity ID ${await save(sessionEntity)}.`);
   await refresh(session.sessionID); // Let the session expire after 30 minutes
   return true;
 };
@@ -49,9 +35,7 @@ export const createSession = async (session: Session): Promise<boolean> => {
  * @returns {User} The user corresponding to the session.
  * @throws an {@link APIError} if the session does not exist.
  */
-export const refreshSessionAndFetchUser = async (
-  sessionID: string
-): Promise<User> => {
+export const refreshSessionAndFetchUser = async (sessionID: string): Promise<User> => {
   const sessionEntity = await fetch(sessionID);
   if (sessionEntity && sessionEntity.email) {
     refresh(sessionID); // Let the session expire after 30 minutes
@@ -75,9 +59,7 @@ export const deleteSession = async (sessionID: string) => {
   if (sessionEntity && sessionEntity.email) {
     const email = new Session(sessionEntity).email;
     await remove(sessionEntity.entityId);
-    logger.info(
-      PREFIX_REDIS + `Deleted session ${sessionID} for user “${email}”.`
-    );
+    logger.info(PREFIX_REDIS + `Deleted session ${sessionID} for user “${email}”.`);
   } else {
     throw new APIError(404, `Session ${sessionID} not found.`);
   }

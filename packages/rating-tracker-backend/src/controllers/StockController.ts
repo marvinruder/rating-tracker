@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import { Stock } from "../models/stock.js";
-import {
-  createResource,
-  readResource,
-} from "../redis/repositories/resource/resourceRepository.js";
+import { createResource, readResource } from "../redis/repositories/resource/resourceRepository.js";
 import {
   createStock,
   deleteStock,
@@ -24,6 +21,7 @@ import {
   Resource,
   sizeArray,
   styleArray,
+  WRITE_STOCKS,
 } from "rating-tracker-commons";
 import APIError from "../lib/apiError.js";
 import axios from "axios";
@@ -42,16 +40,12 @@ class StockController {
    */
   async getList(req: Request, res: Response) {
     // Read all stocks from Redis
-    let stocks = (await readAllStocks()).map(
-      (stockEntity) => new Stock(stockEntity)
-    );
+    let stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
 
     // Filter the list of stocks
     if (req.query.name) {
       stocks = stocks.filter((stock) =>
-        (stock.ticker + " " + stock.name)
-          .toLowerCase()
-          .includes((req.query.name as string).toLowerCase().trim())
+        (stock.ticker + " " + stock.name).toLowerCase().includes((req.query.name as string).toLowerCase().trim())
       );
     }
     if (req.query.country) {
@@ -59,9 +53,7 @@ class StockController {
       if (Array.isArray(countryParam)) {
         // Multiple countries can be specified, one of which must match to the stock’s country.
         const countries: Country[] = [];
-        countryParam.forEach(
-          (country) => isCountry(country) && countries.push(country)
-        );
+        countryParam.forEach((country) => isCountry(country) && countries.push(country));
         stocks = stocks.filter((stock) => countries.includes(stock.country));
       }
     }
@@ -70,9 +62,7 @@ class StockController {
       if (Array.isArray(industryParam)) {
         // Multiple industries can be specified, one of which must match to the stock’s industry.
         const industries: Industry[] = [];
-        industryParam.forEach(
-          (industry) => isIndustry(industry) && industries.push(industry)
-        );
+        industryParam.forEach((industry) => isIndustry(industry) && industries.push(industry));
         stocks = stocks.filter((stock) => industries.includes(stock.industry));
       }
     }
@@ -132,8 +122,7 @@ class StockController {
         stocks = stocks.filter(
           (stock) =>
             // smaller is better – use very large number as default value
-            (stock.priceEarningRatio ?? Number.MAX_VALUE) >=
-            priceEarningRatioMin
+            (stock.priceEarningRatio ?? Number.MAX_VALUE) >= priceEarningRatioMin
         );
       }
     }
@@ -143,16 +132,13 @@ class StockController {
         stocks = stocks.filter(
           (stock) =>
             // smaller is better – use very large number as default value
-            (stock.priceEarningRatio ?? Number.MAX_VALUE) <=
-            priceEarningRatioMax
+            (stock.priceEarningRatio ?? Number.MAX_VALUE) <= priceEarningRatioMax
         );
       }
     }
     if (req.query.morningstarFairValueDiffMin !== undefined) {
       // Filter by percentage difference of fair value to last close
-      const morningstarFairValueDiffMin = Number(
-        req.query.morningstarFairValueDiffMin
-      );
+      const morningstarFairValueDiffMin = Number(req.query.morningstarFairValueDiffMin);
       if (!Number.isNaN(morningstarFairValueDiffMin)) {
         stocks = stocks.filter(
           (stock) =>
@@ -165,9 +151,7 @@ class StockController {
     }
     if (req.query.morningstarFairValueDiffMax !== undefined) {
       // Filter by percentage difference of fair value to last close
-      const morningstarFairValueDiffMax = Number(
-        req.query.morningstarFairValueDiffMax
-      );
+      const morningstarFairValueDiffMax = Number(req.query.morningstarFairValueDiffMax);
       if (!Number.isNaN(morningstarFairValueDiffMax)) {
         stocks = stocks.filter(
           (stock) =>
@@ -246,9 +230,8 @@ class StockController {
         stocks = stocks.filter(
           (stock) =>
             // Filter by index in array [AAA, ..., CCC]. Smaller is better – use largest number as default value
-            (stock.msciESGRating
-              ? msciESGRatingArray.indexOf(stock.msciESGRating)
-              : 7) >= msciESGRatingArray.indexOf(msciESGRatingMin)
+            (stock.msciESGRating ? msciESGRatingArray.indexOf(stock.msciESGRating) : 7) >=
+            msciESGRatingArray.indexOf(msciESGRatingMin)
         );
       }
     }
@@ -258,9 +241,8 @@ class StockController {
         stocks = stocks.filter(
           (stock) =>
             // Filter by index in array [AAA, ..., CCC]. Smaller is better – use largest number as default value
-            (stock.msciESGRating
-              ? msciESGRatingArray.indexOf(stock.msciESGRating)
-              : 7) <= msciESGRatingArray.indexOf(msciESGRatingMax)
+            (stock.msciESGRating ? msciESGRatingArray.indexOf(stock.msciESGRating) : 7) <=
+            msciESGRatingArray.indexOf(msciESGRatingMax)
         );
       }
     }
@@ -339,28 +321,22 @@ class StockController {
       }
     }
     if (req.query.sustainalyticsESGRiskMin !== undefined) {
-      const sustainalyticsESGRiskMin = Number(
-        req.query.sustainalyticsESGRiskMin
-      );
+      const sustainalyticsESGRiskMin = Number(req.query.sustainalyticsESGRiskMin);
       if (!Number.isNaN(sustainalyticsESGRiskMin)) {
         stocks = stocks.filter(
           (stock) =>
             // smaller is better – use very large number as default value
-            (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) >=
-            sustainalyticsESGRiskMin
+            (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) >= sustainalyticsESGRiskMin
         );
       }
     }
     if (req.query.sustainalyticsESGRiskMax !== undefined) {
-      const sustainalyticsESGRiskMax = Number(
-        req.query.sustainalyticsESGRiskMax
-      );
+      const sustainalyticsESGRiskMax = Number(req.query.sustainalyticsESGRiskMax);
       if (!Number.isNaN(sustainalyticsESGRiskMax)) {
         stocks = stocks.filter(
           (stock) =>
             // smaller is better – use very large number as default value
-            (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) <=
-            sustainalyticsESGRiskMax
+            (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) <= sustainalyticsESGRiskMax
         );
       }
     }
@@ -427,9 +403,7 @@ class StockController {
     if (sortBy && typeof sortBy === "string" && isSortableAttribute(sortBy)) {
       switch (sortBy) {
         case "name":
-          stocks.sort((a, b) =>
-            a.name.localeCompare(b.name, "en", { usage: "sort" })
-          );
+          stocks.sort((a, b) => a.name.localeCompare(b.name, "en", { usage: "sort" }));
           break;
         case "size":
           stocks.sort(
@@ -456,50 +430,31 @@ class StockController {
         case "msciTemperature":
         case "sustainalyticsESGRisk":
           // smaller is better – use very large number as default value
-          stocks.sort(
-            (a, b) =>
-              (a[sortBy] ?? Number.MAX_VALUE) - (b[sortBy] ?? Number.MAX_VALUE)
-          );
+          stocks.sort((a, b) => (a[sortBy] ?? Number.MAX_VALUE) - (b[sortBy] ?? Number.MAX_VALUE));
           break;
         case "morningstarFairValue":
         case "analystTargetPrice":
           // smaller is better – use very large number as default value
           stocks.sort(
             (a, b) =>
-              (a[sortBy] && a.lastClose
-                ? a.getPercentageToLastClose(sortBy)
-                : /* istanbul ignore next */ // never reached in tests
-                  Number.MAX_VALUE) -
-              (b[sortBy] && b.lastClose
-                ? b.getPercentageToLastClose(sortBy)
-                : /* istanbul ignore next */ // never reached in tests
-                  Number.MAX_VALUE)
+              (a[sortBy] && a.lastClose ? a.getPercentageToLastClose(sortBy) : Number.MAX_VALUE) -
+              (b[sortBy] && b.lastClose ? b.getPercentageToLastClose(sortBy) : Number.MAX_VALUE)
           );
           break;
         case "52w":
           // sort by relative position of last close in 52W range
           stocks.sort(
             (a, b) =>
-              (a.low52w && a.high52w && a.lastClose
-                ? (a.lastClose - a.low52w) / (a.high52w - a.low52w)
-                : /* istanbul ignore next */ // never reached in tests
-                  0) -
-              (b.low52w && b.high52w && b.lastClose
-                ? (b.lastClose - b.low52w) / (b.high52w - b.low52w)
-                : /* istanbul ignore next */ // never reached in tests
-                  0)
+              (a.low52w && a.high52w && a.lastClose ? (a.lastClose - a.low52w) / (a.high52w - a.low52w) : 0) -
+              (b.low52w && b.high52w && b.lastClose ? (b.lastClose - b.low52w) / (b.high52w - b.low52w) : 0)
           );
           break;
         case "msciESGRating":
           // Sort by index in array [AAA, ..., CCC]. Smaller is better – use largest number as default value
           stocks.sort(
             (a, b) =>
-              (a.msciESGRating
-                ? msciESGRatingArray.indexOf(a.msciESGRating)
-                : 7) -
-              (b.msciESGRating
-                ? msciESGRatingArray.indexOf(b.msciESGRating)
-                : 7)
+              (a.msciESGRating ? msciESGRatingArray.indexOf(a.msciESGRating) : 7) -
+              (b.msciESGRating ? msciESGRatingArray.indexOf(b.msciESGRating) : 7)
           );
           break;
         case "financialScore":
@@ -548,9 +503,7 @@ class StockController {
   async getLogo(req: Request, res: Response) {
     const stock = await readStock(req.params[0]);
     let logoResource: Resource;
-    const url = `https://assets.traderepublic.com/img/logos/${stock.isin}/${
-      req.query.dark ? "dark" : "light"
-    }.svg`;
+    const url = `https://assets.traderepublic.com/img/logos/${stock.isin}/${req.query.dark ? "dark" : "light"}.svg`;
     try {
       // Try to read the logo from Redis cache first.
       logoResource = await readResource(url);
@@ -561,8 +514,8 @@ class StockController {
         .then(async (response) => {
           let maxAge: number;
           try {
-            maxAge = // Cache as long as TradeRepublic says using the max-age cache control directive
-              +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
+            // Cache as long as TradeRepublic says using the max-age cache control directive
+            maxAge = +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
             /* istanbul ignore next */ // Difficult to test, since TradeRepublic always returns a valid max-age
             if (Number.isNaN(maxAge)) {
               throw new TypeError();
@@ -603,9 +556,7 @@ class StockController {
       "Cache-Control",
       `max-age=${
         // Allow client-side caching as long as the logo is valid in the cache
-        (60 * 60 * 24 -
-          (new Date().getTime() - logoResource.fetchDate.getTime()) / 1000) |
-        0
+        (60 * 60 * 24 - (new Date().getTime() - logoResource.fetchDate.getTime()) / 1000) | 0
       }`
     );
     return res.status(200).send(logoResource.content);
@@ -632,6 +583,9 @@ class StockController {
    * @throws an {@link APIError} if a stock with the same ticker already exists
    */
   async put(req: Request, res: Response) {
+    if (!res.locals.user.hasAccessRight(WRITE_STOCKS)) {
+      throw new APIError(403, "This user account does not have the necessary access rights to create stocks.");
+    }
     const ticker = req.params[0];
     const { name, country, isin } = req.query;
     if (
@@ -657,31 +611,21 @@ class StockController {
    * @returns {Response} a 204 response if the stock was updated successfully
    */
   async patch(req: Request, res: Response) {
+    if (!res.locals.user.hasAccessRight(WRITE_STOCKS)) {
+      throw new APIError(403, "This user account does not have the necessary access rights to update stocks.");
+    }
     const ticker = req.params[0];
-    const {
-      name,
-      country,
-      morningstarId,
-      marketScreenerId,
-      msciId,
-      ric,
-      spId,
-      sustainalyticsId,
-    } = req.query;
+    const { name, country, morningstarId, marketScreenerId, msciId, ric, spId, sustainalyticsId } = req.query;
     if (
       typeof ticker === "string" &&
       (typeof name === "string" || typeof name === "undefined") &&
-      ((typeof country === "string" && isCountry(country)) ||
-        typeof country === "undefined") &&
-      (typeof morningstarId === "string" ||
-        typeof morningstarId === "undefined") &&
-      (typeof marketScreenerId === "string" ||
-        typeof marketScreenerId === "undefined") &&
+      ((typeof country === "string" && isCountry(country)) || typeof country === "undefined") &&
+      (typeof morningstarId === "string" || typeof morningstarId === "undefined") &&
+      (typeof marketScreenerId === "string" || typeof marketScreenerId === "undefined") &&
       (typeof msciId === "string" || typeof msciId === "undefined") &&
       (typeof ric === "string" || typeof ric === "undefined") &&
       (typeof spId === "number" || typeof spId === "undefined") &&
-      (typeof sustainalyticsId === "string" ||
-        typeof sustainalyticsId === "undefined")
+      (typeof sustainalyticsId === "string" || typeof sustainalyticsId === "undefined")
     ) {
       await updateStock(ticker, {
         name,
@@ -705,6 +649,9 @@ class StockController {
    * @returns {Response} a 204 response if the stock was deleted successfully
    */
   async delete(req: Request, res: Response) {
+    if (!res.locals.user.hasAccessRight(WRITE_STOCKS)) {
+      throw new APIError(403, "This user account does not have the necessary access rights to delete stocks.");
+    }
     await deleteStock(req.params[0]);
     return res.status(204).end();
   }
