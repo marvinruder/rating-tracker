@@ -437,28 +437,16 @@ class StockController {
           // smaller is better – use very large number as default value
           stocks.sort(
             (a, b) =>
-              (a[sortBy] && a.lastClose
-                ? a.getPercentageToLastClose(sortBy)
-                : /* istanbul ignore next */ // never reached in tests
-                  Number.MAX_VALUE) -
-              (b[sortBy] && b.lastClose
-                ? b.getPercentageToLastClose(sortBy)
-                : /* istanbul ignore next */ // never reached in tests
-                  Number.MAX_VALUE)
+              (a[sortBy] && a.lastClose ? a.getPercentageToLastClose(sortBy) : Number.MAX_VALUE) -
+              (b[sortBy] && b.lastClose ? b.getPercentageToLastClose(sortBy) : Number.MAX_VALUE)
           );
           break;
         case "52w":
           // sort by relative position of last close in 52W range
           stocks.sort(
             (a, b) =>
-              (a.low52w && a.high52w && a.lastClose
-                ? (a.lastClose - a.low52w) / (a.high52w - a.low52w)
-                : /* istanbul ignore next */ // never reached in tests
-                  0) -
-              (b.low52w && b.high52w && b.lastClose
-                ? (b.lastClose - b.low52w) / (b.high52w - b.low52w)
-                : /* istanbul ignore next */ // never reached in tests
-                  0)
+              (a.low52w && a.high52w && a.lastClose ? (a.lastClose - a.low52w) / (a.high52w - a.low52w) : 0) -
+              (b.low52w && b.high52w && b.lastClose ? (b.lastClose - b.low52w) / (b.high52w - b.low52w) : 0)
           );
           break;
         case "msciESGRating":

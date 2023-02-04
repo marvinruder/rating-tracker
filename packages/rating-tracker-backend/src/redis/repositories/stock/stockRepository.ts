@@ -137,10 +137,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
                 case "msciESGRating":
                   signalPrefix =
                     // smaller index in array [AAA, ..., CCC] is better
-                    (newValues.msciESGRating
-                      ? msciESGRatingArray.indexOf(newValues.msciESGRating)
-                      : /* istanbul ignore next */ // This never occurs with our test dataset
-                        7) <
+                    (newValues.msciESGRating ? msciESGRatingArray.indexOf(newValues.msciESGRating) : 7) <
                     (stockEntity.msciESGRating
                       ? msciESGRatingArray.indexOf(stockEntity.msciESGRating as MSCIESGRating)
                       : /* istanbul ignore next */ // This never occurs with our test dataset

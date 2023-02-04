@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* istanbul ignore file */ // This file is mocked since tests must not depend on a running Redis instance
 import { UserEntity, userSchema } from "../../../models/user.js";
 import client from "../../Client.js";
 
