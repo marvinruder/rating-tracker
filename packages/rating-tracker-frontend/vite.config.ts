@@ -20,6 +20,12 @@ const renderChunks = (deps: Record<string, string>) => {
 };
 
 const fontCSS = fs.readFileSync("src/fonts.css", "utf8");
+const switchSelectorCSS = fs.readFileSync(
+  "src/components/SwitchSelector/switchSelector.css",
+  "utf8"
+);
+const nprogressCSSPath = require.resolve("nprogress/nprogress.css");
+const nprogressCSS = fs.readFileSync(nprogressCSSPath, "utf8");
 
 export default mergeConfig(
   defineViteConfig({
@@ -60,6 +66,8 @@ export default mergeConfig(
                 ? '<script src="http://localhost:8097"></script>'
                 : "",
             fontsCSS: `<style type="text/css">${fontCSS}</style>`,
+            switchSelectorCSS: `<style type="text/css">${switchSelectorCSS}</style>`,
+            nprogressCSS: `<style type="text/css">${nprogressCSS}</style>`,
           },
         },
         verbose: process.env.NODE_ENV === "development",
