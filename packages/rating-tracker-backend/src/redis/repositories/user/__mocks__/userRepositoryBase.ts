@@ -16,7 +16,7 @@ export const initUserRepository = () => {
       name: "Jane Doe",
       avatar: "data:image/jpeg;base64,U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U=",
       phone: "123456789",
-      accessRights: 1,
+      accessRights: 255,
       credentialID: "exampleCredentialID",
       credentialPublicKey: "exampleCredentialPublicKey",
       counter: 0,

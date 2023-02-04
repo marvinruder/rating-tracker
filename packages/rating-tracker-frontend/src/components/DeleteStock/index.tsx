@@ -1,11 +1,5 @@
 import LoadingButton from "@mui/lab/LoadingButton";
-import {
-  DialogTitle,
-  Typography,
-  DialogContent,
-  DialogActions,
-  Button,
-} from "@mui/material";
+import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Stock } from "rating-tracker-commons";
 import { useState } from "react";
@@ -60,8 +54,8 @@ const DeleteStock = (props: DeleteStockProps): JSX.Element => {
         <Typography variant="h3">Delete Stock “{props.stock.name}”</Typography>
       </DialogTitle>
       <DialogContent>
-        Do you really want to delete the Stock “{props.stock.name}” (
-        {props.stock.ticker})? This action cannot be reversed.
+        Do you really want to delete the Stock “{props.stock.name}” ({props.stock.ticker})? This action cannot be
+        reversed.
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 0 }}>
         <Button onClick={props.onClose}>Cancel</Button>

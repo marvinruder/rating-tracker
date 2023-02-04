@@ -7,15 +7,11 @@ import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import { createSession } from "../redis/repositories/session/sessionRepository.js";
-import { GENERAL_ACCESS } from "../lib/accessRights.js";
 import APIError from "../lib/apiError.js";
-import {
-  createUser,
-  readUser,
-  updateUser,
-  userExists,
-} from "../redis/repositories/user/userRepository.js";
+import { createUser, readUser, updateUser, userExists } from "../redis/repositories/user/userRepository.js";
 import { sessionTTLInSeconds } from "../redis/repositories/session/sessionRepositoryBase.js";
+import { GENERAL_ACCESS } from "rating-tracker-commons";
+import { User } from "../models/user.js";
 
 dotenv.config({
   path: ".env.local",
@@ -24,9 +20,7 @@ dotenv.config({
 const rpName = "Rating Tracker";
 // Using only the domain name allows us to use the same code for several subdomains.
 const rpID = process.env.DOMAIN;
-const origin = `https://${
-  process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""
-}${rpID}`;
+const origin = `https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${rpID}`;
 
 // Stores all challenges between the client’s GET request to get such challenge and their POST request with the
 // challenge response. Those are only required to be stored for a short time, so we can use a simple object here.
@@ -50,10 +44,7 @@ class AuthController {
     // Users are required to provide an email address and a name to register.
     if (typeof email === "string" && typeof name === "string") {
       if (await userExists(email)) {
-        throw new APIError(
-          403,
-          "This email address is already registered. Please sign in."
-        );
+        throw new APIError(403, "This email address is already registered. Please sign in.");
       }
       // We generate the registration options and store the challenge for later verification.
       const options = SimpleWebAuthnServer.generateRegistrationOptions({
@@ -113,20 +104,18 @@ class AuthController {
         verified &&
         // We attempt to create a new user with the provided information.
         // If the user already exists, createUser(…)  will return false and we throw an error.
-        !(await createUser({
-          email,
-          name,
-          accessRights: 0, // Users need to be manually approved before they can access the app.
-          credentialID: Buffer.from(credentialID).toString("base64"),
-          credentialPublicKey:
-            Buffer.from(credentialPublicKey).toString("base64"),
-          counter,
-        }))
+        !(await createUser(
+          new User({
+            email,
+            name,
+            accessRights: 0, // Users need to be manually approved before they can access the app.
+            credentialID: Buffer.from(credentialID).toString("base64"),
+            credentialPublicKey: Buffer.from(credentialPublicKey).toString("base64"),
+            counter,
+          })
+        ))
       ) {
-        throw new APIError(
-          403,
-          "This email address is already registered. Please sign in."
-        );
+        throw new APIError(403, "This email address is already registered. Please sign in.");
       }
       if (verified) {
         return res.sendStatus(201);
@@ -193,7 +182,7 @@ class AuthController {
     const { newCounter } = authenticationInfo;
     if (verified) {
       // We use bitwise AND to check if the user has the GENERAL_ACCESS bit set.
-      if ((user.accessRights & GENERAL_ACCESS) == 0) {
+      if (!user.hasAccessRight(GENERAL_ACCESS)) {
         throw new APIError(403, "This user account is not yet activated.");
       }
       // The counter variable will increment if the client’s authenticator tracks the number of authentications.

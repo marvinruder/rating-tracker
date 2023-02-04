@@ -14,9 +14,7 @@ import { StockListColumn, stockListColumnArray } from "rating-tracker-commons";
  */
 const StocklistModule = (): JSX.Element => {
   const [filter, setFilter] = useState<StockFilter>({});
-  const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([
-    ...stockListColumnArray,
-  ]);
+  const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
 
   const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
 
@@ -46,11 +44,7 @@ const StocklistModule = (): JSX.Element => {
       </PageTitleWrapper>
       <Container maxWidth={false}>
         <Card>
-          <StocksTable
-            filter={filter}
-            triggerRefetch={refetchTrigger}
-            columns={columnFilter}
-          />
+          <StocksTable filter={filter} triggerRefetch={refetchTrigger} columns={columnFilter} />
         </Card>
       </Container>
       <Footer />

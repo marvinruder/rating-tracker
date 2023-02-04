@@ -39,20 +39,14 @@ const colors = {
     black2: "linear-gradient(60deg, #29323c 0%, #485563 100%)",
   },
   shadows: {
-    success:
-      "0px 1px 4px rgba(68, 214, 0, 0.25), 0px 3px 12px 2px rgba(68, 214, 0, 0.35)",
-    error:
-      "0px 1px 4px rgba(255, 25, 67, 0.25), 0px 3px 12px 2px rgba(255, 25, 67, 0.35)",
+    success: "0px 1px 4px rgba(68, 214, 0, 0.25), 0px 3px 12px 2px rgba(68, 214, 0, 0.35)",
+    error: "0px 1px 4px rgba(255, 25, 67, 0.25), 0px 3px 12px 2px rgba(255, 25, 67, 0.35)",
     info: "0px 1px 4px rgba(51, 194, 255, 0.25), 0px 3px 12px 2px rgba(51, 194, 255, 0.35)",
-    primary:
-      "0px 1px 4px rgba(36, 122, 242, 0.25), 0px 3px 12px 2px rgba(36, 122, 242, 0.35)",
-    warning:
-      "0px 1px 4px rgba(255, 163, 25, 0.25), 0px 3px 12px 2px rgba(255, 163, 25, 0.35)",
+    primary: "0px 1px 4px rgba(36, 122, 242, 0.25), 0px 3px 12px 2px rgba(36, 122, 242, 0.35)",
+    warning: "0px 1px 4px rgba(255, 163, 25, 0.25), 0px 3px 12px 2px rgba(255, 163, 25, 0.35)",
     card: "0px 9px 16px rgba(176, 176, 176, .18), 0px 2px 2px rgba(176, 176, 176, 0.32)",
-    cardSm:
-      "0px 2px 3px rgba(176, 176, 176, .18), 0px 1px 1px rgba(176, 176, 176, 0.32)",
-    cardLg:
-      "0 5rem 14rem 0 rgb(255 255 255 / 30%), 0 0.8rem 2.3rem rgb(0 0 0 / 60%), 0 0.2rem 0.3rem rgb(0 0 0 / 45%)",
+    cardSm: "0px 2px 3px rgba(176, 176, 176, .18), 0px 1px 1px rgba(176, 176, 176, 0.32)",
+    cardLg: "0 5rem 14rem 0 rgb(255 255 255 / 30%), 0 0.8rem 2.3rem rgb(0 0 0 / 60%), 0 0.2rem 0.3rem rgb(0 0 0 / 45%)",
   },
   layout: {
     general: {
@@ -284,8 +278,7 @@ const PureLightTheme = createTheme({
     menuItemIconColor: colors.layout.sidebar.menuItemIconColor,
     menuItemIconColorActive: colors.layout.sidebar.menuItemIconColorActive,
     menuItemHeadingColor: colors.layout.sidebar.menuItemHeadingColor,
-    boxShadow:
-      "2px 0 3px rgba(176, 176, 176, .18), 1px 0 1px rgba(176, 176, 176, 0.32)",
+    boxShadow: "2px 0 3px rgba(176, 176, 176, .18), 1px 0 1px rgba(176, 176, 176, 0.32)",
     width: "290px",
   },
   header: {
@@ -435,11 +428,7 @@ const PureLightTheme = createTheme({
           // borderLeftColor: colors.primary.lighter,
         },
         "#nprogress .peg": {
-          boxShadow:
-            "0 0 15px " +
-            colors.primary.lighter +
-            ", 0 0 8px" +
-            colors.primary.light,
+          boxShadow: "0 0 15px " + colors.primary.lighter + ", 0 0 8px" + colors.primary.light,
         },
         ":root": {
           "--swiper-theme-color": colors.primary.main,
@@ -951,10 +940,9 @@ const PureLightTheme = createTheme({
           margin: 1,
         },
         root: {
-          ".MuiAutocomplete-inputRoot.MuiOutlinedInput-root .MuiAutocomplete-endAdornment":
-            {
-              right: 14,
-            },
+          ".MuiAutocomplete-inputRoot.MuiOutlinedInput-root .MuiAutocomplete-endAdornment": {
+            right: 14,
+          },
         },
         clearIndicator: {
           background: colors.error.lighter,
@@ -1112,8 +1100,7 @@ const PureLightTheme = createTheme({
           "& .MuiButtonBase-root": {
             position: "absolute",
             padding: 6,
-            transition:
-              "left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+            transition: "left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
           },
           "& .MuiIconButton-root": {
             borderRadius: 100,
@@ -1124,11 +1111,7 @@ const PureLightTheme = createTheme({
         },
         thumb: {
           border: "1px solid " + colors.alpha.black[30],
-          boxShadow:
-            "0px 9px 14px " +
-            colors.alpha.black[10] +
-            ", 0px 2px 2px " +
-            colors.alpha.black[10],
+          boxShadow: "0px 9px 14px " + colors.alpha.black[10] + ", 0px 2px 2px " + colors.alpha.black[10],
         },
         track: {
           backgroundColor: colors.alpha.black[5],

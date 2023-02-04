@@ -56,21 +56,15 @@ server.app.disable("x-powered-by");
 const staticContentPath = path.join(__dirname, "..", "..", "public");
 
 /* istanbul ignore next */ // This is not tested because it is only used in development servers
-if (
-  !process.env.AUTO_FETCH_SCHEDULE ||
-  process.env.NODE_ENV === "development"
-) {
+if (!process.env.AUTO_FETCH_SCHEDULE || process.env.NODE_ENV === "development") {
   server.app.use(
     "/assets/images/favicon",
     // Serve different favicons to easily distinguish between development and production servers.
-    express.static(
-      path.join(staticContentPath, "assets", "images", "favicon-dev"),
-      {
-        dotfiles: "ignore",
-        lastModified: false,
-        maxAge: "1 year",
-      }
-    )
+    express.static(path.join(staticContentPath, "assets", "images", "favicon-dev"), {
+      dotfiles: "ignore",
+      lastModified: false,
+      maxAge: "1 year",
+    })
   );
 }
 
@@ -108,17 +102,13 @@ const highlightMethod = (method: string) => {
     case "GET":
       return chalk.whiteBright.bgBlue(` ${method} `) + chalk.blue.bgGrey("");
     case "HEAD":
-      return (
-        chalk.whiteBright.bgMagenta(` ${method} `) + chalk.magenta.bgGrey("")
-      );
+      return chalk.whiteBright.bgMagenta(` ${method} `) + chalk.magenta.bgGrey("");
     case "POST":
       return chalk.whiteBright.bgGreen(` ${method} `) + chalk.green.bgGrey("");
     case "PUT":
       return chalk.black.bgYellow(` ${method} `) + chalk.yellow.bgGrey("");
     case "PATCH":
-      return (
-        chalk.black.bgCyanBright(` ${method} `) + chalk.cyanBright.bgGrey("")
-      );
+      return chalk.black.bgCyanBright(` ${method} `) + chalk.cyanBright.bgGrey("");
     case "DELETE":
       return chalk.whiteBright.bgRed(` ${method} `) + chalk.red.bgGrey("");
     default:
@@ -212,33 +202,20 @@ server.app.use(
             highlightMethod(req.method) + // HTTP request method
             chalk.bgGrey(
               ` ${req.originalUrl // URL path
-                .slice(
-                  1,
-                  req.originalUrl.indexOf("?") == -1
-                    ? undefined
-                    : req.originalUrl.indexOf("?")
-                )
+                .slice(1, req.originalUrl.indexOf("?") == -1 ? undefined : req.originalUrl.indexOf("?"))
                 .replaceAll("/", "  ")} `
             ) +
             chalk.grey("") +
             Object.entries(req.cookies) // Cookies
               .map(
                 ([key, value]) =>
-                  "\n ├─" +
-                  chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) +
-                  chalk.grey("") +
-                  " " +
-                  value
+                  "\n ├─" + chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) + chalk.grey("") + " " + value
               )
               .join(" ") +
             Object.entries(req.query) // Query parameters
               .map(
                 ([key, value]) =>
-                  "\n ├─" +
-                  chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) +
-                  chalk.grey("") +
-                  " " +
-                  value
+                  "\n ├─" + chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) + chalk.grey("") + " " + value
               )
               .join(" ") +
             "\n ╰─" +
@@ -268,16 +245,12 @@ server.app.use(
     if (
       // Check if the user is authenticated and has the required access rights for private endpoints
       (res.locals.user && res.locals.user.accessRights > 0) ||
-      req.cookies.bypassAuthenticationForInternalRequestsToken ===
-        bypassAuthenticationForInternalRequestsToken
+      req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken
     ) {
       next();
     } else {
       // If not, send a 401 response
-      throw new APIError(
-        401,
-        "This endpoint is available to authenticated clients only. Please sign in."
-      );
+      throw new APIError(401, "This endpoint is available to authenticated clients only. Please sign in.");
     }
   },
   server.router.private // If the user is properly authenticated, forward requests to private endpoints to the router
@@ -306,51 +279,39 @@ if (process.env.AUTO_FETCH_SCHEDULE) {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },
       });
-      await axios.get(
-        `http://localhost:${process.env.PORT}/api/fetch/refinitiv`,
-        {
-          params: { detach: "true" },
-          headers: {
-            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-          },
-        }
-      );
+      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/refinitiv`, {
+        params: { detach: "true" },
+        headers: {
+          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+        },
+      });
       await axios.get(`http://localhost:${process.env.PORT}/api/fetch/sp`, {
         params: { detach: "true" },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },
       });
-      await axios.get(
-        `http://localhost:${process.env.PORT}/api/fetch/sustainalytics`,
-        {
-          params: { detach: "true" },
-          headers: {
-            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-          },
-        }
-      );
+      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/sustainalytics`, {
+        params: { detach: "true" },
+        headers: {
+          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+        },
+      });
       // Fetch data from Morningstar first
-      await axios.get(
-        `http://localhost:${process.env.PORT}/api/fetch/morningstar`,
-        {
-          params: { detach: "false" },
-          headers: {
-            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-          },
-        }
-      );
+      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/morningstar`, {
+        params: { detach: "false" },
+        headers: {
+          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+        },
+      });
       // Fetch data from Marketscreener after Morningstar, so Market Screener can use the up-to-date Last Close price to
       // calculate the analyst target price properly
-      await axios.get(
-        `http://localhost:${process.env.PORT}/api/fetch/marketscreener`,
-        {
-          params: { detach: "true" },
-          headers: {
-            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-          },
-        }
-      );
+      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/marketscreener`, {
+        params: { detach: "true" },
+        headers: {
+          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+        },
+      });
     },
     null,
     true
@@ -361,9 +322,7 @@ if (process.env.AUTO_FETCH_SCHEDULE) {
       chalk.green.bgGrey("") +
       chalk.whiteBright.bgGrey(` Auto Fetch activated `) +
       chalk.grey("") +
-      chalk.green(
-        " This instance will periodically fetch information from data providers for all known stocks."
-      )
+      chalk.green(" This instance will periodically fetch information from data providers for all known stocks.")
   );
   logger.info("");
 }

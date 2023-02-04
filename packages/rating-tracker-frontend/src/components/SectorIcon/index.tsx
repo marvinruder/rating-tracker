@@ -1,10 +1,6 @@
 /* eslint-disable max-len */
 import { FC } from "react";
-import {
-  groupOfIndustry,
-  sectorOfIndustryGroup,
-  superSectorOfSector,
-} from "rating-tracker-commons";
+import { groupOfIndustry, sectorOfIndustryGroup, superSectorOfSector } from "rating-tracker-commons";
 import { Industry } from "rating-tracker-commons";
 import { useTheme } from "@mui/material";
 
@@ -14,17 +10,10 @@ import { useTheme } from "@mui/material";
  * @param {SectorIconProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const SectorIcon: FC<SectorIconProps> = (
-  props: SectorIconProps
-): JSX.Element => {
+const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps): JSX.Element => {
   const theme = useTheme();
   const color: React.CSSProperties["color"] =
-    props.color ||
-    theme.colors.sector[
-      superSectorOfSector[
-        sectorOfIndustryGroup[groupOfIndustry[props.industry]]
-      ]
-    ];
+    props.color || theme.colors.sector[superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.industry]]]];
 
   /**
    * Provides the SVG paths for the icon.
@@ -34,11 +23,7 @@ const SectorIcon: FC<SectorIconProps> = (
   const getPaths = (): JSX.Element => {
     switch (props.type) {
       case "SuperSector":
-        switch (
-          superSectorOfSector[
-            sectorOfIndustryGroup[groupOfIndustry[props.industry]]
-          ]
-        ) {
+        switch (superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.industry]]]) {
           case "Cyclical":
             return (
               <path
@@ -116,12 +101,7 @@ const SectorIcon: FC<SectorIconProps> = (
               ></path>
             );
           case "Healthcare":
-            return (
-              <path
-                stroke="none"
-                d="M1 1.083v13h13v-13zm11 8H9v3H6v-3H3v-3h3v-3h3v3h3z"
-              ></path>
-            );
+            return <path stroke="none" d="M1 1.083v13h13v-13zm11 8H9v3H6v-3H3v-3h3v-3h3v3h3z"></path>;
           case "Industrials":
             return (
               <path

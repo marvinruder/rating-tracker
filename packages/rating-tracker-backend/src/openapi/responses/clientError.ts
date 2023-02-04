@@ -95,12 +95,4 @@ const tooManyRequestsJSONError: OpenAPIV3.ResponseObject = {
   },
 };
 
-export {
-  badRequest,
-  unauthorized,
-  forbidden,
-  notFound,
-  conflict,
-  tooManyRequestsHTML,
-  tooManyRequestsJSONError,
-};
+export { badRequest, unauthorized, forbidden, notFound, conflict, tooManyRequestsHTML, tooManyRequestsJSONError };

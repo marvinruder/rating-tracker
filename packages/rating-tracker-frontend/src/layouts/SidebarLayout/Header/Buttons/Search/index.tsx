@@ -1,11 +1,4 @@
-import React, {
-  forwardRef,
-  Ref,
-  useState,
-  ReactElement,
-  ChangeEvent,
-  useEffect,
-} from "react";
+import React, { forwardRef, Ref, useState, ReactElement, ChangeEvent, useEffect } from "react";
 import {
   Avatar,
   Box,
@@ -29,12 +22,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import SearchIcon from "@mui/icons-material/Search";
 
 import axios from "axios";
-import {
-  baseUrl,
-  logoEndpoint,
-  stockAPI,
-  stockListEndpoint,
-} from "../../../../../endpoints";
+import { baseUrl, logoEndpoint, stockAPI, stockListEndpoint } from "../../../../../endpoints";
 import { emojiFlag, Stock } from "rating-tracker-commons";
 import useNotification from "../../../../../helpers/useNotification";
 import SectorIcon from "../../../../../components/SectorIcon/";
@@ -97,8 +85,7 @@ const HeaderSearch = (): JSX.Element => {
      * @param {KeyboardEvent} e The keyboard event.
      * @returns {boolean} Whether the search shortcut was pressed.
      */
-    const isSearchShortcut = (e: KeyboardEvent) =>
-      (e.ctrlKey || e.metaKey) && (e.key === "f" || e.key === "F");
+    const isSearchShortcut = (e: KeyboardEvent) => (e.ctrlKey || e.metaKey) && (e.key === "f" || e.key === "F");
 
     /**
      * Opens the search bar when the search shortcut is pressed.
@@ -277,19 +264,11 @@ const HeaderSearch = (): JSX.Element => {
           <DialogContent sx={{ maxHeight: "calc(100vh - 240px)" }}>
             {searchValue && (
               <>
-                <Box
-                  sx={{ pt: 0, pb: 1 }}
-                  display="flex"
-                  justifyContent="space-between"
-                >
+                <Box sx={{ pt: 0, pb: 1 }} display="flex" justifyContent="space-between">
                   <Typography variant="body2" component="span">
                     {stocksFinal ? (
                       <>
-                        <Typography
-                          sx={{ fontWeight: "bold" }}
-                          variant="body1"
-                          component="span"
-                        >
+                        <Typography sx={{ fontWeight: "bold" }} variant="body1" component="span">
                           {count}
                         </Typography>{" "}
                         search results
@@ -298,11 +277,7 @@ const HeaderSearch = (): JSX.Element => {
                       "Searching"
                     )}{" "}
                     for{" "}
-                    <Typography
-                      sx={{ fontWeight: "bold" }}
-                      variant="body1"
-                      component="span"
-                    >
+                    <Typography sx={{ fontWeight: "bold" }} variant="body1" component="span">
                       {searchValue}
                     </Typography>
                     {!stocksFinal && "…"}
@@ -339,9 +314,7 @@ const HeaderSearch = (): JSX.Element => {
                               baseUrl +
                               stockAPI +
                               logoEndpoint +
-                              `/${stock.ticker}?dark=${
-                                theme.palette.mode === "dark"
-                              }`
+                              `/${stock.ticker}?dark=${theme.palette.mode === "dark"}`
                             }
                             alt=" "
                           />
@@ -356,11 +329,7 @@ const HeaderSearch = (): JSX.Element => {
                           {emojiFlag(stock.country)}
                         </Typography>
                         <Box width={24} height={24} ml={1}>
-                          <SectorIcon
-                            industry={stock.industry}
-                            length={24}
-                            type={"Sector"}
-                          />
+                          <SectorIcon industry={stock.industry} length={24} type={"Sector"} />
                         </Box>
                       </ListItem>
                       <Divider component="li" />
@@ -376,18 +345,8 @@ const HeaderSearch = (): JSX.Element => {
                           <Skeleton variant="text" width="100%" />
                           <Skeleton variant="text" width={40} />
                         </Box>
-                        <Skeleton
-                          variant="rectangular"
-                          width={24}
-                          height={24}
-                          sx={{ ml: 1 }}
-                        />
-                        <Skeleton
-                          variant="rectangular"
-                          width={24}
-                          height={24}
-                          sx={{ ml: 1 }}
-                        />
+                        <Skeleton variant="rectangular" width={24} height={24} sx={{ ml: 1 }} />
+                        <Skeleton variant="rectangular" width={24} height={24} sx={{ ml: 1 }} />
                       </ListItem>
                       <Divider component="li" />
                     </React.Fragment>

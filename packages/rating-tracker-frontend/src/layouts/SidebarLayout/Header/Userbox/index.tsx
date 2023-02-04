@@ -58,12 +58,7 @@ const HeaderUserbox = (): JSX.Element => {
       <Tooltip arrow title="Open Profile Settings">
         <Box display="inline-block">
           {/* Box required for tooltip to work on disabled button */}
-          <Button
-            color="secondary"
-            sx={{ px: 1 }}
-            onClick={() => setOpen(true)}
-            disabled={!user}
-          >
+          <Button color="secondary" sx={{ px: 1 }} onClick={() => setOpen(true)} disabled={!user}>
             {user ? (
               <Avatar variant="rounded" alt={user.name} src={user.avatar} />
             ) : (
@@ -71,12 +66,7 @@ const HeaderUserbox = (): JSX.Element => {
             )}
             <Hidden mdDown>
               <Box pl={1} textAlign="left">
-                <Typography
-                  variant="body1"
-                  fontWeight="bold"
-                  color="text.primary"
-                  noWrap
-                >
+                <Typography variant="body1" fontWeight="bold" color="text.primary" noWrap>
                   {user ? user.name : <Skeleton width={120} />}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" noWrap>

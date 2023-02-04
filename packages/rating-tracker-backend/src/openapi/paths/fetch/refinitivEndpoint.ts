@@ -1,11 +1,7 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 import * as fetch from "../../parameters/fetch.js";
 import * as stock from "../../parameters/stock.js";
-import {
-  notFound,
-  tooManyRequestsJSONError,
-  unauthorized,
-} from "../../responses/clientError.js";
+import { forbidden, notFound, tooManyRequestsJSONError, unauthorized } from "../../responses/clientError.js";
 import { badGateway } from "../../responses/serverError.js";
 import { accepted, noContent, okStockList } from "../../responses/success.js";
 
@@ -32,6 +28,7 @@ const get: OpenAPIV3.OperationObject = {
     "202": accepted,
     "204": noContent,
     "401": unauthorized,
+    "403": forbidden,
     "404": notFound,
     "429": tooManyRequestsJSONError,
     "502": badGateway,

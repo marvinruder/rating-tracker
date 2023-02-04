@@ -167,26 +167,14 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               />
             )}
             <Box width="100%" display="flex" justifyContent="center" mt={1}>
-              <Tooltip
-                title={user.avatar ? "Change your avatar" : "Upload an avatar"}
-                arrow
-              >
+              <Tooltip title={user.avatar ? "Change your avatar" : "Upload an avatar"} arrow>
                 <IconButton color="primary" component="label">
-                  <input
-                    hidden
-                    accept="image/*"
-                    type="file"
-                    onChange={uploadAvatar}
-                  />
+                  <input hidden accept="image/*" type="file" onChange={uploadAvatar} />
                   <AddAPhotoIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Delete your avatar" arrow>
-                <IconButton
-                  color="error"
-                  sx={{ ml: 1, display: !avatar && "none" }}
-                  onClick={() => setAvatar("")}
-                >
+                <IconButton color="error" sx={{ ml: 1, display: !avatar && "none" }} onClick={() => setAvatar("")}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
@@ -204,16 +192,8 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               pr="24px"
             >
               <Grid item xs={12}>
-                <Tooltip
-                  title="To change your email address, please contact your administrator."
-                  arrow
-                >
-                  <TextField
-                    label="Email address"
-                    value={user.email}
-                    disabled
-                    fullWidth
-                  />
+                <Tooltip title="To change your email address, please contact your administrator." arrow>
+                  <TextField label="Email address" value={user.email} disabled fullWidth />
                 </Tooltip>
               </Grid>
               <Grid item xs={12}>

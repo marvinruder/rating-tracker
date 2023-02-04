@@ -11,12 +11,7 @@ import logger, { PREFIX_SIGNAL } from "../lib/logger.js";
  * @param {string} number The number from which to send the message.
  * @param {string[]} recipients The recipients to send the message to.
  */
-export const send = (
-  url: string,
-  message: string,
-  number: string,
-  recipients: string[]
-) => {
+export const send = (url: string, message: string, number: string, recipients: string[]) => {
   axios
     .post(url + "/v2/send", {
       message: message,
@@ -26,9 +21,7 @@ export const send = (
     .catch((error) => {
       (
         PREFIX_SIGNAL +
-        chalk.redBright(
-          `Failed to send the message below from ${number} to ${recipients}: ${error}\n${message}`
-        )
+        chalk.redBright(`Failed to send the message below from ${number} to ${recipients}: ${error}\n${message}`)
       )
         .split("\n") // Show newlines in the log in a pretty way
         .forEach((line) => logger.error(line));

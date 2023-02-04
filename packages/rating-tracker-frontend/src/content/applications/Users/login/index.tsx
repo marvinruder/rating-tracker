@@ -1,23 +1,10 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { useState } from "react";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import axios, { AxiosError } from "axios";
-import {
-  authAPI,
-  baseUrl,
-  registerEndpoint,
-  signInEndpoint,
-} from "../../../../endpoints";
+import { authAPI, baseUrl, registerEndpoint, signInEndpoint } from "../../../../endpoints";
 import SwitchSelector from "../../../../components/SwitchSelector";
 import { useNavigate } from "react-router";
 import useNotification from "../../../../helpers/useNotification";
@@ -42,9 +29,7 @@ const LoginApp = (): JSX.Element => {
    * @returns {boolean} Whether the email input field contains a valid email address.
    */
   const validateEmail = () => {
-    return (
-      document.getElementById("inputEmail") as HTMLInputElement
-    ).reportValidity();
+    return (document.getElementById("inputEmail") as HTMLInputElement).reportValidity();
   };
 
   /**
@@ -53,9 +38,7 @@ const LoginApp = (): JSX.Element => {
    * @returns {boolean} Whether the name input field contains a valid name.
    */
   const validateName = () => {
-    return (
-      document.getElementById("inputName") as HTMLInputElement
-    ).reportValidity();
+    return (document.getElementById("inputName") as HTMLInputElement).reportValidity();
   };
 
   /**
@@ -99,9 +82,7 @@ const LoginApp = (): JSX.Element => {
               params: { email, name },
             });
             // Ask the browser to perform the WebAuthn registration and store a corresponding credential
-            const authRes = await SimpleWebAuthnBrowser.startRegistration(
-              res.data
-            );
+            const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
             try {
               // Send the registration challenge response to the server
               await axios.post(baseUrl + authAPI + registerEndpoint, authRes, {
@@ -129,9 +110,7 @@ const LoginApp = (): JSX.Element => {
           // Request authentication challenge
           const res = await axios.get(baseUrl + authAPI + signInEndpoint);
           // Ask the browser to perform the WebAuthn authentication
-          const authRes = await SimpleWebAuthnBrowser.startAuthentication(
-            res.data
-          );
+          const authRes = await SimpleWebAuthnBrowser.startAuthentication(res.data);
           try {
             // Send the authentication challenge response to the server
             await axios.post(

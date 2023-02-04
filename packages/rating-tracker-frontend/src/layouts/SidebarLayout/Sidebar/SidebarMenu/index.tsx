@@ -1,14 +1,6 @@
 import { useContext } from "react";
 
-import {
-  ListSubheader,
-  alpha,
-  Box,
-  List,
-  styled,
-  Button,
-  ListItem,
-} from "@mui/material";
+import { ListSubheader, alpha, Box, List, styled, Button, ListItem } from "@mui/material";
 import { NavLink as RouterLink } from "react-router-dom";
 import SidebarContext from "../../../../contexts/SidebarContext";
 
@@ -134,10 +126,7 @@ const SubMenuWrapper = styled(Box)(
                 content: ' ';
                 background: ${theme.colors.alpha.trueWhite[100]};
                 opacity: 0;
-                transition: ${theme.transitions.create([
-                  "transform",
-                  "opacity",
-                ])};
+                transition: ${theme.transitions.create(["transform", "opacity"])};
                 width: 6px;
                 height: 6px;
                 transform: scale(0);

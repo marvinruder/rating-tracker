@@ -10,14 +10,10 @@ dotenv.config({
   path: ".env.local",
 });
 
-export const PREFIX_NODEJS =
-  chalk.whiteBright.bgGreen(" \uf898 ") + chalk.green(" ");
-export const PREFIX_REDIS =
-  chalk.whiteBright.bgRed(" \ue76d ") + chalk.red(" ");
-export const PREFIX_CHROME =
-  chalk.whiteBright.bgBlueBright(" \ufc0d ") + chalk.blueBright(" ");
-export const PREFIX_SIGNAL =
-  chalk.whiteBright.bgBlue(" \uf868 ") + chalk.blue(" ");
+export const PREFIX_NODEJS = chalk.whiteBright.bgGreen(" \uf898 ") + chalk.green(" ");
+export const PREFIX_REDIS = chalk.whiteBright.bgRed(" \ue76d ") + chalk.red(" ");
+export const PREFIX_CHROME = chalk.whiteBright.bgBlueBright(" \ufc0d ") + chalk.blueBright(" ");
+export const PREFIX_SIGNAL = chalk.whiteBright.bgBlue(" \uf868 ") + chalk.blue(" ");
 
 const levelIcons = {
   10: chalk.gray(" \uf002 "),
@@ -44,9 +40,10 @@ const prettyStream = pretty({
  * @returns {string} The path of the log file.
  */
 const getLogFilePath = () => {
-  return (
-    process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).log"
-  ).replaceAll("(DATE)", new Date().toISOString().split("T")[0]);
+  return (process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).log").replaceAll(
+    "(DATE)",
+    new Date().toISOString().split("T")[0]
+  );
 };
 
 /**
@@ -92,9 +89,7 @@ new cron.CronJob(
   () => {
     fileStream.end();
     fileStream = getNewFileStream();
-    multistream.streams.find(
-      (stream) => stream.stream instanceof fs.WriteStream
-    ).stream = fileStream;
+    multistream.streams.find((stream) => stream.stream instanceof fs.WriteStream).stream = fileStream;
   },
   null,
   true

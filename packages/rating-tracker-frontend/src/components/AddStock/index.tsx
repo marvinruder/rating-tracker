@@ -31,13 +31,7 @@ import {
   stockAPI,
   sustainalyticsEndpoint,
 } from "../../endpoints";
-import {
-  countryArray,
-  countryName,
-  countryNameWithFlag,
-  isCountry,
-  Stock,
-} from "rating-tracker-commons";
+import { countryArray, countryName, countryNameWithFlag, isCountry, Stock } from "rating-tracker-commons";
 import { useState } from "react";
 import useNotification from "../../helpers/useNotification";
 import StockDetails from "../StockDetails";
@@ -65,34 +59,22 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [isinError, setIsinError] = useState<boolean>(false); // Error in the ISIN text field.
   const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
-  const [morningstarIdRequestInProgress, setMorningstarIdRequestInProgress] =
-    useState<boolean>(false);
+  const [morningstarIdRequestInProgress, setMorningstarIdRequestInProgress] = useState<boolean>(false);
   // Whether the Morningstar ID has been transmitted to the server.
   const [morningstarIdSet, setMorningstarIdSet] = useState<boolean>(false);
-  const [
-    marketScreenerIdRequestInProgress,
-    setMarketScreenerIdRequestInProgress,
-  ] = useState<boolean>(false);
+  const [marketScreenerIdRequestInProgress, setMarketScreenerIdRequestInProgress] = useState<boolean>(false);
   // Whether the Market Screener ID has been transmitted to the server.
-  const [marketScreenerIdSet, setMarketScreenerIdSet] =
-    useState<boolean>(false);
-  const [msciIdRequestInProgress, setMsciIdRequestInProgress] =
-    useState<boolean>(false);
+  const [marketScreenerIdSet, setMarketScreenerIdSet] = useState<boolean>(false);
+  const [msciIdRequestInProgress, setMsciIdRequestInProgress] = useState<boolean>(false);
   const [msciIdSet, setMsciIdSet] = useState<boolean>(false); // Whether the MSCI ID has been transmitted to the server.
   const { setNotification } = useNotification();
-  const [ricRequestInProgress, setRicRequestInProgress] =
-    useState<boolean>(false);
+  const [ricRequestInProgress, setRicRequestInProgress] = useState<boolean>(false);
   const [ricSet, setRicSet] = useState<boolean>(false); //
-  const [spIdRequestInProgress, setSpIdRequestInProgress] =
-    useState<boolean>(false);
+  const [spIdRequestInProgress, setSpIdRequestInProgress] = useState<boolean>(false);
   const [spIdSet, setSpIdSet] = useState<boolean>(false); // Whether the S&P ID has been transmitted to the server.
-  const [
-    sustainalyticsIdRequestInProgress,
-    setSustainalyticsIdRequestInProgress,
-  ] = useState<boolean>(false);
+  const [sustainalyticsIdRequestInProgress, setSustainalyticsIdRequestInProgress] = useState<boolean>(false);
   // Whether the Sustainalytics ID has been transmitted to the server.
-  const [sustainalyticsIdSet, setSustainalyticsIdSet] =
-    useState<boolean>(false);
+  const [sustainalyticsIdSet, setSustainalyticsIdSet] = useState<boolean>(false);
 
   /**
    * Checks for errors in the input fields.
@@ -360,8 +342,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 setNotification({
                   severity: "warning",
                   title: `Unable to fetch S&P Information for stock “${stock.name}” (${stock.ticker})`,
-                  message:
-                    "This stock’s ESG Score is available for S&P Premium subscribers only",
+                  message: "This stock’s ESG Score is available for S&P Premium subscribers only",
                 });
               } else {
                 setNotification({
@@ -565,26 +546,19 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                   setCountryError(false))
                 }
                 filterOptions={(options) => {
-                  const currentInputValue = countryInputValue
-                    .trim()
-                    .toUpperCase();
+                  const currentInputValue = countryInputValue.trim().toUpperCase();
                   // Filter the country names by the input value.
                   const filteredOptions = options.filter(
                     (option) =>
-                      countryName[option]
-                        .toUpperCase()
-                        .startsWith(countryInputValue.trim().toUpperCase()) &&
+                      countryName[option].toUpperCase().startsWith(countryInputValue.trim().toUpperCase()) &&
                       option != currentInputValue
                   );
                   // If the text input is a valid country code, we show it as the first option.
-                  isCountry(currentInputValue) &&
-                    filteredOptions.unshift(currentInputValue);
+                  isCountry(currentInputValue) && filteredOptions.unshift(currentInputValue);
                   return filteredOptions;
                 }}
                 disableClearable
-                renderInput={(params) => (
-                  <TextField {...params} label="Country" error={countryError} />
-                )}
+                renderInput={(params) => <TextField {...params} label="Country" error={countryError} />}
               />
             </Grid>
           </Grid>
@@ -872,9 +846,8 @@ const AddStock = (props: AddStockProps): JSX.Element => {
             <StockDetails stock={stock} maxWidth={600} />
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Please check whether all expected fields are filled. If a field is
-            not filled, an alert will not be raised when the information cannot
-            be extracted at a later time.
+            Please check whether all expected fields are filled. If a field is not filled, an alert will not be raised
+            when the information cannot be extracted at a later time.
           </Typography>
         </>
       ),
@@ -887,9 +860,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
       <DialogTitle>
         <Typography variant="h3">Add a new Stock</Typography>
       </DialogTitle>
-      <DialogContent
-        sx={{ width: useMediaQuery("(min-width:664px)") ? 632 : 324 }}
-      >
+      <DialogContent sx={{ width: useMediaQuery("(min-width:664px)") ? 632 : 324 }}>
         <Stepper
           activeStep={activeStep}
           orientation="vertical"
@@ -901,13 +872,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
           {steps.map((step, index) => {
             return (
               <Step key={step.title}>
-                <StepLabel
-                  optional={
-                    step.optional && (
-                      <Typography variant="caption">Optional</Typography>
-                    )
-                  }
-                >
+                <StepLabel optional={step.optional && <Typography variant="caption">Optional</Typography>}>
                   {step.title}
                 </StepLabel>
                 <StepContent>

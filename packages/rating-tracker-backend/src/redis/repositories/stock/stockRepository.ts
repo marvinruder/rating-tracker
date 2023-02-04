@@ -22,21 +22,14 @@ export const createStock = async (stock: Stock): Promise<boolean> => {
     // If that worked, a stock with the same ticker already exists
     logger.warn(
       PREFIX_REDIS +
-        chalk.yellowBright(
-          `Skipping stock “${stock.name}” – existing already (entity ID ${existingStock.entityId}).`
-        )
+        chalk.yellowBright(`Skipping stock “${stock.name}” – existing already (entity ID ${existingStock.entityId}).`)
     );
     return false;
   } else {
     const stockEntity = new StockEntity(stockSchema, stock.ticker, {
       ...stock,
     });
-    logger.info(
-      PREFIX_REDIS +
-        `Created stock “${stock.name}” with entity ID ${await save(
-          stockEntity
-        )}.`
-    );
+    logger.info(PREFIX_REDIS + `Created stock “${stock.name}” with entity ID ${await save(stockEntity)}.`);
     return true;
   }
 };
@@ -72,10 +65,7 @@ export const readAllStocks = () => {
  * @param {Partial<Omit<Stock, "ticker">>} newValues The new values for the stock.
  * @throws an {@link APIError} if the stock does not exist.
  */
-export const updateStock = async (
-  ticker: string,
-  newValues: Partial<Omit<Stock, "ticker">>
-) => {
+export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock, "ticker">>) => {
   let k: keyof typeof newValues; // all keys of new values
   const stockEntity = await fetch(ticker); // Fetch the stock from Redis
   if (stockEntity && stockEntity.name) {
@@ -89,22 +79,14 @@ export const updateStock = async (
           // New data is different from old data
           isNewData = true;
           if (newValues[k] === null) {
-            logger.info(
-              PREFIX_REDIS + `    Property ${k} removed (was ${stockEntity[k]})`
-            );
+            logger.info(PREFIX_REDIS + `    Property ${k} removed (was ${stockEntity[k]})`);
           } else {
             logger.info(
               PREFIX_REDIS +
                 `    Property ${k} updated from ${
                   // Format dates as ISO strings
-                  stockEntity[k] instanceof Date
-                    ? (stockEntity[k] as Date).toISOString()
-                    : stockEntity[k]
-                } to ${
-                  newValues[k] instanceof Date
-                    ? (newValues[k] as Date).toISOString()
-                    : newValues[k]
-                }`
+                  stockEntity[k] instanceof Date ? (stockEntity[k] as Date).toISOString() : stockEntity[k]
+                } to ${newValues[k] instanceof Date ? (newValues[k] as Date).toISOString() : newValues[k]}`
             );
           }
           const parameterPrettyNames = {
@@ -120,43 +102,29 @@ export const updateStock = async (
             case "starRating":
               signalMessage += `\n\t${
                 // larger is better
-                (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
-                  ? SIGNAL_PREFIX_BETTER
-                  : SIGNAL_PREFIX_WORSE
+                (newValues[k] ?? 0) > (stockEntity[k] ?? 0) ? SIGNAL_PREFIX_BETTER : SIGNAL_PREFIX_WORSE
               }Star Rating changed from ${
                 // Use cute tiny star characters to show the star rating
-                "★".repeat(stockEntity[k] ?? 0) +
-                "☆".repeat(5 - stockEntity[k] ?? 0)
-              } to ${
-                "★".repeat(newValues[k] ?? 0) +
-                "☆".repeat(5 - newValues[k] ?? 0)
-              }`;
+                "★".repeat(stockEntity[k] ?? 0) + "☆".repeat(5 - stockEntity[k] ?? 0)
+              } to ${"★".repeat(newValues[k] ?? 0) + "☆".repeat(5 - newValues[k] ?? 0)}`;
               break;
             case "morningstarFairValue":
               const currency = newValues.currency ?? stockEntity.currency ?? "";
-              const lastClose =
-                newValues.lastClose ?? stockEntity.lastClose ?? 0;
+              const lastClose = newValues.lastClose ?? stockEntity.lastClose ?? 0;
               signalMessage += `\n\t${
                 // larger is better
-                (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
-                  ? SIGNAL_PREFIX_BETTER
-                  : SIGNAL_PREFIX_WORSE
-              }Morningstar Fair Value changed from ${currency} ${
-                stockEntity[k] ?? 0
-              } to ${currency} ${
+                (newValues[k] ?? 0) > (stockEntity[k] ?? 0) ? SIGNAL_PREFIX_BETTER : SIGNAL_PREFIX_WORSE
+              }Morningstar Fair Value changed from ${currency} ${stockEntity[k] ?? 0} to ${currency} ${
                 newValues[k] ?? 0
               } (last close ${currency} ${lastClose})`;
               break;
             case "msciTemperature":
               signalMessage += `\n\t${
                 // smaller is better
-                (newValues[k] ?? Number.MAX_VALUE) <
-                (stockEntity[k] ?? Number.MAX_VALUE)
+                (newValues[k] ?? Number.MAX_VALUE) < (stockEntity[k] ?? Number.MAX_VALUE)
                   ? SIGNAL_PREFIX_BETTER
                   : SIGNAL_PREFIX_WORSE
-              }MSCI Implied Temperature Rise changed from ${
-                stockEntity[k] ?? "N/A"
-              }°C to ${newValues[k] ?? "N/A"}°C`;
+              }MSCI Implied Temperature Rise changed from ${stockEntity[k] ?? "N/A"}°C to ${newValues[k] ?? "N/A"}°C`;
               break;
             case "analystConsensus":
             case "msciESGRating":
@@ -174,9 +142,7 @@ export const updateStock = async (
                       : /* istanbul ignore next */ // This never occurs with our test dataset
                         7) <
                     (stockEntity.msciESGRating
-                      ? msciESGRatingArray.indexOf(
-                          stockEntity.msciESGRating as MSCIESGRating
-                        )
+                      ? msciESGRatingArray.indexOf(stockEntity.msciESGRating as MSCIESGRating)
                       : /* istanbul ignore next */ // This never occurs with our test dataset
                         7)
                       ? SIGNAL_PREFIX_BETTER
@@ -193,16 +159,12 @@ export const updateStock = async (
                 default:
                   signalPrefix =
                     // larger is better for all other parameters
-                    (newValues[k] ?? 0) > (stockEntity[k] ?? 0)
-                      ? SIGNAL_PREFIX_BETTER
-                      : SIGNAL_PREFIX_WORSE;
+                    (newValues[k] ?? 0) > (stockEntity[k] ?? 0) ? SIGNAL_PREFIX_BETTER : SIGNAL_PREFIX_WORSE;
                   break;
               }
-              signalMessage += `\n\t${signalPrefix}${
-                parameterPrettyNames[k]
-              } changed from ${stockEntity[k] ?? "N/A"} to ${
-                newValues[k] ?? "N/A"
-              }`;
+              signalMessage += `\n\t${signalPrefix}${parameterPrettyNames[k]} changed from ${
+                stockEntity[k] ?? "N/A"
+              } to ${newValues[k] ?? "N/A"}`;
               break;
             default:
               break;

@@ -1,9 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import {
-  conflict,
-  notFound,
-  unauthorized,
-} from "../../responses/clientError.js";
+import { conflict, forbidden, notFound, unauthorized } from "../../responses/clientError.js";
 import { created, noContent, okStock } from "../../responses/success.js";
 import * as stock from "../../parameters/stock.js";
 
@@ -47,6 +43,7 @@ const deleteRequest: OpenAPIV3.OperationObject = {
   responses: {
     "204": noContent,
     "401": unauthorized,
+    "403": forbidden,
     "404": notFound,
   },
 };
@@ -84,6 +81,7 @@ const put: OpenAPIV3.OperationObject = {
   responses: {
     "201": created,
     "401": unauthorized,
+    "403": forbidden,
     "409": conflict,
   },
 };
@@ -137,6 +135,7 @@ const patch: OpenAPIV3.OperationObject = {
   responses: {
     "204": noContent,
     "401": unauthorized,
+    "403": forbidden,
     "404": notFound,
   },
 };

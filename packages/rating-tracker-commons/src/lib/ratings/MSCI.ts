@@ -1,15 +1,7 @@
 /**
  * An array of all MSCI ESG Rating values.
  */
-export const msciESGRatingArray = [
-  "AAA",
-  "AA",
-  "A",
-  "BBB",
-  "BB",
-  "B",
-  "CCC",
-] as const;
+export const msciESGRatingArray = ["AAA", "AA", "A", "BBB", "BB", "B", "CCC"] as const;
 
 /**
  * An MSCI ESG Rating value.

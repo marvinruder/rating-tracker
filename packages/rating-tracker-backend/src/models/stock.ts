@@ -1,13 +1,5 @@
 import { Entity, Schema } from "redis-om";
-import {
-  Country,
-  Currency,
-  Industry,
-  MSCIESGRating,
-  Size,
-  Stock as CommonsStock,
-  Style,
-} from "rating-tracker-commons";
+import { Country, Currency, Industry, MSCIESGRating, Size, Stock as CommonsStock, Style } from "rating-tracker-commons";
 
 /**
  * A stock, with core information like its ticker, name, ISIN, country, industry, etc., financial information like its
@@ -34,49 +26,34 @@ export class Stock extends CommonsStock {
     if (stock.size != null) this.size = stock.size as Size;
     if (stock.style != null) this.style = stock.style as Style;
     if (stock.morningstarId != null) this.morningstarId = stock.morningstarId;
-    if (stock.morningstarLastFetch != null)
-      this.morningstarLastFetch = stock.morningstarLastFetch;
+    if (stock.morningstarLastFetch != null) this.morningstarLastFetch = stock.morningstarLastFetch;
     if (stock.starRating != null) this.starRating = stock.starRating;
-    if (stock.dividendYieldPercent != null)
-      this.dividendYieldPercent = stock.dividendYieldPercent;
-    if (stock.priceEarningRatio != null)
-      this.priceEarningRatio = stock.priceEarningRatio;
+    if (stock.dividendYieldPercent != null) this.dividendYieldPercent = stock.dividendYieldPercent;
+    if (stock.priceEarningRatio != null) this.priceEarningRatio = stock.priceEarningRatio;
     if (stock.currency != null) this.currency = stock.currency as Currency;
     if (stock.lastClose != null) this.lastClose = stock.lastClose;
-    if (stock.morningstarFairValue != null)
-      this.morningstarFairValue = stock.morningstarFairValue;
+    if (stock.morningstarFairValue != null) this.morningstarFairValue = stock.morningstarFairValue;
     if (stock.marketCap != null) this.marketCap = stock.marketCap;
     if (stock.low52w != null) this.low52w = stock.low52w;
     if (stock.high52w != null) this.high52w = stock.high52w;
-    if (stock.marketScreenerId != null)
-      this.marketScreenerId = stock.marketScreenerId;
-    if (stock.marketScreenerLastFetch != null)
-      this.marketScreenerLastFetch = stock.marketScreenerLastFetch;
-    if (stock.analystConsensus != null)
-      this.analystConsensus = stock.analystConsensus;
+    if (stock.marketScreenerId != null) this.marketScreenerId = stock.marketScreenerId;
+    if (stock.marketScreenerLastFetch != null) this.marketScreenerLastFetch = stock.marketScreenerLastFetch;
+    if (stock.analystConsensus != null) this.analystConsensus = stock.analystConsensus;
     if (stock.analystCount != null) this.analystCount = stock.analystCount;
-    if (stock.analystTargetPrice != null)
-      this.analystTargetPrice = stock.analystTargetPrice;
+    if (stock.analystTargetPrice != null) this.analystTargetPrice = stock.analystTargetPrice;
     if (stock.msciId != null) this.msciId = stock.msciId;
     if (stock.msciLastFetch != null) this.msciLastFetch = stock.msciLastFetch;
-    if (stock.msciESGRating != null)
-      this.msciESGRating = stock.msciESGRating as MSCIESGRating;
-    if (stock.msciTemperature != null)
-      this.msciTemperature = stock.msciTemperature;
+    if (stock.msciESGRating != null) this.msciESGRating = stock.msciESGRating as MSCIESGRating;
+    if (stock.msciTemperature != null) this.msciTemperature = stock.msciTemperature;
     if (stock.ric != null) this.ric = stock.ric;
-    if (stock.refinitivLastFetch != null)
-      this.refinitivLastFetch = stock.refinitivLastFetch;
-    if (stock.refinitivESGScore != null)
-      this.refinitivESGScore = stock.refinitivESGScore;
-    if (stock.refinitivEmissions != null)
-      this.refinitivEmissions = stock.refinitivEmissions;
+    if (stock.refinitivLastFetch != null) this.refinitivLastFetch = stock.refinitivLastFetch;
+    if (stock.refinitivESGScore != null) this.refinitivESGScore = stock.refinitivESGScore;
+    if (stock.refinitivEmissions != null) this.refinitivEmissions = stock.refinitivEmissions;
     if (stock.spId != null) this.spId = stock.spId;
     if (stock.spLastFetch != null) this.spLastFetch = stock.spLastFetch;
     if (stock.spESGScore != null) this.spESGScore = stock.spESGScore;
-    if (stock.sustainalyticsId != null)
-      this.sustainalyticsId = stock.sustainalyticsId;
-    if (stock.sustainalyticsESGRisk != null)
-      this.sustainalyticsESGRisk = stock.sustainalyticsESGRisk;
+    if (stock.sustainalyticsId != null) this.sustainalyticsId = stock.sustainalyticsId;
+    if (stock.sustainalyticsESGRisk != null) this.sustainalyticsESGRisk = stock.sustainalyticsESGRisk;
     if (stock.description != null) this.description = stock.description;
   }
 }

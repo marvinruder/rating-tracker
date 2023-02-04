@@ -32,12 +32,7 @@ const NestedCheckboxList = <
   ThirdLevelType extends string,
   FourthLevelType extends string
 >(
-  props: NestedCheckboxListProps<
-    FirstLevelType,
-    SecondLevelType,
-    ThirdLevelType,
-    FourthLevelType
-  >
+  props: NestedCheckboxListProps<FirstLevelType, SecondLevelType, ThirdLevelType, FourthLevelType>
 ): JSX.Element => {
   const theme = useTheme();
 
@@ -57,12 +52,8 @@ const NestedCheckboxList = <
       // Get all fourth-level elements that are children of the first-level element
       const fourthLevelElements: FourthLevelType[] = props
         .getSecondLevelElements(firstLevelElement)
-        .flatMap((secondLevelElement) =>
-          props.getThirdLevelElements(secondLevelElement)
-        )
-        .flatMap((thirdLevelElement) =>
-          props.getFourthLevelElements(thirdLevelElement)
-        );
+        .flatMap((secondLevelElement) => props.getThirdLevelElements(secondLevelElement))
+        .flatMap((thirdLevelElement) => props.getFourthLevelElements(thirdLevelElement));
       props.setSelectedLastLevelElements((prev) =>
         getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked" // Previous state of the first-level element
           ? // Check all fourth-level elements that are children of the first-level element
@@ -75,9 +66,7 @@ const NestedCheckboxList = <
       // Get all third-level elements that are children of the first-level element
       const thirdLevelElements: ThirdLevelType[] = props
         .getSecondLevelElements(firstLevelElement)
-        .flatMap((secondLevelElement) =>
-          props.getThirdLevelElements(secondLevelElement)
-        );
+        .flatMap((secondLevelElement) => props.getThirdLevelElements(secondLevelElement));
       props.setSelectedLastLevelElements((prev) =>
         getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked" // Previous state of the first-level element
           ? // Check all third-level elements that are children of the first-level element
@@ -94,8 +83,7 @@ const NestedCheckboxList = <
             [...prev, ...props.getSecondLevelElements(firstLevelElement)]
           : prev.filter(
               // Uncheck all second-level elements that are children of the first-level element
-              (p) =>
-                !props.getSecondLevelElements(firstLevelElement).includes(p)
+              (p) => !props.getSecondLevelElements(firstLevelElement).includes(p)
             )
       );
     } else {
@@ -115,16 +103,12 @@ const NestedCheckboxList = <
    * @param {FirstLevelType} firstLevelElement The first-level element whose state is to be determined
    * @returns {CheckboxState} The state of the first-level checkbox
    */
-  const getFirstLevelCheckboxStatus = (
-    firstLevelElement: FirstLevelType
-  ): CheckboxState => {
+  const getFirstLevelCheckboxStatus = (firstLevelElement: FirstLevelType): CheckboxState => {
     if (props.getSecondLevelElements) {
       // First-level elements have children
       const secondLevelElementStates: CheckboxState[] = props
         .getSecondLevelElements(firstLevelElement)
-        .map((secondLevelElement) =>
-          getSecondLevelCheckboxStatus(secondLevelElement)
-        );
+        .map((secondLevelElement) => getSecondLevelCheckboxStatus(secondLevelElement));
       if (secondLevelElementStates.every((state) => state === "checked")) {
         return "checked"; // If all children are checked, then the parent is checked
       }
@@ -134,9 +118,7 @@ const NestedCheckboxList = <
       return "indeterminate"; // In any other case, the parent is indeterminate
     } else {
       // First-level elements have no children
-      return props.selectedLastLevelElements.includes(firstLevelElement)
-        ? "checked"
-        : "unchecked";
+      return props.selectedLastLevelElements.includes(firstLevelElement) ? "checked" : "unchecked";
     }
   };
 
@@ -152,9 +134,7 @@ const NestedCheckboxList = <
       // Get all fourth-level elements that are children of the second-level element
       const fourthLevelElements: FourthLevelType[] = props
         .getThirdLevelElements(secondLevelElement)
-        .flatMap((thirdLevelElement) =>
-          props.getFourthLevelElements(thirdLevelElement)
-        );
+        .flatMap((thirdLevelElement) => props.getFourthLevelElements(thirdLevelElement));
       props.setSelectedLastLevelElements((prev) =>
         getSecondLevelCheckboxStatus(secondLevelElement) === "unchecked" // Previous state of the second-level element
           ? // Check all fourth-level elements that are children of the second-level element
@@ -171,8 +151,7 @@ const NestedCheckboxList = <
             [...prev, ...props.getThirdLevelElements(secondLevelElement)]
           : prev.filter(
               // Uncheck all third-level elements that are children of the second-level element
-              (p) =>
-                !props.getThirdLevelElements(secondLevelElement).includes(p)
+              (p) => !props.getThirdLevelElements(secondLevelElement).includes(p)
             )
       );
     } else {
@@ -192,16 +171,12 @@ const NestedCheckboxList = <
    * @param {SecondLevelType} secondLevelElement The second-level element whose state is to be determined
    * @returns {CheckboxState} The state of the second-level checkbox
    */
-  const getSecondLevelCheckboxStatus = (
-    secondLevelElement: SecondLevelType
-  ): CheckboxState => {
+  const getSecondLevelCheckboxStatus = (secondLevelElement: SecondLevelType): CheckboxState => {
     if (props.getThirdLevelElements) {
       // Second-level elements have children
       const thirdLevelElementStates: CheckboxState[] = props
         .getThirdLevelElements(secondLevelElement)
-        .map((thirdLevelElement) =>
-          getThirdLevelCheckboxStatus(thirdLevelElement)
-        );
+        .map((thirdLevelElement) => getThirdLevelCheckboxStatus(thirdLevelElement));
       if (thirdLevelElementStates.every((state) => state === "checked")) {
         return "checked"; // If all children are checked, then the parent is checked
       }
@@ -211,9 +186,7 @@ const NestedCheckboxList = <
       return "indeterminate"; // In any other case, the parent is indeterminate
     } else {
       // Second-level elements have no children
-      return props.selectedLastLevelElements.includes(secondLevelElement)
-        ? "checked"
-        : "unchecked";
+      return props.selectedLastLevelElements.includes(secondLevelElement) ? "checked" : "unchecked";
     }
   };
 
@@ -233,8 +206,7 @@ const NestedCheckboxList = <
             [...prev, ...props.getFourthLevelElements(thirdLevelElement)]
           : prev.filter(
               // Uncheck all fourth-level elements that are children of the third-level element
-              (p) =>
-                !props.getFourthLevelElements(thirdLevelElement).includes(p)
+              (p) => !props.getFourthLevelElements(thirdLevelElement).includes(p)
             )
       );
     } else {
@@ -254,16 +226,12 @@ const NestedCheckboxList = <
    * @param {ThirdLevelType} thirdLevelElement The third-level element whose state is to be determined
    * @returns {CheckboxState} The state of the third-level checkbox
    */
-  const getThirdLevelCheckboxStatus = (
-    thirdLevelElement: ThirdLevelType
-  ): CheckboxState => {
+  const getThirdLevelCheckboxStatus = (thirdLevelElement: ThirdLevelType): CheckboxState => {
     if (props.getFourthLevelElements) {
       // Third-level elements have children
       const fourthLevelElementStates: CheckboxState[] = props
         .getFourthLevelElements(thirdLevelElement)
-        .map((fourthLevelElement) =>
-          getFourthLevelCheckboxStatus(fourthLevelElement)
-        );
+        .map((fourthLevelElement) => getFourthLevelCheckboxStatus(fourthLevelElement));
       if (fourthLevelElementStates.every((state) => state === "checked")) {
         return "checked"; // If all children are checked, then the parent is checked
       }
@@ -273,9 +241,7 @@ const NestedCheckboxList = <
       return "indeterminate"; // In any other case, the parent is indeterminate
     } else {
       // Third-level elements have no children
-      return props.selectedLastLevelElements.includes(thirdLevelElement)
-        ? "checked"
-        : "unchecked";
+      return props.selectedLastLevelElements.includes(thirdLevelElement) ? "checked" : "unchecked";
     }
   };
 
@@ -300,13 +266,9 @@ const NestedCheckboxList = <
    * @param {FourthLevelType} fourthLevelElement The fourth-level element whose state is to be determined
    * @returns {CheckboxState} The state of the fourth-level checkbox
    */
-  const getFourthLevelCheckboxStatus = (
-    fourthLevelElement: FourthLevelType
-  ): CheckboxState => {
+  const getFourthLevelCheckboxStatus = (fourthLevelElement: FourthLevelType): CheckboxState => {
     // Fourth-level elements never have children
-    return props.selectedLastLevelElements.includes(fourthLevelElement)
-      ? "checked"
-      : "unchecked";
+    return props.selectedLastLevelElements.includes(fourthLevelElement) ? "checked" : "unchecked";
   };
 
   return (
@@ -325,29 +287,17 @@ const NestedCheckboxList = <
     >
       {props.firstLevelElements.map((firstLevelElement) => (
         <Fragment key={firstLevelElement}>
-          <ListItemButton
-            onClick={() => clickFirstLevelCheckbox(firstLevelElement)}
-            disableGutters
-          >
+          <ListItemButton onClick={() => clickFirstLevelCheckbox(firstLevelElement)} disableGutters>
             <ListItemIcon sx={{ minWidth: 0 }}>
               <Checkbox
-                checked={
-                  getFirstLevelCheckboxStatus(firstLevelElement) === "checked"
-                }
-                indeterminate={
-                  getFirstLevelCheckboxStatus(firstLevelElement) ===
-                  "indeterminate"
-                }
+                checked={getFirstLevelCheckboxStatus(firstLevelElement) === "checked"}
+                indeterminate={getFirstLevelCheckboxStatus(firstLevelElement) === "indeterminate"}
                 sx={{ p: 0, pl: 1, pr: 1 }}
                 disableRipple
               />
             </ListItemIcon>
             <ListItemText
-              primary={
-                props.firstLevelLabels
-                  ? props.firstLevelLabels[firstLevelElement]
-                  : firstLevelElement
-              }
+              primary={props.firstLevelLabels ? props.firstLevelLabels[firstLevelElement] : firstLevelElement}
             />
             {props.getSecondLevelElements && // We have a second level of nesting
               // Check whether this first-level element is expanded
@@ -356,9 +306,7 @@ const NestedCheckboxList = <
                   sx={{ p: 0, mr: 2 }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setOpenFirstLevel((prev) =>
-                      prev.filter((p) => p != firstLevelElement)
-                    );
+                    setOpenFirstLevel((prev) => prev.filter((p) => p != firstLevelElement));
                   }}
                 >
                   <ExpandLess />
@@ -376,206 +324,128 @@ const NestedCheckboxList = <
               ))}
           </ListItemButton>
           {props.getSecondLevelElements && ( // We have a second level of nesting
-            <Collapse
-              in={openFirstLevel.includes(firstLevelElement)}
-              timeout="auto"
-              unmountOnExit
-            >
+            <Collapse in={openFirstLevel.includes(firstLevelElement)} timeout="auto" unmountOnExit>
               <List dense disablePadding sx={{ pl: 1 }}>
-                {props
-                  .getSecondLevelElements(firstLevelElement)
-                  .map((secondLevelElement) => (
-                    <Fragment key={secondLevelElement}>
-                      <ListItemButton
-                        onClick={() =>
-                          clickSecondLevelCheckbox(secondLevelElement)
-                        }
-                        disableGutters
-                      >
-                        <ListItemIcon sx={{ minWidth: 0 }}>
-                          <Checkbox
-                            checked={
-                              getSecondLevelCheckboxStatus(
-                                secondLevelElement
-                              ) === "checked"
-                            }
-                            indeterminate={
-                              getSecondLevelCheckboxStatus(
-                                secondLevelElement
-                              ) === "indeterminate"
-                            }
-                            sx={{ p: 0, pl: 1, pr: 1 }}
-                            disableRipple
-                          />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            props.secondLevelLabels
-                              ? props.secondLevelLabels[secondLevelElement]
-                              : secondLevelElement
-                          }
+                {props.getSecondLevelElements(firstLevelElement).map((secondLevelElement) => (
+                  <Fragment key={secondLevelElement}>
+                    <ListItemButton onClick={() => clickSecondLevelCheckbox(secondLevelElement)} disableGutters>
+                      <ListItemIcon sx={{ minWidth: 0 }}>
+                        <Checkbox
+                          checked={getSecondLevelCheckboxStatus(secondLevelElement) === "checked"}
+                          indeterminate={getSecondLevelCheckboxStatus(secondLevelElement) === "indeterminate"}
+                          sx={{ p: 0, pl: 1, pr: 1 }}
+                          disableRipple
                         />
-                        {props.getThirdLevelElements && // We have a third level of nesting
-                          // Check whether this second-level element is expanded
-                          (openSecondLevel.includes(secondLevelElement) ? (
-                            <IconButton
-                              sx={{ p: 0, mr: 2 }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setOpenSecondLevel((prev) =>
-                                  prev.filter((p) => p != secondLevelElement)
-                                );
-                              }}
-                            >
-                              <ExpandLess />
-                            </IconButton>
-                          ) : (
-                            <IconButton
-                              sx={{ p: 0, mr: 2 }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setOpenSecondLevel((prev) => [
-                                  ...prev,
-                                  secondLevelElement,
-                                ]);
-                              }}
-                            >
-                              <ExpandMore />
-                            </IconButton>
-                          ))}
-                      </ListItemButton>
-                      {props.getThirdLevelElements && (
-                        <Collapse
-                          in={openSecondLevel.includes(secondLevelElement)}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          <List dense disablePadding sx={{ pl: 1 }}>
-                            {props
-                              .getThirdLevelElements(secondLevelElement)
-                              .map((thirdLevelElement) => (
-                                <Fragment key={thirdLevelElement}>
-                                  <ListItemButton
-                                    onClick={() =>
-                                      clickThirdLevelCheckbox(thirdLevelElement)
-                                    }
-                                    disableGutters
-                                  >
-                                    <ListItemIcon sx={{ minWidth: 0 }}>
-                                      <Checkbox
-                                        checked={
-                                          getThirdLevelCheckboxStatus(
-                                            thirdLevelElement
-                                          ) === "checked"
-                                        }
-                                        indeterminate={
-                                          getThirdLevelCheckboxStatus(
-                                            thirdLevelElement
-                                          ) === "indeterminate"
-                                        }
-                                        sx={{ p: 0, pl: 1, pr: 1 }}
-                                        disableRipple
-                                      />
-                                    </ListItemIcon>
-                                    <ListItemText
-                                      primary={
-                                        props.thirdLevelLabels
-                                          ? props.thirdLevelLabels[
-                                              thirdLevelElement
-                                            ]
-                                          : thirdLevelElement
-                                      }
-                                    />
-                                    {props.getFourthLevelElements && // We have a fourth level of nesting
-                                      // Check whether this third-level element is expanded
-                                      (openThirdLevel.includes(
-                                        thirdLevelElement
-                                      ) ? (
-                                        <IconButton
-                                          sx={{ p: 0, mr: 2 }}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setOpenThirdLevel((prev) =>
-                                              prev.filter(
-                                                (p) => p != thirdLevelElement
-                                              )
-                                            );
-                                          }}
-                                        >
-                                          <ExpandLess />
-                                        </IconButton>
-                                      ) : (
-                                        <IconButton
-                                          sx={{ p: 0, mr: 2 }}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setOpenThirdLevel((prev) => [
-                                              ...prev,
-                                              thirdLevelElement,
-                                            ]);
-                                          }}
-                                        >
-                                          <ExpandMore />
-                                        </IconButton>
-                                      ))}
-                                  </ListItemButton>
-                                  {props.getFourthLevelElements && (
-                                    <Collapse
-                                      in={openThirdLevel.includes(
-                                        thirdLevelElement
-                                      )}
-                                      timeout="auto"
-                                      unmountOnExit
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={
+                          props.secondLevelLabels ? props.secondLevelLabels[secondLevelElement] : secondLevelElement
+                        }
+                      />
+                      {props.getThirdLevelElements && // We have a third level of nesting
+                        // Check whether this second-level element is expanded
+                        (openSecondLevel.includes(secondLevelElement) ? (
+                          <IconButton
+                            sx={{ p: 0, mr: 2 }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenSecondLevel((prev) => prev.filter((p) => p != secondLevelElement));
+                            }}
+                          >
+                            <ExpandLess />
+                          </IconButton>
+                        ) : (
+                          <IconButton
+                            sx={{ p: 0, mr: 2 }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenSecondLevel((prev) => [...prev, secondLevelElement]);
+                            }}
+                          >
+                            <ExpandMore />
+                          </IconButton>
+                        ))}
+                    </ListItemButton>
+                    {props.getThirdLevelElements && (
+                      <Collapse in={openSecondLevel.includes(secondLevelElement)} timeout="auto" unmountOnExit>
+                        <List dense disablePadding sx={{ pl: 1 }}>
+                          {props.getThirdLevelElements(secondLevelElement).map((thirdLevelElement) => (
+                            <Fragment key={thirdLevelElement}>
+                              <ListItemButton onClick={() => clickThirdLevelCheckbox(thirdLevelElement)} disableGutters>
+                                <ListItemIcon sx={{ minWidth: 0 }}>
+                                  <Checkbox
+                                    checked={getThirdLevelCheckboxStatus(thirdLevelElement) === "checked"}
+                                    indeterminate={getThirdLevelCheckboxStatus(thirdLevelElement) === "indeterminate"}
+                                    sx={{ p: 0, pl: 1, pr: 1 }}
+                                    disableRipple
+                                  />
+                                </ListItemIcon>
+                                <ListItemText
+                                  primary={
+                                    props.thirdLevelLabels
+                                      ? props.thirdLevelLabels[thirdLevelElement]
+                                      : thirdLevelElement
+                                  }
+                                />
+                                {props.getFourthLevelElements && // We have a fourth level of nesting
+                                  // Check whether this third-level element is expanded
+                                  (openThirdLevel.includes(thirdLevelElement) ? (
+                                    <IconButton
+                                      sx={{ p: 0, mr: 2 }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setOpenThirdLevel((prev) => prev.filter((p) => p != thirdLevelElement));
+                                      }}
                                     >
-                                      <List dense disablePadding sx={{ pl: 1 }}>
-                                        {props
-                                          .getFourthLevelElements(
-                                            thirdLevelElement
-                                          )
-                                          .map((fourthLevelElement) => (
-                                            <ListItemButton
-                                              key={fourthLevelElement}
-                                              onClick={() =>
-                                                clickFourthLevelCheckbox(
-                                                  fourthLevelElement
-                                                )
-                                              }
-                                              disableGutters
-                                            >
-                                              <ListItemIcon
-                                                sx={{ minWidth: 0 }}
-                                              >
-                                                <Checkbox
-                                                  checked={
-                                                    getFourthLevelCheckboxStatus(
-                                                      fourthLevelElement
-                                                    ) === "checked"
-                                                  }
-                                                  sx={{ p: 0, pl: 1, pr: 1 }}
-                                                  disableRipple
-                                                />
-                                              </ListItemIcon>
-                                              <ListItemText
-                                                primary={
-                                                  props.fourthLevelLabels
-                                                    ? props.fourthLevelLabels[
-                                                        fourthLevelElement
-                                                      ]
-                                                    : fourthLevelElement
-                                                }
-                                              />
-                                            </ListItemButton>
-                                          ))}
-                                      </List>
-                                    </Collapse>
-                                  )}
-                                </Fragment>
-                              ))}
-                          </List>
-                        </Collapse>
-                      )}
-                    </Fragment>
-                  ))}
+                                      <ExpandLess />
+                                    </IconButton>
+                                  ) : (
+                                    <IconButton
+                                      sx={{ p: 0, mr: 2 }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setOpenThirdLevel((prev) => [...prev, thirdLevelElement]);
+                                      }}
+                                    >
+                                      <ExpandMore />
+                                    </IconButton>
+                                  ))}
+                              </ListItemButton>
+                              {props.getFourthLevelElements && (
+                                <Collapse in={openThirdLevel.includes(thirdLevelElement)} timeout="auto" unmountOnExit>
+                                  <List dense disablePadding sx={{ pl: 1 }}>
+                                    {props.getFourthLevelElements(thirdLevelElement).map((fourthLevelElement) => (
+                                      <ListItemButton
+                                        key={fourthLevelElement}
+                                        onClick={() => clickFourthLevelCheckbox(fourthLevelElement)}
+                                        disableGutters
+                                      >
+                                        <ListItemIcon sx={{ minWidth: 0 }}>
+                                          <Checkbox
+                                            checked={getFourthLevelCheckboxStatus(fourthLevelElement) === "checked"}
+                                            sx={{ p: 0, pl: 1, pr: 1 }}
+                                            disableRipple
+                                          />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                          primary={
+                                            props.fourthLevelLabels
+                                              ? props.fourthLevelLabels[fourthLevelElement]
+                                              : fourthLevelElement
+                                          }
+                                        />
+                                      </ListItemButton>
+                                    ))}
+                                  </List>
+                                </Collapse>
+                              )}
+                            </Fragment>
+                          ))}
+                        </List>
+                      </Collapse>
+                    )}
+                  </Fragment>
+                ))}
               </List>
             </Collapse>
           )}
@@ -597,12 +467,7 @@ interface NestedCheckboxListProps<
   /**
    * The last-level elements that are currently selected. The parent elements states are derived from this.
    */
-  selectedLastLevelElements: (
-    | FirstLevelType
-    | SecondLevelType
-    | ThirdLevelType
-    | FourthLevelType
-  )[];
+  selectedLastLevelElements: (FirstLevelType | SecondLevelType | ThirdLevelType | FourthLevelType)[];
   /**
    * A function that sets the last-level elements that are currently selected.
    */
@@ -626,9 +491,7 @@ interface NestedCheckboxListProps<
    * @param {FirstLevelType} firstLevelElement The first-level element to get the second-level elements for.
    * @returns {SecondLevelType[]} The second-level elements for the given first-level element.
    */
-  getSecondLevelElements?: (
-    firstLevelElement: FirstLevelType
-  ) => SecondLevelType[];
+  getSecondLevelElements?: (firstLevelElement: FirstLevelType) => SecondLevelType[];
   /**
    * A record of labels for the second-level elements.
    */
@@ -637,9 +500,7 @@ interface NestedCheckboxListProps<
    * A function that returns the third-level elements for a given second-level element. If there are no third-level
    * elements, this function is omitted.
    */
-  getThirdLevelElements?: (
-    secondLevelElement: SecondLevelType
-  ) => ThirdLevelType[];
+  getThirdLevelElements?: (secondLevelElement: SecondLevelType) => ThirdLevelType[];
   /**
    * A record of labels for the third-level elements.
    */
@@ -648,9 +509,7 @@ interface NestedCheckboxListProps<
    * A function that returns the fourth-level elements for a given third-level element. If there are no fourth-level
    * elements, this function is omitted.
    */
-  getFourthLevelElements?: (
-    thirdLevelElement: ThirdLevelType
-  ) => FourthLevelType[];
+  getFourthLevelElements?: (thirdLevelElement: ThirdLevelType) => FourthLevelType[];
   /**
    * A record of labels for the fourth-level elements.
    */

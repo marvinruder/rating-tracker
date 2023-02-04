@@ -107,9 +107,7 @@ const SPNavigator = (props: NavigatorProps): JSX.Element => {
   return props.stock?.spId ? (
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
-      href={`https://www.spglobal.com/esg/scores/results?cid=${String(
-        props.stock.spId
-      )}`}
+      href={`https://www.spglobal.com/esg/scores/results?cid=${String(props.stock.spId)}`}
       target="_blank" // Open in new tab
       style={{ color: "inherit", textDecoration: "none" }} // No change in color, no underline
     >

@@ -11,14 +11,7 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
-import {
-  countryArray,
-  countryNameWithFlag,
-  isCountry,
-  countryName,
-  Country,
-  Stock,
-} from "rating-tracker-commons";
+import { countryArray, countryNameWithFlag, isCountry, countryName, Country, Stock } from "rating-tracker-commons";
 import axios from "axios";
 import { useState } from "react";
 import {
@@ -47,37 +40,19 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   const [country, setCountry] = useState<Country>(props.stock?.country);
   const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
   // The value of the text field in the country autocomplete.
-  const [countryInputValue, setCountryInputValue] = useState<string>(
-    countryName[props.stock?.country]
-  );
-  const [morningstarId, setMorningstarId] = useState<string>(
-    props.stock?.morningstarId
-  );
-  const [morningstarIdRequestInProgress, setMorningstarIdRequestInProgress] =
-    useState<boolean>(false);
-  const [marketScreenerId, setMarketScreenerId] = useState<string>(
-    props.stock?.marketScreenerId
-  );
-  const [
-    marketScreenerIdRequestInProgress,
-    setMarketScreenerIdRequestInProgress,
-  ] = useState<boolean>(false);
+  const [countryInputValue, setCountryInputValue] = useState<string>(countryName[props.stock?.country]);
+  const [morningstarId, setMorningstarId] = useState<string>(props.stock?.morningstarId);
+  const [morningstarIdRequestInProgress, setMorningstarIdRequestInProgress] = useState<boolean>(false);
+  const [marketScreenerId, setMarketScreenerId] = useState<string>(props.stock?.marketScreenerId);
+  const [marketScreenerIdRequestInProgress, setMarketScreenerIdRequestInProgress] = useState<boolean>(false);
   const [msciId, setMsciId] = useState<string>(props.stock?.msciId);
-  const [msciIdRequestInProgress, setMsciIdRequestInProgress] =
-    useState<boolean>(false);
+  const [msciIdRequestInProgress, setMsciIdRequestInProgress] = useState<boolean>(false);
   const [ric, setRic] = useState<string>(props.stock?.ric);
-  const [ricRequestInProgress, setRicRequestInProgress] =
-    useState<boolean>(false);
+  const [ricRequestInProgress, setRicRequestInProgress] = useState<boolean>(false);
   const [spId, setSpId] = useState<number>(props.stock?.spId);
-  const [spIdRequestInProgress, setSpIdRequestInProgress] =
-    useState<boolean>(false);
-  const [sustainalyticsId, setSustainalyticsId] = useState<string>(
-    props.stock?.sustainalyticsId
-  );
-  const [
-    sustainalyticsIdRequestInProgress,
-    setSustainalyticsIdRequestInProgress,
-  ] = useState<boolean>(false);
+  const [spIdRequestInProgress, setSpIdRequestInProgress] = useState<boolean>(false);
+  const [sustainalyticsId, setSustainalyticsId] = useState<string>(props.stock?.sustainalyticsId);
+  const [sustainalyticsIdRequestInProgress, setSustainalyticsIdRequestInProgress] = useState<boolean>(false);
   const { setNotification } = useNotification();
 
   /**
@@ -102,21 +77,12 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             // Only send the parameters that have changed.
             name: name !== props.stock.name ? name : undefined,
             country: country !== props.stock.country ? country : undefined,
-            morningstarId:
-              morningstarId !== props.stock.morningstarId
-                ? morningstarId
-                : undefined,
-            marketScreenerId:
-              marketScreenerId !== props.stock.marketScreenerId
-                ? marketScreenerId
-                : undefined,
+            morningstarId: morningstarId !== props.stock.morningstarId ? morningstarId : undefined,
+            marketScreenerId: marketScreenerId !== props.stock.marketScreenerId ? marketScreenerId : undefined,
             msciId: msciId !== props.stock.msciId ? msciId : undefined,
             ric: ric !== props.stock.ric ? ric : undefined,
             spId: spId !== props.stock.spId ? spId : undefined,
-            sustainalyticsId:
-              sustainalyticsId !== props.stock.sustainalyticsId
-                ? sustainalyticsId
-                : undefined,
+            sustainalyticsId: sustainalyticsId !== props.stock.sustainalyticsId ? sustainalyticsId : undefined,
           },
         })
         .then(props.getStocks) // Update the stocks in the parent component.
@@ -202,8 +168,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               .catch((e) => {
                 setNotification({
                   severity: "error",
-                  title:
-                    "Error while fetching information from Market Screener",
+                  title: "Error while fetching information from Market Screener",
                   message:
                     e.response?.status && e.response?.data?.message
                       ? `${e.response.status}: ${e.response.data.message}`
@@ -350,8 +315,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                   setNotification({
                     severity: "warning",
                     title: `Unable to fetch S&P Information for stock “${props.stock.name}” (${props.stock.ticker})`,
-                    message:
-                      "This stock’s ESG Score is available for S&P Premium subscribers only",
+                    message: "This stock’s ESG Score is available for S&P Premium subscribers only",
                   });
                 } else {
                   setNotification({
@@ -462,30 +426,21 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               onInputChange={(_, value) => setCountryInputValue(value)}
               multiple={false}
               value={country ?? null}
-              onChange={(_, value) =>
-                isCountry(value) && (setCountry(value), setCountryError(false))
-              }
+              onChange={(_, value) => isCountry(value) && (setCountry(value), setCountryError(false))}
               filterOptions={(options) => {
-                const currentInputValue = countryInputValue
-                  .trim()
-                  .toUpperCase();
+                const currentInputValue = countryInputValue.trim().toUpperCase();
                 // Filter the country names by the input value.
                 const filteredOptions = options.filter(
                   (option) =>
-                    countryName[option]
-                      .toUpperCase()
-                      .startsWith(countryInputValue.trim().toUpperCase()) &&
+                    countryName[option].toUpperCase().startsWith(countryInputValue.trim().toUpperCase()) &&
                     option != currentInputValue
                 );
                 // If the text input is a valid country code, we show it as the first option.
-                isCountry(currentInputValue) &&
-                  filteredOptions.unshift(currentInputValue);
+                isCountry(currentInputValue) && filteredOptions.unshift(currentInputValue);
                 return filteredOptions;
               }}
               disableClearable
-              renderInput={(params) => (
-                <TextField {...params} label="Country" error={countryError} />
-              )}
+              renderInput={(params) => <TextField {...params} label="Country" error={countryError} />}
             />
           </Grid>
           <Grid item xs={12} container spacing={1} alignItems="center">
@@ -644,13 +599,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
         </Grid>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 0 }}>
-        <Button
-          onClick={() => (
-            props.onClose(), props.getStocks && props.getStocks()
-          )}
-        >
-          Cancel
-        </Button>
+        <Button onClick={() => (props.onClose(), props.getStocks && props.getStocks())}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}
           variant="contained"

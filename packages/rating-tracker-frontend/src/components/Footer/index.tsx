@@ -17,9 +17,7 @@ const Footer = () => {
         justifyContent="space-between"
       >
         <Box>
-          <Typography variant="subtitle1">
-            &copy; 2022–2023 Marvin A. Ruder
-          </Typography>
+          <Typography variant="subtitle1">&copy; 2022–2023 Marvin A. Ruder</Typography>
         </Box>
         <Typography
           sx={{
@@ -28,11 +26,7 @@ const Footer = () => {
           variant="subtitle1"
         >
           Crafted with{" "}
-          <Link
-            href="https://bloomui.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <Link href="https://bloomui.com" target="_blank" rel="noopener noreferrer">
             BloomUI.com
           </Link>
         </Typography>

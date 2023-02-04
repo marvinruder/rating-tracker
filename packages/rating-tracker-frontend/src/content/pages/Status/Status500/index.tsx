@@ -46,14 +46,8 @@ function Status500(): JSX.Element {
           <Typography variant="h2" sx={{ my: 2 }}>
             There was an error, please try again later
           </Typography>
-          <Typography
-            variant="h4"
-            color="text.secondary"
-            fontWeight="normal"
-            sx={{ mb: 4 }}
-          >
-            The server encountered an internal error and was not able to
-            complete your request
+          <Typography variant="h4" color="text.secondary" fontWeight="normal" sx={{ mb: 4 }}>
+            The server encountered an internal error and was not able to complete your request
           </Typography>
           <LoadingButton
             onClick={handleReload}

@@ -1,10 +1,6 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 import * as user from "../../parameters/user.js";
-import {
-  badRequest,
-  forbidden,
-  tooManyRequestsHTML,
-} from "../../responses/clientError.js";
+import { badRequest, forbidden, tooManyRequestsHTML } from "../../responses/clientError.js";
 import { internalServerError } from "../../responses/serverError.js";
 import { created, okObject } from "../../responses/success.js";
 
@@ -15,8 +11,7 @@ const get: OpenAPIV3.OperationObject = {
   tags: ["Authentication API"],
   operationId: "getRegistrationOptions",
   summary: "Get Registration Options API",
-  description:
-    "Get a challenge for registering a new user via WebAuthn standard",
+  description: "Get a challenge for registering a new user via WebAuthn standard",
   parameters: [
     { ...user.email, required: true },
     { ...user.name, required: true },
