@@ -39,7 +39,7 @@
     "axios": "1.3.2",
     "clsx": "1.2.1",
     "date-fns": "2.29.3",
-    "jimp": "0.16.2",
+    "jimp": "0.17.10",
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "particlesjs": "2.2.3",

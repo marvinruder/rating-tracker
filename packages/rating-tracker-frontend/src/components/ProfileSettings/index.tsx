@@ -112,7 +112,9 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
       }
       // We need to use the browser version of Jimp here, since the Node version is not compatible with the browser.
       // Unfortunately, type declarations are not available for this setup right now.
-      const Jimp = await import("jimp/browser/lib/jimp.js");
+      // This statement loads the browser version of Jimp and makes it available as the global variable `window.Jimp`.
+      await import("jimp/browser/lib/jimp.js");
+      const { Jimp } = window as typeof window & { Jimp: any };
       const image = await Jimp.read(await file.arrayBuffer());
       image
         .cover(480, 480) // Resize to a comfortable size of 480x480px while cutting off the excess.
