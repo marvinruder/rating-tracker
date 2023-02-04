@@ -1,7 +1,6 @@
 import { Typography, useTheme } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 import { default as SwitchSelectorBase } from "react-switch-selector";
-import "./switchSelector.css";
 
 /**
  * A component that renders a switch selector with two options. The clickable areas of the options contain their labels.
