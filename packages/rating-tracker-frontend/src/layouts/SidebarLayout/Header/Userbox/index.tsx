@@ -14,18 +14,18 @@ import {
   Typography,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import NotificationContext from "../../../../contexts/NotificationContext.js";
-import SidebarContext from "../../../../contexts/SidebarContext";
+import NotificationContext from "../../../../contexts/NotificationContext";
+import { UserContext } from "../../../../router";
 import axios from "axios";
-import { baseUrl, sessionAPI } from "../../../../endpoints.js";
+import { baseUrl, sessionAPI } from "../../../../endpoints";
 import { useNavigate } from "react-router";
-import ProfileSettings from "../../../../components/ProfileSettings/index.js";
+import ProfileSettings from "../../../../components/ProfileSettings";
 
 const HeaderUserbox = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { setNotification } = useContext(NotificationContext);
-  const { user, refetchUser } = useContext(SidebarContext);
+  const { user, clearUser } = useContext(UserContext);
 
   /**
    * Sign out the current user.
@@ -35,12 +35,12 @@ const HeaderUserbox = (): JSX.Element => {
       // Delete the session
       await axios.delete(baseUrl + sessionAPI);
       // This is only reached if signing out was successful
+      clearUser();
       setNotification({
         severity: "success",
         title: "See you next time!",
         message: "Signing out successful",
       });
-      refetchUser();
       navigate("/login");
     } catch (e) {
       setNotification({
