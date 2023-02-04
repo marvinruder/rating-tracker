@@ -2439,13 +2439,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/validator@npm:13.7.12":
-  version: 13.7.12
-  resolution: "@types/validator@npm:13.7.12"
-  checksum: 98fc9cb0e0af31a8cf7f3234dbd8391a937b1596cdfea16f21f4228f46d70eea2ebc1128ff6c4041ec7db2d94f093eeb441e66ce1eb9902157b6c44d01066fe2
-  languageName: node
-  linkType: hard
-
 "@types/ws@npm:*":
   version: 8.5.4
   resolution: "@types/ws@npm:8.5.4"
@@ -7705,7 +7698,6 @@ __metadata:
     "@types/node": 18.11.18
     "@types/selenium-webdriver": 4.1.10
     "@types/supertest": 2.0.12
-    "@types/validator": 13.7.12
     "@typescript-eslint/eslint-plugin": 5.50.0
     "@typescript-eslint/parser": 5.50.0
     axios: 1.3.2
