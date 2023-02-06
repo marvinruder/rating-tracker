@@ -1158,7 +1158,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jimp/custom@npm:^0.22.0":
+"@jimp/custom@npm:^0.22.2":
   version: 0.22.2
   resolution: "@jimp/custom@npm:0.22.2"
   dependencies:
@@ -1441,7 +1441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jimp/plugins@npm:^0.22.0":
+"@jimp/plugins@npm:^0.22.2":
   version: 0.22.2
   resolution: "@jimp/plugins@npm:0.22.2"
   dependencies:
@@ -1496,7 +1496,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jimp/types@npm:^0.22.0":
+"@jimp/types@npm:^0.22.2":
   version: 0.22.2
   resolution: "@jimp/types@npm:0.22.2"
   dependencies:
@@ -6181,15 +6181,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jimp@npm:0.22.0":
-  version: 0.22.0
-  resolution: "jimp@npm:0.22.0"
+"jimp@npm:0.22.2":
+  version: 0.22.2
+  resolution: "jimp@npm:0.22.2"
   dependencies:
-    "@jimp/custom": ^0.22.0
-    "@jimp/plugins": ^0.22.0
-    "@jimp/types": ^0.22.0
+    "@jimp/custom": ^0.22.2
+    "@jimp/plugins": ^0.22.2
+    "@jimp/types": ^0.22.2
     regenerator-runtime: ^0.13.3
-  checksum: f6f685c53d618eb99c868da0ce4dc627b7281987b5ac44add4fe7e1f473cb3c250d005cd93a584af9323b9ddf2fb291819c21c7ce382e4ac63c7cccc4f39e13e
+  checksum: 1e347d53037f6893b4dab906369b8d038dda2f768db860ae0b76dbac30c358c13d0b627570d708c5aa4e1a7200f79167b56b38a8c1f6f6d586c2956cfab80cc2
   languageName: node
   linkType: hard
 
@@ -7781,7 +7781,7 @@ __metadata:
     eslint-plugin-jsdoc: 39.8.0
     eslint-plugin-prettier: 4.2.1
     eslint-plugin-react: 7.32.2
-    jimp: 0.22.0
+    jimp: 0.22.2
     nprogress: 0.2.0
     numeral: 2.0.6
     particlesjs: 2.2.3
