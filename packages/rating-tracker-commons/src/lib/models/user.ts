@@ -1,7 +1,7 @@
 // We use bitwise operators to combine several boolean access rights into a single number.
 export const GENERAL_ACCESS = 1 << 0;
 export const WRITE_STOCKS = 1 << 1;
-export const ROOT = 1 << 7;
+export const MANAGE_USERS = 1 << 7;
 
 /**
  * A user of the application. Contains WebAuthn credentials.

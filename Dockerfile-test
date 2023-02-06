@@ -11,7 +11,7 @@ WORKDIR /workdir
 COPY . .
 
 RUN \
-  yarn workspace rating-tracker-commons build && \
+  yarn build && \
   yarn test
 
 ENTRYPOINT [ "/bin/sh" ]

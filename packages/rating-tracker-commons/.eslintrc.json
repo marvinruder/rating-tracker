@@ -28,5 +28,6 @@
         "code": 120
       }
     ]
-  }
+  },
+  "ignorePatterns": ["jest.config.ts"]
 }

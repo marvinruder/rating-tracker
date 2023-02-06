@@ -15,7 +15,7 @@ export const initUserRepository = () => {
     new UserEntity(userSchema, "jane.doe@example.com", {
       name: "Jane Doe",
       avatar: "data:image/jpeg;base64,U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U=",
-      phone: "123456789",
+      phone: "+123456789",
       accessRights: 255,
       credentialID: "exampleCredentialID",
       credentialPublicKey: "exampleCredentialPublicKey",

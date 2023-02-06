@@ -573,17 +573,34 @@ describe("User API", () => {
     expect(res.body.email).toBe("jane.doe@example.com");
     expect(res.body.name).toBe("Jane Doe");
     expect(res.body.avatar).toBe("data:image/jpeg;base64,U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U=");
-    expect(res.body.phone).toBe("123456789");
+    expect(res.body.phone).toBe("+123456789");
     // Authentication-related fields should not be exposed
     expect(res.body.credentialID).toBeUndefined();
     expect(res.body.credentialPublicKey).toBeUndefined();
     expect(res.body.counter).toBeUndefined();
   });
 
+  it("validates the phone number", async () => {
+    await expectRouteToBePrivate("/api/user", requestWithSupertest.patch);
+    let res = await requestWithSupertest
+      .patch("/api/user?phone=987654321")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(400);
+    res = await requestWithSupertest
+      .patch("/api/user?phone=+1%20234%20567%2D8900")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(400);
+
+    // Check that no changes were applied
+    res = await requestWithSupertest.get("/api/user").set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.phone).toBe("+123456789");
+  });
+
   it("updates current user’s information", async () => {
     await expectRouteToBePrivate("/api/user", requestWithSupertest.patch);
     let res = await requestWithSupertest
-      .patch("/api/user?name=Jane%20Doe%20II%2E&phone=987654321")
+      .patch("/api/user?name=Jane%20Doe%20II%2E&phone=%2B987654321")
       .send({
         avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
       })
@@ -596,7 +613,7 @@ describe("User API", () => {
     expect(res.body.email).toBe("jane.doe@example.com");
     expect(res.body.name).toBe("Jane Doe II.");
     expect(res.body.avatar).toBe("data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=");
-    expect(res.body.phone).toBe("987654321");
+    expect(res.body.phone).toBe("+987654321");
   });
 
   it("disallows changing own access rights", async () => {
