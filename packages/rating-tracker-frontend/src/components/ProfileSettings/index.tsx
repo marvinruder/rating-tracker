@@ -34,23 +34,44 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const [name, setName] = useState<string>(user.name);
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [phone, setPhone] = useState<string>(user.phone);
+  const [phoneError, setPhoneError] = useState<boolean>(false); // Error in the phone text field.
   const [avatar, setAvatar] = useState<string>(user.avatar);
   const [processingAvatar, setProcessingAvatar] = useState<boolean>(true);
+
+  /**
+   * Validates the name input field.
+   *
+   * @returns {boolean} Whether the name input field contains a valid name.
+   */
+  const validateName = () => {
+    return (document.getElementById("inputName") as HTMLInputElement).reportValidity();
+  };
+
+  /**
+   * Validates the phone input field.
+   *
+   * @returns {boolean} Whether the phone input field contains a valid phone number.
+   */
+  const validatePhone = () => {
+    return (document.getElementById("inputPhone") as HTMLInputElement).reportValidity();
+  };
 
   /**
    * Checks for errors in the input fields.
    */
   const validate = () => {
     // The following fields are required.
-    setNameError(!name);
-    // TODO Validate phone number for international standard.
+    setNameError(!validateName());
+    setPhoneError(!validatePhone());
   };
 
   /**
    * Updates the user’s profile in the backend.
    */
   const updateProfile = () => {
-    setRequestInProgress(true),
+    validate();
+    if (validateName() && validatePhone()) {
+      setRequestInProgress(true);
       axios
         .patch(
           baseUrl + userAPI,
@@ -89,6 +110,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           });
         })
         .finally(() => setRequestInProgress(false));
+    }
   };
 
   useEffect(() => {
@@ -200,6 +222,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  id="inputName"
                   onChange={(event) => {
                     setName(event.target.value);
                     setNameError(false);
@@ -209,16 +232,24 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   value={name}
                   placeholder={"Jane Doe"}
                   fullWidth
+                  required
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  id="inputPhone"
+                  type="tel"
+                  inputProps={{
+                    pattern: "^\\+[1-9]\\d{1,14}$",
+                  }}
                   onChange={(event) => {
                     setPhone(event.target.value);
+                    setPhoneError(false);
                   }}
+                  error={phoneError}
                   label="Phone number"
                   value={phone}
-                  placeholder={"+1 (212) 555-0123"}
+                  placeholder="+12125550123"
                   fullWidth
                 />
               </Grid>
@@ -233,7 +264,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           variant="contained"
           onClick={updateProfile}
           onMouseOver={validate} // Validate input fields on hover
-          disabled={nameError}
+          disabled={nameError || phoneError}
           startIcon={<SaveIcon />}
         >
           Update Profile

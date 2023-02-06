@@ -36,6 +36,7 @@ const phone: OpenAPIV3.ParameterObject = {
   description: "The phone number of a user, used for Signal messages",
   schema: {
     type: "string",
+    pattern: "^\\+[1-9]\\d{1,14}$|^$", // phone number in E.164 format or empty
     example: "+491234567890",
   },
 };

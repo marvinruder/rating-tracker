@@ -75,6 +75,7 @@ const LoginApp = (): JSX.Element => {
     switch (action) {
       case "register":
         // Validate input fields
+        validate();
         if (validateEmail() && validateName()) {
           try {
             // Request registration challenge
@@ -178,10 +179,10 @@ const LoginApp = (): JSX.Element => {
               }}
             >
               <TextField
-                id={"inputEmail"}
-                type={"email"}
+                id="inputEmail"
+                type="email"
                 fullWidth
-                label={"Email Address"}
+                label="Email Address"
                 value={email}
                 error={emailError}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -204,8 +205,8 @@ const LoginApp = (): JSX.Element => {
             >
               <TextField
                 fullWidth
-                id={"inputName"}
-                label={"Name"}
+                id="inputName"
+                label="Name"
                 value={name}
                 error={nameError}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

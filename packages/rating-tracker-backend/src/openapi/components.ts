@@ -255,6 +255,7 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         phone: {
           type: "string",
+          pattern: "^\\+[1-9]\\d{1,14}$|^$",
           description: "The phone number of the user, used for Signal messages.",
           example: "+491234567890",
         },
