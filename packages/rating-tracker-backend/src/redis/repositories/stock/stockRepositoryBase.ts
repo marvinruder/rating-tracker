@@ -6,23 +6,24 @@ import client from "../../Client.js";
  * The stock repository.
  */
 export const stockRepository = client.fetchRepository(stockSchema);
+await stockRepository.createIndex();
 
 /**
  * Fetch a stock from the repository.
  *
  * @param {string} id The ID of the stock to fetch.
- * @returns {StockEntity} The stock entity.
+ * @returns {Promise<StockEntity>} A promise that resolves to the stock entity.
  */
-export const fetch = (id: string) => {
+export const fetch = (id: string): Promise<StockEntity> => {
   return stockRepository.fetch(id);
 };
 
 /**
  * Fetch all stocks from the repository.
  *
- * @returns {StockEntity[]} A list of all stock entities.
+ * @returns {Promise<StockEntity[]>} A promise that resolves to a list of all stock entities.
  */
-export const fetchAll = () => {
+export const fetchAll = (): Promise<StockEntity[]> => {
   return stockRepository.search().return.all();
 };
 
@@ -30,18 +31,18 @@ export const fetchAll = () => {
  * Save a stock to the repository.
  *
  * @param {StockEntity} stockEntity The stock entity to save.
- * @returns {string} The ID of the saved stock.
+ * @returns {Promise<string>} A promise that resolves to the ID of the saved stock.
  */
-export const save = (stockEntity: StockEntity) => {
+export const save = (stockEntity: StockEntity): Promise<string> => {
   return stockRepository.save(stockEntity);
 };
 
 /**
  * Count the number of stocks in the repository.
  *
- * @returns {number} The number of stocks in the repository.
+ * @returns {Promise<number>} A promise that resolves to the number of stocks in the repository.
  */
-export const count = () => {
+export const count = (): Promise<number> => {
   return stockRepository.search().count();
 };
 
@@ -49,8 +50,7 @@ export const count = () => {
  * Delete a stock from the repository.
  *
  * @param {string} id The ID of the stock to delete.
- * @returns {void}
  */
 export const remove = (id: string) => {
-  return stockRepository.remove(id);
+  stockRepository.remove(id);
 };

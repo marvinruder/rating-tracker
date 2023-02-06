@@ -19,6 +19,7 @@ import { UserContext } from "../../router";
 import { baseUrl, userAPI } from "../../endpoints";
 import useNotification from "../../helpers/useNotification";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { REGEX_PHONE_NUMBER } from "rating-tracker-commons";
 
 /**
  * A dialog to edit the user’s own information.
@@ -240,7 +241,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   id="inputPhone"
                   type="tel"
                   inputProps={{
-                    pattern: "^\\+[1-9]\\d{1,14}$",
+                    pattern: REGEX_PHONE_NUMBER,
                   }}
                   onChange={(event) => {
                     setPhone(event.target.value);

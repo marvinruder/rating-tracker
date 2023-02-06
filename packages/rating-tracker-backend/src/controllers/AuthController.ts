@@ -182,7 +182,7 @@ class AuthController {
     const { newCounter } = authenticationInfo;
     if (verified) {
       // We use bitwise AND to check if the user has the GENERAL_ACCESS bit set.
-      if (!user.hasAccessRight(GENERAL_ACCESS)) {
+      if (!user.hasAccessTo(GENERAL_ACCESS)) {
         throw new APIError(403, "This user account is not yet activated.");
       }
       // The counter variable will increment if the client’s authenticator tracks the number of authentications.

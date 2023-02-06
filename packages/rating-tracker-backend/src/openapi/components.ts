@@ -7,6 +7,7 @@ import {
   sortableAttributeArray,
   currencyArray,
   msciESGRatingArray,
+  REGEX_PHONE_NUMBER,
 } from "rating-tracker-commons";
 
 export const components: OpenAPIV3.ComponentsObject = {
@@ -255,7 +256,7 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         phone: {
           type: "string",
-          pattern: "^\\+[1-9]\\d{1,14}$|^$",
+          pattern: REGEX_PHONE_NUMBER,
           description: "The phone number of the user, used for Signal messages.",
           example: "+491234567890",
         },

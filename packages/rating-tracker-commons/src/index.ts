@@ -30,6 +30,9 @@ export type { Style } from "./lib/stylebox/Style.js";
 export * from "./lib/Currency.js";
 export type { Currency } from "./lib/Currency.js";
 
+export * from "./lib/MessageType.js";
+export type { MessageType } from "./lib/MessageType.js";
+
 export * from "./lib/SortableAttribute.js";
 export type { SortableAttribute } from "./lib/SortableAttribute.js";
 

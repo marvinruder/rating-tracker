@@ -38,10 +38,10 @@ export const createStock = async (stock: Stock): Promise<boolean> => {
  * Read a stock.
  *
  * @param {string} ticker The ticker of the stock.
- * @returns {Stock} The stock.
+ * @returns {Promise<Stock>} A promise that resolves to the stock.
  * @throws an {@link APIError} if the stock does not exist.
  */
-export const readStock = async (ticker: string) => {
+export const readStock = async (ticker: string): Promise<Stock> => {
   const stockEntity = await fetch(ticker);
   if (stockEntity && stockEntity.name) {
     return new Stock(stockEntity);
@@ -52,10 +52,10 @@ export const readStock = async (ticker: string) => {
 /**
  * Read all stocks.
  *
- * @returns {Stock[]} A list of all stocks.
+ * @returns {Promise<Stock[]>} A promise that resolves to a list of all stocks.
  */
-export const readAllStocks = () => {
-  return fetchAll();
+export const readAllStocks = (): Promise<Stock[]> => {
+  return fetchAll().then((stockEntities) => stockEntities.map((stockEntity) => new Stock(stockEntity)));
 };
 
 /**
@@ -223,7 +223,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
       // The message string contains a newline character if and only if a parameter changed for which we want to send a
       // message
       if (signalMessage.includes("\n")) {
-        signal.sendMessage(signalMessage);
+        signal.sendMessage(signalMessage, "stockUpdate");
       }
     } else {
       // No new data was provided

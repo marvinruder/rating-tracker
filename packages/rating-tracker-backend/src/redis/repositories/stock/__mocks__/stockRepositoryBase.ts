@@ -21,47 +21,46 @@ initStockRepository();
  * Fetch a stock from the mock repository.
  *
  * @param {string} id The ID of the stock to fetch.
- * @returns {StockEntity} The stock entity.
+ * @returns {Promise<StockEntity>} A promise that resolves to the stock entity.
  */
-export const fetch = (id: string) => {
-  return stockRepository.get(id);
+export const fetch = (id: string): Promise<StockEntity> => {
+  return Promise.resolve(stockRepository.get(id));
 };
 
 /**
  * Fetch all stocks from the mock repository.
  *
- * @returns {StockEntity[]} A list of all stock entities.
+ * @returns {Promise<StockEntity[]>} A promise that resolves to a list of all stock entities.
  */
 export const fetchAll = () => {
-  return [...stockRepository.values()];
+  return Promise.resolve([...stockRepository.values()]);
 };
 
 /**
  * Save a stock to the mock repository.
  *
  * @param {StockEntity} stockEntity The stock entity to save.
- * @returns {string} The ID of the saved stock.
+ * @returns {Promise<string>} A promise that resolves to the ID of the saved stock.
  */
-export const save = (stockEntity: StockEntity) => {
+export const save = (stockEntity: StockEntity): Promise<string> => {
   stockRepository.set(stockEntity.entityId, stockEntity);
-  return stockEntity.entityId;
+  return Promise.resolve(stockEntity.entityId);
 };
 
 /**
  * Count the number of stocks in the mock repository.
  *
- * @returns {number} The number of stocks in the mock repository.
+ * @returns {Promise<number>} A promise that resolves to the number of stocks in the mock repository.
  */
-export const count = () => {
-  return stockRepository.size;
+export const count = (): Promise<number> => {
+  return Promise.resolve(stockRepository.size);
 };
 
 /**
  * Delete a stock from the mock repository.
  *
  * @param {string} id The ID of the stock to delete.
- * @returns {void}
  */
 export const remove = (id: string) => {
-  return stockRepository.delete(id);
+  stockRepository.delete(id);
 };

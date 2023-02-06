@@ -21,7 +21,7 @@ import {
   Resource,
   sizeArray,
   styleArray,
-  WRITE_STOCKS,
+  WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
 import APIError from "../lib/apiError.js";
 import axios from "axios";
@@ -40,7 +40,7 @@ class StockController {
    */
   async getList(req: Request, res: Response) {
     // Read all stocks from Redis
-    let stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+    let stocks = await readAllStocks();
 
     // Filter the list of stocks
     if (req.query.name) {
@@ -583,7 +583,7 @@ class StockController {
    * @throws an {@link APIError} if a stock with the same ticker already exists
    */
   async put(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(WRITE_STOCKS)) {
+    if (!res.locals.user?.hasAccessTo(WRITE_STOCKS_ACCESS)) {
       throw new APIError(403, "This user account does not have the necessary access rights to create stocks.");
     }
     const ticker = req.params[0];
@@ -611,7 +611,7 @@ class StockController {
    * @returns {Response} a 204 response if the stock was updated successfully
    */
   async patch(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(WRITE_STOCKS)) {
+    if (!res.locals.user?.hasAccessTo(WRITE_STOCKS_ACCESS)) {
       throw new APIError(403, "This user account does not have the necessary access rights to update stocks.");
     }
     const ticker = req.params[0];
@@ -649,7 +649,7 @@ class StockController {
    * @returns {Response} a 204 response if the stock was deleted successfully
    */
   async delete(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(WRITE_STOCKS)) {
+    if (!res.locals.user?.hasAccessTo(WRITE_STOCKS_ACCESS)) {
       throw new APIError(403, "This user account does not have the necessary access rights to delete stocks.");
     }
     await deleteStock(req.params[0]);

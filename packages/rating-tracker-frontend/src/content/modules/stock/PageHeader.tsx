@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteStock from "../../../components/DeleteStock";
 import EditStock from "../../../components/EditStock";
-import { Stock, WRITE_STOCKS } from "rating-tracker-commons";
+import { Stock, WRITE_STOCKS_ACCESS } from "rating-tracker-commons";
 import { useContext, useState } from "react";
 import { baseUrl, stockAPI, logoEndpoint } from "../../../endpoints";
 import { UserContext } from "../../../router.js";
@@ -74,7 +74,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
           <Tooltip
             arrow
             title={
-              user.hasAccessRight(WRITE_STOCKS)
+              user.hasAccessTo(WRITE_STOCKS_ACCESS)
                 ? "Edit Stock"
                 : "You do not have the necessary access rights to update stocks."
             }
@@ -84,7 +84,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
                 sx={{ ml: 1, mt: 1 }}
                 color="primary"
                 onClick={() => setEditDialogOpen(true)}
-                disabled={!user.hasAccessRight(WRITE_STOCKS)}
+                disabled={!user.hasAccessTo(WRITE_STOCKS_ACCESS)}
               >
                 <EditIcon />
               </IconButton>
@@ -93,7 +93,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
           <Tooltip
             arrow
             title={
-              user.hasAccessRight(WRITE_STOCKS)
+              user.hasAccessTo(WRITE_STOCKS_ACCESS)
                 ? "Delete Stock"
                 : "You do not have the necessary access rights to delete stocks."
             }
@@ -103,7 +103,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
                 sx={{ ml: 1, mt: 1 }}
                 color="error"
                 onClick={() => setDeleteDialogOpen(true)}
-                disabled={!user.hasAccessRight(WRITE_STOCKS)}
+                disabled={!user.hasAccessTo(WRITE_STOCKS_ACCESS)}
               >
                 <DeleteIcon />
               </IconButton>

@@ -1,6 +1,6 @@
 import APIError from "../../../lib/apiError.js";
 import { User, UserEntity, userSchema } from "../../../models/user.js";
-import { fetch, remove, save } from "./userRepositoryBase.js";
+import { fetch, fetchAll, remove, save } from "./userRepositoryBase.js";
 import chalk from "chalk";
 import * as signal from "../../../signal/signal.js";
 import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
@@ -9,7 +9,7 @@ import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
  * Create a user.
  *
  * @param {User} user The user to create.
- * @returns {boolean} Whether the user was created.
+ * @returns {Promise<boolean>} A promise that resolves to true if the user was created, false if it already existed.
  */
 /* istanbul ignore next */ // Since we cannot yet test the authentication process, we cannot create a valid User
 export const createUser = async (user: User): Promise<boolean> => {
@@ -27,7 +27,7 @@ export const createUser = async (user: User): Promise<boolean> => {
   });
   logger.info(PREFIX_REDIS + `Created user “${user.name}” with entity ID ${await save(userEntity)}.`);
   // Inform the admin of the new user via Signal messenger
-  signal.sendMessage(`🆕👤 New user “${user.name}” (email ${user.email}) registered.`);
+  signal.sendMessage(`🆕👤 New user “${user.name}” (email ${user.email}) registered.`, "userManagement");
   return true;
 };
 
@@ -35,10 +35,10 @@ export const createUser = async (user: User): Promise<boolean> => {
  * Read a user.
  *
  * @param {string} email The email address of the user.
- * @returns {User} The user.
+ * @returns {Promise<User>} A promise that resolves to the user.
  * @throws an {@link APIError} if the user does not exist.
  */
-export const readUser = async (email: string) => {
+export const readUser = async (email: string): Promise<User> => {
   const userEntity = await fetch(email);
   if (userEntity && userEntity.name) {
     return new User(userEntity);
@@ -48,10 +48,19 @@ export const readUser = async (email: string) => {
 };
 
 /**
+ * Read all users.
+ *
+ * @returns {Promise<User[]>} A promise that resolves to a list of all users.
+ */
+export const readAllUsers = (): Promise<User[]> => {
+  return fetchAll().then((userEntities) => userEntities.map((userEntity) => new User(userEntity)));
+};
+
+/**
  * Check whether a user exists.
  *
  * @param {string} email The email address of the user.
- * @returns {boolean} Whether the user exists.
+ * @returns {Promise<boolean>} A promise that resolves to true if the user exists, false otherwise.
  */
 export const userExists = async (email: string): Promise<boolean> => {
   const userEntity = await fetch(email);

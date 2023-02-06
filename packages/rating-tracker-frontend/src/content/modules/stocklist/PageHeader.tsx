@@ -59,7 +59,7 @@ import {
   SuperSector,
   superSectorArray,
   superSectorName,
-  WRITE_STOCKS,
+  WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
 import React from "react";
 import NestedCheckboxList from "../../../components/NestedCheckboxList";
@@ -194,7 +194,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
         <Tooltip
           arrow
           title={
-            user.hasAccessRight(WRITE_STOCKS)
+            user.hasAccessTo(WRITE_STOCKS_ACCESS)
               ? "Add a new stock"
               : "You do not have the necessary access rights to create stocks."
           }
@@ -204,7 +204,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
               sx={{ ml: 1, mt: 1 }}
               color="primary"
               onClick={() => setAddStockOpen(true)}
-              disabled={!user.hasAccessRight(WRITE_STOCKS)}
+              disabled={!user.hasAccessTo(WRITE_STOCKS_ACCESS)}
             >
               <AddIcon />
             </IconButton>

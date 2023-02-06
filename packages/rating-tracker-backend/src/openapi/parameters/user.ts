@@ -1,4 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+import { REGEX_PHONE_NUMBER } from "rating-tracker-commons";
 
 /**
  * The email address of a user, used as their ID
@@ -36,7 +37,7 @@ const phone: OpenAPIV3.ParameterObject = {
   description: "The phone number of a user, used for Signal messages",
   schema: {
     type: "string",
-    pattern: "^\\+[1-9]\\d{1,14}$|^$", // phone number in E.164 format or empty
+    pattern: REGEX_PHONE_NUMBER,
     example: "+491234567890",
   },
 };
