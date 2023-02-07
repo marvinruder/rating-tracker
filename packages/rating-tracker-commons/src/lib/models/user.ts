@@ -91,7 +91,7 @@ export class User {
    * @param {number} accessRight The access right to check.
    * @returns {boolean} Whether the user has the given access right.
    */
-  public hasAccessTo(accessRight: number): boolean {
+  public hasAccessRight(accessRight: number): boolean {
     return (this.accessRights & accessRight) === accessRight;
   }
 
@@ -114,11 +114,11 @@ export class User {
   public isAllowedAndWishesToReceiveMessage(messageType: MessageType): boolean {
     switch (messageType) {
       case "userManagement":
-        return this.hasAccessTo(ADMINISTRATIVE_ACCESS) && this.hasSubscribedTo(ADMINISTRATIVE_MESSAGE);
+        return this.hasAccessRight(ADMINISTRATIVE_ACCESS) && this.hasSubscribedTo(ADMINISTRATIVE_MESSAGE);
       case "fetchError":
-        return this.hasAccessTo(WRITE_STOCKS_ACCESS) && this.hasSubscribedTo(FETCH_ERROR_MESSAGE);
+        return this.hasAccessRight(WRITE_STOCKS_ACCESS) && this.hasSubscribedTo(FETCH_ERROR_MESSAGE);
       case "stockUpdate":
-        return this.hasAccessTo(GENERAL_ACCESS) && this.hasSubscribedTo(STOCK_UPDATE_MESSAGE);
+        return this.hasAccessRight(GENERAL_ACCESS) && this.hasSubscribedTo(STOCK_UPDATE_MESSAGE);
     }
   }
 }

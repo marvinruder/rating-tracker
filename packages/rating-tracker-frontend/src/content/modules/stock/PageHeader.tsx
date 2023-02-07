@@ -74,7 +74,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
           <Tooltip
             arrow
             title={
-              user.hasAccessTo(WRITE_STOCKS_ACCESS)
+              user.hasAccessRight(WRITE_STOCKS_ACCESS)
                 ? "Edit Stock"
                 : "You do not have the necessary access rights to update stocks."
             }
@@ -84,7 +84,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
                 sx={{ ml: 1, mt: 1 }}
                 color="primary"
                 onClick={() => setEditDialogOpen(true)}
-                disabled={!user.hasAccessTo(WRITE_STOCKS_ACCESS)}
+                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
               >
                 <EditIcon />
               </IconButton>
@@ -93,7 +93,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
           <Tooltip
             arrow
             title={
-              user.hasAccessTo(WRITE_STOCKS_ACCESS)
+              user.hasAccessRight(WRITE_STOCKS_ACCESS)
                 ? "Delete Stock"
                 : "You do not have the necessary access rights to delete stocks."
             }
@@ -103,7 +103,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
                 sx={{ ml: 1, mt: 1 }}
                 color="error"
                 onClick={() => setDeleteDialogOpen(true)}
-                disabled={!user.hasAccessTo(WRITE_STOCKS_ACCESS)}
+                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
               >
                 <DeleteIcon />
               </IconButton>

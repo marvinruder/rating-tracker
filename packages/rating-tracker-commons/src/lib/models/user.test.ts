@@ -19,21 +19,21 @@ const userWhoDoesNotGiveAFuckAboutAnything = new User({ accessRights: 255, subsc
 
 describe("User Access Rights", () => {
   it("has all access rights", () => {
-    expect(root.hasAccessTo(WRITE_STOCKS_ACCESS)).toBe(true);
-    expect(root.hasAccessTo(GENERAL_ACCESS)).toBe(true);
-    expect(root.hasAccessTo(ADMINISTRATIVE_ACCESS)).toBe(true);
+    expect(root.hasAccessRight(WRITE_STOCKS_ACCESS)).toBe(true);
+    expect(root.hasAccessRight(GENERAL_ACCESS)).toBe(true);
+    expect(root.hasAccessRight(ADMINISTRATIVE_ACCESS)).toBe(true);
   });
 
   it("has some access rights", () => {
-    expect(regularUser.hasAccessTo(GENERAL_ACCESS)).toBe(true);
-    expect(regularUser.hasAccessTo(WRITE_STOCKS_ACCESS)).toBe(false);
-    expect(regularUser.hasAccessTo(ADMINISTRATIVE_ACCESS)).toBe(false);
+    expect(regularUser.hasAccessRight(GENERAL_ACCESS)).toBe(true);
+    expect(regularUser.hasAccessRight(WRITE_STOCKS_ACCESS)).toBe(false);
+    expect(regularUser.hasAccessRight(ADMINISTRATIVE_ACCESS)).toBe(false);
   });
 
   it("has no access rights", () => {
-    expect(newUser.hasAccessTo(GENERAL_ACCESS)).toBe(false);
-    expect(newUser.hasAccessTo(WRITE_STOCKS_ACCESS)).toBe(false);
-    expect(newUser.hasAccessTo(ADMINISTRATIVE_ACCESS)).toBe(false);
+    expect(newUser.hasAccessRight(GENERAL_ACCESS)).toBe(false);
+    expect(newUser.hasAccessRight(WRITE_STOCKS_ACCESS)).toBe(false);
+    expect(newUser.hasAccessRight(ADMINISTRATIVE_ACCESS)).toBe(false);
   });
 });
 

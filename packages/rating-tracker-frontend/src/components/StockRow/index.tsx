@@ -654,7 +654,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           </Tooltip>
           <Tooltip
             title={
-              user.hasAccessTo(WRITE_STOCKS_ACCESS)
+              user.hasAccessRight(WRITE_STOCKS_ACCESS)
                 ? "Edit Stock"
                 : "You do not have the necessary access rights to update stocks."
             }
@@ -665,7 +665,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                 color="primary"
                 size="small"
                 onClick={() => setEditDialogOpen(true)}
-                disabled={!user.hasAccessTo(WRITE_STOCKS_ACCESS)}
+                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
               >
                 <EditIcon fontSize="small" />
               </IconButton>
@@ -673,7 +673,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           </Tooltip>
           <Tooltip
             title={
-              user.hasAccessTo(WRITE_STOCKS_ACCESS)
+              user.hasAccessRight(WRITE_STOCKS_ACCESS)
                 ? "Delete Stock"
                 : "You do not have the necessary access rights to delete stocks."
             }
@@ -684,7 +684,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                 color="error"
                 size="small"
                 onClick={() => setDeleteDialogOpen(true)}
-                disabled={!user.hasAccessTo(WRITE_STOCKS_ACCESS)}
+                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
               >
                 <DeleteIcon fontSize="small" />
               </IconButton>

@@ -194,7 +194,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
         <Tooltip
           arrow
           title={
-            user.hasAccessTo(WRITE_STOCKS_ACCESS)
+            user.hasAccessRight(WRITE_STOCKS_ACCESS)
               ? "Add a new stock"
               : "You do not have the necessary access rights to create stocks."
           }
@@ -204,7 +204,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
               sx={{ ml: 1, mt: 1 }}
               color="primary"
               onClick={() => setAddStockOpen(true)}
-              disabled={!user.hasAccessTo(WRITE_STOCKS_ACCESS)}
+              disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
             >
               <AddIcon />
             </IconButton>
