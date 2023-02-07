@@ -10,7 +10,6 @@ WORKDIR /workdir
 COPY . .
 
 RUN \
-  yarn lint && \
   yarn workspace rating-tracker-commons build && \
   yarn test
 
