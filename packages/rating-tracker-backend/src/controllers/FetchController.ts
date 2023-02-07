@@ -138,7 +138,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchMorningstarData(req: Request, res: Response) {
-    if (!res.locals.user.hasAccessRight(WRITE_STOCKS)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -624,7 +624,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchMarketScreenerData(req: Request, res: Response) {
-    if (!res.locals.user.hasAccessRight(WRITE_STOCKS)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -871,7 +871,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchMSCIData(req: Request, res: Response) {
-    if (!res.locals.user.hasAccessRight(WRITE_STOCKS)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -1089,7 +1089,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchRefinitivData(req: Request, res: Response) {
-    if (!res.locals.user.hasAccessRight(WRITE_STOCKS)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -1301,7 +1301,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchSPData(req: Request, res: Response) {
-    if (!res.locals.user.hasAccessRight(WRITE_STOCKS)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -1458,7 +1458,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchSustainalyticsData(req: Request, res: Response) {
-    if (!res.locals.user.hasAccessRight(WRITE_STOCKS)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."

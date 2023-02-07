@@ -18,6 +18,7 @@ import path from "path";
 import logger, { PREFIX_NODEJS } from "./lib/logger.js";
 
 import { fileURLToPath } from "url";
+import { GENERAL_ACCESS } from "rating-tracker-commons";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -162,6 +163,10 @@ server.app.use(async (req, res, next) => {
       res.clearCookie("authToken");
     }
   }
+  /* istanbul ignore next */ // We do not test Cron jobs
+  if (req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken) {
+    res.locals.userIsCron = true;
+  }
   next();
 });
 
@@ -187,8 +192,7 @@ server.app.use(
                   res.locals.user
                     ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})` // Authenticated user
                     : /* istanbul ignore next */ // We do not test Cron jobs
-                    req.cookies.bypassAuthenticationForInternalRequestsToken ===
-                      bypassAuthenticationForInternalRequestsToken
+                    res.locals.userIsCron
                     ? "\ufba7 cron" // Cron job
                     : "\uf21b" // Unauthenticated user
                 ) +
@@ -241,11 +245,11 @@ server.app.use(
 server.app.use(
   "/api",
   server.router.public, // Forward requests to public endpoints directly to the router
-  (req, res, next) => {
+  (_, res, next) => {
     if (
       // Check if the user is authenticated and has the required access rights for private endpoints
-      (res.locals.user && res.locals.user.accessRights > 0) ||
-      req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken
+      res.locals.user?.hasAccessRight(GENERAL_ACCESS) ||
+      res.locals.userIsCron // Allow Cron jobs to access private endpoints
     ) {
       next();
     } else {
