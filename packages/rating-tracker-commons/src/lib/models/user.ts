@@ -1,7 +1,37 @@
+import { MessageType } from "../MessageType.js";
+
+/**
+ * A regular expression that matches a phone number in E.164 format or an empty string.
+ */
+export const REGEX_PHONE_NUMBER = "^\\+[1-9]\\d{1,14}$|^$";
+
 // We use bitwise operators to combine several boolean access rights into a single number.
+
+/**
+ * General access to the application. May log in and view stocks.
+ */
 export const GENERAL_ACCESS = 1 << 0;
-export const WRITE_STOCKS = 1 << 1;
-export const ROOT = 1 << 7;
+/**
+ * Write access to stocks. May add, edit and delete stocks, as well as fetch data from providers.
+ */
+export const WRITE_STOCKS_ACCESS = 1 << 1;
+/**
+ * Administrative access to the application. May add, edit and delete users.
+ */
+export const ADMINISTRATIVE_ACCESS = 1 << 7;
+
+/**
+ * Wishes to receive a message when a stock is updated.
+ */
+export const STOCK_UPDATE_MESSAGE = 1 << 0;
+/**
+ * Wishes to receive a message when an error occurs while fetching data from a provider.
+ */
+export const FETCH_ERROR_MESSAGE = 1 << 1;
+/**
+ * Wishes to receive a message when the attention of an administrator is required.
+ */
+export const ADMINISTRATIVE_MESSAGE = 1 << 7;
 
 /**
  * A user of the application. Contains WebAuthn credentials.
@@ -27,6 +57,10 @@ export class User {
    * The access rights of the user, encoded as a bitfield.
    */
   accessRights: number;
+  /**
+   * The subscriptions of the user to message types, encoded as a bitfield.
+   */
+  subscriptions?: number;
   /**
    * The ID of the WebAuthn credential.
    */
@@ -59,5 +93,43 @@ export class User {
    */
   public hasAccessRight(accessRight: number): boolean {
     return (this.accessRights & accessRight) === accessRight;
+  }
+
+  /**
+   * Computes the separate access rights a user has.
+   *
+   * @returns {number[]} A list of access rights a user has.
+   */
+  public getAccessRights(): number[] {
+    const accessRights: number[] = [];
+    Array.from(Array(8).keys()).forEach((i) => this.hasAccessRight(1 << i) && accessRights.push(1 << i));
+    return accessRights;
+  }
+
+  /**
+   * Checks whether the user has subscribed to the given message type.
+   *
+   * @param {number} subscription The subscription to check.
+   * @returns {boolean} Whether the user has subscribed to the given message type.
+   */
+  public hasSubscribedTo(subscription: number): boolean {
+    return (this.subscriptions & subscription) === subscription;
+  }
+
+  /**
+   * Checks whether the user has the given message type enabled and the rights necessary to receive it.
+   *
+   * @param {MessageType} messageType The message type to check.
+   * @returns {boolean} Whether the user shall receive a message of the given message type.
+   */
+  public isAllowedAndWishesToReceiveMessage(messageType: MessageType): boolean {
+    switch (messageType) {
+      case "userManagement":
+        return this.hasAccessRight(ADMINISTRATIVE_ACCESS) && this.hasSubscribedTo(ADMINISTRATIVE_MESSAGE);
+      case "fetchError":
+        return this.hasAccessRight(WRITE_STOCKS_ACCESS) && this.hasSubscribedTo(FETCH_ERROR_MESSAGE);
+      case "stockUpdate":
+        return this.hasAccessRight(GENERAL_ACCESS) && this.hasSubscribedTo(STOCK_UPDATE_MESSAGE);
+    }
   }
 }

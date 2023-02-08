@@ -31,17 +31,19 @@ class UserController {
    */
   async patch(req: Request, res: Response) {
     const user: User = res.locals.user;
-    const { name, phone } = req.query;
+    const { name, phone, subscriptions } = req.query;
     const { avatar } = req.body;
     if (
       (typeof name === "string" || typeof name === "undefined") &&
       (typeof avatar === "string" || typeof avatar === "undefined") &&
-      (typeof phone === "string" || typeof phone === "undefined")
+      (typeof phone === "string" || typeof phone === "undefined") &&
+      (typeof subscriptions === "number" || typeof subscriptions === "undefined")
     ) {
       await updateUser(user.email, {
         name,
         avatar,
         phone,
+        subscriptions,
       });
       return res.sendStatus(204).end();
     }

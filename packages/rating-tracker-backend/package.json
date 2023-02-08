@@ -19,7 +19,7 @@
     "test:watch": "yarn node --experimental-vm-modules $(yarn bin jest) --watch --runInBand",
     "start": "node dist/src/server.js",
     "build": "tsc --project tsconfig.build.json",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand --coverage",
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand --coverage --colors",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
     "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix"
   },

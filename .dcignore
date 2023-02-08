@@ -1,3 +1,4 @@
 .pnp.*
 .yarn/*
-packages/rating-tracker-frontend/.vite/*
+packages/rating-tracker-frontend/.vite/deps
+packages/rating-tracker-frontend/.vite/deps_temp

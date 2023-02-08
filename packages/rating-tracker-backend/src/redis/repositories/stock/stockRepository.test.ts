@@ -7,12 +7,17 @@ jest.unstable_mockModule(
   async () => await import("../../../signal/__mocks__/signalBase")
 );
 jest.unstable_mockModule("./stockRepositoryBase", async () => await import("./__mocks__/stockRepositoryBase"));
+jest.unstable_mockModule(
+  "../user/userRepositoryBase",
+  async () => await import("../user/__mocks__/userRepositoryBase")
+);
 
 const { createStock, readStock, updateStock } = await import("./stockRepository");
 import dotenv from "dotenv";
 import { initStockRepository } from "./__mocks__/stockRepositoryBase";
 import { sentMessages } from "../../../signal/__mocks__/signalBase";
 import { Stock } from "../../../models/stock";
+import { initUserRepository } from "../user/__mocks__/userRepositoryBase";
 
 dotenv.config({
   path: ".env.local",
@@ -20,6 +25,7 @@ dotenv.config({
 
 beforeAll((done) => {
   initStockRepository();
+  initUserRepository();
   done();
 });
 
@@ -117,12 +123,19 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
 
     await updateStock("NEWSTOCK", newValues);
 
-    expect(sentMessages[0]).toMatch("🟢");
-    expect(sentMessages[1]).toMatch("🔴");
-    expect(sentMessages[2]).toMatch("🟢");
-    expect(sentMessages[0]).not.toMatch("🔴");
-    expect(sentMessages[1]).not.toMatch("🟢");
-    expect(sentMessages[2]).not.toMatch("🔴");
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    expect(sentMessages[0].message).toMatch("🟢");
+    expect(sentMessages[1].message).toMatch("🔴");
+    expect(sentMessages[2].message).toMatch("🟢");
+    expect(sentMessages[0].message).not.toMatch("🔴");
+    expect(sentMessages[1].message).not.toMatch("🟢");
+    expect(sentMessages[2].message).not.toMatch("🔴");
+
+    for (const sentMessage of sentMessages) {
+      expect(sentMessage.recipients).toHaveLength(1);
+      expect(sentMessage.recipients[0]).toMatch("+234567890");
+    }
 
     expect(updatedStock.ticker).toMatch("NEWSTOCK");
     expect(updatedStock.name).toMatch("Updated Stock");

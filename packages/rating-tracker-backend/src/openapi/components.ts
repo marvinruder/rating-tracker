@@ -7,6 +7,7 @@ import {
   sortableAttributeArray,
   currencyArray,
   msciESGRatingArray,
+  REGEX_PHONE_NUMBER,
 } from "rating-tracker-commons";
 
 export const components: OpenAPIV3.ComponentsObject = {
@@ -255,12 +256,18 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         phone: {
           type: "string",
+          pattern: REGEX_PHONE_NUMBER,
           description: "The phone number of the user, used for Signal messages.",
           example: "+491234567890",
         },
         accessRights: {
           type: "integer",
           description: "The access rights of the user, encoded as a bitfield",
+          example: 1,
+        },
+        subscriptions: {
+          type: "integer",
+          description: "The subscriptions of the user to different types of messages, encoded as a bitfield",
           example: 1,
         },
       },

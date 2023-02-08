@@ -268,7 +268,7 @@ export class Stock {
       count += 1;
     }
 
-    return financialScore / Math.max(3, count);
+    return Math.max(financialScore / Math.max(3, count), -1);
   }
 
   /**
@@ -304,7 +304,7 @@ export class Stock {
    * @returns {number} The score, ranging from -2 (4°C) to 1 (1°C).
    */
   private getMSCITemperatureScore(): number | undefined {
-    return this.msciTemperature ? 2 - this.msciTemperature : undefined;
+    return this.msciTemperature ? Math.min(2 - this.msciTemperature, 1) : undefined;
   }
 
   /**
@@ -384,7 +384,7 @@ export class Stock {
       count += 1;
     }
 
-    return esgScore / Math.max(4, count);
+    return Math.max(esgScore / Math.max(4, count), -1);
   }
 
   /**
@@ -404,7 +404,10 @@ export class Stock {
    * @returns {number} The percentage difference.
    */
   public getPercentageToLastClose(attribute: "morningstarFairValue" | "analystTargetPrice"): number | undefined {
-    const result = this[attribute] && this.lastClose ? 100 * (this.lastClose / this[attribute] - 1) : undefined;
-    return Number.isNaN(result) ? undefined : result;
+    const result =
+      this[attribute] /* this also prevents division by zero */ && this.lastClose
+        ? 100 * (this.lastClose / this[attribute] - 1)
+        : undefined;
+    return result;
   }
 }

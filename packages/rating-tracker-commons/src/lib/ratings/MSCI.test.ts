@@ -1,0 +1,11 @@
+import { isMSCIESGRating } from "./MSCI";
+
+describe("MSCI ESG Rating", () => {
+  it("is a rating", () => {
+    expect(isMSCIESGRating("AAA")).toBe(true);
+  });
+
+  it("is not a rating", () => {
+    expect(isMSCIESGRating("AAA+")).toBe(false);
+  });
+});

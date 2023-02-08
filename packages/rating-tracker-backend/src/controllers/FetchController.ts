@@ -18,7 +18,7 @@ import {
   Resource,
   Size,
   Style,
-  WRITE_STOCKS,
+  WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
 import { readAllStocks, readStock, updateStock } from "../redis/repositories/stock/stockRepository.js";
 import * as signal from "../signal/signal.js";
@@ -138,7 +138,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchMorningstarData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -544,7 +544,7 @@ class FetchController {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
           errorMessage += `\n${await this.takeScreenshot(driver, stock, "morningstar")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
+          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -586,7 +586,8 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "morningstar")}`
+            }\n${await this.takeScreenshot(driver, stock, "morningstar")}`,
+          "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
       }
@@ -602,7 +603,8 @@ class FetchController {
         signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from Morningstar after ${consecutiveErrorCount} consecutive failures, ` +
-            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
+          "fetchError"
         );
         break;
       }
@@ -624,7 +626,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchMarketScreenerData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -799,7 +801,7 @@ class FetchController {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
           errorMessage += `\n${await this.takeScreenshot(driver, stock, "marketscreener")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
+          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -833,7 +835,8 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "marketscreener")}`
+            }\n${await this.takeScreenshot(driver, stock, "marketscreener")}`,
+          "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
       }
@@ -849,7 +852,8 @@ class FetchController {
         signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from MarketScreener after ${consecutiveErrorCount} consecutive failures, ` +
-            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
+          "fetchError"
         );
         break;
       }
@@ -871,7 +875,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchMSCIData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -943,7 +947,8 @@ class FetchController {
         signal.sendMessage(
           SIGNAL_PREFIX_INFO +
             `Successfully fetched MSCI information for ${successfulCount} stocks (${errorCount} errors). ` +
-            `Pausing now to avoid rate limiting. Will continue next time.`
+            `Pausing now to avoid rate limiting. Will continue next time.`,
+          "fetchError"
         );
         break;
       }
@@ -1020,7 +1025,7 @@ class FetchController {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
           errorMessage += `\n${await this.takeScreenshot(driver, stock, "msci")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
+          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -1051,7 +1056,8 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "msci")}`
+            }\n${await this.takeScreenshot(driver, stock, "msci")}`,
+          "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
       }
@@ -1067,7 +1073,8 @@ class FetchController {
         signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from MSCI after ${consecutiveErrorCount} consecutive failures, ` +
-            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
+          "fetchError"
         );
         break;
       }
@@ -1089,7 +1096,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchRefinitivData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -1214,7 +1221,7 @@ class FetchController {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
           errorMessage += `\n${await this.takeScreenshot(driver, stock, "refinitiv")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage);
+          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -1252,7 +1259,8 @@ class FetchController {
           signal.sendMessage(
             SIGNAL_PREFIX_ERROR +
               `Aborting fetching information from Refinitiv after exceeding limit ` +
-              `(${successfulCount} successful fetches). Will continue next time.`
+              `(${successfulCount} successful fetches). Will continue next time.`,
+            "fetchError"
           );
           break;
         }
@@ -1263,7 +1271,8 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "refinitiv")}`
+            }\n${await this.takeScreenshot(driver, stock, "refinitiv")}`,
+          "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
       }
@@ -1279,7 +1288,8 @@ class FetchController {
         signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from Refinitiv after ${consecutiveErrorCount} consecutive failures, ` +
-            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
+          "fetchError"
         );
         break;
       }
@@ -1301,7 +1311,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchSPData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -1414,7 +1424,8 @@ class FetchController {
             SIGNAL_PREFIX_ERROR +
               `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
                 String(e.message).split(/[\n:{]/)[0]
-              }\n${await this.takeScreenshot(driver, stock, "sp")}`
+              }\n${await this.takeScreenshot(driver, stock, "sp")}`,
+            "fetchError"
           );
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
@@ -1436,7 +1447,8 @@ class FetchController {
         signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from S&P after ${consecutiveErrorCount} consecutive failures, ` +
-            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
+            `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
+          "fetchError"
         );
         break;
       }
@@ -1458,7 +1470,7 @@ class FetchController {
    * @throws an {@link APIError} in case of a severe error
    */
   async fetchSustainalyticsData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS) || res.locals.userIsCron)) {
+    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
       throw new APIError(
         403,
         "This user account does not have the necessary access rights to fetch data from providers."
@@ -1598,7 +1610,8 @@ class FetchController {
             SIGNAL_PREFIX_ERROR +
               `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${
                 String(e.message).split(/[\n:{]/)[0]
-              }`
+              }`,
+            "fetchError"
           );
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -1621,7 +1634,8 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Aborting extracting information from Sustainalytics after ${consecutiveErrorCount} ` +
             `consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. ` +
-            `Will continue next time.`
+            `Will continue next time.`,
+          "fetchError"
         );
         break;
       }

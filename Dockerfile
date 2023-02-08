@@ -8,7 +8,8 @@ WORKDIR /workdir
 COPY . .
 
 # Build
-RUN yarn build && \
+RUN \
+  yarn build && \
   yarn workspaces focus --production
 
 # Copy static frontend files into backend for serving

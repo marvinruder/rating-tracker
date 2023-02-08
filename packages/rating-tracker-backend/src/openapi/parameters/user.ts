@@ -1,4 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+import { REGEX_PHONE_NUMBER } from "rating-tracker-commons";
 
 /**
  * The email address of a user, used as their ID
@@ -36,8 +37,22 @@ const phone: OpenAPIV3.ParameterObject = {
   description: "The phone number of a user, used for Signal messages",
   schema: {
     type: "string",
+    pattern: REGEX_PHONE_NUMBER,
     example: "+491234567890",
   },
 };
 
-export { email, name, phone };
+/**
+ * The subscriptions of the user to different types of messages, encoded as a bitfield
+ */
+const subscriptions: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "subscriptions",
+  description: "The subscriptions of the user to different types of messages, encoded as a bitfield",
+  schema: {
+    type: "integer",
+    example: 1,
+  },
+};
+
+export { email, name, phone, subscriptions };

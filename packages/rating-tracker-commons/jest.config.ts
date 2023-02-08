@@ -1,14 +1,12 @@
 import type { JestConfigWithTsJest } from "ts-jest";
 
 const jestConfig: JestConfigWithTsJest = {
-  collectCoverageFrom: ["src/**/*"],
   extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: {
     // maps a ".../Module.js" import to a ".../Module" import
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   preset: "ts-jest/presets/default-esm",
-  resolver: "./resolver.cjs", // currently required for chalk v5
   roots: ["src"],
   transform: {
     "^.+\\.tsx?$": [

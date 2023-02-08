@@ -48,6 +48,7 @@ const patch: OpenAPIV3.OperationObject = {
       ...user.phone,
       allowEmptyValue: true,
     },
+    user.subscriptions,
   ],
   requestBody: {
     required: false,

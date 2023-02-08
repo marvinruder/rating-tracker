@@ -2,13 +2,18 @@ import {
   Avatar,
   Box,
   Button,
+  Checkbox,
   CircularProgress,
   DialogActions,
   DialogContent,
+  Divider,
+  FormControlLabel,
+  FormGroup,
   Grid,
   IconButton,
   TextField,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,6 +24,13 @@ import { UserContext } from "../../router";
 import { baseUrl, userAPI } from "../../endpoints";
 import useNotification from "../../helpers/useNotification";
 import LoadingButton from "@mui/lab/LoadingButton";
+import {
+  messageTypesAllowedWithGivenAccessRight,
+  messageTypeDescription,
+  messageTypeName,
+  REGEX_PHONE_NUMBER,
+  subscriptionOfMessageType,
+} from "rating-tracker-commons";
 
 /**
  * A dialog to edit the user’s own information.
@@ -34,23 +46,65 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const [name, setName] = useState<string>(user.name);
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [phone, setPhone] = useState<string>(user.phone);
+  const [phoneError, setPhoneError] = useState<boolean>(false); // Error in the phone text field.
   const [avatar, setAvatar] = useState<string>(user.avatar);
   const [processingAvatar, setProcessingAvatar] = useState<boolean>(true);
+  const [subscriptions, setSubscriptions] = useState<number>(user.subscriptions);
+
+  const subscriptionSwitches: {
+    subscription: number;
+    name: string;
+    description: string;
+  }[] = [
+    ...new Set( // deduplicate
+      user
+        .getAccessRights() // Get a list of all access rights
+        .flatMap((accessRight) => messageTypesAllowedWithGivenAccessRight[accessRight]) // Map to list of message types
+        .filter((messageType) => messageType !== undefined) // Filter out undefined values
+    ),
+  ].map(
+    (messageType) =>
+      messageType && {
+        subscription: subscriptionOfMessageType[messageType],
+        name: messageTypeName[messageType],
+        description: messageTypeDescription[messageType],
+      }
+  );
+
+  /**
+   * Validates the name input field.
+   *
+   * @returns {boolean} Whether the name input field contains a valid name.
+   */
+  const validateName = () => {
+    return (document.getElementById("inputName") as HTMLInputElement).reportValidity();
+  };
+
+  /**
+   * Validates the phone input field.
+   *
+   * @returns {boolean} Whether the phone input field contains a valid phone number.
+   */
+  const validatePhone = () => {
+    return (document.getElementById("inputPhone") as HTMLInputElement).reportValidity();
+  };
 
   /**
    * Checks for errors in the input fields.
    */
   const validate = () => {
     // The following fields are required.
-    setNameError(!name);
-    // TODO Validate phone number for international standard.
+    setNameError(!validateName());
+    setPhoneError(!validatePhone());
   };
 
   /**
    * Updates the user’s profile in the backend.
    */
   const updateProfile = () => {
-    setRequestInProgress(true),
+    validate();
+    if (validateName() && validatePhone()) {
+      setRequestInProgress(true);
       axios
         .patch(
           baseUrl + userAPI,
@@ -64,6 +118,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               // Only send the parameters that have changed.
               name: name !== user.name ? name : undefined,
               phone: phone !== user.phone ? phone : undefined,
+              subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
             },
           }
         )
@@ -89,6 +144,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           });
         })
         .finally(() => setRequestInProgress(false));
+    }
   };
 
   useEffect(() => {
@@ -200,6 +256,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  id="inputName"
                   onChange={(event) => {
                     setName(event.target.value);
                     setNameError(false);
@@ -209,20 +266,62 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   value={name}
                   placeholder={"Jane Doe"}
                   fullWidth
+                  required
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  id="inputPhone"
+                  type="tel"
+                  inputProps={{
+                    pattern: REGEX_PHONE_NUMBER,
+                  }}
                   onChange={(event) => {
                     setPhone(event.target.value);
+                    setPhoneError(false);
                   }}
+                  error={phoneError}
                   label="Phone number"
                   value={phone}
-                  placeholder={"+1 (212) 555-0123"}
+                  placeholder="+12125550123"
                   fullWidth
                 />
               </Grid>
             </Grid>
+          </Grid>
+          <Grid item xs={12} px="24px">
+            <Divider orientation="horizontal" sx={{ my: 2 }} />
+            <Typography variant="h4" pb={0.5}>
+              Subscribe to notifications
+            </Typography>
+            <FormGroup>
+              {subscriptionSwitches.map((subscriptionSwitch) => (
+                <FormControlLabel
+                  sx={{ pt: 1 }}
+                  key={subscriptionSwitch.name}
+                  control={
+                    <Checkbox
+                      checked={(subscriptions & subscriptionSwitch.subscription) === subscriptionSwitch.subscription}
+                      onChange={() => setSubscriptions(subscriptions ^ subscriptionSwitch.subscription)}
+                    />
+                  }
+                  label={
+                    <>
+                      <Typography variant="body1" fontWeight="bold" color="text.primary">
+                        {subscriptionSwitch.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {subscriptionSwitch.description}
+                      </Typography>
+                    </>
+                  }
+                />
+              ))}
+            </FormGroup>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              Notifications are sent via the instant messenger Signal. Be sure to enter the phone number of your Signal
+              account in the field above.
+            </Typography>
           </Grid>
         </Grid>
       </DialogContent>
@@ -233,7 +332,15 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           variant="contained"
           onClick={updateProfile}
           onMouseOver={validate} // Validate input fields on hover
-          disabled={nameError}
+          disabled={
+            // We cannot save if there are errors or if nothing has changed.
+            nameError ||
+            phoneError ||
+            (name === user.name &&
+              phone === user.phone &&
+              avatar === user.avatar &&
+              subscriptions === user.subscriptions)
+          }
           startIcon={<SaveIcon />}
         >
           Update Profile

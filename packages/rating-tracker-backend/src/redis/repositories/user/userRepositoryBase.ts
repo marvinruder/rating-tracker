@@ -6,24 +6,34 @@ import client from "../../Client.js";
  * The user repository.
  */
 export const userRepository = client.fetchRepository(userSchema);
+await userRepository.createIndex();
 
 /**
  * Fetch a user from the repository.
  *
  * @param {string} id The ID of the user to fetch.
- * @returns {UserEntity} The user entity.
+ * @returns {Promise<UserEntity>} A promise that resolves to the user entity.
  */
-export const fetch = (id: string) => {
+export const fetch = (id: string): Promise<UserEntity> => {
   return userRepository.fetch(id);
+};
+
+/**
+ * Fetch all users from the repository.
+ *
+ * @returns {Promise<UserEntity[]>} A promise that resolves to a list of all user entities.
+ */
+export const fetchAll = (): Promise<UserEntity[]> => {
+  return userRepository.search().return.all();
 };
 
 /**
  * Save a user to the repository.
  *
  * @param {UserEntity} userEntity The user entity to save.
- * @returns {string} The ID of the saved user.
+ * @returns {Promise<string>} A promise that resolves to the ID of the saved user.
  */
-export const save = (userEntity: UserEntity) => {
+export const save = (userEntity: UserEntity): Promise<string> => {
   return userRepository.save(userEntity);
 };
 
@@ -31,8 +41,7 @@ export const save = (userEntity: UserEntity) => {
  * Delete a user from the repository.
  *
  * @param {string} id The ID of the user to delete.
- * @returns {void}
  */
 export const remove = (id: string) => {
-  return userRepository.remove(id);
+  userRepository.remove(id);
 };

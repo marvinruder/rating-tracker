@@ -23,6 +23,7 @@ export class User extends CommonsUser {
     if (userEntity.avatar != null) this.avatar = userEntity.avatar;
     if (userEntity.phone != null) this.phone = userEntity.phone;
     this.accessRights = userEntity.accessRights;
+    if (userEntity.subscriptions != null) this.subscriptions = userEntity.subscriptions;
     this.credentialID = userEntity.credentialID;
     this.credentialPublicKey = userEntity.credentialPublicKey;
     this.counter = userEntity.counter;
@@ -54,6 +55,10 @@ export interface UserEntity {
    */
   accessRights: number;
   /**
+   * The subscriptions of the user to message types, encoded as a bitfield.
+   */
+  subscriptions?: number;
+  /**
    * The ID of the WebAuthn credential.
    */
   credentialID: string;
@@ -82,6 +87,7 @@ export const userSchema = new Schema(UserEntity, {
   avatar: { type: "string" },
   phone: { type: "string" },
   accessRights: { type: "number" },
+  subscriptions: { type: "number" },
   credentialID: { type: "string" },
   credentialPublicKey: { type: "string" },
   counter: { type: "number" },
