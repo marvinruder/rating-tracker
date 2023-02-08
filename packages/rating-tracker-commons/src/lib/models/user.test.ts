@@ -22,18 +22,24 @@ describe("User Access Rights", () => {
     expect(root.hasAccessRight(WRITE_STOCKS_ACCESS)).toBe(true);
     expect(root.hasAccessRight(GENERAL_ACCESS)).toBe(true);
     expect(root.hasAccessRight(ADMINISTRATIVE_ACCESS)).toBe(true);
+
+    expect(root.getAccessRights()).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
   });
 
   it("has some access rights", () => {
     expect(regularUser.hasAccessRight(GENERAL_ACCESS)).toBe(true);
     expect(regularUser.hasAccessRight(WRITE_STOCKS_ACCESS)).toBe(false);
     expect(regularUser.hasAccessRight(ADMINISTRATIVE_ACCESS)).toBe(false);
+
+    expect(regularUser.getAccessRights()).toEqual([GENERAL_ACCESS]);
   });
 
   it("has no access rights", () => {
     expect(newUser.hasAccessRight(GENERAL_ACCESS)).toBe(false);
     expect(newUser.hasAccessRight(WRITE_STOCKS_ACCESS)).toBe(false);
     expect(newUser.hasAccessRight(ADMINISTRATIVE_ACCESS)).toBe(false);
+
+    expect(newUser.getAccessRights()).toEqual([]);
   });
 });
 

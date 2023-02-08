@@ -23,7 +23,7 @@ export class User extends CommonsUser {
     if (userEntity.avatar != null) this.avatar = userEntity.avatar;
     if (userEntity.phone != null) this.phone = userEntity.phone;
     this.accessRights = userEntity.accessRights;
-    this.subscriptions = userEntity.subscriptions;
+    if (userEntity.subscriptions != null) this.subscriptions = userEntity.subscriptions;
     this.credentialID = userEntity.credentialID;
     this.credentialPublicKey = userEntity.credentialPublicKey;
     this.counter = userEntity.counter;

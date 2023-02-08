@@ -2,13 +2,18 @@ import {
   Avatar,
   Box,
   Button,
+  Checkbox,
   CircularProgress,
   DialogActions,
   DialogContent,
+  Divider,
+  FormControlLabel,
+  FormGroup,
   Grid,
   IconButton,
   TextField,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,7 +24,13 @@ import { UserContext } from "../../router";
 import { baseUrl, userAPI } from "../../endpoints";
 import useNotification from "../../helpers/useNotification";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { REGEX_PHONE_NUMBER } from "rating-tracker-commons";
+import {
+  messageTypesAllowedWithGivenAccessRight,
+  messageTypeDescription,
+  messageTypeName,
+  REGEX_PHONE_NUMBER,
+  subscriptionOfMessageType,
+} from "rating-tracker-commons";
 
 /**
  * A dialog to edit the user’s own information.
@@ -38,6 +49,27 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const [phoneError, setPhoneError] = useState<boolean>(false); // Error in the phone text field.
   const [avatar, setAvatar] = useState<string>(user.avatar);
   const [processingAvatar, setProcessingAvatar] = useState<boolean>(true);
+  const [subscriptions, setSubscriptions] = useState<number>(user.subscriptions);
+
+  const subscriptionSwitches: {
+    subscription: number;
+    name: string;
+    description: string;
+  }[] = [
+    ...new Set( // deduplicate
+      user
+        .getAccessRights() // Get a list of all access rights
+        .flatMap((accessRight) => messageTypesAllowedWithGivenAccessRight[accessRight]) // Map to list of message types
+        .filter((messageType) => messageType !== undefined) // Filter out undefined values
+    ),
+  ].map(
+    (messageType) =>
+      messageType && {
+        subscription: subscriptionOfMessageType[messageType],
+        name: messageTypeName[messageType],
+        description: messageTypeDescription[messageType],
+      }
+  );
 
   /**
    * Validates the name input field.
@@ -86,6 +118,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               // Only send the parameters that have changed.
               name: name !== user.name ? name : undefined,
               phone: phone !== user.phone ? phone : undefined,
+              subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
             },
           }
         )
@@ -256,6 +289,40 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               </Grid>
             </Grid>
           </Grid>
+          <Grid item xs={12} px="24px">
+            <Divider orientation="horizontal" sx={{ my: 2 }} />
+            <Typography variant="h4" pb={0.5}>
+              Subscribe to notifications
+            </Typography>
+            <FormGroup>
+              {subscriptionSwitches.map((subscriptionSwitch) => (
+                <FormControlLabel
+                  sx={{ pt: 1 }}
+                  key={subscriptionSwitch.name}
+                  control={
+                    <Checkbox
+                      checked={(subscriptions & subscriptionSwitch.subscription) === subscriptionSwitch.subscription}
+                      onChange={() => setSubscriptions(subscriptions ^ subscriptionSwitch.subscription)}
+                    />
+                  }
+                  label={
+                    <>
+                      <Typography variant="body1" fontWeight="bold" color="text.primary">
+                        {subscriptionSwitch.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {subscriptionSwitch.description}
+                      </Typography>
+                    </>
+                  }
+                />
+              ))}
+            </FormGroup>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              Notifications are sent via the instant messenger Signal. Be sure to enter the phone number of your Signal
+              account in the field above.
+            </Typography>
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 0 }}>
@@ -265,7 +332,15 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           variant="contained"
           onClick={updateProfile}
           onMouseOver={validate} // Validate input fields on hover
-          disabled={nameError || phoneError}
+          disabled={
+            // We cannot save if there are errors or if nothing has changed.
+            nameError ||
+            phoneError ||
+            (name === user.name &&
+              phone === user.phone &&
+              avatar === user.avatar &&
+              subscriptions === user.subscriptions)
+          }
           startIcon={<SaveIcon />}
         >
           Update Profile

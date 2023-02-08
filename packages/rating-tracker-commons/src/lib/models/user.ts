@@ -96,6 +96,17 @@ export class User {
   }
 
   /**
+   * Computes the separate access rights a user has.
+   *
+   * @returns {number[]} A list of access rights a user has.
+   */
+  public getAccessRights(): number[] {
+    const accessRights: number[] = [];
+    Array.from(Array(8).keys()).forEach((i) => this.hasAccessRight(1 << i) && accessRights.push(1 << i));
+    return accessRights;
+  }
+
+  /**
    * Checks whether the user has subscribed to the given message type.
    *
    * @param {number} subscription The subscription to check.

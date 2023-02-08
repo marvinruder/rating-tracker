@@ -42,4 +42,17 @@ const phone: OpenAPIV3.ParameterObject = {
   },
 };
 
-export { email, name, phone };
+/**
+ * The subscriptions of the user to different types of messages, encoded as a bitfield
+ */
+const subscriptions: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "subscriptions",
+  description: "The subscriptions of the user to different types of messages, encoded as a bitfield",
+  schema: {
+    type: "integer",
+    example: 1,
+  },
+};
+
+export { email, name, phone, subscriptions };

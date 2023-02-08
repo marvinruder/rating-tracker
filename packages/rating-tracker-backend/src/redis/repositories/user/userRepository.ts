@@ -100,13 +100,14 @@ export const updateUser = async (email: string, newValues: Partial<Omit<User, "e
               userEntity[k] = newValues[k];
               break;
             case "accessRights":
+            case "subscriptions":
             // deepcode ignore DuplicateCaseBody: Reassignment must happen per type
             case "counter":
               userEntity[k] = newValues[k];
               break;
-            // default:
-            //   userEntity[k] = newValues[k];
-            //   break;
+            /* istanbul ignore next */ // Not testable since the cases above cover all possible values
+            default:
+              throw new APIError(400, `Invalid property ${k} for user ${userEntity.email}.`);
           }
         }
       }

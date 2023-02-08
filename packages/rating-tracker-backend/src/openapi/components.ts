@@ -265,6 +265,11 @@ export const components: OpenAPIV3.ComponentsObject = {
           description: "The access rights of the user, encoded as a bitfield",
           example: 1,
         },
+        subscriptions: {
+          type: "integer",
+          description: "The subscriptions of the user to different types of messages, encoded as a bitfield",
+          example: 1,
+        },
       },
     },
     Error: {

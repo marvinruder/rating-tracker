@@ -211,9 +211,9 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
             case "sustainalyticsESGRisk":
               stockEntity[k] = newValues[k];
               break;
-            // default:
-            //   stockEntity[k] = newValues[k];
-            //   break;
+            /* istanbul ignore next */ // Not testable since the cases above cover all possible values
+            default:
+              throw new APIError(400, `Invalid property ${k} for stock ${stockEntity.ticker}.`);
           }
         }
       }
