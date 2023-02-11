@@ -7799,7 +7799,7 @@ __metadata:
     react-switch-selector: 2.2.1
     react-tsparticles: 2.9.0
     tsparticles: 2.9.0
-    tsparticles-engine: 2.8.0
+    tsparticles-engine: 2.9.0
     typescript: 4.9.5
     vite: 4.1.1
     vite-plugin-html: 3.2.0
@@ -9133,14 +9133,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsparticles-engine@npm:2.8.0":
-  version: 2.8.0
-  resolution: "tsparticles-engine@npm:2.8.0"
-  checksum: 100635a3456b62fc74baea157945d731ba6a02ad0e4e352ebbaf14f2a81d6c553e5807c93611c830676d8a0bd1c5e9a16039fbb1139d1e0a9611db175af50257
-  languageName: node
-  linkType: hard
-
-"tsparticles-engine@npm:^2.9.0":
+"tsparticles-engine@npm:2.9.0, tsparticles-engine@npm:^2.9.0":
   version: 2.9.0
   resolution: "tsparticles-engine@npm:2.9.0"
   checksum: 01725afacb412d45e6021a30086e391315c19d9c66c0ecaccc6453da49363a2e276ca2c46118301b6997863cee675cc74238745f086a724bec6f96b2df64892d
