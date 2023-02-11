@@ -10061,7 +10061,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-router", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:6.8.1"],\
             ["react-router-dom", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:6.8.1"],\
             ["react-switch-selector", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.2.1"],\
-            ["react-tsparticles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.8.0"],\
+            ["react-tsparticles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.9.0"],\
             ["tsparticles", "npm:2.8.0"],\
             ["tsparticles-engine", "npm:2.8.0"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
@@ -10307,17 +10307,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["react-tsparticles", [\
-        ["npm:2.8.0", {\
-          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-29a4375dfb/node_modules/react-tsparticles/",\
+        ["npm:2.9.0", {\
+          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-aaa182caf7/node_modules/react-tsparticles/",\
           "packageDependencies": [\
-            ["react-tsparticles", "npm:2.8.0"]\
+            ["react-tsparticles", "npm:2.9.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.8.0", {\
-          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-29a4375dfb/node_modules/react-tsparticles/",\
+        ["virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.9.0", {\
+          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-aaa182caf7/node_modules/react-tsparticles/",\
           "packageDependencies": [\
-            ["react-tsparticles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.8.0"],\
+            ["react-tsparticles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.9.0"],\
             ["@types/react", "npm:18.0.27"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["react", "npm:18.2.0"],\
