@@ -10057,7 +10057,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:18.2.0"],\
             ["react-apexcharts", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:1.4.0"],\
             ["react-dom", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:18.2.0"],\
-            ["react-particles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.9.0"],\
+            ["react-particles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.9.1"],\
             ["react-router", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:6.8.1"],\
             ["react-router-dom", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:6.8.1"],\
             ["react-switch-selector", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.2.1"],\
@@ -10163,21 +10163,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["react-particles", [\
-        ["npm:2.9.0", {\
-          "packageLocation": "./.yarn/unplugged/react-particles-virtual-fd3f6be219/node_modules/react-particles/",\
+        ["npm:2.9.1", {\
+          "packageLocation": "./.yarn/unplugged/react-particles-virtual-727301fc08/node_modules/react-particles/",\
           "packageDependencies": [\
-            ["react-particles", "npm:2.9.0"]\
+            ["react-particles", "npm:2.9.1"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.9.0", {\
-          "packageLocation": "./.yarn/unplugged/react-particles-virtual-fd3f6be219/node_modules/react-particles/",\
+        ["virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.9.1", {\
+          "packageLocation": "./.yarn/unplugged/react-particles-virtual-727301fc08/node_modules/react-particles/",\
           "packageDependencies": [\
-            ["react-particles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.9.0"],\
+            ["react-particles", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:2.9.1"],\
             ["@types/react", "npm:18.0.28"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["react", "npm:18.2.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "packagePeers": [\
             "@types/react",\
@@ -10321,7 +10321,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:18.0.28"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["react", "npm:18.2.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "packagePeers": [\
             "@types/react",\
@@ -11649,7 +11649,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-npm-2.9.0-eb76403276-1686383424.zip/node_modules/tsparticles/",\
           "packageDependencies": [\
             ["tsparticles", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"],\
+            ["tsparticles-engine", "npm:2.9.1"],\
             ["tsparticles-interaction-external-trail", "npm:2.9.0"],\
             ["tsparticles-plugin-absorbers", "npm:2.9.0"],\
             ["tsparticles-plugin-emitters", "npm:2.9.0"],\
@@ -11670,6 +11670,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tsparticles-engine", "npm:2.9.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:2.9.1", {\
+          "packageLocation": "./.yarn/unplugged/tsparticles-engine-npm-2.9.1-cdbac0c252/node_modules/tsparticles-engine/",\
+          "packageDependencies": [\
+            ["tsparticles-engine", "npm:2.9.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["tsparticles-interaction-external-attract", [\
@@ -11677,7 +11684,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-attract-npm-2.9.0-9c9e20a381-03c349483c.zip/node_modules/tsparticles-interaction-external-attract/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-attract", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11687,7 +11694,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-bounce-npm-2.9.0-608c0a8204-6c1caa4428.zip/node_modules/tsparticles-interaction-external-bounce/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-bounce", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11697,7 +11704,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-bubble-npm-2.9.0-5b17d8669c-ed8bf3e8c2.zip/node_modules/tsparticles-interaction-external-bubble/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-bubble", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11707,7 +11714,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-connect-npm-2.9.0-eab723c5d4-2854074ca4.zip/node_modules/tsparticles-interaction-external-connect/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-connect", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11717,7 +11724,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-grab-npm-2.9.0-5f26f6be97-b6a455c6b1.zip/node_modules/tsparticles-interaction-external-grab/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-grab", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11727,7 +11734,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-pause-npm-2.9.0-b824dabdcb-8957bb7fb5.zip/node_modules/tsparticles-interaction-external-pause/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-pause", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11737,7 +11744,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-push-npm-2.9.0-b48176b88f-db86ada2e5.zip/node_modules/tsparticles-interaction-external-push/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-push", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11747,7 +11754,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-remove-npm-2.9.0-9b6ef0c081-99fc9956b0.zip/node_modules/tsparticles-interaction-external-remove/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-remove", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11757,7 +11764,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-repulse-npm-2.9.0-473ec6957a-cae5a0587c.zip/node_modules/tsparticles-interaction-external-repulse/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-repulse", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11767,7 +11774,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-slow-npm-2.9.0-1e1e56534f-1d433b4833.zip/node_modules/tsparticles-interaction-external-slow/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-slow", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11777,7 +11784,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-external-trail-npm-2.9.0-b8ed2d9e00-4c3ed08704.zip/node_modules/tsparticles-interaction-external-trail/",\
           "packageDependencies": [\
             ["tsparticles-interaction-external-trail", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11787,7 +11794,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-particles-attract-npm-2.9.0-882c5f4858-f4a778ce4d.zip/node_modules/tsparticles-interaction-particles-attract/",\
           "packageDependencies": [\
             ["tsparticles-interaction-particles-attract", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11797,7 +11804,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-particles-collisions-npm-2.9.0-3bd4df4c8a-93c16e6834.zip/node_modules/tsparticles-interaction-particles-collisions/",\
           "packageDependencies": [\
             ["tsparticles-interaction-particles-collisions", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11807,7 +11814,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-interaction-particles-links-npm-2.9.0-66165433bd-a2b40e9be4.zip/node_modules/tsparticles-interaction-particles-links/",\
           "packageDependencies": [\
             ["tsparticles-interaction-particles-links", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11817,7 +11824,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-move-base-npm-2.9.0-a24e4f8358-5d59a7aab4.zip/node_modules/tsparticles-move-base/",\
           "packageDependencies": [\
             ["tsparticles-move-base", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11827,7 +11834,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-move-parallax-npm-2.9.0-1579f70be7-d738040476.zip/node_modules/tsparticles-move-parallax/",\
           "packageDependencies": [\
             ["tsparticles-move-parallax", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11837,7 +11844,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-particles.js-npm-2.9.0-1e49c3efd9-c56e2a29c5.zip/node_modules/tsparticles-particles.js/",\
           "packageDependencies": [\
             ["tsparticles-particles.js", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11847,7 +11854,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-plugin-absorbers-npm-2.9.0-865228cb62-7d2bbfd4cf.zip/node_modules/tsparticles-plugin-absorbers/",\
           "packageDependencies": [\
             ["tsparticles-plugin-absorbers", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11857,7 +11864,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-plugin-easing-quad-npm-2.9.0-a43b6cd53a-f49d6fb866.zip/node_modules/tsparticles-plugin-easing-quad/",\
           "packageDependencies": [\
             ["tsparticles-plugin-easing-quad", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11867,7 +11874,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-plugin-emitters-npm-2.9.0-5028e9806f-0cede49328.zip/node_modules/tsparticles-plugin-emitters/",\
           "packageDependencies": [\
             ["tsparticles-plugin-emitters", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11877,7 +11884,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-shape-circle-npm-2.9.0-dcb5710848-a294c1d795.zip/node_modules/tsparticles-shape-circle/",\
           "packageDependencies": [\
             ["tsparticles-shape-circle", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11887,7 +11894,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-shape-image-npm-2.9.0-fec1e70f35-b8b507d837.zip/node_modules/tsparticles-shape-image/",\
           "packageDependencies": [\
             ["tsparticles-shape-image", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11897,7 +11904,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-shape-line-npm-2.9.0-79ad08bf35-aef965cca6.zip/node_modules/tsparticles-shape-line/",\
           "packageDependencies": [\
             ["tsparticles-shape-line", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11907,7 +11914,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-shape-polygon-npm-2.9.0-a03874c7b8-8a21a751ff.zip/node_modules/tsparticles-shape-polygon/",\
           "packageDependencies": [\
             ["tsparticles-shape-polygon", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11917,7 +11924,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-shape-square-npm-2.9.0-9f14b752c1-efbc908e2f.zip/node_modules/tsparticles-shape-square/",\
           "packageDependencies": [\
             ["tsparticles-shape-square", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11927,7 +11934,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-shape-star-npm-2.9.0-00fdc36df9-fcafcf5a3a.zip/node_modules/tsparticles-shape-star/",\
           "packageDependencies": [\
             ["tsparticles-shape-star", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11937,7 +11944,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-shape-text-npm-2.9.0-cf041557c1-0cc8cc6c54.zip/node_modules/tsparticles-shape-text/",\
           "packageDependencies": [\
             ["tsparticles-shape-text", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11947,7 +11954,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-slim-npm-2.9.0-16c466318a-d2faf89a46.zip/node_modules/tsparticles-slim/",\
           "packageDependencies": [\
             ["tsparticles-slim", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"],\
+            ["tsparticles-engine", "npm:2.9.1"],\
             ["tsparticles-interaction-external-attract", "npm:2.9.0"],\
             ["tsparticles-interaction-external-bounce", "npm:2.9.0"],\
             ["tsparticles-interaction-external-bubble", "npm:2.9.0"],\
@@ -11988,7 +11995,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-angle-npm-2.9.0-77f23cc836-6a3b356b6b.zip/node_modules/tsparticles-updater-angle/",\
           "packageDependencies": [\
             ["tsparticles-updater-angle", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11998,7 +12005,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-color-npm-2.9.0-9655478c6c-4b50affba2.zip/node_modules/tsparticles-updater-color/",\
           "packageDependencies": [\
             ["tsparticles-updater-color", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12008,7 +12015,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-destroy-npm-2.9.0-a7a9b7c796-26acf2464c.zip/node_modules/tsparticles-updater-destroy/",\
           "packageDependencies": [\
             ["tsparticles-updater-destroy", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12018,7 +12025,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-life-npm-2.9.0-98140bc242-19a267cbe8.zip/node_modules/tsparticles-updater-life/",\
           "packageDependencies": [\
             ["tsparticles-updater-life", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12028,7 +12035,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-opacity-npm-2.9.0-b897be43af-8347ec5122.zip/node_modules/tsparticles-updater-opacity/",\
           "packageDependencies": [\
             ["tsparticles-updater-opacity", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12038,7 +12045,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-out-modes-npm-2.9.0-61cd279d5a-9ca64a8909.zip/node_modules/tsparticles-updater-out-modes/",\
           "packageDependencies": [\
             ["tsparticles-updater-out-modes", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12048,7 +12055,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-roll-npm-2.9.0-080d3600fd-494efc1249.zip/node_modules/tsparticles-updater-roll/",\
           "packageDependencies": [\
             ["tsparticles-updater-roll", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12058,7 +12065,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-size-npm-2.9.0-f2bdbe0b2a-ffda85eead.zip/node_modules/tsparticles-updater-size/",\
           "packageDependencies": [\
             ["tsparticles-updater-size", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12068,7 +12075,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-stroke-color-npm-2.9.0-61654798a1-5ebdd81c6f.zip/node_modules/tsparticles-updater-stroke-color/",\
           "packageDependencies": [\
             ["tsparticles-updater-stroke-color", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12078,7 +12085,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-tilt-npm-2.9.0-fa87867b57-d10843e1a1.zip/node_modules/tsparticles-updater-tilt/",\
           "packageDependencies": [\
             ["tsparticles-updater-tilt", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12088,7 +12095,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-twinkle-npm-2.9.0-a4a828d7bc-6936bc50d5.zip/node_modules/tsparticles-updater-twinkle/",\
           "packageDependencies": [\
             ["tsparticles-updater-twinkle", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12098,7 +12105,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tsparticles-updater-wobble-npm-2.9.0-ff79c789a9-251bdd1b77.zip/node_modules/tsparticles-updater-wobble/",\
           "packageDependencies": [\
             ["tsparticles-updater-wobble", "npm:2.9.0"],\
-            ["tsparticles-engine", "npm:2.9.0"]\
+            ["tsparticles-engine", "npm:2.9.1"]\
           ],\
           "linkType": "HARD"\
         }]\
