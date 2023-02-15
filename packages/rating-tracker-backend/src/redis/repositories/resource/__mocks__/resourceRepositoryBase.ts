@@ -6,7 +6,7 @@ import { ResourceEntity, resourceSchema } from "../../../../models/resource.js";
 let resourceRepository: Map<string, ResourceEntity>;
 
 /**
- * Initializes the mock repository.
+ * Initializes the mock repository with one exemplary resource.
  */
 export const initResourceRepository = () => {
   resourceRepository = new Map<string, ResourceEntity>();
@@ -17,8 +17,6 @@ export const initResourceRepository = () => {
     })
   );
 };
-
-initResourceRepository();
 
 /**
  * Fetch a resource from the mock repository.

@@ -5,6 +5,7 @@ import { initSessionRepository } from "./redis/repositories/session/__mocks__/se
 import { initStockRepository } from "./redis/repositories/stock/__mocks__/stockRepositoryBase";
 import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { initResourceRepository } from "./redis/repositories/resource/__mocks__/resourceRepositoryBase.js";
 
 vi.mock("./lib/logger");
 
@@ -18,6 +19,7 @@ const { listener, server } = await import("./server");
 const requestWithSupertest = supertest(server.app);
 
 beforeEach(() => {
+  initResourceRepository();
   initStockRepository();
   initSessionRepository();
   initUserRepository();
