@@ -214,7 +214,7 @@ class FetchController {
 
       try {
         await driver.get(
-          `https://tools.morningstar.co.uk/uk/stockreport/default.aspx?Site=us&id=${stock.morningstarId}` +
+          `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarId}` +
             `&LanguageId=en-US&SecurityToken=${stock.morningstarId}]3]0]E0WWE$$ALL`
         );
         await driver.wait(
