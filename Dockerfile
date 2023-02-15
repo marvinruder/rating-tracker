@@ -27,7 +27,6 @@ RUN find /workdir/packages -type f '(' -name "*.d.ts*" -o -name "*.tsbuildinfo" 
   /workdir/.yarn/cache/@types-* \
   /workdir/.yarn/cache/@typescript-* \
   /workdir/.yarn/cache/caniuse-* \
-  /workdir/.yarn/cache/cbor-x-* \
   /workdir/.yarn/cache/esbuild-* \
   /workdir/.yarn/cache/eslint-* \
   /workdir/.yarn/cache/istanbul-* \
