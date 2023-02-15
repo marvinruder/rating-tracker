@@ -1,26 +1,26 @@
-import { jest } from "@jest/globals";
 import { sortableAttributeArray } from "rating-tracker-commons";
 import supertest, { CallbackHandler, Test } from "supertest";
 import { Stock } from "./models/stock";
 import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
 import { initStockRepository } from "./redis/repositories/stock/__mocks__/stockRepositoryBase";
 import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-jest.unstable_mockModule("./lib/logger", async () => await import("./lib/__mocks__/logger"));
+vi.mock("./lib/logger", async () => await import("./lib/__mocks__/logger"));
 
-jest.unstable_mockModule(
+vi.mock(
   "./redis/repositories/resource/resourceRepositoryBase",
   async () => await import("./redis/repositories/resource/__mocks__/resourceRepositoryBase")
 );
-jest.unstable_mockModule(
+vi.mock(
   "./redis/repositories/session/sessionRepositoryBase",
   async () => await import("./redis/repositories/session/__mocks__/sessionRepositoryBase")
 );
-jest.unstable_mockModule(
+vi.mock(
   "./redis/repositories/stock/stockRepositoryBase",
   async () => await import("./redis/repositories/stock/__mocks__/stockRepositoryBase")
 );
-jest.unstable_mockModule(
+vi.mock(
   "./redis/repositories/user/userRepositoryBase",
   async () => await import("./redis/repositories/user/__mocks__/userRepositoryBase")
 );
@@ -29,20 +29,14 @@ const { listener, server } = await import("./server");
 
 const requestWithSupertest = supertest(server.app);
 
-beforeAll((done) => {
-  done();
-});
-
-beforeEach((done) => {
+beforeEach(() => {
   initStockRepository();
   initSessionRepository();
   initUserRepository();
-  done();
 });
 
-afterAll((done) => {
+afterAll(() => {
   listener.close();
-  done();
 });
 
 const expectStockListLengthToBe = async (length: number) => {
@@ -548,6 +542,13 @@ describe("Authentication API", () => {
 });
 
 describe("Resource API", () => {
+  it("provides a resource", async () => {
+    await expectRouteToBePrivate("/api/resource/image.png");
+    const res = await requestWithSupertest.get("/api/resource/image.png").set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.toString()).toMatch("Sample PNG image");
+  });
+
   it("does not provide resources of unknown type", async () => {
     await expectRouteToBePrivate("/api/resource/odd.exe");
     const res = await requestWithSupertest.get("/api/resource/odd.exe").set("Cookie", ["authToken=exampleSessionID"]);

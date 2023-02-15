@@ -66,7 +66,7 @@ class AuthController {
   }
 
   // This function is not tested because it is difficult to mock creating a valid challenge response.
-  /* istanbul ignore next */
+  /* istanbul ignore next -- @preserve */
   /**
    * Verifies the registration response and creates a new user if the request is valid.
    *
@@ -142,7 +142,7 @@ class AuthController {
   }
 
   // This function is not tested because it is difficult to mock creating a valid challenge response.
-  /* istanbul ignore next */
+  /* istanbul ignore next -- @preserve */
   /**
    * Verifies the authentication response and creates a session cookie if the challenge response is valid.
    *

@@ -29,5 +29,5 @@
       }
     ]
   },
-  "ignorePatterns": ["jest.config.ts"]
+  "ignorePatterns": ["vitest.config.ts"]
 }

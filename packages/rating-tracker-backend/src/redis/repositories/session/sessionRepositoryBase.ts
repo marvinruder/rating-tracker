@@ -1,4 +1,4 @@
-/* istanbul ignore file */ // This file is mocked since tests must not depend on a running Redis instance
+/* istanbul ignore file -- @preserve */ // This file is mocked since tests must not depend on a running Redis instance
 import { SessionEntity, sessionSchema } from "../../../models/session.js";
 import client from "../../Client.js";
 

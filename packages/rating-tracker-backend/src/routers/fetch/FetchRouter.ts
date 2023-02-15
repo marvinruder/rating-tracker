@@ -1,5 +1,5 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
-/* istanbul ignore file */
+/* istanbul ignore file -- @preserve */
 import { Request, Response, Router } from "express";
 import FetchController from "../../controllers/FetchController.js";
 import "express-async-errors";

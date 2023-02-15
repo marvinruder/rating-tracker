@@ -11,7 +11,8 @@ import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
  * @param {User} user The user to create.
  * @returns {Promise<boolean>} A promise that resolves to true if the user was created, false if it already existed.
  */
-/* istanbul ignore next */ // Since we cannot yet test the authentication process, we cannot create a valid User
+// Since we cannot yet test the authentication process, we cannot create a valid User
+/* istanbul ignore next -- @preserve */
 export const createUser = async (user: User): Promise<boolean> => {
   const existingUser = await fetch(user.email); // Attempt to fetch an existing user with the same email address
   if (existingUser && existingUser.name) {
@@ -43,7 +44,7 @@ export const readUser = async (email: string): Promise<User> => {
   if (userEntity && userEntity.name) {
     return new User(userEntity);
   }
-  /* istanbul ignore next */
+  /* istanbul ignore next -- @preserve */
   throw new APIError(404, `User ${email} not found.`);
 };
 
@@ -77,7 +78,7 @@ export const userExists = async (email: string): Promise<boolean> => {
  * @param {Partial<Omit<User, "email">>} newValues The new values for the user.
  * @throws an {@link APIError} if the user does not exist.
  */
-/* istanbul ignore next */ // This is only called after an authentication, which we cannot yet test
+/* istanbul ignore next -- @preserve */ // This is only called after an authentication, which we cannot yet test
 export const updateUser = async (email: string, newValues: Partial<Omit<User, "email">>) => {
   let k: keyof typeof newValues; // all keys of new values
   const userEntity = await fetch(email); // Fetch the user from Redis
@@ -105,7 +106,7 @@ export const updateUser = async (email: string, newValues: Partial<Omit<User, "e
             case "counter":
               userEntity[k] = newValues[k];
               break;
-            /* istanbul ignore next */ // Not testable since the cases above cover all possible values
+            /* istanbul ignore next -- @preserve */ // Not testable since the cases above cover all possible values
             default:
               throw new APIError(400, `Invalid property ${k} for user ${userEntity.email}.`);
           }
@@ -131,7 +132,7 @@ export const updateUser = async (email: string, newValues: Partial<Omit<User, "e
  */
 export const deleteUser = async (email: string) => {
   const userEntity = await fetch(email);
-  /* istanbul ignore else */ // Not reached in current tests since a user can only delete themself
+  /* istanbul ignore else -- @preserve */ // Not reached in current tests since a user can only delete themself
   if (userEntity && userEntity.name) {
     const name = new User(userEntity).name;
     await remove(userEntity.entityId);

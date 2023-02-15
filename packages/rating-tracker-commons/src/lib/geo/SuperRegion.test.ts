@@ -1,4 +1,5 @@
 import { isSuperRegion, getRegionsInSuperRegion } from "./SuperRegion";
+import { describe, expect, it } from "vitest";
 
 describe("Super Region", () => {
   it("is a super region", () => {

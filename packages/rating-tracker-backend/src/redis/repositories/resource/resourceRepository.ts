@@ -13,7 +13,7 @@ import { expire, fetch, save } from "./resourceRepositoryBase.js";
  */
 export const createResource = async (resource: Resource, ttlInSeconds?: number): Promise<boolean> => {
   const existingResource = await fetch(resource.url); // Attempt to fetch an existing resource with the same URL
-  /* istanbul ignore next */
+  /* istanbul ignore next -- @preserve */
   if (existingResource && existingResource.content) {
     // If that worked, a resource with the same URL already exists
     logger.warn(PREFIX_REDIS + chalk.yellowBright(`Skipping resource ${existingResource.url} – existing already.`));

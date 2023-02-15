@@ -1,4 +1,5 @@
 import { isMessageType } from "./MessageType";
+import { describe, expect, it } from "vitest";
 
 describe("Message Type", () => {
   it("is a message type", () => {

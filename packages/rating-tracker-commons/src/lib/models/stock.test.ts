@@ -1,8 +1,9 @@
 import { Stock } from "./stock";
+import { describe, expect, it } from "vitest";
 
 describe("Stock Scores", () => {
   it("has score when empty", () => {
-    const emptyStock = new Stock({});
+    const emptyStock = new Stock();
     expect(emptyStock.getTotalScore()).toBe(0);
   });
 

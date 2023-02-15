@@ -1,4 +1,5 @@
 import { isRegion, getCountriesInRegion } from "./Region";
+import { describe, expect, it } from "vitest";
 
 describe("Region", () => {
   it("is a region", () => {

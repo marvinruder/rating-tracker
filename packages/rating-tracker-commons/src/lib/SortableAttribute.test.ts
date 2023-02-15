@@ -1,4 +1,5 @@
 import { isSortableAttribute } from "./SortableAttribute";
+import { describe, expect, it } from "vitest";
 
 describe("Sortable Attribute", () => {
   it("is a sortable attribute", () => {

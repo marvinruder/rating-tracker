@@ -12,7 +12,8 @@ import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
  * @param {Session} session The session to create.
  * @returns {boolean} Whether the session was created.
  */
-/* istanbul ignore next */ // Since we cannot yet test the authentication process, we cannot create a valid Session
+// Since we cannot yet test the authentication process, we cannot create a valid Session
+/* istanbul ignore next -- @preserve */
 export const createSession = async (session: Session): Promise<boolean> => {
   const existingSession = await fetch(session.sessionID); // Attempt to fetch an existing session with the same ID
   if (existingSession && existingSession.email) {
@@ -55,7 +56,8 @@ export const refreshSessionAndFetchUser = async (sessionID: string): Promise<Use
 
 export const deleteSession = async (sessionID: string) => {
   const sessionEntity = await fetch(sessionID);
-  /* istanbul ignore else  */ // Not reached in current tests since a user can only delete their current session
+  // Not reached in current tests since a user can only delete their current session
+  /* istanbul ignore else -- @preserve */
   if (sessionEntity && sessionEntity.email) {
     const email = new Session(sessionEntity).email;
     await remove(sessionEntity.entityId);

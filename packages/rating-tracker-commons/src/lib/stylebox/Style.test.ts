@@ -1,4 +1,5 @@
 import { isStyle } from "./Style";
+import { describe, expect, it } from "vitest";
 
 describe("Style", () => {
   it("is a style", () => {

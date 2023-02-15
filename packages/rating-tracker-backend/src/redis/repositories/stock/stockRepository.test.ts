@@ -1,16 +1,10 @@
-import { jest } from "@jest/globals";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 
-jest.unstable_mockModule("../../../lib/logger", async () => await import("../../../lib/__mocks__/logger"));
+vi.mock("../../../lib/logger", async () => await import("../../../lib/__mocks__/logger"));
 
-jest.unstable_mockModule(
-  "../../../signal/signalBase",
-  async () => await import("../../../signal/__mocks__/signalBase")
-);
-jest.unstable_mockModule("./stockRepositoryBase", async () => await import("./__mocks__/stockRepositoryBase"));
-jest.unstable_mockModule(
-  "../user/userRepositoryBase",
-  async () => await import("../user/__mocks__/userRepositoryBase")
-);
+vi.mock("../../../signal/signalBase", async () => await import("../../../signal/__mocks__/signalBase"));
+vi.mock("./stockRepositoryBase", async () => await import("./__mocks__/stockRepositoryBase"));
+vi.mock("../user/userRepositoryBase", async () => await import("../user/__mocks__/userRepositoryBase"));
 
 const { createStock, readStock, updateStock } = await import("./stockRepository");
 import dotenv from "dotenv";
@@ -23,14 +17,9 @@ dotenv.config({
   path: ".env.local",
 });
 
-beforeAll((done) => {
+beforeAll(() => {
   initStockRepository();
   initUserRepository();
-  done();
-});
-
-afterAll((done) => {
-  done();
 });
 
 describe("CRUD methods for single stock that are difficult to test otherwise", () => {
@@ -86,7 +75,7 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
 
     await updateStock("NEWSTOCK", newValues);
 
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await new Promise((resolve) => setTimeout(resolve, 1));
 
     const slightlyWorseValues: Partial<Omit<Stock, "ticker">> = {
       starRating: 3,
@@ -123,7 +112,7 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
 
     await updateStock("NEWSTOCK", newValues);
 
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await new Promise((resolve) => setTimeout(resolve, 1));
 
     expect(sentMessages[0].message).toMatch("🟢");
     expect(sentMessages[1].message).toMatch("🔴");
@@ -139,5 +128,23 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
 
     expect(updatedStock.ticker).toMatch("NEWSTOCK");
     expect(updatedStock.name).toMatch("Updated Stock");
+  });
+
+  it("cannot update a stock with an invalid property", async () => {
+    await createStock(
+      new Stock({
+        ticker: "NEWSTOCK",
+        name: "New Stock Inc.",
+        isin: "US123456789",
+        country: "US",
+      })
+    );
+
+    const invalidValues: any = {
+      questionableProperty: "This is not a valid property",
+    };
+    await expect(updateStock("NEWSTOCK", invalidValues)).rejects.toThrow(
+      "Invalid property questionableProperty for stock NEWSTOCK."
+    );
   });
 });

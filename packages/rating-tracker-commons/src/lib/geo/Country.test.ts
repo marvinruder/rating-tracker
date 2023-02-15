@@ -1,4 +1,5 @@
 import { emojiFlag, isCountry } from "./Country";
+import { describe, expect, it } from "vitest";
 
 describe("Country Codes", () => {
   it("is an ISO 3166-1 alpha-2 country code", () => {

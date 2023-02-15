@@ -1,4 +1,4 @@
-/* istanbul ignore file */ // We do not need to test the logger itself
+/* istanbul ignore file -- @preserve */ // We do not need to test the logger itself
 import pino from "pino";
 import pretty from "pino-pretty";
 import fs from "node:fs";

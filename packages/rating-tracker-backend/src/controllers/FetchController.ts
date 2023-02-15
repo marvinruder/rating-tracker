@@ -1,5 +1,5 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
-/* istanbul ignore file */
+/* istanbul ignore file -- @preserve */
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 import { Builder, By, Capabilities, until, WebDriver } from "selenium-webdriver";

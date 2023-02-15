@@ -1,4 +1,5 @@
 import { getSectorsInSuperSector, isSuperSector } from "./SuperSector";
+import { describe, expect, it } from "vitest";
 
 describe("Super Sector", () => {
   it("is a super sector", () => {

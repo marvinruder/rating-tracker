@@ -6,10 +6,11 @@ import {
   ADMINISTRATIVE_MESSAGE,
   WRITE_STOCKS_ACCESS,
 } from "./user";
+import { describe, expect, it } from "vitest";
 
 const root = new User({ accessRights: 255, subscriptions: 255 });
 const regularUser = new User({ accessRights: GENERAL_ACCESS, subscriptions: STOCK_UPDATE_MESSAGE });
-const newUser = new User({ accessRights: 0, subscriptions: 0 });
+const newUser = new User();
 
 const userWithIllegalSubscription = new User({
   accessRights: GENERAL_ACCESS,

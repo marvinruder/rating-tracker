@@ -56,7 +56,7 @@ server.app.disable("x-powered-by");
  */
 const staticContentPath = path.join(__dirname, "..", "..", "public");
 
-/* istanbul ignore next */ // This is not tested because it is only used in development servers
+/* istanbul ignore next -- @preserve */ // This is not tested because it is only used in development servers
 if (!process.env.AUTO_FETCH_SCHEDULE || process.env.NODE_ENV === "development") {
   server.app.use(
     "/assets/images/favicon",
@@ -69,7 +69,7 @@ if (!process.env.AUTO_FETCH_SCHEDULE || process.env.NODE_ENV === "development") 
   );
 }
 
-/* istanbul ignore next */ // We do not have static resources in tests, so this middleware is not tested
+/* istanbul ignore next -- @preserve */ // We do not have static resources in tests, so this middleware is not tested
 server.app.use(
   express.static(staticContentPath, {
     dotfiles: "ignore",
@@ -97,7 +97,7 @@ server.app.use((_, res, next) => {
  * @param {string} method The HTTP method.
  * @returns {string} A colored pretty prefix string.
  */
-/* istanbul ignore next */ // We do not test the logger middleware and its helper functions
+/* istanbul ignore next -- @preserve */ // We do not test the logger middleware and its helper functions
 const highlightMethod = (method: string) => {
   switch (method) {
     case "GET":
@@ -123,7 +123,7 @@ const highlightMethod = (method: string) => {
  * @param {number} statusCode The HTTP status code.
  * @returns {string} A colored pretty prefix string.
  */
-/* istanbul ignore next */ // We do not test the logger middleware and its helper functions
+/* istanbul ignore next -- @preserve */ // We do not test the logger middleware and its helper functions
 const statusCodeDescription = (statusCode: number) => {
   const statusCodeString = ` ${statusCode}  ${STATUS_CODES[statusCode]} `;
   switch (Math.floor(statusCode / 100)) {
@@ -163,7 +163,7 @@ server.app.use(async (req, res, next) => {
       res.clearCookie("authToken");
     }
   }
-  /* istanbul ignore next */ // We do not test Cron jobs
+  /* istanbul ignore next -- @preserve */ // We do not test Cron jobs
   if (req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken) {
     res.locals.userIsCron = true;
   }
@@ -191,7 +191,7 @@ server.app.use(
                 chalk.yellow(
                   res.locals.user
                     ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})` // Authenticated user
-                    : /* istanbul ignore next */ // We do not test Cron jobs
+                    : /* istanbul ignore next -- @preserve */ // We do not test Cron jobs
                     res.locals.userIsCron
                     ? "\ufba7 cron" // Cron job
                     : "\uf21b" // Unauthenticated user
@@ -271,7 +271,7 @@ server.app.use((err, _, res, next) => {
   });
 });
 
-/* istanbul ignore next */ // We do not test Cron jobs
+/* istanbul ignore next -- @preserve */ // We do not test Cron jobs
 if (process.env.AUTO_FETCH_SCHEDULE) {
   new cron.CronJob(
     process.env.AUTO_FETCH_SCHEDULE,
