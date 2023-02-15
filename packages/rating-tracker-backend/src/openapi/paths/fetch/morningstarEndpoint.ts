@@ -6,13 +6,13 @@ import { badGateway } from "../../responses/serverError.js";
 import { accepted, noContent, okStockList } from "../../responses/success.js";
 
 /**
- * Fetch information from Morningstar UK web page
+ * Fetch information from Morningstar Italy web page
  */
 const get: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchMorningstarData",
   summary: "Morningstar Fetch API",
-  description: "Fetch information from Morningstar UK web page",
+  description: "Fetch information from Morningstar Italy web page",
   parameters: [
     {
       ...stock.ticker,
