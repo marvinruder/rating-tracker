@@ -130,7 +130,7 @@ class FetchController {
   }
 
   /**
-   * Fetches data from Morningstar UK.
+   * Fetches data from Morningstar Italy.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object

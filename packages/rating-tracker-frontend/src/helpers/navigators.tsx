@@ -13,7 +13,7 @@ const MorningstarNavigator = (props: NavigatorProps): JSX.Element => {
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
       href={
-        `https://tools.morningstar.co.uk/uk/stockreport/default.aspx?Site=us&id=${props.stock.morningstarId}` +
+        `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${props.stock.morningstarId}` +
         `&LanguageId=en-US&SecurityToken=${props.stock.morningstarId}]3]0]E0WWE$$ALL`
       }
       target="_blank" // Open in new tab
