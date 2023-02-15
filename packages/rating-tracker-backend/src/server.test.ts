@@ -6,24 +6,12 @@ import { initStockRepository } from "./redis/repositories/stock/__mocks__/stockR
 import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("./lib/logger", async () => await import("./lib/__mocks__/logger"));
+vi.mock("./lib/logger");
 
-vi.mock(
-  "./redis/repositories/resource/resourceRepositoryBase",
-  async () => await import("./redis/repositories/resource/__mocks__/resourceRepositoryBase")
-);
-vi.mock(
-  "./redis/repositories/session/sessionRepositoryBase",
-  async () => await import("./redis/repositories/session/__mocks__/sessionRepositoryBase")
-);
-vi.mock(
-  "./redis/repositories/stock/stockRepositoryBase",
-  async () => await import("./redis/repositories/stock/__mocks__/stockRepositoryBase")
-);
-vi.mock(
-  "./redis/repositories/user/userRepositoryBase",
-  async () => await import("./redis/repositories/user/__mocks__/userRepositoryBase")
-);
+vi.mock("./redis/repositories/resource/resourceRepositoryBase");
+vi.mock("./redis/repositories/session/sessionRepositoryBase");
+vi.mock("./redis/repositories/stock/stockRepositoryBase");
+vi.mock("./redis/repositories/user/userRepositoryBase");
 
 const { listener, server } = await import("./server");
 

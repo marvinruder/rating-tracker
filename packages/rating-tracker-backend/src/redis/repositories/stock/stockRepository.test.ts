@@ -1,10 +1,10 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
-vi.mock("../../../lib/logger", async () => await import("../../../lib/__mocks__/logger"));
+vi.mock("../../../lib/logger");
 
-vi.mock("../../../signal/signalBase", async () => await import("../../../signal/__mocks__/signalBase"));
-vi.mock("./stockRepositoryBase", async () => await import("./__mocks__/stockRepositoryBase"));
-vi.mock("../user/userRepositoryBase", async () => await import("../user/__mocks__/userRepositoryBase"));
+vi.mock("../../../signal/signalBase");
+vi.mock("./stockRepositoryBase");
+vi.mock("../user/userRepositoryBase");
 
 const { createStock, readStock, updateStock } = await import("./stockRepository");
 import dotenv from "dotenv";
