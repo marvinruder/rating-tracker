@@ -11,7 +11,7 @@ export const sessionTTLInSeconds = 1800;
 let sessionRepository: Map<string, SessionEntity>;
 
 /**
- * Initializes the mock repository with one exemplary session.
+ * Initializes the mock repository with two exemplary sessions.
  */
 export const initSessionRepository = () => {
   sessionRepository = new Map<string, SessionEntity>();

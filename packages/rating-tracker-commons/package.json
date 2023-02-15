@@ -12,8 +12,8 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test:watch": "yarn node --experimental-vm-modules $(yarn bin jest) --watch --runInBand",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand --coverage --colors",
+    "test:watch": "vitest",
+    "test": "vitest run --coverage --color",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
     "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix"
   },
@@ -21,16 +21,16 @@
     "typescript": "4.9.5"
   },
   "devDependencies": {
-    "@types/jest": "29.4.0",
     "@typescript-eslint/eslint-plugin": "5.52.0",
     "@typescript-eslint/parser": "5.52.0",
+    "@vitest/coverage-istanbul": "0.28.5",
     "eslint": "8.34.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-jsdoc": "40.0.0",
     "eslint-plugin-prettier": "4.2.1",
-    "jest": "29.4.2",
     "prettier": "2.8.4",
-    "ts-jest": "29.0.5"
+    "vite": "4.1.1",
+    "vitest": "0.28.5"
   }
 }

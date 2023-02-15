@@ -13,7 +13,7 @@ export class User extends CommonsUser {
   constructor(userEntity: UserEntity | Partial<User>) {
     super();
     // Creating a user from a partial object is only done during registration, which is not currently tested
-    /* istanbul ignore else */
+    /* istanbul ignore else -- @preserve */
     if (userEntity instanceof UserEntity) {
       this.email = userEntity.entityId; // The email is used as the entity’s ID
     } else {

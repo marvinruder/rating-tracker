@@ -21,17 +21,26 @@ RUN rm -r /workdir/packages/rating-tracker-frontend && \
 RUN find /workdir/packages -type f '(' -name "*.d.ts*" -o -name "*.tsbuildinfo" ')' -delete && \
   rm -r \
   /workdir/.yarn/cache/@babel-* \
+  /workdir/.yarn/cache/@esbuild-* \
   /workdir/.yarn/cache/@eslint-* \
   /workdir/.yarn/cache/@istanbuljs-* \
-  /workdir/.yarn/cache/@jest-* \
   /workdir/.yarn/cache/@types-* \
   /workdir/.yarn/cache/@typescript-* \
-  /workdir/.yarn/cache/babel-* \
+  /workdir/.yarn/cache/caniuse-* \
+  /workdir/.yarn/cache/cbor-x-* \
+  /workdir/.yarn/cache/esbuild-* \
   /workdir/.yarn/cache/eslint-* \
   /workdir/.yarn/cache/istanbul-* \
   /workdir/.yarn/cache/node-gyp-* \
   /workdir/.yarn/cache/prettier-* \
+  /workdir/.yarn/cache/rollup-* \
   /workdir/.yarn/cache/typescript-* \
+  /workdir/.yarn/cache/vite-* \
+  /workdir/.yarn/cache/vitest-* \
+  /workdir/.yarn/unplugged/@cbor-extract-* \
+  /workdir/.yarn/unplugged/@esbuild-* \
+  /workdir/.yarn/unplugged/cbor-extract-* \
+  /workdir/.yarn/unplugged/esbuild-* \
   /workdir/.yarn/unplugged/node-gyp-*
 
 # Create directories for run container and copy only necessary files

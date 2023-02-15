@@ -1,4 +1,4 @@
-import { ResourceEntity } from "../../../../models/resource.js";
+import { ResourceEntity, resourceSchema } from "../../../../models/resource.js";
 
 /**
  * A mock repository for testing purposes.
@@ -6,13 +6,17 @@ import { ResourceEntity } from "../../../../models/resource.js";
 let resourceRepository: Map<string, ResourceEntity>;
 
 /**
- * Initializes the mock repository.
+ * Initializes the mock repository with one exemplary resource.
  */
 export const initResourceRepository = () => {
   resourceRepository = new Map<string, ResourceEntity>();
+  resourceRepository.set(
+    "image.png",
+    new ResourceEntity(resourceSchema, "image.png", {
+      content: "U2FtcGxlIFBORyBpbWFnZQ==",
+    })
+  );
 };
-
-initResourceRepository();
 
 /**
  * Fetch a resource from the mock repository.

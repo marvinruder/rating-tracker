@@ -516,12 +516,12 @@ class StockController {
           try {
             // Cache as long as TradeRepublic says using the max-age cache control directive
             maxAge = +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
-            /* istanbul ignore next */ // Difficult to test, since TradeRepublic always returns a valid max-age
+            /* istanbul ignore next -- @preserve */ // Difficult to test, since valid max-age is always returned
             if (Number.isNaN(maxAge)) {
               throw new TypeError();
             }
           } catch (e) {
-            /* istanbul ignore next */ // Difficult to test, since TradeRepublic always returns a valid max-age
+            /* istanbul ignore next -- @preserve */ // Difficult to test, since valid max-age is always returned
             maxAge = 60 * 60 * 24;
           }
           // Store the logo in the cache

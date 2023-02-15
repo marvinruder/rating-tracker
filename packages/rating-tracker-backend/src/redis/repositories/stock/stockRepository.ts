@@ -140,7 +140,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
                     (newValues.msciESGRating ? msciESGRatingArray.indexOf(newValues.msciESGRating) : 7) <
                     (stockEntity.msciESGRating
                       ? msciESGRatingArray.indexOf(stockEntity.msciESGRating as MSCIESGRating)
-                      : /* istanbul ignore next */ // This never occurs with our test dataset
+                      : /* istanbul ignore next -- @preserve */ // This never occurs with our test dataset
                         7)
                       ? SIGNAL_PREFIX_BETTER
                       : SIGNAL_PREFIX_WORSE;
@@ -211,9 +211,8 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
             case "sustainalyticsESGRisk":
               stockEntity[k] = newValues[k];
               break;
-            /* istanbul ignore next */ // Not testable since the cases above cover all possible values
             default:
-              throw new APIError(400, `Invalid property ${k} for stock ${stockEntity.ticker}.`);
+              throw new APIError(400, `Invalid property ${k} for stock ${stockEntity.entityId}.`);
           }
         }
       }

@@ -7,7 +7,7 @@ import { UserEntity, userSchema } from "../../../../models/user.js";
 let userRepository: Map<string, UserEntity>;
 
 /**
- * Initializes the mock repository with one exemplary user.
+ * Initializes the mock repository with two exemplary users.
  */
 export const initUserRepository = () => {
   userRepository = new Map<string, UserEntity>();

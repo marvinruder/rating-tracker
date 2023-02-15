@@ -39,7 +39,7 @@ class AuthRouter {
       await this._controller.getRegistrationOptions(req, res);
     });
     // This function is not tested because it is difficult to mock creating a valid challenge response.
-    /* istanbul ignore next */
+    /* istanbul ignore next -- @preserve */
     this._router.post("/register", authLimiter, async (req: Request, res: Response) => {
       await this._controller.postRegistrationResponse(req, res);
     });
@@ -47,7 +47,7 @@ class AuthRouter {
       await this._controller.getAuthenticationOptions(req, res);
     });
     // This function is not tested because it is difficult to mock creating a valid challenge response.
-    /* istanbul ignore next */
+    /* istanbul ignore next -- @preserve */
     this._router.post("/signIn", authLimiter, async (req: Request, res: Response) => {
       await this._controller.postAuthenticationResponse(req, res);
     });

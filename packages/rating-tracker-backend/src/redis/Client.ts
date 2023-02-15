@@ -1,4 +1,4 @@
-/* istanbul ignore file */ // This file is mocked since tests must not depend on a running Redis instance
+/* istanbul ignore file -- @preserve */ // This file is mocked since tests must not depend on a running Redis instance
 import chalk from "chalk";
 import dotenv from "dotenv";
 import { createClient } from "redis";

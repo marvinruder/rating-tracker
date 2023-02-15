@@ -15,7 +15,7 @@ const servers: OpenAPIV3.ServerObject[] = [
   },
 ];
 
-/* istanbul ignore next */ // Only available in development environment
+/* istanbul ignore next -- @preserve */ // Only available in development environment
 process.env.NODE_ENV === "development" &&
   servers.push({
     url: `http://localhost:${process.env.PORT}/`,

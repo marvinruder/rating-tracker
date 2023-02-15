@@ -5,7 +5,8 @@ import { Entity, Schema } from "redis-om";
  * A session related to a user, the ID of which is stored in a cookie.
  */
 export class Session extends CommonsSession {
-  /* istanbul ignore next */ // Since we cannot yet test the authentication process, we cannot create a valid Session
+  // Since we cannot yet test the authentication process, we cannot create a valid Session
+  /* istanbul ignore next -- @preserve */
   /**
    * Creates a new {@link Session} from its Redis entity.
    *

@@ -1,4 +1,5 @@
 import { isSize } from "./Size";
+import { describe, expect, it } from "vitest";
 
 describe("Size", () => {
   it("is a size", () => {
@@ -6,6 +7,6 @@ describe("Size", () => {
   });
 
   it("is not a size", () => {
-    expect(isSize("Smol")).toBe(false);
+    expect(isSize("smol")).toBe(false);
   });
 });
