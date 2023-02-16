@@ -1,6 +1,5 @@
-import { sortableAttributeArray } from "rating-tracker-commons";
+import { sortableAttributeArray, Stock, User } from "rating-tracker-commons";
 import supertest, { CallbackHandler, Test } from "supertest";
-import { Stock } from "./models/stock";
 import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
 import { initStockRepository } from "./redis/repositories/stock/__mocks__/stockRepositoryBase";
 import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
@@ -621,5 +620,71 @@ describe("User API", () => {
     // Check that the user was deleted
     res = await requestWithSupertest.head("/api/session").set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(401);
+  });
+});
+
+describe("User Admin API", () => {
+  it("returns a list of users", async () => {
+    await expectRouteToBePrivate("/api/userAdmin/list");
+    await expectSpecialAccessRightsToBeRequired("/api/userAdmin/list");
+    const res = await requestWithSupertest.get("/api/userAdmin/list").set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(2);
+    expect((res.body as User[]).find((user) => user.email === "jane.doe@example.com").name).toMatch("Jane Doe");
+  });
+
+  it("reads a user", async () => {
+    await expectRouteToBePrivate("/api/userAdmin/john.doe%40example.com");
+    await expectSpecialAccessRightsToBeRequired("/api/userAdmin/john.doe%40example.com");
+    let res = await requestWithSupertest
+      .get("/api/userAdmin/john.doe%40example.com")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as User).name).toEqual("John Doe");
+
+    // attempting to read a non-existent user results in an error
+    res = await requestWithSupertest
+      .get("/api/userAdmin/doesNotExist@example.com")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+  });
+
+  it("updates a user’s information", async () => {
+    await expectRouteToBePrivate("/api/userAdmin/john.doe%40example.com", requestWithSupertest.patch);
+    await expectSpecialAccessRightsToBeRequired("/api/userAdmin/john.doe%40example.com", requestWithSupertest.patch);
+    let res = await requestWithSupertest
+      .patch(
+        "/api/userAdmin/john.doe%40example.com" +
+          "?name=John%20Doe%20II%2E&phone=%2B987654321&accessRights=0&subscriptions=0"
+      )
+      .send({
+        avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
+      })
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+
+    // Check that the changes were applied
+    res = await requestWithSupertest
+      .get("/api/userAdmin/john.doe%40example.com")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.email).toBe("john.doe@example.com");
+    expect(res.body.name).toBe("John Doe II.");
+    expect(res.body.avatar).toBe("data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=");
+    expect(res.body.phone).toBe("+987654321");
+  });
+
+  it("deletes a user", async () => {
+    await expectRouteToBePrivate("/api/userAdmin/john.doe%40example.com", requestWithSupertest.delete);
+    await expectSpecialAccessRightsToBeRequired("/api/userAdmin/john.doe%40example.com", requestWithSupertest.delete);
+    let res = await requestWithSupertest
+      .delete("/api/userAdmin/john.doe%40example.com")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+
+    // Check that the user was deleted
+    res = await requestWithSupertest
+      .get("/api/userAdmin/john.doe%40example.com")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
   });
 });

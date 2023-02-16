@@ -1,0 +1,102 @@
+import { Request, Response } from "express";
+import { ADMINISTRATIVE_ACCESS } from "rating-tracker-commons";
+import APIError from "../lib/apiError.js";
+import { deleteUser, readAllUsers, readUser, updateUser } from "../redis/repositories/user/userRepository.js";
+
+/**
+ * This class is responsible for providing user information.
+ */
+class UserAdminController {
+  /**
+   * Returns a list of users.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   * @returns {Response} a response containing the user list.
+   */
+  async getList(req: Request, res: Response) {
+    if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
+      throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
+    }
+    // Read all users from Redis
+    const users = await readAllUsers();
+
+    // Remove information required for authentication.
+    users.forEach((user) => {
+      delete user.credentialID;
+      delete user.credentialPublicKey;
+      delete user.counter;
+    });
+
+    // Respond with the list of users
+    return res.status(200).json(users);
+  }
+
+  /**
+   * Reads a single user from Redis.
+   *
+   * @param {Request} req The request.
+   * @param {Response} res The response.
+   * @returns {Response} a response with the user.
+   */
+  async get(req: Request, res: Response) {
+    if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
+      throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
+    }
+    const user = await readUser(req.params[0]);
+    // Remove information required for authentication.
+    delete user.credentialID;
+    delete user.credentialPublicKey;
+    delete user.counter;
+    return res.status(200).json(user);
+  }
+
+  /**
+   * Updates a user in Redis.
+   *
+   * @param {Request} req The request.
+   * @param {Response} res The response.
+   * @returns {Response} a 204 response if the user was updated successfully
+   */
+  async patch(req: Request, res: Response) {
+    if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
+      throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
+    }
+    const email = req.params[0];
+    const { name, phone, accessRights, subscriptions } = req.query;
+    const { avatar } = req.body;
+    if (
+      (typeof name === "string" || typeof name === "undefined") &&
+      (typeof avatar === "string" || typeof avatar === "undefined") &&
+      (typeof phone === "string" || typeof phone === "undefined") &&
+      (typeof accessRights === "number" || typeof accessRights === "undefined") &&
+      (typeof subscriptions === "number" || typeof subscriptions === "undefined")
+    ) {
+      await updateUser(email, {
+        name,
+        avatar,
+        phone,
+        accessRights,
+        subscriptions,
+      });
+      return res.status(204).end();
+    }
+  }
+
+  /**
+   * Deletes a user from Redis.
+   *
+   * @param {Request} req The request.
+   * @param {Response} res The response.
+   * @returns {Response} a 204 response if the user was deleted successfully
+   */
+  async delete(req: Request, res: Response) {
+    if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
+      throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
+    }
+    await deleteUser(req.params[0]);
+    return res.status(204).end();
+  }
+}
+
+export default new UserAdminController();

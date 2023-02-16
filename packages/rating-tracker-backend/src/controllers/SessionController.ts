@@ -18,7 +18,7 @@ class SessionController {
       secure: process.env.NODE_ENV !== "development", // allow plain HTTP in development
       sameSite: true,
     }); // Clears the session cookie.
-    return res.sendStatus(204).end();
+    return res.status(204).end();
   }
 }
 

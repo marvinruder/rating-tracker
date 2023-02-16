@@ -1,13 +1,13 @@
 import { Request, Response, Router } from "express";
-import UserController from "../../controllers/UserController.js";
+import UserAdminController from "../../controllers/UserAdminController.js";
 import "express-async-errors";
 
 /**
  * Router for user routes
  */
-class UserRouter {
+class UserAdminRouter {
   private _router = Router();
-  private _controller = UserController;
+  private _controller = UserAdminController;
 
   /**
    * Get the router for user routes.
@@ -29,16 +29,19 @@ class UserRouter {
    * Connect routes to their matching controller endpoints.
    */
   private _configure() {
-    this._router.get("", async (req: Request, res: Response) => {
+    this._router.get("/list", async (req: Request, res: Response) => {
+      await this._controller.getList(req, res);
+    });
+    this._router.get("/*", async (req: Request, res: Response) => {
       await this._controller.get(req, res);
     });
-    this._router.patch("", async (req: Request, res: Response) => {
+    this._router.patch("/*", async (req: Request, res: Response) => {
       await this._controller.patch(req, res);
     });
-    this._router.delete("", async (req: Request, res: Response) => {
+    this._router.delete("/*", async (req: Request, res: Response) => {
       await this._controller.delete(req, res);
     });
   }
 }
 
-export default new UserRouter().router;
+export default new UserAdminRouter().router;

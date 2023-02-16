@@ -43,6 +43,19 @@ const phone: OpenAPIV3.ParameterObject = {
 };
 
 /**
+ * The access rights of the user, encoded as a bitfield
+ */
+const accessRights: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "accessRights",
+  description: "The access rights of the user, encoded as a bitfield",
+  schema: {
+    type: "integer",
+    example: 1,
+  },
+};
+
+/**
  * The subscriptions of the user to different types of messages, encoded as a bitfield
  */
 const subscriptions: OpenAPIV3.ParameterObject = {
@@ -55,4 +68,4 @@ const subscriptions: OpenAPIV3.ParameterObject = {
   },
 };
 
-export { email, name, phone, subscriptions };
+export { email, name, phone, accessRights, subscriptions };

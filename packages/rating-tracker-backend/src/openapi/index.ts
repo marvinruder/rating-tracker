@@ -1,6 +1,7 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 import { components } from "./components.js";
-import * as listEndpoint from "./paths/stock/listEndpoint.js";
+import * as stockListEndpoint from "./paths/stock/listEndpoint.js";
+import * as userListEndpoint from "./paths/userAdmin/listEndpoint.js";
 import * as morningstarEndpoint from "./paths/fetch/morningstarEndpoint.js";
 import * as marketScreenerEndpoint from "./paths/fetch/marketScreenerEndpoint.js";
 import * as msciEndpoint from "./paths/fetch/msciEndpoint.js";
@@ -14,6 +15,7 @@ import * as logoEndpoint from "./paths/stock/logo/index.js";
 import * as stockEndpoint from "./paths/stock/index.js";
 import * as signInEndpoint from "./paths/auth/signInEndpoint.js";
 import * as resourceEndpoint from "./paths/resource/index.js";
+import * as userAdminEndpoint from "./paths/userAdmin/index.js";
 import * as userEndpoint from "./paths/user/index.js";
 import { servers } from "./servers.js";
 
@@ -39,7 +41,7 @@ export const openapiDocument: OpenAPIV3.Document = {
   paths: {
     "/api/auth/register": registerEndpoint,
     "/api/auth/signIn": signInEndpoint,
-    "/api/stock/list": listEndpoint,
+    "/api/stock/list": stockListEndpoint,
     "/api/stock/{ticker}": stockEndpoint,
     "/api/stock/logo/{ticker}": logoEndpoint,
     "/api/fetch/morningstar": morningstarEndpoint,
@@ -51,6 +53,8 @@ export const openapiDocument: OpenAPIV3.Document = {
     "/api/resource/{id}": resourceEndpoint,
     "/api/status": statusEndpoint,
     "/api/session": sessionEndpoint,
+    "/api/userAdmin/{email}": userAdminEndpoint,
+    "/api/userAdmin/list": userListEndpoint,
     "/api/user": userEndpoint,
   },
   tags: [],

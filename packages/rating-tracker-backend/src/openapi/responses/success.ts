@@ -67,6 +67,23 @@ const okStockList: OpenAPIV3.ResponseObject = {
 };
 
 /**
+ * A response with a 200 OK status code and an array of User objects.
+ */
+const okUserList: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "application/json": {
+      schema: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/User",
+        },
+      },
+    },
+  },
+};
+
+/**
  * A response with a 200 OK status code and an object containing an array of Stock objects and a count.
  */
 const okStockListWithCount: OpenAPIV3.ResponseObject = {
@@ -141,6 +158,7 @@ export {
   okSVG,
   okStock,
   okStockList,
+  okUserList,
   okStockListWithCount,
   okOperational,
   okUser,

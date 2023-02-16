@@ -3,6 +3,7 @@ import AuthRouter from "./auth/AuthRouter.js";
 import FetchRouter from "./fetch/FetchRouter.js";
 import ResourceRouter from "./resource/ResourceRouter.js";
 import StockRouter from "./stock/StockRouter.js";
+import UserAdminRouter from "./userAdmin/UserAdminRouter.js";
 import UserRouter from "./user/UserRouter.js";
 import SessionRouter from "./session/SessionRouter.js";
 
@@ -50,6 +51,7 @@ class PrivateRouter {
   private _subrouterFetch = FetchRouter;
   private _subrouterStock = StockRouter;
   private _subrouterResource = ResourceRouter;
+  private _subrouterUserAdmin = UserAdminRouter;
   private _subrouterUser = UserRouter;
   private _subrouterSession = SessionRouter;
 
@@ -77,6 +79,7 @@ class PrivateRouter {
     this._router.use("/stock", this._subrouterStock);
     this._router.use("/resource", this._subrouterResource);
     this._router.use("/user", this._subrouterUser);
+    this._router.use("/userAdmin", this._subrouterUserAdmin);
     this._router.use("/session", this._subrouterSession);
   }
 }
