@@ -39,7 +39,7 @@ const loader = (Component: React.LazyExoticComponent<React.ComponentType<any>>) 
  * The login application.
  * Since it is displayed first, we load it right away and do not use a suspense loader.
  */
-import LoginApp from "./content/applications/Users/login";
+import LoginApp from "./content/applications/Users/Login";
 
 // Modules
 
@@ -49,7 +49,15 @@ import LoginApp from "./content/applications/Users/login";
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const Stocklist = loader(lazy(() => import("./content/modules/stocklist")));
+const StockList = loader(lazy(() => import("./content/modules/StockList")));
+
+/**
+ * The user management module, loaded only when needed.
+ *
+ * @param {JSX.IntrinsicAttributes} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const UserManagement = loader(lazy(() => import("./content/modules/UserManagement")));
 
 /**
  * The stock module, loaded only when needed.
@@ -57,7 +65,7 @@ const Stocklist = loader(lazy(() => import("./content/modules/stocklist")));
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const Stock = loader(lazy(() => import("./content/modules/stock")));
+const Stock = loader(lazy(() => import("./content/modules/Stock")));
 
 /**
  * The 404 Not Found error page.
@@ -191,11 +199,15 @@ const routes: RouteObject[] = [
     children: [
       {
         path: "stocklist",
-        element: <Stocklist />,
+        element: <StockList />,
       },
       {
         path: "stock/:ticker",
         element: <Stock />,
+      },
+      {
+        path: "usermanagement",
+        element: <UserManagement />,
       },
     ],
   },

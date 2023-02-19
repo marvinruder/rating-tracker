@@ -7,7 +7,7 @@ import * as user from "../../parameters/user.js";
  * Get information about a user
  */
 const get: OpenAPIV3.OperationObject = {
-  tags: ["User Admin API"],
+  tags: ["User Management API"],
   operationId: "getUser",
   summary: "Get User API",
   description: "Get information about a user",
@@ -30,7 +30,7 @@ const get: OpenAPIV3.OperationObject = {
  * Delete a user
  */
 const deleteRequest: OpenAPIV3.OperationObject = {
-  tags: ["User Admin API"],
+  tags: ["User Management API"],
   operationId: "deleteUser",
   summary: "Delete User API",
   description: "Delete a user",
@@ -53,7 +53,7 @@ const deleteRequest: OpenAPIV3.OperationObject = {
  * Update a user using the information provided.
  */
 const patch: OpenAPIV3.OperationObject = {
-  tags: ["User Admin API"],
+  tags: ["User Management API"],
   operationId: "updateUser",
   summary: "Update User API",
   description: "Update a user using the information provided.",

@@ -6,7 +6,7 @@ import { okUserList } from "../../responses/success.js";
  * Get a list of users.
  */
 const get: OpenAPIV3.OperationObject = {
-  tags: ["User Admin API"],
+  tags: ["User Management API"],
   operationId: "getUserList",
   summary: "User List API",
   description: "Get a list of users.",

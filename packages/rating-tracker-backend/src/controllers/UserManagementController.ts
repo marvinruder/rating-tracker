@@ -6,7 +6,7 @@ import { deleteUser, readAllUsers, readUser, updateUser } from "../redis/reposit
 /**
  * This class is responsible for providing user information.
  */
-class UserAdminController {
+class UserManagementController {
   /**
    * Returns a list of users.
    *
@@ -99,4 +99,4 @@ class UserAdminController {
   }
 }
 
-export default new UserAdminController();
+export default new UserManagementController();

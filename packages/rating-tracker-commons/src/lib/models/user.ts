@@ -107,13 +107,26 @@ export class User {
   }
 
   /**
-   * Checks whether the user has subscribed to the given message type.
+   * Checks whether the user has subscribed to the given message type, given either as a number or as a
+   * {@link MessageType}.
    *
-   * @param {number} subscription The subscription to check.
+   * @param {number | MessageType} subscription The subscription to check.
    * @returns {boolean} Whether the user has subscribed to the given message type.
    */
-  public hasSubscribedTo(subscription: number): boolean {
-    return (this.subscriptions & subscription) === subscription;
+  public hasSubscribedTo(subscription: number | MessageType): boolean {
+    switch (typeof subscription) {
+      case "string":
+        switch (subscription) {
+          case "userManagement":
+            return this.hasSubscribedTo(ADMINISTRATIVE_MESSAGE);
+          case "fetchError":
+            return this.hasSubscribedTo(FETCH_ERROR_MESSAGE);
+          case "stockUpdate":
+            return this.hasSubscribedTo(STOCK_UPDATE_MESSAGE);
+        }
+      case "number":
+        return (this.subscriptions & subscription) === subscription;
+    }
   }
 
   /**
@@ -123,13 +136,16 @@ export class User {
    * @returns {boolean} Whether the user shall receive a message of the given message type.
    */
   public isAllowedAndWishesToReceiveMessage(messageType: MessageType): boolean {
+    if (!this.hasSubscribedTo(messageType)) {
+      return false;
+    }
     switch (messageType) {
       case "userManagement":
-        return this.hasAccessRight(ADMINISTRATIVE_ACCESS) && this.hasSubscribedTo(ADMINISTRATIVE_MESSAGE);
+        return this.hasAccessRight(ADMINISTRATIVE_ACCESS);
       case "fetchError":
-        return this.hasAccessRight(WRITE_STOCKS_ACCESS) && this.hasSubscribedTo(FETCH_ERROR_MESSAGE);
+        return this.hasAccessRight(WRITE_STOCKS_ACCESS);
       case "stockUpdate":
-        return this.hasAccessRight(GENERAL_ACCESS) && this.hasSubscribedTo(STOCK_UPDATE_MESSAGE);
+        return this.hasAccessRight(GENERAL_ACCESS);
     }
   }
 }

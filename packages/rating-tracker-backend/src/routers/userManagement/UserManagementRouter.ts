@@ -1,13 +1,13 @@
 import { Request, Response, Router } from "express";
-import UserAdminController from "../../controllers/UserAdminController.js";
+import UserManagementController from "../../controllers/UserManagementController.js";
 import "express-async-errors";
 
 /**
  * Router for user routes
  */
-class UserAdminRouter {
+class UserManagementRouter {
   private _router = Router();
-  private _controller = UserAdminController;
+  private _controller = UserManagementController;
 
   /**
    * Get the router for user routes.
@@ -44,4 +44,4 @@ class UserAdminRouter {
   }
 }
 
-export default new UserAdminRouter().router;
+export default new UserManagementRouter().router;

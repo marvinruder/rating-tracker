@@ -623,38 +623,43 @@ describe("User API", () => {
   });
 });
 
-describe("User Admin API", () => {
+describe("User Management API", () => {
   it("returns a list of users", async () => {
-    await expectRouteToBePrivate("/api/userAdmin/list");
-    await expectSpecialAccessRightsToBeRequired("/api/userAdmin/list");
-    const res = await requestWithSupertest.get("/api/userAdmin/list").set("Cookie", ["authToken=exampleSessionID"]);
+    await expectRouteToBePrivate("/api/userManagement/list");
+    await expectSpecialAccessRightsToBeRequired("/api/userManagement/list");
+    const res = await requestWithSupertest
+      .get("/api/userManagement/list")
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(2);
     expect((res.body as User[]).find((user) => user.email === "jane.doe@example.com").name).toMatch("Jane Doe");
   });
 
   it("reads a user", async () => {
-    await expectRouteToBePrivate("/api/userAdmin/john.doe%40example.com");
-    await expectSpecialAccessRightsToBeRequired("/api/userAdmin/john.doe%40example.com");
+    await expectRouteToBePrivate("/api/userManagement/john.doe%40example.com");
+    await expectSpecialAccessRightsToBeRequired("/api/userManagement/john.doe%40example.com");
     let res = await requestWithSupertest
-      .get("/api/userAdmin/john.doe%40example.com")
+      .get("/api/userManagement/john.doe%40example.com")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as User).name).toEqual("John Doe");
 
     // attempting to read a non-existent user results in an error
     res = await requestWithSupertest
-      .get("/api/userAdmin/doesNotExist@example.com")
+      .get("/api/userManagement/doesNotExist@example.com")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });
 
   it("updates a user’s information", async () => {
-    await expectRouteToBePrivate("/api/userAdmin/john.doe%40example.com", requestWithSupertest.patch);
-    await expectSpecialAccessRightsToBeRequired("/api/userAdmin/john.doe%40example.com", requestWithSupertest.patch);
+    await expectRouteToBePrivate("/api/userManagement/john.doe%40example.com", requestWithSupertest.patch);
+    await expectSpecialAccessRightsToBeRequired(
+      "/api/userManagement/john.doe%40example.com",
+      requestWithSupertest.patch
+    );
     let res = await requestWithSupertest
       .patch(
-        "/api/userAdmin/john.doe%40example.com" +
+        "/api/userManagement/john.doe%40example.com" +
           "?name=John%20Doe%20II%2E&phone=%2B987654321&accessRights=0&subscriptions=0"
       )
       .send({
@@ -665,7 +670,7 @@ describe("User Admin API", () => {
 
     // Check that the changes were applied
     res = await requestWithSupertest
-      .get("/api/userAdmin/john.doe%40example.com")
+      .get("/api/userManagement/john.doe%40example.com")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("john.doe@example.com");
@@ -675,15 +680,18 @@ describe("User Admin API", () => {
   });
 
   it("deletes a user", async () => {
-    await expectRouteToBePrivate("/api/userAdmin/john.doe%40example.com", requestWithSupertest.delete);
-    await expectSpecialAccessRightsToBeRequired("/api/userAdmin/john.doe%40example.com", requestWithSupertest.delete);
+    await expectRouteToBePrivate("/api/userManagement/john.doe%40example.com", requestWithSupertest.delete);
+    await expectSpecialAccessRightsToBeRequired(
+      "/api/userManagement/john.doe%40example.com",
+      requestWithSupertest.delete
+    );
     let res = await requestWithSupertest
-      .delete("/api/userAdmin/john.doe%40example.com")
+      .delete("/api/userManagement/john.doe%40example.com")
       .set("Cookie", ["authToken=exampleSessionID"]);
 
     // Check that the user was deleted
     res = await requestWithSupertest
-      .get("/api/userAdmin/john.doe%40example.com")
+      .get("/api/userManagement/john.doe%40example.com")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });

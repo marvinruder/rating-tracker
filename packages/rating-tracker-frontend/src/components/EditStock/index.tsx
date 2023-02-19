@@ -464,7 +464,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
               >
-                {"Update and fetch"}
+                Update and fetch
               </LoadingButton>
             </Grid>
           </Grid>
@@ -489,7 +489,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
               >
-                {"Update and fetch"}
+                Update and fetch
               </LoadingButton>
             </Grid>
           </Grid>
@@ -514,7 +514,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
               >
-                {"Update and fetch"}
+                Update and fetch
               </LoadingButton>
             </Grid>
           </Grid>
@@ -539,7 +539,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
               >
-                {"Update and fetch"}
+                Update and fetch
               </LoadingButton>
             </Grid>
           </Grid>
@@ -567,7 +567,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
               >
-                {"Update and fetch"}
+                Update and fetch
               </LoadingButton>
             </Grid>
           </Grid>
@@ -592,7 +592,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
               >
-                {"Update and fetch"}
+                Update and fetch
               </LoadingButton>
             </Grid>
           </Grid>
