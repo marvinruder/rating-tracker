@@ -1,0 +1,99 @@
+import { FC, useEffect, useState } from "react";
+import axios from "axios";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TableContainer } from "@mui/material";
+import { User } from "rating-tracker-commons";
+import { baseUrl, userManagementAPI, userListEndpoint } from "../../../endpoints";
+import UserRow from "../../../components/UserRow";
+import useNotification from "../../../helpers/useNotification";
+
+/**
+ * The user table component.
+ *
+ * @returns {JSX.Element} The users table component.
+ */
+const UserTable: FC = (): JSX.Element => {
+  const [count, setCount] = useState<number>(-1);
+  const [users, setUsers] = useState<User[]>([]);
+  const [usersFinal, setUsersFinal] = useState<boolean>(false);
+  const { setNotification } = useNotification();
+
+  /**
+   * Get the users from the backend.
+   */
+  const getUsers = () => {
+    setUsersFinal(false);
+    axios
+      .get(baseUrl + userManagementAPI + userListEndpoint)
+      .then((res) => {
+        setUsers(res.data.map((user: any) => new User(user)));
+        setCount(res.data.length);
+      })
+      .catch((e) => {
+        setNotification({
+          severity: "error",
+          title: "Error while fetching user information",
+          message:
+            e.response?.status && e.response?.data?.message
+              ? `${e.response.status}: ${e.response.data.message}`
+              : e.message ?? "No additional information available.",
+        });
+        setUsers([]);
+        setCount(0);
+      })
+      .finally(() => setUsersFinal(true));
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  return (
+    <>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {/* Name and Avatar */}
+              <TableCell>User</TableCell>
+              {/* Phone Number */}
+              <TableCell>Phone</TableCell>
+              {/* Subscriptions */}
+              <TableCell>Subscriptions</TableCell>
+              {/* Access Rights */}
+              <TableCell>Access Rights</TableCell>
+              {/* Actions */}
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {usersFinal
+              ? users.map(
+                  (
+                    user // Render user rows
+                  ) => <UserRow user={user} getUsers={getUsers} key={user.email} />
+                )
+              : [...Array(10)].map(
+                  (
+                    _undef,
+                    key // Render skeleton rows
+                  ) => <UserRow key={key} getUsers={getUsers} />
+                )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell sx={{ border: 0 }}>
+                {count} user{count != 1 && "s"}
+              </TableCell>
+              <TableCell sx={{ border: 0 }} />
+              <TableCell sx={{ border: 0 }} />
+              <TableCell sx={{ border: 0 }} />
+              <TableCell sx={{ border: 0 }} />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </>
+  );
+};
+
+export default UserTable;

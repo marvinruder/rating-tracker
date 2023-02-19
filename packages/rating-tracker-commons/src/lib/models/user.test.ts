@@ -20,8 +20,8 @@ const userWhoDoesNotGiveAFuckAboutAnything = new User({ accessRights: 255, subsc
 
 describe("User Access Rights", () => {
   it("has all access rights", () => {
-    expect(root.hasAccessRight(WRITE_STOCKS_ACCESS)).toBe(true);
     expect(root.hasAccessRight(GENERAL_ACCESS)).toBe(true);
+    expect(root.hasAccessRight(WRITE_STOCKS_ACCESS)).toBe(true);
     expect(root.hasAccessRight(ADMINISTRATIVE_ACCESS)).toBe(true);
 
     expect(root.getAccessRights()).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
@@ -45,6 +45,12 @@ describe("User Access Rights", () => {
 });
 
 describe("Message Subscriptions", () => {
+  it("receives messages if subscribed and access rights suffice", () => {
+    expect(root.isAllowedAndWishesToReceiveMessage("stockUpdate")).toBe(true);
+    expect(root.isAllowedAndWishesToReceiveMessage("fetchError")).toBe(true);
+    expect(root.isAllowedAndWishesToReceiveMessage("userManagement")).toBe(true);
+  });
+
   it("must not receive message if not subscribed", () => {
     expect(userWhoDoesNotGiveAFuckAboutAnything.isAllowedAndWishesToReceiveMessage("stockUpdate")).toBe(false);
     expect(userWhoDoesNotGiveAFuckAboutAnything.isAllowedAndWishesToReceiveMessage("fetchError")).toBe(false);

@@ -1,10 +1,13 @@
 import { useContext } from "react";
 
-import { ListSubheader, alpha, Box, List, styled, Button, ListItem } from "@mui/material";
+import { alpha, Box, List, styled, Button, ListItem, Divider, useTheme } from "@mui/material";
 import { NavLink as RouterLink } from "react-router-dom";
 import SidebarContext from "../../../../contexts/SidebarContext";
 
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import TableRowsIcon from "@mui/icons-material/TableRows";
+import { UserContext } from "../../../../router";
+import { ADMINISTRATIVE_ACCESS } from "rating-tracker-commons";
 
 /**
  * A wrapper for the sidebar menu component.
@@ -159,17 +162,14 @@ const SubMenuWrapper = styled(Box)(
 const SidebarMenu = (): JSX.Element => {
   const { closeSidebar } = useContext(SidebarContext);
 
+  const theme = useTheme();
+
+  const { user } = useContext(UserContext);
+
   return (
     <>
       <MenuWrapper>
-        <List
-          component="div"
-          subheader={
-            <ListSubheader component="div" disableSticky>
-              Modules
-            </ListSubheader>
-          }
-        >
+        <List component="div">
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
@@ -185,6 +185,26 @@ const SidebarMenu = (): JSX.Element => {
               </ListItem>
             </List>
           </SubMenuWrapper>
+          {user.hasAccessRight(ADMINISTRATIVE_ACCESS) && (
+            <>
+              <Divider sx={{ mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
+              <SubMenuWrapper>
+                <List component="div">
+                  <ListItem component="div">
+                    <Button
+                      disableRipple
+                      component={RouterLink}
+                      onClick={closeSidebar}
+                      to="/usermanagement"
+                      startIcon={<ManageAccountsIcon />}
+                    >
+                      User Management
+                    </Button>
+                  </ListItem>
+                </List>
+              </SubMenuWrapper>
+            </>
+          )}
         </List>
       </MenuWrapper>
     </>

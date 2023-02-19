@@ -173,7 +173,7 @@ class FetchController {
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.sendStatus(202);
+      res.status(202);
     }
 
     const updatedStocks: Stock[] = [];
@@ -662,7 +662,7 @@ class FetchController {
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.sendStatus(202);
+      res.status(202);
     }
 
     const updatedStocks: Stock[] = [];
@@ -910,7 +910,7 @@ class FetchController {
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.sendStatus(202);
+      res.status(202);
     }
 
     const updatedStocks: Stock[] = [];
@@ -1131,7 +1131,7 @@ class FetchController {
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.sendStatus(202);
+      res.status(202);
     }
 
     const updatedStocks: Stock[] = [];
@@ -1346,7 +1346,7 @@ class FetchController {
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.sendStatus(202);
+      res.status(202);
     }
 
     const updatedStocks: Stock[] = [];
@@ -1500,7 +1500,7 @@ class FetchController {
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.sendStatus(202);
+      res.status(202);
     }
 
     const updatedStocks: Stock[] = [];

@@ -45,7 +45,7 @@ class UserController {
         phone,
         subscriptions,
       });
-      return res.sendStatus(204).end();
+      return res.status(204).end();
     }
   }
 
@@ -58,7 +58,7 @@ class UserController {
   async delete(_: Request, res: Response) {
     const user: User = res.locals.user;
     await deleteUser(user.email);
-    return res.sendStatus(204).end();
+    return res.status(204).end();
   }
 }
 

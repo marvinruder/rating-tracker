@@ -67,3 +67,13 @@ export const sustainalyticsEndpoint = "/sustainalytics";
  * The user API path.
  */
 export const userAPI = "/api/user";
+
+/**
+ * The user management API path.
+ */
+export const userManagementAPI = "/api/userManagement";
+
+/**
+ * The user list endpoint.
+ */
+export const userListEndpoint = "/list";

@@ -33,7 +33,7 @@ class SessionRouter {
       // The trivial session route is implemented directly in the router.
       // If not authenticated, a 401 response would have been returned before this route is reached here.
       // If authenticated, this route is reached and a 204 response is returned.
-      return res.sendStatus(204);
+      return res.status(204).end();
     });
     this._router.delete("", async (req: Request, res: Response) => {
       await this._controller.delete(req, res);

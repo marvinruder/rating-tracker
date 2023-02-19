@@ -118,7 +118,7 @@ class AuthController {
         throw new APIError(403, "This email address is already registered. Please sign in.");
       }
       if (verified) {
-        return res.sendStatus(201);
+        return res.status(201).end();
       }
       // We do not provide too much information about the error to the user.
       throw new APIError(400, "Registration failed");
@@ -198,7 +198,7 @@ class AuthController {
         secure: process.env.NODE_ENV !== "development", // allow plain HTTP in development
         sameSite: true,
       });
-      return res.sendStatus(204);
+      return res.status(204).end();
     }
     throw new APIError(400, "Authentication failed");
   }
