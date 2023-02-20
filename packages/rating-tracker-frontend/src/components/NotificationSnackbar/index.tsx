@@ -1,6 +1,6 @@
 import { Alert, AlertProps, AlertTitle, Snackbar, SnackbarCloseReason, SnackbarProps } from "@mui/material";
 import { useEffect, useState } from "react";
-import useNotification from "../../helpers/useNotification";
+import { useNotification } from "../../contexts/NotificationContext";
 
 /**
  * The duration of the transition between the snackbar being shown and hidden.

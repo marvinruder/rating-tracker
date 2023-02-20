@@ -25,7 +25,7 @@ import {
   spEndpoint,
   sustainalyticsEndpoint,
 } from "../../endpoints";
-import useNotification from "../../helpers/useNotification";
+import { useNotification } from "../../contexts/NotificationContext";
 
 /**
  * A dialog to edit a new stock in the backend.

@@ -16,7 +16,7 @@ import {
   superSectorName,
   superSectorOfSector,
 } from "rating-tracker-commons";
-import formatMarketCap from "../../helpers/formatters";
+import formatMarketCap from "../../lib/formatters";
 import Range52WSlider from "../Range52WSlider";
 import SectorIcon from "../SectorIcon";
 import StyleBox from "../StyleBox";
@@ -31,7 +31,7 @@ import {
   RefinitivNavigator,
   SPNavigator,
   SustainalyticsNavigator,
-} from "../../helpers/navigators";
+} from "../../lib/navigators";
 import StarRating from "../StarRating";
 
 /**

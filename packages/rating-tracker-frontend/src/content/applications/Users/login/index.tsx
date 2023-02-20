@@ -7,7 +7,7 @@ import axios, { AxiosError } from "axios";
 import { authAPI, baseUrl, registerEndpoint, signInEndpoint } from "../../../../endpoints";
 import SwitchSelector from "../../../../components/SwitchSelector";
 import { useNavigate } from "react-router";
-import useNotification from "../../../../helpers/useNotification";
+import { useNotification } from "../../../../contexts/NotificationContext";
 
 /**
  * This component renders the login page.

@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TableCon
 import { User } from "rating-tracker-commons";
 import { baseUrl, userManagementAPI, userListEndpoint } from "../../../endpoints";
 import UserRow from "../../../components/UserRow";
-import useNotification from "../../../helpers/useNotification";
+import { useNotification } from "../../../contexts/NotificationContext";
 
 /**
  * The user table component.

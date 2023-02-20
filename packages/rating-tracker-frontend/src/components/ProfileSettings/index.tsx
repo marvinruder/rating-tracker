@@ -22,7 +22,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../router";
 import { baseUrl, userAPI } from "../../endpoints";
-import useNotification from "../../helpers/useNotification";
+import { useNotification } from "../../contexts/NotificationContext";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
   messageTypesAllowedWithGivenAccessRight,
@@ -31,6 +31,7 @@ import {
   REGEX_PHONE_NUMBER,
   subscriptionOfMessageType,
 } from "rating-tracker-commons";
+import { convertAvatar } from "../../lib/imageManipulation";
 
 /**
  * A dialog to edit the user’s own information.
@@ -166,21 +167,8 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
         setProcessingAvatar(false);
         return;
       }
-      // We need to use the browser version of Jimp here, since the Node version is not compatible with the browser.
-      // Unfortunately, type declarations are not available for this setup right now.
-      // This statement loads the browser version of Jimp and makes it available as the global variable `window.Jimp`.
-      await import("jimp/browser/lib/jimp.js");
-      const { Jimp } = window as typeof window & { Jimp: any };
-      const image = await Jimp.read(await file.arrayBuffer());
-      image
-        .cover(480, 480) // Resize to a comfortable size of 480x480px while cutting off the excess.
-        .quality(60) // Reduce the quality to 60%.
-        .getBase64(Jimp.MIME_JPEG, (e: Error, src: string) => {
-          if (e) {
-            throw e;
-          }
-          avatar === src ? setProcessingAvatar(false) : setAvatar(src);
-        });
+      const processedAvatar = await convertAvatar(file);
+      avatar === processedAvatar ? setProcessingAvatar(false) : setAvatar(processedAvatar);
     } catch (e) {
       setNotification({
         severity: "error",

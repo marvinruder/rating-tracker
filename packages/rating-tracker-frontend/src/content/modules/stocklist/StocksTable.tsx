@@ -17,7 +17,7 @@ import { MSCIESGRating, Stock, StockListColumn } from "rating-tracker-commons";
 import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
 import { Country, Industry, Size, SortableAttribute, Style } from "rating-tracker-commons";
 import StockRow from "../../../components/StockRow";
-import useNotification from "../../../helpers/useNotification";
+import { useNotification } from "../../../contexts/NotificationContext";
 
 /**
  * The stocks table component.

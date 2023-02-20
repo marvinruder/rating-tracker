@@ -16,9 +16,9 @@ import { refreshSessionAndFetchUser } from "./redis/repositories/session/session
 import { sessionTTLInSeconds } from "./redis/repositories/session/sessionRepositoryBase.js";
 import path from "path";
 import logger, { PREFIX_NODEJS } from "./lib/logger.js";
+import { GENERAL_ACCESS } from "rating-tracker-commons";
 
 import { fileURLToPath } from "url";
-import { GENERAL_ACCESS } from "rating-tracker-commons";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
