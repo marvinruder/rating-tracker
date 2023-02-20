@@ -27,9 +27,13 @@ RUN find /workdir/packages -type f '(' -name "*.d.ts*" -o -name "*.tsbuildinfo" 
   /workdir/.yarn/cache/@types-* \
   /workdir/.yarn/cache/@typescript-* \
   /workdir/.yarn/cache/caniuse-* \
+  /workdir/.yarn/cache/diff-* \
   /workdir/.yarn/cache/esbuild-* \
   /workdir/.yarn/cache/eslint-* \
+  /workdir/.yarn/cache/esquery-* \
+  /workdir/.yarn/cache/happy-dom-* \
   /workdir/.yarn/cache/istanbul-* \
+  /workdir/.yarn/cache/js-sdsl-* \
   /workdir/.yarn/cache/node-gyp-* \
   /workdir/.yarn/cache/prettier-* \
   /workdir/.yarn/cache/rollup-* \
