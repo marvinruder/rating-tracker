@@ -32,7 +32,7 @@ import DeleteUser from "../DeleteUser";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { baseUrl, userManagementAPI } from "../../endpoints";
 import axios from "axios";
-import useNotification from "../../helpers/useNotification";
+import { useNotification } from "../../contexts/NotificationContext";
 
 const ListItem = styled("li")(() => ({
   margin: 0.5,

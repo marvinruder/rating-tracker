@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { Notification } from "../types/Notification";
 
 /**
@@ -50,5 +50,12 @@ type NotificationProviderProps = {
    */
   children: React.ReactNode;
 };
+
+/**
+ * Hook to use the notification context.
+ *
+ * @returns {NotificationContextType} The notification context.
+ */
+export const useNotification = (): NotificationContextType => useContext(NotificationContext);
 
 export default NotificationContext;

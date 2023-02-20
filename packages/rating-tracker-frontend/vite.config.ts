@@ -1,7 +1,4 @@
-// import {
-//   defineConfig as defineVitestConfig,
-//   configDefaults as vitestConfigDefaults,
-// } from "vitest/config";
+import { defineConfig as defineVitestConfig, configDefaults as vitestConfigDefaults } from "vitest/config";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 import react from "@vitejs/plugin-react";
@@ -60,19 +57,14 @@ export default mergeConfig(
       }),
     ],
   }),
-  {}
-  // defineVitestConfig({
-  //   test: {
-  //     cache: { dir: ".vite/vitest" },
-  //     coverage: {
-  //       reporter: ["cobertura", "text"],
-  //       exclude: [
-  //         ...(vitestConfigDefaults.coverage.exclude
-  //           ? vitestConfigDefaults.coverage.exclude
-  //           : []),
-  //         ".pnp.*",
-  //       ],
-  //     },
-  //   },
-  // })
+  defineVitestConfig({
+    test: {
+      cache: { dir: ".vite/vitest" },
+      coverage: {
+        provider: "istanbul",
+        // reporter: ["cobertura", "text"],
+        // exclude: [...(vitestConfigDefaults.coverage.exclude ? vitestConfigDefaults.coverage.exclude : []), ".pnp.*"],
+      },
+    },
+  })
 );

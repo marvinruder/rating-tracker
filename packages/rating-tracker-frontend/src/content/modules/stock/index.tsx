@@ -7,7 +7,7 @@ import Footer from "../../../components/Footer";
 import PageTitleWrapper from "../../../components/PageTitleWrapper";
 import StockDetails from "../../../components/StockDetails";
 import PageHeader from "./PageHeader";
-import useNotification from "../../../helpers/useNotification";
+import { useNotification } from "../../../contexts/NotificationContext";
 import { useParams } from "react-router";
 
 /**

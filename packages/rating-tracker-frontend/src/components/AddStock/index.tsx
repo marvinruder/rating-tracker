@@ -33,7 +33,7 @@ import {
 } from "../../endpoints";
 import { countryArray, countryName, countryNameWithFlag, isCountry, Stock } from "rating-tracker-commons";
 import { useState } from "react";
-import useNotification from "../../helpers/useNotification";
+import { useNotification } from "../../contexts/NotificationContext";
 import StockDetails from "../StockDetails";
 
 /**

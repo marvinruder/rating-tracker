@@ -24,7 +24,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import { baseUrl, logoEndpoint, stockAPI, stockListEndpoint } from "../../../../../endpoints";
 import { emojiFlag, Stock } from "rating-tracker-commons";
-import useNotification from "../../../../../helpers/useNotification";
+import { useNotification } from "../../../../../contexts/NotificationContext";
 import SectorIcon from "../../../../../components/SectorIcon/";
 import { NavLink, useNavigate } from "react-router-dom";
 

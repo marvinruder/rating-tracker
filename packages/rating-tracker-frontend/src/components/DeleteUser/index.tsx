@@ -5,7 +5,7 @@ import { User } from "rating-tracker-commons";
 import { useState } from "react";
 import axios from "axios";
 import { baseUrl, userManagementAPI } from "../../endpoints";
-import useNotification from "../../helpers/useNotification";
+import { useNotification } from "../../contexts/NotificationContext";
 
 /**
  * A dialog to delete a user from the backend.

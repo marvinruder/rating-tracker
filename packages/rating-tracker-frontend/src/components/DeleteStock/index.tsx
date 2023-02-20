@@ -5,7 +5,7 @@ import { Stock } from "rating-tracker-commons";
 import { useState } from "react";
 import axios from "axios";
 import { baseUrl, stockAPI } from "../../endpoints";
-import useNotification from "../../helpers/useNotification";
+import { useNotification } from "../../contexts/NotificationContext";
 import { useNavigate } from "react-router";
 
 /**

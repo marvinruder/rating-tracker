@@ -45,9 +45,10 @@ node {
                 stage ('Publish Codecov results') {
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
-                    mkdir -p coverage/{backend,commons}
+                    mkdir -p coverage/{backend,commons,frontend}
                     docker cp \$id:/workdir/packages/rating-tracker-backend/coverage/. ./coverage/backend
                     docker cp \$id:/workdir/packages/rating-tracker-commons/coverage/. ./coverage/commons
+                    docker cp \$id:/workdir/packages/rating-tracker-frontend/coverage/. ./coverage/frontend
                     docker rm -v \$id
                     curl -Os https://uploader.codecov.io/latest/linux/codecov
                     chmod +x ./codecov
