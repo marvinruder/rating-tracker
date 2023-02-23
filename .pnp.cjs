@@ -2431,7 +2431,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/body-parser", "npm:1.19.2"],\
             ["@types/connect", "npm:3.4.35"],\
-            ["@types/node", "npm:18.14.0"]\
+            ["@types/node", "npm:18.14.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2460,7 +2460,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-connect-npm-3.4.35-7337eee0a3-fe81351470.zip/node_modules/@types/connect/",\
           "packageDependencies": [\
             ["@types/connect", "npm:3.4.35"],\
-            ["@types/node", "npm:18.14.0"]\
+            ["@types/node", "npm:18.14.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2480,7 +2480,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/cron", "npm:2.0.0"],\
             ["@types/luxon", "npm:3.2.0"],\
-            ["@types/node", "npm:18.14.0"]\
+            ["@types/node", "npm:18.14.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2503,7 +2503,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-express-serve-static-core-npm-4.17.33-0366bd5654-dce580d16b.zip/node_modules/@types/express-serve-static-core/",\
           "packageDependencies": [\
             ["@types/express-serve-static-core", "npm:4.17.33"],\
-            ["@types/node", "npm:18.14.0"],\
+            ["@types/node", "npm:18.14.1"],\
             ["@types/qs", "npm:6.9.7"],\
             ["@types/range-parser", "npm:1.2.4"]\
           ],\
@@ -2555,10 +2555,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:18.14.0", {\
-          "packageLocation": "./.yarn/cache/@types-node-npm-18.14.0-ddc1a221d2-d83fcf5e4e.zip/node_modules/@types/node/",\
+        ["npm:18.14.1", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.14.1-39865d8170-58556bbdb0.zip/node_modules/@types/node/",\
           "packageDependencies": [\
-            ["@types/node", "npm:18.14.0"]\
+            ["@types/node", "npm:18.14.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2675,7 +2675,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/serve-static", "npm:1.15.0"],\
             ["@types/mime", "npm:3.0.1"],\
-            ["@types/node", "npm:18.14.0"]\
+            ["@types/node", "npm:18.14.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2686,7 +2686,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/superagent", "npm:4.1.16"],\
             ["@types/cookiejar", "npm:2.1.2"],\
-            ["@types/node", "npm:18.14.0"]\
+            ["@types/node", "npm:18.14.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2706,7 +2706,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-ws-npm-8.5.4-c0237574ef-fefbad20d2.zip/node_modules/@types/ws/",\
           "packageDependencies": [\
             ["@types/ws", "npm:8.5.4"],\
-            ["@types/node", "npm:18.14.0"]\
+            ["@types/node", "npm:18.14.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8075,7 +8075,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@simplewebauthn/server", "npm:7.0.1"],\
             ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.17"],\
-            ["@types/node", "npm:18.14.0"],\
+            ["@types/node", "npm:18.14.1"],\
             ["@types/selenium-webdriver", "npm:4.1.11"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@typescript-eslint/eslint-plugin", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:5.53.0"],\
@@ -8146,7 +8146,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mui/lab", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:5.0.0-alpha.120"],\
             ["@mui/material", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:5.11.10"],\
             ["@simplewebauthn/browser", "npm:7.1.0"],\
-            ["@types/node", "npm:18.14.0"],\
+            ["@types/node", "npm:18.14.1"],\
             ["@types/react", "npm:18.0.28"],\
             ["@types/react-dom", "npm:18.0.11"],\
             ["@typescript-eslint/eslint-plugin", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:5.53.0"],\
@@ -10347,7 +10347,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["vite", "virtual:a4638961c4f1d3d39c68c123f729238d8382bd18476366b3b687c0c255576090aba4ba16cb6bc7e1f767857d76080b22ee31072ff3a402a426efec04e7e6090d#npm:4.1.4"],\
             ["@types/less", null],\
-            ["@types/node", "npm:18.14.0"],\
+            ["@types/node", "npm:18.14.1"],\
             ["@types/sass", null],\
             ["@types/stylus", null],\
             ["@types/sugarss", null],\
@@ -10497,7 +10497,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/edge-runtime__vm", null],\
             ["@types/happy-dom", null],\
             ["@types/jsdom", null],\
-            ["@types/node", "npm:18.14.0"],\
+            ["@types/node", "npm:18.14.1"],\
             ["@types/vitest__browser", null],\
             ["@types/vitest__ui", null],\
             ["@vitest/browser", null],\
@@ -10550,7 +10550,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/edge-runtime__vm", null],\
             ["@types/happy-dom", null],\
             ["@types/jsdom", null],\
-            ["@types/node", "npm:18.14.0"],\
+            ["@types/node", "npm:18.14.1"],\
             ["@types/vitest__browser", null],\
             ["@types/vitest__ui", null],\
             ["@vitest/browser", null],\
