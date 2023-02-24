@@ -939,19 +939,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/bmp", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-bmp-npm-0.22.5-c0d008082b-e751420e7a.zip/node_modules/@jimp/bmp/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-bmp-npm-0.22.6-1f8a54d4e4-0eb55a4886.zip/node_modules/@jimp/bmp/",\
           "packageDependencies": [\
-            ["@jimp/bmp", "npm:0.22.5"]\
+            ["@jimp/bmp", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-bmp-virtual-52664d8b65/0/cache/@jimp-bmp-npm-0.22.5-c0d008082b-e751420e7a.zip/node_modules/@jimp/bmp/",\
+        ["virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-bmp-virtual-d166ff991f/0/cache/@jimp-bmp-npm-0.22.6-1f8a54d4e4-0eb55a4886.zip/node_modules/@jimp/bmp/",\
           "packageDependencies": [\
-            ["@jimp/bmp", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/bmp", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["bmp-js", "npm:0.1.0"]\
           ],\
@@ -963,11 +963,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/core", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-core-npm-0.22.5-ed9a5022d2-f038e27dbb.zip/node_modules/@jimp/core/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-core-npm-0.22.6-592221187c-4e189993b5.zip/node_modules/@jimp/core/",\
           "packageDependencies": [\
-            ["@jimp/core", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/core", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["any-base", "npm:1.1.0"],\
             ["buffer", "npm:5.7.1"],\
             ["exif-parser", "npm:0.1.12"],\
@@ -981,29 +981,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/custom", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-custom-npm-0.22.5-89333c57c9-a42ed5309d.zip/node_modules/@jimp/custom/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-custom-npm-0.22.6-04696a74a1-c5132518d5.zip/node_modules/@jimp/custom/",\
           "packageDependencies": [\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/core", "npm:0.22.5"]\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/core", "npm:0.22.6"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@jimp/gif", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-gif-npm-0.22.5-ad048c317d-8352f2b71c.zip/node_modules/@jimp/gif/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-gif-npm-0.22.6-135a2e5002-fe2a08bcc4.zip/node_modules/@jimp/gif/",\
           "packageDependencies": [\
-            ["@jimp/gif", "npm:0.22.5"]\
+            ["@jimp/gif", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-gif-virtual-64a1f9f618/0/cache/@jimp-gif-npm-0.22.5-ad048c317d-8352f2b71c.zip/node_modules/@jimp/gif/",\
+        ["virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-gif-virtual-0c04475b6e/0/cache/@jimp-gif-npm-0.22.6-135a2e5002-fe2a08bcc4.zip/node_modules/@jimp/gif/",\
           "packageDependencies": [\
-            ["@jimp/gif", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/gif", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["gifwrap", "npm:0.9.4"],\
             ["omggif", "npm:1.0.10"]\
@@ -1016,19 +1016,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/jpeg", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-jpeg-npm-0.22.5-e14d7304f3-7e2348681a.zip/node_modules/@jimp/jpeg/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-jpeg-npm-0.22.6-b540958c1c-cb01cbe852.zip/node_modules/@jimp/jpeg/",\
           "packageDependencies": [\
-            ["@jimp/jpeg", "npm:0.22.5"]\
+            ["@jimp/jpeg", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-jpeg-virtual-48693864ba/0/cache/@jimp-jpeg-npm-0.22.5-e14d7304f3-7e2348681a.zip/node_modules/@jimp/jpeg/",\
+        ["virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-jpeg-virtual-eac8505362/0/cache/@jimp-jpeg-npm-0.22.6-b540958c1c-cb01cbe852.zip/node_modules/@jimp/jpeg/",\
           "packageDependencies": [\
-            ["@jimp/jpeg", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/jpeg", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["jpeg-js", "npm:0.4.4"]\
           ],\
@@ -1040,19 +1040,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-blit", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-blit-npm-0.22.5-035a0b7430-72e05cf2e5.zip/node_modules/@jimp/plugin-blit/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-blit-npm-0.22.6-c23eb8eb5f-5dc63b6e20.zip/node_modules/@jimp/plugin-blit/",\
           "packageDependencies": [\
-            ["@jimp/plugin-blit", "npm:0.22.5"]\
+            ["@jimp/plugin-blit", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-blit-virtual-81ba303246/0/cache/@jimp-plugin-blit-npm-0.22.5-035a0b7430-72e05cf2e5.zip/node_modules/@jimp/plugin-blit/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-blit-virtual-23071f9187/0/cache/@jimp-plugin-blit-npm-0.22.6-c23eb8eb5f-5dc63b6e20.zip/node_modules/@jimp/plugin-blit/",\
           "packageDependencies": [\
-            ["@jimp/plugin-blit", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-blit", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1063,19 +1063,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-blur", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-blur-npm-0.22.5-40dee4ba41-4480acbd7e.zip/node_modules/@jimp/plugin-blur/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-blur-npm-0.22.6-36f430befc-ff4e30d3a7.zip/node_modules/@jimp/plugin-blur/",\
           "packageDependencies": [\
-            ["@jimp/plugin-blur", "npm:0.22.5"]\
+            ["@jimp/plugin-blur", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-blur-virtual-65d978a42b/0/cache/@jimp-plugin-blur-npm-0.22.5-40dee4ba41-4480acbd7e.zip/node_modules/@jimp/plugin-blur/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-blur-virtual-2e985ee5ea/0/cache/@jimp-plugin-blur-npm-0.22.6-36f430befc-ff4e30d3a7.zip/node_modules/@jimp/plugin-blur/",\
           "packageDependencies": [\
-            ["@jimp/plugin-blur", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-blur", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1086,19 +1086,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-circle", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-circle-npm-0.22.5-ab3ac6d657-6c2e9929bb.zip/node_modules/@jimp/plugin-circle/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-circle-npm-0.22.6-52cb51f92c-082b8a651e.zip/node_modules/@jimp/plugin-circle/",\
           "packageDependencies": [\
-            ["@jimp/plugin-circle", "npm:0.22.5"]\
+            ["@jimp/plugin-circle", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-circle-virtual-85c3d6f19d/0/cache/@jimp-plugin-circle-npm-0.22.5-ab3ac6d657-6c2e9929bb.zip/node_modules/@jimp/plugin-circle/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-circle-virtual-d5cd45e4b4/0/cache/@jimp-plugin-circle-npm-0.22.6-52cb51f92c-082b8a651e.zip/node_modules/@jimp/plugin-circle/",\
           "packageDependencies": [\
-            ["@jimp/plugin-circle", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-circle", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1109,19 +1109,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-color", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-color-npm-0.22.5-05748bdfd0-ad55086990.zip/node_modules/@jimp/plugin-color/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-color-npm-0.22.6-be1381cbdd-9ece29cb75.zip/node_modules/@jimp/plugin-color/",\
           "packageDependencies": [\
-            ["@jimp/plugin-color", "npm:0.22.5"]\
+            ["@jimp/plugin-color", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-color-virtual-07a66c5bdb/0/cache/@jimp-plugin-color-npm-0.22.5-05748bdfd0-ad55086990.zip/node_modules/@jimp/plugin-color/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-color-virtual-bdfa6302e8/0/cache/@jimp-plugin-color-npm-0.22.6-be1381cbdd-9ece29cb75.zip/node_modules/@jimp/plugin-color/",\
           "packageDependencies": [\
-            ["@jimp/plugin-color", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-color", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["tinycolor2", "npm:1.6.0"]\
           ],\
@@ -1133,22 +1133,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-contain", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-contain-npm-0.22.5-c01776641e-328246d3e0.zip/node_modules/@jimp/plugin-contain/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-contain-npm-0.22.6-1c0ace0048-44d19dd67c.zip/node_modules/@jimp/plugin-contain/",\
           "packageDependencies": [\
-            ["@jimp/plugin-contain", "npm:0.22.5"]\
+            ["@jimp/plugin-contain", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-contain-virtual-8f0ba4338c/0/cache/@jimp-plugin-contain-npm-0.22.5-c01776641e-328246d3e0.zip/node_modules/@jimp/plugin-contain/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-contain-virtual-9b3f5ac9ed/0/cache/@jimp-plugin-contain-npm-0.22.6-1c0ace0048-44d19dd67c.zip/node_modules/@jimp/plugin-contain/",\
           "packageDependencies": [\
-            ["@jimp/plugin-contain", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugin-blit", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-resize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-scale", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-contain", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugin-blit", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-resize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-scale", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["@types/jimp__plugin-blit", null],\
             ["@types/jimp__plugin-resize", null],\
@@ -1168,22 +1168,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-cover", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-cover-npm-0.22.5-aa81e3c5ae-8ca4776a89.zip/node_modules/@jimp/plugin-cover/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-cover-npm-0.22.6-dce7849764-1a10125760.zip/node_modules/@jimp/plugin-cover/",\
           "packageDependencies": [\
-            ["@jimp/plugin-cover", "npm:0.22.5"]\
+            ["@jimp/plugin-cover", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-cover-virtual-9fba7e4709/0/cache/@jimp-plugin-cover-npm-0.22.5-aa81e3c5ae-8ca4776a89.zip/node_modules/@jimp/plugin-cover/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-cover-virtual-46df0a68b3/0/cache/@jimp-plugin-cover-npm-0.22.6-dce7849764-1a10125760.zip/node_modules/@jimp/plugin-cover/",\
           "packageDependencies": [\
-            ["@jimp/plugin-cover", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugin-crop", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-resize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-scale", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-cover", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugin-crop", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-resize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-scale", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["@types/jimp__plugin-crop", null],\
             ["@types/jimp__plugin-resize", null],\
@@ -1203,19 +1203,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-crop", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-crop-npm-0.22.5-898a7e892c-8b84746744.zip/node_modules/@jimp/plugin-crop/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-crop-npm-0.22.6-9d9bd8f354-8597937014.zip/node_modules/@jimp/plugin-crop/",\
           "packageDependencies": [\
-            ["@jimp/plugin-crop", "npm:0.22.5"]\
+            ["@jimp/plugin-crop", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-crop-virtual-bea67b4f14/0/cache/@jimp-plugin-crop-npm-0.22.5-898a7e892c-8b84746744.zip/node_modules/@jimp/plugin-crop/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-crop-virtual-b76e1ea738/0/cache/@jimp-plugin-crop-npm-0.22.6-9d9bd8f354-8597937014.zip/node_modules/@jimp/plugin-crop/",\
           "packageDependencies": [\
-            ["@jimp/plugin-crop", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-crop", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1226,19 +1226,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-displace", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-displace-npm-0.22.5-e8fcd44a89-57281caf8f.zip/node_modules/@jimp/plugin-displace/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-displace-npm-0.22.6-2ae1c7ca0b-717ce7753d.zip/node_modules/@jimp/plugin-displace/",\
           "packageDependencies": [\
-            ["@jimp/plugin-displace", "npm:0.22.5"]\
+            ["@jimp/plugin-displace", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-displace-virtual-7e651ae3ab/0/cache/@jimp-plugin-displace-npm-0.22.5-e8fcd44a89-57281caf8f.zip/node_modules/@jimp/plugin-displace/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-displace-virtual-f5cac8a951/0/cache/@jimp-plugin-displace-npm-0.22.6-2ae1c7ca0b-717ce7753d.zip/node_modules/@jimp/plugin-displace/",\
           "packageDependencies": [\
-            ["@jimp/plugin-displace", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-displace", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1249,19 +1249,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-dither", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-dither-npm-0.22.5-0eb5e8a8b0-c9c43beef2.zip/node_modules/@jimp/plugin-dither/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-dither-npm-0.22.6-a5791c7867-e8c034afd9.zip/node_modules/@jimp/plugin-dither/",\
           "packageDependencies": [\
-            ["@jimp/plugin-dither", "npm:0.22.5"]\
+            ["@jimp/plugin-dither", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-dither-virtual-939bd31f0d/0/cache/@jimp-plugin-dither-npm-0.22.5-0eb5e8a8b0-c9c43beef2.zip/node_modules/@jimp/plugin-dither/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-dither-virtual-8013c74d6a/0/cache/@jimp-plugin-dither-npm-0.22.6-a5791c7867-e8c034afd9.zip/node_modules/@jimp/plugin-dither/",\
           "packageDependencies": [\
-            ["@jimp/plugin-dither", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-dither", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1272,19 +1272,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-fisheye", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-fisheye-npm-0.22.5-97b46ff9d7-6c80e3e2e4.zip/node_modules/@jimp/plugin-fisheye/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-fisheye-npm-0.22.6-dfbf3f18f1-1b6f10a278.zip/node_modules/@jimp/plugin-fisheye/",\
           "packageDependencies": [\
-            ["@jimp/plugin-fisheye", "npm:0.22.5"]\
+            ["@jimp/plugin-fisheye", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-fisheye-virtual-947249337d/0/cache/@jimp-plugin-fisheye-npm-0.22.5-97b46ff9d7-6c80e3e2e4.zip/node_modules/@jimp/plugin-fisheye/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-fisheye-virtual-4e2afdcd2e/0/cache/@jimp-plugin-fisheye-npm-0.22.6-dfbf3f18f1-1b6f10a278.zip/node_modules/@jimp/plugin-fisheye/",\
           "packageDependencies": [\
-            ["@jimp/plugin-fisheye", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-fisheye", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1295,20 +1295,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-flip", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-flip-npm-0.22.5-f8e9809526-0b5092f06e.zip/node_modules/@jimp/plugin-flip/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-flip-npm-0.22.6-e64800e277-ec45e6d355.zip/node_modules/@jimp/plugin-flip/",\
           "packageDependencies": [\
-            ["@jimp/plugin-flip", "npm:0.22.5"]\
+            ["@jimp/plugin-flip", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-flip-virtual-393389f78a/0/cache/@jimp-plugin-flip-npm-0.22.5-f8e9809526-0b5092f06e.zip/node_modules/@jimp/plugin-flip/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-flip-virtual-1917d5b360/0/cache/@jimp-plugin-flip-npm-0.22.6-e64800e277-ec45e6d355.zip/node_modules/@jimp/plugin-flip/",\
           "packageDependencies": [\
-            ["@jimp/plugin-flip", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugin-rotate", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-flip", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugin-rotate", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["@types/jimp__plugin-rotate", null]\
           ],\
@@ -1322,19 +1322,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-gaussian", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-gaussian-npm-0.22.5-8a2833357d-34654d1bce.zip/node_modules/@jimp/plugin-gaussian/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-gaussian-npm-0.22.6-c916e2ed2a-0ffa81c420.zip/node_modules/@jimp/plugin-gaussian/",\
           "packageDependencies": [\
-            ["@jimp/plugin-gaussian", "npm:0.22.5"]\
+            ["@jimp/plugin-gaussian", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-gaussian-virtual-5ae9de6541/0/cache/@jimp-plugin-gaussian-npm-0.22.5-8a2833357d-34654d1bce.zip/node_modules/@jimp/plugin-gaussian/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-gaussian-virtual-f7e678af08/0/cache/@jimp-plugin-gaussian-npm-0.22.6-c916e2ed2a-0ffa81c420.zip/node_modules/@jimp/plugin-gaussian/",\
           "packageDependencies": [\
-            ["@jimp/plugin-gaussian", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-gaussian", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1345,19 +1345,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-invert", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-invert-npm-0.22.5-3e64c47fb8-5bb4e6b1e9.zip/node_modules/@jimp/plugin-invert/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-invert-npm-0.22.6-0ba6422a8d-9a2d890b92.zip/node_modules/@jimp/plugin-invert/",\
           "packageDependencies": [\
-            ["@jimp/plugin-invert", "npm:0.22.5"]\
+            ["@jimp/plugin-invert", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-invert-virtual-6ada182caa/0/cache/@jimp-plugin-invert-npm-0.22.5-3e64c47fb8-5bb4e6b1e9.zip/node_modules/@jimp/plugin-invert/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-invert-virtual-f9f0581b38/0/cache/@jimp-plugin-invert-npm-0.22.6-0ba6422a8d-9a2d890b92.zip/node_modules/@jimp/plugin-invert/",\
           "packageDependencies": [\
-            ["@jimp/plugin-invert", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-invert", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1368,19 +1368,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-mask", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-mask-npm-0.22.5-55c05b78e2-9671a8fceb.zip/node_modules/@jimp/plugin-mask/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-mask-npm-0.22.6-acc5dbcbbc-a55953dd9c.zip/node_modules/@jimp/plugin-mask/",\
           "packageDependencies": [\
-            ["@jimp/plugin-mask", "npm:0.22.5"]\
+            ["@jimp/plugin-mask", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-mask-virtual-38df9cb90f/0/cache/@jimp-plugin-mask-npm-0.22.5-55c05b78e2-9671a8fceb.zip/node_modules/@jimp/plugin-mask/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-mask-virtual-ac4a0de2bd/0/cache/@jimp-plugin-mask-npm-0.22.6-acc5dbcbbc-a55953dd9c.zip/node_modules/@jimp/plugin-mask/",\
           "packageDependencies": [\
-            ["@jimp/plugin-mask", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-mask", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1391,19 +1391,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-normalize", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-normalize-npm-0.22.5-5987b0789c-89d3149598.zip/node_modules/@jimp/plugin-normalize/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-normalize-npm-0.22.6-70b73cba74-fc9100c7ab.zip/node_modules/@jimp/plugin-normalize/",\
           "packageDependencies": [\
-            ["@jimp/plugin-normalize", "npm:0.22.5"]\
+            ["@jimp/plugin-normalize", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-normalize-virtual-c6f1f47b63/0/cache/@jimp-plugin-normalize-npm-0.22.5-5987b0789c-89d3149598.zip/node_modules/@jimp/plugin-normalize/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-normalize-virtual-759c67dd93/0/cache/@jimp-plugin-normalize-npm-0.22.6-70b73cba74-fc9100c7ab.zip/node_modules/@jimp/plugin-normalize/",\
           "packageDependencies": [\
-            ["@jimp/plugin-normalize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-normalize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1414,20 +1414,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-print", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-print-npm-0.22.5-c91f5bb02b-335d141d1f.zip/node_modules/@jimp/plugin-print/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-print-npm-0.22.6-63ebc6d508-5886226ec0.zip/node_modules/@jimp/plugin-print/",\
           "packageDependencies": [\
-            ["@jimp/plugin-print", "npm:0.22.5"]\
+            ["@jimp/plugin-print", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-print-virtual-f81c5c24b9/0/cache/@jimp-plugin-print-npm-0.22.5-c91f5bb02b-335d141d1f.zip/node_modules/@jimp/plugin-print/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-print-virtual-8dbae49fff/0/cache/@jimp-plugin-print-npm-0.22.6-63ebc6d508-5886226ec0.zip/node_modules/@jimp/plugin-print/",\
           "packageDependencies": [\
-            ["@jimp/plugin-print", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugin-blit", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-print", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugin-blit", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["@types/jimp__plugin-blit", null],\
             ["load-bmfont", "npm:1.4.1"]\
@@ -1442,19 +1442,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-resize", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-resize-npm-0.22.5-6685180bf4-31b9d2fba8.zip/node_modules/@jimp/plugin-resize/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-resize-npm-0.22.6-0dda88f7ef-0a94c7167e.zip/node_modules/@jimp/plugin-resize/",\
           "packageDependencies": [\
-            ["@jimp/plugin-resize", "npm:0.22.5"]\
+            ["@jimp/plugin-resize", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-resize-virtual-bcfcb89031/0/cache/@jimp-plugin-resize-npm-0.22.5-6685180bf4-31b9d2fba8.zip/node_modules/@jimp/plugin-resize/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-resize-virtual-51e9195d2a/0/cache/@jimp-plugin-resize-npm-0.22.6-0dda88f7ef-0a94c7167e.zip/node_modules/@jimp/plugin-resize/",\
           "packageDependencies": [\
-            ["@jimp/plugin-resize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-resize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null]\
           ],\
           "packagePeers": [\
@@ -1465,22 +1465,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-rotate", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-rotate-npm-0.22.5-eda05482f5-79c89b63d7.zip/node_modules/@jimp/plugin-rotate/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-rotate-npm-0.22.6-a06a5b152c-41c557ab7d.zip/node_modules/@jimp/plugin-rotate/",\
           "packageDependencies": [\
-            ["@jimp/plugin-rotate", "npm:0.22.5"]\
+            ["@jimp/plugin-rotate", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-rotate-virtual-b84e51101f/0/cache/@jimp-plugin-rotate-npm-0.22.5-eda05482f5-79c89b63d7.zip/node_modules/@jimp/plugin-rotate/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-rotate-virtual-a2f88641da/0/cache/@jimp-plugin-rotate-npm-0.22.6-a06a5b152c-41c557ab7d.zip/node_modules/@jimp/plugin-rotate/",\
           "packageDependencies": [\
-            ["@jimp/plugin-rotate", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugin-blit", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-crop", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-resize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-rotate", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugin-blit", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-crop", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-resize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["@types/jimp__plugin-blit", null],\
             ["@types/jimp__plugin-crop", null],\
@@ -1500,20 +1500,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-scale", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-scale-npm-0.22.5-a59a4912ff-92c25549ae.zip/node_modules/@jimp/plugin-scale/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-scale-npm-0.22.6-f12d7368d9-5a935e09e0.zip/node_modules/@jimp/plugin-scale/",\
           "packageDependencies": [\
-            ["@jimp/plugin-scale", "npm:0.22.5"]\
+            ["@jimp/plugin-scale", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-scale-virtual-c0ec7f1259/0/cache/@jimp-plugin-scale-npm-0.22.5-a59a4912ff-92c25549ae.zip/node_modules/@jimp/plugin-scale/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-scale-virtual-9f85cfde90/0/cache/@jimp-plugin-scale-npm-0.22.6-f12d7368d9-5a935e09e0.zip/node_modules/@jimp/plugin-scale/",\
           "packageDependencies": [\
-            ["@jimp/plugin-scale", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugin-resize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-scale", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugin-resize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["@types/jimp__plugin-resize", null]\
           ],\
@@ -1527,21 +1527,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-shadow", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-shadow-npm-0.22.5-af8c0d17c3-213d7b1cc1.zip/node_modules/@jimp/plugin-shadow/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-shadow-npm-0.22.6-a745be26b9-330a6fbddc.zip/node_modules/@jimp/plugin-shadow/",\
           "packageDependencies": [\
-            ["@jimp/plugin-shadow", "npm:0.22.5"]\
+            ["@jimp/plugin-shadow", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-shadow-virtual-82e21b43f5/0/cache/@jimp-plugin-shadow-npm-0.22.5-af8c0d17c3-213d7b1cc1.zip/node_modules/@jimp/plugin-shadow/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-shadow-virtual-01c1a5aa02/0/cache/@jimp-plugin-shadow-npm-0.22.6-a745be26b9-330a6fbddc.zip/node_modules/@jimp/plugin-shadow/",\
           "packageDependencies": [\
-            ["@jimp/plugin-shadow", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugin-blur", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-resize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-shadow", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugin-blur", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-resize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["@types/jimp__plugin-blur", null],\
             ["@types/jimp__plugin-resize", null]\
@@ -1558,21 +1558,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugin-threshold", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugin-threshold-npm-0.22.5-bbbe7455eb-2d84f5cae7.zip/node_modules/@jimp/plugin-threshold/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugin-threshold-npm-0.22.6-e339ef11c5-83018098ab.zip/node_modules/@jimp/plugin-threshold/",\
           "packageDependencies": [\
-            ["@jimp/plugin-threshold", "npm:0.22.5"]\
+            ["@jimp/plugin-threshold", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-threshold-virtual-f8d7747abe/0/cache/@jimp-plugin-threshold-npm-0.22.5-bbbe7455eb-2d84f5cae7.zip/node_modules/@jimp/plugin-threshold/",\
+        ["virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugin-threshold-virtual-26f963192f/0/cache/@jimp-plugin-threshold-npm-0.22.6-e339ef11c5-83018098ab.zip/node_modules/@jimp/plugin-threshold/",\
           "packageDependencies": [\
-            ["@jimp/plugin-threshold", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugin-color", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-resize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/plugin-threshold", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugin-color", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-resize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["@types/jimp__plugin-color", null],\
             ["@types/jimp__plugin-resize", null]\
@@ -1589,39 +1589,39 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/plugins", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-plugins-npm-0.22.5-d45c72d2b7-404ad458c6.zip/node_modules/@jimp/plugins/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-plugins-npm-0.22.6-5f1554d955-5ba6d299cd.zip/node_modules/@jimp/plugins/",\
           "packageDependencies": [\
-            ["@jimp/plugins", "npm:0.22.5"]\
+            ["@jimp/plugins", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:4768974afeb3bcbadb8482dfc893eaeec5e34b076de1eef9cbfe3020baa815faa103dba7da126d26b130c43b3e839cfc21013c8dc5d0fca817aef110bf31f2f7#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-plugins-virtual-2ce9b3556e/0/cache/@jimp-plugins-npm-0.22.5-d45c72d2b7-404ad458c6.zip/node_modules/@jimp/plugins/",\
+        ["virtual:111042dd520a56d7b7873936ff31773cbd7ce5ae5733aad6bbcce4ee80ee071608282aef7df90fa38536628b51c1754626540856eda123cdd969c0410fd9d05b#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-plugins-virtual-dd098af4f0/0/cache/@jimp-plugins-npm-0.22.6-5f1554d955-5ba6d299cd.zip/node_modules/@jimp/plugins/",\
           "packageDependencies": [\
-            ["@jimp/plugins", "virtual:4768974afeb3bcbadb8482dfc893eaeec5e34b076de1eef9cbfe3020baa815faa103dba7da126d26b130c43b3e839cfc21013c8dc5d0fca817aef110bf31f2f7#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugin-blit", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-blur", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-circle", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-color", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-contain", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-cover", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-crop", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-displace", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-dither", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-fisheye", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-flip", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-gaussian", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-invert", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-mask", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-normalize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-print", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-resize", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-rotate", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-scale", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-shadow", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
-            ["@jimp/plugin-threshold", "virtual:2ce9b3556eabed8fc98a1459a146835b4767a8cc57dad172191574241982b6fe8f5931b2bcdb95cc2bb66589b1cc1a230b2830978c479349c2b4da7d7a8689d2#npm:0.22.5"],\
+            ["@jimp/plugins", "virtual:111042dd520a56d7b7873936ff31773cbd7ce5ae5733aad6bbcce4ee80ee071608282aef7df90fa38536628b51c1754626540856eda123cdd969c0410fd9d05b#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugin-blit", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-blur", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-circle", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-color", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-contain", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-cover", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-crop", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-displace", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-dither", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-fisheye", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-flip", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-gaussian", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-invert", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-mask", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-normalize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-print", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-resize", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-rotate", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-scale", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-shadow", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
+            ["@jimp/plugin-threshold", "virtual:dd098af4f0b38de4dd6898e7acf05d181ab55ff60d6ae669b182a6a9da4363187a8df3d19c057ba56109c6f21e8a28bad0c862259412ff63b6dc491273c718e9#npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["timm", "npm:1.7.1"]\
           ],\
@@ -1633,19 +1633,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/png", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-png-npm-0.22.5-c9306bceef-bf92e25122.zip/node_modules/@jimp/png/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-png-npm-0.22.6-a2e54caa5e-4594e475f3.zip/node_modules/@jimp/png/",\
           "packageDependencies": [\
-            ["@jimp/png", "npm:0.22.5"]\
+            ["@jimp/png", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-png-virtual-4a17ea0a0b/0/cache/@jimp-png-npm-0.22.5-c9306bceef-bf92e25122.zip/node_modules/@jimp/png/",\
+        ["virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-png-virtual-8e7f4a57ea/0/cache/@jimp-png-npm-0.22.6-a2e54caa5e-4594e475f3.zip/node_modules/@jimp/png/",\
           "packageDependencies": [\
-            ["@jimp/png", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/png", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["pngjs", "npm:6.0.0"]\
           ],\
@@ -1657,18 +1657,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/tiff", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-tiff-npm-0.22.5-0d8ea0da4d-7357128d2f.zip/node_modules/@jimp/tiff/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-tiff-npm-0.22.6-4a79d5bdee-b54d428ed3.zip/node_modules/@jimp/tiff/",\
           "packageDependencies": [\
-            ["@jimp/tiff", "npm:0.22.5"]\
+            ["@jimp/tiff", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-tiff-virtual-d1de903771/0/cache/@jimp-tiff-npm-0.22.5-0d8ea0da4d-7357128d2f.zip/node_modules/@jimp/tiff/",\
+        ["virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-tiff-virtual-de40c86d51/0/cache/@jimp-tiff-npm-0.22.6-4a79d5bdee-b54d428ed3.zip/node_modules/@jimp/tiff/",\
           "packageDependencies": [\
-            ["@jimp/tiff", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
+            ["@jimp/tiff", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["utif2", "npm:4.0.1"]\
           ],\
@@ -1680,23 +1680,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/types", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-types-npm-0.22.5-346871f948-3e8cdd7484.zip/node_modules/@jimp/types/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-types-npm-0.22.6-0d67797d43-3e126bdc56.zip/node_modules/@jimp/types/",\
           "packageDependencies": [\
-            ["@jimp/types", "npm:0.22.5"]\
+            ["@jimp/types", "npm:0.22.6"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:4768974afeb3bcbadb8482dfc893eaeec5e34b076de1eef9cbfe3020baa815faa103dba7da126d26b130c43b3e839cfc21013c8dc5d0fca817aef110bf31f2f7#npm:0.22.5", {\
-          "packageLocation": "./.yarn/__virtual__/@jimp-types-virtual-b34f5a0645/0/cache/@jimp-types-npm-0.22.5-346871f948-3e8cdd7484.zip/node_modules/@jimp/types/",\
+        ["virtual:111042dd520a56d7b7873936ff31773cbd7ce5ae5733aad6bbcce4ee80ee071608282aef7df90fa38536628b51c1754626540856eda123cdd969c0410fd9d05b#npm:0.22.6", {\
+          "packageLocation": "./.yarn/__virtual__/@jimp-types-virtual-6469f9bf4a/0/cache/@jimp-types-npm-0.22.6-0d67797d43-3e126bdc56.zip/node_modules/@jimp/types/",\
           "packageDependencies": [\
-            ["@jimp/types", "virtual:4768974afeb3bcbadb8482dfc893eaeec5e34b076de1eef9cbfe3020baa815faa103dba7da126d26b130c43b3e839cfc21013c8dc5d0fca817aef110bf31f2f7#npm:0.22.5"],\
-            ["@jimp/bmp", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/gif", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
-            ["@jimp/jpeg", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
-            ["@jimp/png", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
-            ["@jimp/tiff", "virtual:b34f5a0645c58b57b48a456aac124b8d0b83382ce9880fb33c3dd73642a58a5f41406a6d067d69a01ba23ab468444d5a9d467f1dc3b704be258555831e3ebb78#npm:0.22.5"],\
+            ["@jimp/types", "virtual:111042dd520a56d7b7873936ff31773cbd7ce5ae5733aad6bbcce4ee80ee071608282aef7df90fa38536628b51c1754626540856eda123cdd969c0410fd9d05b#npm:0.22.6"],\
+            ["@jimp/bmp", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/gif", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
+            ["@jimp/jpeg", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
+            ["@jimp/png", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
+            ["@jimp/tiff", "virtual:6469f9bf4a9fd70de21c848453fa7ffc6b5a63a2e7d432e6bf47437bd68685143ccc6f9efbba06bae4a6b18bbdc734917a9136a21f53d37d20d8c4a8765bc02e#npm:0.22.6"],\
             ["@types/jimp__custom", null],\
             ["timm", "npm:1.7.1"]\
           ],\
@@ -1708,10 +1708,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@jimp/utils", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/@jimp-utils-npm-0.22.5-c67cd9c84b-9271e1cdcc.zip/node_modules/@jimp/utils/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/@jimp-utils-npm-0.22.6-3e9d64f414-4de2c2659c.zip/node_modules/@jimp/utils/",\
           "packageDependencies": [\
-            ["@jimp/utils", "npm:0.22.5"],\
+            ["@jimp/utils", "npm:0.22.6"],\
             ["regenerator-runtime", "npm:0.13.11"]\
           ],\
           "linkType": "HARD"\
@@ -6427,13 +6427,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["jimp", [\
-        ["npm:0.22.5", {\
-          "packageLocation": "./.yarn/cache/jimp-npm-0.22.5-4768974afe-07f5d0bb24.zip/node_modules/jimp/",\
+        ["npm:0.22.6", {\
+          "packageLocation": "./.yarn/cache/jimp-npm-0.22.6-111042dd52-b13f6858e7.zip/node_modules/jimp/",\
           "packageDependencies": [\
-            ["jimp", "npm:0.22.5"],\
-            ["@jimp/custom", "npm:0.22.5"],\
-            ["@jimp/plugins", "virtual:4768974afeb3bcbadb8482dfc893eaeec5e34b076de1eef9cbfe3020baa815faa103dba7da126d26b130c43b3e839cfc21013c8dc5d0fca817aef110bf31f2f7#npm:0.22.5"],\
-            ["@jimp/types", "virtual:4768974afeb3bcbadb8482dfc893eaeec5e34b076de1eef9cbfe3020baa815faa103dba7da126d26b130c43b3e839cfc21013c8dc5d0fca817aef110bf31f2f7#npm:0.22.5"],\
+            ["jimp", "npm:0.22.6"],\
+            ["@jimp/custom", "npm:0.22.6"],\
+            ["@jimp/plugins", "virtual:111042dd520a56d7b7873936ff31773cbd7ce5ae5733aad6bbcce4ee80ee071608282aef7df90fa38536628b51c1754626540856eda123cdd969c0410fd9d05b#npm:0.22.6"],\
+            ["@jimp/types", "virtual:111042dd520a56d7b7873936ff31773cbd7ce5ae5733aad6bbcce4ee80ee071608282aef7df90fa38536628b51c1754626540856eda123cdd969c0410fd9d05b#npm:0.22.6"],\
             ["regenerator-runtime", "npm:0.13.11"]\
           ],\
           "linkType": "HARD"\
@@ -8164,7 +8164,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-prettier", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:4.2.1"],\
             ["eslint-plugin-react", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:7.32.2"],\
             ["happy-dom", "npm:8.7.2"],\
-            ["jimp", "npm:0.22.5"],\
+            ["jimp", "npm:0.22.6"],\
             ["nprogress", "npm:0.2.0"],\
             ["numeral", "npm:2.0.6"],\
             ["particlesjs", "npm:2.2.3"],\
