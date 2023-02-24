@@ -1794,12 +1794,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/selenium-webdriver@npm:4.1.11":
-  version: 4.1.11
-  resolution: "@types/selenium-webdriver@npm:4.1.11"
+"@types/selenium-webdriver@npm:4.1.12":
+  version: 4.1.12
+  resolution: "@types/selenium-webdriver@npm:4.1.12"
   dependencies:
     "@types/ws": "*"
-  checksum: 5f64f39ef6395cd1674f70e685eba677fe1951eeb44edb3b2466e0db396b8610234aa58895ccac513d22590d1074244befa8fceb7ec9fde6c276ddbfc4ce5ae1
+  checksum: 3aeb3e539d876bcc85ff5b0b2c4eb6e2a53bfd2f3afda79e35533ef7f51a3dafaedb4f819a5a016483d2b9a547e62f2ac96bad38e07e69e60ba7e84b3b21ffb8
   languageName: node
   linkType: hard
 
@@ -6418,7 +6418,7 @@ __metadata:
     "@types/cron": 2.0.0
     "@types/express": 4.17.17
     "@types/node": 18.14.1
-    "@types/selenium-webdriver": 4.1.11
+    "@types/selenium-webdriver": 4.1.12
     "@types/supertest": 2.0.12
     "@typescript-eslint/eslint-plugin": 5.53.0
     "@typescript-eslint/parser": 5.53.0
