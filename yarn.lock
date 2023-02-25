@@ -4379,17 +4379,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"happy-dom@npm:*, happy-dom@npm:8.7.2":
-  version: 8.7.2
-  resolution: "happy-dom@npm:8.7.2"
+"happy-dom@npm:*, happy-dom@npm:8.9.0":
+  version: 8.9.0
+  resolution: "happy-dom@npm:8.9.0"
   dependencies:
     css.escape: ^1.5.1
     he: ^1.2.0
+    iconv-lite: ^0.6.3
     node-fetch: ^2.x.x
     webidl-conversions: ^7.0.0
     whatwg-encoding: ^2.0.0
     whatwg-mimetype: ^3.0.0
-  checksum: 17494b85563283f4705d51cfd59136bb11c6b64a0c424e606cac053adfc7820680805982f8839a7d6460bbf45c7361a1df5e56caea350dc102ca87baaec7b5ea
+  checksum: 2a9d853199e924e4445c11844a3d0fdd75b9831edab4c5dda52c4725c4f7889cd919814333162b70b3ae43884ec70ed50fbc22564eb94ba09408218922870a34
   languageName: node
   linkType: hard
 
@@ -4580,7 +4581,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2":
+"iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2, iconv-lite@npm:^0.6.3":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
   dependencies:
@@ -6501,7 +6502,7 @@ __metadata:
     eslint-plugin-jsdoc: 40.0.0
     eslint-plugin-prettier: 4.2.1
     eslint-plugin-react: 7.32.2
-    happy-dom: 8.7.2
+    happy-dom: 8.9.0
     jimp: 0.22.7
     nprogress: 0.2.0
     numeral: 2.0.6
