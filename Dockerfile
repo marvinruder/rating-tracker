@@ -10,7 +10,7 @@ COPY . .
 # Build
 RUN \
   yarn build && \
-  rm .pnp.* && \
+  yarn cache clean && \
   yarn workspaces focus --production rating-tracker-backend
 
 # Copy static frontend files into backend for serving
