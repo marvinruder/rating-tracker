@@ -62,8 +62,6 @@ export default mergeConfig(
       cache: { dir: ".vite/vitest" },
       coverage: {
         provider: "istanbul",
-        // reporter: ["cobertura", "text"],
-        // exclude: [...(vitestConfigDefaults.coverage.exclude ? vitestConfigDefaults.coverage.exclude : []), ".pnp.*"],
       },
     },
   })
