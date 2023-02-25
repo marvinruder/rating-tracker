@@ -8,7 +8,6 @@
   },
   "license": "MIT",
   "workspaces": [
-    "packages/rating-tracker-commons",
     "packages/*"
   ],
   "scripts": {
@@ -21,10 +20,8 @@
     "lint": "yarn workspaces foreach -pt run lint"
   },
   "packageManager": "yarn@3.4.1",
-  "dependencies": {
-    "concurrently": "7.6.0"
-  },
   "devDependencies": {
+    "concurrently": "7.6.0",
     "eslint": "8.34.0",
     "prettier": "2.8.4",
     "typescript": "4.9.5"
