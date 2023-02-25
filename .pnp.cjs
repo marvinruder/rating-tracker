@@ -9423,10 +9423,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["swagger-ui-dist", [\
-        ["npm:4.16.0", {\
-          "packageLocation": "./.yarn/cache/swagger-ui-dist-npm-4.16.0-70bea00505-66c4479bfc.zip/node_modules/swagger-ui-dist/",\
+        ["npm:4.16.1", {\
+          "packageLocation": "./.yarn/cache/swagger-ui-dist-npm-4.16.1-d44bc6d34b-8acfb47556.zip/node_modules/swagger-ui-dist/",\
           "packageDependencies": [\
-            ["swagger-ui-dist", "npm:4.16.0"]\
+            ["swagger-ui-dist", "npm:4.16.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9445,7 +9445,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["swagger-ui-express", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.6.1"],\
             ["@types/express", "npm:4.17.17"],\
             ["express", "npm:4.18.2"],\
-            ["swagger-ui-dist", "npm:4.16.0"]\
+            ["swagger-ui-dist", "npm:4.16.1"]\
           ],\
           "packagePeers": [\
             "@types/express",\
