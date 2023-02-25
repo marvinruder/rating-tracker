@@ -5734,13 +5734,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["happy-dom", [\
-        ["npm:8.7.2", {\
-          "packageLocation": "./.yarn/cache/happy-dom-npm-8.7.2-5d6996d95b-17494b8556.zip/node_modules/happy-dom/",\
+        ["npm:8.9.0", {\
+          "packageLocation": "./.yarn/cache/happy-dom-npm-8.9.0-da8dfa876b-2a9d853199.zip/node_modules/happy-dom/",\
           "packageDependencies": [\
-            ["happy-dom", "npm:8.7.2"],\
+            ["happy-dom", "npm:8.9.0"],\
             ["css.escape", "npm:1.5.1"],\
             ["he", "npm:1.2.0"],\
-            ["node-fetch", "virtual:5d6996d95be71cbbe7597eeadfa562f46dccf8fce0aecb3f7410b36f5e0fc6bd9b2758a113a4020d51e73a60665b0f9e82c386f3e13cdafe3bdcddc38932550d#npm:2.6.9"],\
+            ["iconv-lite", "npm:0.6.3"],\
+            ["node-fetch", "virtual:da8dfa876bfa55716a1a88a082431f8dfef158f8f24fcb9f5eb69bc6a83eb1642579b982cc1a89291964479eb696458d1b76a13cb08ba2ec694f25dcba55ab8e#npm:2.6.9"],\
             ["webidl-conversions", "npm:7.0.0"],\
             ["whatwg-encoding", "npm:2.0.0"],\
             ["whatwg-mimetype", "npm:3.0.0"]\
@@ -6349,7 +6350,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/isomorphic-fetch-npm-3.0.0-bce711adff-e5ab79a56c.zip/node_modules/isomorphic-fetch/",\
           "packageDependencies": [\
             ["isomorphic-fetch", "npm:3.0.0"],\
-            ["node-fetch", "virtual:5d6996d95be71cbbe7597eeadfa562f46dccf8fce0aecb3f7410b36f5e0fc6bd9b2758a113a4020d51e73a60665b0f9e82c386f3e13cdafe3bdcddc38932550d#npm:2.6.9"],\
+            ["node-fetch", "virtual:da8dfa876bfa55716a1a88a082431f8dfef158f8f24fcb9f5eb69bc6a83eb1642579b982cc1a89291964479eb696458d1b76a13cb08ba2ec694f25dcba55ab8e#npm:2.6.9"],\
             ["whatwg-fetch", "npm:3.6.2"]\
           ],\
           "linkType": "HARD"\
@@ -6653,7 +6654,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["local-pkg", "npm:0.4.3"],\
             ["@vitest/coverage-istanbul", "npm:0.28.5"],\
-            ["happy-dom", "npm:8.7.2"]\
+            ["happy-dom", "npm:8.9.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -7176,10 +7177,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5d6996d95be71cbbe7597eeadfa562f46dccf8fce0aecb3f7410b36f5e0fc6bd9b2758a113a4020d51e73a60665b0f9e82c386f3e13cdafe3bdcddc38932550d#npm:2.6.9", {\
-          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-2bc4a9fc34/0/cache/node-fetch-npm-2.6.9-9fc9a54529-acb04f9ce7.zip/node_modules/node-fetch/",\
+        ["virtual:da8dfa876bfa55716a1a88a082431f8dfef158f8f24fcb9f5eb69bc6a83eb1642579b982cc1a89291964479eb696458d1b76a13cb08ba2ec694f25dcba55ab8e#npm:2.6.9", {\
+          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-ec6cb8e509/0/cache/node-fetch-npm-2.6.9-9fc9a54529-acb04f9ce7.zip/node_modules/node-fetch/",\
           "packageDependencies": [\
-            ["node-fetch", "virtual:5d6996d95be71cbbe7597eeadfa562f46dccf8fce0aecb3f7410b36f5e0fc6bd9b2758a113a4020d51e73a60665b0f9e82c386f3e13cdafe3bdcddc38932550d#npm:2.6.9"],\
+            ["node-fetch", "virtual:da8dfa876bfa55716a1a88a082431f8dfef158f8f24fcb9f5eb69bc6a83eb1642579b982cc1a89291964479eb696458d1b76a13cb08ba2ec694f25dcba55ab8e#npm:2.6.9"],\
             ["@types/encoding", null],\
             ["encoding", null],\
             ["whatwg-url", "npm:5.0.0"]\
@@ -8163,7 +8164,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-jsdoc", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:40.0.0"],\
             ["eslint-plugin-prettier", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:4.2.1"],\
             ["eslint-plugin-react", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:7.32.2"],\
-            ["happy-dom", "npm:8.7.2"],\
+            ["happy-dom", "npm:8.9.0"],\
             ["jimp", "npm:0.22.7"],\
             ["nprogress", "npm:0.2.0"],\
             ["numeral", "npm:2.0.6"],\
@@ -10511,7 +10512,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cac", "npm:6.7.14"],\
             ["chai", "npm:4.3.7"],\
             ["debug", "virtual:007f670de2e506a151fec572a83f2de9d546622ece352a4cf72e57296c0aa644478f43ac47fd07d8495ee7103d37c60645e444556d514defaeb66e67a086d21f#npm:4.3.4"],\
-            ["happy-dom", "npm:8.7.2"],\
+            ["happy-dom", "npm:8.9.0"],\
             ["jsdom", null],\
             ["local-pkg", "npm:0.4.3"],\
             ["pathe", "npm:1.1.0"],\
