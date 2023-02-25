@@ -8482,7 +8482,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:0.29.1":
+"vitest@npm:*, vitest@npm:0.29.1":
   version: 0.29.1
   resolution: "vitest@npm:0.29.1"
   dependencies:
