@@ -24,7 +24,7 @@ RUN mkdir -p /workdir/app/packages/rating-tracker-backend/public /workdir/app/pa
   find /workdir/app -name '*.d.ts' -type f -delete
 
 ARG BUILD_DATE
-RUN env | grep BUILD_
+RUN printenv | grep BUILD_
 
 
 FROM alpine:3.17.3 as run
@@ -37,7 +37,7 @@ LABEL org.opencontainers.image.vendor="Marvin A. Ruder"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.version="0.1.0"
 LABEL org.opencontainers.image.created=${BUILD_DATE}
-RUN env | grep BUILD_
+RUN printenv | grep BUILD_
 ENV NODE_ENV production
 WORKDIR /app
 RUN --mount=type=cache,target=/var/cache/apk apk add dumb-init
