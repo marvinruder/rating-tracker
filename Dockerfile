@@ -7,9 +7,10 @@ WORKDIR /workdir
 
 COPY . .
 
-# Build
+# Build and create local production caches while using global mirror
 RUN \
   yarn build && \
+  yarn config set enableGlobalCache false && \
   yarn cache clean && \
   yarn workspaces focus --production rating-tracker-backend
 
