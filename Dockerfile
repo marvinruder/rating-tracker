@@ -11,6 +11,7 @@ COPY . .
 RUN \
   yarn build && \
   yarn cache clean && \
+  yarn config set globalFolder /workdir/global/.yarn/berry && \
   yarn workspaces focus --production rating-tracker-backend
 
 # Create directories for run container and copy only necessary files

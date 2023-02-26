@@ -18,7 +18,8 @@ node {
             docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f Dockerfile-yarn .")
             sh """
             id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
-            docker cp \$id:/workdir/. .
+            docker cp \$id:/workdir/.yarn/. ./.yarn
+            docker cp \$id:/root/.yarn ./global/.yarn
             docker rm -v \$id
             """
         }
