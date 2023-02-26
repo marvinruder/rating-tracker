@@ -1,6 +1,5 @@
 FROM node:20.1.0-alpine as build
 LABEL stage=build
-ARG BUILD_DATE=
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -27,15 +26,17 @@ RUN printenv
 
 
 FROM alpine:3.17.3 as run
-LABEL org.opencontainers.image.title="Rating Tracker"
-LABEL org.opencontainers.image.authors="Marvin A. Ruder <ratingtracker@mruder.dev>"
-LABEL org.opencontainers.image.description="A web service fetching and providing financial and ESG ratings for stocks."
-LABEL org.opencontainers.image.url="https://github.com/marvinruder/rating-tracker"
-LABEL org.opencontainers.image.source="https://github.com/marvinruder/rating-tracker"
-LABEL org.opencontainers.image.vendor="Marvin A. Ruder"
-LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.version="0.1.0"
-LABEL org.opencontainers.image.created=${BUILD_DATE}
+ARG BUILD_DATE
+LABEL \
+  org.opencontainers.image.title="Rating Tracker" \
+  org.opencontainers.image.authors="Marvin A. Ruder <ratingtracker@mruder.dev>" \
+  org.opencontainers.image.description="A web service fetching and providing financial and ESG ratings for stocks." \
+  org.opencontainers.image.url="https://github.com/marvinruder/rating-tracker" \
+  org.opencontainers.image.source="https://github.com/marvinruder/rating-tracker" \
+  org.opencontainers.image.vendor="Marvin A. Ruder" \
+  org.opencontainers.image.licenses="MIT" \
+  org.opencontainers.image.version="0.1.0" \
+  org.opencontainers.image.created=$BUILD_DATE
 RUN printenv
 ENV NODE_ENV production
 WORKDIR /app
