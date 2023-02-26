@@ -10,6 +10,8 @@ WORKDIR /workdir
 COPY . .
 
 RUN \
+  yarn config set globalFolder /workdir/global && \
+  yarn config set enableGlobalCache true && \
   yarn workspace rating-tracker-commons build && \
   yarn test
 

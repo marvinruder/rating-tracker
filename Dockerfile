@@ -9,15 +9,11 @@ COPY . .
 
 # Build
 RUN \
-  yarn build && \
-  mkdir -p /root/.yarn/berry && \
-  mv /workdir/.yarn/cache /root/.yarn/berry && \
-  yarn cache clean && \
+  yarn config set globalFolder /workdir/global && \
   yarn config set preferAggregateCacheInfo true && \
-  yarn config && \
-  du -hs /root/.yarn/berry/cache && \
-  yarn cache clean --mirror && \
-  du -hs /root/.yarn/berry/cache && \
+  yarn config set enableGlobalCache true && \
+  yarn build && \
+  yarn config set enableGlobalCache false && \
   yarn workspaces focus --production rating-tracker-backend
 
 # Create directories for run container and copy only necessary files

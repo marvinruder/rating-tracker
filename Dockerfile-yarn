@@ -5,7 +5,9 @@ WORKDIR /workdir
 
 COPY . .
 RUN \
+  yarn config set globalFolder /workdir/global && \
   yarn config set preferAggregateCacheInfo true && \
+  yarn config set enableGlobalCache true && \
   yarn --immutable
 
 ENTRYPOINT [ "/bin/sh" ]
