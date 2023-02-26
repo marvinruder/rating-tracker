@@ -10,6 +10,7 @@ COPY . .
 # Build
 RUN \
   yarn build && \
+  mkdir -p /root/.yarn/berry && \
   mv /workdir/.yarn/cache /root/.yarn/berry && \
   yarn cache clean && \
   yarn workspaces focus --production rating-tracker-backend
