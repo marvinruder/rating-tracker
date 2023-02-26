@@ -5,6 +5,5 @@ WORKDIR /workdir
 
 COPY . .
 RUN yarn --immutable
-RUN du -hs /root/.yarn
 
 ENTRYPOINT [ "/bin/sh" ]
