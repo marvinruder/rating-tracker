@@ -56,7 +56,7 @@ node {
 
             build: {
                 stage ('Build Docker Image') {
-                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", ".")
+                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "--build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
                 }
             }
 
