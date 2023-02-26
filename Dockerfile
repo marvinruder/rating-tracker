@@ -1,5 +1,6 @@
 FROM node:20.1.0-alpine as build
 LABEL stage=build
+ARG BUILD_DATE=
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -22,8 +23,6 @@ RUN mkdir -p /workdir/app/packages/rating-tracker-backend/public /workdir/app/pa
   cp -r /workdir/packages/rating-tracker-commons/dist /workdir/packages/rating-tracker-commons/package.json /workdir/app/packages/rating-tracker-commons && \
   cp -r /workdir/packages/rating-tracker-frontend/dist/* /workdir/app/packages/rating-tracker-backend/public && \
   find /workdir/app -name '*.d.ts' -type f -delete
-
-ARG BUILD_DATE
 RUN printenv
 
 
