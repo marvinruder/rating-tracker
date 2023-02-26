@@ -13,6 +13,7 @@ RUN \
   mkdir -p /root/.yarn/berry && \
   mv /workdir/.yarn/cache /root/.yarn/berry && \
   yarn cache clean && \
+  yarn config set enableNetwork false && \
   yarn config && \
   du -hs /root/.yarn/berry/cache && \
   ls -l /root/.yarn/berry /root/.yarn/berry/cache && \
