@@ -4,6 +4,7 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 COPY . .
+RUN yarn config
 RUN yarn --immutable
 
 ENTRYPOINT [ "/bin/sh" ]
