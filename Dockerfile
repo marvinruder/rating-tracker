@@ -14,7 +14,7 @@ RUN \
   yarn config set enableGlobalCache true && \
   yarn build && \
   yarn config set enableGlobalCache false && \
-  yarn cache clean && \
+  yarn cache clean --all && \
   yarn workspaces focus --production rating-tracker-backend
 
 # Create directories for run container and copy only necessary files
