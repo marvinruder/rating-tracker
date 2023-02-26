@@ -4,6 +4,8 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 COPY . .
-RUN yarn --immutable
+RUN \
+  yarn config set preferAggregateCacheInfo true && \
+  yarn --immutable
 
 ENTRYPOINT [ "/bin/sh" ]

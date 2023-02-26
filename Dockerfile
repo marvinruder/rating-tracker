@@ -13,10 +13,11 @@ RUN \
   mkdir -p /root/.yarn/berry && \
   mv /workdir/.yarn/cache /root/.yarn/berry && \
   yarn cache clean && \
-  yarn config set enableNetwork false && \
+  yarn config set preferAggregateCacheInfo true && \
   yarn config && \
   du -hs /root/.yarn/berry/cache && \
-  ls -l /root/.yarn/berry /root/.yarn/berry/cache && \
+  yarn cache clean --mirror && \
+  du -hs /root/.yarn/berry/cache && \
   yarn workspaces focus --production rating-tracker-backend
 
 # Create directories for run container and copy only necessary files
