@@ -22,7 +22,6 @@ RUN mkdir -p /workdir/app/packages/rating-tracker-backend/public /workdir/app/pa
   cp -r /workdir/packages/rating-tracker-commons/dist /workdir/packages/rating-tracker-commons/package.json /workdir/app/packages/rating-tracker-commons && \
   cp -r /workdir/packages/rating-tracker-frontend/dist/* /workdir/app/packages/rating-tracker-backend/public && \
   find /workdir/app -name '*.d.ts' -type f -delete
-RUN printenv
 
 
 FROM alpine:3.17.3 as run
@@ -37,7 +36,6 @@ LABEL \
   org.opencontainers.image.licenses="MIT" \
   org.opencontainers.image.version="0.1.0" \
   org.opencontainers.image.created=$BUILD_DATE
-RUN printenv
 ENV NODE_ENV production
 WORKDIR /app
 RUN --mount=type=cache,target=/var/cache/apk apk add dumb-init
