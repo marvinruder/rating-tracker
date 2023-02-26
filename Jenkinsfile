@@ -12,6 +12,7 @@ node {
         stage('Clone repository') {
             checkout scm
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
+            sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
         }
 
         stage ('Install dependencies') {

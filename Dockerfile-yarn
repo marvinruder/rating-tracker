@@ -4,10 +4,6 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 COPY . .
-RUN \
-  yarn config set globalFolder /workdir/global && \
-  yarn config set preferAggregateCacheInfo true && \
-  yarn config set enableGlobalCache true && \
-  yarn --immutable
+RUN yarn --immutable
 
 ENTRYPOINT [ "/bin/sh" ]
