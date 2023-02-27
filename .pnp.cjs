@@ -8150,7 +8150,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["response-time", "npm:2.3.2"],\
             ["selenium-webdriver", "npm:4.8.1"],\
             ["supertest", "npm:6.3.3"],\
-            ["swagger-ui-express", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.6.1"],\
+            ["swagger-ui-express", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.6.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
             ["vite", "virtual:e062256a07bfad74565b7b1af0a223c9c752d8358e46d3af52c369a042d53b68d83986514c0faa5e05eb365147cc212fdfd1b6486f5a28355e410768282a925f#npm:4.1.4"],\
             ["vitest", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:0.29.1"]\
@@ -9442,17 +9442,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["swagger-ui-express", [\
-        ["npm:4.6.1", {\
-          "packageLocation": "./.yarn/cache/swagger-ui-express-npm-4.6.1-40b985c79d-28a4e4b381.zip/node_modules/swagger-ui-express/",\
+        ["npm:4.6.2", {\
+          "packageLocation": "./.yarn/cache/swagger-ui-express-npm-4.6.2-d5646138c6-3883dc9243.zip/node_modules/swagger-ui-express/",\
           "packageDependencies": [\
-            ["swagger-ui-express", "npm:4.6.1"]\
+            ["swagger-ui-express", "npm:4.6.2"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.6.1", {\
-          "packageLocation": "./.yarn/__virtual__/swagger-ui-express-virtual-794a25f29a/0/cache/swagger-ui-express-npm-4.6.1-40b985c79d-28a4e4b381.zip/node_modules/swagger-ui-express/",\
+        ["virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.6.2", {\
+          "packageLocation": "./.yarn/__virtual__/swagger-ui-express-virtual-66ca07e9a0/0/cache/swagger-ui-express-npm-4.6.2-d5646138c6-3883dc9243.zip/node_modules/swagger-ui-express/",\
           "packageDependencies": [\
-            ["swagger-ui-express", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.6.1"],\
+            ["swagger-ui-express", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.6.2"],\
             ["@types/express", "npm:4.17.17"],\
             ["express", "npm:4.18.2"],\
             ["swagger-ui-dist", "npm:4.16.1"]\
