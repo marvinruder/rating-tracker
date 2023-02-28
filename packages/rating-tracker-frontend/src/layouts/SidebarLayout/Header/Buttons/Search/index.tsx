@@ -197,8 +197,9 @@ const HeaderSearch = (): JSX.Element => {
     axios
       .get(baseUrl + stockAPI + stockListEndpoint, {
         params: {
-          sortBy: "name",
           name: currentSearchValue,
+          sortBy: "name",
+          count: 10, // Only request the first 10 results
         },
       })
       .then((res) => {
@@ -260,32 +261,28 @@ const HeaderSearch = (): JSX.Element => {
           />
         </DialogTitleWrapper>
         <Divider />
-        {(searchValue || count > 0) && (
+        {searchValue && (
           <DialogContent sx={{ maxHeight: "calc(100vh - 240px)" }}>
-            {searchValue && (
-              <>
-                <Box sx={{ pt: 0, pb: 1 }} display="flex" justifyContent="space-between">
-                  <Typography variant="body2" component="span">
-                    {stocksFinal ? (
-                      <>
-                        <Typography sx={{ fontWeight: "bold" }} variant="body1" component="span">
-                          {count}
-                        </Typography>{" "}
-                        search results
-                      </>
-                    ) : (
-                      "Searching"
-                    )}{" "}
-                    for{" "}
+            <Box sx={{ pt: 0, pb: 1 }} display="flex" justifyContent="space-between">
+              <Typography variant="body2" component="span">
+                {stocksFinal ? (
+                  <>
                     <Typography sx={{ fontWeight: "bold" }} variant="body1" component="span">
-                      {searchValue}
-                    </Typography>
-                    {!stocksFinal && "…"}
-                  </Typography>
-                </Box>
-                <Divider />
-              </>
-            )}
+                      {count}
+                    </Typography>{" "}
+                    search results
+                  </>
+                ) : (
+                  "Searching"
+                )}{" "}
+                for{" "}
+                <Typography sx={{ fontWeight: "bold" }} variant="body1" component="span">
+                  {searchValue}
+                </Typography>
+                {!stocksFinal && "…"}
+              </Typography>
+            </Box>
+            <Divider />
             <List disablePadding>
               {stocksFinal
                 ? stocks.map((stock) => (
@@ -352,6 +349,11 @@ const HeaderSearch = (): JSX.Element => {
                     </React.Fragment>
                   ))}
             </List>
+            {stocksFinal && count > 10 && (
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                Only the first 10 results are shown. Refine your search parameter to show additional results.
+              </Typography>
+            )}
           </DialogContent>
         )}
       </DialogWrapper>
