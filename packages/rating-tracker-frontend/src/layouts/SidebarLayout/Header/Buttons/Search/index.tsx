@@ -157,10 +157,10 @@ const HeaderSearch = (): JSX.Element => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchValue) {
-        // Only search if the search value is not empty and the search input did not change in the last 300ms.
+        // Only search if the search value is not empty and the search input did not change in the last 200ms.
         getStocks(searchValue);
       }
-    }, 300);
+    }, 200);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchValue]);
