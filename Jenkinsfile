@@ -55,8 +55,10 @@ node {
                     docker rm -v \$id
                     """
                     withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
-                        sh """
-                        #!/usr/bin/bash
+                        sh """#!/usr/bin/env bash
+                        printenv
+                        ps
+                        echo \$0
                         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./coverage/{backend,commons,frontend}/clover.xml
                         """
                     }
