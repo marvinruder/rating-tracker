@@ -44,8 +44,8 @@ node {
 
         parallel(
 
-            codecov: {
-                stage ('Publish Codecov results') {
+            codacy: {
+                stage ('Publish coverage results to Codacy') {
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
                     mkdir -p coverage/{backend,commons,frontend}
@@ -53,11 +53,11 @@ node {
                     docker cp \$id:/workdir/packages/rating-tracker-commons/coverage/. ./coverage/commons
                     docker cp \$id:/workdir/packages/rating-tracker-frontend/coverage/. ./coverage/frontend
                     docker rm -v \$id
-                    curl -Os https://uploader.codecov.io/latest/linux/codecov
-                    chmod +x ./codecov
                     """
-                    withCredentials([string(credentialsId: 'codecov-token-rating-tracker', variable: 'CODECOV_TOKEN')]) {
-                        sh "./codecov -s coverage -C $GIT_COMMIT_HASH"
+                    withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
+                        sh """#!/usr/bin/env bash
+                        bash <(curl -Ls https://coverage.codacy.com/get.sh) report \$(find . -name 'clover.xml' -printf '-r %p ')
+                        """
                     }
                 }
             },
