@@ -9,13 +9,12 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev:tsc": "tsc -w --preserveWatchOutput",
+    "dev:ts-node": "node --loader ts-node/esm --loader ../../.pnp.loader.mjs --loader ../../.pnp-ts.loader.mjs --watch --watch-preserve-output ./src/server.ts",
     "dev:nginx": "docker compose -f local-dev/docker-compose.yml up nginx",
     "dev:redis": "docker compose -f local-dev/docker-compose.yml up redis",
     "dev:selenium": "docker compose -f local-dev/docker-compose.yml up selenium",
     "dev:signal": "docker compose -f local-dev/docker-compose.yml up signal",
     "dev:tools": "conc --kill-others \"yarn dev:nginx\" \"yarn dev:redis\" \"yarn dev:selenium\" \"yarn dev:signal\" -n \",,ﰍ,\" -p \"{name}\" -c #43972A,#D82C20,#43B02A,#4975E8 --timings",
-    "dev:node": "node --watch dist/src/server.js",
     "test:watch": "vitest",
     "test": "vitest run --coverage --color",
     "start": "node dist/src/server.js",
@@ -61,6 +60,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.8.4",
     "supertest": "6.3.3",
+    "ts-node": "10.9.1",
     "typescript": "4.9.5",
     "vite": "4.1.4",
     "vitest": "0.29.2"
