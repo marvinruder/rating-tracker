@@ -8,14 +8,15 @@
   },
   "license": "MIT",
   "type": "module",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "exports": "./dist/src/index.js",
+  "types": "./src/index.ts",
   "scripts": {
+    "dev:build": "tsc --watch --preserveWatchOutput",
     "build": "tsc",
     "test:watch": "vitest",
     "test": "vitest run --coverage --color",
-    "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
-    "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix"
+    "lint": "eslint --cache --ext .ts src/",
+    "lint:fix": "eslint --cache --ext .ts src/ --fix"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.54.1",

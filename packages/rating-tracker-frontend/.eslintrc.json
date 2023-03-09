@@ -1,14 +1,8 @@
 {
   "env": {
-    "browser": true,
-    "es2021": true
+    "browser": true
   },
-  "extends": [
-    "plugin:react/recommended",
-    "plugin:jsdoc/recommended",
-    "google",
-    "prettier"
-  ],
+  "extends": ["plugin:react/recommended", "plugin:jsdoc/recommended", "google", "prettier"],
   "settings": {
     "react": {
       "version": "detect"
