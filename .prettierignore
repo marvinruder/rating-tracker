@@ -1,6 +1,6 @@
 # .prettierignore file
+packages/*/coverage
 packages/*/dist
-node_modules/
 .yarn/
 README.md
 

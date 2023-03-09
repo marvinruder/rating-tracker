@@ -17,10 +17,9 @@
     "dev:tools": "conc --kill-others \"yarn dev:nginx\" \"yarn dev:redis\" \"yarn dev:selenium\" \"yarn dev:signal\" -n \",,ﰍ,\" -p \"{name}\" -c #43972A,#D82C20,#43B02A,#4975E8 --timings",
     "test:watch": "vitest",
     "test": "vitest run --coverage --color",
-    "start": "node dist/src/server.js",
     "build": "tsc --project tsconfig.build.json",
-    "lint": "eslint --ext .jsx,.js,.tsx,.ts src/",
-    "lint:fix": "eslint --ext .jsx,.js,.tsx,.ts src/ --fix"
+    "lint": "eslint --cache --ext .ts src/",
+    "lint:fix": "eslint --cache --ext .ts src/ --fix"
   },
   "dependencies": {
     "@simplewebauthn/server": "7.0.1",
