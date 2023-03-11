@@ -4,7 +4,7 @@ import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 import { Builder, By, Capabilities, until, WebDriver } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
-import APIError from "../lib/apiError.js";
+import APIError from "../utils/apiError.js";
 import { Stock } from "../models/stock.js";
 import chalk from "chalk";
 import {
@@ -22,7 +22,7 @@ import {
 } from "rating-tracker-commons";
 import { readAllStocks, readStock, updateStock } from "../redis/repositories/stock/stockRepository.js";
 import * as signal from "../signal/signal.js";
-import logger, { PREFIX_CHROME } from "../lib/logger.js";
+import logger, { PREFIX_CHROME } from "../utils/logger.js";
 import { createResource, readResource } from "../redis/repositories/resource/resourceRepository.js";
 import axios from "axios";
 import dotenv from "dotenv";

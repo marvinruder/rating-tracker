@@ -1,9 +1,9 @@
-import APIError from "../../../lib/apiError.js";
+import APIError from "../../../utils/apiError.js";
 import { User, UserEntity, userSchema } from "../../../models/user.js";
 import { fetch, fetchAll, remove, save } from "./userRepositoryBase.js";
 import chalk from "chalk";
 import * as signal from "../../../signal/signal.js";
-import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
+import logger, { PREFIX_REDIS } from "../../../utils/logger.js";
 
 /**
  * Create a user.

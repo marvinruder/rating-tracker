@@ -6,7 +6,7 @@ import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepo
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { initResourceRepository } from "./redis/repositories/resource/__mocks__/resourceRepositoryBase.js";
 
-vi.mock("./lib/logger");
+vi.mock("./utils/logger");
 
 vi.mock("./redis/repositories/resource/resourceRepositoryBase");
 vi.mock("./redis/repositories/session/sessionRepositoryBase");

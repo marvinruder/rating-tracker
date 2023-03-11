@@ -31,7 +31,7 @@ import {
   REGEX_PHONE_NUMBER,
   subscriptionOfMessageType,
 } from "rating-tracker-commons";
-import { convertAvatar } from "../../lib/imageManipulation";
+import { convertAvatar } from "../../utils/imageManipulation";
 
 /**
  * A dialog to edit the user’s own information.

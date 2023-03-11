@@ -1,9 +1,9 @@
-import APIError from "../../../lib/apiError.js";
+import APIError from "../../../utils/apiError.js";
 import { Stock, StockEntity, stockSchema } from "../../../models/stock.js";
 import { fetch, fetchAll, remove, save } from "./stockRepositoryBase.js";
 import chalk from "chalk";
 import * as signal from "../../../signal/signal.js";
-import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
+import logger, { PREFIX_REDIS } from "../../../utils/logger.js";
 import { MSCIESGRating, msciESGRatingArray } from "rating-tracker-commons";
 
 // Emojis showing whether a change is good or bad. Used in the Signal message.

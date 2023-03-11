@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import APIError from "../lib/apiError.js";
+import APIError from "../utils/apiError.js";
 import { readResource } from "../redis/repositories/resource/resourceRepository.js";
 
 /**

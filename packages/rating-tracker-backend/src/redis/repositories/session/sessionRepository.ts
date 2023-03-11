@@ -1,10 +1,10 @@
-import APIError from "../../../lib/apiError.js";
+import APIError from "../../../utils/apiError.js";
 import { Session, SessionEntity, sessionSchema } from "../../../models/session.js";
 import { refresh, fetch, save, remove } from "./sessionRepositoryBase.js";
 import chalk from "chalk";
 import { User } from "../../../models/user.js";
 import { readUser } from "../user/userRepository.js";
-import logger, { PREFIX_REDIS } from "../../../lib/logger.js";
+import logger, { PREFIX_REDIS } from "../../../utils/logger.js";
 
 /**
  * Create a session.

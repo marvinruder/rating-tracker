@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ADMINISTRATIVE_ACCESS } from "rating-tracker-commons";
-import APIError from "../lib/apiError.js";
+import APIError from "../utils/apiError.js";
 import { deleteUser, readAllUsers, readUser, updateUser } from "../redis/repositories/user/userRepository.js";
 
 /**

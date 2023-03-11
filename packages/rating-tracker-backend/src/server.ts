@@ -11,11 +11,11 @@ import chalk from "chalk";
 import responseTime from "response-time";
 import { STATUS_CODES } from "http";
 import axios from "axios";
-import APIError from "./lib/apiError.js";
+import APIError from "./utils/apiError.js";
 import { refreshSessionAndFetchUser } from "./redis/repositories/session/sessionRepository.js";
 import { sessionTTLInSeconds } from "./redis/repositories/session/sessionRepositoryBase.js";
 import path from "path";
-import logger, { PREFIX_NODEJS } from "./lib/logger.js";
+import logger, { PREFIX_NODEJS } from "./utils/logger.js";
 import { GENERAL_ACCESS } from "rating-tracker-commons";
 
 import { fileURLToPath } from "url";

@@ -23,7 +23,7 @@ import {
   styleArray,
   WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
-import APIError from "../lib/apiError.js";
+import APIError from "../utils/apiError.js";
 import axios from "axios";
 
 /**

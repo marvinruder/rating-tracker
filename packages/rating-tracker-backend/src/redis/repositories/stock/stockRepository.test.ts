@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
-vi.mock("../../../lib/logger");
+vi.mock("../../../utils/logger");
 
 vi.mock("../../../signal/signalBase");
 vi.mock("./stockRepositoryBase");

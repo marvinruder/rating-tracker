@@ -2,7 +2,7 @@
 // This file is not tested because tests must not depend on a running Signal Client instance
 import axios from "axios";
 import chalk from "chalk";
-import logger, { PREFIX_SIGNAL } from "../lib/logger.js";
+import logger, { PREFIX_SIGNAL } from "../utils/logger.js";
 
 /**
  * Send a message to a list of recipients.

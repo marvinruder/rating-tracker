@@ -51,7 +51,7 @@ import { useContext, useState } from "react";
 import DeleteStock from "../DeleteStock";
 import EditStock from "../EditStock";
 import StockDetails from "../StockDetails";
-import formatMarketCap from "../../lib/formatters";
+import formatMarketCap from "../../utils/formatters";
 import {
   MorningstarNavigator,
   MarketScreenerNavigator,
@@ -59,7 +59,7 @@ import {
   RefinitivNavigator,
   SPNavigator,
   SustainalyticsNavigator,
-} from "../../lib/navigators";
+} from "../../utils/navigators";
 import Range52WSlider from "../Range52WSlider";
 import { NavLink } from "react-router-dom";
 import { UserContext } from "../../router.js";

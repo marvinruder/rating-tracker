@@ -1,5 +1,5 @@
 import { StockEntity, stockSchema } from "../../../../models/stock.js";
-import exampleStocks from "../../../../lib/exampleStocks.js";
+import exampleStocks from "../../../../utils/exampleStocks.js";
 
 /**
  * A mock repository for testing purposes.

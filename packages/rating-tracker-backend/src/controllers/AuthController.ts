@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import { createSession } from "../redis/repositories/session/sessionRepository.js";
-import APIError from "../lib/apiError.js";
+import APIError from "../utils/apiError.js";
 import { createUser, readUser, updateUser, userExists } from "../redis/repositories/user/userRepository.js";
 import { sessionTTLInSeconds } from "../redis/repositories/session/sessionRepositoryBase.js";
 import { GENERAL_ACCESS } from "rating-tracker-commons";
