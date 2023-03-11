@@ -139,7 +139,7 @@ const LoginApp = (): JSX.Element => {
   return (
     <Card sx={{ margin: "auto", minWidth: 275 }}>
       <CardContent>
-        <Grid container direction={"column"} spacing={2} padding={1}>
+        <Grid container direction="column" spacing={2} padding={1}>
           <Grid item>
             <Box
               sx={{
@@ -152,7 +152,7 @@ const LoginApp = (): JSX.Element => {
             </Box>
           </Grid>
           <Grid item>
-            <Typography variant="h3" textAlign={"center"}>
+            <Typography variant="h3" textAlign="center">
               Rating Tracker
             </Typography>
           </Grid>
@@ -166,7 +166,7 @@ const LoginApp = (): JSX.Element => {
               rightLabel="Register"
             />
           </Grid>
-          <Grid container item direction={"column"} spacing={1}>
+          <Grid container item direction="column" spacing={1}>
             <Grid
               item
               maxHeight={action === "register" ? 60 : 0}

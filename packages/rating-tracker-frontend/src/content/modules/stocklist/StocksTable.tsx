@@ -13,11 +13,12 @@ import {
   Tooltip,
   Box,
 } from "@mui/material";
-import { MSCIESGRating, Stock, StockListColumn } from "rating-tracker-commons";
+import { Stock, StockListColumn } from "rating-tracker-commons";
 import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
-import { Country, Industry, Size, SortableAttribute, Style } from "rating-tracker-commons";
+import { SortableAttribute } from "rating-tracker-commons";
 import StockRow from "../../../components/StockRow";
 import { useNotification } from "../../../contexts/NotificationContext";
+import { StockFilter } from "../../../types/StockFilter";
 
 /**
  * The stocks table component.
@@ -775,45 +776,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
     </>
   );
 };
-
-export interface StockFilter {
-  totalScoreMin?: number;
-  totalScoreMax?: number;
-  financialScoreMin?: number;
-  financialScoreMax?: number;
-  esgScoreMin?: number;
-  esgScoreMax?: number;
-  dividendYieldPercentMin?: number;
-  dividendYieldPercentMax?: number;
-  priceEarningRatioMin?: number;
-  priceEarningRatioMax?: number;
-  starRatingMin?: number;
-  starRatingMax?: number;
-  morningstarFairValueDiffMin?: number;
-  morningstarFairValueDiffMax?: number;
-  analystConsensusMin?: number;
-  analystConsensusMax?: number;
-  analystCountMin?: number;
-  analystCountMax?: number;
-  analystTargetDiffMin?: number;
-  analystTargetDiffMax?: number;
-  msciESGRatingMin?: MSCIESGRating;
-  msciESGRatingMax?: MSCIESGRating;
-  msciTemperatureMin?: number;
-  msciTemperatureMax?: number;
-  refinitivESGScoreMin?: number;
-  refinitivESGScoreMax?: number;
-  refinitivEmissionsMin?: number;
-  refinitivEmissionsMax?: number;
-  spESGScoreMin?: number;
-  spESGScoreMax?: number;
-  sustainalyticsESGRiskMin?: number;
-  sustainalyticsESGRiskMax?: number;
-  countries?: Country[];
-  industries?: Industry[];
-  size?: Size;
-  style?: Style;
-}
 
 /**
  * Properties for the StocksTable component.

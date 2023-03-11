@@ -326,7 +326,7 @@ const HeaderSearch = (): JSX.Element => {
                           {emojiFlag(stock.country)}
                         </Typography>
                         <Box width={24} height={24} ml={1}>
-                          <SectorIcon industry={stock.industry} length={24} type={"Sector"} />
+                          <SectorIcon industry={stock.industry} length={24} type="Sector" />
                         </Box>
                       </ListItem>
                       <Divider component="li" />

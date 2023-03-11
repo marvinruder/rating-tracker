@@ -188,7 +188,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   return (
     <>
       <DialogContent sx={{ p: 0, pb: 2 }}>
-        <Grid container mt={2} maxWidth={"sm"}>
+        <Grid container mt={2} maxWidth="sm">
           <Grid item xs={12} sm={6} md={4}>
             {processingAvatar ? (
               <Avatar
@@ -252,7 +252,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   error={nameError}
                   label="Name"
                   value={name}
-                  placeholder={"Jane Doe"}
+                  placeholder="Jane Doe"
                   fullWidth
                   required
                 />

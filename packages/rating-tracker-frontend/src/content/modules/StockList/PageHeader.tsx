@@ -66,7 +66,7 @@ import NestedCheckboxList from "../../../components/NestedCheckboxList";
 import AddStock from "../../../components/AddStock";
 import StarRating from "../../../components/StarRating";
 import { stockListColumnArray } from "rating-tracker-commons";
-import { StockFilter } from "./StocksTable";
+import { StockFilter } from "../../../types/StockFilter";
 import { UserContext } from "../../../router";
 
 /**
@@ -75,7 +75,7 @@ import { UserContext } from "../../../router";
  * @param {PageHeaderProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps) => {
+const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [columnFilterOpen, setColumnFilterOpen] = useState<boolean>(false);
 

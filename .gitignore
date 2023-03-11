@@ -19,10 +19,10 @@ packages/*/dist
 packages/*/.vite
 
 # local dev environment
-packages/rating-tracker-backend/local-dev/nginx/certs
-packages/rating-tracker-backend/local-dev/nginx/dhparam
-packages/rating-tracker-backend/local-dev/redis
-packages/rating-tracker-backend/local-dev/signal-cli
+packages/rating-tracker-backend/dev-env/nginx/certs
+packages/rating-tracker-backend/dev-env/nginx/dhparam
+packages/rating-tracker-backend/dev-env/redis
+packages/rating-tracker-backend/dev-env/signal-cli
 
 # misc
 .DS_Store

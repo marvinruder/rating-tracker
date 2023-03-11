@@ -4,7 +4,7 @@ services:
   nginx:
     build:
       context: ./nginx
-    image: local-dev/nginx
+    image: dev-env/nginx
     cap_add:
       - NET_ADMIN
     security_opt:

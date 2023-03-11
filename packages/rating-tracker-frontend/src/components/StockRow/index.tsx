@@ -794,7 +794,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("Sector"),
         }}
       >
-        <Typography variant="body1" display={"flex"}>
+        <Typography variant="body1" display="flex">
           <Skeleton
             variant="rectangular"
             width={1.55 * (theme.typography.body1.fontSize as number)}
@@ -806,7 +806,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <Box width={6} />
           <Skeleton width={105} />
         </Typography>
-        <Typography variant="body2" display={"flex"}>
+        <Typography variant="body2" display="flex">
           <Skeleton
             variant="rectangular"
             width={1.55 * (theme.typography.body1.fontSize as number)}

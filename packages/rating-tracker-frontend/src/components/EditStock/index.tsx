@@ -408,7 +408,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               error={nameError}
               label="Stock name"
               value={name}
-              placeholder={"e.g. Apple Inc."}
+              placeholder="e.g. Apple Inc."
               fullWidth
             />
           </Grid>
@@ -451,7 +451,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 }}
                 label="Morningstar ID"
                 value={morningstarId}
-                placeholder={"e.g. 0P000000GY"}
+                placeholder="e.g. 0P000000GY"
                 fullWidth
               />
             </Grid>
@@ -476,7 +476,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 }}
                 label="MarketScreener ID"
                 value={marketScreenerId}
-                placeholder={"e.g. APPLE-INC-4849"}
+                placeholder="e.g. APPLE-INC-4849"
                 fullWidth
               />
             </Grid>
@@ -501,7 +501,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 }}
                 label="MSCI ID"
                 value={msciId}
-                placeholder={"e.g. apple-inc/IID000000002157615"}
+                placeholder="e.g. apple-inc/IID000000002157615"
                 fullWidth
               />
             </Grid>
@@ -526,7 +526,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 }}
                 label="RIC"
                 value={ric}
-                placeholder={"e.g. AAPL.O"}
+                placeholder="e.g. AAPL.O"
                 fullWidth
               />
             </Grid>
@@ -554,7 +554,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 }}
                 label="S&P ID"
                 value={spId}
-                placeholder={"e.g. 4004205"}
+                placeholder="e.g. 4004205"
                 fullWidth
               />
             </Grid>
@@ -579,7 +579,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 }}
                 label="Sustainalytics ID"
                 value={sustainalyticsId}
-                placeholder={"e.g. apple-inc/1007903183"}
+                placeholder="e.g. apple-inc/1007903183"
                 fullWidth
               />
             </Grid>

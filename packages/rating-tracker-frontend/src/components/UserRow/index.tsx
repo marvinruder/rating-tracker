@@ -229,7 +229,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
       {/* Actions */}
       {props.getUsers && (
         <TableCell style={{ whiteSpace: "nowrap" }}>
-          <Tooltip title={"Delete User"} arrow>
+          <Tooltip title="Delete User" arrow>
             <Box display="inline-block">
               <IconButton color="error" size="small" onClick={() => setDeleteDialogOpen(true)}>
                 <DeleteIcon fontSize="small" />

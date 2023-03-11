@@ -23,6 +23,7 @@
     "no-unused-vars": 0,
     "@typescript-eslint/no-unused-vars": ["warn"],
     "react/react-in-jsx-scope": 0,
+    "react/jsx-curly-brace-presence": ["warn", "never"],
     "require-jsdoc": 0,
     "valid-jsdoc": 0,
     "jsdoc/no-undefined-types": 0,

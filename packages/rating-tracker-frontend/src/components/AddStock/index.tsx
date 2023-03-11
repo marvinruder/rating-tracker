@@ -470,7 +470,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 error={tickerError}
                 label="Ticker symbol"
                 value={stock.ticker}
-                placeholder={"e.g. AAPL"}
+                placeholder="e.g. AAPL"
                 fullWidth
               />
             </Grid>
@@ -488,7 +488,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 error={nameError}
                 label="Stock name"
                 value={stock.name}
-                placeholder={"e.g. Apple Inc."}
+                placeholder="e.g. Apple Inc."
                 fullWidth
               />
             </Grid>
@@ -520,7 +520,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 error={isinError}
                 label="ISIN"
                 value={stock.isin}
-                placeholder={"e.g. US0378331005"}
+                placeholder="e.g. US0378331005"
                 fullWidth
               />
             </Grid>
@@ -605,7 +605,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 }}
                 label="Morningstar ID"
                 value={stock.morningstarId}
-                placeholder={"e.g. 0P000000GY"}
+                placeholder="e.g. 0P000000GY"
                 fullWidth
               />
             </Grid>
@@ -641,7 +641,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 }}
                 label="Market Screener ID"
                 value={stock.marketScreenerId}
-                placeholder={"e.g. APPLE-INC-4849"}
+                placeholder="e.g. APPLE-INC-4849"
                 fullWidth
               />
             </Grid>
@@ -677,7 +677,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 }}
                 label="MSCI ID"
                 value={stock.msciId}
-                placeholder={"e.g. apple-inc/IID000000002157615"}
+                placeholder="e.g. apple-inc/IID000000002157615"
                 fullWidth
               />
             </Grid>
@@ -710,7 +710,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 }}
                 label="RIC"
                 value={stock.ric}
-                placeholder={"e.g. AAPL.O"}
+                placeholder="e.g. AAPL.O"
                 fullWidth
               />
             </Grid>
@@ -749,7 +749,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 }}
                 label="S&P ID"
                 value={stock.spId}
-                placeholder={"e.g. 4004205"}
+                placeholder="e.g. 4004205"
                 fullWidth
               />
             </Grid>
@@ -785,7 +785,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 }}
                 label="Sustainalytics ID"
                 value={stock.sustainalyticsId}
-                placeholder={"e.g. apple-inc/1007903183"}
+                placeholder="e.g. apple-inc/1007903183"
                 fullWidth
               />
             </Grid>

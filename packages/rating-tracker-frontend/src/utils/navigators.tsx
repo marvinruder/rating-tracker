@@ -85,7 +85,7 @@ const RefinitivNavigator = (props: NavigatorProps): JSX.Element => {
     <Link
       onClick={() => navigator.clipboard.writeText(props.stock.name)} // Copy the stock name to the clipboard
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
-      href={`https://www.refinitiv.com/en/sustainable-finance/esg-scores`}
+      href="https://www.refinitiv.com/en/sustainable-finance/esg-scores"
       target="_blank" // Open in new tab
       style={{ color: "inherit", textDecoration: "none" }} // No change in color, no underline
     >
