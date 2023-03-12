@@ -1,13 +1,7 @@
 import { Request, Response } from "express";
-import { Stock } from "../models/stock.js";
+import { optionalStockValuesNull, Stock } from "rating-tracker-commons";
 import { createResource, readResource } from "../redis/repositories/resource/resourceRepository.js";
-import {
-  createStock,
-  deleteStock,
-  readAllStocks,
-  updateStock,
-  readStock,
-} from "../redis/repositories/stock/stockRepository.js";
+import { createStock, deleteStock, readAllStocks, updateStock, readStock } from "../db/tables/stockTable.js";
 import {
   Country,
   Industry,
@@ -39,7 +33,7 @@ class StockController {
    * pagination.
    */
   async getList(req: Request, res: Response) {
-    // Read all stocks from Redis
+    // Read all stocks from the database
     let stocks = await readAllStocks();
 
     // Filter the list of stocks
@@ -563,7 +557,7 @@ class StockController {
   }
 
   /**
-   * Reads a single stock from Redis.
+   * Reads a single stock from the database.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
@@ -575,7 +569,7 @@ class StockController {
   }
 
   /**
-   * Creates a new stock in Redis.
+   * Creates a new stock in the database.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
@@ -595,7 +589,7 @@ class StockController {
       isCountry(country) &&
       typeof isin === "string"
     ) {
-      if (await createStock(new Stock({ ticker, name, country, isin }))) {
+      if (await createStock(new Stock({ ...optionalStockValuesNull, ticker, name, country, isin }))) {
         return res.status(201).end();
       } else {
         throw new APIError(409, "A stock with that ticker exists already.");
@@ -604,7 +598,7 @@ class StockController {
   }
 
   /**
-   * Updates a stock in Redis.
+   * Updates a stock in the database.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
@@ -615,34 +609,34 @@ class StockController {
       throw new APIError(403, "This user account does not have the necessary access rights to update stocks.");
     }
     const ticker = req.params[0];
-    const { name, country, morningstarId, marketScreenerId, msciId, ric, spId, sustainalyticsId } = req.query;
+    const { name, country, morningstarID, marketScreenerID, msciID, ric, spID, sustainalyticsID } = req.query;
     if (
       typeof ticker === "string" &&
       (typeof name === "string" || typeof name === "undefined") &&
       ((typeof country === "string" && isCountry(country)) || typeof country === "undefined") &&
-      (typeof morningstarId === "string" || typeof morningstarId === "undefined") &&
-      (typeof marketScreenerId === "string" || typeof marketScreenerId === "undefined") &&
-      (typeof msciId === "string" || typeof msciId === "undefined") &&
+      (typeof morningstarID === "string" || typeof morningstarID === "undefined") &&
+      (typeof marketScreenerID === "string" || typeof marketScreenerID === "undefined") &&
+      (typeof msciID === "string" || typeof msciID === "undefined") &&
       (typeof ric === "string" || typeof ric === "undefined") &&
-      (typeof spId === "number" || typeof spId === "undefined") &&
-      (typeof sustainalyticsId === "string" || typeof sustainalyticsId === "undefined")
+      (typeof spID === "number" || typeof spID === "undefined") &&
+      (typeof sustainalyticsID === "string" || typeof sustainalyticsID === "undefined")
     ) {
       await updateStock(ticker, {
         name,
         country,
-        morningstarId,
-        marketScreenerId,
-        msciId,
+        morningstarID,
+        marketScreenerID,
+        msciID,
         ric,
-        spId,
-        sustainalyticsId,
+        spID,
+        sustainalyticsID,
       });
       return res.status(204).end();
     }
   }
 
   /**
-   * Deletes a stock from Redis.
+   * Deletes a stock from the database.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object

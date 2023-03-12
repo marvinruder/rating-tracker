@@ -1,24 +1,22 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
-
-vi.mock("../../../utils/logger");
-
-vi.mock("../../../signal/signalBase");
-vi.mock("./stockRepositoryBase");
-vi.mock("../user/userRepositoryBase");
-
-const { createStock, readStock, updateStock } = await import("./stockRepository");
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import dotenv from "dotenv";
-import { initStockRepository } from "./__mocks__/stockRepositoryBase";
-import { sentMessages } from "../../../signal/__mocks__/signalBase";
-import { Stock } from "../../../models/stock";
-import { initUserRepository } from "../user/__mocks__/userRepositoryBase";
+
+vi.mock("../../utils/logger");
+vi.mock("../../signal/signalBase");
+vi.mock("../../redis/repositories/user/userRepositoryBase");
 
 dotenv.config({
-  path: ".env.local",
+  path: ".testenv",
 });
 
-beforeAll(() => {
-  initStockRepository();
+const { createStock, readStock, updateStock } = await import("./stockTable");
+import { sentMessages } from "../../signal/__mocks__/signalBase";
+import { optionalStockValuesNull, Stock } from "rating-tracker-commons";
+import { initUserRepository } from "../../redis/repositories/user/__mocks__/userRepositoryBase";
+import { applyStockSeed } from "../seeds/testStockSeeds";
+
+beforeEach(async () => {
+  await applyStockSeed();
   initUserRepository();
 });
 
@@ -26,6 +24,7 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
   it("updates a single stock", async () => {
     await createStock(
       new Stock({
+        ...optionalStockValuesNull,
         ticker: "NEWSTOCK",
         name: "New Stock Inc.",
         isin: "US123456789",
@@ -36,11 +35,11 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
     const newValues: Partial<Omit<Stock, "ticker">> = {
       name: "Updated Stock",
       country: "CA",
-      isin: "CA012345678",
+      isin: "CA0123456789",
       industry: "LumberWoodProduction",
       size: "Mid",
       style: "Blend",
-      morningstarId: "0P012345678",
+      morningstarID: "0P012345678",
       morningstarLastFetch: new Date(),
       starRating: 4,
       dividendYieldPercent: 3.61,
@@ -51,12 +50,12 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       marketCap: 67800000000,
       low52w: 101.23,
       high52w: 145.67,
-      marketScreenerId: "NEW-STOCK-238712974",
+      marketScreenerID: "NEW-STOCK-238712974",
       marketScreenerLastFetch: new Date(),
       analystConsensus: 2.5,
       analystCount: 5,
       analystTargetPrice: 150,
-      msciId: "new-stock/IID000001238712974",
+      msciID: "new-stock/IID000001238712974",
       msciLastFetch: new Date(),
       msciESGRating: "BB",
       msciTemperature: 2.1,
@@ -64,18 +63,16 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
       refinitivLastFetch: new Date(),
       refinitivESGScore: 74,
       refinitivEmissions: 23,
-      spId: 4123456,
+      spID: 4123456,
       spLastFetch: new Date(),
       spESGScore: 78,
-      sustainalyticsId: "newstock/1238712974",
+      sustainalyticsID: "newstock/1238712974",
       sustainalyticsESGRisk: 31.2,
       description:
         "This is a long description of the stock, which is not used in the app. It is only used for testing purposes.",
     };
 
     await updateStock("NEWSTOCK", newValues);
-
-    await new Promise((resolve) => setTimeout(resolve, 1));
 
     const slightlyWorseValues: Partial<Omit<Stock, "ticker">> = {
       starRating: 3,
@@ -98,21 +95,17 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
     await updateStock("NEWSTOCK", slightlyWorseValues);
     const updatedStock = await readStock("NEWSTOCK");
     for (const k in newValues) {
-      if (slightlyWorseValues[k] === null) {
-        expect(updatedStock[k]).not.toBeNull();
-        expect(updatedStock[k]).toBeUndefined();
+      if (k in slightlyWorseValues) {
+        expect(updatedStock[k]).toStrictEqual(slightlyWorseValues[k]);
       } else {
-        if (k in slightlyWorseValues) {
-          expect(updatedStock[k]).toBe(slightlyWorseValues[k]);
-        } else {
-          expect(updatedStock[k]).toBe(newValues[k]);
-        }
+        expect(updatedStock[k]).toStrictEqual(newValues[k]);
       }
     }
 
     await updateStock("NEWSTOCK", newValues);
 
-    await new Promise((resolve) => setTimeout(resolve, 1));
+    // Since we normally do not wait for a message being sent, we need to manually wait here.
+    await new Promise((resolve) => setTimeout(resolve, 10));
 
     expect(sentMessages[0].message).toMatch("🟢");
     expect(sentMessages[1].message).toMatch("🔴");
@@ -133,6 +126,7 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
   it("cannot update a stock with an invalid property", async () => {
     await createStock(
       new Stock({
+        ...optionalStockValuesNull,
         ticker: "NEWSTOCK",
         name: "New Stock Inc.",
         isin: "US123456789",

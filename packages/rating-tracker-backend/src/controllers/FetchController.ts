@@ -5,7 +5,6 @@ import { Request, Response } from "express";
 import { Builder, By, Capabilities, until, WebDriver } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
 import APIError from "../utils/apiError.js";
-import { Stock } from "../models/stock.js";
 import chalk from "chalk";
 import {
   Currency,
@@ -17,19 +16,18 @@ import {
   MSCIESGRating,
   Resource,
   Size,
+  Stock,
   Style,
   WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
-import { readAllStocks, readStock, updateStock } from "../redis/repositories/stock/stockRepository.js";
+import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable.js";
 import * as signal from "../signal/signal.js";
 import logger, { PREFIX_CHROME } from "../utils/logger.js";
 import { createResource, readResource } from "../redis/repositories/resource/resourceRepository.js";
 import axios from "axios";
 import dotenv from "dotenv";
 
-dotenv.config({
-  path: ".env.local",
-});
+dotenv.config();
 
 const SIGNAL_PREFIX_ERROR = "⚠️ ";
 const SIGNAL_PREFIX_INFO = "ℹ️ ";
@@ -151,18 +149,18 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].morningstarId) {
+        if (!stocks[0].morningstarID) {
           // If the only stock to use does not have a Morningstar ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have a Morningstar ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
+      // When no specific stock is requested, we fetch all stocks from the database.
       stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
     }
 
     stocks = stocks
-      .filter((stock) => stock.morningstarId) // Only stocks with a Morningstar ID are considered.
+      .filter((stock) => stock.morningstarID) // Only stocks with a Morningstar ID are considered.
       .sort(
         // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
         (a, b) => (a.morningstarLastFetch ?? new Date(0)).getTime() - (b.morningstarLastFetch ?? new Date(0)).getTime()
@@ -214,8 +212,8 @@ class FetchController {
 
       try {
         await driver.get(
-          `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarId}` +
-            `&LanguageId=en-US&SecurityToken=${stock.morningstarId}]3]0]E0WWE$$ALL`
+          `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarID}` +
+            `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`
         );
         await driver.wait(
           until.elementLocated(By.id("SnapshotContent")),
@@ -237,9 +235,9 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract industry: ${e}`));
-          if (stock.industry !== undefined) {
-            // If an industry for the stock is already stored in Redis, but we cannot extract it now from the page, we
-            // log this as an error and send a message.
+          if (stock.industry !== null) {
+            // If an industry for the stock is already stored in the database, but we cannot extract it now from the
+            // page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -269,9 +267,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract size and style: ${e}`)
           );
-          if (stock.size !== undefined || stock.style !== undefined) {
-            // If size or style for the stock are already stored in Redis, but we cannot extract them now from the page,
-            // we log this as an error and send a message.
+          if (stock.size !== null || stock.style !== null) {
+            // If size or style for the stock are already stored in the database, but we cannot extract them now from
+            // the page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -293,9 +291,9 @@ class FetchController {
           starRating = +starRatingString;
         } catch (e) {
           logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract star rating: ${e}`));
-          if (stock.starRating !== undefined) {
-            // If a star rating for the stock is already stored in Redis, but we cannot extract it now from the page, we
-            // log this as an error and send a message.
+          if (stock.starRating !== null) {
+            // If a star rating for the stock is already stored in the database, but we cannot extract it now from the
+            // page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -322,9 +320,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`)
           );
-          if (stock.dividendYieldPercent !== undefined) {
-            // If a dividend yield for the stock is already stored in Redis, but we cannot extract it now from the page,
-            // we log this as an error and send a message.
+          if (stock.dividendYieldPercent !== null) {
+            // If a dividend yield for the stock is already stored in the database, but we cannot extract it now from
+            // the page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -351,9 +349,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`)
           );
-          if (stock.priceEarningRatio !== undefined) {
-            // If a price earning ratio for the stock is already stored in Redis, but we cannot extract it now from the
-            // page, we log this as an error and send a message.
+          if (stock.priceEarningRatio !== null) {
+            // If a price earning ratio for the stock is already stored in the database, but we cannot extract it now
+            // from the page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -376,9 +374,9 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract currency: ${e}`));
-          if (stock.currency !== undefined) {
-            // If a currency for the stock is already stored in Redis, but we cannot extract it now from the page, we
-            // log this as an error and send a message.
+          if (stock.currency !== null) {
+            // If a currency for the stock is already stored in the database, but we cannot extract it now from the
+            // page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -402,9 +400,9 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract last close: ${e}`));
-          if (stock.lastClose !== undefined) {
-            // If a last close for the stock is already stored in Redis, but we cannot extract it now from the page, we
-            // log this as an error and send a message.
+          if (stock.lastClose !== null) {
+            // If a last close for the stock is already stored in the database, but we cannot extract it now from the
+            // page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -433,9 +431,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`)
           );
-          if (stock.morningstarFairValue !== undefined) {
-            // If a Morningstar Fair Value for the stock is already stored in Redis, but we cannot extract it now from
-            // the page, we log this as an error and send a message.
+          if (stock.morningstarFairValue !== null) {
+            // If a Morningstar Fair Value for the stock is already stored in the database, but we cannot extract it
+            // now from the page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -470,9 +468,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`)
           );
-          if (stock.marketCap !== undefined) {
-            // If a market capitalization for the stock is already stored in Redis, but we cannot extract it now from
-            // the page, we log this as an error and send a message.
+          if (stock.marketCap !== null) {
+            // If a market capitalization for the stock is already stored in the database, but we cannot extract it now
+            // from the page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -508,9 +506,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`)
           );
-          if (stock.low52w !== undefined || stock.high52w !== undefined) {
-            // If a 52 week price range for the stock is already stored in Redis, but we cannot extract it now from
-            // the page, we log this as an error and send a message.
+          if (stock.low52w !== null || stock.high52w !== null) {
+            // If a 52 week price range for the stock is already stored in the database, but we cannot extract it now
+            // from the page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -526,8 +524,8 @@ class FetchController {
           description = await driver.findElement(By.xpath(XPATH_DESCRIPTION)).getText();
         } catch (e) {
           logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract description: ${e}`));
-          if (stock.description !== undefined) {
-            // If a description for the stock is already stored in Redis, but we cannot extract it now from
+          if (stock.description !== null) {
+            // If a description for the stock is already stored in the database, but we cannot extract it now from
             // the page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
@@ -552,7 +550,7 @@ class FetchController {
           successfulCount += 1;
           consecutiveErrorCount = 0;
         }
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           industry,
           size,
@@ -639,18 +637,18 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].marketScreenerId) {
+        if (!stocks[0].marketScreenerID) {
           // If the only stock to use does not have a MarketScreener ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have a MarketScreener ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
+      // When no specific stock is requested, we fetch all stocks from the database.
       stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
     }
 
     stocks = stocks
-      .filter((stock) => stock.marketScreenerId) // Only stocks with a MarketScreener ID are considered.
+      .filter((stock) => stock.marketScreenerID) // Only stocks with a MarketScreener ID are considered.
       .sort(
         // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
         (a, b) =>
@@ -692,7 +690,7 @@ class FetchController {
       let analystTargetPrice: number;
 
       try {
-        await driver.get(`https://www.marketscreener.com/quote/stock/${stock.marketScreenerId}/`);
+        await driver.get(`https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/`);
         // Wait for the page to load for a maximum of 5 seconds.
         await driver.wait(until.elementLocated(By.id("zbCenter")), 5000);
 
@@ -712,9 +710,9 @@ class FetchController {
             logger.warn(
               PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`)
             );
-            if (stock.analystConsensus !== undefined) {
-              // If an analyst consensus is already stored in Redis, but we cannot extract it from the page, we log
-              // this as an error and send a message.
+            if (stock.analystConsensus !== null) {
+              // If an analyst consensus is already stored in the database, but we cannot extract it from the page, we
+              // log this as an error and send a message.
               logger.error(
                 PREFIX_CHROME +
                   chalk.redBright(
@@ -732,8 +730,8 @@ class FetchController {
             logger.warn(
               PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`)
             );
-            if (stock.analystCount !== undefined) {
-              // If an analyst count is already stored in Redis, but we cannot extract it from the page, we log
+            if (stock.analystCount !== null) {
+              // If an analyst count is already stored in the database, but we cannot extract it from the page, we log
               // this as an error and send a message.
               logger.error(
                 PREFIX_CHROME +
@@ -762,9 +760,9 @@ class FetchController {
             logger.warn(
               PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`)
             );
-            if (stock.analystTargetPrice !== undefined) {
-              // If an analyst target price is already stored in Redis, but we cannot extract it from the page, we log
-              // this as an error and send a message.
+            if (stock.analystTargetPrice !== null) {
+              // If an analyst target price is already stored in the database, but we cannot extract it from the page,
+              // we log this as an error and send a message.
               logger.error(
                 PREFIX_CHROME +
                   chalk.redBright(
@@ -779,13 +777,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`)
           );
-          if (
-            stock.analystConsensus !== undefined ||
-            stock.analystCount !== undefined ||
-            stock.analystTargetPrice !== undefined
-          ) {
-            // If any of the analyst-related information is already stored in Redis, but we cannot extract it from the
-            // page, we log this as an error and send a message.
+          if (stock.analystConsensus !== null || stock.analystCount !== null || stock.analystTargetPrice !== null) {
+            // If any of the analyst-related information is already stored in the database, but we cannot extract it
+            // from the page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -809,7 +803,7 @@ class FetchController {
           successfulCount += 1;
           consecutiveErrorCount = 0;
         }
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           marketScreenerLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
           analystConsensus,
@@ -888,18 +882,18 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].msciId) {
+        if (!stocks[0].msciID) {
           // If the only stock to use does not have an MSCI ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have an MSCI ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
+      // When no specific stock is requested, we fetch all stocks from the database.
       stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
     }
 
     stocks = stocks
-      .filter((stock) => stock.msciId) // Only stocks with an MSCI ID are considered.
+      .filter((stock) => stock.msciID) // Only stocks with an MSCI ID are considered.
       .sort(
         // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
         (a, b) => (a.msciLastFetch ?? new Date(0)).getTime() - (b.msciLastFetch ?? new Date(0)).getTime()
@@ -962,7 +956,7 @@ class FetchController {
           await new Promise((resolve) => setTimeout(resolve, 15000));
         }
         await driver.get(
-          `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${stock.msciId}`
+          `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${stock.msciID}`
         );
         await driver.wait(
           until.elementsLocated(By.className("esg-expandable")),
@@ -981,9 +975,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`)
           );
-          if (stock.msciESGRating !== undefined) {
-            // If an MSCI ESG Rating is already stored in Redis, but we cannot extract it from the page, we log this as
-            // an error and send a message.
+          if (stock.msciESGRating !== null) {
+            // If an MSCI ESG Rating is already stored in the database, but we cannot extract it from the page, we log
+            // this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -1005,9 +999,9 @@ class FetchController {
             PREFIX_CHROME +
               chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`)
           );
-          if (stock.msciTemperature !== undefined) {
-            // If an MSCI Implied Temperature Rise is already stored in Redis, but we cannot extract it from the page,
-            // we log this as an error and send a message.
+          if (stock.msciTemperature !== null) {
+            // If an MSCI Implied Temperature Rise is already stored in the database, but we cannot extract it from the
+            // page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -1033,7 +1027,7 @@ class FetchController {
           successfulCount += 1;
           consecutiveErrorCount = 0;
         }
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           msciLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
           msciESGRating,
@@ -1115,7 +1109,7 @@ class FetchController {
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
+      // When no specific stock is requested, we fetch all stocks from the database.
       stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
     }
 
@@ -1183,9 +1177,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`)
           );
-          if (stock.refinitivESGScore !== undefined) {
-            // If a Refinitiv ESG Score is already stored in Redis, but we cannot extract it from the page, we log this
-            // as an error and send a message.
+          if (stock.refinitivESGScore !== null) {
+            // If a Refinitiv ESG Score is already stored in the database, but we cannot extract it from the page, we
+            // log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -1203,9 +1197,9 @@ class FetchController {
           logger.warn(
             PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`)
           );
-          if (stock.refinitivEmissions !== undefined) {
-            // If a Refinitiv Emissions Rating is already stored in Redis, but we cannot extract it from the page, we
-            // log this as an error and send a message.
+          if (stock.refinitivEmissions !== null) {
+            // If a Refinitiv Emissions Rating is already stored in the database, but we cannot extract it from the
+            // page, we log this as an error and send a message.
             logger.error(
               PREFIX_CHROME +
                 chalk.redBright(
@@ -1229,7 +1223,7 @@ class FetchController {
           successfulCount += 1;
           consecutiveErrorCount = 0;
         }
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           refinitivLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
           refinitivESGScore,
@@ -1324,18 +1318,18 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].spId) {
+        if (!stocks[0].spID) {
           // If the only stock to use does not have an S&P ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have an S&P ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
+      // When no specific stock is requested, we fetch all stocks from the database.
       stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
     }
 
     stocks = stocks
-      .filter((stock) => stock.spId) // Only stocks with an S&P ID are considered.
+      .filter((stock) => stock.spID) // Only stocks with an S&P ID are considered.
       .sort(
         // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
         (a, b) => (a.spLastFetch ?? new Date(0)).getTime() - (b.spLastFetch ?? new Date(0)).getTime()
@@ -1374,7 +1368,7 @@ class FetchController {
       let spESGScore: number;
 
       try {
-        await driver.get(`https://www.spglobal.com/esg/scores/results?cid=${stock.spId}`);
+        await driver.get(`https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`);
         // Wait for the page to load for a maximum of 5 seconds.
         await driver.wait(until.elementLocated(By.xpath(XPATH_SP_PANEL)), 5000);
 
@@ -1392,7 +1386,7 @@ class FetchController {
 
         spESGScore = +(await (await driver.findElement(By.id("esg-score"))).getText());
 
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           spLastFetch: new Date(),
           spESGScore,
@@ -1410,9 +1404,9 @@ class FetchController {
           );
         }
         logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`));
-        if (stock.spESGScore !== undefined) {
-          // If an S&P ESG Score is already stored in Redis, but we cannot extract it from the page, we log this as an
-          // error and send a message.
+        if (stock.spESGScore !== null) {
+          // If an S&P ESG Score is already stored in the database, but we cannot extract it from the page, we log this
+          // as an error and send a message.
           logger.error(
             PREFIX_CHROME +
               chalk.redBright(
@@ -1483,17 +1477,17 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].sustainalyticsId) {
+        if (!stocks[0].sustainalyticsID) {
           // If the only stock to use does not have a Sustainalytics ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have a Sustainalytics ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
+      // When no specific stock is requested, we fetch all stocks from the database.
       stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
     }
 
-    stocks = stocks.filter((stock) => stock.sustainalyticsId); // Only stocks with a Sustainalytics ID are considered.
+    stocks = stocks.filter((stock) => stock.sustainalyticsID); // Only stocks with a Sustainalytics ID are considered.
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
       return res.status(204).end();
@@ -1564,21 +1558,21 @@ class FetchController {
 
       try {
         // Look for the Sustainalytics ID in the XML lines.
-        const sustainalyticsIdIndex = sustainalyticsXMLLines.findIndex(
+        const sustainalyticsIDIndex = sustainalyticsXMLLines.findIndex(
           (line, index) =>
-            line.startsWith(`<a data-href="/${stock.sustainalyticsId}`) &&
+            line.startsWith(`<a data-href="/${stock.sustainalyticsID}`) &&
             sustainalyticsXMLLines[index + 1].startsWith(`<div class="col-2">`)
         );
-        if (sustainalyticsIdIndex === -1) {
+        if (sustainalyticsIDIndex === -1) {
           // If the Sustainalytics ID is not found, we throw an error.
-          throw new APIError(404, `Cannot find Sustainalytics ID ${stock.sustainalyticsId} in XML.`);
+          throw new APIError(404, `Cannot find Sustainalytics ID ${stock.sustainalyticsID} in XML.`);
         }
-        const sustainalyticsESGRiskLine = sustainalyticsXMLLines[sustainalyticsIdIndex + 1];
+        const sustainalyticsESGRiskLine = sustainalyticsXMLLines[sustainalyticsIDIndex + 1];
         sustainalyticsESGRisk = +sustainalyticsESGRiskLine // Example: <div class="col-2">25.2</div>
           .substring(sustainalyticsESGRiskLine.indexOf(">") + 1)
           .match(/(\d+(\.\d+)?)/g)[0];
 
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           sustainalyticsESGRisk,
         });
@@ -1596,9 +1590,9 @@ class FetchController {
         logger.warn(
           PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`)
         );
-        if (stock.sustainalyticsESGRisk !== undefined) {
-          // If a Sustainalytics ESG Risk is already stored in Redis, but we cannot extract it from the page, we log
-          // this as an error and send a message.
+        if (stock.sustainalyticsESGRisk !== null) {
+          // If a Sustainalytics ESG Risk is already stored in the database, but we cannot extract it from the page, we
+          // log this as an error and send a message.
           logger.error(
             PREFIX_CHROME +
               chalk.redBright(

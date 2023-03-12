@@ -5,9 +5,7 @@ import { createClient } from "redis";
 import { Client } from "redis-om";
 import logger, { PREFIX_REDIS } from "../utils/logger.js";
 
-dotenv.config({
-  path: ".env.local",
-});
+dotenv.config();
 
 // The URL of the Redis instance
 const url = process.env.REDIS_URL;

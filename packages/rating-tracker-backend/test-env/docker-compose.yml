@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  redis-test:
+    image: redis:alpine
+    user: "1000"
+    cap_drop:
+      - all
+    security_opt:
+      - no-new-privileges
+    command: redis-server --appendonly no
+    ports:
+      - "63791:6379"
+
+  postgres-test:
+    image: postgres:alpine
+    user: "70"
+    cap_drop:
+      - all
+    cap_add:
+      - CHOWN
+    security_opt:
+      - no-new-privileges
+    ports:
+      - "54321:5432"
+    environment:
+      POSTGRES_DB: "rating-tracker-test"
+      POSTGRES_USER: "rating-tracker-test"
+      POSTGRES_PASSWORD: "rating-tracker-test"
+    shm_size: '256mb'

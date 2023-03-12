@@ -1,14 +1,25 @@
-import { Stock } from "./stock";
+import { optionalStockValuesNull, Stock } from "./stock";
 import { describe, expect, it } from "vitest";
 
 describe("Stock Scores", () => {
   it("has score when empty", () => {
-    const emptyStock = new Stock();
+    const emptyStock = new Stock({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
+    });
     expect(emptyStock.getTotalScore()).toBe(0);
   });
 
   it("has scores of 0 when average", () => {
     const stock = new Stock({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
       lastClose: 100,
       starRating: 3,
       morningstarFairValue: 100,
@@ -29,6 +40,11 @@ describe("Stock Scores", () => {
 
   it("has scores of -1 when performing poor", () => {
     const stock = new Stock({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
       lastClose: 100,
       starRating: 1,
       morningstarFairValue: 25,
@@ -49,6 +65,11 @@ describe("Stock Scores", () => {
 
   it("has scores of 1 when performing excellent", () => {
     const stock = new Stock({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
       lastClose: 100,
       starRating: 5,
       morningstarFairValue: 230,
@@ -68,7 +89,13 @@ describe("Stock Scores", () => {
   });
 
   it("has defined scores for every possible star rating", () => {
-    const stock = new Stock({});
+    const stock = new Stock({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
+    });
     expect(stock.getFinancialScore()).toBe(0);
 
     stock.starRating = 1;
@@ -84,7 +111,13 @@ describe("Stock Scores", () => {
   });
 
   it("has defined scores for every possible MSCI ESG rating", () => {
-    const stock = new Stock({});
+    const stock = new Stock({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
+    });
     expect(stock.getESGScore()).toBe(0);
 
     stock.msciESGRating = "AAA";
@@ -104,7 +137,13 @@ describe("Stock Scores", () => {
   });
 
   it("has financial score depending on analyst count", () => {
-    const stock = new Stock({});
+    const stock = new Stock({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
+    });
 
     stock.lastClose = 100;
     stock.analystTargetPrice = 200;
@@ -123,6 +162,11 @@ describe("Stock Scores", () => {
 describe("Stock Percentages", () => {
   it("has percentage to last close", () => {
     const stock = new Stock({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
       lastClose: 100,
       morningstarFairValue: 200,
       analystTargetPrice: 50,
@@ -134,6 +178,11 @@ describe("Stock Percentages", () => {
 
   it("has non-NaN percentage to last close even when dividing by zero", () => {
     const stock = new Stock({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
       lastClose: 100,
       morningstarFairValue: 0,
     });

@@ -13,9 +13,7 @@ import { sessionTTLInSeconds } from "../redis/repositories/session/sessionReposi
 import { GENERAL_ACCESS } from "rating-tracker-commons";
 import { User } from "../models/user.js";
 
-dotenv.config({
-  path: ".env.local",
-});
+dotenv.config();
 
 const rpName = "Rating Tracker";
 // Using only the domain name allows us to use the same code for several subdomains.

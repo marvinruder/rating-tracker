@@ -339,9 +339,9 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             <Box sx={{ float: "right" }}>{props.stock.morningstarFairValue?.toFixed(2) ?? "–"}</Box>
           </Typography>
           <Typography variant="body2" color="text.secondary" width={90} sx={{ textAlign: "right" }} noWrap>
-            {props.stock.morningstarFairValue !== undefined &&
-              props.stock.lastClose !== undefined &&
-              props.stock.getPercentageToLastClose("morningstarFairValue") !== undefined &&
+            {props.stock.morningstarFairValue !== null &&
+              props.stock.lastClose !== null &&
+              props.stock.getPercentageToLastClose("morningstarFairValue") !== null &&
               `${props.stock.lastClose > props.stock.morningstarFairValue ? "+" : ""}${Math.round(
                 props.stock.getPercentageToLastClose("morningstarFairValue")
               )}\u2009%`}
@@ -354,7 +354,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("Analyst Consensus"),
         }}
       >
-        {props.stock.analystConsensus !== undefined && (
+        {props.stock.analystConsensus !== null && (
           <MarketScreenerNavigator stock={props.stock}>
             <Chip
               label={<strong>{props.stock.analystConsensus}</strong>}
@@ -421,9 +421,9 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             sx={{ textAlign: "left", display: "inline-block" }}
             noWrap
           >
-            {props.stock.analystTargetPrice !== undefined &&
-              props.stock.analystCount !== undefined &&
-              props.stock.lastClose !== undefined &&
+            {props.stock.analystTargetPrice !== null &&
+              props.stock.analystCount !== null &&
+              props.stock.lastClose !== null &&
               `n\u2009=\u2009${props.stock.analystCount}`}
           </Typography>
           <Typography
@@ -433,10 +433,10 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             sx={{ textAlign: "right", display: "inline-block" }}
             noWrap
           >
-            {props.stock.analystTargetPrice !== undefined &&
-              props.stock.analystCount !== undefined &&
-              props.stock.lastClose !== undefined &&
-              props.stock.getPercentageToLastClose("analystTargetPrice") !== undefined &&
+            {props.stock.analystTargetPrice !== null &&
+              props.stock.analystCount !== null &&
+              props.stock.lastClose !== null &&
+              props.stock.getPercentageToLastClose("analystTargetPrice") !== null &&
               `${props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""}${Math.round(
                 props.stock.getPercentageToLastClose("analystTargetPrice")
               )}\u2009%`}
@@ -474,7 +474,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("MSCI Implied Temperature Rise"),
         }}
       >
-        {props.stock.msciTemperature !== undefined && (
+        {props.stock.msciTemperature !== null && (
           <MSCINavigator stock={props.stock}>
             <TemperatureChip
               icon={<ThermostatIcon />}
@@ -550,7 +550,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("Sustainalytics ESG Risk"),
         }}
       >
-        {props.stock.sustainalyticsESGRisk !== undefined && (
+        {props.stock.sustainalyticsESGRisk !== null && (
           <SustainalyticsNavigator stock={props.stock}>
             <Chip
               label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
@@ -579,34 +579,32 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("52 Week Range"),
         }}
       >
-        {props.stock.lastClose !== undefined &&
-          props.stock.low52w !== undefined &&
-          props.stock.high52w !== undefined && (
-            <Range52WSlider
-              size="small"
-              sx={{
-                mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
-                mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
-                width: 150,
-              }}
-              value={props.stock.lastClose}
-              min={props.stock.low52w}
-              max={props.stock.high52w}
-              marks={[
-                {
-                  value: props.stock.low52w,
-                  label: props.stock.low52w?.toFixed(2),
-                },
-                {
-                  value: props.stock.high52w,
-                  label: props.stock.high52w?.toFixed(2),
-                },
-              ]}
-              valueLabelDisplay="on"
-              valueLabelFormat={(value) => value.toFixed(2)}
-              disabled
-            />
-          )}
+        {props.stock.lastClose !== null && props.stock.low52w !== null && props.stock.high52w !== null && (
+          <Range52WSlider
+            size="small"
+            sx={{
+              mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
+              mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
+              width: 150,
+            }}
+            value={props.stock.lastClose}
+            min={props.stock.low52w}
+            max={props.stock.high52w}
+            marks={[
+              {
+                value: props.stock.low52w,
+                label: props.stock.low52w?.toFixed(2),
+              },
+              {
+                value: props.stock.high52w,
+                label: props.stock.high52w?.toFixed(2),
+              },
+            ]}
+            valueLabelDisplay="on"
+            valueLabelFormat={(value) => value.toFixed(2)}
+            disabled
+          />
+        )}
       </TableCell>
       {/* Dividend Yield */}
       <TableCell
@@ -641,7 +639,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
               {props.stock.currency ?? ""}
             </Box>
           </Tooltip>
-          <Box sx={{ float: "right" }}>{props.stock.marketCap !== undefined ? formatMarketCap(props.stock) : "–"}</Box>
+          <Box sx={{ float: "right" }}>{props.stock.marketCap !== null ? formatMarketCap(props.stock) : "–"}</Box>
         </Typography>
       </TableCell>
       {/* Actions */}

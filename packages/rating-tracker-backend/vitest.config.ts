@@ -9,5 +9,6 @@ export default defineConfig({
       provider: "istanbul",
       exclude: ["**/__mocks__/**"],
     },
+    singleThread: true,
   },
 });

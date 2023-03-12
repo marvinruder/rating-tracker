@@ -13,18 +13,32 @@ node {
             checkout scm
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
             sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
+            sh "sed -i 's/127.0.0.1/172.17.0.1/g' packages/rating-tracker-backend/.testenv"
         }
 
-        stage ('Install dependencies') {
-            docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f Dockerfile-yarn .")
-            sh """
-            id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
-            docker cp \$id:/workdir/.yarn/. ./.yarn
-            docker cp \$id:/workdir/global .
-            docker cp \$id:/workdir/.pnp.cjs .
-            docker rm -v \$id
-            """
-        }
+        parallel(
+            testenv: {
+                stage('Start test environment') {
+                    sh """
+                    docker compose -f packages/rating-tracker-backend/test-env/docker-compose.yml up --force-recreate -V -d
+                    """
+                }
+            },
+
+            dep: {
+                stage ('Install dependencies') {
+                    docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f Dockerfile-yarn .")
+                    sh """
+                    id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
+                    docker cp \$id:/workdir/packages/rating-tracker-backend/prisma/. ./packages/rating-tracker-backend/prisma
+                    docker cp \$id:/workdir/.yarn/. ./.yarn
+                    docker cp \$id:/workdir/global .
+                    docker cp \$id:/workdir/.pnp.cjs .
+                    docker rm -v \$id
+                    """
+                }
+            }
+        )
 
         parallel(
 
@@ -77,6 +91,7 @@ node {
 
         stage ('Cleanup') {
             sh """
+            docker compose -f packages/rating-tracker-backend/test-env/docker-compose.yml down
             docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true

@@ -22,9 +22,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({
-  path: ".env.local",
-});
+dotenv.config();
 
 /**
  * A token that is used to bypass authentication for requests sent by Cron jobs. It is generated randomly and changes on

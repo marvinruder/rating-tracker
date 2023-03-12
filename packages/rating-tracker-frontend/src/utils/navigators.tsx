@@ -9,12 +9,12 @@ import { Stock } from "rating-tracker-commons";
  * @returns {JSX.Element} The component.
  */
 const MorningstarNavigator = (props: NavigatorProps): JSX.Element => {
-  return props.stock?.morningstarId ? (
+  return props.stock?.morningstarID ? (
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
       href={
-        `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${props.stock.morningstarId}` +
-        `&LanguageId=en-US&SecurityToken=${props.stock.morningstarId}]3]0]E0WWE$$ALL`
+        `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${props.stock.morningstarID}` +
+        `&LanguageId=en-US&SecurityToken=${props.stock.morningstarID}]3]0]E0WWE$$ALL`
       }
       target="_blank" // Open in new tab
       style={{ color: "inherit", textDecoration: "none" }} // No change in color, no underline
@@ -34,10 +34,10 @@ const MorningstarNavigator = (props: NavigatorProps): JSX.Element => {
  * @returns {JSX.Element} The component.
  */
 const MarketScreenerNavigator = (props: NavigatorProps): JSX.Element => {
-  return props.stock?.marketScreenerId ? (
+  return props.stock?.marketScreenerID ? (
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
-      href={`https://www.marketscreener.com/quote/stock/${props.stock.marketScreenerId}/`}
+      href={`https://www.marketscreener.com/quote/stock/${props.stock.marketScreenerID}/`}
       target="_blank" // Open in new tab
       style={{ color: "inherit", textDecoration: "none" }} // No change in color, no underline
     >
@@ -56,12 +56,12 @@ const MarketScreenerNavigator = (props: NavigatorProps): JSX.Element => {
  * @returns {JSX.Element} The component.
  */
 const MSCINavigator = (props: NavigatorProps): JSX.Element => {
-  return props.stock?.msciId ? (
+  return props.stock?.msciID ? (
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
       href={
         `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/` +
-        `${props.stock.msciId}`
+        `${props.stock.msciID}`
       }
       target="_blank" // Open in new tab
       style={{ color: "inherit", textDecoration: "none" }} // No change in color, no underline
@@ -104,10 +104,10 @@ const RefinitivNavigator = (props: NavigatorProps): JSX.Element => {
  * @returns {JSX.Element} The component.
  */
 const SPNavigator = (props: NavigatorProps): JSX.Element => {
-  return props.stock?.spId ? (
+  return props.stock?.spID ? (
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
-      href={`https://www.spglobal.com/esg/scores/results?cid=${String(props.stock.spId)}`}
+      href={`https://www.spglobal.com/esg/scores/results?cid=${String(props.stock.spID)}`}
       target="_blank" // Open in new tab
       style={{ color: "inherit", textDecoration: "none" }} // No change in color, no underline
     >
@@ -126,10 +126,10 @@ const SPNavigator = (props: NavigatorProps): JSX.Element => {
  * @returns {JSX.Element} The component.
  */
 const SustainalyticsNavigator = (props: NavigatorProps): JSX.Element => {
-  return props.stock?.sustainalyticsId ? (
+  return props.stock?.sustainalyticsID ? (
     <Link
       rel="noreferrer noopener"
-      href={`https://www.sustainalytics.com/esg-rating/${props.stock.sustainalyticsId}`}
+      href={`https://www.sustainalytics.com/esg-rating/${props.stock.sustainalyticsID}`}
       target="_blank"
       color="inherit"
       underline="none"

@@ -32,6 +32,28 @@ services:
       - ./redis/data:/data
       - ./redis/config:/etc/redis
 
+  postgres: # On macOS, this container requires gRPC FUSE instead of VirtioFS until docker/for-mac#6614 is resolved.
+    image: postgres:alpine
+    restart: unless-stopped
+    user: ${MY_UID}:${MY_GID}
+    cap_drop:
+      - all
+    cap_add:
+      - CHOWN
+    security_opt:
+      - no-new-privileges
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_DB: "rating-tracker"
+      POSTGRES_USER: "rating-tracker"
+      POSTGRES_PASSWORD_FILE: /var/lib/postgresql/pgpass
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+      - ./postgresql/pgpass:/var/lib/postgresql/pgpass
+    shm_size: '256mb'
+
   selenium:
     image: seleniarm/standalone-chromium:latest
     restart: unless-stopped

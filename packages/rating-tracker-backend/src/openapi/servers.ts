@@ -1,9 +1,7 @@
 import dotenv from "dotenv";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 
-dotenv.config({
-  path: ".env.local",
-});
+dotenv.config();
 
 /**
  * The servers that the API is reachable at.

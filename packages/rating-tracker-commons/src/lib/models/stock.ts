@@ -4,6 +4,7 @@ import { Industry } from "../gecs/Industry.js";
 import { MSCIESGRating } from "../ratings/MSCI.js";
 import { Size } from "../stylebox/Size.js";
 import { Style } from "../stylebox/Style.js";
+import { OmitFunctions } from "../OmitFunctions.js";
 
 /**
  * A stock, with core information like its ticker, name, ISIN, country, industry, etc., financial information like its
@@ -30,145 +31,143 @@ export class Stock {
   /**
    * The stock’s industry as part of the Morningstar Global Equity Classification Structure.
    */
-  industry?: Industry;
+  industry: Industry | null;
   /**
    * The stock’s size as part of the Morningstar Style Box. Based on its market capitalization and geographic area.
    */
-  size?: Size;
+  size: Size | null;
   /**
    * The stock’s style as part of the Morningstar Style Box. Based on the value and growth characteristics of a company.
    */
-  style?: Style;
+  style: Style | null;
   /**
    * Morningstar’s identifier for the stock.
    */
-  morningstarId?: string;
+  morningstarID: string | null;
   /**
    * The date and time of the last fetch from Morningstar.
    */
-  morningstarLastFetch?: Date;
+  morningstarLastFetch: Date | null;
   /**
    * Morningstar’s star rating of the stock.
    */
-  starRating?: number;
+  starRating: number | null;
   /**
    * The dividend yield of the stock, in percent.
    */
-  dividendYieldPercent?: number;
+  dividendYieldPercent: number | null;
   /**
    * The price-to-earnings ratio of the stock.
    */
-  priceEarningRatio?: number;
+  priceEarningRatio: number | null;
   /**
    * The currency the stock is traded in.
    */
-  currency?: Currency;
+  currency: Currency | null;
   /**
    * The stock’s price at the end of the previous trading day.
    */
-  lastClose?: number;
+  lastClose: number | null;
   /**
    * Morningstar’s fair value estimate for the stock.
    */
-  morningstarFairValue?: number;
+  morningstarFairValue: number | null;
   /**
    * The market capitalization of the stock.
    */
-  marketCap?: number;
+  marketCap: number | null;
   /**
    * The lower bound of the 52-week range of the stock’s price.
    */
-  low52w?: number;
+  low52w: number | null;
   /**
    * The upper bound of the 52-week range of the stock’s price.
    */
-  high52w?: number;
+  high52w: number | null;
   /**
    * Market Screener’s identifier for the stock.
    */
-  marketScreenerId?: string;
+  marketScreenerID: string | null;
   /**
    * The date and time of the last fetch from Market Screener.
    */
-  marketScreenerLastFetch?: Date;
+  marketScreenerLastFetch: Date | null;
   /**
    * The consensus of analysts’ opinions on the stock.
    */
-  analystConsensus?: number;
+  analystConsensus: number | null;
   /**
    * The number of analysts that cover the stock.
    */
-  analystCount?: number;
+  analystCount: number | null;
   /**
    * The average target price of analysts for the stock.
    */
-  analystTargetPrice?: number;
+  analystTargetPrice: number | null;
   /**
    * MSCI’s identifier for the stock.
    */
-  msciId?: string;
+  msciID: string | null;
   /**
    * The date and time of the last fetch from MSCI.
    */
-  msciLastFetch?: Date;
+  msciLastFetch: Date | null;
   /**
    * MSCI’s ESG rating of the stock.
    */
-  msciESGRating?: MSCIESGRating;
+  msciESGRating: MSCIESGRating | null;
   /**
    * MSCI’s Implied Temperature rise of the stock.
    */
-  msciTemperature?: number;
+  msciTemperature: number | null;
   /**
    * The Reuters Instrument Code of the stock, used by Refinitiv.
    */
-  ric?: string;
+  ric: string | null;
   /**
    * The date and time of the last fetch from Refinitiv.
    */
-  refinitivLastFetch?: Date;
+  refinitivLastFetch: Date | null;
   /**
    * Refinitiv’s ESG score of the stock.
    */
-  refinitivESGScore?: number;
+  refinitivESGScore: number | null;
   /**
    * Refinitiv’s Emissions rating of the stock.
    */
-  refinitivEmissions?: number;
+  refinitivEmissions: number | null;
   /**
    * Standard & Poor’s identifier for the stock.
    */
-  spId?: number;
+  spID: number | null;
   /**
    * The date and time of the last fetch from Standard & Poor’s.
    */
-  spLastFetch?: Date;
+  spLastFetch: Date | null;
   /**
    * Standard & Poor’s ESG score of the stock.
    */
-  spESGScore?: number;
+  spESGScore: number | null;
   /**
    * Morningstar Sustainalytics’ identifier for the stock.
    */
-  sustainalyticsId?: string;
+  sustainalyticsID: string | null;
   /**
    * Sustainalytics’ ESG risk of the stock.
    */
-  sustainalyticsESGRisk?: number;
+  sustainalyticsESGRisk: number | null;
   /**
    * A description of the company.
    */
-  description?: string;
+  description: string | null;
 
   /**
-   * Creates a new stock from partial stock information.
+   * Creates a new stock from stock information.
    *
-   * @param {Partial<Stock>} stock The partial stock information.
+   * @param {OmitFunctions<Stock>} stock The stock information.
    */
-  constructor(stock?: Partial<Stock>) {
-    if (stock) {
-      Object.assign(this, stock);
-    }
+  constructor(stock: OmitFunctions<Stock>) {
+    Object.assign(this, stock);
   }
 
   /**
@@ -176,7 +175,7 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -1 (1 star) to 1 (5 stars).
    */
-  private getStarRatingScore(): number | undefined {
+  private getStarRatingScore(): number | null {
     switch (this.starRating) {
       case 1:
         return -1;
@@ -188,7 +187,7 @@ export class Stock {
         return 1;
       case 3:
       default:
-        return undefined;
+        return null;
     }
   }
 
@@ -197,9 +196,9 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -1 (premium of 50 percent or more) to 1 (discount of 50 percent or more).
    */
-  private getMorningstarFairValueScore(): number | undefined {
+  private getMorningstarFairValueScore(): number | null {
     const percentageToLastClose = this.getPercentageToLastClose("morningstarFairValue");
-    return percentageToLastClose !== undefined ? -percentageToLastClose / 50 : undefined;
+    return percentageToLastClose !== null ? -percentageToLastClose / 50 : null;
   }
 
   /**
@@ -207,15 +206,15 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -1 (consensus of 0) to 1 (consensus of 10).
    */
-  private getAnalystConsensusScore(): number | undefined {
-    if (this.analystCount && this.analystConsensus !== undefined) {
+  private getAnalystConsensusScore(): number | null {
+    if (this.analystCount && this.analystConsensus !== null) {
       if (this.analystCount >= 10) {
         return (this.analystConsensus - 5) / 5;
       } else {
         return (this.analystCount / 10) * ((this.analystConsensus - 5) / 5);
       }
     } else {
-      return undefined;
+      return null;
     }
   }
 
@@ -224,16 +223,16 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -1 (premium of 50 percent or more) to 1 (discount of 50 percent or more).
    */
-  private getAnalystTargetPriceScore(): number | undefined {
+  private getAnalystTargetPriceScore(): number | null {
     const percentageToLastClose = this.getPercentageToLastClose("analystTargetPrice");
-    if (this.analystCount && percentageToLastClose !== undefined) {
+    if (this.analystCount && percentageToLastClose !== null) {
       if (this.analystCount >= 10) {
         return -percentageToLastClose / 50;
       } else {
         return (this.analystCount / 10) * (-percentageToLastClose / 50);
       }
     } else {
-      return undefined;
+      return null;
     }
   }
 
@@ -251,24 +250,24 @@ export class Stock {
     let financialScore = 0;
     let count = 0;
 
-    if (starRatingScore !== undefined) {
+    if (starRatingScore !== null) {
       financialScore += starRatingScore;
       count += 1;
     }
-    if (morningstarFairValueScore !== undefined) {
+    if (morningstarFairValueScore !== null) {
       financialScore += Math.min(morningstarFairValueScore, 1);
       count += 1;
     }
-    if (analystConsensusScore !== undefined) {
+    if (analystConsensusScore !== null) {
       financialScore += analystConsensusScore;
       count += 1;
     }
-    if (analystTargetPriceScore !== undefined) {
+    if (analystTargetPriceScore !== null) {
       financialScore += Math.min(analystTargetPriceScore, 1);
       count += 1;
     }
 
-    return Math.max(financialScore / Math.max(3, count), -1);
+    return count ? Math.max(financialScore / Math.max(3, count), -1) : 0;
   }
 
   /**
@@ -276,9 +275,9 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -2 (CCC) to 1 (AAA).
    */
-  private getMSCIESGRatingScore(): number | undefined {
-    if (!this.msciESGRating) {
-      return undefined;
+  private getMSCIESGRatingScore(): number | null {
+    if (this.msciESGRating === null) {
+      return null;
     }
     switch (this.msciESGRating) {
       case "AAA":
@@ -303,8 +302,8 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -2 (4°C) to 1 (1°C).
    */
-  private getMSCITemperatureScore(): number | undefined {
-    return this.msciTemperature ? Math.min(2 - this.msciTemperature, 1) : undefined;
+  private getMSCITemperatureScore(): number | null {
+    return this.msciTemperature !== null ? Math.min(2 - this.msciTemperature, 1) : null;
   }
 
   /**
@@ -312,8 +311,8 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -1 (0) to 1 (100).
    */
-  private getRefinitivESGScore(): number | undefined {
-    return this.refinitivESGScore !== undefined ? (this.refinitivESGScore - 50) / 50 : undefined;
+  private getRefinitivESGScore(): number | null {
+    return this.refinitivESGScore !== null ? (this.refinitivESGScore - 50) / 50 : null;
   }
 
   /**
@@ -321,8 +320,8 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -1 (0) to 1 (100).
    */
-  private getRefinitivEmissionsScore(): number | undefined {
-    return this.refinitivEmissions !== undefined ? (this.refinitivEmissions - 50) / 50 : undefined;
+  private getRefinitivEmissionsScore(): number | null {
+    return this.refinitivEmissions !== null ? (this.refinitivEmissions - 50) / 50 : null;
   }
 
   /**
@@ -330,8 +329,8 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -1 (0) to 1 (100).
    */
-  private getSPESGScore(): number | undefined {
-    return this.spESGScore !== undefined ? (this.spESGScore - 50) / 50 : undefined;
+  private getSPESGScore(): number | null {
+    return this.spESGScore !== null ? (this.spESGScore - 50) / 50 : null;
   }
 
   /**
@@ -339,8 +338,8 @@ export class Stock {
    *
    * @returns {number} The score, ranging from -1 (40) to 1 (0).
    */
-  private getSustainalyticsESGRiskScore(): number | undefined {
-    return this.sustainalyticsESGRisk !== undefined ? 1 - this.sustainalyticsESGRisk / 20 : undefined;
+  private getSustainalyticsESGRiskScore(): number | null {
+    return this.sustainalyticsESGRisk !== null ? 1 - this.sustainalyticsESGRisk / 20 : null;
   }
 
   /**
@@ -359,32 +358,32 @@ export class Stock {
     let esgScore = 0;
     let count = 0;
 
-    if (msciESGRatingScore !== undefined) {
+    if (msciESGRatingScore !== null) {
       esgScore += msciESGRatingScore;
       count += 1;
     }
-    if (msciTemperatureScore !== undefined) {
+    if (msciTemperatureScore !== null) {
       esgScore += msciTemperatureScore;
       count += 1;
     }
-    if (refinitivESGScore !== undefined) {
+    if (refinitivESGScore !== null) {
       esgScore += refinitivESGScore;
       count += 1;
     }
-    if (refinitivEmissionsScore !== undefined) {
+    if (refinitivEmissionsScore !== null) {
       esgScore += refinitivEmissionsScore;
       count += 1;
     }
-    if (spESGScore !== undefined) {
+    if (spESGScore !== null) {
       esgScore += spESGScore;
       count += 1;
     }
-    if (sustainalyticsESGRiskScore !== undefined) {
+    if (sustainalyticsESGRiskScore !== null) {
       esgScore += sustainalyticsESGRiskScore;
       count += 1;
     }
 
-    return Math.max(esgScore / Math.max(4, count), -1);
+    return count ? Math.max(esgScore / Math.max(4, count), -1) : 0;
   }
 
   /**
@@ -403,11 +402,51 @@ export class Stock {
    * @param {"morningstarFairValue" | "analystTargetPrice"} attribute The attribute to compare to the last close.
    * @returns {number} The percentage difference.
    */
-  public getPercentageToLastClose(attribute: "morningstarFairValue" | "analystTargetPrice"): number | undefined {
+  public getPercentageToLastClose(attribute: "morningstarFairValue" | "analystTargetPrice"): number | null {
     const result =
       this[attribute] /* this also prevents division by zero */ && this.lastClose
         ? 100 * (this.lastClose / this[attribute] - 1)
-        : undefined;
+        : null;
     return result;
   }
 }
+
+/**
+ * An object containing null values for all optional attributes of a stock. Can be passed to the Stock constructor via
+ * `{ ...optionalStockValuesNull, … }`.
+ */
+export const optionalStockValuesNull: OmitFunctions<Omit<Stock, "ticker" | "name" | "isin" | "country">> = {
+  industry: null,
+  size: null,
+  style: null,
+  morningstarID: null,
+  morningstarLastFetch: null,
+  starRating: null,
+  dividendYieldPercent: null,
+  priceEarningRatio: null,
+  currency: null,
+  lastClose: null,
+  morningstarFairValue: null,
+  marketCap: null,
+  low52w: null,
+  high52w: null,
+  marketScreenerID: null,
+  marketScreenerLastFetch: null,
+  analystConsensus: null,
+  analystCount: null,
+  analystTargetPrice: null,
+  msciID: null,
+  msciLastFetch: null,
+  msciESGRating: null,
+  msciTemperature: null,
+  ric: null,
+  refinitivLastFetch: null,
+  refinitivESGScore: null,
+  refinitivEmissions: null,
+  spID: null,
+  spLastFetch: null,
+  spESGScore: null,
+  sustainalyticsID: null,
+  sustainalyticsESGRisk: null,
+  description: null,
+};

@@ -1,25 +1,33 @@
-import { sortableAttributeArray, Stock, User } from "rating-tracker-commons";
-import supertest, { CallbackHandler, Test } from "supertest";
-import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
-import { initStockRepository } from "./redis/repositories/stock/__mocks__/stockRepositoryBase";
-import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
-import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { initResourceRepository } from "./redis/repositories/resource/__mocks__/resourceRepositoryBase.js";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import dotenv from "dotenv";
 
 vi.mock("./utils/logger");
-
 vi.mock("./redis/repositories/resource/resourceRepositoryBase");
 vi.mock("./redis/repositories/session/sessionRepositoryBase");
-vi.mock("./redis/repositories/stock/stockRepositoryBase");
 vi.mock("./redis/repositories/user/userRepositoryBase");
+
+dotenv.config({
+  path: ".testenv",
+});
+
+import { sortableAttributeArray, Stock, User } from "rating-tracker-commons";
+import supertest, { CallbackHandler, Test } from "supertest";
+import { initResourceRepository } from "./redis/repositories/resource/__mocks__/resourceRepositoryBase";
+import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
+import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
+import { applyStockSeed } from "./db/seeds/testStockSeeds";
 
 const { listener, server } = await import("./server");
 
 const requestWithSupertest = supertest(server.app);
 
-beforeEach(() => {
+beforeAll(() => {
+  delete process.env.DATABASE_URL;
+});
+
+beforeEach(async () => {
+  await applyStockSeed();
   initResourceRepository();
-  initStockRepository();
   initSessionRepository();
   initUserRepository();
 });
@@ -413,23 +421,23 @@ describe("Stock API", () => {
     await expectRouteToBePrivate("/api/stock/exampleAAPL", requestWithSupertest.patch);
     await expectSpecialAccessRightsToBeRequired("/api/stock/exampleAAPL", requestWithSupertest.patch);
     let res = await requestWithSupertest
-      .patch("/api/stock/exampleAAPL?morningstarId=US012345678&name=Apple%20Inc")
+      .patch("/api/stock/exampleAAPL?morningstarID=0P012345678&name=Apple%20Inc")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
     res = await requestWithSupertest.get("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
-    expect((res.body as Stock).morningstarId).toEqual("US012345678");
+    expect((res.body as Stock).morningstarID).toEqual("0P012345678");
 
     // sending an update with the same information results in no changes
     res = await requestWithSupertest
-      .patch("/api/stock/exampleAAPL?morningstarId=US012345678")
+      .patch("/api/stock/exampleAAPL?morningstarID=0P012345678")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
     res = await requestWithSupertest.get("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
-    expect((res.body as Stock).morningstarId).toEqual("US012345678");
+    expect((res.body as Stock).morningstarID).toEqual("0P012345678");
 
     // sending an update without anything results in no changes
     res = await requestWithSupertest.patch("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
@@ -437,11 +445,11 @@ describe("Stock API", () => {
     res = await requestWithSupertest.get("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
-    expect((res.body as Stock).morningstarId).toEqual("US012345678");
+    expect((res.body as Stock).morningstarID).toEqual("0P012345678");
 
     // attempting to update a non-existent stock results in an error
     res = await requestWithSupertest
-      .patch("/api/stock/doesNotExist?morningstarId=CA012345678")
+      .patch("/api/stock/doesNotExist?morningstarID=0P123456789")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });

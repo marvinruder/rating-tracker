@@ -6,9 +6,7 @@ import chalk from "chalk";
 import cron from "cron";
 import dotenv from "dotenv";
 
-dotenv.config({
-  path: ".env.local",
-});
+dotenv.config();
 
 export const PREFIX_NODEJS = chalk.whiteBright.bgGreen(" \uf898 ") + chalk.green(" ");
 export const PREFIX_REDIS = chalk.whiteBright.bgRed(" \ue76d ") + chalk.red(" ");
