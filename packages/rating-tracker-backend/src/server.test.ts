@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 vi.mock("./utils/logger");
 vi.mock("./redis/repositories/resource/resourceRepositoryBase");
 vi.mock("./redis/repositories/session/sessionRepositoryBase");
-vi.mock("./redis/repositories/user/userRepositoryBase");
 
 dotenv.config({
   path: ".testenv",
@@ -14,8 +13,8 @@ import { sortableAttributeArray, Stock, User } from "rating-tracker-commons";
 import supertest, { CallbackHandler, Test } from "supertest";
 import { initResourceRepository } from "./redis/repositories/resource/__mocks__/resourceRepositoryBase";
 import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
-import { initUserRepository } from "./redis/repositories/user/__mocks__/userRepositoryBase";
 import { applyStockSeed } from "./db/seeds/testStockSeeds";
+import { applyUserSeed } from "./db/seeds/testUserSeeds";
 
 const { listener, server } = await import("./server");
 
@@ -27,9 +26,9 @@ beforeAll(() => {
 
 beforeEach(async () => {
   await applyStockSeed();
+  await applyUserSeed();
   initResourceRepository();
   initSessionRepository();
-  initUserRepository();
 });
 
 afterAll(() => {
@@ -272,7 +271,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[1].name).toMatch("Kion");
     expect(res.body.stocks[2].name).toMatch("Ørsted");
 
-    sortableAttributeArray.forEach(async (sortCriterion) => {
+    for await (const sortCriterion of sortableAttributeArray) {
       res = await requestWithSupertest
         .get(`/api/stock/list?sortBy=${sortCriterion}`)
         .set("Cookie", ["authToken=exampleSessionID"]);
@@ -334,7 +333,7 @@ describe("Stock API", () => {
           }
         }
       }
-    });
+    }
   });
 
   it("supports pagination", async () => {

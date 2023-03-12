@@ -3,7 +3,7 @@ import { Session, SessionEntity, sessionSchema } from "../../../models/session.j
 import { refresh, fetch, save, remove } from "./sessionRepositoryBase.js";
 import chalk from "chalk";
 import { User } from "../../../models/user.js";
-import { readUser } from "../user/userRepository.js";
+import { readUser } from "../../../db/tables/userTable.js";
 import logger, { PREFIX_REDIS } from "../../../utils/logger.js";
 
 /**
@@ -54,6 +54,11 @@ export const refreshSessionAndFetchUser = async (sessionID: string): Promise<Use
 //   }
 // };
 
+/**
+ * Delete a session from Redis.
+ *
+ * @param {string} sessionID The session ID.
+ */
 export const deleteSession = async (sessionID: string) => {
   const sessionEntity = await fetch(sessionID);
   // Not reached in current tests since a user can only delete their current session

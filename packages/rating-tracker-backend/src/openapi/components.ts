@@ -285,11 +285,13 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         avatar: {
           type: "string",
+          nullable: true,
           description: "The base64-encoded avatar of the user.",
           format: "binary",
         },
         phone: {
           type: "string",
+          nullable: true,
           pattern: REGEX_PHONE_NUMBER,
           description: "The phone number of the user, used for Signal messages.",
           example: "+491234567890",
@@ -301,6 +303,7 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         subscriptions: {
           type: "integer",
+          nullable: true,
           description: "The subscriptions of the user to different types of messages, encoded as a bitfield",
           example: 1,
         },

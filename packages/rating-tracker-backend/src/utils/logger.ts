@@ -10,7 +10,8 @@ dotenv.config();
 
 export const PREFIX_NODEJS = chalk.whiteBright.bgGreen(" \uf898 ") + chalk.green(" ");
 export const PREFIX_REDIS = chalk.whiteBright.bgRed(" \ue76d ") + chalk.red(" ");
-export const PREFIX_CHROME = chalk.whiteBright.bgBlueBright(" \ufc0d ") + chalk.blueBright(" ");
+export const PREFIX_POSTGRES = chalk.whiteBright.bgBlueBright(" \ue76e ") + chalk.blueBright(" ");
+export const PREFIX_SELENIUM = chalk.whiteBright.bgGreenBright(" \ufc0d ") + chalk.greenBright(" ");
 export const PREFIX_SIGNAL = chalk.whiteBright.bgBlue(" \uf868 ") + chalk.blue(" ");
 
 const levelIcons = {

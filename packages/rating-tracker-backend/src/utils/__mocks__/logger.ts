@@ -2,7 +2,8 @@ import pino from "pino";
 
 export const PREFIX_NODEJS = "";
 export const PREFIX_REDIS = "";
-export const PREFIX_CHROME = "";
+export const PREFIX_POSTGRES = "";
+export const PREFIX_SELENIUM = "";
 export const PREFIX_SIGNAL = "";
 
 // We do not want to log anything in tests

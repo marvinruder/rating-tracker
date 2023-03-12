@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../models/user.js";
-import { updateUser, deleteUser } from "../redis/repositories/user/userRepository.js";
+import { updateUser, deleteUser } from "../db/tables/userTable.js";
 
 /**
  * This class is responsible for providing user information.

@@ -1,7 +1,7 @@
 import APIError from "../../utils/apiError.js";
 import chalk from "chalk";
 import * as signal from "../../signal/signal.js";
-import logger, { PREFIX_REDIS } from "../../utils/logger.js";
+import logger, { PREFIX_POSTGRES } from "../../utils/logger.js";
 import { Stock, MSCIESGRating, msciESGRatingArray } from "rating-tracker-commons";
 import client from "../client.js";
 
@@ -38,8 +38,8 @@ export const createStock = (stock: Stock): Promise<boolean> => {
     .then((existingStock) => {
       // If that worked, a stock with the same ticker already exists
       logger.warn(
-        PREFIX_REDIS +
-          chalk.yellowBright(`Skipping stock “${stock.name}” – existing already (entity ID ${existingStock.ticker}).`)
+        PREFIX_POSTGRES +
+          chalk.yellowBright(`Skipping stock “${stock.name}” – existing already (ticker ${existingStock.ticker}).`)
       );
       return false;
     })
@@ -47,7 +47,7 @@ export const createStock = (stock: Stock): Promise<boolean> => {
       await client.stock.create({
         data: { ...stock },
       });
-      logger.info(PREFIX_REDIS + `Created stock “${stock.name}” with ticker ${stock.ticker}.`);
+      logger.info(PREFIX_POSTGRES + `Created stock “${stock.name}” with ticker ${stock.ticker}.`);
       return true;
     });
 };
@@ -90,9 +90,9 @@ export const readAllStocks = (): Promise<Stock[]> => {
  */
 export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock, "ticker">>) => {
   let k: keyof typeof newValues; // all keys of new values
-  const stock = await readStock(ticker); // Fetch the stock from the database
+  const stock = await readStock(ticker); // Read the stock from the database
   let signalMessage = `Updates for ${stock.name} (${ticker}):`;
-  logger.info(PREFIX_REDIS + `Updating stock ${ticker}…`);
+  logger.info(PREFIX_POSTGRES + `Updating stock ${ticker}…`);
   let isNewData = false;
   // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
   for (k in newValues) {
@@ -109,7 +109,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
       isNewData = true;
 
       logger.info(
-        PREFIX_REDIS +
+        PREFIX_POSTGRES +
           `    Property ${k} updated from ${
             // Format dates as ISO strings
             stock[k] instanceof Date ? (stock[k] as Date).toISOString() : stock[k]
@@ -196,16 +196,16 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
     // The message string contains a newline character if and only if a parameter changed for which we want to send a
     // message
     if (signalMessage.includes("\n")) {
-      signal.sendMessage(signalMessage, "stockUpdate");
+      await signal.sendMessage(signalMessage, "stockUpdate");
     }
   } else {
     // No new data was provided
-    logger.info(PREFIX_REDIS + `No updates for stock ${ticker}.`);
+    logger.info(PREFIX_POSTGRES + `No updates for stock ${ticker}.`);
   }
 };
 
 /**
- * Delete a stock from Redis.
+ * Delete a stock.
  *
  * @param {string} ticker The ticker of the stock to delete.
  * @throws an {@link APIError} if the stock does not exist.
@@ -218,7 +218,7 @@ export const deleteStock = async (ticker: string) => {
     await client.stock.delete({
       where: { ticker },
     });
-    logger.info(PREFIX_REDIS + `Deleted stock “${existingStock.name}” (ticker ${ticker}).`);
+    logger.info(PREFIX_POSTGRES + `Deleted stock “${existingStock.name}” (ticker ${ticker}).`);
   } catch {
     throw new APIError(404, `Stock ${ticker} not found.`);
   }

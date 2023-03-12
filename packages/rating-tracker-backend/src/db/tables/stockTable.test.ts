@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 
 vi.mock("../../utils/logger");
 vi.mock("../../signal/signalBase");
-vi.mock("../../redis/repositories/user/userRepositoryBase");
 
 dotenv.config({
   path: ".testenv",
@@ -12,12 +11,12 @@ dotenv.config({
 const { createStock, readStock, updateStock } = await import("./stockTable");
 import { sentMessages } from "../../signal/__mocks__/signalBase";
 import { optionalStockValuesNull, Stock } from "rating-tracker-commons";
-import { initUserRepository } from "../../redis/repositories/user/__mocks__/userRepositoryBase";
 import { applyStockSeed } from "../seeds/testStockSeeds";
+import { applyUserSeed } from "../seeds/testUserSeeds.js";
 
 beforeEach(async () => {
   await applyStockSeed();
-  initUserRepository();
+  await applyUserSeed();
 });
 
 describe("CRUD methods for single stock that are difficult to test otherwise", () => {
@@ -103,9 +102,6 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
     }
 
     await updateStock("NEWSTOCK", newValues);
-
-    // Since we normally do not wait for a message being sent, we need to manually wait here.
-    await new Promise((resolve) => setTimeout(resolve, 10));
 
     expect(sentMessages[0].message).toMatch("🟢");
     expect(sentMessages[1].message).toMatch("🔴");

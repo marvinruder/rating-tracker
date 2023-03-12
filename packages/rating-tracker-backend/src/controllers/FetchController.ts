@@ -22,7 +22,7 @@ import {
 } from "rating-tracker-commons";
 import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable.js";
 import * as signal from "../signal/signal.js";
-import logger, { PREFIX_CHROME } from "../utils/logger.js";
+import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
 import { createResource, readResource } from "../redis/repositories/resource/resourceRepository.js";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -93,7 +93,7 @@ class FetchController {
     try {
       await driver.quit();
     } catch (e) {
-      logger.warn(PREFIX_CHROME + chalk.yellowBright(`Unable to shut down Selenium WebDriver gracefully: ${e}`));
+      logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to shut down Selenium WebDriver gracefully: ${e}`));
     }
   }
 
@@ -122,7 +122,7 @@ class FetchController {
         process.env.DOMAIN
       }/api/resource/${screenshotID}.`;
     } catch (e) {
-      logger.warn(PREFIX_CHROME + chalk.yellowBright(`Unable to take screenshot “${screenshotID}”: ${e}`));
+      logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to take screenshot “${screenshotID}”: ${e}`));
       return "";
     }
   }
@@ -187,7 +187,7 @@ class FetchController {
         new Date().getTime() - stock.morningstarLastFetch.getTime() < 1000 * 60 * 60 * 12
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping Morningstar fetch since last successful fetch was ${formatDistance(
               stock.morningstarLastFetch.getTime(),
               new Date().getTime(),
@@ -234,12 +234,12 @@ class FetchController {
             throw new TypeError(`Extracted industry “${industryString}” is no valid industry.`);
           }
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract industry: ${e}`));
+          logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract industry: ${e}`));
           if (stock.industry !== null) {
             // If an industry for the stock is already stored in the database, but we cannot extract it now from the
             // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of industry failed unexpectedly. This incident will be reported.`
                 )
@@ -265,13 +265,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract size and style: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract size and style: ${e}`)
           );
           if (stock.size !== null || stock.style !== null) {
             // If size or style for the stock are already stored in the database, but we cannot extract them now from
             // the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of size and style failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -290,12 +290,14 @@ class FetchController {
           }
           starRating = +starRatingString;
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract star rating: ${e}`));
+          logger.warn(
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract star rating: ${e}`)
+          );
           if (stock.starRating !== null) {
             // If a star rating for the stock is already stored in the database, but we cannot extract it now from the
             // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of star rating failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -318,13 +320,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`)
           );
           if (stock.dividendYieldPercent !== null) {
             // If a dividend yield for the stock is already stored in the database, but we cannot extract it now from
             // the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of dividend yield failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -347,13 +349,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`)
           );
           if (stock.priceEarningRatio !== null) {
             // If a price earning ratio for the stock is already stored in the database, but we cannot extract it now
             // from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of price earning ratio failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -373,12 +375,12 @@ class FetchController {
             throw new TypeError(`Extracted currency code “${currencyString}” is no valid currency code.`);
           }
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract currency: ${e}`));
+          logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract currency: ${e}`));
           if (stock.currency !== null) {
             // If a currency for the stock is already stored in the database, but we cannot extract it now from the
             // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of currency failed unexpectedly. This incident will be reported.`
                 )
@@ -399,12 +401,14 @@ class FetchController {
             lastClose = +lastCloseString;
           }
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract last close: ${e}`));
+          logger.warn(
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract last close: ${e}`)
+          );
           if (stock.lastClose !== null) {
             // If a last close for the stock is already stored in the database, but we cannot extract it now from the
             // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of last close failed unexpectedly. This incident will be reported.`
                 )
@@ -429,13 +433,14 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`)
+            PREFIX_SELENIUM +
+              chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`)
           );
           if (stock.morningstarFairValue !== null) {
             // If a Morningstar Fair Value for the stock is already stored in the database, but we cannot extract it
             // now from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of Morningstar Fair Value failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -466,13 +471,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`)
           );
           if (stock.marketCap !== null) {
             // If a market capitalization for the stock is already stored in the database, but we cannot extract it now
             // from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of Market Capitalization failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -504,13 +509,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`)
           );
           if (stock.low52w !== null || stock.high52w !== null) {
             // If a 52 week price range for the stock is already stored in the database, but we cannot extract it now
             // from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of 52 week price range failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -523,12 +528,14 @@ class FetchController {
         try {
           description = await driver.findElement(By.xpath(XPATH_DESCRIPTION)).getText();
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract description: ${e}`));
+          logger.warn(
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract description: ${e}`)
+          );
           if (stock.description !== null) {
             // If a description for the stock is already stored in the database, but we cannot extract it now from
             // the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of description failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -542,7 +549,7 @@ class FetchController {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
           errorMessage += `\n${await this.takeScreenshot(driver, stock, "morningstar")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
+          await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -579,8 +586,10 @@ class FetchController {
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${String(e.message).split(/[\n:{]/)[0]}`
           );
         }
-        logger.error(PREFIX_CHROME + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e}`));
-        signal.sendMessage(
+        logger.error(
+          PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e}`)
+        );
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
               String(e.message).split(/[\n:{]/)[0]
@@ -592,13 +601,13 @@ class FetchController {
       if (consecutiveErrorCount >= 5) {
         // If we have 5 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from Morningstar after ${consecutiveErrorCount} consecutive failures, ` +
                 `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from Morningstar after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -676,7 +685,7 @@ class FetchController {
         new Date().getTime() - stock.marketScreenerLastFetch.getTime() < 1000 * 60 * 60 * 12
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping MarketScreener fetch because last fetch was ${formatDistance(
               stock.marketScreenerLastFetch.getTime(),
               new Date().getTime(),
@@ -708,13 +717,13 @@ class FetchController {
               .match(/(\d+(\.\d+)?)/g)[0]; // Extract the first decimal number from the title.
           } catch (e) {
             logger.warn(
-              PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`)
+              PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`)
             );
             if (stock.analystConsensus !== null) {
               // If an analyst consensus is already stored in the database, but we cannot extract it from the page, we
               // log this as an error and send a message.
               logger.error(
-                PREFIX_CHROME +
+                PREFIX_SELENIUM +
                   chalk.redBright(
                     `Stock ${stock.ticker}: Extraction of analyst consensus failed unexpectedly. ` +
                       `This incident will be reported.`
@@ -728,13 +737,13 @@ class FetchController {
             analystCount = +(await (await consensusTableDiv.findElement(By.xpath(XPATH_ANALYST_COUNT))).getText());
           } catch (e) {
             logger.warn(
-              PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`)
+              PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`)
             );
             if (stock.analystCount !== null) {
               // If an analyst count is already stored in the database, but we cannot extract it from the page, we log
               // this as an error and send a message.
               logger.error(
-                PREFIX_CHROME +
+                PREFIX_SELENIUM +
                   chalk.redBright(
                     `Stock ${stock.ticker}: Extraction of analyst count failed unexpectedly. ` +
                       `This incident will be reported.`
@@ -758,13 +767,14 @@ class FetchController {
                 1);
           } catch (e) {
             logger.warn(
-              PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`)
+              PREFIX_SELENIUM +
+                chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`)
             );
             if (stock.analystTargetPrice !== null) {
               // If an analyst target price is already stored in the database, but we cannot extract it from the page,
               // we log this as an error and send a message.
               logger.error(
-                PREFIX_CHROME +
+                PREFIX_SELENIUM +
                   chalk.redBright(
                     `Stock ${stock.ticker}: Extraction of analyst target price failed unexpectedly. ` +
                       `This incident will be reported.`
@@ -775,13 +785,14 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`)
+            PREFIX_SELENIUM +
+              chalk.yellowBright(`Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`)
           );
           if (stock.analystConsensus !== null || stock.analystCount !== null || stock.analystTargetPrice !== null) {
             // If any of the analyst-related information is already stored in the database, but we cannot extract it
             // from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -795,7 +806,7 @@ class FetchController {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
           errorMessage += `\n${await this.takeScreenshot(driver, stock, "marketscreener")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
+          await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -823,9 +834,9 @@ class FetchController {
           );
         }
         logger.error(
-          PREFIX_CHROME + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e}`)
+          PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e}`)
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
               String(e.message).split(/[\n:{]/)[0]
@@ -837,13 +848,13 @@ class FetchController {
       if (consecutiveErrorCount >= 5) {
         // If we have 5 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from MarketScreener after ${consecutiveErrorCount} consecutive failures,` +
                 ` ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from MarketScreener after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -920,7 +931,7 @@ class FetchController {
         new Date().getTime() - stock.msciLastFetch.getTime() < 1000 * 60 * 60 * 24 * 14
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping MSCI fetch since last successful fetch was ${formatDistance(
               stock.msciLastFetch.getTime(),
               new Date().getTime(),
@@ -932,13 +943,13 @@ class FetchController {
       if (successfulCount >= 50) {
         // If we have fetched 50 stocks successfully, we stop fetching data to avoid rate limiting.
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.greenBright(
               `Successfully fetched MSCI information for ${successfulCount} stocks (${errorCount} errors). ` +
                 `Pausing now to avoid rate limiting. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_INFO +
             `Successfully fetched MSCI information for ${successfulCount} stocks (${errorCount} errors). ` +
             `Pausing now to avoid rate limiting. Will continue next time.`,
@@ -973,13 +984,13 @@ class FetchController {
           msciESGRating = esgClassName.substring(esgClassName.lastIndexOf("-") + 1).toUpperCase() as MSCIESGRating;
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`)
           );
           if (stock.msciESGRating !== null) {
             // If an MSCI ESG Rating is already stored in the database, but we cannot extract it from the page, we log
             // this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of MSCI ESG Rating failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -996,14 +1007,14 @@ class FetchController {
             .match(/(\d+(\.\d+)?)/g)[0];
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME +
+            PREFIX_SELENIUM +
               chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`)
           );
           if (stock.msciTemperature !== null) {
             // If an MSCI Implied Temperature Rise is already stored in the database, but we cannot extract it from the
             // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of MSCI Implied Temperature Rise failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -1019,7 +1030,7 @@ class FetchController {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
           errorMessage += `\n${await this.takeScreenshot(driver, stock, "msci")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
+          await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -1045,8 +1056,10 @@ class FetchController {
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${String(e.message).split(/[\n:{]/)[0]}`
           );
         }
-        logger.error(PREFIX_CHROME + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MSCI information: ${e}`));
-        signal.sendMessage(
+        logger.error(
+          PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MSCI information: ${e}`)
+        );
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
               String(e.message).split(/[\n:{]/)[0]
@@ -1058,13 +1071,13 @@ class FetchController {
       if (consecutiveErrorCount >= 10) {
         // If we have 10 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from MSCI after ${consecutiveErrorCount} consecutive failures, ` +
                 `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from MSCI after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -1141,7 +1154,7 @@ class FetchController {
         new Date().getTime() - stock.refinitivLastFetch.getTime() < 1000 * 60 * 60 * 24 * 7
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping Refinitiv fetch because last fetch was ${formatDistance(
               stock.refinitivLastFetch.getTime(),
               new Date().getTime(),
@@ -1175,13 +1188,13 @@ class FetchController {
           refinitivESGScore = +refinitivJSON.esgScore["TR.TRESG"].score;
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`)
           );
           if (stock.refinitivESGScore !== null) {
             // If a Refinitiv ESG Score is already stored in the database, but we cannot extract it from the page, we
             // log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of Refinitiv ESG Score failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -1195,13 +1208,13 @@ class FetchController {
           refinitivEmissions = +refinitivJSON.esgScore["TR.TRESGEmissions"].score;
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`)
           );
           if (stock.refinitivEmissions !== null) {
             // If a Refinitiv Emissions Rating is already stored in the database, but we cannot extract it from the
             // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of Refinitiv Emissions failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -1215,7 +1228,7 @@ class FetchController {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
           errorMessage += `\n${await this.takeScreenshot(driver, stock, "refinitiv")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
+          await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -1244,13 +1257,13 @@ class FetchController {
         if ((e as Error).message.includes("Limit exceeded")) {
           // If the limit has been exceeded, we stop fetching data and log an error.
           logger.error(
-            PREFIX_CHROME +
+            PREFIX_SELENIUM +
               chalk.redBright(
                 `Aborting fetching information from Refinitiv after exceeding limit ` +
                   `(${successfulCount} successful fetches). Will continue next time.`
               )
           );
-          signal.sendMessage(
+          await signal.sendMessage(
             SIGNAL_PREFIX_ERROR +
               `Aborting fetching information from Refinitiv after exceeding limit ` +
               `(${successfulCount} successful fetches). Will continue next time.`,
@@ -1259,9 +1272,9 @@ class FetchController {
           break;
         }
         logger.error(
-          PREFIX_CHROME + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e}`)
+          PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e}`)
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
               String(e.message).split(/[\n:{]/)[0]
@@ -1273,13 +1286,13 @@ class FetchController {
       if (consecutiveErrorCount >= 5) {
         // If we have 5 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from Refinitiv after ${consecutiveErrorCount} consecutive failures, ` +
                 `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from Refinitiv after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -1356,7 +1369,7 @@ class FetchController {
         new Date().getTime() - stock.spLastFetch.getTime() < 1000 * 60 * 60 * 24 * 7
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping S&P fetch because last fetch was ${formatDistance(
               stock.spLastFetch.getTime(),
               new Date().getTime(),
@@ -1403,18 +1416,18 @@ class FetchController {
             `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`
           );
         }
-        logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`));
+        logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`));
         if (stock.spESGScore !== null) {
           // If an S&P ESG Score is already stored in the database, but we cannot extract it from the page, we log this
           // as an error and send a message.
           logger.error(
-            PREFIX_CHROME +
+            PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of S&P ESG Score failed unexpectedly. ` +
                   `This incident will be reported.`
               )
           );
-          signal.sendMessage(
+          await signal.sendMessage(
             SIGNAL_PREFIX_ERROR +
               `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
                 String(e.message).split(/[\n:{]/)[0]
@@ -1432,13 +1445,13 @@ class FetchController {
       if (consecutiveErrorCount >= 5) {
         // If we have 5 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from S&P after ${consecutiveErrorCount} consecutive failures, ` +
                 `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from S&P after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -1507,7 +1520,7 @@ class FetchController {
         // We try to read the cached Sustainalytics data first.
         sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Using cached Sustainalytics data because last fetch was ${formatDistance(
               sustainalyticsXMLResource.fetchDate,
               new Date().getTime(),
@@ -1588,19 +1601,19 @@ class FetchController {
           );
         }
         logger.warn(
-          PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`)
+          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`)
         );
         if (stock.sustainalyticsESGRisk !== null) {
           // If a Sustainalytics ESG Risk is already stored in the database, but we cannot extract it from the page, we
           // log this as an error and send a message.
           logger.error(
-            PREFIX_CHROME +
+            PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of Sustainalytics ESG Risk failed unexpectedly. ` +
                   `This incident will be reported.`
               )
           );
-          signal.sendMessage(
+          await signal.sendMessage(
             SIGNAL_PREFIX_ERROR +
               `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${
                 String(e.message).split(/[\n:{]/)[0]
@@ -1617,14 +1630,14 @@ class FetchController {
       if (consecutiveErrorCount >= 10) {
         // If we have 10 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting extracting information from Sustainalytics after ${consecutiveErrorCount} ` +
                 `consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. ` +
                 `Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting extracting information from Sustainalytics after ${consecutiveErrorCount} ` +
             `consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. ` +
