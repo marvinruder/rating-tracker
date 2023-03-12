@@ -24,7 +24,7 @@
     "test:prisma:migrate:init": "env $(cat .testenv) pnpify prisma migrate dev --name init",
     "prisma:generate": "pnpify prisma generate",
     "prisma:migrate:dev": "pnpify prisma migrate dev",
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.build.json && mkdir -p dist/prisma && cp -rf prisma/* dist/prisma",
     "lint": "eslint --cache --ext .ts src/",
     "lint:fix": "eslint --cache --ext .ts src/ --fix"
   },
