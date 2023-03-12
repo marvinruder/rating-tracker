@@ -91,7 +91,7 @@ node {
 
         stage ('Cleanup') {
             sh """
-            docker compose -f packages/rating-tracker-backend/test-env/docker-compose.yml down
+            docker compose -f packages/rating-tracker-backend/test-env/docker-compose.yml down -t 0
             docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true
