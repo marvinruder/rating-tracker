@@ -17,17 +17,16 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis/redis-stack-server
+    image: redis:alpine
     restart: unless-stopped
     user: "1000"
     cap_drop:
       - all
     security_opt:
       - no-new-privileges
+    command: redis-server --appendonly yes --no-appendfsync-on-rewrite yes --aclfile /etc/redis/users.acl
     ports:
       - "127.0.0.1:6379:6379"
-    environment:
-      REDIS_ARGS: "--save 60 1 --appendonly yes --no-appendfsync-on-rewrite yes --aclfile /etc/redis/users.acl"
     volumes:
       - ./redis/data:/data
       - ./redis/config:/etc/redis

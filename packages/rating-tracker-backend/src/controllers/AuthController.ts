@@ -10,8 +10,7 @@ import { createSession } from "../redis/repositories/session/sessionRepository.j
 import APIError from "../utils/apiError.js";
 import { createUser, readUser, updateUser, userExists } from "../db/tables/userTable.js";
 import { sessionTTLInSeconds } from "../redis/repositories/session/sessionRepositoryBase.js";
-import { GENERAL_ACCESS } from "rating-tracker-commons";
-import { User } from "../models/user.js";
+import { GENERAL_ACCESS, User } from "rating-tracker-commons";
 
 dotenv.config();
 

@@ -47,7 +47,11 @@ export class ResourceEntity extends Entity {}
  *
  * @see {@link Resource}
  */
-export const resourceSchema = new Schema(ResourceEntity, {
-  fetchDate: { type: "date" },
-  content: { type: "string" },
-});
+export const resourceSchema = new Schema(
+  ResourceEntity,
+  {
+    fetchDate: { type: "date" },
+    content: { type: "string" },
+  },
+  { dataStructure: "HASH" }
+);

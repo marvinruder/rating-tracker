@@ -43,6 +43,10 @@ export class SessionEntity extends Entity {}
  *
  * @see {@link Session}
  */
-export const sessionSchema = new Schema(SessionEntity, {
-  email: { type: "string" },
-});
+export const sessionSchema = new Schema(
+  SessionEntity,
+  {
+    email: { type: "string" },
+  },
+  { dataStructure: "HASH" }
+);

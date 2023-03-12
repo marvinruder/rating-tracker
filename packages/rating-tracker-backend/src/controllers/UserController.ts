@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User } from "../models/user.js";
+import { User } from "rating-tracker-commons";
 import { updateUser, deleteUser } from "../db/tables/userTable.js";
 
 /**

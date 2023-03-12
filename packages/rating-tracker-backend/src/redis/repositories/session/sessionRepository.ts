@@ -2,7 +2,7 @@ import APIError from "../../../utils/apiError.js";
 import { Session, SessionEntity, sessionSchema } from "../../../models/session.js";
 import { refresh, fetch, save, remove } from "./sessionRepositoryBase.js";
 import chalk from "chalk";
-import { User } from "../../../models/user.js";
+import { User } from "rating-tracker-commons";
 import { readUser } from "../../../db/tables/userTable.js";
 import logger, { PREFIX_REDIS } from "../../../utils/logger.js";
 
