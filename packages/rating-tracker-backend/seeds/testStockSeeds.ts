@@ -1,4 +1,4 @@
-import client from "../client.js";
+import client from "../src/db/client.js";
 
 /**
  * Clears and writes example stock data into the stock table in the database. Must only be used in tests.

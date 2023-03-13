@@ -13,8 +13,8 @@ import { sortableAttributeArray, Stock, User } from "rating-tracker-commons";
 import supertest, { CallbackHandler, Test } from "supertest";
 import { initResourceRepository } from "./redis/repositories/resource/__mocks__/resourceRepositoryBase";
 import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
-import { applyStockSeed } from "./db/seeds/testStockSeeds";
-import { applyUserSeed } from "./db/seeds/testUserSeeds";
+import { applyStockSeed } from "../seeds/testStockSeeds";
+import { applyUserSeed } from "../seeds/testUserSeeds";
 
 const { listener, server } = await import("./server");
 

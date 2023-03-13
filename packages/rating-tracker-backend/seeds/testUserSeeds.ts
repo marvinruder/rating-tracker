@@ -1,5 +1,5 @@
 import { GENERAL_ACCESS, STOCK_UPDATE_MESSAGE } from "rating-tracker-commons";
-import client from "../client.js";
+import client from "../src/db/client.js";
 
 /**
  * Clears and writes example user data into the user table in the database. Must only be used in tests.
