@@ -59,6 +59,7 @@ const expire = (id: string, ttlInSeconds: number) => {
  */
 export const createResource = async (resource: Resource, ttlInSeconds?: number): Promise<boolean> => {
   const existingResource = await fetch(resource.url); // Attempt to fetch an existing resource with the same URL
+  // Difficult to test since the implementation always checks whether a cached resource exists before creating a new one
   /* istanbul ignore next -- @preserve */
   if (existingResource && existingResource.content) {
     // If that worked, a resource with the same URL already exists

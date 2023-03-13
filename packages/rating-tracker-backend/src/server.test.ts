@@ -514,7 +514,7 @@ describe("Authentication API", () => {
     expect(res.status).toBe(400);
   });
 
-  it("provides a authentication challenge", async () => {
+  it("provides an authentication challenge", async () => {
     const res = await requestWithSupertest.get("/api/auth/signIn");
     expect(res.status).toBe(200);
     expect(typeof res.body.challenge).toBe("string");

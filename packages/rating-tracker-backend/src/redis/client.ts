@@ -18,7 +18,7 @@ export const redis = createClient({
   password: process.env.REDIS_PASS,
 });
 redis.on(
-  "error",
+  "error", // This error only occurs when Redis server is not available, which is difficult to reproduce.
   /* istanbul ignore next -- @preserve */ (err) => logger.error(PREFIX_REDIS + chalk.redBright(`Redis Client: ${err}`))
 );
 await redis.connect();
