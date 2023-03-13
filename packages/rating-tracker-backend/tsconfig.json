@@ -6,5 +6,5 @@
     "rootDir": ".",
     "sourceMap": true
   },
-  "include": ["src", "seeds"]
+  "include": ["src", "seeds", "vitest.config.ts"]
 }

@@ -8,7 +8,7 @@ services:
       - all
     security_opt:
       - no-new-privileges
-    command: redis-server --appendonly no
+    command: "redis-server --appendonly no --save \"\""
     ports:
       - "63791:6379"
 

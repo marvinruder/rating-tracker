@@ -8,7 +8,7 @@ import client from "../src/db/client.js";
  */
 export const applyUserSeed = async () => {
   if (process.env.NODE_ENV !== "test") {
-    throw new Error("Refusing to apply seed when not in a test environment: " + process.env.DATABASE_URL);
+    throw new Error("Refusing to apply seed when not in a test environment");
   }
 
   await client.user.deleteMany();

@@ -2,8 +2,6 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vites
 import dotenv from "dotenv";
 
 vi.mock("./utils/logger");
-vi.mock("./redis/repositories/resource/resourceRepositoryBase");
-vi.mock("./redis/repositories/session/sessionRepositoryBase");
 
 dotenv.config({
   path: ".testenv",
@@ -11,10 +9,10 @@ dotenv.config({
 
 import { sortableAttributeArray, Stock, User, UserWithCredentials } from "rating-tracker-commons";
 import supertest, { CallbackHandler, Test } from "supertest";
-import { initResourceRepository } from "./redis/repositories/resource/__mocks__/resourceRepositoryBase";
-import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
 import { applyStockSeed } from "../seeds/testStockSeeds";
 import { applyUserSeed } from "../seeds/testUserSeeds";
+import { applyResourceSeed } from "../seeds/testResourceSeeds";
+import { applySessionSeed } from "../seeds/testSessionSeeds";
 
 const { listener, server } = await import("./server");
 
@@ -27,8 +25,8 @@ beforeAll(() => {
 beforeEach(async () => {
   await applyStockSeed();
   await applyUserSeed();
-  initResourceRepository();
-  initSessionRepository();
+  await applyResourceSeed();
+  await applySessionSeed();
 });
 
 afterAll(() => {
