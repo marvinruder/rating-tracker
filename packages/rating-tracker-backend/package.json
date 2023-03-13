@@ -34,7 +34,7 @@
     "express-openapi-validator": "5.0.3",
     "express-rate-limit": "6.7.0",
     "pino": "8.11.0",
-    "pino-pretty": "9.4.0",
+    "pino-pretty": "10.0.0",
     "rating-tracker-commons": "workspace:*",
     "redis": "4.6.5",
     "redis-om": "0.3.6",
