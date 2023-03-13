@@ -9,7 +9,7 @@ dotenv.config({
   path: ".testenv",
 });
 
-import { sortableAttributeArray, Stock, User } from "rating-tracker-commons";
+import { sortableAttributeArray, Stock, User, UserWithCredentials } from "rating-tracker-commons";
 import supertest, { CallbackHandler, Test } from "supertest";
 import { initResourceRepository } from "./redis/repositories/resource/__mocks__/resourceRepositoryBase";
 import { initSessionRepository } from "./redis/repositories/session/__mocks__/sessionRepositoryBase";
@@ -640,6 +640,11 @@ describe("User Management API", () => {
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(2);
     expect((res.body as User[]).find((user) => user.email === "jane.doe@example.com").name).toMatch("Jane Doe");
+    (res.body as UserWithCredentials[]).forEach((user) => {
+      expect(user.credentialID).toBeUndefined();
+      expect(user.credentialPublicKey).toBeUndefined();
+      expect(user.counter).toBeUndefined();
+    });
   });
 
   it("reads a user", async () => {
@@ -649,7 +654,11 @@ describe("User Management API", () => {
       .get("/api/userManagement/john.doe%40example.com")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect((res.body as User).name).toEqual("John Doe");
+    expect(res.body.name).toEqual("John Doe");
+    // Authentication-related fields should not be exposed
+    expect(res.body.credentialID).toBeUndefined();
+    expect(res.body.credentialPublicKey).toBeUndefined();
+    expect(res.body.counter).toBeUndefined();
 
     // attempting to read a non-existent user results in an error
     res = await requestWithSupertest
@@ -695,10 +704,17 @@ describe("User Management API", () => {
     let res = await requestWithSupertest
       .delete("/api/userManagement/john.doe%40example.com")
       .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
 
     // Check that the user was deleted
     res = await requestWithSupertest
       .get("/api/userManagement/john.doe%40example.com")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+
+    // attempting to delete a non-existent stock returns an error
+    res = await requestWithSupertest
+      .delete("/api/userManagement/john.doe%40example.com")
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });

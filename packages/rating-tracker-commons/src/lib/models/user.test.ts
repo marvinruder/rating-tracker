@@ -5,18 +5,65 @@ import {
   User,
   ADMINISTRATIVE_MESSAGE,
   WRITE_STOCKS_ACCESS,
+  optionalUserValuesNull,
+  UserWithCredentials,
 } from "./user";
 import { describe, expect, it } from "vitest";
 
-const root = new User({ accessRights: 255, subscriptions: 255 });
-const regularUser = new User({ accessRights: GENERAL_ACCESS, subscriptions: STOCK_UPDATE_MESSAGE });
-const newUser = new User();
+const root = new User({
+  ...optionalUserValuesNull,
+  email: "user@example.com",
+  name: "Example User",
+  accessRights: 255,
+  subscriptions: 255,
+});
+const regularUser = new User({
+  ...optionalUserValuesNull,
+  email: "user@example.com",
+  name: "Example User",
+  accessRights: GENERAL_ACCESS,
+  subscriptions: STOCK_UPDATE_MESSAGE,
+});
+const newUser = new User({
+  ...optionalUserValuesNull,
+  email: "user@example.com",
+  name: "Example User",
+  accessRights: 0,
+});
 
 const userWithIllegalSubscription = new User({
+  ...optionalUserValuesNull,
+  email: "user@example.com",
+  name: "Example User",
   accessRights: GENERAL_ACCESS,
   subscriptions: ADMINISTRATIVE_MESSAGE | STOCK_UPDATE_MESSAGE,
 });
-const userWhoDoesNotGiveAFuckAboutAnything = new User({ accessRights: 255, subscriptions: 0 });
+const userWhoDoesNotGiveAFuckAboutAnything = new User({
+  ...optionalUserValuesNull,
+  email: "user@example.com",
+  name: "Example User",
+  accessRights: 255,
+  subscriptions: 0,
+});
+
+describe("User Constructor", () => {
+  it("removes credentials", () => {
+    const userWithCredentials: UserWithCredentials = new UserWithCredentials({
+      ...regularUser,
+      credentialID: "Credential ID",
+      credentialPublicKey: "Credential Public Key",
+      counter: 1,
+    });
+    expect(userWithCredentials.credentialID).toBe("Credential ID");
+    expect(userWithCredentials.credentialPublicKey).toBe("Credential Public Key");
+    expect(userWithCredentials.counter).toBe(1);
+
+    const userWithoutCredentials = new User(userWithCredentials);
+    expect((userWithoutCredentials as any).credentialID).toBeUndefined();
+    expect((userWithoutCredentials as any).credentialPublicKey).toBeUndefined();
+    expect((userWithoutCredentials as any).counter).toBeUndefined();
+  });
+});
 
 describe("User Access Rights", () => {
   it("has all access rights", () => {

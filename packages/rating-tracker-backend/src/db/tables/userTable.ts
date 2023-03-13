@@ -1,19 +1,19 @@
 import APIError from "../../utils/apiError.js";
-import { User } from "rating-tracker-commons";
+import { User, UserWithCredentials } from "rating-tracker-commons";
 import chalk from "chalk";
 import * as signal from "../../signal/signal.js";
 import logger, { PREFIX_POSTGRES } from "../../utils/logger.js";
 import client from "../client.js";
 
 /**
- * Create a user.
+ * Create a user with credentials.
  *
- * @param {User} user The user to create.
+ * @param {UserWithCredentials} user The user to create.
  * @returns {Promise<boolean>} A promise that resolves to true if the user was created, false if it already existed.
  */
 // Since we cannot yet test the authentication process, we cannot create a valid User
 /* istanbul ignore next -- @preserve */
-export const createUser = (user: User): Promise<boolean> => {
+export const createUser = (user: UserWithCredentials): Promise<boolean> => {
   // Attempt to find an existing user with the same email address
   return client.user
     .findUniqueOrThrow({
@@ -62,6 +62,27 @@ export const readUser = (email: string): Promise<User> => {
 };
 
 /**
+ * Read a user and include credentials.
+ *
+ * @param {string} email The email address of the user.
+ * @returns {Promise<UserWithCredentials>} A promise that resolves to the user.
+ * @throws an {@link APIError} if the user does not exist.
+ */
+export const readUserWithCredentials = (email: string): Promise<UserWithCredentials> => {
+  return client.user
+    .findUniqueOrThrow({
+      where: { email },
+    })
+    .then((user) => {
+      return new UserWithCredentials(user);
+    })
+    .catch(() => {
+      /* istanbul ignore next -- @preserve */
+      throw new APIError(404, `User ${email} not found.`);
+    });
+};
+
+/**
  * Read all users.
  *
  * @returns {Promise<User[]>} A promise that resolves to a list of all users.
@@ -87,13 +108,16 @@ export const userExists = (email: string): Promise<boolean> => {
  * Update a user.
  *
  * @param {string} email The email address of the user.
- * @param {Partial<Omit<User, "email">>} newValues The new values for the user.
+ * @param {Partial<Omit<UserWithCredentials, "email">>} newValues The new values for the user.
  * @throws an {@link APIError} if the user does not exist.
  */
 /* istanbul ignore next -- @preserve */ // This is only called after an authentication, which we cannot yet test
-export const updateUser = async (email: string, newValues: Partial<Omit<User, "email">>) => {
+export const updateUserWithCredentials = async (
+  email: string,
+  newValues: Partial<Omit<UserWithCredentials, "email">>
+) => {
   let k: keyof typeof newValues; // all keys of new values
-  const user = await readUser(email); // Read the user from the database
+  const user = await readUserWithCredentials(email); // Read the user from the database
   if (user && user.name) {
     logger.info(PREFIX_POSTGRES + `Updating user ${email}…`);
     let isNewData = false;

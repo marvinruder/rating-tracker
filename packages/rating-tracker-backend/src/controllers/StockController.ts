@@ -564,8 +564,7 @@ class StockController {
    * @returns {Response} a response with the stock
    */
   async get(req: Request, res: Response) {
-    const stock = await readStock(req.params[0]);
-    return res.status(200).json(stock);
+    return res.status(200).json(await readStock(req.params[0]));
   }
 
   /**

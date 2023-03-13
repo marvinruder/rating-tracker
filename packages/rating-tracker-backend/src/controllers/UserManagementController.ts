@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ADMINISTRATIVE_ACCESS } from "rating-tracker-commons";
 import APIError from "../utils/apiError.js";
-import { deleteUser, readAllUsers, readUser, updateUser } from "../db/tables/userTable.js";
+import { deleteUser, readAllUsers, readUser, updateUserWithCredentials } from "../db/tables/userTable.js";
 
 /**
  * This class is responsible for providing user information.
@@ -18,18 +18,9 @@ class UserManagementController {
     if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
       throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
     }
-    // Read all users from Redis
-    const users = await readAllUsers();
-
-    // Remove information required for authentication.
-    users.forEach((user) => {
-      delete user.credentialID;
-      delete user.credentialPublicKey;
-      delete user.counter;
-    });
 
     // Respond with the list of users
-    return res.status(200).json(users);
+    return res.status(200).json(await readAllUsers());
   }
 
   /**
@@ -43,12 +34,7 @@ class UserManagementController {
     if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
       throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
     }
-    const user = await readUser(req.params[0]);
-    // Remove information required for authentication.
-    delete user.credentialID;
-    delete user.credentialPublicKey;
-    delete user.counter;
-    return res.status(200).json(user);
+    return res.status(200).json(await readUser(req.params[0]));
   }
 
   /**
@@ -72,7 +58,7 @@ class UserManagementController {
       (typeof accessRights === "number" || typeof accessRights === "undefined") &&
       (typeof subscriptions === "number" || typeof subscriptions === "undefined")
     ) {
-      await updateUser(email, {
+      await updateUserWithCredentials(email, {
         name,
         avatar,
         phone,

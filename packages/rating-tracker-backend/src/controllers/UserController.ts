@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "rating-tracker-commons";
-import { updateUser, deleteUser } from "../db/tables/userTable.js";
+import { updateUserWithCredentials, deleteUser } from "../db/tables/userTable.js";
 
 /**
  * This class is responsible for providing user information.
@@ -14,12 +14,7 @@ class UserController {
    * @returns {Response} a response with the user.
    */
   get(_: Request, res: Response) {
-    const user: Partial<User> = res.locals.user;
-    // Remove information required for authentication.
-    delete user.credentialID;
-    delete user.credentialPublicKey;
-    delete user.counter;
-    return res.status(200).json(user);
+    return res.status(200).json(res.locals.user);
   }
 
   /**
@@ -39,7 +34,7 @@ class UserController {
       (typeof phone === "string" || typeof phone === "undefined") &&
       (typeof subscriptions === "number" || typeof subscriptions === "undefined")
     ) {
-      await updateUser(user.email, {
+      await updateUserWithCredentials(user.email, {
         name,
         avatar,
         phone,
@@ -56,8 +51,7 @@ class UserController {
    * @param {Response} res The response.
    */
   async delete(_: Request, res: Response) {
-    const user: User = res.locals.user;
-    await deleteUser(user.email);
+    await deleteUser(res.locals.user.email);
     return res.status(204).end();
   }
 }

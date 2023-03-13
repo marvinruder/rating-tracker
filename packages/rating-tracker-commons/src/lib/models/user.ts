@@ -1,4 +1,5 @@
 import { MessageType } from "../MessageType.js";
+import { OmitFunctions } from "../OmitFunctions.js";
 
 /**
  * A regular expression that matches a phone number in E.164 format or an empty string.
@@ -34,7 +35,7 @@ export const FETCH_ERROR_MESSAGE = 1 << 1;
 export const ADMINISTRATIVE_MESSAGE = 1 << 7;
 
 /**
- * A user of the application. Contains WebAuthn credentials.
+ * A user of the application.
  */
 export class User {
   /**
@@ -48,11 +49,11 @@ export class User {
   /**
    * The base64-encoded avatar of the user.
    */
-  avatar?: string;
+  avatar: string | null;
   /**
    * The phone number of the user, used for Signal messages.
    */
-  phone?: string;
+  phone: string | null;
   /**
    * The access rights of the user, encoded as a bitfield.
    */
@@ -60,29 +61,25 @@ export class User {
   /**
    * The subscriptions of the user to message types, encoded as a bitfield.
    */
-  subscriptions?: number;
-  /**
-   * The ID of the WebAuthn credential.
-   */
-  credentialID: string;
-  /**
-   * The public key of the WebAuthn credential.
-   */
-  credentialPublicKey: string;
-  /**
-   * The counter of the WebAuthn credential, indicating the number of times it has been used.
-   */
-  counter: number;
+  subscriptions: number | null;
 
   /**
-   * Creates a new user from partial user information.
+   * Creates a new user from user information and remove credentials, if present.
    *
-   * @param {Partial<User>} user The partial user information.
+   * @param {OmitFunctions<User | UserWithCredentials>} user The user information, possibly containing credentials.
    */
-  constructor(user?: Partial<User>) {
-    if (user) {
-      Object.assign(this, user);
+  constructor(user: OmitFunctions<User | UserWithCredentials>) {
+    const userWithPossibleCredentials = { ...user };
+    if ("credentialID" in userWithPossibleCredentials) {
+      delete userWithPossibleCredentials.credentialID;
     }
+    if ("credentialPublicKey" in userWithPossibleCredentials) {
+      delete userWithPossibleCredentials.credentialPublicKey;
+    }
+    if ("counter" in userWithPossibleCredentials) {
+      delete userWithPossibleCredentials.counter;
+    }
+    Object.assign(this, userWithPossibleCredentials);
   }
 
   /**
@@ -149,3 +146,41 @@ export class User {
     }
   }
 }
+
+/**
+ * A user of the application with WebAuthn credentials.
+ */
+export class UserWithCredentials extends User {
+  /**
+   * The ID of the WebAuthn credential.
+   */
+  credentialID: string;
+  /**
+   * The public key of the WebAuthn credential.
+   */
+  credentialPublicKey: string;
+  /**
+   * The counter of the WebAuthn credential, indicating the number of times it has been used.
+   */
+  counter: number;
+
+  /**
+   * Creates a new user from user information.
+   *
+   * @param {OmitFunctions<User | UserWithCredentials>} user The user information.
+   */
+  constructor(user: OmitFunctions<User | UserWithCredentials>) {
+    super(user);
+    Object.assign(this, user);
+  }
+}
+
+/**
+ * An object containing null values for all optional attributes of a user. Can be passed to the user constructor via
+ * `{ ...optionalUserValuesNull, … }`.
+ */
+export const optionalUserValuesNull: OmitFunctions<Omit<User, "email" | "name" | "accessRights">> = {
+  avatar: null,
+  phone: null,
+  subscriptions: null,
+};

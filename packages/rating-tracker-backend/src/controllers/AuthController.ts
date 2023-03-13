@@ -8,9 +8,9 @@ import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import { createSession } from "../redis/repositories/session/sessionRepository.js";
 import APIError from "../utils/apiError.js";
-import { createUser, readUser, updateUser, userExists } from "../db/tables/userTable.js";
+import { createUser, readUserWithCredentials, updateUserWithCredentials, userExists } from "../db/tables/userTable.js";
 import { sessionTTLInSeconds } from "../redis/repositories/session/sessionRepositoryBase.js";
-import { GENERAL_ACCESS, User } from "rating-tracker-commons";
+import { GENERAL_ACCESS, optionalUserValuesNull, UserWithCredentials } from "rating-tracker-commons";
 
 dotenv.config();
 
@@ -102,7 +102,8 @@ class AuthController {
         // We attempt to create a new user with the provided information.
         // If the user already exists, createUser(…)  will return false and we throw an error.
         !(await createUser(
-          new User({
+          new UserWithCredentials({
+            ...optionalUserValuesNull,
             email,
             name,
             accessRights: 0, // Users need to be manually approved before they can access the app.
@@ -152,7 +153,7 @@ class AuthController {
   async postAuthenticationResponse(req: Request, res: Response) {
     // We retrieve the user from Redis, who we identified by the email address in the challenge response.
     const email = req.body.response.userHandle;
-    const user = await readUser(email);
+    const user = await readUserWithCredentials(email);
 
     let verification: VerifiedAuthenticationResponse;
     try {
@@ -184,7 +185,7 @@ class AuthController {
       }
       // The counter variable will increment if the client’s authenticator tracks the number of authentications.
       // Not supported by all authenticators.
-      await updateUser(email, { counter: newCounter });
+      await updateUserWithCredentials(email, { counter: newCounter });
 
       // We create and store a session cookie for the user.
       const authToken = randomUUID();
