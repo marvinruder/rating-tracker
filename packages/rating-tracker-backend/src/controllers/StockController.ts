@@ -608,10 +608,11 @@ class StockController {
       throw new APIError(403, "This user account does not have the necessary access rights to update stocks.");
     }
     const ticker = req.params[0];
-    const { name, country, morningstarID, marketScreenerID, msciID, ric, spID, sustainalyticsID } = req.query;
+    const { name, isin, country, morningstarID, marketScreenerID, msciID, ric, spID, sustainalyticsID } = req.query;
     if (
       typeof ticker === "string" &&
       (typeof name === "string" || typeof name === "undefined") &&
+      (typeof isin === "string" || typeof isin === "undefined") &&
       ((typeof country === "string" && isCountry(country)) || typeof country === "undefined") &&
       (typeof morningstarID === "string" || typeof morningstarID === "undefined") &&
       (typeof marketScreenerID === "string" || typeof marketScreenerID === "undefined") &&
@@ -622,6 +623,7 @@ class StockController {
     ) {
       await updateStock(ticker, {
         name,
+        isin,
         country,
         morningstarID,
         marketScreenerID,

@@ -37,6 +37,8 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>(props.stock?.name);
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
+  const [isin, setIsin] = useState<string>(props.stock?.isin);
+  const [isinError, setIsinError] = useState<boolean>(false); // Error in the ISIN text field.
   const [country, setCountry] = useState<Country>(props.stock?.country);
   const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
   // The value of the text field in the country autocomplete.
@@ -61,6 +63,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   const validate = () => {
     // The following fields are required.
     setNameError(!name);
+    setIsinError(!isin);
     setCountryError(!country);
   };
 
@@ -76,6 +79,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
           params: {
             // Only send the parameters that have changed.
             name: name !== props.stock.name ? name : undefined,
+            isin: isin !== props.stock.isin ? isin : undefined,
             country: country !== props.stock.country ? country : undefined,
             morningstarID: morningstarID !== props.stock.morningstarID ? morningstarID : undefined,
             marketScreenerID: marketScreenerID !== props.stock.marketScreenerID ? marketScreenerID : undefined,
@@ -413,6 +417,19 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             />
           </Grid>
           <Grid item xs={12}>
+            <TextField
+              onChange={(event) => {
+                setIsin(event.target.value);
+                setIsinError(false);
+              }}
+              error={isinError}
+              label="ISIN"
+              value={isin}
+              placeholder="e.g. US0378331005"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
             <Autocomplete
               options={countryArray}
               autoHighlight
@@ -605,7 +622,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
           variant="contained"
           onClick={updateStock}
           onMouseOver={validate} // Validate input fields on hover
-          disabled={nameError || countryError}
+          disabled={nameError || isinError || countryError}
           startIcon={<PublishedWithChangesIcon />}
         >
           Update Stock

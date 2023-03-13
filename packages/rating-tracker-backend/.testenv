@@ -3,6 +3,7 @@ DATABASE_URL=postgresql://rating-tracker-test:rating-tracker-test@127.0.0.1:5432
 NODE_ENV=test
 DOMAIN=example.com
 SUBDOMAIN=subdomain
+PORT=30001
 REDIS_URL=redis://127.0.0.1:63791
 REDIS_USER=
 REDIS_PASS=

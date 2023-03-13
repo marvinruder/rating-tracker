@@ -101,6 +101,7 @@ const patch: OpenAPIV3.OperationObject = {
       required: true,
     },
     stock.name,
+    stock.isin,
     {
       ...stock.country,
       schema: {
