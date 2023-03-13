@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { optionalStockValuesNull, Stock } from "rating-tracker-commons";
-import { createResource, readResource } from "../redis/repositories/resource/resourceRepository.js";
+import { createResource, readResource } from "../redis/repositories/resourceRepository.js";
 import { createStock, deleteStock, readAllStocks, updateStock, readStock } from "../db/tables/stockTable.js";
 import {
   Country,

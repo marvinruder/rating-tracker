@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { deleteSession } from "../redis/repositories/session/sessionRepository.js";
+import { deleteSession } from "../redis/repositories/sessionRepository.js";
 
 /**
  * This class is responsible for providing session information.
@@ -12,6 +12,7 @@ class SessionController {
    * @param {Response} res The response.
    */
   async delete(req: Request, res: Response) {
+    // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
     await deleteSession(req.cookies.authToken);
     res.clearCookie("authToken", {
       httpOnly: true,

@@ -1,4 +1,3 @@
-/* istanbul ignore file -- @preserve */ // This file is mocked since tests must not depend on a running Redis instance
 import chalk from "chalk";
 import dotenv from "dotenv";
 import { createClient } from "redis";
@@ -18,7 +17,10 @@ export const redis = createClient({
   username: process.env.REDIS_USER,
   password: process.env.REDIS_PASS,
 });
-redis.on("error", (err) => logger.error(PREFIX_REDIS + chalk.redBright(`Redis Client: ${err}`)));
+redis.on(
+  "error",
+  /* istanbul ignore next -- @preserve */ (err) => logger.error(PREFIX_REDIS + chalk.redBright(`Redis Client: ${err}`))
+);
 await redis.connect();
 
 /**

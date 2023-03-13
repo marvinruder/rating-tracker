@@ -1,5 +1,5 @@
 import { SessionEntity, sessionSchema } from "../src/models/session.js";
-import { sessionRepository } from "../src/redis/repositories/session/sessionRepositoryBase.js";
+import { sessionRepository } from "../src/redis/repositories/sessionRepository.js";
 
 /**
  * Clears and writes example session data into the session repository in Redis. Must only be used in tests.

@@ -23,7 +23,7 @@ import {
 import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable.js";
 import * as signal from "../signal/signal.js";
 import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
-import { createResource, readResource } from "../redis/repositories/resource/resourceRepository.js";
+import { createResource, readResource } from "../redis/repositories/resourceRepository.js";
 import axios from "axios";
 import dotenv from "dotenv";
 
@@ -110,6 +110,7 @@ class FetchController {
     const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.png`;
     try {
       const screenshot = await driver.takeScreenshot();
+      // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
       await createResource(
         {
           url: screenshotID,

@@ -12,8 +12,7 @@ import responseTime from "response-time";
 import { STATUS_CODES } from "http";
 import axios from "axios";
 import APIError from "./utils/apiError.js";
-import { refreshSessionAndFetchUser } from "./redis/repositories/session/sessionRepository.js";
-import { sessionTTLInSeconds } from "./redis/repositories/session/sessionRepositoryBase.js";
+import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository.js";
 import path from "path";
 import logger, { PREFIX_NODEJS } from "./utils/logger.js";
 import { GENERAL_ACCESS } from "rating-tracker-commons";
@@ -149,6 +148,7 @@ server.app.use(async (req, res, next) => {
     // If a session cookie is present
     try {
       // Refresh the cookie on the server and append the user to the response
+      // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
       res.locals.user = await refreshSessionAndFetchUser(req.cookies.authToken);
       res.cookie("authToken", req.cookies.authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client

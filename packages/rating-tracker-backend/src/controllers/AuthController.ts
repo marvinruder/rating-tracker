@@ -6,10 +6,10 @@ import SimpleWebAuthnServer, {
 import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
-import { createSession } from "../redis/repositories/session/sessionRepository.js";
+import { createSession } from "../redis/repositories/sessionRepository.js";
 import APIError from "../utils/apiError.js";
 import { createUser, readUserWithCredentials, updateUserWithCredentials, userExists } from "../db/tables/userTable.js";
-import { sessionTTLInSeconds } from "../redis/repositories/session/sessionRepositoryBase.js";
+import { sessionTTLInSeconds } from "../redis/repositories/sessionRepository.js";
 import { GENERAL_ACCESS, optionalUserValuesNull, UserWithCredentials } from "rating-tracker-commons";
 
 dotenv.config();
@@ -189,6 +189,7 @@ class AuthController {
 
       // We create and store a session cookie for the user.
       const authToken = randomUUID();
+      // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
       await createSession({ sessionID: authToken, email });
       res.cookie("authToken", authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client

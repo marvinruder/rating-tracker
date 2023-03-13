@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import APIError from "../utils/apiError.js";
-import { readResource } from "../redis/repositories/resource/resourceRepository.js";
+import { readResource } from "../redis/repositories/resourceRepository.js";
 
 /**
  * This class is responsible for providing resources such as images.
@@ -18,6 +18,7 @@ class ResourceController {
     // Use the file extension to determine the type of the resource
     switch (resourceID.split(".").pop().toUpperCase()) {
       case "PNG":
+        // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
         const resource = await readResource(resourceID);
         return res.setHeader("Content-Type", "image/png").status(200).send(Buffer.from(resource.content, "base64"));
       default:
