@@ -42,8 +42,6 @@ const refresh = (id: string) => {
  * @param {SessionEntity} sessionEntity The session entity to save.
  * @returns {string} The ID of the saved session.
  */
-// Since we cannot yet test the authentication process, we cannot create a valid Session to save
-/* istanbul ignore next -- @preserve */
 const save = (sessionEntity: SessionEntity) => {
   return sessionRepository.save(sessionEntity);
 };
@@ -64,10 +62,10 @@ const remove = (id: string) => {
  * @param {Session} session The session to create.
  * @returns {boolean} Whether the session was created.
  */
-// Since we cannot yet test the authentication process, we cannot create a valid Session
-/* istanbul ignore next -- @preserve */
 export const createSession = async (session: Session): Promise<boolean> => {
   const existingSession = await fetch(session.sessionID); // Attempt to fetch an existing session with the same ID
+  // Difficult to test since session IDs are always created randomly
+  /* istanbul ignore next -- @preserve */
   if (existingSession && existingSession.email) {
     // If that worked, a session with the same ID already exists
     logger.warn(PREFIX_REDIS + chalk.yellowBright(`Skipping session ${existingSession.entityId} – existing already.`));

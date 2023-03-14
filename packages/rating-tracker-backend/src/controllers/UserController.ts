@@ -18,7 +18,7 @@ class UserController {
   }
 
   /**
-   * Updates the current user in Redis.
+   * Updates the current user in the database.
    *
    * @param {Request} req The request.
    * @param {Response} res The response.
@@ -45,7 +45,7 @@ class UserController {
   }
 
   /**
-   * Deletes the current user from Redis.
+   * Deletes the current user from the database.
    *
    * @param {Request} _ The request.
    * @param {Response} res The response.

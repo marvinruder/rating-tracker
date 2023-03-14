@@ -62,8 +62,6 @@ class AuthController {
     }
   }
 
-  // This function is not tested because it is difficult to mock creating a valid challenge response.
-  /* istanbul ignore next -- @preserve */
   /**
    * Verifies the registration response and creates a new user if the request is valid.
    *
@@ -92,13 +90,12 @@ class AuthController {
         throw new APIError(500, error.message);
       }
 
-      const { verified } = verification; // If the verification was successful, this will hold true.
-      const { registrationInfo } = verification;
+      const { verified, registrationInfo } = verification;
       // The following information is required to verify the user’s identity in the future.
-      // We store it in Redis.
+      // We store it in the database.
       const { credentialPublicKey, credentialID, counter } = registrationInfo;
       if (
-        verified &&
+        verified && // If the verification was successful, this will hold true.
         // We attempt to create a new user with the provided information.
         // If the user already exists, createUser(…)  will return false and we throw an error.
         !(await createUser(
@@ -126,11 +123,11 @@ class AuthController {
   /**
    * Generates an authentication challenge for any user to sign in. The challenge is not related to any specific user.
    *
-   * @param {Request} req Request object
+   * @param {Request} _ Request object
    * @param {Response} res Response object
    * @returns {Response} a response containing the authentication challenge.
    */
-  getAuthenticationOptions(req: Request, res: Response) {
+  getAuthenticationOptions(_: Request, res: Response) {
     const options = SimpleWebAuthnServer.generateAuthenticationOptions({
       rpID: rpID,
       userVerification: "required", // Require the user to verify their identity with a PIN or biometric sensor.
@@ -139,8 +136,6 @@ class AuthController {
     return res.status(200).json(options);
   }
 
-  // This function is not tested because it is difficult to mock creating a valid challenge response.
-  /* istanbul ignore next -- @preserve */
   /**
    * Verifies the authentication response and creates a session cookie if the challenge response is valid.
    *
@@ -151,7 +146,7 @@ class AuthController {
    * @throws an {@link APIError} if the authentication failed or the user lacks access rights.
    */
   async postAuthenticationResponse(req: Request, res: Response) {
-    // We retrieve the user from Redis, who we identified by the email address in the challenge response.
+    // We retrieve the user from the database, who we identified by the email address in the challenge response.
     const email = req.body.response.userHandle;
     const user = await readUserWithCredentials(email);
 
@@ -164,7 +159,7 @@ class AuthController {
         expectedOrigin: origin,
         expectedRPID: rpID,
         authenticator: {
-          // This information is stored for each user in Redis.
+          // This information is stored for each user in the database.
           credentialID: Buffer.from(user.credentialID, "base64"),
           credentialPublicKey: Buffer.from(user.credentialPublicKey, "base64"),
           counter: user.counter,
@@ -175,9 +170,9 @@ class AuthController {
       throw new APIError(500, error.message);
     }
 
-    const { verified } = verification; // If the verification was successful, this will hold true.
-    const { authenticationInfo } = verification;
+    const { verified, authenticationInfo } = verification;
     const { newCounter } = authenticationInfo;
+    // If the verification was successful, this will hold true.
     if (verified) {
       // We use bitwise AND to check if the user has the GENERAL_ACCESS bit set.
       if (!user.hasAccessRight(GENERAL_ACCESS)) {

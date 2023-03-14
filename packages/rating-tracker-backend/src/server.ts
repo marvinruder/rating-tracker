@@ -94,7 +94,6 @@ server.app.use((_, res, next) => {
  * @param {string} method The HTTP method.
  * @returns {string} A colored pretty prefix string.
  */
-/* istanbul ignore next -- @preserve */ // We do not test the logger middleware and its helper functions
 const highlightMethod = (method: string) => {
   switch (method) {
     case "GET":
@@ -109,8 +108,6 @@ const highlightMethod = (method: string) => {
       return chalk.black.bgCyanBright(` ${method} `) + chalk.cyanBright.bgGrey("");
     case "DELETE":
       return chalk.whiteBright.bgRed(` ${method} `) + chalk.red.bgGrey("");
-    default:
-      return method;
   }
 };
 
@@ -120,7 +117,6 @@ const highlightMethod = (method: string) => {
  * @param {number} statusCode The HTTP status code.
  * @returns {string} A colored pretty prefix string.
  */
-/* istanbul ignore next -- @preserve */ // We do not test the logger middleware and its helper functions
 const statusCodeDescription = (statusCode: number) => {
   const statusCodeString = ` ${statusCode}  ${STATUS_CODES[statusCode]} `;
   switch (Math.floor(statusCode / 100)) {
@@ -133,7 +129,6 @@ const statusCodeDescription = (statusCode: number) => {
     case 5: // Server error responses
       return chalk.whiteBright.bgRed(statusCodeString) + chalk.red("");
   }
-  return statusCodeString;
 };
 
 // Parses cookies and stores them in req.cookies

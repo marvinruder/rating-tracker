@@ -24,7 +24,7 @@ class UserManagementController {
   }
 
   /**
-   * Reads a single user from Redis.
+   * Reads a single user from the database.
    *
    * @param {Request} req The request.
    * @param {Response} res The response.
@@ -38,7 +38,7 @@ class UserManagementController {
   }
 
   /**
-   * Updates a user in Redis.
+   * Updates a user in the database.
    *
    * @param {Request} req The request.
    * @param {Response} res The response.
@@ -70,7 +70,7 @@ class UserManagementController {
   }
 
   /**
-   * Deletes a user from Redis.
+   * Deletes a user from the database.
    *
    * @param {Request} req The request.
    * @param {Response} res The response.

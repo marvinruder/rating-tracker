@@ -1,7 +1,69 @@
+import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import SimpleWebAuthnServer, {
+  VerifyAuthenticationResponseOpts,
+  VerifyRegistrationResponseOpts,
+} from "@simplewebauthn/server";
 import dotenv from "dotenv";
 
 vi.mock("./utils/logger");
+vi.mock("@simplewebauthn/server", async () => {
+  const orig = await vi.importActual<typeof SimpleWebAuthnServer>("@simplewebauthn/server");
+  const randomCredential = randomUUID();
+
+  const verifyRegistrationResponse = (options: VerifyRegistrationResponseOpts) => {
+    if (!options.response.id) {
+      throw new Error("Missing credential ID");
+    }
+    return Promise.resolve({
+      verified:
+        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).challenge ===
+          options.expectedChallenge &&
+        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).origin ===
+          options.expectedOrigin &&
+        options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
+        options.expectedRPID.includes(process.env.DOMAIN) &&
+        options.requireUserVerification,
+      registrationInfo: {
+        credentialID: Buffer.from(`Credential ID ${randomCredential}`),
+        credentialPublicKey: Buffer.from(`Credential Public Key ${randomCredential}`),
+        counter: 0,
+      },
+    });
+  };
+
+  const verifyAuthenticationResponse = (options: VerifyAuthenticationResponseOpts) => {
+    if (!options.response.id) {
+      throw new Error("Missing credential ID");
+    }
+    return Promise.resolve({
+      verified:
+        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).challenge ===
+          options.expectedChallenge &&
+        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).origin ===
+          options.expectedOrigin &&
+        options.response.challenge === options.expectedChallenge &&
+        options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
+        options.expectedRPID.includes(process.env.DOMAIN) &&
+        options.requireUserVerification &&
+        options.authenticator.credentialID.toString("ascii") === `Credential ID ${randomCredential}` &&
+        options.authenticator.credentialPublicKey.toString("ascii") === `Credential Public Key ${randomCredential}`,
+      authenticationInfo: {
+        newCounter: options.authenticator.counter + 1,
+      },
+    });
+  };
+
+  const mocked = {
+    ...orig,
+    verifyRegistrationResponse,
+    verifyAuthenticationResponse,
+  };
+  return {
+    ...mocked,
+    default: mocked,
+  };
+});
 
 dotenv.config({
   path: ".testenv",
@@ -409,6 +471,15 @@ describe("Stock API", () => {
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
 
+    // If a previous ETag is referenced in the If-None-Match header that matches the previous response, we should
+    // receive a Not Modified response indicating that the response is identical to the one cached by the client.
+    const eTag = res.header.etag;
+    res = await requestWithSupertest
+      .get("/api/stock/exampleAAPL")
+      .set("Cookie", ["authToken=exampleSessionID"])
+      .set("If-None-Match", eTag);
+    expect(res.status).toBe(304);
+
     // attempting to read a non-existent stock results in an error
     res = await requestWithSupertest.get("/api/stock/doesNotExist").set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
@@ -482,8 +553,9 @@ describe("Swagger API", () => {
 });
 
 describe("Authentication API", () => {
-  it("provides a registration challenge", async () => {
-    const res = await requestWithSupertest.get("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe");
+  it("registers and authenticates a new user", async () => {
+    // Get Registration Challenge
+    let res = await requestWithSupertest.get("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe");
     expect(res.status).toBe(200);
     expect(typeof res.body.challenge).toBe("string");
     expect(typeof res.body.timeout).toBe("number");
@@ -496,6 +568,118 @@ describe("Authentication API", () => {
     expect(res.body.authenticatorSelection.userVerification).toBe("required");
     expect(res.body.authenticatorSelection.residentKey).toBe("required");
     expect(res.body.authenticatorSelection.requireResidentKey).toBeTruthy();
+
+    let challenge = res.body.challenge;
+    let response = {
+      clientDataJSON: Buffer.from(
+        JSON.stringify({
+          type: "webauthn.create",
+          challenge,
+          origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+        })
+      ).toString("base64"),
+    } as unknown;
+
+    // Post Registration Response
+    res = await requestWithSupertest.post("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe").send({
+      response,
+    });
+    expect(res.status).toBe(500); // Internal Server Error
+    expect(res.body.message).toMatch("Missing credential ID");
+
+    res = await requestWithSupertest.post("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe").send({
+      id: "ID",
+      response: {
+        clientDataJSON: Buffer.from(
+          JSON.stringify({
+            type: "webauthn.create",
+            challenge: "Wrong challenge", // Oh no!
+            origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+          })
+        ).toString("base64"),
+      },
+    });
+    expect(res.status).toBe(400); // Bad Request
+    expect(res.body.message).toMatch("Registration failed");
+
+    res = await requestWithSupertest.post("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe").send({
+      id: "ID",
+      response,
+    });
+    expect(res.status).toBe(201); // Successful registration
+
+    res = await requestWithSupertest.post("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe").send({
+      id: "ID",
+      response,
+    });
+    expect(res.status).toBe(403); // Hey, we have done that already!
+
+    // Get Authentication Challenge
+    res = await requestWithSupertest.get("/api/auth/signIn");
+    expect(res.status).toBe(200);
+    expect(typeof res.body.challenge).toBe("string");
+    expect(typeof res.body.timeout).toBe("number");
+    expect(res.body.rpId).toBe(`${process.env.DOMAIN}`);
+    expect(res.body.userVerification).toBe("required");
+
+    challenge = res.body.challenge;
+    response = {
+      clientDataJSON: Buffer.from(
+        JSON.stringify({
+          type: "webauthn.get",
+          challenge,
+          origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+        })
+      ).toString("base64"),
+      userHandle: "jim.doe@example.com",
+    };
+
+    // Post Registration Response
+    res = await requestWithSupertest.post("/api/auth/signIn").send({
+      challenge,
+      response,
+    });
+    expect(res.status).toBe(500); // Internal Server Error
+    expect(res.body.message).toMatch("Missing credential ID");
+    expect(res.headers["set-cookie"]).toBeUndefined(); // no session cookie yet
+
+    res = await requestWithSupertest.post("/api/auth/signIn").send({
+      id: "ID",
+      challenge: "Wrong challenge", // Oh no!
+      response,
+    });
+    expect(res.status).toBe(400); // Bad Request
+    expect(res.body.message).toMatch("Authentication failed");
+    expect(res.headers["set-cookie"]).toBeUndefined(); // no session cookie yet
+
+    res = await requestWithSupertest.post("/api/auth/signIn").send({
+      id: "ID",
+      challenge,
+      response,
+    });
+    expect(res.status).toBe(403);
+    expect(res.body.message).toMatch("This user account is not yet activated");
+    expect(res.headers["set-cookie"]).toBeUndefined(); // no session cookie yet
+
+    // Activate user account
+    await requestWithSupertest
+      .patch("/api/userManagement/jim.doe%40example.com" + "?accessRights=1")
+      .set("Cookie", ["authToken=exampleSessionID"]);
+
+    res = await requestWithSupertest.post("/api/auth/signIn").send({
+      id: "ID",
+      challenge,
+      response,
+    });
+    expect(res.status).toBe(204);
+
+    // Check that session cookie works
+    const authTokenCookieHeader = res.headers["set-cookie"][0].split(";")[0];
+    res = await requestWithSupertest.get("/api/user").set("Cookie", [authTokenCookieHeader]);
+    expect(res.status).toBe(200);
+    expect(res.body.email).toBe("jim.doe@example.com");
+    expect(res.body.name).toBe("Jim Doe");
+    expect(res.body.accessRights).toBe(1);
   });
 
   it("rejects a registration challenge request from an existing user", async () => {
@@ -512,15 +696,6 @@ describe("Authentication API", () => {
   it("rejects a registration challenge request from an invalid user", async () => {
     const res = await requestWithSupertest.get("/api/auth/register");
     expect(res.status).toBe(400);
-  });
-
-  it("provides an authentication challenge", async () => {
-    const res = await requestWithSupertest.get("/api/auth/signIn");
-    expect(res.status).toBe(200);
-    expect(typeof res.body.challenge).toBe("string");
-    expect(typeof res.body.timeout).toBe("number");
-    expect(res.body.rpId).toBe(`${process.env.DOMAIN}`);
-    expect(res.body.userVerification).toBe("required");
   });
 
   it("does not provide too many authentication challenges", async () => {
@@ -674,7 +849,7 @@ describe("User Management API", () => {
     let res = await requestWithSupertest
       .patch(
         "/api/userManagement/john.doe%40example.com" +
-          "?name=John%20Doe%20II%2E&phone=%2B987654321&accessRights=0&subscriptions=0"
+          "?name=John%20Doe%20II%2E&phone=%2B987654321&accessRights=1&subscriptions=0"
       )
       .send({
         avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
@@ -691,6 +866,18 @@ describe("User Management API", () => {
     expect(res.body.name).toBe("John Doe II.");
     expect(res.body.avatar).toBe("data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=");
     expect(res.body.phone).toBe("+987654321");
+
+    // Changing nothing is useless, but fine
+    res = await requestWithSupertest
+      .patch("/api/userManagement/john.doe%40example.com?subscriptions=0") // we did that before
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+
+    // Changing no one is not fine
+    res = await requestWithSupertest
+      .patch("/api/userManagement/noreply%40example.com?subscriptions=0") // we did that before
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
   });
 
   it("deletes a user", async () => {

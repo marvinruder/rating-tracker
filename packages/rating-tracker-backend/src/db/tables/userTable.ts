@@ -11,8 +11,6 @@ import client from "../client.js";
  * @param {UserWithCredentials} user The user to create.
  * @returns {Promise<boolean>} A promise that resolves to true if the user was created, false if it already existed.
  */
-// Since we cannot yet test the authentication process, we cannot create a valid User
-/* istanbul ignore next -- @preserve */
 export const createUser = (user: UserWithCredentials): Promise<boolean> => {
   // Attempt to find an existing user with the same email address
   return client.user
@@ -56,7 +54,6 @@ export const readUser = (email: string): Promise<User> => {
       return new User(user);
     })
     .catch(() => {
-      /* istanbul ignore next -- @preserve */
       throw new APIError(404, `User ${email} not found.`);
     });
 };
@@ -77,7 +74,6 @@ export const readUserWithCredentials = (email: string): Promise<UserWithCredenti
       return new UserWithCredentials(user);
     })
     .catch(() => {
-      /* istanbul ignore next -- @preserve */
       throw new APIError(404, `User ${email} not found.`);
     });
 };
@@ -111,47 +107,43 @@ export const userExists = (email: string): Promise<boolean> => {
  * @param {Partial<Omit<UserWithCredentials, "email">>} newValues The new values for the user.
  * @throws an {@link APIError} if the user does not exist.
  */
-/* istanbul ignore next -- @preserve */ // This is only called after an authentication, which we cannot yet test
 export const updateUserWithCredentials = async (
   email: string,
   newValues: Partial<Omit<UserWithCredentials, "email">>
 ) => {
   let k: keyof typeof newValues; // all keys of new values
   const user = await readUserWithCredentials(email); // Read the user from the database
-  if (user && user.name) {
-    logger.info(PREFIX_POSTGRES + `Updating user ${email}…`);
-    let isNewData = false;
-    // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
-    for (k in newValues) {
-      if (newValues[k] !== undefined) {
-        if (user[k] === undefined) {
-          throw new APIError(400, `Invalid property ${k} for user ${user.email}.`);
-        }
-        if (newValues[k] === user[k]) {
-          delete newValues[k];
-          continue;
-        }
-
-        // New data is different from old data
-        isNewData = true;
-
-        logger.info(PREFIX_POSTGRES + `    Property ${k} updated from ${user[k]} to ${newValues[k]}`);
+  logger.info(PREFIX_POSTGRES + `Updating user ${email}…`);
+  let isNewData = false;
+  // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
+  for (k in newValues) {
+    if (newValues[k] !== undefined) {
+      /* istanbul ignore next -- @preserve */ // Those properties are always caught by OpenAPI validation
+      if (user[k] === undefined) {
+        throw new APIError(400, `Invalid property ${k} for user ${user.email}.`);
       }
-    }
+      if (newValues[k] === user[k]) {
+        delete newValues[k];
+        continue;
+      }
 
-    if (isNewData) {
-      await client.user.update({
-        where: {
-          email: user.email,
-        },
-        data: { ...newValues },
-      });
-    } else {
-      // No new data was provided
-      logger.info(PREFIX_POSTGRES + `No updates for user ${email}.`);
+      // New data is different from old data
+      isNewData = true;
+
+      logger.info(PREFIX_POSTGRES + `    Property ${k} updated from ${user[k]} to ${newValues[k]}`);
     }
+  }
+
+  if (isNewData) {
+    await client.user.update({
+      where: {
+        email: user.email,
+      },
+      data: { ...newValues },
+    });
   } else {
-    throw new APIError(404, `User ${email} not found.`);
+    // No new data was provided
+    logger.info(PREFIX_POSTGRES + `No updates for user ${email}.`);
   }
 };
 
