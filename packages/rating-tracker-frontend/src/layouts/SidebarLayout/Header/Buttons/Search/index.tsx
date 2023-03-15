@@ -22,8 +22,8 @@ import { TransitionProps } from "@mui/material/transitions";
 import SearchIcon from "@mui/icons-material/Search";
 
 import axios from "axios";
-import { baseUrl, logoEndpoint, stockAPI, stockListEndpoint } from "../../../../../endpoints";
-import { emojiFlag, Stock } from "rating-tracker-commons";
+import { baseUrl } from "../../../../..";
+import { emojiFlag, Stock, stockListEndpointPath, stockLogoEndpointPath } from "rating-tracker-commons";
 import { useNotification } from "../../../../../contexts/NotificationContext";
 import SectorIcon from "../../../../../components/SectorIcon/";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -195,7 +195,7 @@ const HeaderSearch = (): JSX.Element => {
    */
   const getStocks = (currentSearchValue: string) => {
     axios
-      .get(baseUrl + stockAPI + stockListEndpoint, {
+      .get(baseUrl + stockListEndpointPath, {
         params: {
           name: currentSearchValue,
           sortBy: "name",
@@ -308,10 +308,7 @@ const HeaderSearch = (): JSX.Element => {
                               background: "none",
                             }}
                             src={
-                              baseUrl +
-                              stockAPI +
-                              logoEndpoint +
-                              `/${stock.ticker}?dark=${theme.palette.mode === "dark"}`
+                              baseUrl + stockLogoEndpointPath + `/${stock.ticker}?dark=${theme.palette.mode === "dark"}`
                             }
                             alt=" "
                           />

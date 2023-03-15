@@ -1,5 +1,12 @@
 import { Request, Response } from "express";
-import { optionalStockValuesNull, Stock } from "rating-tracker-commons";
+import {
+  GENERAL_ACCESS,
+  optionalStockValuesNull,
+  Stock,
+  stockEndpointPath,
+  stockListEndpointPath,
+  stockLogoEndpointPath,
+} from "rating-tracker-commons";
 import { createResource, readResource } from "../redis/repositories/resourceRepository.js";
 import { createStock, deleteStock, readAllStocks, updateStock, readStock } from "../db/tables/stockTable.js";
 import {
@@ -19,19 +26,23 @@ import {
 } from "rating-tracker-commons";
 import APIError from "../utils/apiError.js";
 import axios from "axios";
+import Router from "../routers/Router.js";
 
 /**
  * This class is responsible for providing stock data.
  */
-class StockController {
+export class StockController {
   /**
    * Returns a list of stocks, which can be filtered, sorted and paginated.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a response containing the stock list and the total number of stocks after filtering, but before
-   * pagination.
    */
+  @Router({
+    path: stockListEndpointPath,
+    method: "get",
+    accessRights: GENERAL_ACCESS,
+  })
   async getList(req: Request, res: Response) {
     // Read all stocks from the database
     let stocks = await readAllStocks();
@@ -481,10 +492,7 @@ class StockController {
     );
 
     // Respond with the list of stocks and the total count after filtering and before pagination
-    return res.status(200).json({
-      stocks: stocks,
-      count: length,
-    });
+    res.status(200).json({ stocks, count: length }).end();
   }
 
   /**
@@ -492,8 +500,12 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a response with the logo of the stock
    */
+  @Router({
+    path: stockLogoEndpointPath + "/*",
+    method: "get",
+    accessRights: GENERAL_ACCESS,
+  })
   async getLogo(req: Request, res: Response) {
     const stock = await readStock(req.params[0]);
     let logoResource: Resource;
@@ -553,7 +565,7 @@ class StockController {
         (60 * 60 * 24 - (new Date().getTime() - logoResource.fetchDate.getTime()) / 1000) | 0
       }`
     );
-    return res.status(200).send(logoResource.content);
+    res.status(200).send(logoResource.content).end();
   }
 
   /**
@@ -561,10 +573,17 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a response with the stock
    */
+  @Router({
+    path: stockEndpointPath + "/*",
+    method: "get",
+    accessRights: GENERAL_ACCESS,
+  })
   async get(req: Request, res: Response) {
-    return res.status(200).json(await readStock(req.params[0]));
+    res
+      .status(200)
+      .json(await readStock(req.params[0]))
+      .end();
   }
 
   /**
@@ -572,13 +591,14 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a 201 response if the stock was created successfully
    * @throws an {@link APIError} if a stock with the same ticker already exists
    */
+  @Router({
+    path: stockEndpointPath + "/*",
+    method: "put",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async put(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS)) {
-      throw new APIError(403, "This user account does not have the necessary access rights to create stocks.");
-    }
     const ticker = req.params[0];
     const { name, country, isin } = req.query;
     if (
@@ -589,7 +609,7 @@ class StockController {
       typeof isin === "string"
     ) {
       if (await createStock(new Stock({ ...optionalStockValuesNull, ticker, name, country, isin }))) {
-        return res.status(201).end();
+        res.status(201).end();
       } else {
         throw new APIError(409, "A stock with that ticker exists already.");
       }
@@ -601,12 +621,13 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a 204 response if the stock was updated successfully
    */
+  @Router({
+    path: stockEndpointPath + "/*",
+    method: "patch",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async patch(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS)) {
-      throw new APIError(403, "This user account does not have the necessary access rights to update stocks.");
-    }
     const ticker = req.params[0];
     const { name, isin, country, morningstarID, marketScreenerID, msciID, ric, spID, sustainalyticsID } = req.query;
     if (
@@ -632,7 +653,7 @@ class StockController {
         spID,
         sustainalyticsID,
       });
-      return res.status(204).end();
+      res.status(204).end();
     }
   }
 
@@ -641,15 +662,14 @@ class StockController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a 204 response if the stock was deleted successfully
    */
+  @Router({
+    path: stockEndpointPath + "/*",
+    method: "delete",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async delete(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS)) {
-      throw new APIError(403, "This user account does not have the necessary access rights to delete stocks.");
-    }
     await deleteStock(req.params[0]);
-    return res.status(204).end();
+    res.status(204).end();
   }
 }
-
-export default new StockController();

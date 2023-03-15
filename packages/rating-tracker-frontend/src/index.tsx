@@ -6,6 +6,12 @@ import { SidebarProvider } from "./contexts/SidebarContext";
 import axios from "axios";
 
 /**
+ * The globalThis.regeneratorRuntime = undefined addresses a potentially unsafe-eval problem
+ * Source: https://github.com/facebook/regenerator/issues/378#issuecomment-802628326
+ */
+globalThis.regeneratorRuntime = undefined;
+
+/**
  * Encode spaces as %20 instead of +, since + is not a character considered safe by the backend.
  */
 axios.defaults.paramsSerializer = {
@@ -14,6 +20,11 @@ axios.defaults.paramsSerializer = {
     return typeof encodedValue === "string" ? encodedValue.replaceAll("+", "%20") : encodedValue;
   },
 };
+
+/**
+ * The base URL of the backend API server.
+ */
+export const baseUrl = `${document.location.protocol}//${document.location.hostname}/api`;
 
 createRoot(document.getElementById("root")).render(
   <SidebarProvider>

@@ -13,8 +13,8 @@ import {
   Tooltip,
   Box,
 } from "@mui/material";
-import { Stock, StockListColumn } from "rating-tracker-commons";
-import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
+import { Stock, StockListColumn, stockListEndpointPath } from "rating-tracker-commons";
+import { baseUrl } from "../../..";
 import { SortableAttribute } from "rating-tracker-commons";
 import StockRow from "../../../components/StockRow";
 import { useNotification } from "../../../contexts/NotificationContext";
@@ -46,7 +46,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
   const getStocks = () => {
     setStocksFinal(false);
     axios
-      .get(baseUrl + stockAPI + stockListEndpoint, {
+      .get(baseUrl + stockListEndpointPath, {
         params: {
           // Pagination
           offset: page * rowsPerPage,

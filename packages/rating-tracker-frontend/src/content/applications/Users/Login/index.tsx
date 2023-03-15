@@ -4,10 +4,11 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { useState } from "react";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import axios, { AxiosError } from "axios";
-import { authAPI, baseUrl, registerEndpoint, signInEndpoint } from "../../../../endpoints";
+import { baseUrl } from "../../../..";
 import SwitchSelector from "../../../../components/SwitchSelector";
 import { useNavigate } from "react-router";
 import { useNotification } from "../../../../contexts/NotificationContext";
+import { registerEndpointPath, signInEndpointPath } from "rating-tracker-commons";
 
 /**
  * This component renders the login page.
@@ -79,14 +80,14 @@ const LoginApp = (): JSX.Element => {
         if (validateEmail() && validateName()) {
           try {
             // Request registration challenge
-            const res = await axios.get(baseUrl + authAPI + registerEndpoint, {
+            const res = await axios.get(baseUrl + registerEndpointPath, {
               params: { email, name },
             });
             // Ask the browser to perform the WebAuthn registration and store a corresponding credential
             const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
             try {
               // Send the registration challenge response to the server
-              await axios.post(baseUrl + authAPI + registerEndpoint, authRes, {
+              await axios.post(baseUrl + registerEndpointPath, authRes, {
                 params: { email, name },
                 headers: { "Content-Type": "application/json" },
               });
@@ -109,13 +110,13 @@ const LoginApp = (): JSX.Element => {
       case "signIn":
         try {
           // Request authentication challenge
-          const res = await axios.get(baseUrl + authAPI + signInEndpoint);
+          const res = await axios.get(baseUrl + signInEndpointPath);
           // Ask the browser to perform the WebAuthn authentication
           const authRes = await SimpleWebAuthnBrowser.startAuthentication(res.data);
           try {
             // Send the authentication challenge response to the server
             await axios.post(
-              baseUrl + authAPI + signInEndpoint,
+              baseUrl + signInEndpointPath,
               { ...authRes, challenge: res.data.challenge },
               { headers: { "Content-Type": "application/json" } }
             );

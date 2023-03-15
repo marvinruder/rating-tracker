@@ -19,6 +19,15 @@ export * from "./lib/models/session.js";
 export * from "./lib/models/stock.js";
 export * from "./lib/models/user.js";
 
+export * from "./lib/paths/auth.js";
+export * from "./lib/paths/fetch.js";
+export * from "./lib/paths/resource.js";
+export * from "./lib/paths/session.js";
+export * from "./lib/paths/status.js";
+export * from "./lib/paths/stock.js";
+export * from "./lib/paths/user.js";
+export * from "./lib/paths/userManagement.js";
+
 export * from "./lib/ratings/MSCI.js";
 export type { MSCIESGRating } from "./lib/ratings/MSCI.js";
 

@@ -20,18 +20,22 @@ import AddLinkIcon from "@mui/icons-material/AddLink";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import LinkIcon from "@mui/icons-material/Link";
 import axios from "axios";
+import { baseUrl } from "../..";
 import {
-  baseUrl,
-  fetchAPI,
-  marketScreenerEndpoint,
-  morningstarEndpoint,
-  msciEndpoint,
-  refinitivEndpoint,
-  spEndpoint,
-  stockAPI,
-  sustainalyticsEndpoint,
-} from "../../endpoints";
-import { countryArray, countryName, countryNameWithFlag, isCountry, Stock } from "rating-tracker-commons";
+  countryArray,
+  countryName,
+  countryNameWithFlag,
+  fetchMarketScreenerEndpointPath,
+  fetchMorningstarEndpointPath,
+  fetchMSCIEndpointPath,
+  fetchRefinitivEndpointPath,
+  fetchSPEndpointPath,
+  fetchSustainalyticsEndpointPath,
+  isCountry,
+  optionalStockValuesNull,
+  Stock,
+  stockEndpointPath,
+} from "rating-tracker-commons";
 import { useState } from "react";
 import { useNotification } from "../../contexts/NotificationContext";
 import StockDetails from "../StockDetails";
@@ -46,6 +50,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const [activeStep, setActiveStep] = useState<number>(0); // The dialog step to show.
   const [stock, setStock] = useState<Stock>(
     new Stock({
+      ...optionalStockValuesNull,
       ticker: "",
       name: "",
       isin: "",
@@ -112,7 +117,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
     setRequestInProgress(true);
     const { name, isin, country } = stock;
     axios
-      .put(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+      .put(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { name, isin, country },
       })
       .then(() => {
@@ -137,7 +142,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockmorningstarID = () => {
     setmorningstarIDRequestInProgress(true);
     axios
-      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+      .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { morningstarID: stock.morningstarID },
       })
       .then(() => {
@@ -145,7 +150,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.morningstarID) {
           // If a Morningstar ID was set, we fetch data from Morningstar using the new ID.
           axios
-            .get(baseUrl + fetchAPI + morningstarEndpoint, {
+            .get(baseUrl + fetchMorningstarEndpointPath, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -183,7 +188,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockMarketScreenerId = () => {
     setMarketScreenerIdRequestInProgress(true);
     axios
-      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+      .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { marketScreenerID: stock.marketScreenerID },
       })
       .then(() => {
@@ -191,7 +196,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.marketScreenerID) {
           // If a Market Screener ID was set, we fetch data from Market Screener using the new ID.
           axios
-            .get(baseUrl + fetchAPI + marketScreenerEndpoint, {
+            .get(baseUrl + fetchMarketScreenerEndpointPath, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -229,7 +234,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockmsciID = () => {
     setmsciIDRequestInProgress(true);
     axios
-      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+      .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { msciID: stock.msciID },
       })
       .then(() => {
@@ -237,7 +242,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.msciID) {
           // If an MSCI ID was set, we fetch data from MSCI using the new ID.
           axios
-            .get(baseUrl + fetchAPI + msciEndpoint, {
+            .get(baseUrl + fetchMSCIEndpointPath, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -275,7 +280,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockRic = () => {
     setRicRequestInProgress(true);
     axios
-      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+      .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { ric: stock.ric },
       })
       .then(() => {
@@ -283,7 +288,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.ric) {
           // If a RIC was set, we fetch data from Refinitiv using the new RIC.
           axios
-            .get(baseUrl + fetchAPI + refinitivEndpoint, {
+            .get(baseUrl + fetchRefinitivEndpointPath, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -321,7 +326,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockSpId = () => {
     setSpIdRequestInProgress(true);
     axios
-      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+      .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { spID: stock.spID },
       })
       .then(() => {
@@ -329,7 +334,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.spID) {
           // If an S&P ID was set, we fetch data from S&P using the new ID.
           axios
-            .get(baseUrl + fetchAPI + spEndpoint, {
+            .get(baseUrl + fetchSPEndpointPath, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -379,7 +384,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockSustainalyticsId = () => {
     setSustainalyticsIdRequestInProgress(true);
     axios
-      .patch(baseUrl + stockAPI + `/${stock.ticker}`, undefined, {
+      .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { sustainalyticsID: stock.sustainalyticsID },
       })
       .then(() => {
@@ -387,7 +392,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.sustainalyticsID) {
           // If a Sustainalytics ID was set, we fetch data from Sustainalytics using the new ID.
           axios
-            .get(baseUrl + fetchAPI + sustainalyticsEndpoint, {
+            .get(baseUrl + fetchSustainalyticsEndpointPath, {
               params: { ticker: stock.ticker },
             })
             .then(() => {})
@@ -425,7 +430,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const getAndShowStock = () => {
     setRequestInProgress(true);
     axios
-      .get(baseUrl + stockAPI + `/${stock.ticker}`)
+      .get(baseUrl + stockEndpointPath + `/${stock.ticker}`)
       .then((res) => {
         setStock(new Stock(res.data));
         handleNext();

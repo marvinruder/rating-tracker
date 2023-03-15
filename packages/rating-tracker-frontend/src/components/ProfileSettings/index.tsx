@@ -21,7 +21,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../router";
-import { baseUrl, userAPI } from "../../endpoints";
+import { baseUrl } from "../..";
 import { useNotification } from "../../contexts/NotificationContext";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
@@ -30,6 +30,7 @@ import {
   messageTypeName,
   REGEX_PHONE_NUMBER,
   subscriptionOfMessageType,
+  userEndpointPath,
 } from "rating-tracker-commons";
 import { convertAvatar } from "../../utils/imageManipulation";
 
@@ -108,7 +109,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
       setRequestInProgress(true);
       axios
         .patch(
-          baseUrl + userAPI,
+          baseUrl + userEndpointPath,
           avatar !== user.avatar
             ? {
                 avatar, // Include payload with avatar only if it has changed.

@@ -1,93 +1,70 @@
-import { Router } from "express";
-import AuthRouter from "./auth/AuthRouter.js";
-import FetchRouter from "./fetch/FetchRouter.js";
-import ResourceRouter from "./resource/ResourceRouter.js";
-import StockRouter from "./stock/StockRouter.js";
-import UserManagementRouter from "./userManagement/UserManagementRouter.js";
-import UserRouter from "./user/UserRouter.js";
-import SessionRouter from "./session/SessionRouter.js";
+import { NextFunction, Request, Response, Router as expressRouter } from "express";
+import APIError from "../utils/apiError.js";
+export const router = expressRouter();
+import rateLimit from "express-rate-limit";
 
 /**
- * Router for all public routes.
+ * Rate limiter in use by authentication routes.
  */
-class PublicRouter {
-  private _router = Router();
-  private _subrouterAuth = AuthRouter;
+const rateLimiter = rateLimit({ windowMs: 1000 * 60, max: 60 });
 
+/**
+ * The options for a router.
+ */
+interface RouterOptions {
   /**
-   * Get the router for all public routes.
-   *
-   * @returns {Router} The router for all public routes.
+   * The path of the API endpoint.
    */
-  get router() {
-    return this._router;
-  }
-
+  path: string;
   /**
-   * Creates a new public router.
+   * The HTTP method.
    */
-  constructor() {
-    this._configure();
-  }
-
+  method: "get" | "head" | "post" | "put" | "patch" | "delete";
   /**
-   * Connect routes to their matching subrouters.
+   * The required access rights, encoded as a bitfield.
    */
-  private _configure() {
-    this._router.use("/auth", this._subrouterAuth);
-    this._router.get("/status", (_, res) => {
-      // The trivial status route is implemented directly in the router.
-      return res.status(200).json({ status: "operational" });
-    });
-  }
+  accessRights: number;
+  /**
+   * Whether the rate limiter shall protect this route.
+   */
+  rateLimited?: boolean;
 }
 
 /**
- * Router for all private routes. Requests arriving here have already been verified to originate from an authenticated
- * user.
+ * A router decorator. Allows for decorating controller methods with routing information.
+ *
+ * @param {RouterOptions} options The router options.
+ * @returns {void}
  */
-class PrivateRouter {
-  private _router = Router();
-  private _subrouterFetch = FetchRouter;
-  private _subrouterStock = StockRouter;
-  private _subrouterResource = ResourceRouter;
-  private _subrouterUserManagement = UserManagementRouter;
-  private _subrouterUser = UserRouter;
-  private _subrouterSession = SessionRouter;
-
-  /**
-   * Get the router for all private routes.
-   *
-   * @returns {Router} The router for all private routes.
-   */
-  get router() {
-    return this._router;
-  }
-
-  /**
-   * Creates a new private router.
-   */
-  constructor() {
-    this._configure();
-  }
-
-  /**
-   * Connect routes to their matching routers.
-   */
-  private _configure() {
-    this._router.use("/fetch", this._subrouterFetch);
-    this._router.use("/stock", this._subrouterStock);
-    this._router.use("/resource", this._subrouterResource);
-    this._router.use("/user", this._subrouterUser);
-    this._router.use("/userManagement", this._subrouterUserManagement);
-    this._router.use("/session", this._subrouterSession);
-  }
-}
-
-/**
- * An object containing two routers for both public and private routes.
- */
-export default {
-  public: new PublicRouter().router,
-  private: new PrivateRouter().router,
+const Router = (options: RouterOptions) => {
+  return (target: any, propertyKey: string) => {
+    const controller = target[propertyKey];
+    const controllerWithAccessRightCheck = async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        if (
+          !options.accessRights || // Public Routes do not require an access right check
+          // Check if the user is authenticated and has the required access rights for the endpoint
+          res.locals.user?.hasAccessRight(options.accessRights) ||
+          res.locals.userIsCron // Allow Cron jobs to access all endpoints
+        ) {
+          await controller(req, res);
+        } else {
+          throw new APIError(
+            // Use the correct error code and message based on whether a user is authenticated.
+            res.locals.user ? 403 : 401,
+            res.locals.user
+              ? "The authenticated user account does not have the rights necessary to access this endpoint."
+              : "This endpoint is available to authenticated clients only. Please sign in."
+          );
+        }
+      } catch (err) {
+        next(err);
+      }
+    };
+    options.rateLimited
+      ? router[options.method](options.path, rateLimiter, controllerWithAccessRightCheck)
+      : router[options.method](options.path, controllerWithAccessRightCheck);
+  };
 };
+
+export default Router;

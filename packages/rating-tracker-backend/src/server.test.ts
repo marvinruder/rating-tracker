@@ -8,7 +8,22 @@ dotenv.config({
   path: "test/.env",
 });
 
-import { sortableAttributeArray, Stock, User, UserWithCredentials } from "rating-tracker-commons";
+import {
+  registerEndpointPath,
+  resourceEndpointPath,
+  sessionEndpointPath,
+  signInEndpointPath,
+  sortableAttributeArray,
+  statusEndpointPath,
+  Stock,
+  stockEndpointPath,
+  stockListEndpointPath,
+  stockLogoEndpointPath,
+  User,
+  userEndpointPath,
+  userManagementEndpointPath,
+  UserWithCredentials,
+} from "rating-tracker-commons";
 import supertest, { CallbackHandler, Test } from "supertest";
 import applyPostgresSeeds from "../test/seeds/postgres";
 import applyRedisSeeds from "../test/seeds/redis";
@@ -30,7 +45,9 @@ afterAll(() => {
 });
 
 const expectStockListLengthToBe = async (length: number) => {
-  const res = await requestWithSupertest.get("/api/stock/list").set("Cookie", ["authToken=exampleSessionID"]);
+  const res = await requestWithSupertest
+    .get(`/api${stockListEndpointPath}`)
+    .set("Cookie", ["authToken=exampleSessionID"]);
   expect(res.status).toBe(200);
   expect(res.body.count).toBe(length);
   expect(res.body.stocks).toHaveLength(length);
@@ -51,38 +68,48 @@ const expectSpecialAccessRightsToBeRequired = async (
   method = method ?? requestWithSupertest.get;
   const res = await method(route).set("Cookie", ["authToken=anotherExampleSessionID"]);
   expect(res.status).toBe(403);
-  expect(res.body.message).toMatch("This user account does not have the necessary access rights");
+  expect(res.body.message).toMatch(
+    "The authenticated user account does not have the rights necessary to access this endpoint"
+  );
 };
 
 describe("Session API", () => {
   it("renews cookie when token is valid", async () => {
-    const res = await requestWithSupertest.head("/api/session").set("Cookie", ["authToken=exampleSessionID"]);
+    const res = await requestWithSupertest
+      .head(`/api${sessionEndpointPath}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
     expect(res.header["set-cookie"][0]).toMatch("authToken=exampleSessionID;");
     expect(res.header["set-cookie"][0]).toMatch("HttpOnly; Secure; SameSite=Strict");
   });
 
   it("clears cookie when token is invalid", async () => {
-    const res = await requestWithSupertest.head("/api/session").set("Cookie", ["authToken=invalidSessionID"]);
+    const res = await requestWithSupertest
+      .head(`/api${sessionEndpointPath}`)
+      .set("Cookie", ["authToken=invalidSessionID"]);
     expect(res.status).toBe(401);
     expect(res.header["set-cookie"][0]).toMatch("authToken=;");
   });
 
   it("deletes session when signing out", async () => {
-    let res = await requestWithSupertest.delete("/api/session").set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await requestWithSupertest
+      .delete(`/api${sessionEndpointPath}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
     expect(res.header["set-cookie"][1]).toMatch("authToken=;");
 
     // Check whether we can still access the current user
-    res = await requestWithSupertest.get("/api/user").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest.get(`/api${userEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(401);
   });
 });
 
 describe("Stock API", () => {
   it("returns a list of stocks", async () => {
-    await expectRouteToBePrivate("/api/stock/list");
-    const res = await requestWithSupertest.get("/api/stock/list").set("Cookie", ["authToken=exampleSessionID"]);
+    await expectRouteToBePrivate(`/api${stockListEndpointPath}`);
+    const res = await requestWithSupertest
+      .get(`/api${stockListEndpointPath}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(11);
     expect(res.body.stocks).toHaveLength(11);
@@ -91,7 +118,7 @@ describe("Stock API", () => {
 
   it("filters and sorts stock list", async () => {
     let res = await requestWithSupertest
-      .get("/api/stock/list?size=Large&style=Growth&sortBy=name&sortDesc=true")
+      .get(`/api${stockListEndpointPath}?size=Large&style=Growth&sortBy=name&sortDesc=true`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(5);
@@ -103,7 +130,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[4].name).toMatch("Apple");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?country=US&sortBy=size")
+      .get(`/api${stockListEndpointPath}?country=US&sortBy=size`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(2);
@@ -112,7 +139,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[1].name).toMatch("Apple");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?country=US&sortBy=style&sortDesc=true")
+      .get(`/api${stockListEndpointPath}?country=US&sortBy=style&sortDesc=true`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(2);
@@ -121,7 +148,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[1].name).toMatch("Newmont");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?industry=Semiconductors&name=Semiconductor")
+      .get(`/api${stockListEndpointPath}?industry=Semiconductors&name=Semiconductor`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(1);
@@ -129,7 +156,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[0].ticker).toMatch("TSM");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?starRatingMin=3&starRatingMax=4&sortBy=name")
+      .get(`/api${stockListEndpointPath}?starRatingMin=3&starRatingMax=4&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(5);
@@ -141,7 +168,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[4].name).toMatch("MercadoLibre");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?dividendYieldPercentMin=1.5&dividendYieldPercentMax=5&sortBy=name")
+      .get(`/api${stockListEndpointPath}?dividendYieldPercentMin=1.5&dividendYieldPercentMax=5&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(5);
@@ -153,7 +180,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[4].name).toMatch("Taiwan Semiconductor");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?priceEarningRatioMin=10&priceEarningRatioMax=20&sortBy=name")
+      .get(`/api${stockListEndpointPath}?priceEarningRatioMin=10&priceEarningRatioMax=20&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(4);
@@ -164,7 +191,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[3].name).toMatch("Taiwan Semiconductor");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name")
+      .get(`/api${stockListEndpointPath}?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(7);
@@ -179,7 +206,7 @@ describe("Stock API", () => {
 
     res = await requestWithSupertest
       .get(
-        "/api/stock/list?analystConsensusMin=7&analystConsensusMax=8.5" +
+        `/api${stockListEndpointPath}?analystConsensusMin=7&analystConsensusMax=8.5` +
           "&analystCountMin=20&analystCountMax=40&sortBy=name"
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
@@ -192,7 +219,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[3].name).toMatch("Ørsted");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?analystTargetDiffMin=-20&analystTargetDiffMax=10&sortBy=name")
+      .get(`/api${stockListEndpointPath}?analystTargetDiffMin=-20&analystTargetDiffMax=10&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(5);
@@ -204,7 +231,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[4].name).toMatch("Novo Nordisk");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?msciESGRatingMin=AA&msciESGRatingMax=A&sortBy=name")
+      .get(`/api${stockListEndpointPath}?msciESGRatingMin=AA&msciESGRatingMax=A&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(3);
@@ -214,7 +241,9 @@ describe("Stock API", () => {
     expect(res.body.stocks[2].name).toMatch("Newmont");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name")
+      .get(
+        `/api${stockListEndpointPath}?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name`
+      )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(3);
@@ -225,7 +254,7 @@ describe("Stock API", () => {
 
     res = await requestWithSupertest
       .get(
-        "/api/stock/list?refinitivESGScoreMin=70&refinitivESGScoreMax=80&" +
+        `/api${stockListEndpointPath}?refinitivESGScoreMin=70&refinitivESGScoreMax=80&` +
           "refinitivEmissionsMin=80&refinitivEmissionsMax=90&sortBy=name"
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
@@ -236,7 +265,7 @@ describe("Stock API", () => {
 
     res = await requestWithSupertest
       .get(
-        "/api/stock/list?spESGScoreMin=50&spESGScoreMax=85" +
+        `/api${stockListEndpointPath}?spESGScoreMin=50&spESGScoreMax=85` +
           "&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name"
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
@@ -247,7 +276,10 @@ describe("Stock API", () => {
     expect(res.body.stocks[1].name).toMatch("Novo Nordisk");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?financialScoreMin=0&financialScoreMax=50&esgScoreMin=40&esgScoreMax=60&sortBy=name")
+      .get(
+        `/api${stockListEndpointPath}?financialScoreMin=0&financialScoreMax=50&esgScoreMin=40&esgScoreMax=60` +
+          "&sortBy=name"
+      )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(2);
@@ -256,7 +288,7 @@ describe("Stock API", () => {
     expect(res.body.stocks[1].name).toMatch("Newmont");
 
     res = await requestWithSupertest
-      .get("/api/stock/list?totalScoreMin=40&totalScoreMax=60&sortBy=name")
+      .get(`/api${stockListEndpointPath}?totalScoreMin=40&totalScoreMax=60&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(3);
@@ -267,7 +299,7 @@ describe("Stock API", () => {
 
     for await (const sortCriterion of sortableAttributeArray) {
       res = await requestWithSupertest
-        .get(`/api/stock/list?sortBy=${sortCriterion}`)
+        .get(`/api${stockListEndpointPath}?sortBy=${sortCriterion}`)
         .set("Cookie", ["authToken=exampleSessionID"]);
       expect(res.status).toBe(200);
       if (["morningstarFairValue", "analystTargetPrice"].includes(sortCriterion)) {
@@ -332,13 +364,13 @@ describe("Stock API", () => {
 
   it("supports pagination", async () => {
     const resAllStocks = await requestWithSupertest
-      .get("/api/stock/list")
+      .get(`/api${stockListEndpointPath}`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(resAllStocks.status).toBe(200);
     expect(resAllStocks.body.count).toBe(11);
     expect(resAllStocks.body.stocks).toHaveLength(11);
     const resPagination = await requestWithSupertest
-      .get("/api/stock/list?offset=5&count=5")
+      .get(`/api${stockListEndpointPath}?offset=5&count=5`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(resPagination.body.stocks[0].name).toBe(resAllStocks.body.stocks[5].name);
     expect(resPagination.body.stocks[4].name).toBe(resAllStocks.body.stocks[9].name);
@@ -346,9 +378,9 @@ describe("Stock API", () => {
   });
 
   it("provides stock logos", async () => {
-    await expectRouteToBePrivate("/api/stock/logo/exampleAAPL");
+    await expectRouteToBePrivate(`/api${stockLogoEndpointPath}/exampleAAPL`);
     let res = await requestWithSupertest
-      .get("/api/stock/logo/exampleAAPL")
+      .get(`/api${stockLogoEndpointPath}/exampleAAPL`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
@@ -357,7 +389,9 @@ describe("Stock API", () => {
     );
 
     // attempting to read the logo of a stock for which no logo exists returns an empty SVG file
-    res = await requestWithSupertest.get("/api/stock/logo/exampleNULL").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest
+      .get(`/api${stockLogoEndpointPath}/exampleNULL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
     expect(res.body.toString()).toMatch(
@@ -365,26 +399,28 @@ describe("Stock API", () => {
     );
 
     // attempting to read a non-existent stock’s logo results in an error
-    res = await requestWithSupertest.get("/api/stock/logo/doesNotExist").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest
+      .get(`/api${stockLogoEndpointPath}/doesNotExist`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });
 
   it("creates a stock", async () => {
     await expectRouteToBePrivate(
-      "/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321",
+      `/api${stockEndpointPath}/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321`,
       requestWithSupertest.put
     );
     await expectSpecialAccessRightsToBeRequired(
-      "/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321",
+      `/api${stockEndpointPath}/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321`,
       requestWithSupertest.put
     );
     let res = await requestWithSupertest
-      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321")
+      .put(`/api${stockEndpointPath}/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(201);
     await expectStockListLengthToBe(12);
     res = await requestWithSupertest
-      .get("/api/stock/list?name=New%20Stock")
+      .get(`/api${stockListEndpointPath}?name=New%20Stock`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.body.stocks).toHaveLength(1);
     expect(res.body.stocks[0].ticker).toBe("NEWSTOCK");
@@ -393,15 +429,17 @@ describe("Stock API", () => {
 
     // attempting to create the same stock again results in an error
     res = await requestWithSupertest
-      .put("/api/stock/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321")
+      .put(`/api${stockEndpointPath}/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(409);
     await expectStockListLengthToBe(12);
   });
 
   it("reads a stock", async () => {
-    await expectRouteToBePrivate("/api/stock/exampleAAPL");
-    let res = await requestWithSupertest.get("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
+    await expectRouteToBePrivate(`/api${stockEndpointPath}/exampleAAPL`);
+    let res = await requestWithSupertest
+      .get(`/api${stockEndpointPath}/exampleAAPL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
 
@@ -409,63 +447,77 @@ describe("Stock API", () => {
     // receive a Not Modified response indicating that the response is identical to the one cached by the client.
     const eTag = res.header.etag;
     res = await requestWithSupertest
-      .get("/api/stock/exampleAAPL")
+      .get(`/api${stockEndpointPath}/exampleAAPL`)
       .set("Cookie", ["authToken=exampleSessionID"])
       .set("If-None-Match", eTag);
     expect(res.status).toBe(304);
 
     // attempting to read a non-existent stock results in an error
-    res = await requestWithSupertest.get("/api/stock/doesNotExist").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest
+      .get(`/api${stockEndpointPath}/doesNotExist`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });
 
   it("updates a stock", async () => {
-    await expectRouteToBePrivate("/api/stock/exampleAAPL", requestWithSupertest.patch);
-    await expectSpecialAccessRightsToBeRequired("/api/stock/exampleAAPL", requestWithSupertest.patch);
+    await expectRouteToBePrivate(`/api${stockEndpointPath}/exampleAAPL`, requestWithSupertest.patch);
+    await expectSpecialAccessRightsToBeRequired(`/api${stockEndpointPath}/exampleAAPL`, requestWithSupertest.patch);
     let res = await requestWithSupertest
-      .patch("/api/stock/exampleAAPL?morningstarID=0P012345678&name=Apple%20Inc")
+      .patch(`/api${stockEndpointPath}/exampleAAPL?morningstarID=0P012345678&name=Apple%20Inc`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await requestWithSupertest.get("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest
+      .get(`/api${stockEndpointPath}/exampleAAPL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toEqual("0P012345678");
 
     // sending an update with the same information results in no changes
     res = await requestWithSupertest
-      .patch("/api/stock/exampleAAPL?morningstarID=0P012345678")
+      .patch(`/api${stockEndpointPath}/exampleAAPL?morningstarID=0P012345678`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await requestWithSupertest.get("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest
+      .get(`/api${stockEndpointPath}/exampleAAPL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toEqual("0P012345678");
 
     // sending an update without anything results in no changes
-    res = await requestWithSupertest.patch("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest
+      .patch(`/api${stockEndpointPath}/exampleAAPL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await requestWithSupertest.get("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest
+      .get(`/api${stockEndpointPath}/exampleAAPL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toEqual("0P012345678");
 
     // attempting to update a non-existent stock results in an error
     res = await requestWithSupertest
-      .patch("/api/stock/doesNotExist?morningstarID=0P123456789")
+      .patch(`/api${stockEndpointPath}/doesNotExist?morningstarID=0P123456789`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });
 
   it("deletes a stock", async () => {
-    await expectRouteToBePrivate("/api/stock/exampleAAPL", requestWithSupertest.delete);
-    await expectSpecialAccessRightsToBeRequired("/api/stock/exampleAAPL", requestWithSupertest.delete);
-    let res = await requestWithSupertest.delete("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
+    await expectRouteToBePrivate(`/api${stockEndpointPath}/exampleAAPL`, requestWithSupertest.delete);
+    await expectSpecialAccessRightsToBeRequired(`/api${stockEndpointPath}/exampleAAPL`, requestWithSupertest.delete);
+    let res = await requestWithSupertest
+      .delete(`/api${stockEndpointPath}/exampleAAPL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
     res = await expectStockListLengthToBe(10);
     expect((res.body.stocks as Stock[]).find((stock) => stock.ticker === "exampleAAPL")).toBeUndefined();
 
     // attempting to delete a non-existent stock returns an error
-    res = await requestWithSupertest.delete("/api/stock/exampleAAPL").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest
+      .delete(`/api${stockEndpointPath}/exampleAAPL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Stock exampleAAPL not found.");
   });
@@ -473,7 +525,7 @@ describe("Stock API", () => {
 
 describe("Status API", () => {
   it("returns status “operational”", async () => {
-    const res = await requestWithSupertest.get("/api/status");
+    const res = await requestWithSupertest.get(`/api${statusEndpointPath}`);
     expect(res.status).toBe(200);
     expect(res.body.status).toBe("operational");
   });
@@ -489,7 +541,7 @@ describe("Swagger API", () => {
 describe("Authentication API", () => {
   it("registers and authenticates a new user", async () => {
     // Get Registration Challenge
-    let res = await requestWithSupertest.get("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe");
+    let res = await requestWithSupertest.get(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`);
     expect(res.status).toBe(200);
     expect(typeof res.body.challenge).toBe("string");
     expect(typeof res.body.timeout).toBe("number");
@@ -515,41 +567,47 @@ describe("Authentication API", () => {
     } as unknown;
 
     // Post Registration Response
-    res = await requestWithSupertest.post("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe").send({
-      response,
-    });
+    res = await requestWithSupertest
+      .post(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`)
+      .send({ response });
     expect(res.status).toBe(500); // Internal Server Error
     expect(res.body.message).toMatch("Missing credential ID");
 
-    res = await requestWithSupertest.post("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe").send({
-      id: "ID",
-      response: {
-        clientDataJSON: Buffer.from(
-          JSON.stringify({
-            type: "webauthn.create",
-            challenge: "Wrong challenge", // Oh no!
-            origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
-          })
-        ).toString("base64"),
-      },
-    });
+    res = await requestWithSupertest
+      .post(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`)
+      .send({
+        id: "ID",
+        response: {
+          clientDataJSON: Buffer.from(
+            JSON.stringify({
+              type: "webauthn.create",
+              challenge: "Wrong challenge", // Oh no!
+              origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+            })
+          ).toString("base64"),
+        },
+      });
     expect(res.status).toBe(400); // Bad Request
     expect(res.body.message).toMatch("Registration failed");
 
-    res = await requestWithSupertest.post("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe").send({
-      id: "ID",
-      response,
-    });
+    res = await requestWithSupertest
+      .post(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`)
+      .send({
+        id: "ID",
+        response,
+      });
     expect(res.status).toBe(201); // Successful registration
 
-    res = await requestWithSupertest.post("/api/auth/register?email=jim.doe%40example.com&name=Jim%20Doe").send({
-      id: "ID",
-      response,
-    });
+    res = await requestWithSupertest
+      .post(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`)
+      .send({
+        id: "ID",
+        response,
+      });
     expect(res.status).toBe(403); // Hey, we have done that already!
 
     // Get Authentication Challenge
-    res = await requestWithSupertest.get("/api/auth/signIn");
+    res = await requestWithSupertest.get(`/api${signInEndpointPath}`);
     expect(res.status).toBe(200);
     expect(typeof res.body.challenge).toBe("string");
     expect(typeof res.body.timeout).toBe("number");
@@ -569,7 +627,7 @@ describe("Authentication API", () => {
     };
 
     // Post Registration Response
-    res = await requestWithSupertest.post("/api/auth/signIn").send({
+    res = await requestWithSupertest.post(`/api${signInEndpointPath}`).send({
       challenge,
       response,
     });
@@ -577,7 +635,7 @@ describe("Authentication API", () => {
     expect(res.body.message).toMatch("Missing credential ID");
     expect(res.headers["set-cookie"]).toBeUndefined(); // no session cookie yet
 
-    res = await requestWithSupertest.post("/api/auth/signIn").send({
+    res = await requestWithSupertest.post(`/api${signInEndpointPath}`).send({
       id: "ID",
       challenge: "Wrong challenge", // Oh no!
       response,
@@ -586,7 +644,7 @@ describe("Authentication API", () => {
     expect(res.body.message).toMatch("Authentication failed");
     expect(res.headers["set-cookie"]).toBeUndefined(); // no session cookie yet
 
-    res = await requestWithSupertest.post("/api/auth/signIn").send({
+    res = await requestWithSupertest.post(`/api${signInEndpointPath}`).send({
       id: "ID",
       challenge,
       response,
@@ -597,10 +655,10 @@ describe("Authentication API", () => {
 
     // Activate user account
     await requestWithSupertest
-      .patch("/api/userManagement/jim.doe%40example.com" + "?accessRights=1")
+      .patch(`/api${userManagementEndpointPath}/jim.doe%40example.com?accessRights=1`)
       .set("Cookie", ["authToken=exampleSessionID"]);
 
-    res = await requestWithSupertest.post("/api/auth/signIn").send({
+    res = await requestWithSupertest.post(`/api${signInEndpointPath}`).send({
       id: "ID",
       challenge,
       response,
@@ -609,7 +667,7 @@ describe("Authentication API", () => {
 
     // Check that session cookie works
     const authTokenCookieHeader = res.headers["set-cookie"][0].split(";")[0];
-    res = await requestWithSupertest.get("/api/user").set("Cookie", [authTokenCookieHeader]);
+    res = await requestWithSupertest.get(`/api${userEndpointPath}`).set("Cookie", [authTokenCookieHeader]);
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("jim.doe@example.com");
     expect(res.body.name).toBe("Jim Doe");
@@ -617,18 +675,20 @@ describe("Authentication API", () => {
   });
 
   it("rejects a registration challenge request from an existing user", async () => {
-    const res = await requestWithSupertest.get("/api/auth/register?email=jane.doe%40example.com&name=Jane%20Doe");
+    const res = await requestWithSupertest.get(
+      `/api${registerEndpointPath}?email=jane.doe%40example.com&name=Jane%20Doe`
+    );
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("This email address is already registered. Please sign in.");
   });
 
   it("rejects a registration challenge request from an unknown user", async () => {
-    const res = await requestWithSupertest.get("/api/auth/register?email=notAnEmailAddress&name=John%20Doe");
+    const res = await requestWithSupertest.get(`/api${registerEndpointPath}?email=notAnEmailAddress&name=John%20Doe`);
     expect(res.status).toBe(400);
   });
 
   it("rejects a registration challenge request from an invalid user", async () => {
-    const res = await requestWithSupertest.get("/api/auth/register");
+    const res = await requestWithSupertest.get(`/api${registerEndpointPath}`);
     expect(res.status).toBe(400);
   });
 
@@ -636,33 +696,37 @@ describe("Authentication API", () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for await (const _ of [...Array(60)]) {
       // Request 60 authentication challenges
-      await requestWithSupertest.get("/api/auth/signIn");
+      await requestWithSupertest.get(`/api${signInEndpointPath}`);
     }
     // Those were too many. The rate limiter should now refuse to provide more.
-    const res = await requestWithSupertest.get("/api/auth/signIn");
+    const res = await requestWithSupertest.get(`/api${signInEndpointPath}`);
     expect(res.status).toBe(429);
   });
 });
 
 describe("Resource API", () => {
   it("provides a resource", async () => {
-    await expectRouteToBePrivate("/api/resource/image.png");
-    const res = await requestWithSupertest.get("/api/resource/image.png").set("Cookie", ["authToken=exampleSessionID"]);
+    await expectRouteToBePrivate(`/api${resourceEndpointPath}/image.png`);
+    const res = await requestWithSupertest
+      .get(`/api${resourceEndpointPath}/image.png`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.toString()).toMatch("Sample PNG image");
   });
 
   it("does not provide resources of unknown type", async () => {
-    await expectRouteToBePrivate("/api/resource/odd.exe");
-    const res = await requestWithSupertest.get("/api/resource/odd.exe").set("Cookie", ["authToken=exampleSessionID"]);
+    await expectRouteToBePrivate(`/api${resourceEndpointPath}/odd.exe`);
+    const res = await requestWithSupertest
+      .get(`/api${resourceEndpointPath}/odd.exe`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(501);
     expect(res.body.message).toMatch("Resources of this type cannot be fetched using this API endpoint");
   });
 
   it("fails to provide not-existent resource", async () => {
-    await expectRouteToBePrivate("/api/resource/doesNotExist.png");
+    await expectRouteToBePrivate(`/api${resourceEndpointPath}/doesNotExist.png`);
     const res = await requestWithSupertest
-      .get("/api/resource/doesNotExist.png")
+      .get(`/api${resourceEndpointPath}/doesNotExist.png`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("not found");
@@ -671,8 +735,8 @@ describe("Resource API", () => {
 
 describe("User API", () => {
   it("provides current user’s information", async () => {
-    await expectRouteToBePrivate("/api/user");
-    const res = await requestWithSupertest.get("/api/user").set("Cookie", ["authToken=exampleSessionID"]);
+    await expectRouteToBePrivate(`/api${userEndpointPath}`);
+    const res = await requestWithSupertest.get(`/api${userEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("jane.doe@example.com");
     expect(res.body.name).toBe("Jane Doe");
@@ -685,26 +749,26 @@ describe("User API", () => {
   });
 
   it("validates the phone number", async () => {
-    await expectRouteToBePrivate("/api/user", requestWithSupertest.patch);
+    await expectRouteToBePrivate(`/api${userEndpointPath}`, requestWithSupertest.patch);
     let res = await requestWithSupertest
-      .patch("/api/user?phone=987654321")
+      .patch(`/api${userEndpointPath}?phone=987654321`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
     res = await requestWithSupertest
-      .patch("/api/user?phone=+1%20234%20567%2D8900")
+      .patch(`/api${userEndpointPath}?phone=+1%20234%20567%2D8900`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
 
     // Check that no changes were applied
-    res = await requestWithSupertest.get("/api/user").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest.get(`/api${userEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.phone).toBe("+123456789");
   });
 
   it("updates current user’s information", async () => {
-    await expectRouteToBePrivate("/api/user", requestWithSupertest.patch);
+    await expectRouteToBePrivate(`/api${userEndpointPath}`, requestWithSupertest.patch);
     let res = await requestWithSupertest
-      .patch("/api/user?name=Jane%20Doe%20II%2E&phone=%2B987654321")
+      .patch(`/api${userEndpointPath}?name=Jane%20Doe%20II%2E&phone=%2B987654321`)
       .send({
         avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
       })
@@ -712,7 +776,7 @@ describe("User API", () => {
     expect(res.status).toBe(204);
 
     // Check that the changes were applied
-    res = await requestWithSupertest.get("/api/user").set("Cookie", ["authToken=exampleSessionID"]);
+    res = await requestWithSupertest.get(`/api${userEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("jane.doe@example.com");
     expect(res.body.name).toBe("Jane Doe II.");
@@ -722,27 +786,31 @@ describe("User API", () => {
 
   it("disallows changing own access rights", async () => {
     const res = await requestWithSupertest
-      .patch("/api/user?accessRights=255")
+      .patch(`/api${userEndpointPath}?accessRights=255`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
   });
 
   it("deletes the current user", async () => {
-    await expectRouteToBePrivate("/api/user", requestWithSupertest.delete);
-    let res = await requestWithSupertest.delete("/api/user").set("Cookie", ["authToken=anotherExampleSessionID"]);
+    await expectRouteToBePrivate(`/api${userEndpointPath}`, requestWithSupertest.delete);
+    let res = await requestWithSupertest
+      .delete(`/api${userEndpointPath}`)
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
 
     // Check that the user was deleted
-    res = await requestWithSupertest.head("/api/session").set("Cookie", ["authToken=anotherExampleSessionID"]);
+    res = await requestWithSupertest
+      .head(`/api${sessionEndpointPath}`)
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(401);
   });
 });
 
 describe("User Management API", () => {
   it("returns a list of users", async () => {
-    await expectRouteToBePrivate("/api/userManagement/list");
-    await expectSpecialAccessRightsToBeRequired("/api/userManagement/list");
+    await expectRouteToBePrivate(`/api${userManagementEndpointPath}/list`);
+    await expectSpecialAccessRightsToBeRequired(`/api${userManagementEndpointPath}/list`);
     const res = await requestWithSupertest
-      .get("/api/userManagement/list")
+      .get(`/api${userManagementEndpointPath}/list`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(2);
@@ -755,10 +823,10 @@ describe("User Management API", () => {
   });
 
   it("reads a user", async () => {
-    await expectRouteToBePrivate("/api/userManagement/john.doe%40example.com");
-    await expectSpecialAccessRightsToBeRequired("/api/userManagement/john.doe%40example.com");
+    await expectRouteToBePrivate(`/api${userManagementEndpointPath}/john.doe%40example.com`);
+    await expectSpecialAccessRightsToBeRequired(`/api${userManagementEndpointPath}/john.doe%40example.com`);
     let res = await requestWithSupertest
-      .get("/api/userManagement/john.doe%40example.com")
+      .get(`/api${userManagementEndpointPath}/john.doe%40example.com`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toEqual("John Doe");
@@ -769,20 +837,23 @@ describe("User Management API", () => {
 
     // attempting to read a non-existent user results in an error
     res = await requestWithSupertest
-      .get("/api/userManagement/doesNotExist@example.com")
+      .get(`/api${userManagementEndpointPath}/doesNotExist@example.com`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });
 
   it("updates a user’s information", async () => {
-    await expectRouteToBePrivate("/api/userManagement/john.doe%40example.com", requestWithSupertest.patch);
+    await expectRouteToBePrivate(
+      `/api${userManagementEndpointPath}/john.doe%40example.com`,
+      requestWithSupertest.patch
+    );
     await expectSpecialAccessRightsToBeRequired(
-      "/api/userManagement/john.doe%40example.com",
+      `/api${userManagementEndpointPath}/john.doe%40example.com`,
       requestWithSupertest.patch
     );
     let res = await requestWithSupertest
       .patch(
-        "/api/userManagement/john.doe%40example.com" +
+        `/api${userManagementEndpointPath}/john.doe%40example.com` +
           "?name=John%20Doe%20II%2E&phone=%2B987654321&accessRights=1&subscriptions=0"
       )
       .send({
@@ -793,7 +864,7 @@ describe("User Management API", () => {
 
     // Check that the changes were applied
     res = await requestWithSupertest
-      .get("/api/userManagement/john.doe%40example.com")
+      .get(`/api${userManagementEndpointPath}/john.doe%40example.com`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("john.doe@example.com");
@@ -803,37 +874,40 @@ describe("User Management API", () => {
 
     // Changing nothing is useless, but fine
     res = await requestWithSupertest
-      .patch("/api/userManagement/john.doe%40example.com?subscriptions=0") // we did that before
+      .patch(`/api${userManagementEndpointPath}/john.doe%40example.com?subscriptions=0`) // we did that before
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Changing no one is not fine
     res = await requestWithSupertest
-      .patch("/api/userManagement/noreply%40example.com?subscriptions=0") // we did that before
+      .patch(`/api${userManagementEndpointPath}/noreply%40example.com?subscriptions=0`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });
 
   it("deletes a user", async () => {
-    await expectRouteToBePrivate("/api/userManagement/john.doe%40example.com", requestWithSupertest.delete);
+    await expectRouteToBePrivate(
+      `/api${userManagementEndpointPath}/john.doe%40example.com`,
+      requestWithSupertest.delete
+    );
     await expectSpecialAccessRightsToBeRequired(
-      "/api/userManagement/john.doe%40example.com",
+      `/api${userManagementEndpointPath}/john.doe%40example.com`,
       requestWithSupertest.delete
     );
     let res = await requestWithSupertest
-      .delete("/api/userManagement/john.doe%40example.com")
+      .delete(`/api${userManagementEndpointPath}/john.doe%40example.com`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Check that the user was deleted
     res = await requestWithSupertest
-      .get("/api/userManagement/john.doe%40example.com")
+      .get(`/api${userManagementEndpointPath}/john.doe%40example.com`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
 
     // attempting to delete a non-existent stock returns an error
     res = await requestWithSupertest
-      .delete("/api/userManagement/john.doe%40example.com")
+      .delete(`/api${userManagementEndpointPath}/john.doe%40example.com`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   });

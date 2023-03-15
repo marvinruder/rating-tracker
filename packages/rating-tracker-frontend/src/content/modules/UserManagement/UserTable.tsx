@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import axios from "axios";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TableContainer } from "@mui/material";
-import { User } from "rating-tracker-commons";
-import { baseUrl, userManagementAPI, userListEndpoint } from "../../../endpoints";
+import { User, userListEndpointPath } from "rating-tracker-commons";
+import { baseUrl } from "../../..";
 import UserRow from "../../../components/UserRow";
 import { useNotification } from "../../../contexts/NotificationContext";
 
@@ -23,7 +23,7 @@ const UserTable: FC = (): JSX.Element => {
   const getUsers = () => {
     setUsersFinal(false);
     axios
-      .get(baseUrl + userManagementAPI + userListEndpoint)
+      .get(baseUrl + userListEndpointPath)
       .then((res) => {
         setUsers(res.data.map((user: any) => new User(user)));
         setCount(res.data.length);

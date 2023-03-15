@@ -26,11 +26,12 @@ import {
   GENERAL_ACCESS,
   WRITE_STOCKS_ACCESS,
   ADMINISTRATIVE_ACCESS,
+  userManagementEndpointPath,
 } from "rating-tracker-commons";
 import { useState } from "react";
 import DeleteUser from "../DeleteUser";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { baseUrl, userManagementAPI } from "../../endpoints";
+import { baseUrl } from "../..";
 import axios from "axios";
 import { useNotification } from "../../contexts/NotificationContext";
 
@@ -86,7 +87,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
     const patchAccessRights = () => {
       setRequestInProgress(true);
       axios
-        .patch(baseUrl + userManagementAPI + `/${props.user.email}`, undefined, {
+        .patch(baseUrl + userManagementEndpointPath + `/${props.user.email}`, undefined, {
           params: {
             // Only send the parameters that have changed.
             accessRights: accessRights !== props.user.accessRights ? accessRights : undefined,

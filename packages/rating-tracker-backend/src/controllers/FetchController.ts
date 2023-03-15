@@ -8,6 +8,13 @@ import APIError from "../utils/apiError.js";
 import chalk from "chalk";
 import {
   Currency,
+  fetchMarketScreenerEndpointPath,
+  fetchMorningstarEndpointPath,
+  fetchMSCIEndpointPath,
+  fetchRefinitivEndpointPath,
+  fetchSPEndpointPath,
+  fetchSustainalyticsEndpointPath,
+  GENERAL_ACCESS,
   Industry,
   isCurrency,
   isIndustry,
@@ -26,11 +33,12 @@ import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
 import { createResource, readResource } from "../redis/repositories/resourceRepository.js";
 import axios from "axios";
 import dotenv from "dotenv";
+import Router from "../routers/Router.js";
 
 dotenv.config();
 
-const SIGNAL_PREFIX_ERROR = "⚠️ ";
-const SIGNAL_PREFIX_INFO = "ℹ️ ";
+const SIGNAL_PREFIX_ERROR = "⚠️ " as const;
+const SIGNAL_PREFIX_INFO = "ℹ️ " as const;
 
 const XPATH_INDUSTRY = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.." as const;
 const XPATH_SIZE_STYLE = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Stock Style')]/.." as const;
@@ -47,102 +55,100 @@ const XPATH_SPREAD_AVERAGE_TARGET =
 
 const XPATH_SP_PANEL = "//*/div[@class='panel-set__first-column']/h1[@id='company-name']/.." as const;
 
-const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings";
+const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings" as const;
+
+/**
+ * Creates and returns a new WebDriver instance.
+ *
+ * @param {boolean} headless whether to run the browser in headless mode
+ * @returns {Promise<WebDriver>} a Promise that resolves to a WebDriver instance
+ * @throws an {@link APIError} if the WebDriver cannot be created
+ */
+const getDriver = async (headless?: boolean) => {
+  const url = process.env.SELENIUM_URL;
+  const options = new Options().addArguments("window-size=1080x3840"); // convenient for screenshots
+  headless && options.headless(); // In headless mode, the browser window is not shown.
+
+  return await new Builder()
+    .usingServer(url)
+    .withCapabilities(
+      new Capabilities()
+        // Use Chrome as the browser.
+        .setBrowserName("chrome")
+        // Do not wait for all resources to load. This speeds up the page load.
+        .setPageLoadStrategy("eager")
+    )
+    .setChromeOptions(options)
+    .build()
+    .then((driver) => driver)
+    .catch((e) => {
+      throw new APIError(502, `Unable to connect to Selenium WebDriver: ${e.message}`);
+    });
+};
+
+/**
+ * Shuts down the given WebDriver instance gracefully, deallocating all associated resources.
+ *
+ * @param {WebDriver} driver the WebDriver instance to shut down
+ * @returns {Promise<void>} a Promise that resolves when the WebDriver has been shut down
+ * @throws an {@link APIError} if the WebDriver cannot be shut down gracefully
+ */
+const quitDriver = async (driver: WebDriver): Promise<void> => {
+  try {
+    await driver.quit();
+  } catch (e) {
+    logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to shut down Selenium WebDriver gracefully: ${e}`));
+  }
+};
+
+/**
+ * Creates a screenshot of the current page and stores it in Redis.
+ *
+ * @param {WebDriver} driver the WebDriver instance in use
+ * @param {Stock} stock the affected stock
+ * @param {string} dataProvider the name of the data provider
+ * @returns {Promise<string>} a Promise that resolves to a string holding a general informational message and a URL to
+ * the screenshot
+ */
+const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvider: string): Promise<string> => {
+  const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.png`;
+  try {
+    const screenshot = await driver.takeScreenshot();
+    // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
+    await createResource(
+      {
+        url: screenshotID,
+        fetchDate: new Date(),
+        content: screenshot, // base64-encoded PNG image
+      },
+      60 * 60 * 24 // We only store the screenshot for 24 hours.
+    );
+    return `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
+      process.env.DOMAIN
+    }/api/resource/${screenshotID}.`;
+  } catch (e) {
+    logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to take screenshot “${screenshotID}”: ${e}`));
+    return "";
+  }
+};
 
 /**
  * This class is responsible for fetching data from external data providers.
  */
-class FetchController {
-  /**
-   * Creates and returns a new WebDriver instance.
-   *
-   * @param {boolean} headless whether to run the browser in headless mode
-   * @returns {Promise<WebDriver>} a Promise that resolves to a WebDriver instance
-   * @throws an {@link APIError} if the WebDriver cannot be created
-   */
-  async getDriver(headless?: boolean) {
-    const url = process.env.SELENIUM_URL;
-    const options = new Options().addArguments("window-size=1080x3840"); // convenient for screenshots
-    headless && options.headless(); // In headless mode, the browser window is not shown.
-
-    return await new Builder()
-      .usingServer(url)
-      .withCapabilities(
-        new Capabilities()
-          // Use Chrome as the browser.
-          .setBrowserName("chrome")
-          // Do not wait for all resources to load. This speeds up the page load.
-          .setPageLoadStrategy("eager")
-      )
-      .setChromeOptions(options)
-      .build()
-      .then((driver) => driver)
-      .catch((e) => {
-        throw new APIError(502, `Unable to connect to Selenium WebDriver: ${e.message}`);
-      });
-  }
-
-  /**
-   * Shuts down the given WebDriver instance gracefully, deallocating all associated resources.
-   *
-   * @param {WebDriver} driver the WebDriver instance to shut down
-   * @returns {Promise<void>} a Promise that resolves when the WebDriver has been shut down
-   * @throws an {@link APIError} if the WebDriver cannot be shut down gracefully
-   */
-  async quitDriver(driver: WebDriver) {
-    try {
-      await driver.quit();
-    } catch (e) {
-      logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to shut down Selenium WebDriver gracefully: ${e}`));
-    }
-  }
-
-  /**
-   * Creates a screenshot of the current page and stores it in Redis.
-   *
-   * @param {WebDriver} driver the WebDriver instance in use
-   * @param {Stock} stock the affected stock
-   * @param {string} dataProvider the name of the data provider
-   * @returns {Promise<string>} a Promise that resolves to a string holding a general informational message and a URL to
-   * the screenshot
-   */
-  async takeScreenshot(driver: WebDriver, stock: Stock, dataProvider: string): Promise<string> {
-    const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.png`;
-    try {
-      const screenshot = await driver.takeScreenshot();
-      // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
-      await createResource(
-        {
-          url: screenshotID,
-          fetchDate: new Date(),
-          content: screenshot, // base64-encoded PNG image
-        },
-        60 * 60 * 24 // We only store the screenshot for 24 hours.
-      );
-      return `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
-        process.env.DOMAIN
-      }/api/resource/${screenshotID}.`;
-    } catch (e) {
-      logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to take screenshot “${screenshotID}”: ${e}`));
-      return "";
-    }
-  }
-
+export class FetchController {
   /**
    * Fetches data from Morningstar Italy.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchMorningstarEndpointPath,
+    method: "get",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchMorningstarData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -168,7 +174,8 @@ class FetchController {
       );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -179,7 +186,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver(true);
+    const driver = await getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -549,7 +556,7 @@ class FetchController {
         if (errorMessage.includes("\n")) {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
-          errorMessage += `\n${await this.takeScreenshot(driver, stock, "morningstar")}`;
+          errorMessage += `\n${await takeScreenshot(driver, stock, "morningstar")}`;
           await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
@@ -581,7 +588,7 @@ class FetchController {
         consecutiveErrorCount += 1;
         if (req.query.ticker) {
           // If the request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${String(e.message).split(/[\n:{]/)[0]}`
@@ -594,7 +601,7 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "morningstar")}`,
+            }\n${await takeScreenshot(driver, stock, "morningstar")}`,
           "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -617,11 +624,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 
@@ -630,16 +637,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchMarketScreenerEndpointPath,
+    method: "get",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchMarketScreenerData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -666,7 +671,8 @@ class FetchController {
       );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -677,7 +683,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver(true);
+    const driver = await getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -806,7 +812,7 @@ class FetchController {
         if (errorMessage.includes("\n")) {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
-          errorMessage += `\n${await this.takeScreenshot(driver, stock, "marketscreener")}`;
+          errorMessage += `\n${await takeScreenshot(driver, stock, "marketscreener")}`;
           await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
@@ -828,7 +834,7 @@ class FetchController {
         consecutiveErrorCount += 1;
         if (req.query.ticker) {
           // If this request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${String(e.message).split(/[\n:{]/)[0]}`
@@ -841,7 +847,7 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "marketscreener")}`,
+            }\n${await takeScreenshot(driver, stock, "marketscreener")}`,
           "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -864,11 +870,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 
@@ -877,16 +883,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchMSCIEndpointPath,
+    method: "get",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchMSCIData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -912,7 +916,8 @@ class FetchController {
       );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -923,7 +928,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver();
+    const driver = await getDriver();
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1030,7 +1035,7 @@ class FetchController {
         if (errorMessage.includes("\n")) {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
-          errorMessage += `\n${await this.takeScreenshot(driver, stock, "msci")}`;
+          errorMessage += `\n${await takeScreenshot(driver, stock, "msci")}`;
           await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
@@ -1051,7 +1056,7 @@ class FetchController {
         consecutiveErrorCount += 1;
         if (req.query.ticker) {
           // If this request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${String(e.message).split(/[\n:{]/)[0]}`
@@ -1064,7 +1069,7 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "msci")}`,
+            }\n${await takeScreenshot(driver, stock, "msci")}`,
           "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -1087,11 +1092,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks);
     }
   }
 
@@ -1100,16 +1105,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchRefinitivEndpointPath,
+    method: "get",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchRefinitivData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -1135,7 +1138,8 @@ class FetchController {
       );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -1146,7 +1150,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver(true);
+    const driver = await getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1228,7 +1232,7 @@ class FetchController {
         if (errorMessage.includes("\n")) {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
-          errorMessage += `\n${await this.takeScreenshot(driver, stock, "refinitiv")}`;
+          errorMessage += `\n${await takeScreenshot(driver, stock, "refinitiv")}`;
           await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
@@ -1249,7 +1253,7 @@ class FetchController {
         consecutiveErrorCount += 1;
         if (req.query.ticker) {
           // If this request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             (e as Error).message.includes("Limit exceeded") ? 429 : 502,
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${String(e.message).split(/[\n:{]/)[0]}`
@@ -1279,7 +1283,7 @@ class FetchController {
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "refinitiv")}`,
+            }\n${await takeScreenshot(driver, stock, "refinitiv")}`,
           "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -1302,11 +1306,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 
@@ -1315,16 +1319,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchSPEndpointPath,
+    method: "get",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchSPData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -1350,7 +1352,8 @@ class FetchController {
       );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -1361,7 +1364,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver(true);
+    const driver = await getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1411,7 +1414,7 @@ class FetchController {
       } catch (e) {
         if (req.query.ticker) {
           // If this request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`
@@ -1432,7 +1435,7 @@ class FetchController {
             SIGNAL_PREFIX_ERROR +
               `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
                 String(e.message).split(/[\n:{]/)[0]
-              }\n${await this.takeScreenshot(driver, stock, "sp")}`,
+              }\n${await takeScreenshot(driver, stock, "sp")}`,
             "fetchError"
           );
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -1461,11 +1464,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 
@@ -1474,16 +1477,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchSustainalyticsEndpointPath,
+    method: "get",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchSustainalyticsData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -1504,7 +1505,8 @@ class FetchController {
     stocks = stocks.filter((stock) => stock.sustainalyticsID); // Only stocks with a Sustainalytics ID are considered.
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -1649,11 +1651,9 @@ class FetchController {
       }
     }
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 }
-
-export default new FetchController();

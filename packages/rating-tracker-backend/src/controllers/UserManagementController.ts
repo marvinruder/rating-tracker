@@ -1,26 +1,33 @@
 import { Request, Response } from "express";
-import { ADMINISTRATIVE_ACCESS } from "rating-tracker-commons";
-import APIError from "../utils/apiError.js";
+import {
+  ADMINISTRATIVE_ACCESS,
+  GENERAL_ACCESS,
+  userListEndpointPath,
+  userManagementEndpointPath,
+} from "rating-tracker-commons";
 import { deleteUser, readAllUsers, readUser, updateUserWithCredentials } from "../db/tables/userTable.js";
+import Router from "../routers/Router.js";
 
 /**
  * This class is responsible for providing user information.
  */
-class UserManagementController {
+export class UserManagementController {
   /**
    * Returns a list of users.
    *
-   * @param {Request} req Request object
+   * @param {Request} _ Request object
    * @param {Response} res Response object
-   * @returns {Response} a response containing the user list.
    */
-  async getList(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
-      throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
-    }
-
-    // Respond with the list of users
-    return res.status(200).json(await readAllUsers());
+  @Router({
+    path: userListEndpointPath,
+    method: "get",
+    accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
+  })
+  async getList(_: Request, res: Response) {
+    res
+      .status(200)
+      .json(await readAllUsers())
+      .end();
   }
 
   /**
@@ -28,13 +35,17 @@ class UserManagementController {
    *
    * @param {Request} req The request.
    * @param {Response} res The response.
-   * @returns {Response} a response with the user.
    */
+  @Router({
+    path: userManagementEndpointPath + "/*",
+    method: "get",
+    accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
+  })
   async get(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
-      throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
-    }
-    return res.status(200).json(await readUser(req.params[0]));
+    res
+      .status(200)
+      .json(await readUser(req.params[0]))
+      .end();
   }
 
   /**
@@ -42,12 +53,13 @@ class UserManagementController {
    *
    * @param {Request} req The request.
    * @param {Response} res The response.
-   * @returns {Response} a 204 response if the user was updated successfully
    */
+  @Router({
+    path: userManagementEndpointPath + "/*",
+    method: "patch",
+    accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
+  })
   async patch(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
-      throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
-    }
     const email = req.params[0];
     const { name, phone, accessRights, subscriptions } = req.query;
     const { avatar } = req.body;
@@ -65,7 +77,7 @@ class UserManagementController {
         accessRights,
         subscriptions,
       });
-      return res.status(204).end();
+      res.status(204).end();
     }
   }
 
@@ -74,15 +86,14 @@ class UserManagementController {
    *
    * @param {Request} req The request.
    * @param {Response} res The response.
-   * @returns {Response} a 204 response if the user was deleted successfully
    */
+  @Router({
+    path: userManagementEndpointPath + "/*",
+    method: "delete",
+    accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
+  })
   async delete(req: Request, res: Response) {
-    if (!res.locals.user?.hasAccessRight(ADMINISTRATIVE_ACCESS)) {
-      throw new APIError(403, "This user account does not have the necessary access rights to administer users.");
-    }
     await deleteUser(req.params[0]);
-    return res.status(204).end();
+    res.status(204).end();
   }
 }
-
-export default new UserManagementController();

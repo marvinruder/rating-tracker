@@ -1,7 +1,7 @@
 import { Card, Container, useMediaQuery } from "@mui/material";
 import axios from "axios";
-import { baseUrl, stockAPI } from "../../../endpoints";
-import { Stock } from "rating-tracker-commons";
+import { baseUrl } from "../../..";
+import { Stock, stockEndpointPath } from "rating-tracker-commons";
 import { useEffect, useState } from "react";
 import Footer from "../../../components/Footer";
 import PageTitleWrapper from "../../../components/PageTitleWrapper";
@@ -27,7 +27,7 @@ const StockModule = (): JSX.Element => {
    */
   const getStock = (ticker: string) => {
     axios
-      .get(baseUrl + stockAPI + `/${ticker}`)
+      .get(baseUrl + stockEndpointPath + `/${ticker}`)
       .then((res) => {
         setStock(new Stock(res.data));
       })

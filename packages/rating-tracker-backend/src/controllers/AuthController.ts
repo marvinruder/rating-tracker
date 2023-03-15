@@ -10,7 +10,14 @@ import { createSession } from "../redis/repositories/sessionRepository.js";
 import APIError from "../utils/apiError.js";
 import { createUser, readUserWithCredentials, updateUserWithCredentials, userExists } from "../db/tables/userTable.js";
 import { sessionTTLInSeconds } from "../redis/repositories/sessionRepository.js";
-import { GENERAL_ACCESS, optionalUserValuesNull, UserWithCredentials } from "rating-tracker-commons";
+import {
+  GENERAL_ACCESS,
+  optionalUserValuesNull,
+  registerEndpointPath,
+  signInEndpointPath,
+  UserWithCredentials,
+} from "rating-tracker-commons";
+import Router from "../routers/Router.js";
 
 dotenv.config();
 
@@ -26,15 +33,20 @@ const currentChallenges = {};
 /**
  * This class is responsible for handling all registration and authentication requests.
  */
-class AuthController {
+export class AuthController {
   /**
    * Generates a registration challenge for the user to register.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a response containing the registration challenge.
    * @throws an {@link APIError} if the user already exists.
    */
+  @Router({
+    path: registerEndpointPath,
+    method: "get",
+    accessRights: 0,
+    rateLimited: true,
+  })
   async getRegistrationOptions(req: Request, res: Response) {
     const email = req.query.email;
     const name = req.query.name;
@@ -58,7 +70,7 @@ class AuthController {
         },
       });
       currentChallenges[email] = options.challenge;
-      return res.status(200).json(options);
+      res.status(200).json(options).end();
     }
   }
 
@@ -67,9 +79,14 @@ class AuthController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a response with status code 201 if the registration was successful.
    * @throws an {@link APIError} if the registration failed or the user already exists.
    */
+  @Router({
+    path: registerEndpointPath,
+    method: "post",
+    accessRights: 0,
+    rateLimited: true,
+  })
   async postRegistrationResponse(req: Request, res: Response) {
     const email = req.query.email;
     const name = req.query.name;
@@ -113,7 +130,7 @@ class AuthController {
         throw new APIError(403, "This email address is already registered. Please sign in.");
       }
       if (verified) {
-        return res.status(201).end();
+        res.status(201).end();
       }
       // We do not provide too much information about the error to the user.
       throw new APIError(400, "Registration failed");
@@ -125,15 +142,20 @@ class AuthController {
    *
    * @param {Request} _ Request object
    * @param {Response} res Response object
-   * @returns {Response} a response containing the authentication challenge.
    */
+  @Router({
+    path: signInEndpointPath,
+    method: "get",
+    accessRights: 0,
+    rateLimited: true,
+  })
   getAuthenticationOptions(_: Request, res: Response) {
     const options = SimpleWebAuthnServer.generateAuthenticationOptions({
       rpID: rpID,
       userVerification: "required", // Require the user to verify their identity with a PIN or biometric sensor.
     });
     currentChallenges[options.challenge] = options.challenge;
-    return res.status(200).json(options);
+    res.status(200).json(options).end();
   }
 
   /**
@@ -141,10 +163,14 @@ class AuthController {
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a response with status code 204 and the session cookie set if the authentication was
-   * successful.
    * @throws an {@link APIError} if the authentication failed or the user lacks access rights.
    */
+  @Router({
+    path: signInEndpointPath,
+    method: "post",
+    accessRights: 0,
+    rateLimited: true,
+  })
   async postAuthenticationResponse(req: Request, res: Response) {
     // We retrieve the user from the database, who we identified by the email address in the challenge response.
     const email = req.body.response.userHandle;
@@ -192,10 +218,8 @@ class AuthController {
         secure: process.env.NODE_ENV !== "development", // allow plain HTTP in development
         sameSite: true,
       });
-      return res.status(204).end();
+      res.status(204).end();
     }
     throw new APIError(400, "Authentication failed");
   }
 }
-
-export default new AuthController();

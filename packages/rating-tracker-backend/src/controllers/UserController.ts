@@ -1,20 +1,25 @@
 import { Request, Response } from "express";
-import { User } from "rating-tracker-commons";
+import { GENERAL_ACCESS, User, userEndpointPath } from "rating-tracker-commons";
 import { updateUserWithCredentials, deleteUser } from "../db/tables/userTable.js";
+import Router from "../routers/Router.js";
 
 /**
  * This class is responsible for providing user information.
  */
-class UserController {
+export class UserController {
   /**
    * Returns the current user fetched during session validation.
    *
    * @param {Request} _ The request.
    * @param {Response} res The response.
-   * @returns {Response} a response with the user.
    */
+  @Router({
+    path: userEndpointPath,
+    method: "get",
+    accessRights: GENERAL_ACCESS,
+  })
   get(_: Request, res: Response) {
-    return res.status(200).json(res.locals.user);
+    res.status(200).json(res.locals.user).end();
   }
 
   /**
@@ -22,8 +27,12 @@ class UserController {
    *
    * @param {Request} req The request.
    * @param {Response} res The response.
-   * @returns {Response} a 204 response if the user was updated successfully
    */
+  @Router({
+    path: userEndpointPath,
+    method: "patch",
+    accessRights: GENERAL_ACCESS,
+  })
   async patch(req: Request, res: Response) {
     const user: User = res.locals.user;
     const { name, phone, subscriptions } = req.query;
@@ -40,7 +49,7 @@ class UserController {
         phone,
         subscriptions,
       });
-      return res.status(204).end();
+      res.status(204).end();
     }
   }
 
@@ -50,10 +59,13 @@ class UserController {
    * @param {Request} _ The request.
    * @param {Response} res The response.
    */
+  @Router({
+    path: userEndpointPath,
+    method: "delete",
+    accessRights: GENERAL_ACCESS,
+  })
   async delete(_: Request, res: Response) {
     await deleteUser(res.locals.user.email);
-    return res.status(204).end();
+    res.status(204).end();
   }
 }
-
-export default new UserController();

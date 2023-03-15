@@ -41,12 +41,13 @@ import {
   sectorOfIndustryGroup,
   Stock,
   StockListColumn,
+  stockLogoEndpointPath,
   superSectorDescription,
   superSectorName,
   superSectorOfSector,
   WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
-import { baseUrl, logoEndpoint, stockAPI } from "../../endpoints";
+import { baseUrl } from "../..";
 import { useContext, useState } from "react";
 import DeleteStock from "../DeleteStock";
 import EditStock from "../EditStock";
@@ -150,7 +151,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         >
           <Avatar
             sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
-            src={baseUrl + stockAPI + logoEndpoint + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+            src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
             alt=" "
           />
           <Box width={8} />
@@ -710,7 +711,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                   mr: "-8px",
                   background: "none",
                 }}
-                src={baseUrl + stockAPI + logoEndpoint + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+                src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
                 alt=" "
               />
               <Box sx={{ my: 1 }}>
