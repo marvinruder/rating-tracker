@@ -13,14 +13,14 @@ node {
             checkout scm
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
             sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
-            sh "sed -i 's/127.0.0.1/172.17.0.1/g' packages/rating-tracker-backend/.testenv"
+            sh "sed -i 's/127.0.0.1/172.17.0.1/g' packages/rating-tracker-backend/test/.env"
         }
 
         parallel(
             testenv: {
                 stage('Start test environment') {
                     sh """
-                    docker compose -f packages/rating-tracker-backend/test-env/docker-compose.yml up --force-recreate -V -d
+                    docker compose -f packages/rating-tracker-backend/test/docker-compose.yml up --force-recreate -V -d
                     """
                 }
             },
@@ -91,7 +91,7 @@ node {
 
         stage ('Cleanup') {
             sh """
-            docker compose -f packages/rating-tracker-backend/test-env/docker-compose.yml down -t 0
+            docker compose -f packages/rating-tracker-backend/test/docker-compose.yml down -t 0
             docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true

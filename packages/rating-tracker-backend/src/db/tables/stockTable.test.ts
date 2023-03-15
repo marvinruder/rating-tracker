@@ -5,18 +5,17 @@ vi.mock("../../utils/logger");
 vi.mock("../../signal/signalBase");
 
 dotenv.config({
-  path: ".testenv",
+  path: "test/.env",
 });
 
 const { createStock, readStock, updateStock } = await import("./stockTable");
 import { sentMessages } from "../../signal/__mocks__/signalBase";
 import { optionalStockValuesNull, Stock } from "rating-tracker-commons";
-import { applyStockSeed } from "../../../seeds/testStockSeeds";
-import { applyUserSeed } from "../../../seeds/testUserSeeds";
+import applyPostgresSeeds from "../../../test/seeds/postgres";
+import applyRedisSeeds from "../../../test/seeds/redis";
 
 beforeEach(async () => {
-  await applyStockSeed();
-  await applyUserSeed();
+  await Promise.all([applyPostgresSeeds(), applyRedisSeeds()]);
 });
 
 describe("CRUD methods for single stock that are difficult to test otherwise", () => {

@@ -7,7 +7,7 @@ export default defineConfig({
     },
     coverage: {
       provider: "istanbul",
-      exclude: ["**/__mocks__/**", "prisma", "seeds"],
+      exclude: ["**/__mocks__/**", "prisma", "test"],
     },
     singleThread: true,
   },

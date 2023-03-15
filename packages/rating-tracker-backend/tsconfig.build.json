@@ -4,5 +4,5 @@
     "sourceMap": false
   },
   "include": ["src"],
-  "exclude": ["src/**/*.test.ts", "src/**/__mocks__/*", "vitest.config.ts"]
+  "exclude": ["src/**/*.test.ts", "src/**/__mocks__/*"]
 }

@@ -1,80 +1,17 @@
-import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import SimpleWebAuthnServer, {
-  VerifyAuthenticationResponseOpts,
-  VerifyRegistrationResponseOpts,
-} from "@simplewebauthn/server";
 import dotenv from "dotenv";
 
 vi.mock("./utils/logger");
-vi.mock("@simplewebauthn/server", async () => {
-  const orig = await vi.importActual<typeof SimpleWebAuthnServer>("@simplewebauthn/server");
-  const randomCredential = randomUUID();
-
-  const verifyRegistrationResponse = (options: VerifyRegistrationResponseOpts) => {
-    if (!options.response.id) {
-      throw new Error("Missing credential ID");
-    }
-    return Promise.resolve({
-      verified:
-        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).challenge ===
-          options.expectedChallenge &&
-        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).origin ===
-          options.expectedOrigin &&
-        options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
-        options.expectedRPID.includes(process.env.DOMAIN) &&
-        options.requireUserVerification,
-      registrationInfo: {
-        credentialID: Buffer.from(`Credential ID ${randomCredential}`),
-        credentialPublicKey: Buffer.from(`Credential Public Key ${randomCredential}`),
-        counter: 0,
-      },
-    });
-  };
-
-  const verifyAuthenticationResponse = (options: VerifyAuthenticationResponseOpts) => {
-    if (!options.response.id) {
-      throw new Error("Missing credential ID");
-    }
-    return Promise.resolve({
-      verified:
-        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).challenge ===
-          options.expectedChallenge &&
-        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).origin ===
-          options.expectedOrigin &&
-        options.response.challenge === options.expectedChallenge &&
-        options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
-        options.expectedRPID.includes(process.env.DOMAIN) &&
-        options.requireUserVerification &&
-        options.authenticator.credentialID.toString("ascii") === `Credential ID ${randomCredential}` &&
-        options.authenticator.credentialPublicKey.toString("ascii") === `Credential Public Key ${randomCredential}`,
-      authenticationInfo: {
-        newCounter: options.authenticator.counter + 1,
-      },
-    });
-  };
-
-  const mocked = {
-    ...orig,
-    verifyRegistrationResponse,
-    verifyAuthenticationResponse,
-  };
-  return {
-    ...mocked,
-    default: mocked,
-  };
-});
+vi.mock("@simplewebauthn/server", async () => await import("../test/moduleMocks/@simplewebauthn/server"));
 
 dotenv.config({
-  path: ".testenv",
+  path: "test/.env",
 });
 
 import { sortableAttributeArray, Stock, User, UserWithCredentials } from "rating-tracker-commons";
 import supertest, { CallbackHandler, Test } from "supertest";
-import { applyStockSeed } from "../seeds/testStockSeeds";
-import { applyUserSeed } from "../seeds/testUserSeeds";
-import { applyResourceSeed } from "../seeds/testResourceSeeds";
-import { applySessionSeed } from "../seeds/testSessionSeeds";
+import applyPostgresSeeds from "../test/seeds/postgres";
+import applyRedisSeeds from "../test/seeds/redis";
 
 const { listener, server } = await import("./server");
 
@@ -85,10 +22,7 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
-  await applyStockSeed();
-  await applyUserSeed();
-  await applyResourceSeed();
-  await applySessionSeed();
+  await Promise.all([applyPostgresSeeds(), applyRedisSeeds()]);
 });
 
 afterAll(() => {
