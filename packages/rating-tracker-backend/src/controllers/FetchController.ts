@@ -47,7 +47,7 @@ const XPATH_ANALYST_COUNT =
 const XPATH_SPREAD_AVERAGE_TARGET =
   "//div/table/tbody/tr/td[contains(text(), 'Spread / Average Target')]/following-sibling::td" as const;
 
-const XPATH_SP_PANEL = "//*/div[@class='panel-set__first-column']/h2[@id='company-name']/.." as const;
+const XPATH_SP_PANEL = "//*/div[@class='panel-set__first-column']/h1[@id='company-name']/.." as const;
 
 const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings";
 
