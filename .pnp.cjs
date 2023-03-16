@@ -2442,26 +2442,31 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/iso-webcrypto", [\
-        ["npm:7.0.1", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-iso-webcrypto-npm-7.0.1-bae5f6738c-a0434ef979.zip/node_modules/@simplewebauthn/iso-webcrypto/",\
+        ["npm:7.2.0", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-iso-webcrypto-npm-7.2.0-db7b12b859-663b3cf8b8.zip/node_modules/@simplewebauthn/iso-webcrypto/",\
           "packageDependencies": [\
-            ["@simplewebauthn/iso-webcrypto", "npm:7.0.1"]\
+            ["@simplewebauthn/iso-webcrypto", "npm:7.2.0"],\
+            ["@simplewebauthn/typescript-types", "npm:7.0.0"],\
+            ["@types/node", "npm:18.15.3"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@simplewebauthn/server", [\
-        ["npm:7.0.1", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-7.0.1-ac81233d49-65d567e649.zip/node_modules/@simplewebauthn/server/",\
+        ["npm:7.2.0", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-7.2.0-f1ed5fde8a-6340e94be8.zip/node_modules/@simplewebauthn/server/",\
           "packageDependencies": [\
-            ["@simplewebauthn/server", "npm:7.0.1"],\
+            ["@simplewebauthn/server", "npm:7.2.0"],\
             ["@hexagon/base64", "npm:1.1.26"],\
             ["@peculiar/asn1-android", "npm:2.3.3"],\
             ["@peculiar/asn1-ecc", "npm:2.3.4"],\
             ["@peculiar/asn1-rsa", "npm:2.3.4"],\
             ["@peculiar/asn1-schema", "npm:2.3.3"],\
             ["@peculiar/asn1-x509", "npm:2.3.4"],\
-            ["@simplewebauthn/iso-webcrypto", "npm:7.0.1"],\
+            ["@simplewebauthn/iso-webcrypto", "npm:7.2.0"],\
+            ["@simplewebauthn/typescript-types", "npm:7.0.0"],\
+            ["@types/debug", "npm:4.1.7"],\
+            ["@types/node", "npm:18.15.3"],\
             ["cbor-x", "npm:1.5.1"],\
             ["cross-fetch", "npm:3.1.5"],\
             ["debug", "virtual:a51f526c2adeba537acab82695794a9d1b157226503eb6a4b845884ae37134eb991f7fe73ca28a4380b8fcf50c4baf959f57e6800dc81e7afb4b90477e3f77d2#npm:4.3.4"]\
@@ -2592,6 +2597,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/debug", [\
+        ["npm:4.1.7", {\
+          "packageLocation": "./.yarn/cache/@types-debug-npm-4.1.7-f54c81f8db-0a7b89d8ed.zip/node_modules/@types/debug/",\
+          "packageDependencies": [\
+            ["@types/debug", "npm:4.1.7"],\
+            ["@types/ms", "npm:0.7.31"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/express", [\
         ["npm:4.17.17", {\
           "packageLocation": "./.yarn/cache/@types-express-npm-4.17.17-46fe8173db-0196dacc27.zip/node_modules/@types/express/",\
@@ -2640,6 +2655,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-mime-npm-3.0.1-dec03536dc-4040fac73f.zip/node_modules/@types/mime/",\
           "packageDependencies": [\
             ["@types/mime", "npm:3.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/ms", [\
+        ["npm:0.7.31", {\
+          "packageLocation": "./.yarn/cache/@types-ms-npm-0.7.31-ea3b89342b-daadd354ae.zip/node_modules/@types/ms/",\
+          "packageDependencies": [\
+            ["@types/ms", "npm:0.7.31"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8216,7 +8240,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/rating-tracker-backend/",\
           "packageDependencies": [\
             ["rating-tracker-backend", "workspace:packages/rating-tracker-backend"],\
-            ["@simplewebauthn/server", "npm:7.0.1"],\
+            ["@simplewebauthn/server", "npm:7.2.0"],\
             ["@types/cron", "npm:2.0.0"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/node", "npm:18.15.3"],\
