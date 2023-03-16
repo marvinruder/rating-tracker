@@ -16,6 +16,9 @@ model Stock {
   industry                                  Industry?
   size                                      Size?
   style                                     Style?
+  financialScore                            Float          @default(0)
+  esgScore                                  Float          @default(0)
+  totalScore                                Float          @default(0)
   morningstarID                             String?        @unique @db.VarChar(255)
   morningstarLastFetch                      DateTime?      @db.Timestamp(6)
   starRating                                Int?           @db.SmallInt

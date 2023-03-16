@@ -6,7 +6,7 @@ import {
   userManagementEndpointPath,
 } from "rating-tracker-commons";
 import { deleteUser, readAllUsers, readUser, updateUserWithCredentials } from "../db/tables/userTable.js";
-import Router from "../routers/Router.js";
+import Router from "../utils/router.js";
 
 /**
  * This class is responsible for providing user information.

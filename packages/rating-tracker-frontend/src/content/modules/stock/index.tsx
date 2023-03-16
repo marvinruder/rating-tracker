@@ -28,9 +28,7 @@ const StockModule = (): JSX.Element => {
   const getStock = (ticker: string) => {
     axios
       .get(baseUrl + stockEndpointPath + `/${ticker}`)
-      .then((res) => {
-        setStock(new Stock(res.data));
-      })
+      .then((res) => setStock(res.data))
       .catch((e) => {
         setNotification({
           severity: "error",

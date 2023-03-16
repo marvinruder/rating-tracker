@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import express from "express";
-import { router } from "./routers/Router.js";
+import { router } from "./utils/router.js";
 import SwaggerUI from "swagger-ui-express";
 import openapiDocument from "./openapi/index.js";
 import * as OpenApiValidator from "express-openapi-validator";

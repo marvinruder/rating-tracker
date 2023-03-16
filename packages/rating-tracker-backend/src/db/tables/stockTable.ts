@@ -2,8 +2,9 @@ import APIError from "../../utils/apiError.js";
 import chalk from "chalk";
 import * as signal from "../../signal/signal.js";
 import logger, { PREFIX_POSTGRES } from "../../utils/logger.js";
-import { Stock, MSCIESGRating, msciESGRatingArray } from "rating-tracker-commons";
+import { Stock, MSCIESGRating, msciESGRatingArray, OmitDynamicAttributesStock } from "rating-tracker-commons";
 import client from "../client.js";
+import { addDynamicAttributesToStockData, dynamicStockAttributes } from "../../models/dynamicStockAttributes.js";
 
 // Emojis showing whether a change is good or bad. Used in the Signal message.
 const SIGNAL_PREFIX_BETTER = "🟢 ";
@@ -27,29 +28,27 @@ const parameterPrettyNames = {
  * @param {Stock} stock The stock to create.
  * @returns {boolean} Whether the stock was created.
  */
-export const createStock = (stock: Stock): Promise<boolean> => {
+export const createStock = async (stock: OmitDynamicAttributesStock): Promise<boolean> => {
   // Attempt to find an existing stock with the same ticker
-  return client.stock
-    .findUniqueOrThrow({
+  try {
+    const existingStock = await client.stock.findUniqueOrThrow({
       where: {
         ticker: stock.ticker,
       },
-    })
-    .then((existingStock) => {
-      // If that worked, a stock with the same ticker already exists
-      logger.warn(
-        PREFIX_POSTGRES +
-          chalk.yellowBright(`Skipping stock “${stock.name}” – existing already (ticker ${existingStock.ticker}).`)
-      );
-      return false;
-    })
-    .catch(async () => {
-      await client.stock.create({
-        data: { ...stock },
-      });
-      logger.info(PREFIX_POSTGRES + `Created stock “${stock.name}” with ticker ${stock.ticker}.`);
-      return true;
     });
+    // If that worked, a stock with the same ticker already exists
+    logger.warn(
+      PREFIX_POSTGRES +
+        chalk.yellowBright(`Skipping stock “${stock.name}” – existing already (ticker ${existingStock.ticker}).`)
+    );
+    return false;
+  } catch {
+    await client.stock.create({
+      data: addDynamicAttributesToStockData(stock),
+    });
+    logger.info(PREFIX_POSTGRES + `Created stock “${stock.name}” with ticker ${stock.ticker}.`);
+    return true;
+  }
 };
 
 /**
@@ -59,17 +58,14 @@ export const createStock = (stock: Stock): Promise<boolean> => {
  * @returns {Promise<Stock>} A promise that resolves to the stock.
  * @throws an {@link APIError} if the stock does not exist.
  */
-export const readStock = (ticker: string): Promise<Stock> => {
-  return client.stock
-    .findUniqueOrThrow({
+export const readStock = async (ticker: string): Promise<Stock> => {
+  try {
+    return await client.stock.findUniqueOrThrow({
       where: { ticker },
-    })
-    .then((stock) => {
-      return new Stock(stock);
-    })
-    .catch(() => {
-      throw new APIError(404, `Stock ${ticker} not found.`);
     });
+  } catch {
+    throw new APIError(404, `Stock ${ticker} not found.`);
+  }
 };
 
 /**
@@ -77,8 +73,8 @@ export const readStock = (ticker: string): Promise<Stock> => {
  *
  * @returns {Promise<Stock[]>} A promise that resolves to a list of all stocks.
  */
-export const readAllStocks = (): Promise<Stock[]> => {
-  return client.stock.findMany().then((stocks) => stocks.map((stock) => new Stock(stock)));
+export const readAllStocks = async (): Promise<Stock[]> => {
+  return await client.stock.findMany();
 };
 
 /**
@@ -86,9 +82,11 @@ export const readAllStocks = (): Promise<Stock[]> => {
  *
  * @param {string} ticker The ticker of the stock.
  * @param {Partial<Omit<Stock, "ticker">>} newValues The new values for the stock.
+ * @param {boolean} forceUpdate Whether new values are written into the database, even if they are equal to the stock’s
+ * current values. Triggers computation of scores.
  * @throws an {@link APIError} if the stock does not exist.
  */
-export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock, "ticker">>) => {
+export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock, "ticker">>, forceUpdate?: boolean) => {
   let k: keyof typeof newValues; // all keys of new values
   const stock = await readStock(ticker); // Read the stock from the database
   let signalMessage = `Updates for ${stock.name} (${ticker}):`;
@@ -186,12 +184,12 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
       }
     }
   }
-  if (isNewData) {
+  if (isNewData || forceUpdate) {
     await client.stock.update({
       where: {
         ticker: stock.ticker,
       },
-      data: { ...newValues },
+      data: { ...newValues, ...dynamicStockAttributes({ ...stock, ...newValues }) },
     });
     // The message string contains a newline character if and only if a parameter changed for which we want to send a
     // message

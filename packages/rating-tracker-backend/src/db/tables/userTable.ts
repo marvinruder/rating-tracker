@@ -11,31 +11,29 @@ import client from "../client.js";
  * @param {UserWithCredentials} user The user to create.
  * @returns {Promise<boolean>} A promise that resolves to true if the user was created, false if it already existed.
  */
-export const createUser = (user: UserWithCredentials): Promise<boolean> => {
+export const createUser = async (user: UserWithCredentials): Promise<boolean> => {
   // Attempt to find an existing user with the same email address
-  return client.user
-    .findUniqueOrThrow({
+  try {
+    const existingUser = await client.user.findUniqueOrThrow({
       where: {
         email: user.email,
       },
-    })
-    .then((existingUser) => {
-      // If that worked, a user with the same email address already exists
-      logger.warn(
-        PREFIX_POSTGRES +
-          chalk.yellowBright(`Skipping user “${user.name}” – existing already (email address ${existingUser.email}).`)
-      );
-      return false;
-    })
-    .catch(async () => {
-      await client.user.create({
-        data: { ...user },
-      });
-      logger.info(PREFIX_POSTGRES + `Created user “${user.name}” with email address ${user.email}}.`);
-      // Inform the admin of the new user via Signal messenger
-      await signal.sendMessage(`🆕👤 New user “${user.name}” (email ${user.email}) registered.`, "userManagement");
-      return true;
     });
+    // If that worked, a user with the same email address already exists
+    logger.warn(
+      PREFIX_POSTGRES +
+        chalk.yellowBright(`Skipping user “${user.name}” – existing already (email address ${existingUser.email}).`)
+    );
+    return false;
+  } catch {
+    await client.user.create({
+      data: { ...user },
+    });
+    logger.info(PREFIX_POSTGRES + `Created user “${user.name}” with email address ${user.email}}.`);
+    // Inform the admin of the new user via Signal messenger
+    await signal.sendMessage(`🆕👤 New user “${user.name}” (email ${user.email}) registered.`, "userManagement");
+    return true;
+  }
 };
 
 /**
@@ -45,17 +43,15 @@ export const createUser = (user: UserWithCredentials): Promise<boolean> => {
  * @returns {Promise<User>} A promise that resolves to the user.
  * @throws an {@link APIError} if the user does not exist.
  */
-export const readUser = (email: string): Promise<User> => {
-  return client.user
-    .findUniqueOrThrow({
+export const readUser = async (email: string): Promise<User> => {
+  try {
+    const user = await client.user.findUniqueOrThrow({
       where: { email },
-    })
-    .then((user) => {
-      return new User(user);
-    })
-    .catch(() => {
-      throw new APIError(404, `User ${email} not found.`);
     });
+    return new User(user);
+  } catch {
+    throw new APIError(404, `User ${email} not found.`);
+  }
 };
 
 /**
@@ -65,17 +61,15 @@ export const readUser = (email: string): Promise<User> => {
  * @returns {Promise<UserWithCredentials>} A promise that resolves to the user.
  * @throws an {@link APIError} if the user does not exist.
  */
-export const readUserWithCredentials = (email: string): Promise<UserWithCredentials> => {
-  return client.user
-    .findUniqueOrThrow({
+export const readUserWithCredentials = async (email: string): Promise<UserWithCredentials> => {
+  try {
+    const user = await client.user.findUniqueOrThrow({
       where: { email },
-    })
-    .then((user) => {
-      return new UserWithCredentials(user);
-    })
-    .catch(() => {
-      throw new APIError(404, `User ${email} not found.`);
     });
+    return new UserWithCredentials(user);
+  } catch {
+    throw new APIError(404, `User ${email} not found.`);
+  }
 };
 
 /**
@@ -83,8 +77,9 @@ export const readUserWithCredentials = (email: string): Promise<UserWithCredenti
  *
  * @returns {Promise<User[]>} A promise that resolves to a list of all users.
  */
-export const readAllUsers = (): Promise<User[]> => {
-  return client.user.findMany().then((users) => users.map((user) => new User(user)));
+export const readAllUsers = async (): Promise<User[]> => {
+  const users = await client.user.findMany();
+  return users.map((user) => new User(user));
 };
 
 /**
@@ -93,11 +88,13 @@ export const readAllUsers = (): Promise<User[]> => {
  * @param {string} email The email address of the user.
  * @returns {Promise<boolean>} A promise that resolves to true if the user exists, false otherwise.
  */
-export const userExists = (email: string): Promise<boolean> => {
-  return client.user
-    .findUniqueOrThrow({ where: { email } })
-    .then(() => true)
-    .catch(() => false);
+export const userExists = async (email: string): Promise<boolean> => {
+  try {
+    await client.user.findUniqueOrThrow({ where: { email } });
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 /**

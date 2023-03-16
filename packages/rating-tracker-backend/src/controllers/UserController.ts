@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { GENERAL_ACCESS, User, userEndpointPath } from "rating-tracker-commons";
 import { updateUserWithCredentials, deleteUser } from "../db/tables/userTable.js";
-import Router from "../routers/Router.js";
+import Router from "../utils/router.js";
 
 /**
  * This class is responsible for providing user information.

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router as expressRouter } from "express";
-import APIError from "../utils/apiError.js";
+import APIError from "./apiError.js";
 export const router = expressRouter();
 import rateLimit from "express-rate-limit";
 

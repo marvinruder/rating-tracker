@@ -32,6 +32,7 @@ import {
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
   isCountry,
+  OmitDynamicAttributesStock,
   optionalStockValuesNull,
   Stock,
   stockEndpointPath,
@@ -48,15 +49,14 @@ import StockDetails from "../StockDetails";
  */
 const AddStock = (props: AddStockProps): JSX.Element => {
   const [activeStep, setActiveStep] = useState<number>(0); // The dialog step to show.
-  const [stock, setStock] = useState<Stock>(
-    new Stock({
-      ...optionalStockValuesNull,
-      ticker: "",
-      name: "",
-      isin: "",
-      country: undefined,
-    })
-  );
+  const [stock, setStock] = useState<OmitDynamicAttributesStock>({
+    ...optionalStockValuesNull,
+    ticker: "",
+    name: "",
+    isin: "",
+    country: undefined,
+  });
+  const [finalStock, setFinalStock] = useState<Stock>();
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   // The value of the text field in the country autocomplete.
   const [countryInputValue, setCountryInputValue] = useState<string>("");
@@ -64,22 +64,22 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [isinError, setIsinError] = useState<boolean>(false); // Error in the ISIN text field.
   const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
-  const [morningstarIDRequestInProgress, setmorningstarIDRequestInProgress] = useState<boolean>(false);
+  const [morningstarIDRequestInProgress, setMorningstarIDRequestInProgress] = useState<boolean>(false);
   // Whether the Morningstar ID has been transmitted to the server.
-  const [morningstarIDSet, setmorningstarIDSet] = useState<boolean>(false);
-  const [marketScreenerIDRequestInProgress, setMarketScreenerIdRequestInProgress] = useState<boolean>(false);
+  const [morningstarIDSet, setMorningstarIDSet] = useState<boolean>(false);
+  const [marketScreenerIDRequestInProgress, setMarketScreenerIDRequestInProgress] = useState<boolean>(false);
   // Whether the Market Screener ID has been transmitted to the server.
-  const [marketScreenerIDSet, setMarketScreenerIdSet] = useState<boolean>(false);
-  const [msciIDRequestInProgress, setmsciIDRequestInProgress] = useState<boolean>(false);
-  const [msciIDSet, setmsciIDSet] = useState<boolean>(false); // Whether the MSCI ID has been transmitted to the server.
+  const [marketScreenerIDSet, setMarketScreenerIDSet] = useState<boolean>(false);
+  const [msciIDRequestInProgress, setMSCIIDRequestInProgress] = useState<boolean>(false);
+  const [msciIDSet, setMSCIIDSet] = useState<boolean>(false); // Whether the MSCI ID has been transmitted to the server.
   const { setNotification } = useNotification();
-  const [ricRequestInProgress, setRicRequestInProgress] = useState<boolean>(false);
-  const [ricSet, setRicSet] = useState<boolean>(false); //
-  const [spIDRequestInProgress, setSpIdRequestInProgress] = useState<boolean>(false);
-  const [spIDSet, setSpIdSet] = useState<boolean>(false); // Whether the S&P ID has been transmitted to the server.
-  const [sustainalyticsIDRequestInProgress, setSustainalyticsIdRequestInProgress] = useState<boolean>(false);
+  const [ricRequestInProgress, setRICRequestInProgress] = useState<boolean>(false);
+  const [ricSet, setRICSet] = useState<boolean>(false); //
+  const [spIDRequestInProgress, setSPIDRequestInProgress] = useState<boolean>(false);
+  const [spIDSet, setSPIDSet] = useState<boolean>(false); // Whether the S&P ID has been transmitted to the server.
+  const [sustainalyticsIDRequestInProgress, setSustainalyticsIDRequestInProgress] = useState<boolean>(false);
   // Whether the Sustainalytics ID has been transmitted to the server.
-  const [sustainalyticsIDSet, setSustainalyticsIdSet] = useState<boolean>(false);
+  const [sustainalyticsIDSet, setSustainalyticsIDSet] = useState<boolean>(false);
 
   /**
    * Checks for errors in the input fields.
@@ -139,18 +139,18 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   /**
    * Transmits the Morningstar ID to the server.
    */
-  const patchStockmorningstarID = () => {
-    setmorningstarIDRequestInProgress(true);
+  const patchStockMorningstarID = () => {
+    setMorningstarIDRequestInProgress(true);
     axios
       .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { morningstarID: stock.morningstarID },
       })
       .then(() => {
-        setmorningstarIDSet(!!stock.morningstarID); // Whether the Morningstar ID was empty
+        setMorningstarIDSet(!!stock.morningstarID); // Whether the Morningstar ID was empty
         if (stock.morningstarID) {
           // If a Morningstar ID was set, we fetch data from Morningstar using the new ID.
           axios
-            .get(baseUrl + fetchMorningstarEndpointPath, {
+            .post(baseUrl + fetchMorningstarEndpointPath, undefined, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -164,13 +164,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                     : e.message ?? "No additional information available.",
               });
             })
-            .finally(() => setmorningstarIDRequestInProgress(false));
+            .finally(() => setMorningstarIDRequestInProgress(false));
         } else {
-          setmorningstarIDRequestInProgress(false);
+          setMorningstarIDRequestInProgress(false);
         }
       })
       .catch((e) => {
-        setmorningstarIDRequestInProgress(false);
+        setMorningstarIDRequestInProgress(false);
         setNotification({
           severity: "error",
           title: "Error while setting Morningstar ID",
@@ -185,18 +185,18 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   /**
    * Transmits the Market Screener ID to the server.
    */
-  const patchStockMarketScreenerId = () => {
-    setMarketScreenerIdRequestInProgress(true);
+  const patchStockMarketScreenerID = () => {
+    setMarketScreenerIDRequestInProgress(true);
     axios
       .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { marketScreenerID: stock.marketScreenerID },
       })
       .then(() => {
-        setMarketScreenerIdSet(!!stock.marketScreenerID); // Whether the Market Screener ID was empty
+        setMarketScreenerIDSet(!!stock.marketScreenerID); // Whether the Market Screener ID was empty
         if (stock.marketScreenerID) {
           // If a Market Screener ID was set, we fetch data from Market Screener using the new ID.
           axios
-            .get(baseUrl + fetchMarketScreenerEndpointPath, {
+            .post(baseUrl + fetchMarketScreenerEndpointPath, undefined, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -210,13 +210,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                     : e.message ?? "No additional information available.",
               });
             })
-            .finally(() => setMarketScreenerIdRequestInProgress(false));
+            .finally(() => setMarketScreenerIDRequestInProgress(false));
         } else {
-          setMarketScreenerIdRequestInProgress(false);
+          setMarketScreenerIDRequestInProgress(false);
         }
       })
       .catch((e) => {
-        setMarketScreenerIdRequestInProgress(false);
+        setMarketScreenerIDRequestInProgress(false);
         setNotification({
           severity: "error",
           title: "Error while setting Market Screener ID",
@@ -231,18 +231,18 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   /**
    * Transmits the MSCI ID to the server.
    */
-  const patchStockmsciID = () => {
-    setmsciIDRequestInProgress(true);
+  const patchStockMSCIID = () => {
+    setMSCIIDRequestInProgress(true);
     axios
       .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { msciID: stock.msciID },
       })
       .then(() => {
-        setmsciIDSet(!!stock.msciID); // Whether the MSCI ID was empty
+        setMSCIIDSet(!!stock.msciID); // Whether the MSCI ID was empty
         if (stock.msciID) {
           // If an MSCI ID was set, we fetch data from MSCI using the new ID.
           axios
-            .get(baseUrl + fetchMSCIEndpointPath, {
+            .post(baseUrl + fetchMSCIEndpointPath, undefined, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -256,13 +256,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                     : e.message ?? "No additional information available.",
               });
             })
-            .finally(() => setmsciIDRequestInProgress(false));
+            .finally(() => setMSCIIDRequestInProgress(false));
         } else {
-          setmsciIDRequestInProgress(false);
+          setMSCIIDRequestInProgress(false);
         }
       })
       .catch((e) => {
-        setmsciIDRequestInProgress(false);
+        setMSCIIDRequestInProgress(false);
         setNotification({
           severity: "error",
           title: "Error while setting MSCI ID",
@@ -275,20 +275,20 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the Reuters Identifier Code (RIC) to the server.
+   * Transmits the Reuters IDentifier Code (RIC) to the server.
    */
-  const patchStockRic = () => {
-    setRicRequestInProgress(true);
+  const patchStockRIC = () => {
+    setRICRequestInProgress(true);
     axios
       .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { ric: stock.ric },
       })
       .then(() => {
-        setRicSet(!!stock.ric); // Whether the RIC was empty
+        setRICSet(!!stock.ric); // Whether the RIC was empty
         if (stock.ric) {
           // If a RIC was set, we fetch data from Refinitiv using the new RIC.
           axios
-            .get(baseUrl + fetchRefinitivEndpointPath, {
+            .post(baseUrl + fetchRefinitivEndpointPath, undefined, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -302,13 +302,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                     : e.message ?? "No additional information available.",
               });
             })
-            .finally(() => setRicRequestInProgress(false));
+            .finally(() => setRICRequestInProgress(false));
         } else {
-          setRicRequestInProgress(false);
+          setRICRequestInProgress(false);
         }
       })
       .catch((e) => {
-        setRicRequestInProgress(false);
+        setRICRequestInProgress(false);
         setNotification({
           severity: "error",
           title: "Error while setting RIC",
@@ -323,18 +323,18 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   /**
    * Transmits the Standard & Poor’s ID to the server.
    */
-  const patchStockSpId = () => {
-    setSpIdRequestInProgress(true);
+  const patchStockSPID = () => {
+    setSPIDRequestInProgress(true);
     axios
       .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { spID: stock.spID },
       })
       .then(() => {
-        setSpIdSet(!!stock.spID); // Whether the S&P ID was empty
+        setSPIDSet(!!stock.spID); // Whether the S&P ID was empty
         if (stock.spID) {
           // If an S&P ID was set, we fetch data from S&P using the new ID.
           axios
-            .get(baseUrl + fetchSPEndpointPath, {
+            .post(baseUrl + fetchSPEndpointPath, undefined, {
               params: { ticker: stock.ticker, noSkip: true },
             })
             .then(() => {})
@@ -360,13 +360,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 });
               }
             })
-            .finally(() => setSpIdRequestInProgress(false));
+            .finally(() => setSPIDRequestInProgress(false));
         } else {
-          setSpIdRequestInProgress(false);
+          setSPIDRequestInProgress(false);
         }
       })
       .catch((e) => {
-        setSpIdRequestInProgress(false);
+        setSPIDRequestInProgress(false);
         setNotification({
           severity: "error",
           title: "Error while setting S&P ID",
@@ -381,18 +381,18 @@ const AddStock = (props: AddStockProps): JSX.Element => {
   /**
    * Transmits the Sustainalytics ID to the server.
    */
-  const patchStockSustainalyticsId = () => {
-    setSustainalyticsIdRequestInProgress(true);
+  const patchStockSustainalyticsID = () => {
+    setSustainalyticsIDRequestInProgress(true);
     axios
       .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
         params: { sustainalyticsID: stock.sustainalyticsID },
       })
       .then(() => {
-        setSustainalyticsIdSet(!!stock.sustainalyticsID); // Whether the Sustainalytics ID was empty
+        setSustainalyticsIDSet(!!stock.sustainalyticsID); // Whether the Sustainalytics ID was empty
         if (stock.sustainalyticsID) {
           // If a Sustainalytics ID was set, we fetch data from Sustainalytics using the new ID.
           axios
-            .get(baseUrl + fetchSustainalyticsEndpointPath, {
+            .post(baseUrl + fetchSustainalyticsEndpointPath, undefined, {
               params: { ticker: stock.ticker },
             })
             .then(() => {})
@@ -406,13 +406,13 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                     : e.message ?? "No additional information available.",
               });
             })
-            .finally(() => setSustainalyticsIdRequestInProgress(false));
+            .finally(() => setSustainalyticsIDRequestInProgress(false));
         } else {
-          setSustainalyticsIdRequestInProgress(false);
+          setSustainalyticsIDRequestInProgress(false);
         }
       })
       .catch((e) => {
-        setSustainalyticsIdRequestInProgress(false);
+        setSustainalyticsIDRequestInProgress(false);
         setNotification({
           severity: "error",
           title: "Error while setting Sustainalytics ID",
@@ -432,7 +432,8 @@ const AddStock = (props: AddStockProps): JSX.Element => {
     axios
       .get(baseUrl + stockEndpointPath + `/${stock.ticker}`)
       .then((res) => {
-        setStock(new Stock(res.data));
+        setStock(res.data);
+        setFinalStock(res.data);
         handleNext();
       })
       .catch((e) => {
@@ -465,10 +466,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return new Stock({
+                    return {
                       ...prevStock,
                       ticker: event.target.value,
-                    });
+                    };
                   });
                   setTickerError(false);
                 }}
@@ -483,10 +484,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return new Stock({
+                    return {
                       ...prevStock,
                       name: event.target.value,
-                    });
+                    };
                   });
                   setNameError(false);
                 }}
@@ -501,10 +502,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return new Stock({
+                    return {
                       ...prevStock,
                       isin: event.target.value,
-                    });
+                    };
                   });
                   if (!stock.country && event.target.value.length >= 2) {
                     // Extract country from ISIN
@@ -512,10 +513,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                     if (isCountry(possibleCountry)) {
                       // If the extracted country is valid, we set it as the stock’s country.
                       setStock((prevStock) => {
-                        return new Stock({
+                        return {
                           ...prevStock,
                           country: possibleCountry,
-                        });
+                        };
                       });
                       setCountryError(false);
                     }
@@ -546,7 +547,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 onChange={(_, value) =>
                   isCountry(value) &&
                   (setStock((prevStock) => {
-                    return new Stock({ ...prevStock, country: value });
+                    return { ...prevStock, country: value };
                   }),
                   setCountryError(false))
                 }
@@ -602,10 +603,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return new Stock({
+                    return {
                       ...prevStock,
                       morningstarID: event.target.value,
-                    });
+                    };
                   });
                 }}
                 label="Morningstar ID"
@@ -618,7 +619,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={morningstarIDRequestInProgress}
-                onClick={patchStockmorningstarID}
+                onClick={patchStockMorningstarID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={morningstarIDSet ? <LinkIcon /> : <AddLinkIcon />}
@@ -638,10 +639,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return new Stock({
+                    return {
                       ...prevStock,
                       marketScreenerID: event.target.value,
-                    });
+                    };
                   });
                 }}
                 label="Market Screener ID"
@@ -654,7 +655,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={marketScreenerIDRequestInProgress}
-                onClick={patchStockMarketScreenerId}
+                onClick={patchStockMarketScreenerID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={marketScreenerIDSet ? <LinkIcon /> : <AddLinkIcon />}
@@ -674,10 +675,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return new Stock({
+                    return {
                       ...prevStock,
                       msciID: event.target.value,
-                    });
+                    };
                   });
                 }}
                 label="MSCI ID"
@@ -690,7 +691,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={msciIDRequestInProgress}
-                onClick={patchStockmsciID}
+                onClick={patchStockMSCIID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={msciIDSet ? <LinkIcon /> : <AddLinkIcon />}
@@ -710,7 +711,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return new Stock({ ...prevStock, ric: event.target.value });
+                    return { ...prevStock, ric: event.target.value };
                   });
                 }}
                 label="RIC"
@@ -723,7 +724,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={ricRequestInProgress}
-                onClick={patchStockRic}
+                onClick={patchStockRIC}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={ricSet ? <LinkIcon /> : <AddLinkIcon />}
@@ -745,10 +746,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
                 onChange={(event) => {
                   if (!Number.isNaN(+event.target.value)) {
                     setStock((prevStock) => {
-                      return new Stock({
+                      return {
                         ...prevStock,
                         spID: +event.target.value,
-                      });
+                      };
                     });
                   }
                 }}
@@ -762,7 +763,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={spIDRequestInProgress}
-                onClick={patchStockSpId}
+                onClick={patchStockSPID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={spIDSet ? <LinkIcon /> : <AddLinkIcon />}
@@ -782,10 +783,10 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => {
-                    return new Stock({
+                    return {
                       ...prevStock,
                       sustainalyticsID: event.target.value,
-                    });
+                    };
                   });
                 }}
                 label="Sustainalytics ID"
@@ -798,7 +799,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={sustainalyticsIDRequestInProgress}
-                onClick={patchStockSustainalyticsId}
+                onClick={patchStockSustainalyticsID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={sustainalyticsIDSet ? <LinkIcon /> : <AddLinkIcon />}
@@ -848,7 +849,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               mr: "-32px",
             }}
           >
-            <StockDetails stock={stock} maxWidth={600} />
+            <StockDetails stock={finalStock} maxWidth={600} />
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             Please check whether all expected fields are filled. If a field is not filled, an alert will not be raised

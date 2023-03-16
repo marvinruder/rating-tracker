@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import APIError from "../utils/apiError.js";
 import { readResource } from "../redis/repositories/resourceRepository.js";
 import { GENERAL_ACCESS, resourceEndpointPath } from "rating-tracker-commons";
-import Router from "../routers/Router.js";
+import Router from "../utils/router.js";
 
 /**
  * This class is responsible for providing resources such as images.

@@ -17,7 +17,7 @@ import {
   signInEndpointPath,
   UserWithCredentials,
 } from "rating-tracker-commons";
-import Router from "../routers/Router.js";
+import Router from "../utils/router.js";
 
 dotenv.config();
 

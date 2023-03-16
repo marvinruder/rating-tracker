@@ -33,7 +33,7 @@ import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
 import { createResource, readResource } from "../redis/repositories/resourceRepository.js";
 import axios from "axios";
 import dotenv from "dotenv";
-import Router from "../routers/Router.js";
+import Router from "../utils/router.js";
 
 dotenv.config();
 
@@ -145,7 +145,7 @@ export class FetchController {
    */
   @Router({
     path: fetchMorningstarEndpointPath,
-    method: "get",
+    method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchMorningstarData(req: Request, res: Response) {
@@ -163,7 +163,7 @@ export class FetchController {
       }
     } else {
       // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      stocks = await readAllStocks();
     }
 
     stocks = stocks
@@ -641,7 +641,7 @@ export class FetchController {
    */
   @Router({
     path: fetchMarketScreenerEndpointPath,
-    method: "get",
+    method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchMarketScreenerData(req: Request, res: Response) {
@@ -659,7 +659,7 @@ export class FetchController {
       }
     } else {
       // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      stocks = await readAllStocks();
     }
 
     stocks = stocks
@@ -887,7 +887,7 @@ export class FetchController {
    */
   @Router({
     path: fetchMSCIEndpointPath,
-    method: "get",
+    method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchMSCIData(req: Request, res: Response) {
@@ -905,7 +905,7 @@ export class FetchController {
       }
     } else {
       // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      stocks = await readAllStocks();
     }
 
     stocks = stocks
@@ -1109,7 +1109,7 @@ export class FetchController {
    */
   @Router({
     path: fetchRefinitivEndpointPath,
-    method: "get",
+    method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchRefinitivData(req: Request, res: Response) {
@@ -1127,7 +1127,7 @@ export class FetchController {
       }
     } else {
       // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      stocks = await readAllStocks();
     }
 
     stocks = stocks
@@ -1323,7 +1323,7 @@ export class FetchController {
    */
   @Router({
     path: fetchSPEndpointPath,
-    method: "get",
+    method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchSPData(req: Request, res: Response) {
@@ -1341,7 +1341,7 @@ export class FetchController {
       }
     } else {
       // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      stocks = await readAllStocks();
     }
 
     stocks = stocks
@@ -1481,7 +1481,7 @@ export class FetchController {
    */
   @Router({
     path: fetchSustainalyticsEndpointPath,
-    method: "get",
+    method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchSustainalyticsData(req: Request, res: Response) {
@@ -1499,7 +1499,7 @@ export class FetchController {
       }
     } else {
       // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      stocks = await readAllStocks();
     }
 
     stocks = stocks.filter((stock) => stock.sustainalyticsID); // Only stocks with a Sustainalytics ID are considered.

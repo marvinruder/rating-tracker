@@ -92,11 +92,11 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element =>
   const [analystCountInput, setAnalystCountInput] = useState<number[]>([0, 60]);
   const [analystTargetDiffInput, setAnalystTargetDiffInput] = useState<number[]>([-50, 50]);
 
-  const [msciESGRatingInput, setMsciESGRatingInput] = useState<(MSCIESGRating | "None")[]>(["AAA", "None"]);
-  const [msciTemperatureInput, setMsciTemperatureInput] = useState<number[]>([1.0, 4.0]);
+  const [msciESGRatingInput, setMSCIESGRatingInput] = useState<(MSCIESGRating | "None")[]>(["AAA", "None"]);
+  const [msciTemperatureInput, setMSCITemperatureInput] = useState<number[]>([1.0, 4.0]);
   const [refinitivESGScoreInput, setRefinitivESGScoreInput] = useState<number[]>([0, 100]);
   const [refinitivEmissionsInput, setRefinitivEmissionsInput] = useState<number[]>([0, 100]);
-  const [spESGScoreInput, setSpESGScoreInput] = useState<number[]>([0, 100]);
+  const [spESGScoreInput, setSPESGScoreInput] = useState<number[]>([0, 100]);
   const [sustainalyticsESGRiskInput, setSustainalyticsESGRiskInput] = useState<number[]>([0, 50]);
 
   const [countryInput, setCountryInput] = useState<Country[]>([]);
@@ -240,11 +240,11 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element =>
               setAnalystConsensusInput([0, 10]);
               setAnalystCountInput([0, 60]);
               setAnalystTargetDiffInput([-50, 50]);
-              setMsciESGRatingInput(["AAA", "None"]);
-              setMsciTemperatureInput([1.0, 4.0]);
+              setMSCIESGRatingInput(["AAA", "None"]);
+              setMSCITemperatureInput([1.0, 4.0]);
               setRefinitivESGScoreInput([0, 100]);
               setRefinitivEmissionsInput([0, 100]);
-              setSpESGScoreInput([0, 100]);
+              setSPESGScoreInput([0, 100]);
               setSustainalyticsESGRiskInput([0, 50]);
               setStyleboxInput({});
               setCountryInput([]);
@@ -416,7 +416,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element =>
                     step={1}
                     marks
                     onChange={(_, newValue: number[]) =>
-                      setMsciESGRatingInput(newValue.map((value) => (value === 7 ? "None" : msciESGRatingArray[value])))
+                      setMSCIESGRatingInput(newValue.map((value) => (value === 7 ? "None" : msciESGRatingArray[value])))
                     }
                     valueLabelDisplay="auto"
                     valueLabelFormat={(value) => (value === 7 ? "None" : msciESGRatingArray[value])}
@@ -429,7 +429,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element =>
                     min={1}
                     max={4}
                     step={0.1}
-                    onChange={(_, newValue: number[]) => setMsciTemperatureInput(newValue)}
+                    onChange={(_, newValue: number[]) => setMSCITemperatureInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* Refinitiv ESG Score */}
@@ -459,7 +459,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element =>
                     value={spESGScoreInput}
                     min={0}
                     max={100}
-                    onChange={(_, newValue: number[]) => setSpESGScoreInput(newValue)}
+                    onChange={(_, newValue: number[]) => setSPESGScoreInput(newValue)}
                     valueLabelDisplay="auto"
                   />
                   {/* Sustainalytics ESG Risk */}

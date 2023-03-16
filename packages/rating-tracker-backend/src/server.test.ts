@@ -16,6 +16,7 @@ import {
   sortableAttributeArray,
   statusEndpointPath,
   Stock,
+  stockComputeEndpointPath,
   stockEndpointPath,
   stockListEndpointPath,
   stockLogoEndpointPath,
@@ -27,6 +28,7 @@ import {
 import supertest, { CallbackHandler, Test } from "supertest";
 import applyPostgresSeeds from "../test/seeds/postgres";
 import applyRedisSeeds from "../test/seeds/redis";
+import client from "./db/client.js";
 
 const { listener, server } = await import("./server");
 
@@ -114,6 +116,32 @@ describe("Stock API", () => {
     expect(res.body.count).toBe(11);
     expect(res.body.stocks).toHaveLength(11);
     expect((res.body.stocks as Stock[]).find((stock) => stock.ticker === "exampleAAPL").name).toMatch("Apple");
+  });
+
+  it("computes correct scores", async () => {
+    await expectRouteToBePrivate(`/api${stockComputeEndpointPath}`, requestWithSupertest.post);
+
+    // Write incorrect score directly into the database
+    await client.stock.update({ where: { ticker: "exampleAAPL" }, data: { totalScore: 0 } });
+
+    let res = await requestWithSupertest
+      .get(`/api${stockEndpointPath}/exampleAAPL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).totalScore).toBe(0);
+
+    // Fix the incorrect score by recomputing
+    res = await requestWithSupertest
+      .post(`/api${stockComputeEndpointPath}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+
+    // Now the score does not hold an incorrect value
+    res = await requestWithSupertest
+      .get(`/api${stockEndpointPath}/exampleAAPL`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).totalScore).not.toBe(0);
   });
 
   it("filters and sorts stock list", async () => {

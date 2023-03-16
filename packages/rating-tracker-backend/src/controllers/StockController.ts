@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   GENERAL_ACCESS,
   optionalStockValuesNull,
-  Stock,
+  stockComputeEndpointPath,
   stockEndpointPath,
   stockListEndpointPath,
   stockLogoEndpointPath,
@@ -26,7 +26,7 @@ import {
 } from "rating-tracker-commons";
 import APIError from "../utils/apiError.js";
 import axios from "axios";
-import Router from "../routers/Router.js";
+import Router from "../utils/router.js";
 
 /**
  * This class is responsible for providing stock data.
@@ -148,9 +148,7 @@ export class StockController {
         stocks = stocks.filter(
           (stock) =>
             // smaller is better – use very large number as default value
-            (stock.morningstarFairValue && stock.lastClose
-              ? stock.getPercentageToLastClose("morningstarFairValue")
-              : Number.MAX_VALUE) >= morningstarFairValueDiffMin
+            (stock.morningstarFairValuePercentageToLastClose ?? Number.MAX_VALUE) >= morningstarFairValueDiffMin
         );
       }
     }
@@ -161,9 +159,7 @@ export class StockController {
         stocks = stocks.filter(
           (stock) =>
             // smaller is better – use very large number as default value
-            (stock.morningstarFairValue && stock.lastClose
-              ? stock.getPercentageToLastClose("morningstarFairValue")
-              : Number.MAX_VALUE) <= morningstarFairValueDiffMax
+            (stock.morningstarFairValuePercentageToLastClose ?? Number.MAX_VALUE) <= morningstarFairValueDiffMax
         );
       }
     }
@@ -210,9 +206,7 @@ export class StockController {
         stocks = stocks.filter(
           (stock) =>
             // smaller is better – use very large number as default value
-            (stock.analystTargetPrice && stock.lastClose
-              ? stock.getPercentageToLastClose("analystTargetPrice")
-              : Number.MAX_VALUE) >= analystTargetDiffMin
+            (stock.analystTargetPricePercentageToLastClose ?? Number.MAX_VALUE) >= analystTargetDiffMin
         );
       }
     }
@@ -223,9 +217,7 @@ export class StockController {
         stocks = stocks.filter(
           (stock) =>
             // smaller is better – use very large number as default value
-            (stock.analystTargetPrice && stock.lastClose
-              ? stock.getPercentageToLastClose("analystTargetPrice")
-              : Number.MAX_VALUE) <= analystTargetDiffMax
+            (stock.analystTargetPricePercentageToLastClose ?? Number.MAX_VALUE) <= analystTargetDiffMax
         );
       }
     }
@@ -350,7 +342,7 @@ export class StockController {
       if (!Number.isNaN(financialScoreMin)) {
         stocks = stocks.filter(
           // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.getFinancialScore() >= financialScoreMin
+          (stock) => 100 * stock.financialScore >= financialScoreMin
         );
       }
     }
@@ -359,7 +351,7 @@ export class StockController {
       if (!Number.isNaN(financialScoreMax)) {
         stocks = stocks.filter(
           // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.getFinancialScore() <= financialScoreMax
+          (stock) => 100 * stock.financialScore <= financialScoreMax
         );
       }
     }
@@ -368,7 +360,7 @@ export class StockController {
       if (!Number.isNaN(esgScoreMin)) {
         stocks = stocks.filter(
           // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.getESGScore() >= esgScoreMin
+          (stock) => 100 * stock.esgScore >= esgScoreMin
         );
       }
     }
@@ -377,7 +369,7 @@ export class StockController {
       if (!Number.isNaN(esgScoreMax)) {
         stocks = stocks.filter(
           // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.getESGScore() <= esgScoreMax
+          (stock) => 100 * stock.esgScore <= esgScoreMax
         );
       }
     }
@@ -386,7 +378,7 @@ export class StockController {
       if (!Number.isNaN(totalScoreMin)) {
         stocks = stocks.filter(
           // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.getTotalScore() >= totalScoreMin
+          (stock) => 100 * stock.totalScore >= totalScoreMin
         );
       }
     }
@@ -395,7 +387,7 @@ export class StockController {
       if (!Number.isNaN(totalScoreMax)) {
         stocks = stocks.filter(
           // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.getTotalScore() <= totalScoreMax
+          (stock) => 100 * stock.totalScore <= totalScoreMax
         );
       }
     }
@@ -438,12 +430,19 @@ export class StockController {
           stocks.sort((a, b) => (a[sortBy] ?? Number.MAX_VALUE) - (b[sortBy] ?? Number.MAX_VALUE));
           break;
         case "morningstarFairValue":
+          // smaller is better – use very large number as default value
+          stocks.sort(
+            (a, b) =>
+              (a[sortBy] && a.lastClose ? a.morningstarFairValuePercentageToLastClose : Number.MAX_VALUE) -
+              (b[sortBy] && b.lastClose ? b.morningstarFairValuePercentageToLastClose : Number.MAX_VALUE)
+          );
+          break;
         case "analystTargetPrice":
           // smaller is better – use very large number as default value
           stocks.sort(
             (a, b) =>
-              (a[sortBy] && a.lastClose ? a.getPercentageToLastClose(sortBy) : Number.MAX_VALUE) -
-              (b[sortBy] && b.lastClose ? b.getPercentageToLastClose(sortBy) : Number.MAX_VALUE)
+              (a[sortBy] && a.lastClose ? a.analystTargetPricePercentageToLastClose : Number.MAX_VALUE) -
+              (b[sortBy] && b.lastClose ? b.analystTargetPricePercentageToLastClose : Number.MAX_VALUE)
           );
           break;
         case "52w":
@@ -463,13 +462,13 @@ export class StockController {
           );
           break;
         case "financialScore":
-          stocks.sort((a, b) => a.getFinancialScore() - b.getFinancialScore());
+          stocks.sort((a, b) => a.financialScore - b.financialScore);
           break;
         case "esgScore":
-          stocks.sort((a, b) => a.getESGScore() - b.getESGScore());
+          stocks.sort((a, b) => a.esgScore - b.esgScore);
           break;
         case "totalScore":
-          stocks.sort((a, b) => a.getTotalScore() - b.getTotalScore());
+          stocks.sort((a, b) => a.totalScore - b.totalScore);
           break;
       }
       // We just sorted ascending. If descending is requested, simply reverse the list.
@@ -493,6 +492,24 @@ export class StockController {
 
     // Respond with the list of stocks and the total count after filtering and before pagination
     res.status(200).json({ stocks, count: length }).end();
+  }
+
+  /**
+   * (Re-)Computes dynamic attributes of all stocks.
+   *
+   * @param {Request} _ Request object
+   * @param {Response} res Response object
+   */
+  @Router({
+    path: stockComputeEndpointPath,
+    method: "post",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
+  async compute(_: Request, res: Response) {
+    for await (const stock of await readAllStocks()) {
+      await updateStock(stock.ticker, {}, true);
+    }
+    res.status(204).end();
   }
 
   /**
@@ -608,7 +625,7 @@ export class StockController {
       isCountry(country) &&
       typeof isin === "string"
     ) {
-      if (await createStock(new Stock({ ...optionalStockValuesNull, ticker, name, country, isin }))) {
+      if (await createStock({ ...optionalStockValuesNull, ticker, name, country, isin })) {
         res.status(201).end();
       } else {
         throw new APIError(409, "A stock with that ticker exists already.");

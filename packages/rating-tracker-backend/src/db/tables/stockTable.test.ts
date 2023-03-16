@@ -20,15 +20,13 @@ beforeEach(async () => {
 
 describe("CRUD methods for single stock that are difficult to test otherwise", () => {
   it("updates a single stock", async () => {
-    await createStock(
-      new Stock({
-        ...optionalStockValuesNull,
-        ticker: "NEWSTOCK",
-        name: "New Stock Inc.",
-        isin: "US123456789",
-        country: "US",
-      })
-    );
+    await createStock({
+      ...optionalStockValuesNull,
+      ticker: "NEWSTOCK",
+      name: "New Stock Inc.",
+      isin: "US123456789",
+      country: "US",
+    });
 
     const newValues: Partial<Omit<Stock, "ticker">> = {
       name: "Updated Stock",
@@ -119,15 +117,13 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
   });
 
   it("cannot update a stock with an invalid property", async () => {
-    await createStock(
-      new Stock({
-        ...optionalStockValuesNull,
-        ticker: "NEWSTOCK",
-        name: "New Stock Inc.",
-        isin: "US123456789",
-        country: "US",
-      })
-    );
+    await createStock({
+      ...optionalStockValuesNull,
+      ticker: "NEWSTOCK",
+      name: "New Stock Inc.",
+      isin: "US123456789",
+      country: "US",
+    });
 
     const invalidValues: any = {
       questionableProperty: "This is not a valid property",

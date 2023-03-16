@@ -13,6 +13,7 @@ import * as sessionEndpoint from "./paths/sessionEndpoint.js";
 import * as statusEndpoint from "./paths/statusEndpoint.js";
 import * as stockLogoEndpoint from "./paths/stock/logo/index.js";
 import * as stockEndpoint from "./paths/stock/index.js";
+import * as stockComputeEndpoint from "./paths/stock/computeEndpoint.js";
 import * as signInEndpoint from "./paths/auth/signInEndpoint.js";
 import * as resourceEndpoint from "./paths/resource/index.js";
 import * as userManagementEndpoint from "./paths/userManagement/index.js";
@@ -30,6 +31,7 @@ import {
   sessionEndpointPath,
   signInEndpointPath,
   statusEndpointPath,
+  stockComputeEndpointPath,
   stockEndpointPath,
   stockListEndpointPath,
   stockLogoEndpointPath,
@@ -61,6 +63,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     [`/api${registerEndpointPath}`]: registerEndpoint,
     [`/api${signInEndpointPath}`]: signInEndpoint,
     [`/api${stockListEndpointPath}`]: stockListEndpoint,
+    [`/api${stockComputeEndpointPath}`]: stockComputeEndpoint,
     [`/api${stockEndpointPath}/{ticker}`]: stockEndpoint,
     [`/api${stockLogoEndpointPath}/{ticker}`]: stockLogoEndpoint,
     [`/api${fetchMorningstarEndpointPath}`]: morningstarEndpoint,

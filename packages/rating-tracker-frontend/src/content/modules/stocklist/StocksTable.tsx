@@ -64,7 +64,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
         },
       })
       .then((res) => {
-        setStocks(res.data.stocks.map((stock: any) => new Stock(stock)));
+        setStocks(res.data.stocks);
         setCount(res.data.count);
       })
       .catch((e) => {

@@ -8,7 +8,7 @@ import { accepted, noContent, okStockList } from "../../responses/success.js";
 /**
  * Fetch information from S&P Global Sustainable1 ESG Scores
  */
-const get: OpenAPIV3.OperationObject = {
+const post: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchSPData",
   summary: "S&P Fetch API",
@@ -34,4 +34,4 @@ const get: OpenAPIV3.OperationObject = {
   },
 };
 
-export { get };
+export { post };

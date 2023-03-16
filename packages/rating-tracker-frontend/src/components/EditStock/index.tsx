@@ -47,18 +47,18 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
   // The value of the text field in the country autocomplete.
   const [countryInputValue, setCountryInputValue] = useState<string>(countryName[props.stock?.country]);
-  const [morningstarID, setmorningstarID] = useState<string>(props.stock?.morningstarID);
-  const [morningstarIDRequestInProgress, setmorningstarIDRequestInProgress] = useState<boolean>(false);
-  const [marketScreenerID, setMarketScreenerId] = useState<string>(props.stock?.marketScreenerID);
-  const [marketScreenerIDRequestInProgress, setMarketScreenerIdRequestInProgress] = useState<boolean>(false);
-  const [msciID, setmsciID] = useState<string>(props.stock?.msciID);
-  const [msciIDRequestInProgress, setmsciIDRequestInProgress] = useState<boolean>(false);
-  const [ric, setRic] = useState<string>(props.stock?.ric);
-  const [ricRequestInProgress, setRicRequestInProgress] = useState<boolean>(false);
-  const [spID, setSpId] = useState<number>(props.stock?.spID);
-  const [spIDRequestInProgress, setSpIdRequestInProgress] = useState<boolean>(false);
-  const [sustainalyticsID, setSustainalyticsId] = useState<string>(props.stock?.sustainalyticsID);
-  const [sustainalyticsIDRequestInProgress, setSustainalyticsIdRequestInProgress] = useState<boolean>(false);
+  const [morningstarID, setMorningstarID] = useState<string>(props.stock?.morningstarID);
+  const [morningstarIDRequestInProgress, setMorningstarIDRequestInProgress] = useState<boolean>(false);
+  const [marketScreenerID, setMarketScreenerID] = useState<string>(props.stock?.marketScreenerID);
+  const [marketScreenerIDRequestInProgress, setMarketScreenerIDRequestInProgress] = useState<boolean>(false);
+  const [msciID, setMSCIID] = useState<string>(props.stock?.msciID);
+  const [msciIDRequestInProgress, setMSCIIDRequestInProgress] = useState<boolean>(false);
+  const [ric, setRIC] = useState<string>(props.stock?.ric);
+  const [ricRequestInProgress, setRICRequestInProgress] = useState<boolean>(false);
+  const [spID, setSPID] = useState<number>(props.stock?.spID);
+  const [spIDRequestInProgress, setSPIDRequestInProgress] = useState<boolean>(false);
+  const [sustainalyticsID, setSustainalyticsID] = useState<string>(props.stock?.sustainalyticsID);
+  const [sustainalyticsIDRequestInProgress, setSustainalyticsIDRequestInProgress] = useState<boolean>(false);
   const { setNotification } = useNotification();
 
   /**
@@ -110,10 +110,10 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   /**
    * Transmits the Morningstar ID to the server.
    */
-  const patchStockmorningstarID = () => {
+  const patchStockMorningstarID = () => {
     props.stock &&
       props.getStocks &&
-      (setmorningstarIDRequestInProgress(true),
+      (setMorningstarIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { morningstarID },
@@ -122,7 +122,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
           if (morningstarID) {
             // If a Morningstar ID was set, we fetch data from Morningstar using the new ID.
             axios
-              .get(baseUrl + fetchMorningstarEndpointPath, {
+              .post(baseUrl + fetchMorningstarEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true },
               })
               .then(() => {})
@@ -136,13 +136,13 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                       : e.message ?? "No additional information available.",
                 });
               })
-              .finally(() => setmorningstarIDRequestInProgress(false));
+              .finally(() => setMorningstarIDRequestInProgress(false));
           } else {
-            setmorningstarIDRequestInProgress(false);
+            setMorningstarIDRequestInProgress(false);
           }
         })
         .catch((e) => {
-          setmorningstarIDRequestInProgress(false);
+          setMorningstarIDRequestInProgress(false);
           setNotification({
             severity: "error",
             title: "Error while setting Morningstar ID",
@@ -157,10 +157,10 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   /**
    * Transmits the Market Screener ID to the server.
    */
-  const patchStockMarketScreenerId = () => {
+  const patchStockMarketScreenerID = () => {
     props.stock &&
       props.getStocks &&
-      (setMarketScreenerIdRequestInProgress(true),
+      (setMarketScreenerIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { marketScreenerID },
@@ -169,7 +169,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
           if (marketScreenerID) {
             // If a Market Screener ID was set, we fetch data from Market Screener using the new ID.
             axios
-              .get(baseUrl + fetchMarketScreenerEndpointPath, {
+              .post(baseUrl + fetchMarketScreenerEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true },
               })
               .then(() => {})
@@ -183,13 +183,13 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                       : e.message ?? "No additional information available.",
                 });
               })
-              .finally(() => setMarketScreenerIdRequestInProgress(false));
+              .finally(() => setMarketScreenerIDRequestInProgress(false));
           } else {
-            setMarketScreenerIdRequestInProgress(false);
+            setMarketScreenerIDRequestInProgress(false);
           }
         })
         .catch((e) => {
-          setMarketScreenerIdRequestInProgress(false);
+          setMarketScreenerIDRequestInProgress(false);
           setNotification({
             severity: "error",
             title: "Error while setting Market Screener ID",
@@ -204,10 +204,10 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   /**
    * Transmits the MSCI ID to the server.
    */
-  const patchStockmsciID = () => {
+  const patchStockMSCIID = () => {
     props.stock &&
       props.getStocks &&
-      (setmsciIDRequestInProgress(true),
+      (setMSCIIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { msciID },
@@ -216,7 +216,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
           if (msciID) {
             // If an MSCI ID was set, we fetch data from MSCI using the new ID.
             axios
-              .get(baseUrl + fetchMSCIEndpointPath, {
+              .post(baseUrl + fetchMSCIEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true },
               })
               .then(() => {})
@@ -230,13 +230,13 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                       : e.message ?? "No additional information available.",
                 });
               })
-              .finally(() => setmsciIDRequestInProgress(false));
+              .finally(() => setMSCIIDRequestInProgress(false));
           } else {
-            setmsciIDRequestInProgress(false);
+            setMSCIIDRequestInProgress(false);
           }
         })
         .catch((e) => {
-          setmsciIDRequestInProgress(false);
+          setMSCIIDRequestInProgress(false);
           setNotification({
             severity: "error",
             title: "Error while setting MSCI ID",
@@ -249,12 +249,12 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the Reuters Identifier Code (RIC) to the server.
+   * Transmits the Reuters IDentifier Code (RIC) to the server.
    */
-  const patchStockRic = () => {
+  const patchStockRIC = () => {
     props.stock &&
       props.getStocks &&
-      (setRicRequestInProgress(true),
+      (setRICRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { ric },
@@ -263,7 +263,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
           if (ric) {
             // If a RIC was set, we fetch data from Refinitiv using the new RIC.
             axios
-              .get(baseUrl + fetchRefinitivEndpointPath, {
+              .post(baseUrl + fetchRefinitivEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true },
               })
               .then(() => {})
@@ -277,13 +277,13 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                       : e.message ?? "No additional information available.",
                 });
               })
-              .finally(() => setRicRequestInProgress(false));
+              .finally(() => setRICRequestInProgress(false));
           } else {
-            setRicRequestInProgress(false);
+            setRICRequestInProgress(false);
           }
         })
         .catch((e) => {
-          setRicRequestInProgress(false);
+          setRICRequestInProgress(false);
           setNotification({
             severity: "error",
             title: "Error while setting RIC",
@@ -298,10 +298,10 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   /**
    * Transmits the S&P ID to the server.
    */
-  const patchStockSpId = () => {
+  const patchStockSPID = () => {
     props.stock &&
       props.getStocks &&
-      (setSpIdRequestInProgress(true),
+      (setSPIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { spID },
@@ -310,7 +310,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
           if (spID) {
             // If an S&P ID was set, we fetch data from S&P using the new ID.
             axios
-              .get(baseUrl + fetchSPEndpointPath, {
+              .post(baseUrl + fetchSPEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true },
               })
               .then(() => {})
@@ -336,13 +336,13 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                   });
                 }
               })
-              .finally(() => setSpIdRequestInProgress(false));
+              .finally(() => setSPIDRequestInProgress(false));
           } else {
-            setSpIdRequestInProgress(false);
+            setSPIDRequestInProgress(false);
           }
         })
         .catch((e) => {
-          setSpIdRequestInProgress(false);
+          setSPIDRequestInProgress(false);
           setNotification({
             severity: "error",
             title: "Error while setting S&P ID",
@@ -357,10 +357,10 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   /**
    * Transmits the Sustainalytics ID to the server.
    */
-  const patchStockSustainalyticsId = () => {
+  const patchStockSustainalyticsID = () => {
     props.stock &&
       props.getStocks &&
-      (setSustainalyticsIdRequestInProgress(true),
+      (setSustainalyticsIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { sustainalyticsID },
@@ -369,7 +369,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
           if (sustainalyticsID) {
             // If a Sustainalytics ID was set, we fetch data from Sustainalytics using the new ID.
             axios
-              .get(baseUrl + fetchSustainalyticsEndpointPath, {
+              .post(baseUrl + fetchSustainalyticsEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker },
               })
               .then(() => {})
@@ -383,13 +383,13 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                       : e.message ?? "No additional information available.",
                 });
               })
-              .finally(() => setSustainalyticsIdRequestInProgress(false));
+              .finally(() => setSustainalyticsIDRequestInProgress(false));
           } else {
-            setSustainalyticsIdRequestInProgress(false);
+            setSustainalyticsIDRequestInProgress(false);
           }
         })
         .catch((e) => {
-          setSustainalyticsIdRequestInProgress(false);
+          setSustainalyticsIDRequestInProgress(false);
           setNotification({
             severity: "error",
             title: "Error while setting Sustainalytics ID",
@@ -468,7 +468,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
               <TextField
                 onChange={(event) => {
-                  setmorningstarID(event.target.value);
+                  setMorningstarID(event.target.value);
                 }}
                 label="Morningstar ID"
                 value={morningstarID}
@@ -480,7 +480,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={morningstarIDRequestInProgress}
-                onClick={patchStockmorningstarID}
+                onClick={patchStockMorningstarID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
@@ -493,7 +493,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
               <TextField
                 onChange={(event) => {
-                  setMarketScreenerId(event.target.value);
+                  setMarketScreenerID(event.target.value);
                 }}
                 label="MarketScreener ID"
                 value={marketScreenerID}
@@ -505,7 +505,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={marketScreenerIDRequestInProgress}
-                onClick={patchStockMarketScreenerId}
+                onClick={patchStockMarketScreenerID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
@@ -518,7 +518,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
               <TextField
                 onChange={(event) => {
-                  setmsciID(event.target.value);
+                  setMSCIID(event.target.value);
                 }}
                 label="MSCI ID"
                 value={msciID}
@@ -530,7 +530,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={msciIDRequestInProgress}
-                onClick={patchStockmsciID}
+                onClick={patchStockMSCIID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
@@ -543,7 +543,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
               <TextField
                 onChange={(event) => {
-                  setRic(event.target.value);
+                  setRIC(event.target.value);
                 }}
                 label="RIC"
                 value={ric}
@@ -555,7 +555,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={ricRequestInProgress}
-                onClick={patchStockRic}
+                onClick={patchStockRIC}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
@@ -570,7 +570,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 onChange={(event) => {
                   if (!Number.isNaN(+event.target.value)) {
-                    setSpId(+event.target.value);
+                    setSPID(+event.target.value);
                   }
                 }}
                 label="S&P ID"
@@ -583,7 +583,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={spIDRequestInProgress}
-                onClick={patchStockSpId}
+                onClick={patchStockSPID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}
@@ -596,7 +596,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
               <TextField
                 onChange={(event) => {
-                  setSustainalyticsId(event.target.value);
+                  setSustainalyticsID(event.target.value);
                 }}
                 label="Sustainalytics ID"
                 value={sustainalyticsID}
@@ -608,7 +608,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               <LoadingButton
                 size="small"
                 loading={sustainalyticsIDRequestInProgress}
-                onClick={patchStockSustainalyticsId}
+                onClick={patchStockSustainalyticsID}
                 disabled={requestInProgress}
                 variant="contained"
                 startIcon={<PublishedWithChangesIcon />}

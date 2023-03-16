@@ -20,7 +20,7 @@ import formatMarketCap from "../../utils/formatters";
 import Range52WSlider from "../Range52WSlider";
 import SectorIcon from "../SectorIcon";
 import StyleBox from "../StyleBox";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
@@ -455,8 +455,8 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={6}>
             {props.stock ? (
               <BlueIconChip
-                icon={<EmojiEventsIcon />}
-                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.getTotalScore()))}</strong>}
+                icon={<VerifiedIcon />}
+                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.totalScore))}</strong>}
                 sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
               />
             ) : (
@@ -489,7 +489,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             {props.stock ? (
               <YellowIconChip
                 icon={<PriceCheckIcon />}
-                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.getFinancialScore()))}</strong>}
+                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.financialScore))}</strong>}
                 sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
               />
             ) : (
@@ -522,7 +522,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             {props.stock ? (
               <GreenIconChip
                 icon={<NaturePeopleIcon />}
-                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.getESGScore()))}</strong>}
+                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.esgScore))}</strong>}
                 sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
               />
             ) : (
@@ -640,11 +640,9 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
                 {props.stock ? (
                   <>
-                    {props?.stock.morningstarFairValue !== null &&
-                      props?.stock.lastClose !== null &&
-                      props?.stock.getPercentageToLastClose("morningstarFairValue") !== null &&
-                      `${props.stock?.lastClose > props.stock?.morningstarFairValue ? "+" : ""}${Math.round(
-                        props.stock?.getPercentageToLastClose("morningstarFairValue")
+                    {props?.stock.morningstarFairValuePercentageToLastClose !== null &&
+                      `${props?.stock.morningstarFairValuePercentageToLastClose > 0 ? "+" : ""}${Math.round(
+                        props.stock?.morningstarFairValuePercentageToLastClose
                       )}\u2009%`}
                   </>
                 ) : (
@@ -770,12 +768,10 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
                 {props.stock ? (
                   <>
-                    {props.stock?.analystTargetPrice !== null &&
-                      props.stock?.analystCount !== null &&
-                      props.stock?.lastClose !== null &&
-                      props.stock?.getPercentageToLastClose("analystTargetPrice") !== null &&
-                      `${props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""}${Math.round(
-                        props.stock.getPercentageToLastClose("analystTargetPrice")
+                    {props.stock?.analystCount !== null &&
+                      props.stock?.analystTargetPricePercentageToLastClose !== null &&
+                      `${props.stock?.analystTargetPricePercentageToLastClose > 0 ? "+" : ""}${Math.round(
+                        props.stock.analystTargetPricePercentageToLastClose
                       )}\u2009%`}
                   </>
                 ) : (
@@ -801,7 +797,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   {props.stock?.analystTargetPrice !== null &&
                     props.stock?.analystCount !== null &&
                     props.stock?.lastClose !== null &&
-                    props.stock?.getPercentageToLastClose("analystTargetPrice") !== null &&
+                    props.stock?.analystTargetPricePercentageToLastClose !== null &&
                     `n\u2009=\u2009${props.stock?.analystCount}`}
                 </>
               ) : (

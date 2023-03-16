@@ -1,14 +1,14 @@
-import { optionalStockValuesNull, Stock } from "rating-tracker-commons";
+import { OmitDynamicAttributesStock, optionalStockValuesNull } from "rating-tracker-commons";
 import { describe, expect, it } from "vitest";
 import formatMarketCap from "./formatters";
 
-const stock: Stock = new Stock({
+const stock: OmitDynamicAttributesStock = {
   ...optionalStockValuesNull,
   ticker: "EXAMPLE",
   name: "Example Inc.",
   isin: "US0000000000",
   country: "US",
-});
+};
 
 describe("Market Capitalization Formatter", () => {
   it("formats trillions", () => {

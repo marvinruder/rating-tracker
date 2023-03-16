@@ -1,4 +1,4 @@
-import { Stock } from "rating-tracker-commons";
+import { OmitDynamicAttributesStock } from "rating-tracker-commons";
 
 /**
  * Formats the market capitalization of a stock to a human readable format.
@@ -6,7 +6,7 @@ import { Stock } from "rating-tracker-commons";
  * @param {Stock} stock The stock to format the market capitalization of.
  * @returns {string} The formatted market capitalization.
  */
-const formatMarketCap = (stock: Stock): string => {
+const formatMarketCap = (stock: OmitDynamicAttributesStock): string => {
   if (stock.marketCap > 1e12) {
     return (stock.marketCap / 1e12).toPrecision(3) + " T"; // trillion, rounded to 3 significant digits
   } else if (stock.marketCap > 1e9) {

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { statusEndpointPath } from "rating-tracker-commons";
-import Router from "../routers/Router.js";
+import Router from "../utils/router.js";
 
 /**
  * This class is responsible for providing a trivial status response whenever the backend API is up and running.

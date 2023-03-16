@@ -20,7 +20,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
@@ -285,8 +285,8 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         }}
       >
         <BlueIconChip
-          icon={<EmojiEventsIcon />}
-          label={<strong>{Math.round(Math.max(0, 100 * props.stock.getTotalScore()))}</strong>}
+          icon={<VerifiedIcon />}
+          label={<strong>{Math.round(Math.max(0, 100 * props.stock.totalScore))}</strong>}
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
@@ -298,7 +298,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       >
         <YellowIconChip
           icon={<PriceCheckIcon />}
-          label={<strong>{Math.round(Math.max(0, 100 * props.stock.getFinancialScore()))}</strong>}
+          label={<strong>{Math.round(Math.max(0, 100 * props.stock.financialScore))}</strong>}
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
@@ -310,7 +310,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       >
         <GreenIconChip
           icon={<NaturePeopleIcon />}
-          label={<strong>{Math.round(Math.max(0, 100 * props.stock.getESGScore()))}</strong>}
+          label={<strong>{Math.round(Math.max(0, 100 * props.stock.esgScore))}</strong>}
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
@@ -340,11 +340,9 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             <Box sx={{ float: "right" }}>{props.stock.morningstarFairValue?.toFixed(2) ?? "–"}</Box>
           </Typography>
           <Typography variant="body2" color="text.secondary" width={90} sx={{ textAlign: "right" }} noWrap>
-            {props.stock.morningstarFairValue !== null &&
-              props.stock.lastClose !== null &&
-              props.stock.getPercentageToLastClose("morningstarFairValue") !== null &&
-              `${props.stock.lastClose > props.stock.morningstarFairValue ? "+" : ""}${Math.round(
-                props.stock.getPercentageToLastClose("morningstarFairValue")
+            {props.stock.morningstarFairValuePercentageToLastClose !== null &&
+              `${props.stock.morningstarFairValuePercentageToLastClose > 0 ? "+" : ""}${Math.round(
+                props.stock.morningstarFairValuePercentageToLastClose
               )}\u2009%`}
           </Typography>
         </MorningstarNavigator>
@@ -434,12 +432,10 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             sx={{ textAlign: "right", display: "inline-block" }}
             noWrap
           >
-            {props.stock.analystTargetPrice !== null &&
-              props.stock.analystCount !== null &&
-              props.stock.lastClose !== null &&
-              props.stock.getPercentageToLastClose("analystTargetPrice") !== null &&
-              `${props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""}${Math.round(
-                props.stock.getPercentageToLastClose("analystTargetPrice")
+            {props.stock.analystCount !== null &&
+              props.stock.analystTargetPricePercentageToLastClose !== null &&
+              `${props.stock.analystTargetPricePercentageToLastClose > 0 ? "+" : ""}${Math.round(
+                props.stock.analystTargetPricePercentageToLastClose
               )}\u2009%`}
           </Typography>
         </MarketScreenerNavigator>
