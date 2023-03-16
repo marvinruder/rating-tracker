@@ -31,7 +31,7 @@ import {
 import { useState } from "react";
 import DeleteUser from "../DeleteUser";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { baseUrl } from "../..";
+import { baseUrl } from "../../router";
 import axios from "axios";
 import { useNotification } from "../../contexts/NotificationContext";
 

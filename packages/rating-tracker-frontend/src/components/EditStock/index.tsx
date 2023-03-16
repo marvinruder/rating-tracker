@@ -28,7 +28,7 @@ import {
 } from "rating-tracker-commons";
 import axios from "axios";
 import { useState } from "react";
-import { baseUrl } from "../..";
+import { baseUrl } from "../../router";
 import { useNotification } from "../../contexts/NotificationContext";
 
 /**

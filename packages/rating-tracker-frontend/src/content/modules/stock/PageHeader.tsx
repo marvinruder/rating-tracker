@@ -5,7 +5,7 @@ import DeleteStock from "../../../components/DeleteStock";
 import EditStock from "../../../components/EditStock";
 import { Stock, stockLogoEndpointPath, WRITE_STOCKS_ACCESS } from "rating-tracker-commons";
 import { useContext, useState } from "react";
-import { baseUrl } from "../../..";
+import { baseUrl } from "../../../router";
 import { UserContext } from "../../../router.js";
 
 /**

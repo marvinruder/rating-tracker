@@ -4,7 +4,7 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { useState } from "react";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import axios, { AxiosError } from "axios";
-import { baseUrl } from "../../../..";
+import { baseUrl } from "../../../../router";
 import SwitchSelector from "../../../../components/SwitchSelector";
 import { useNavigate } from "react-router";
 import { useNotification } from "../../../../contexts/NotificationContext";

@@ -6,7 +6,11 @@ import SidebarLayout from "./layouts/SidebarLayout";
 
 import SuspenseLoader from "./components/SuspenseLoader";
 import axios from "axios";
-import { baseUrl } from ".";
+
+/**
+ * The base URL of the backend API server.
+ */
+export const baseUrl = `${document.location.protocol}//${document.location.hostname}/api`;
 
 /**
  * A wrapper for lazy-loaded components that adds a suspense loader. While the component is loading, the suspense

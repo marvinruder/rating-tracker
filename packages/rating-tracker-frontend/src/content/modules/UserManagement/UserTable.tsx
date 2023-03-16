@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import axios from "axios";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TableContainer } from "@mui/material";
 import { User, userListEndpointPath } from "rating-tracker-commons";
-import { baseUrl } from "../../..";
+import { baseUrl } from "../../../router";
 import UserRow from "../../../components/UserRow";
 import { useNotification } from "../../../contexts/NotificationContext";
 

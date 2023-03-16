@@ -22,7 +22,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import SearchIcon from "@mui/icons-material/Search";
 
 import axios from "axios";
-import { baseUrl } from "../../../../..";
+import { baseUrl } from "../../../../../router";
 import { emojiFlag, Stock, stockListEndpointPath, stockLogoEndpointPath } from "rating-tracker-commons";
 import { useNotification } from "../../../../../contexts/NotificationContext";
 import SectorIcon from "../../../../../components/SectorIcon/";

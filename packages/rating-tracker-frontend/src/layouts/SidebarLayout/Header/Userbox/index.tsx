@@ -17,7 +17,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationContext from "../../../../contexts/NotificationContext";
 import { UserContext } from "../../../../router";
 import axios from "axios";
-import { baseUrl } from "../../../..";
+import { baseUrl } from "../../../../router";
 import { useNavigate } from "react-router";
 import ProfileSettings from "../../../../components/ProfileSettings";
 import { sessionEndpointPath } from "rating-tracker-commons";

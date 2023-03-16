@@ -21,11 +21,6 @@ axios.defaults.paramsSerializer = {
   },
 };
 
-/**
- * The base URL of the backend API server.
- */
-export const baseUrl = `${document.location.protocol}//${document.location.hostname}/api`;
-
 createRoot(document.getElementById("root")).render(
   <SidebarProvider>
     <HashRouter>

@@ -47,7 +47,7 @@ import {
   superSectorOfSector,
   WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
-import { baseUrl } from "../..";
+import { baseUrl } from "../../router";
 import { useContext, useState } from "react";
 import DeleteStock from "../DeleteStock";
 import EditStock from "../EditStock";
@@ -693,15 +693,13 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       )}
       {/* Details Dialog */}
       <Dialog open={detailsDialogOpen} onClose={() => setDetailsDialogOpen(false)} maxWidth="lg">
-        <DialogTitle style={{ paddingBottom: "0px" }}>
+        <DialogTitle>
           <Grid container justifyContent="space-between">
             <Grid
               item
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                maxWidth: "calc(100% - 40px)",
-              }}
+              display="flex"
+              alignItems="center"
+              maxWidth={{ xs: "calc(100% - 40px)", md: "calc(100% - 80px)" }}
             >
               <Avatar
                 sx={{
@@ -723,10 +721,29 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid item>
-              <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ ml: "auto", borderRadius: 20 }}>
-                <CloseIcon />
-              </IconButton>
+            <Grid
+              container
+              width={{ xs: 40, md: 80 }}
+              direction={{ xs: "column", md: "row-reverse" }}
+              display="flex"
+              justifyContent={{ xs: "space-between" }}
+              sx={{ ml: "auto" }}
+            >
+              <Grid item>
+                <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ borderRadius: 20 }}>
+                  <CloseIcon />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  component={NavLink}
+                  to={`/stock/${props.stock.ticker}`}
+                  target="_blank"
+                  sx={{ borderRadius: 20 }}
+                >
+                  <OpenInNewIcon />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
         </DialogTitle>

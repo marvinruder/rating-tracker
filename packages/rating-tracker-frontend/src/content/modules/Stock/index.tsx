@@ -1,6 +1,6 @@
 import { Card, Container, useMediaQuery } from "@mui/material";
 import axios from "axios";
-import { baseUrl } from "../../..";
+import { baseUrl } from "../../../router";
 import { Stock, stockEndpointPath } from "rating-tracker-commons";
 import { useEffect, useState } from "react";
 import Footer from "../../../components/Footer";

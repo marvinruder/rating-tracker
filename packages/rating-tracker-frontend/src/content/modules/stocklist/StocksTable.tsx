@@ -14,7 +14,7 @@ import {
   Box,
 } from "@mui/material";
 import { Stock, StockListColumn, stockListEndpointPath } from "rating-tracker-commons";
-import { baseUrl } from "../../..";
+import { baseUrl } from "../../../router";
 import { SortableAttribute } from "rating-tracker-commons";
 import StockRow from "../../../components/StockRow";
 import { useNotification } from "../../../contexts/NotificationContext";
