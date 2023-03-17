@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import SimpleWebAuthnServer, {
   VerifyAuthenticationResponseOpts,
   VerifyRegistrationResponseOpts,

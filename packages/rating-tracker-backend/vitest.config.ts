@@ -9,6 +9,7 @@ export default defineConfig({
       provider: "istanbul",
       exclude: ["**/__mocks__/**", "prisma", "test"],
     },
+    // TODO: try some concurrency where possible. Perhaps implement a mutex?
     singleThread: true,
   },
 });

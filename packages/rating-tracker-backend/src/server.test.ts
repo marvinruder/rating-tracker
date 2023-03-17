@@ -1,4 +1,3 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import dotenv from "dotenv";
 
 vi.mock("./utils/logger");
