@@ -39,12 +39,12 @@ const verifyAuthenticationResponse = (options: VerifyAuthenticationResponseOpts)
         options.expectedChallenge &&
       JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).origin ===
         options.expectedOrigin &&
-      options.response.challenge === options.expectedChallenge &&
+      // options.response.challenge === options.expectedChallenge &&
       options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
       options.expectedRPID.includes(process.env.DOMAIN) &&
       options.requireUserVerification &&
-      options.authenticator.credentialID.toString("ascii") === `Credential ID ${randomCredential}` &&
-      options.authenticator.credentialPublicKey.toString("ascii") === `Credential Public Key ${randomCredential}`,
+      options.authenticator.credentialID.toString() === `Credential ID ${randomCredential}` &&
+      options.authenticator.credentialPublicKey.toString() === `Credential Public Key ${randomCredential}`,
     authenticationInfo: {
       newCounter: options.authenticator.counter + 1,
     },

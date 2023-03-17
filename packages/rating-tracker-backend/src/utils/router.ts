@@ -30,16 +30,30 @@ interface RouterOptions {
   rateLimited?: boolean;
 }
 
+/*
+
+// This way of using stable decorators is not yet supported by Vite(st).
+
+const Router = <This>(options: RouterOptions): any => {
+  return (
+    controllerFn: (...args: [Request, Response]) => void | Promise<void>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _: ClassMethodDecoratorContext<This, (...args: [Request, Response]) => void | Promise<void>>
+  ) => {
+    const controllerFnWithAccessRightCheck = async (req: Request, res: Response, next: NextFunction) => {
+
+*/
+
 /**
  * A router decorator. Allows for decorating controller methods with routing information.
  *
  * @param {RouterOptions} options The router options.
- * @returns {void}
+ * @returns {any} some decorator magic
  */
-const Router = (options: RouterOptions) => {
-  return (target: any, propertyKey: string) => {
-    const controller = target[propertyKey];
-    const controllerWithAccessRightCheck = async (req: Request, res: Response, next: NextFunction) => {
+const Router = <This>(options: RouterOptions): any => {
+  return (controllerClass: This, controllerFnName: string) => {
+    const controllerFn = controllerClass[controllerFnName];
+    const controllerFnWithAccessRightCheck = async (req: Request, res: Response, next: NextFunction) => {
       try {
         if (
           !options.accessRights || // Public Routes do not require an access right check
@@ -47,7 +61,7 @@ const Router = (options: RouterOptions) => {
           res.locals.user?.hasAccessRight(options.accessRights) ||
           res.locals.userIsCron // Allow Cron jobs to access all endpoints
         ) {
-          await controller(req, res);
+          await controllerFn(req, res);
         } else {
           throw new APIError(
             // Use the correct error code and message based on whether a user is authenticated.
@@ -62,8 +76,8 @@ const Router = (options: RouterOptions) => {
       }
     };
     options.rateLimited
-      ? router[options.method](options.path, rateLimiter, controllerWithAccessRightCheck)
-      : router[options.method](options.path, controllerWithAccessRightCheck);
+      ? router[options.method](options.path, rateLimiter, controllerFnWithAccessRightCheck)
+      : router[options.method](options.path, controllerFnWithAccessRightCheck);
   };
 };
 
