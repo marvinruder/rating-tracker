@@ -9,7 +9,10 @@ export default defineConfig({
       provider: "istanbul",
       exclude: ["**/__mocks__/**", "prisma", "test"],
     },
-    // TODO: try some concurrency where possible. Perhaps implement a mutex?
-    singleThread: true,
+    exclude: ["**/*.live.test.ts"],
+    forceRerunTriggers: ["**/*.live.test.ts"],
+    useAtomics: true,
+    globals: true,
+    clearMocks: true,
   },
 });

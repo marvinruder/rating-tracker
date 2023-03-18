@@ -1,5 +1,5 @@
 import { optionalStockValuesNull } from "rating-tracker-commons";
-import { addDynamicAttributesToStockData, dynamicStockAttributes } from "./dynamicStockAttributes.js";
+import { addDynamicAttributesToStockData, dynamicStockAttributes } from "./dynamicStockAttributes";
 
 describe("Stock Scores", () => {
   it("has score when empty", () => {

@@ -1,24 +1,15 @@
-import dotenv from "dotenv";
-
-vi.mock("../../utils/logger");
-vi.mock("../../signal/signalBase");
-
-dotenv.config({
-  path: "test/.env",
-});
-
-const { createStock, readStock, updateStock } = await import("./stockTable");
+import { createStock, readStock, updateStock } from "./stockTable";
 import { sentMessages } from "../../signal/__mocks__/signalBase";
 import { optionalStockValuesNull, Stock } from "rating-tracker-commons";
-import applyPostgresSeeds from "../../../test/seeds/postgres";
-import applyRedisSeeds from "../../../test/seeds/redis";
+import { LiveTestSuite } from "../../../test/liveTestHelpers";
 
-beforeEach(async () => {
-  await Promise.all([applyPostgresSeeds(), applyRedisSeeds()]);
-});
+export const suiteName = "Stock Table";
 
-describe("CRUD methods for single stock that are difficult to test otherwise", () => {
-  it("updates a single stock", async () => {
+export const tests: LiveTestSuite = [];
+
+tests.push({
+  testName: "[unsafe] updates a single stock",
+  testFunction: async () => {
     await createStock({
       ...optionalStockValuesNull,
       ticker: "NEWSTOCK",
@@ -113,9 +104,12 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
 
     expect(updatedStock.ticker).toMatch("NEWSTOCK");
     expect(updatedStock.name).toMatch("Updated Stock");
-  });
+  },
+});
 
-  it("cannot update a stock with an invalid property", async () => {
+tests.push({
+  testName: "[unsafe] cannot update a stock with an invalid property",
+  testFunction: async () => {
     await createStock({
       ...optionalStockValuesNull,
       ticker: "NEWSTOCK",
@@ -130,5 +124,5 @@ describe("CRUD methods for single stock that are difficult to test otherwise", (
     await expect(updateStock("NEWSTOCK", invalidValues)).rejects.toThrow(
       "Invalid property questionableProperty for stock NEWSTOCK."
     );
-  });
+  },
 });

@@ -417,7 +417,7 @@ const stockData: Stock[] = [
  *
  * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
-const applyStockSeed = async () => {
+const applyStockSeed = async (): Promise<void> => {
   await client.stock.deleteMany();
 
   await client.stock.createMany({
@@ -430,7 +430,7 @@ const applyStockSeed = async () => {
  *
  * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
-const applyUserSeed = async () => {
+const applyUserSeed = async (): Promise<void> => {
   await client.user.deleteMany();
 
   await client.user.createMany({
@@ -466,7 +466,7 @@ const applyUserSeed = async () => {
  *
  * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
-const applyPostgresSeeds = async () => {
+const applyPostgresSeeds = async (): Promise<void> => {
   if (process.env.NODE_ENV !== "test") {
     throw new Error("Refusing to apply seed when not in a test environment");
   }

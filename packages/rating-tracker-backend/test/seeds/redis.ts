@@ -9,7 +9,7 @@ import client from "../../src/redis/client";
  *
  * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
-const applyResourceSeed = async () => {
+const applyResourceSeed = async (): Promise<void> => {
   await resourceRepository.save(
     new ResourceEntity(resourceSchema, "image.png", {
       content: "U2FtcGxlIFBORyBpbWFnZQ==",
@@ -22,7 +22,7 @@ const applyResourceSeed = async () => {
  *
  * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
-const applySessionSeed = async () => {
+const applySessionSeed = async (): Promise<void> => {
   await sessionRepository.save(
     new SessionEntity(sessionSchema, "exampleSessionID", {
       email: "jane.doe@example.com",
@@ -40,7 +40,7 @@ const applySessionSeed = async () => {
  *
  * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
-const applyRedisSeeds = async () => {
+const applyRedisSeeds = async (): Promise<void> => {
   if (process.env.NODE_ENV !== "test") {
     throw new Error("Refusing to apply seed when not in a test environment");
   }
