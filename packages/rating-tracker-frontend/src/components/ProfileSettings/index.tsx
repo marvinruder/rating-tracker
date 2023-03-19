@@ -266,7 +266,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                     pattern: REGEX_PHONE_NUMBER,
                   }}
                   onChange={(event) => {
-                    setPhone(event.target.value);
+                    setPhone(event.target.value.replaceAll(/[^0-9+]+/g, "").substring(0, 16));
                     setPhoneError(false);
                   }}
                   error={phoneError}

@@ -210,6 +210,7 @@ const spID: OpenAPIV3.ParameterObject = {
   description: "The identifier of a stock used by Standard & Poor’s",
   schema: {
     type: "integer",
+    nullable: true,
     example: "4004205",
   },
 };

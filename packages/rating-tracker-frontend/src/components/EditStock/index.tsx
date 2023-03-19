@@ -55,7 +55,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   const [msciIDRequestInProgress, setMSCIIDRequestInProgress] = useState<boolean>(false);
   const [ric, setRIC] = useState<string>(props.stock?.ric);
   const [ricRequestInProgress, setRICRequestInProgress] = useState<boolean>(false);
-  const [spID, setSPID] = useState<number>(props.stock?.spID);
+  const [spID, setSPID] = useState<number | null>(props.stock?.spID);
   const [spIDRequestInProgress, setSPIDRequestInProgress] = useState<boolean>(false);
   const [sustainalyticsID, setSustainalyticsID] = useState<string>(props.stock?.sustainalyticsID);
   const [sustainalyticsIDRequestInProgress, setSustainalyticsIDRequestInProgress] = useState<boolean>(false);
@@ -304,10 +304,10 @@ const EditStock = (props: EditStockProps): JSX.Element => {
       (setSPIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
-          params: { spID },
+          params: { spID: spID === null ? "" : spID },
         })
         .then(() => {
-          if (spID) {
+          if (spID !== null) {
             // If an S&P ID was set, we fetch data from S&P using the new ID.
             axios
               .post(baseUrl + fetchSPEndpointPath, undefined, {
@@ -567,14 +567,13 @@ const EditStock = (props: EditStockProps): JSX.Element => {
           <Grid item xs={12} container spacing={1} alignItems="center">
             <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
               <TextField
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                inputProps={{ inputMode: "numeric", pattern: "\\d*" }}
                 onChange={(event) => {
-                  if (!Number.isNaN(+event.target.value)) {
-                    setSPID(+event.target.value);
-                  }
+                  const value = event.target.value.replaceAll(/\D+/g, "");
+                  setSPID(value ? +value : null);
                 }}
                 label="S&P ID"
-                value={spID}
+                value={spID === null ? "" : spID}
                 placeholder="e.g. 4004205"
                 fullWidth
               />

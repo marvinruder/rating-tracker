@@ -655,7 +655,8 @@ export class StockController {
   })
   async patch(req: Request, res: Response) {
     const ticker = req.params[0];
-    const { name, isin, country, morningstarID, marketScreenerID, msciID, ric, spID, sustainalyticsID } = req.query;
+    const { name, isin, country, morningstarID, marketScreenerID, msciID, ric, sustainalyticsID } = req.query;
+    const spID = req.query.spID === null ? "" : req.query.spID;
     if (
       typeof ticker === "string" &&
       (typeof name === "string" || typeof name === "undefined") &&
@@ -665,19 +666,19 @@ export class StockController {
       (typeof marketScreenerID === "string" || typeof marketScreenerID === "undefined") &&
       (typeof msciID === "string" || typeof msciID === "undefined") &&
       (typeof ric === "string" || typeof ric === "undefined") &&
-      (typeof spID === "number" || typeof spID === "undefined") &&
+      ((typeof spID === "string" && spID === "") || typeof spID === "number" || typeof spID === "undefined") &&
       (typeof sustainalyticsID === "string" || typeof sustainalyticsID === "undefined")
     ) {
       await updateStock(ticker, {
         name,
         isin,
         country,
-        morningstarID,
-        marketScreenerID,
-        msciID,
-        ric,
-        spID,
-        sustainalyticsID,
+        morningstarID: morningstarID === "" ? null : morningstarID,
+        marketScreenerID: marketScreenerID === "" ? null : marketScreenerID,
+        msciID: msciID === "" ? null : msciID,
+        ric: ric === "" ? null : ric,
+        spID: spID === "" ? null : (spID as unknown as number | null | undefined),
+        sustainalyticsID: sustainalyticsID === "" ? null : sustainalyticsID,
       });
       res.status(204).end();
     }

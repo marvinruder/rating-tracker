@@ -327,7 +327,7 @@ const AddStock = (props: AddStockProps): JSX.Element => {
     setSPIDRequestInProgress(true);
     axios
       .patch(baseUrl + stockEndpointPath + `/${stock.ticker}`, undefined, {
-        params: { spID: stock.spID },
+        params: { spID: stock.spID === null ? "" : stock.spID },
       })
       .then(() => {
         setSPIDSet(!!stock.spID); // Whether the S&P ID was empty
@@ -742,19 +742,18 @@ const AddStock = (props: AddStockProps): JSX.Element => {
               }}
             >
               <TextField
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                inputProps={{ inputMode: "numeric", pattern: "\\d*" }}
                 onChange={(event) => {
-                  if (!Number.isNaN(+event.target.value)) {
-                    setStock((prevStock) => {
-                      return {
-                        ...prevStock,
-                        spID: +event.target.value,
-                      };
-                    });
-                  }
+                  const value = event.target.value.replaceAll(/\D+/g, "");
+                  setStock((prevStock) => {
+                    return {
+                      ...prevStock,
+                      spID: value ? +value : null,
+                    };
+                  });
                 }}
                 label="S&P ID"
-                value={stock.spID}
+                value={stock.spID === null ? "" : stock.spID}
                 placeholder="e.g. 4004205"
                 fullWidth
               />

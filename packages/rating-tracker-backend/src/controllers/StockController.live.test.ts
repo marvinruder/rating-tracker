@@ -526,6 +526,17 @@ tests.push({
       .patch(`/api${stockEndpointPath}/doesNotExist?morningstarID=0P123456789`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
+
+    // updating a unique ID to an empty string results in the ID being null
+    res = await supertest
+      .patch(`/api${stockEndpointPath}/exampleAAPL?morningstarID=&spID=`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await supertest.get(`/api${stockEndpointPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).morningstarID).toBeNull();
+    expect((res.body as Stock).spID).toBeNull();
   },
 });
 
