@@ -465,8 +465,6 @@ export class StockController {
     const sortBy = req.query.sortBy;
     if (sortBy && typeof sortBy === "string" && isSortableAttribute(sortBy)) {
       const sort = String(req.query.sortDesc).toLowerCase() === "true" ? "desc" : "asc";
-      const smallerValuesBetter = sort === "asc" ? "last" : "first";
-      const largerValuesBetter = sort === "asc" ? "first" : "last";
       switch (sortBy) {
         case "name":
         case "size":
@@ -474,32 +472,15 @@ export class StockController {
         case "financialScore":
         case "esgScore":
         case "totalScore":
-          // We do not consider null values here
+          // No null values available
           stockFindManyArgs.orderBy = {
             [sortBy]: sort,
           };
           break;
-        case "starRating":
-        case "dividendYieldPercent":
-        case "positionIn52w":
-        case "analystConsensus":
-        case "refinitivESGScore":
-        case "refinitivEmissions":
-        case "spESGScore":
-          // null values are put next to the smallest values
+        default:
+          // If we sort by something, we do not care about stocks having a value of null there. We put them at the end.
           stockFindManyArgs.orderBy = {
-            [sortBy]: { sort, nulls: largerValuesBetter },
-          };
-          break;
-        case "priceEarningRatio":
-        case "morningstarFairValuePercentageToLastClose":
-        case "analystTargetPricePercentageToLastClose":
-        case "msciESGRating":
-        case "msciTemperature":
-        case "sustainalyticsESGRisk":
-          // null values are put next to the largest values
-          stockFindManyArgs.orderBy = {
-            [sortBy]: { sort, nulls: smallerValuesBetter },
+            [sortBy]: { sort, nulls: "last" },
           };
           break;
       }
