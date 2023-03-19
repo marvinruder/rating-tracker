@@ -11,12 +11,17 @@ import responseTime from "response-time";
 import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository.js";
 import path from "path";
 import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger.js";
-import glob from "glob";
 
 // Import all controllers
-for await (const path of await glob("src/controllers/*Controller.ts")) {
-  await import(path.replace(/^src\//, "./").replace(/\.ts$/, ".js"));
-}
+import "./controllers/AuthController.js";
+import "./controllers/FetchController.js";
+import "./controllers/ResourceController.js";
+import "./controllers/SessionController.js";
+import "./controllers/SessionController.js";
+import "./controllers/StatusController.js";
+import "./controllers/StockController.js";
+import "./controllers/UserController.js";
+import "./controllers/UserManagementController.js";
 
 import { fileURLToPath } from "url";
 import errorHandler from "./utils/errorHandler.js";
