@@ -4,6 +4,7 @@ import * as signal from "../../signal/signal.js";
 import logger, { PREFIX_POSTGRES } from "../../utils/logger.js";
 import { Stock, MSCIESGRating, msciESGRatingArray, OmitDynamicAttributesStock } from "rating-tracker-commons";
 import client from "../client.js";
+import { Prisma } from "../../../prisma/client";
 import { addDynamicAttributesToStockData, dynamicStockAttributes } from "../../models/dynamicStockAttributes.js";
 
 // Emojis showing whether a change is good or bad. Used in the Signal message.
@@ -69,12 +70,18 @@ export const readStock = async (ticker: string): Promise<Stock> => {
 };
 
 /**
- * Read all stocks.
+ * Query multiple stocks as well as their count after filtering.
  *
+ * @param {Prisma.StockFindManyArgs} args An object with filtering, sorting and pagination options.
  * @returns {Promise<Stock[]>} A promise that resolves to a list of all stocks.
  */
-export const readAllStocks = async (): Promise<Stock[]> => {
-  return await client.stock.findMany();
+export const readAllStocks = async (args?: Prisma.StockFindManyArgs): Promise<[Stock[], number]> => {
+  return await client.$transaction([
+    client.stock.findMany(args),
+    client.stock.count({
+      where: { ...args?.where },
+    }),
+  ]);
 };
 
 /**
@@ -140,7 +147,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
             (newValues[k] ?? Number.MAX_VALUE) < (stock[k] ?? Number.MAX_VALUE)
               ? SIGNAL_PREFIX_BETTER
               : SIGNAL_PREFIX_WORSE
-          }MSCI Implied Temperature Rise changed from ${stock[k] ?? "N/A"}°C to ${newValues[k] ?? "N/A"}°C`;
+          }MSCI Implied Temperature Rise changed from ${stock[k] ?? "N/A"}\u2009℃ to ${newValues[k] ?? "N/A"}\u2009℃`;
           break;
         case "analystConsensus":
         case "msciESGRating":

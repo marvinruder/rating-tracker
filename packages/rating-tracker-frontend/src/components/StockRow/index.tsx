@@ -475,7 +475,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <MSCINavigator stock={props.stock}>
             <TemperatureChip
               icon={<ThermostatIcon />}
-              label={<strong>{props.stock.msciTemperature + "°C"}</strong>}
+              label={<strong>{props.stock.msciTemperature + "\u2009℃"}</strong>}
               size="small"
               sx={{ width: 72 }}
               style={{ cursor: "inherit" }}

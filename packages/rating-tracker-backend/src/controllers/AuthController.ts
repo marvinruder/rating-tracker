@@ -219,7 +219,8 @@ export class AuthController {
         sameSite: true,
       });
       res.status(204).end();
+    } else {
+      throw new APIError(400, "Authentication failed");
     }
-    throw new APIError(400, "Authentication failed");
   }
 }

@@ -380,9 +380,9 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
                 }}
               >
                 <TableSortLabel
-                  active={sortBy === "morningstarFairValue"}
-                  direction={sortBy === "morningstarFairValue" && sortDesc ? "desc" : "asc"}
-                  onClick={handleSortLabelClicked("morningstarFairValue")}
+                  active={sortBy === "morningstarFairValuePercentageToLastClose"}
+                  direction={sortBy === "morningstarFairValuePercentageToLastClose" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("morningstarFairValuePercentageToLastClose")}
                 >
                   <Tooltip
                     title={
@@ -444,9 +444,9 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
                 }}
               >
                 <TableSortLabel
-                  active={sortBy === "analystTargetPrice"}
-                  direction={sortBy === "analystTargetPrice" && sortDesc ? "desc" : "asc"}
-                  onClick={handleSortLabelClicked("analystTargetPrice")}
+                  active={sortBy === "analystTargetPricePercentageToLastClose"}
+                  direction={sortBy === "analystTargetPricePercentageToLastClose" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("analystTargetPricePercentageToLastClose")}
                 >
                   <Tooltip
                     title={
@@ -650,9 +650,9 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
                 }}
               >
                 <TableSortLabel
-                  active={sortBy === "52w"}
-                  direction={sortBy === "52w" && sortDesc ? "desc" : "asc"}
-                  onClick={handleSortLabelClicked("52w")}
+                  active={sortBy === "positionIn52w"}
+                  direction={sortBy === "positionIn52w" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("positionIn52w")}
                 >
                   <Tooltip
                     title={

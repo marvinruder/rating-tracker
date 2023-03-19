@@ -1,10 +1,13 @@
 import {
   Stock,
+  msciESGRatingArray,
+  sizeArray,
   sortableAttributeArray,
   stockComputeEndpointPath,
   stockEndpointPath,
   stockListEndpointPath,
   stockLogoEndpointPath,
+  styleArray,
 } from "rating-tracker-commons";
 import {
   LiveTestSuite,
@@ -64,8 +67,8 @@ tests.push({
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(5);
     expect(res.body.stocks).toHaveLength(5);
-    expect(res.body.stocks[0].name).toMatch("Taiwan Semiconductor Manufacturing Co Ltd");
-    expect(res.body.stocks[1].name).toMatch("Ørsted A/S");
+    expect(res.body.stocks[0].name).toMatch("Ørsted A/S");
+    expect(res.body.stocks[1].name).toMatch("Taiwan Semiconductor Manufacturing Co Ltd");
     expect(res.body.stocks[2].name).toMatch("Novo Nordisk");
     expect(res.body.stocks[3].name).toMatch("MercadoLibre");
     expect(res.body.stocks[4].name).toMatch("Apple");
@@ -144,8 +147,8 @@ tests.push({
     expect(res.body.stocks[0].name).toMatch("Danone");
     expect(res.body.stocks[1].name).toMatch("Iberdrola");
     expect(res.body.stocks[2].name).toMatch("Newmont");
-    expect(res.body.stocks[3].name).toMatch("Ørsted");
-    expect(res.body.stocks[4].name).toMatch("Taiwan Semiconductor");
+    expect(res.body.stocks[3].name).toMatch("Taiwan Semiconductor");
+    expect(res.body.stocks[4].name).toMatch("Ørsted");
   },
 });
 
@@ -160,8 +163,8 @@ tests.push({
     expect(res.body.stocks).toHaveLength(4);
     expect(res.body.stocks[0].name).toMatch("Allianz");
     expect(res.body.stocks[1].name).toMatch("Iberdrola");
-    expect(res.body.stocks[2].name).toMatch("Ørsted");
-    expect(res.body.stocks[3].name).toMatch("Taiwan Semiconductor");
+    expect(res.body.stocks[2].name).toMatch("Taiwan Semiconductor");
+    expect(res.body.stocks[3].name).toMatch("Ørsted");
   },
 });
 
@@ -247,8 +250,8 @@ tests.push({
     expect(res.body.count).toBe(3);
     expect(res.body.stocks).toHaveLength(3);
     expect(res.body.stocks[0].name).toMatch("Iberdrola");
-    expect(res.body.stocks[1].name).toMatch("Ørsted");
-    expect(res.body.stocks[2].name).toMatch("Taiwan Semiconductor");
+    expect(res.body.stocks[1].name).toMatch("Taiwan Semiconductor");
+    expect(res.body.stocks[2].name).toMatch("Ørsted");
   },
 });
 
@@ -317,73 +320,70 @@ tests.push({
   },
 });
 
-sortableAttributeArray.forEach((sortCriterion) =>
-  tests.push({
-    testName: `filters and sorts stock list by ${sortCriterion}`,
-    testFunction: async () => {
-      const res = await supertest
-        .get(`/api${stockListEndpointPath}?sortBy=${sortCriterion}`)
-        .set("Cookie", ["authToken=exampleSessionID"]);
-      expect(res.status).toBe(200);
-      if (["morningstarFairValue", "analystTargetPrice"].includes(sortCriterion)) {
+[false, true].forEach((sortDesc) =>
+  sortableAttributeArray.forEach((sortCriterion) =>
+    tests.push({
+      testName: `filters and sorts stock list by ${sortCriterion} ${sortDesc ? "descending" : "ascending"}`,
+      testFunction: async () => {
+        const res = await supertest
+          .get(`/api${stockListEndpointPath}?sortBy=${sortCriterion}&sortDesc=${sortDesc}`)
+          .set("Cookie", ["authToken=exampleSessionID"]);
+        expect(res.status).toBe(200);
+        let sortCriterionArray: readonly string[];
+        switch (sortCriterion) {
+          case "size":
+            sortCriterionArray = sizeArray;
+            break;
+          case "style":
+            sortCriterionArray = styleArray;
+            break;
+          case "msciESGRating":
+            sortCriterionArray = msciESGRatingArray;
+            break;
+          default:
+            break;
+        }
+        const toBeSortedInTheCorrectOrder = sortDesc ? "toBeGreaterThanOrEqual" : "toBeLessThanOrEqual";
         for (let i = 0; i < res.body.count - 1; i++) {
-          if (
-            res.body.stocks[i][sortCriterion] &&
-            res.body.stocks[i + 1][sortCriterion] &&
-            typeof res.body.stocks[i][sortCriterion] == "number" &&
-            typeof res.body.stocks[i + 1][sortCriterion] == "number" &&
-            res.body.stocks[i].lastClose &&
-            res.body.stocks[i + 1].lastClose &&
-            typeof res.body.stocks[i].lastClose == "number" &&
-            typeof res.body.stocks[i + 1].lastClose == "number"
-          ) {
-            // Stocks should be ordered by the ratio of the target price to the last close price (premium or discount)
-            expect(res.body.stocks[i].lastClose / res.body.stocks[i][sortCriterion]).toBeLessThanOrEqual(
-              res.body.stocks[i + 1].lastClose / res.body.stocks[i + 1][sortCriterion]
-            );
+          // We do not test the sorting order of null values
+          if (res.body.stocks[i][sortCriterion] && res.body.stocks[i + 1][sortCriterion]) {
+            if (
+              typeof res.body.stocks[i][sortCriterion] === "number" &&
+              typeof res.body.stocks[i + 1][sortCriterion] === "number"
+            ) {
+              // Stocks should be ordered by the numeric value of the sort criterion
+              expect(res.body.stocks[i][sortCriterion])[toBeSortedInTheCorrectOrder](
+                res.body.stocks[i + 1][sortCriterion]
+              );
+            } else if (
+              typeof res.body.stocks[i][sortCriterion] === "string" &&
+              typeof res.body.stocks[i + 1][sortCriterion] === "string" &&
+              sortCriterionArray
+            ) {
+              // Stocks should be ordered by the index of the enum value of the sort criterion
+              expect(sortCriterionArray.indexOf(res.body.stocks[i][sortCriterion]))[toBeSortedInTheCorrectOrder](
+                sortCriterionArray.indexOf(res.body.stocks[i + 1][sortCriterion])
+              );
+            } else {
+              if (
+                String.prototype
+                  .concat(res.body.stocks[i][sortCriterion], res.body.stocks[i + 1][sortCriterion])
+                  .split("")
+                  .some((c) => c.charCodeAt(0) > 127)
+              ) {
+                // If one value contains a special character, we skip sorting validation
+                continue;
+              }
+              // Stocks should be ordered alphabetically
+              expect(res.body.stocks[i][sortCriterion].localeCompare(res.body.stocks[i + 1][sortCriterion]))[
+                toBeSortedInTheCorrectOrder
+              ](0);
+            }
           }
         }
-      } else if (sortCriterion === "52w") {
-        for (let i = 0; i < res.body.count - 1; i++) {
-          if (
-            res.body.stocks[i].low52w &&
-            res.body.stocks[i + 1].low52w &&
-            typeof res.body.stocks[i].low52w == "number" &&
-            typeof res.body.stocks[i + 1].low52w == "number" &&
-            res.body.stocks[i].high52w &&
-            res.body.stocks[i + 1].high52w &&
-            typeof res.body.stocks[i].high52w == "number" &&
-            typeof res.body.stocks[i + 1].high52w == "number" &&
-            res.body.stocks[i].lastClose &&
-            res.body.stocks[i + 1].lastClose &&
-            typeof res.body.stocks[i].lastClose == "number" &&
-            typeof res.body.stocks[i + 1].lastClose == "number"
-          ) {
-            // Stocks should be ordered by the relative position of the last close price within the 52 week range
-            expect(
-              (res.body.stocks[i].lastClose - res.body.stocks[i].low52w) /
-                (res.body.stocks[i].high52w - res.body.stocks[i].low52w)
-            ).toBeLessThanOrEqual(
-              (res.body.stocks[i + 1].lastClose - res.body.stocks[i + 1].low52w) /
-                (res.body.stocks[i + 1].high52w - res.body.stocks[i + 1].low52w)
-            );
-          }
-        }
-      } else {
-        for (let i = 0; i < res.body.count - 1; i++) {
-          if (
-            res.body.stocks[i][sortCriterion] &&
-            res.body.stocks[i + 1][sortCriterion] &&
-            typeof res.body.stocks[i][sortCriterion] == "number" &&
-            typeof res.body.stocks[i + 1][sortCriterion] == "number"
-          ) {
-            // Stocks should be ordered by the sort criterion
-            expect(res.body.stocks[i][sortCriterion]).toBeLessThanOrEqual(res.body.stocks[i + 1][sortCriterion]);
-          }
-        }
-      }
-    },
-  })
+      },
+    })
+  )
 );
 
 tests.push({

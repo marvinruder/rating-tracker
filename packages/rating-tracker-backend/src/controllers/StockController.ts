@@ -20,13 +20,12 @@ import {
   isStyle,
   msciESGRatingArray,
   Resource,
-  sizeArray,
-  styleArray,
   WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
 import APIError from "../utils/apiError.js";
 import axios from "axios";
 import Router from "../utils/router.js";
+import { Prisma } from "../../prisma/client/index.js";
 
 /**
  * This class is responsible for providing stock data.
@@ -44,454 +43,482 @@ export class StockController {
     accessRights: GENERAL_ACCESS,
   })
   async getList(req: Request, res: Response) {
-    // Read all stocks from the database
-    let stocks = await readAllStocks();
+    const filters: Prisma.Enumerable<Prisma.StockWhereInput> = [];
+    const stockFindManyArgs: Prisma.StockFindManyArgs = {
+      where: {
+        AND: filters,
+      },
+    };
 
-    // Filter the list of stocks
     if (req.query.name) {
-      stocks = stocks.filter((stock) =>
-        (stock.ticker + " " + stock.name).toLowerCase().includes((req.query.name as string).toLowerCase().trim())
-      );
+      filters.push({
+        OR: [
+          {
+            ticker: {
+              contains: (req.query.name as string).trim(),
+              mode: "insensitive",
+            },
+          },
+          {
+            name: {
+              contains: (req.query.name as string).trim(),
+              mode: "insensitive",
+            },
+          },
+        ],
+      });
     }
+
     if (req.query.country) {
       const countryParam = req.query.country;
       if (Array.isArray(countryParam)) {
-        // Multiple countries can be specified, one of which must match to the stock’s country.
         const countries: Country[] = [];
         countryParam.forEach((country) => isCountry(country) && countries.push(country));
-        stocks = stocks.filter((stock) => countries.includes(stock.country));
+        // Multiple countries can be specified, one of which must match to the stock’s country.
+        filters.push({
+          country: {
+            in: countries,
+          },
+        });
       }
     }
+
     if (req.query.industry) {
       const industryParam = req.query.industry;
       if (Array.isArray(industryParam)) {
-        // Multiple industries can be specified, one of which must match to the stock’s industry.
         const industries: Industry[] = [];
         industryParam.forEach((industry) => isIndustry(industry) && industries.push(industry));
-        stocks = stocks.filter((stock) => industries.includes(stock.industry));
+        // Multiple industries can be specified, one of which must match to the stock’s industry.
+        filters.push({
+          industry: {
+            in: industries,
+          },
+        });
       }
     }
+
     if (req.query.size) {
       const size = req.query.size;
       if (typeof size === "string" && isSize(size)) {
-        stocks = stocks.filter((stock) => size === stock.size);
+        filters.push({
+          size: {
+            equals: size,
+          },
+        });
       }
     }
+
     if (req.query.style) {
       const style = req.query.style;
       if (typeof style === "string" && isStyle(style)) {
-        stocks = stocks.filter((stock) => style === stock.style);
+        filters.push({
+          style: {
+            equals: style,
+          },
+        });
       }
     }
+
     if (req.query.starRatingMin !== undefined) {
       const starRatingMin = Number(req.query.starRatingMin);
       if (!Number.isNaN(starRatingMin)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.starRating ?? -1) >= starRatingMin
-        );
+        filters.push({
+          starRating: {
+            gte: starRatingMin,
+          },
+        });
       }
     }
     if (req.query.starRatingMax !== undefined) {
       const starRatingMax = Number(req.query.starRatingMax);
       if (!Number.isNaN(starRatingMax)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.starRating ?? -1) <= starRatingMax
-        );
+        filters.push({
+          starRating: {
+            lte: starRatingMax,
+          },
+        });
       }
     }
+
     if (req.query.dividendYieldPercentMin !== undefined) {
       const dividendYieldPercentMin = Number(req.query.dividendYieldPercentMin);
       if (!Number.isNaN(dividendYieldPercentMin)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // larger is better – use -1 as default value
-            (stock.dividendYieldPercent ?? -1) >= dividendYieldPercentMin
-        );
+        filters.push({
+          dividendYieldPercent: {
+            gte: dividendYieldPercentMin,
+          },
+        });
       }
     }
     if (req.query.dividendYieldPercentMax !== undefined) {
       const dividendYieldPercentMax = Number(req.query.dividendYieldPercentMax);
       if (!Number.isNaN(dividendYieldPercentMax)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // larger is better – use -1 as default value
-            (stock.dividendYieldPercent ?? -1) <= dividendYieldPercentMax
-        );
+        filters.push({
+          dividendYieldPercent: {
+            lte: dividendYieldPercentMax,
+          },
+        });
       }
     }
+
     if (req.query.priceEarningRatioMin !== undefined) {
       const priceEarningRatioMin = Number(req.query.priceEarningRatioMin);
       if (!Number.isNaN(priceEarningRatioMin)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.priceEarningRatio ?? Number.MAX_VALUE) >= priceEarningRatioMin
-        );
+        filters.push({
+          priceEarningRatio: {
+            gte: priceEarningRatioMin,
+          },
+        });
       }
     }
     if (req.query.priceEarningRatioMax !== undefined) {
       const priceEarningRatioMax = Number(req.query.priceEarningRatioMax);
       if (!Number.isNaN(priceEarningRatioMax)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.priceEarningRatio ?? Number.MAX_VALUE) <= priceEarningRatioMax
-        );
+        filters.push({
+          priceEarningRatio: {
+            lte: priceEarningRatioMax,
+          },
+        });
       }
     }
+
     if (req.query.morningstarFairValueDiffMin !== undefined) {
       // Filter by percentage difference of fair value to last close
       const morningstarFairValueDiffMin = Number(req.query.morningstarFairValueDiffMin);
       if (!Number.isNaN(morningstarFairValueDiffMin)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.morningstarFairValuePercentageToLastClose ?? Number.MAX_VALUE) >= morningstarFairValueDiffMin
-        );
+        filters.push({
+          morningstarFairValuePercentageToLastClose: {
+            gte: morningstarFairValueDiffMin,
+          },
+        });
       }
     }
     if (req.query.morningstarFairValueDiffMax !== undefined) {
       // Filter by percentage difference of fair value to last close
       const morningstarFairValueDiffMax = Number(req.query.morningstarFairValueDiffMax);
       if (!Number.isNaN(morningstarFairValueDiffMax)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.morningstarFairValuePercentageToLastClose ?? Number.MAX_VALUE) <= morningstarFairValueDiffMax
-        );
+        filters.push({
+          morningstarFairValuePercentageToLastClose: {
+            lte: morningstarFairValueDiffMax,
+          },
+        });
       }
     }
+
     if (req.query.analystConsensusMin !== undefined) {
       const analystConsensusMin = Number(req.query.analystConsensusMin);
       if (!Number.isNaN(analystConsensusMin)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.analystConsensus ?? -1) >= analystConsensusMin
-        );
+        filters.push({
+          analystConsensus: {
+            gte: analystConsensusMin,
+          },
+        });
       }
     }
     if (req.query.analystConsensusMax !== undefined) {
       const analystConsensusMax = Number(req.query.analystConsensusMax);
       if (!Number.isNaN(analystConsensusMax)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.analystConsensus ?? -1) <= analystConsensusMax
-        );
+        filters.push({
+          analystConsensus: {
+            lte: analystConsensusMax,
+          },
+        });
       }
     }
+
     if (req.query.analystCountMin !== undefined) {
       const analystCountMin = Number(req.query.analystCountMin);
       if (!Number.isNaN(analystCountMin)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.analystCount ?? -1) >= analystCountMin
-        );
+        filters.push({
+          analystCount: {
+            gte: analystCountMin,
+          },
+        });
       }
     }
     if (req.query.analystCountMax !== undefined) {
       const analystCountMax = Number(req.query.analystCountMax);
       if (!Number.isNaN(analystCountMax)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.analystCount ?? -1) <= analystCountMax
-        );
+        filters.push({
+          analystCount: {
+            lte: analystCountMax,
+          },
+        });
       }
     }
+
     if (req.query.analystTargetDiffMin !== undefined) {
       // Filter by percentage difference of analyst target price to last close
       const analystTargetDiffMin = Number(req.query.analystTargetDiffMin);
       if (!Number.isNaN(analystTargetDiffMin)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.analystTargetPricePercentageToLastClose ?? Number.MAX_VALUE) >= analystTargetDiffMin
-        );
+        filters.push({
+          analystTargetPricePercentageToLastClose: {
+            gte: analystTargetDiffMin,
+          },
+        });
       }
     }
     if (req.query.analystTargetDiffMax !== undefined) {
       // Filter by percentage difference of analyst target price to last close
       const analystTargetDiffMax = Number(req.query.analystTargetDiffMax);
       if (!Number.isNaN(analystTargetDiffMax)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.analystTargetPricePercentageToLastClose ?? Number.MAX_VALUE) <= analystTargetDiffMax
-        );
+        filters.push({
+          analystTargetPricePercentageToLastClose: {
+            lte: analystTargetDiffMax,
+          },
+        });
       }
     }
+
+    let filteredMSCIESGRatingArray = [...msciESGRatingArray];
     if (req.query.msciESGRatingMin !== undefined) {
       const msciESGRatingMin = req.query.msciESGRatingMin as string;
       if (isMSCIESGRating(msciESGRatingMin)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // Filter by index in array [AAA, ..., CCC]. Smaller is better – use largest number as default value
-            (stock.msciESGRating ? msciESGRatingArray.indexOf(stock.msciESGRating) : 7) >=
-            msciESGRatingArray.indexOf(msciESGRatingMin)
+        filteredMSCIESGRatingArray = filteredMSCIESGRatingArray.filter(
+          (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) >= msciESGRatingArray.indexOf(msciESGRatingMin)
         );
       }
     }
     if (req.query.msciESGRatingMax !== undefined) {
       const msciESGRatingMax = req.query.msciESGRatingMax as string;
       if (isMSCIESGRating(msciESGRatingMax)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // Filter by index in array [AAA, ..., CCC]. Smaller is better – use largest number as default value
-            (stock.msciESGRating ? msciESGRatingArray.indexOf(stock.msciESGRating) : 7) <=
-            msciESGRatingArray.indexOf(msciESGRatingMax)
+        filteredMSCIESGRatingArray = filteredMSCIESGRatingArray.filter(
+          (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) <= msciESGRatingArray.indexOf(msciESGRatingMax)
         );
       }
     }
+    if (msciESGRatingArray.some((msciESGRating) => !filteredMSCIESGRatingArray.includes(msciESGRating))) {
+      filters.push({
+        msciESGRating: {
+          in: filteredMSCIESGRatingArray,
+        },
+      });
+    }
+
     if (req.query.msciTemperatureMin !== undefined) {
       const msciTemperatureMin = Number(req.query.msciTemperatureMin);
       if (!Number.isNaN(msciTemperatureMin)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.msciTemperature ?? Number.MAX_VALUE) >= msciTemperatureMin
-        );
+        filters.push({
+          msciTemperature: {
+            gte: msciTemperatureMin,
+          },
+        });
       }
     }
     if (req.query.msciTemperatureMax !== undefined) {
       const msciTemperatureMax = Number(req.query.msciTemperatureMax);
       if (!Number.isNaN(msciTemperatureMax)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.msciTemperature ?? Number.MAX_VALUE) <= msciTemperatureMax
-        );
+        filters.push({
+          msciTemperature: {
+            lte: msciTemperatureMax,
+          },
+        });
       }
     }
+
     if (req.query.refinitivESGScoreMin !== undefined) {
       const refinitivESGScoreMin = Number(req.query.refinitivESGScoreMin);
       if (!Number.isNaN(refinitivESGScoreMin)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.refinitivESGScore ?? -1) >= refinitivESGScoreMin
-        );
+        filters.push({
+          refinitivESGScore: {
+            gte: refinitivESGScoreMin,
+          },
+        });
       }
     }
     if (req.query.refinitivESGScoreMax !== undefined) {
       const refinitivESGScoreMax = Number(req.query.refinitivESGScoreMax);
       if (!Number.isNaN(refinitivESGScoreMax)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.refinitivESGScore ?? -1) <= refinitivESGScoreMax
-        );
+        filters.push({
+          refinitivESGScore: {
+            lte: refinitivESGScoreMax,
+          },
+        });
       }
     }
+
     if (req.query.refinitivEmissionsMin !== undefined) {
       const refinitivEmissionsMin = Number(req.query.refinitivEmissionsMin);
       if (!Number.isNaN(refinitivEmissionsMin)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.refinitivEmissions ?? -1) >= refinitivEmissionsMin
-        );
+        filters.push({
+          refinitivEmissions: {
+            gte: refinitivEmissionsMin,
+          },
+        });
       }
     }
     if (req.query.refinitivEmissionsMax !== undefined) {
       const refinitivEmissionsMax = Number(req.query.refinitivEmissionsMax);
       if (!Number.isNaN(refinitivEmissionsMax)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.refinitivEmissions ?? -1) <= refinitivEmissionsMax
-        );
+        filters.push({
+          refinitivEmissions: {
+            lte: refinitivEmissionsMax,
+          },
+        });
       }
     }
+
     if (req.query.spESGScoreMin !== undefined) {
       const spESGScoreMin = Number(req.query.spESGScoreMin);
       if (!Number.isNaN(spESGScoreMin)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.spESGScore ?? -1) >= spESGScoreMin
-        );
+        filters.push({
+          spESGScore: {
+            gte: spESGScoreMin,
+          },
+        });
       }
     }
     if (req.query.spESGScoreMax !== undefined) {
       const spESGScoreMax = Number(req.query.spESGScoreMax);
       if (!Number.isNaN(spESGScoreMax)) {
-        stocks = stocks.filter(
-          // larger is better – use -1 as default value
-          (stock) => (stock.spESGScore ?? -1) <= spESGScoreMax
-        );
+        filters.push({
+          spESGScore: {
+            lte: spESGScoreMax,
+          },
+        });
       }
     }
+
     if (req.query.sustainalyticsESGRiskMin !== undefined) {
       const sustainalyticsESGRiskMin = Number(req.query.sustainalyticsESGRiskMin);
       if (!Number.isNaN(sustainalyticsESGRiskMin)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) >= sustainalyticsESGRiskMin
-        );
+        filters.push({
+          sustainalyticsESGRisk: {
+            gte: sustainalyticsESGRiskMin,
+          },
+        });
       }
     }
     if (req.query.sustainalyticsESGRiskMax !== undefined) {
       const sustainalyticsESGRiskMax = Number(req.query.sustainalyticsESGRiskMax);
       if (!Number.isNaN(sustainalyticsESGRiskMax)) {
-        stocks = stocks.filter(
-          (stock) =>
-            // smaller is better – use very large number as default value
-            (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE) <= sustainalyticsESGRiskMax
-        );
+        filters.push({
+          sustainalyticsESGRisk: {
+            lte: sustainalyticsESGRiskMax,
+          },
+        });
       }
     }
+
     if (req.query.financialScoreMin !== undefined) {
       const financialScoreMin = Number(req.query.financialScoreMin);
       if (!Number.isNaN(financialScoreMin)) {
-        stocks = stocks.filter(
-          // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.financialScore >= financialScoreMin
-        );
+        filters.push({
+          financialScore: {
+            gte: 0.01 * financialScoreMin,
+          },
+        });
       }
     }
     if (req.query.financialScoreMax !== undefined) {
       const financialScoreMax = Number(req.query.financialScoreMax);
       if (!Number.isNaN(financialScoreMax)) {
-        stocks = stocks.filter(
-          // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.financialScore <= financialScoreMax
-        );
+        filters.push({
+          financialScore: {
+            lte: 0.01 * financialScoreMax,
+          },
+        });
       }
     }
+
     if (req.query.esgScoreMin !== undefined) {
       const esgScoreMin = Number(req.query.esgScoreMin);
       if (!Number.isNaN(esgScoreMin)) {
-        stocks = stocks.filter(
-          // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.esgScore >= esgScoreMin
-        );
+        filters.push({
+          esgScore: {
+            gte: 0.01 * esgScoreMin,
+          },
+        });
       }
     }
     if (req.query.esgScoreMax !== undefined) {
       const esgScoreMax = Number(req.query.esgScoreMax);
       if (!Number.isNaN(esgScoreMax)) {
-        stocks = stocks.filter(
-          // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.esgScore <= esgScoreMax
-        );
+        filters.push({
+          esgScore: {
+            lte: 0.01 * esgScoreMax,
+          },
+        });
       }
     }
+
     if (req.query.totalScoreMin !== undefined) {
       const totalScoreMin = Number(req.query.totalScoreMin);
       if (!Number.isNaN(totalScoreMin)) {
-        stocks = stocks.filter(
-          // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.totalScore >= totalScoreMin
-        );
+        filters.push({
+          totalScore: {
+            gte: 0.01 * totalScoreMin,
+          },
+        });
       }
     }
     if (req.query.totalScoreMax !== undefined) {
       const totalScoreMax = Number(req.query.totalScoreMax);
       if (!Number.isNaN(totalScoreMax)) {
-        stocks = stocks.filter(
-          // score from function is between -1 and 1, filter input is between 0 and 100
-          (stock) => 100 * stock.totalScore <= totalScoreMax
-        );
+        filters.push({
+          totalScore: {
+            lte: 0.01 * totalScoreMax,
+          },
+        });
       }
     }
-
-    // Count all remaining stocks
-    const length = stocks.length;
-
-    // Sort the list of remaining stocks
     const sortBy = req.query.sortBy;
     if (sortBy && typeof sortBy === "string" && isSortableAttribute(sortBy)) {
+      const sort = String(req.query.sortDesc).toLowerCase() === "true" ? "desc" : "asc";
+      const smallerValuesBetter = sort === "asc" ? "last" : "first";
+      const largerValuesBetter = sort === "asc" ? "first" : "last";
       switch (sortBy) {
         case "name":
-          stocks.sort((a, b) => a.name.localeCompare(b.name, "en", { usage: "sort" }));
-          break;
         case "size":
-          stocks.sort(
-            // Order: Small, Mid, Large
-            (a, b) => sizeArray.indexOf(a.size) - sizeArray.indexOf(b.size)
-          );
-          break;
         case "style":
-          stocks.sort(
-            // Order: Value, Blend, Growth
-            (a, b) => styleArray.indexOf(a.style) - styleArray.indexOf(b.style)
-          );
+        case "financialScore":
+        case "esgScore":
+        case "totalScore":
+          // We do not consider null values here
+          stockFindManyArgs.orderBy = {
+            [sortBy]: sort,
+          };
           break;
         case "starRating":
         case "dividendYieldPercent":
+        case "positionIn52w":
         case "analystConsensus":
         case "refinitivESGScore":
         case "refinitivEmissions":
         case "spESGScore":
-          // larger is better – use -1 as default value
-          stocks.sort((a, b) => (a[sortBy] ?? -1) - (b[sortBy] ?? -1));
+          // null values are put next to the smallest values
+          stockFindManyArgs.orderBy = {
+            [sortBy]: { sort, nulls: largerValuesBetter },
+          };
           break;
         case "priceEarningRatio":
+        case "morningstarFairValuePercentageToLastClose":
+        case "analystTargetPricePercentageToLastClose":
+        case "msciESGRating":
         case "msciTemperature":
         case "sustainalyticsESGRisk":
-          // smaller is better – use very large number as default value
-          stocks.sort((a, b) => (a[sortBy] ?? Number.MAX_VALUE) - (b[sortBy] ?? Number.MAX_VALUE));
+          // null values are put next to the largest values
+          stockFindManyArgs.orderBy = {
+            [sortBy]: { sort, nulls: smallerValuesBetter },
+          };
           break;
-        case "morningstarFairValue":
-          // smaller is better – use very large number as default value
-          stocks.sort(
-            (a, b) =>
-              (a[sortBy] && a.lastClose ? a.morningstarFairValuePercentageToLastClose : Number.MAX_VALUE) -
-              (b[sortBy] && b.lastClose ? b.morningstarFairValuePercentageToLastClose : Number.MAX_VALUE)
-          );
-          break;
-        case "analystTargetPrice":
-          // smaller is better – use very large number as default value
-          stocks.sort(
-            (a, b) =>
-              (a[sortBy] && a.lastClose ? a.analystTargetPricePercentageToLastClose : Number.MAX_VALUE) -
-              (b[sortBy] && b.lastClose ? b.analystTargetPricePercentageToLastClose : Number.MAX_VALUE)
-          );
-          break;
-        case "52w":
-          // sort by relative position of last close in 52W range
-          stocks.sort(
-            (a, b) =>
-              (a.low52w && a.high52w && a.lastClose ? (a.lastClose - a.low52w) / (a.high52w - a.low52w) : 0) -
-              (b.low52w && b.high52w && b.lastClose ? (b.lastClose - b.low52w) / (b.high52w - b.low52w) : 0)
-          );
-          break;
-        case "msciESGRating":
-          // Sort by index in array [AAA, ..., CCC]. Smaller is better – use largest number as default value
-          stocks.sort(
-            (a, b) =>
-              (a.msciESGRating ? msciESGRatingArray.indexOf(a.msciESGRating) : 7) -
-              (b.msciESGRating ? msciESGRatingArray.indexOf(b.msciESGRating) : 7)
-          );
-          break;
-        case "financialScore":
-          stocks.sort((a, b) => a.financialScore - b.financialScore);
-          break;
-        case "esgScore":
-          stocks.sort((a, b) => a.esgScore - b.esgScore);
-          break;
-        case "totalScore":
-          stocks.sort((a, b) => a.totalScore - b.totalScore);
-          break;
-      }
-      // We just sorted ascending. If descending is requested, simply reverse the list.
-      if (String(req.query.sortDesc).toLowerCase() === "true") {
-        stocks.reverse();
       }
     }
 
     // Only return the subset (= page in list) of stocks requested by offset and count
-    let offset: number = parseInt(req.query.offset as string);
-    const count: number = parseInt(req.query.count as string);
-    if (Number.isNaN(offset)) {
-      // If offset is not set, return the first page
-      offset = 0;
-    }
-    stocks = stocks.slice(
-      offset,
-      // If count is not set, return all remaining stocks
-      Number.isNaN(count) ? undefined : offset + count
-    );
+    const skip: number = parseInt(req.query.offset as string);
+    const take: number = parseInt(req.query.count as string);
+
+    // If offset is not set, return the first page
+    stockFindManyArgs.skip = Number.isNaN(skip) ? 0 : skip;
+    // If count is not set, return all
+    stockFindManyArgs.take = Number.isNaN(take) ? undefined : take;
+
+    // Read all stocks from the database
+    const [stocks, count] = await readAllStocks(stockFindManyArgs);
 
     // Respond with the list of stocks and the total count after filtering and before pagination
-    res.status(200).json({ stocks, count: length }).end();
+    res.status(200).json({ stocks, count }).end();
   }
 
   /**
@@ -506,7 +533,8 @@ export class StockController {
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async compute(_: Request, res: Response) {
-    for await (const stock of await readAllStocks()) {
+    const [stocks] = await readAllStocks();
+    for await (const stock of stocks) {
       await updateStock(stock.ticker, {}, true);
     }
     res.status(204).end();

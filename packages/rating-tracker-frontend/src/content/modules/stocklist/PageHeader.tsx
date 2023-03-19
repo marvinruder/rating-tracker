@@ -431,6 +431,7 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element =>
                     step={0.1}
                     onChange={(_, newValue: number[]) => setMSCITemperatureInput(newValue)}
                     valueLabelDisplay="auto"
+                    valueLabelFormat={(value) => `${value}\u2009℃`}
                   />
                   {/* Refinitiv ESG Score */}
                   <Typography variant="h5">Refinitiv ESG Score</Typography>

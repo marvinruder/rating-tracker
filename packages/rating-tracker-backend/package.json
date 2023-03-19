@@ -16,7 +16,7 @@
     "dev:selenium": "docker compose -f dev/docker-compose.yml up selenium",
     "dev:signal": "docker compose -f dev/docker-compose.yml up signal",
     "dev:tools": "conc --kill-others \"yarn dev:nginx\" \"yarn dev:postgres\" \"yarn dev:redis\" \"yarn dev:selenium\" \"yarn dev:signal\" -n \",,,ﰍ,\" -p \"{name}\" -c #43972A,#336791,#D82C20,#43B02A,#4975E8 --timings",
-    "test:watch": "vitest",
+    "test:watch": "yarn test:prisma:migrate:init && vitest",
     "test": "vitest run --coverage --color",
     "test:postgres": "docker compose -f test/docker-compose.yml up --force-recreate -V postgres-test",
     "test:redis": "docker compose -f test/docker-compose.yml up --force-recreate -V redis-test",

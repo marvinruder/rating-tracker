@@ -162,16 +162,20 @@ export class FetchController {
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = await readAllStocks();
+      // When no specific stock is requested, we fetch all stocks from the database which have a Morningstar ID.
+      [stocks] = await readAllStocks({
+        where: {
+          morningstarID: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          morningstarLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.morningstarID) // Only stocks with a Morningstar ID are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) => (a.morningstarLastFetch ?? new Date(0)).getTime() - (b.morningstarLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
       res.status(204).end();
@@ -658,17 +662,20 @@ export class FetchController {
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = await readAllStocks();
+      // When no specific stock is requested, we fetch all stocks from the database which have a Market Screener ID.
+      [stocks] = await readAllStocks({
+        where: {
+          marketScreenerID: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          marketScreenerLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.marketScreenerID) // Only stocks with a MarketScreener ID are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) =>
-          (a.marketScreenerLastFetch ?? new Date(0)).getTime() - (b.marketScreenerLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
       res.status(204).end();
@@ -904,16 +911,20 @@ export class FetchController {
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = await readAllStocks();
+      // When no specific stock is requested, we fetch all stocks from the database which have an MSCI ID.
+      [stocks] = await readAllStocks({
+        where: {
+          msciID: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          msciLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.msciID) // Only stocks with an MSCI ID are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) => (a.msciLastFetch ?? new Date(0)).getTime() - (b.msciLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
       res.status(204).end();
@@ -1126,16 +1137,20 @@ export class FetchController {
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = await readAllStocks();
+      // When no specific stock is requested, we fetch all stocks from the database which have a RIC.
+      [stocks] = await readAllStocks({
+        where: {
+          ric: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          refinitivLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.ric) // Only stocks with a RIC are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) => (a.refinitivLastFetch ?? new Date(0)).getTime() - (b.refinitivLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
       res.status(204).end();
@@ -1340,16 +1355,20 @@ export class FetchController {
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = await readAllStocks();
+      // When no specific stock is requested, we fetch all stocks from the database which have a Standard & Poor’s ID.
+      [stocks] = await readAllStocks({
+        where: {
+          spID: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          spLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.spID) // Only stocks with an S&P ID are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) => (a.spLastFetch ?? new Date(0)).getTime() - (b.spLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
       res.status(204).end();
@@ -1498,11 +1517,16 @@ export class FetchController {
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from the database.
-      stocks = await readAllStocks();
+      // When no specific stock is requested, we fetch all stocks from the database which have a Sustainalytics ID.
+      [stocks] = await readAllStocks({
+        where: {
+          sustainalyticsID: {
+            not: null,
+          },
+        },
+      });
     }
 
-    stocks = stocks.filter((stock) => stock.sustainalyticsID); // Only stocks with a Sustainalytics ID are considered.
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
       res.status(204).end();
@@ -1542,7 +1566,7 @@ export class FetchController {
           )
           .then(async (response) => {
             const sustainalyticsXMLLines: string[] = [];
-            response.data.split("\n").forEach((line) => {
+            response.data.split("\n").forEach((line: string) => {
               // We only keep the lines that contain the data we need.
               if (line.includes(`<a data-href="`) || line.includes(`<div class="col-2">`)) {
                 sustainalyticsXMLLines.push(line.trim());
