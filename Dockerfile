@@ -9,6 +9,7 @@ COPY . .
 
 # Build and create local production caches while using global mirror
 RUN \
+  yarn workspace rating-tracker-backend prisma:generate && \
   yarn build && \
   yarn config set enableGlobalCache false && \
   yarn cache clean && \
