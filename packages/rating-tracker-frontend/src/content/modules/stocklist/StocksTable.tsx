@@ -13,11 +13,12 @@ import {
   Tooltip,
   Box,
 } from "@mui/material";
-import { MSCIESGRating, Stock, StockListColumn } from "rating-tracker-commons";
-import { baseUrl, stockAPI, stockListEndpoint } from "../../../endpoints";
-import { Country, Industry, Size, SortableAttribute, Style } from "rating-tracker-commons";
+import { Stock, StockListColumn, stockListEndpointPath } from "rating-tracker-commons";
+import { baseUrl } from "../../../router";
+import { SortableAttribute } from "rating-tracker-commons";
 import StockRow from "../../../components/StockRow";
 import { useNotification } from "../../../contexts/NotificationContext";
+import { StockFilter } from "../../../types/StockFilter";
 
 /**
  * The stocks table component.
@@ -45,7 +46,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
   const getStocks = () => {
     setStocksFinal(false);
     axios
-      .get(baseUrl + stockAPI + stockListEndpoint, {
+      .get(baseUrl + stockListEndpointPath, {
         params: {
           // Pagination
           offset: page * rowsPerPage,
@@ -63,7 +64,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
         },
       })
       .then((res) => {
-        setStocks(res.data.stocks.map((stock: any) => new Stock(stock)));
+        setStocks(res.data.stocks);
         setCount(res.data.count);
       })
       .catch((e) => {
@@ -379,9 +380,9 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
                 }}
               >
                 <TableSortLabel
-                  active={sortBy === "morningstarFairValue"}
-                  direction={sortBy === "morningstarFairValue" && sortDesc ? "desc" : "asc"}
-                  onClick={handleSortLabelClicked("morningstarFairValue")}
+                  active={sortBy === "morningstarFairValuePercentageToLastClose"}
+                  direction={sortBy === "morningstarFairValuePercentageToLastClose" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("morningstarFairValuePercentageToLastClose")}
                 >
                   <Tooltip
                     title={
@@ -443,9 +444,9 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
                 }}
               >
                 <TableSortLabel
-                  active={sortBy === "analystTargetPrice"}
-                  direction={sortBy === "analystTargetPrice" && sortDesc ? "desc" : "asc"}
-                  onClick={handleSortLabelClicked("analystTargetPrice")}
+                  active={sortBy === "analystTargetPricePercentageToLastClose"}
+                  direction={sortBy === "analystTargetPricePercentageToLastClose" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("analystTargetPricePercentageToLastClose")}
                 >
                   <Tooltip
                     title={
@@ -649,9 +650,9 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
                 }}
               >
                 <TableSortLabel
-                  active={sortBy === "52w"}
-                  direction={sortBy === "52w" && sortDesc ? "desc" : "asc"}
-                  onClick={handleSortLabelClicked("52w")}
+                  active={sortBy === "positionIn52w"}
+                  direction={sortBy === "positionIn52w" && sortDesc ? "desc" : "asc"}
+                  onClick={handleSortLabelClicked("positionIn52w")}
                 >
                   <Tooltip
                     title={
@@ -775,45 +776,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
     </>
   );
 };
-
-export interface StockFilter {
-  totalScoreMin?: number;
-  totalScoreMax?: number;
-  financialScoreMin?: number;
-  financialScoreMax?: number;
-  esgScoreMin?: number;
-  esgScoreMax?: number;
-  dividendYieldPercentMin?: number;
-  dividendYieldPercentMax?: number;
-  priceEarningRatioMin?: number;
-  priceEarningRatioMax?: number;
-  starRatingMin?: number;
-  starRatingMax?: number;
-  morningstarFairValueDiffMin?: number;
-  morningstarFairValueDiffMax?: number;
-  analystConsensusMin?: number;
-  analystConsensusMax?: number;
-  analystCountMin?: number;
-  analystCountMax?: number;
-  analystTargetDiffMin?: number;
-  analystTargetDiffMax?: number;
-  msciESGRatingMin?: MSCIESGRating;
-  msciESGRatingMax?: MSCIESGRating;
-  msciTemperatureMin?: number;
-  msciTemperatureMax?: number;
-  refinitivESGScoreMin?: number;
-  refinitivESGScoreMax?: number;
-  refinitivEmissionsMin?: number;
-  refinitivEmissionsMax?: number;
-  spESGScoreMin?: number;
-  spESGScoreMax?: number;
-  sustainalyticsESGRiskMin?: number;
-  sustainalyticsESGRiskMax?: number;
-  countries?: Country[];
-  industries?: Industry[];
-  size?: Size;
-  style?: Style;
-}
 
 /**
  * Properties for the StocksTable component.

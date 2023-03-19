@@ -5,7 +5,6 @@ import { Entity, Schema } from "redis-om";
  * A cached webpage, API response, image or other resource from the web.
  */
 export class Resource extends CommonsResource {
-  /* istanbul ignore next -- @preserve */ // We do not yet have test data to create a valid Resource
   /**
    * Creates a new {@link Resource} from its Redis entity.
    *
@@ -47,7 +46,11 @@ export class ResourceEntity extends Entity {}
  *
  * @see {@link Resource}
  */
-export const resourceSchema = new Schema(ResourceEntity, {
-  fetchDate: { type: "date" },
-  content: { type: "string" },
-});
+export const resourceSchema = new Schema(
+  ResourceEntity,
+  {
+    fetchDate: { type: "date" },
+    content: { type: "string" },
+  },
+  { dataStructure: "HASH" }
+);

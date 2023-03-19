@@ -3,9 +3,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteStock from "../../../components/DeleteStock";
 import EditStock from "../../../components/EditStock";
-import { Stock, WRITE_STOCKS_ACCESS } from "rating-tracker-commons";
+import { Stock, stockLogoEndpointPath, WRITE_STOCKS_ACCESS } from "rating-tracker-commons";
 import { useContext, useState } from "react";
-import { baseUrl, stockAPI, logoEndpoint } from "../../../endpoints";
+import { baseUrl } from "../../../router";
 import { UserContext } from "../../../router.js";
 
 /**
@@ -35,7 +35,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
                   mr: "-8px",
                   background: "none",
                 }}
-                src={baseUrl + stockAPI + logoEndpoint + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+                src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
                 alt=" "
               />
               <Box>

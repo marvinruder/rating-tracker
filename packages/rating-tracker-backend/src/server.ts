@@ -1,30 +1,35 @@
 import { randomUUID } from "node:crypto";
 import cookieParser from "cookie-parser";
-import * as cron from "cron";
 import dotenv from "dotenv";
-import express, { Request, Response } from "express";
-import Router from "./routers/Router.js";
+import express from "express";
+import { router } from "./utils/router.js";
 import SwaggerUI from "swagger-ui-express";
 import openapiDocument from "./openapi/index.js";
 import * as OpenApiValidator from "express-openapi-validator";
 import chalk from "chalk";
 import responseTime from "response-time";
-import { STATUS_CODES } from "http";
-import axios from "axios";
-import APIError from "./lib/apiError.js";
-import { refreshSessionAndFetchUser } from "./redis/repositories/session/sessionRepository.js";
-import { sessionTTLInSeconds } from "./redis/repositories/session/sessionRepositoryBase.js";
+import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository.js";
 import path from "path";
-import logger, { PREFIX_NODEJS } from "./lib/logger.js";
-import { GENERAL_ACCESS } from "rating-tracker-commons";
+import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger.js";
+
+// Import all controllers
+import "./controllers/AuthController.js";
+import "./controllers/FetchController.js";
+import "./controllers/ResourceController.js";
+import "./controllers/SessionController.js";
+import "./controllers/SessionController.js";
+import "./controllers/StatusController.js";
+import "./controllers/StockController.js";
+import "./controllers/UserController.js";
+import "./controllers/UserManagementController.js";
 
 import { fileURLToPath } from "url";
+import errorHandler from "./utils/errorHandler.js";
+import setupCronJobs from "./utils/cron.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({
-  path: ".env.local",
-});
+dotenv.config();
 
 /**
  * A token that is used to bypass authentication for requests sent by Cron jobs. It is generated randomly and changes on
@@ -38,7 +43,7 @@ const bypassAuthenticationForInternalRequestsToken = randomUUID();
  */
 class Server {
   public app = express();
-  public router = Router;
+  public router = router;
 }
 
 /**
@@ -91,54 +96,6 @@ server.app.use((_, res, next) => {
   next();
 });
 
-/**
- * Create a pretty prefix string from an HTTP method. The colors in use correspond to those used by the OpenAPI UI.
- *
- * @param {string} method The HTTP method.
- * @returns {string} A colored pretty prefix string.
- */
-/* istanbul ignore next -- @preserve */ // We do not test the logger middleware and its helper functions
-const highlightMethod = (method: string) => {
-  switch (method) {
-    case "GET":
-      return chalk.whiteBright.bgBlue(` ${method} `) + chalk.blue.bgGrey("");
-    case "HEAD":
-      return chalk.whiteBright.bgMagenta(` ${method} `) + chalk.magenta.bgGrey("");
-    case "POST":
-      return chalk.whiteBright.bgGreen(` ${method} `) + chalk.green.bgGrey("");
-    case "PUT":
-      return chalk.black.bgYellow(` ${method} `) + chalk.yellow.bgGrey("");
-    case "PATCH":
-      return chalk.black.bgCyanBright(` ${method} `) + chalk.cyanBright.bgGrey("");
-    case "DELETE":
-      return chalk.whiteBright.bgRed(` ${method} `) + chalk.red.bgGrey("");
-    default:
-      return method;
-  }
-};
-
-/**
- * Create a pretty prefix string from an HTTP status code.
- *
- * @param {number} statusCode The HTTP status code.
- * @returns {string} A colored pretty prefix string.
- */
-/* istanbul ignore next -- @preserve */ // We do not test the logger middleware and its helper functions
-const statusCodeDescription = (statusCode: number) => {
-  const statusCodeString = ` ${statusCode}  ${STATUS_CODES[statusCode]} `;
-  switch (Math.floor(statusCode / 100)) {
-    case 2: // Successful responses
-      return chalk.whiteBright.bgGreen(statusCodeString) + chalk.green("");
-    case 1: // Informational responses
-    case 3: // Redirection messages
-      return chalk.black.bgYellow(statusCodeString) + chalk.yellow("");
-    case 4: // Client error responses
-    case 5: // Server error responses
-      return chalk.whiteBright.bgRed(statusCodeString) + chalk.red("");
-  }
-  return statusCodeString;
-};
-
 // Parses cookies and stores them in req.cookies
 server.app.use(cookieParser());
 
@@ -151,6 +108,7 @@ server.app.use(async (req, res, next) => {
     // If a session cookie is present
     try {
       // Refresh the cookie on the server and append the user to the response
+      // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
       res.locals.user = await refreshSessionAndFetchUser(req.cookies.authToken);
       res.cookie("authToken", req.cookies.authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
@@ -176,62 +134,8 @@ server.app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(openapiDocument));
 // Host the OpenAPI JSON configuration
 server.app.get("/api-spec/v3", (_, res) => res.json(openapiDocument));
 
-server.app.use(
-  // Log all requests
-  responseTime((req: Request, res: Response, time) => {
-    // Do not log requests for resources such as logos – those are far too many and only mildly interesting
-    if (!req.originalUrl.startsWith("/api/stock/logo")) {
-      chalk
-        .white(
-          chalk.whiteBright.bgGreen(" \uf898 ") +
-            chalk.bgGrey.green("") +
-            chalk.bgGrey(
-              chalk.cyanBright(" \uf5ef " + new Date().toISOString()) + // Timestamp
-                "  " +
-                chalk.yellow(
-                  res.locals.user
-                    ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})` // Authenticated user
-                    : /* istanbul ignore next -- @preserve */ // We do not test Cron jobs
-                    res.locals.userIsCron
-                    ? "\ufba7 cron" // Cron job
-                    : "\uf21b" // Unauthenticated user
-                ) +
-                "  " +
-                // use reverse proxy that sets this header to prevent CWE-134
-                chalk.magentaBright("\uf98c" + req.headers["x-real-ip"]) + // IP address
-                " "
-            ) +
-            chalk.grey("") +
-            "\n ├─" +
-            highlightMethod(req.method) + // HTTP request method
-            chalk.bgGrey(
-              ` ${req.originalUrl // URL path
-                .slice(1, req.originalUrl.indexOf("?") == -1 ? undefined : req.originalUrl.indexOf("?"))
-                .replaceAll("/", "  ")} `
-            ) +
-            chalk.grey("") +
-            Object.entries(req.cookies) // Cookies
-              .map(
-                ([key, value]) =>
-                  "\n ├─" + chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) + chalk.grey("") + " " + value
-              )
-              .join(" ") +
-            Object.entries(req.query) // Query parameters
-              .map(
-                ([key, value]) =>
-                  "\n ├─" + chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) + chalk.grey("") + " " + value
-              )
-              .join(" ") +
-            "\n ╰─" +
-            statusCodeDescription(res.statusCode) + // HTTP response status code
-            ` after ${Math.round(time)} ms` // Response time
-        )
-        .split("\n")
-        .forEach((line) => logger.info(line)); // Show newlines in the log in a pretty way
-      logger.info("");
-    }
-  })
-);
+// Log all requests
+server.app.use(responseTime(requestLogger));
 
 // Validate requests and responses against the OpenAPI specification
 server.app.use(
@@ -242,99 +146,20 @@ server.app.use(
   })
 );
 
-server.app.use(
-  "/api",
-  server.router.public, // Forward requests to public endpoints directly to the router
-  (_, res, next) => {
-    if (
-      // Check if the user is authenticated and has the required access rights for private endpoints
-      res.locals.user?.hasAccessRight(GENERAL_ACCESS) ||
-      res.locals.userIsCron // Allow Cron jobs to access private endpoints
-    ) {
-      next();
-    } else {
-      // If not, send a 401 response
-      throw new APIError(401, "This endpoint is available to authenticated clients only. Please sign in.");
-    }
-  },
-  server.router.private // If the user is properly authenticated, forward requests to private endpoints to the router
-);
+// Route requests to controllers
+server.app.use("/api", server.router);
 
 // Handle errors
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-server.app.use((err, _, res, next) => {
-  logger.error(PREFIX_NODEJS + chalk.redBright(err)); // Log the error
-  // Send an error response to the client
-  res.status(err.status || 500).json({
-    message: err.message,
-    errors: err.errors,
-  });
-});
+server.app.use(errorHandler);
 
-/* istanbul ignore next -- @preserve */ // We do not test Cron jobs
-if (process.env.AUTO_FETCH_SCHEDULE) {
-  new cron.CronJob(
-    process.env.AUTO_FETCH_SCHEDULE,
-    async () => {
-      // Fetch data from MSCI, Refinitiv, S&P and Sustainalytics in parallel and detach the processes
-      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/msci`, {
-        params: { detach: "true" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/refinitiv`, {
-        params: { detach: "true" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/sp`, {
-        params: { detach: "true" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/sustainalytics`, {
-        params: { detach: "true" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      // Fetch data from Morningstar first
-      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/morningstar`, {
-        params: { detach: "false" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      // Fetch data from Marketscreener after Morningstar, so Market Screener can use the up-to-date Last Close price to
-      // calculate the analyst target price properly
-      await axios.get(`http://localhost:${process.env.PORT}/api/fetch/marketscreener`, {
-        params: { detach: "true" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-    },
-    null,
-    true
-  );
-  // If we have an auto fetch schedule, log a message
-  logger.info(
-    chalk.whiteBright.bgGreen(" \uf898 ") +
-      chalk.green.bgGrey("") +
-      chalk.whiteBright.bgGrey(` Auto Fetch activated `) +
-      chalk.grey("") +
-      chalk.green(" This instance will periodically fetch information from data providers for all known stocks.")
-  );
-  logger.info("");
-}
+// Setup Cron Jobs
+process.env.AUTO_FETCH_SCHEDULE &&
+  setupCronJobs(bypassAuthenticationForInternalRequestsToken, process.env.AUTO_FETCH_SCHEDULE);
 
 export const listener = server.app.listen(process.env.PORT, () => {
   logger.info(
-    chalk.whiteBright.bgGreen(" \uf898 ") +
-      chalk.green.bgGrey("") +
+    chalk.whiteBright.bgHex("#339933")(" \uf898 ") +
+      chalk.bgGrey.hex("#339933")("") +
       chalk.whiteBright.bgGrey(` \uf6ff ${process.env.PORT} `) +
       chalk.grey("") +
       " Listening…"

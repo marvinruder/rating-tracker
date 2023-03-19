@@ -20,7 +20,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
@@ -41,17 +41,18 @@ import {
   sectorOfIndustryGroup,
   Stock,
   StockListColumn,
+  stockLogoEndpointPath,
   superSectorDescription,
   superSectorName,
   superSectorOfSector,
   WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
-import { baseUrl, logoEndpoint, stockAPI } from "../../endpoints";
+import { baseUrl } from "../../router";
 import { useContext, useState } from "react";
 import DeleteStock from "../DeleteStock";
 import EditStock from "../EditStock";
 import StockDetails from "../StockDetails";
-import formatMarketCap from "../../lib/formatters";
+import formatMarketCap from "../../utils/formatters";
 import {
   MorningstarNavigator,
   MarketScreenerNavigator,
@@ -59,7 +60,7 @@ import {
   RefinitivNavigator,
   SPNavigator,
   SustainalyticsNavigator,
-} from "../../lib/navigators";
+} from "../../utils/navigators";
 import Range52WSlider from "../Range52WSlider";
 import { NavLink } from "react-router-dom";
 import { UserContext } from "../../router.js";
@@ -150,7 +151,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         >
           <Avatar
             sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
-            src={baseUrl + stockAPI + logoEndpoint + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+            src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
             alt=" "
           />
           <Box width={8} />
@@ -284,8 +285,8 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         }}
       >
         <BlueIconChip
-          icon={<EmojiEventsIcon />}
-          label={<strong>{Math.round(Math.max(0, 100 * props.stock.getTotalScore()))}</strong>}
+          icon={<VerifiedIcon />}
+          label={<strong>{Math.round(Math.max(0, 100 * props.stock.totalScore))}</strong>}
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
@@ -297,7 +298,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       >
         <YellowIconChip
           icon={<PriceCheckIcon />}
-          label={<strong>{Math.round(Math.max(0, 100 * props.stock.getFinancialScore()))}</strong>}
+          label={<strong>{Math.round(Math.max(0, 100 * props.stock.financialScore))}</strong>}
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
@@ -309,7 +310,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       >
         <GreenIconChip
           icon={<NaturePeopleIcon />}
-          label={<strong>{Math.round(Math.max(0, 100 * props.stock.getESGScore()))}</strong>}
+          label={<strong>{Math.round(Math.max(0, 100 * props.stock.esgScore))}</strong>}
           sx={{ width: 84, fontSize: 18 }}
         />
       </TableCell>
@@ -339,11 +340,9 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             <Box sx={{ float: "right" }}>{props.stock.morningstarFairValue?.toFixed(2) ?? "–"}</Box>
           </Typography>
           <Typography variant="body2" color="text.secondary" width={90} sx={{ textAlign: "right" }} noWrap>
-            {props.stock.morningstarFairValue !== undefined &&
-              props.stock.lastClose !== undefined &&
-              props.stock.getPercentageToLastClose("morningstarFairValue") !== undefined &&
-              `${props.stock.lastClose > props.stock.morningstarFairValue ? "+" : ""}${Math.round(
-                props.stock.getPercentageToLastClose("morningstarFairValue")
+            {props.stock.morningstarFairValuePercentageToLastClose !== null &&
+              `${props.stock.morningstarFairValuePercentageToLastClose > 0 ? "+" : ""}${Math.round(
+                props.stock.morningstarFairValuePercentageToLastClose
               )}\u2009%`}
           </Typography>
         </MorningstarNavigator>
@@ -354,7 +353,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("Analyst Consensus"),
         }}
       >
-        {props.stock.analystConsensus !== undefined && (
+        {props.stock.analystConsensus !== null && (
           <MarketScreenerNavigator stock={props.stock}>
             <Chip
               label={<strong>{props.stock.analystConsensus}</strong>}
@@ -421,9 +420,9 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             sx={{ textAlign: "left", display: "inline-block" }}
             noWrap
           >
-            {props.stock.analystTargetPrice !== undefined &&
-              props.stock.analystCount !== undefined &&
-              props.stock.lastClose !== undefined &&
+            {props.stock.analystTargetPrice !== null &&
+              props.stock.analystCount !== null &&
+              props.stock.lastClose !== null &&
               `n\u2009=\u2009${props.stock.analystCount}`}
           </Typography>
           <Typography
@@ -433,12 +432,10 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             sx={{ textAlign: "right", display: "inline-block" }}
             noWrap
           >
-            {props.stock.analystTargetPrice !== undefined &&
-              props.stock.analystCount !== undefined &&
-              props.stock.lastClose !== undefined &&
-              props.stock.getPercentageToLastClose("analystTargetPrice") !== undefined &&
-              `${props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""}${Math.round(
-                props.stock.getPercentageToLastClose("analystTargetPrice")
+            {props.stock.analystCount !== null &&
+              props.stock.analystTargetPricePercentageToLastClose !== null &&
+              `${props.stock.analystTargetPricePercentageToLastClose > 0 ? "+" : ""}${Math.round(
+                props.stock.analystTargetPricePercentageToLastClose
               )}\u2009%`}
           </Typography>
         </MarketScreenerNavigator>
@@ -474,11 +471,11 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("MSCI Implied Temperature Rise"),
         }}
       >
-        {props.stock.msciTemperature !== undefined && (
+        {props.stock.msciTemperature !== null && (
           <MSCINavigator stock={props.stock}>
             <TemperatureChip
               icon={<ThermostatIcon />}
-              label={<strong>{props.stock.msciTemperature + "°C"}</strong>}
+              label={<strong>{props.stock.msciTemperature + "\u2009℃"}</strong>}
               size="small"
               sx={{ width: 72 }}
               style={{ cursor: "inherit" }}
@@ -550,7 +547,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("Sustainalytics ESG Risk"),
         }}
       >
-        {props.stock.sustainalyticsESGRisk !== undefined && (
+        {props.stock.sustainalyticsESGRisk !== null && (
           <SustainalyticsNavigator stock={props.stock}>
             <Chip
               label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
@@ -579,34 +576,32 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("52 Week Range"),
         }}
       >
-        {props.stock.lastClose !== undefined &&
-          props.stock.low52w !== undefined &&
-          props.stock.high52w !== undefined && (
-            <Range52WSlider
-              size="small"
-              sx={{
-                mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
-                mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
-                width: 150,
-              }}
-              value={props.stock.lastClose}
-              min={props.stock.low52w}
-              max={props.stock.high52w}
-              marks={[
-                {
-                  value: props.stock.low52w,
-                  label: props.stock.low52w?.toFixed(2),
-                },
-                {
-                  value: props.stock.high52w,
-                  label: props.stock.high52w?.toFixed(2),
-                },
-              ]}
-              valueLabelDisplay="on"
-              valueLabelFormat={(value) => value.toFixed(2)}
-              disabled
-            />
-          )}
+        {props.stock.lastClose !== null && props.stock.low52w !== null && props.stock.high52w !== null && (
+          <Range52WSlider
+            size="small"
+            sx={{
+              mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
+              mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
+              width: 150,
+            }}
+            value={props.stock.lastClose}
+            min={props.stock.low52w}
+            max={props.stock.high52w}
+            marks={[
+              {
+                value: props.stock.low52w,
+                label: props.stock.low52w?.toFixed(2),
+              },
+              {
+                value: props.stock.high52w,
+                label: props.stock.high52w?.toFixed(2),
+              },
+            ]}
+            valueLabelDisplay="on"
+            valueLabelFormat={(value) => value.toFixed(2)}
+            disabled
+          />
+        )}
       </TableCell>
       {/* Dividend Yield */}
       <TableCell
@@ -641,7 +636,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
               {props.stock.currency ?? ""}
             </Box>
           </Tooltip>
-          <Box sx={{ float: "right" }}>{props.stock.marketCap !== undefined ? formatMarketCap(props.stock) : "–"}</Box>
+          <Box sx={{ float: "right" }}>{props.stock.marketCap !== null ? formatMarketCap(props.stock) : "–"}</Box>
         </Typography>
       </TableCell>
       {/* Actions */}
@@ -694,15 +689,13 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       )}
       {/* Details Dialog */}
       <Dialog open={detailsDialogOpen} onClose={() => setDetailsDialogOpen(false)} maxWidth="lg">
-        <DialogTitle style={{ paddingBottom: "0px" }}>
+        <DialogTitle>
           <Grid container justifyContent="space-between">
             <Grid
               item
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                maxWidth: "calc(100% - 40px)",
-              }}
+              display="flex"
+              alignItems="center"
+              maxWidth={{ xs: "calc(100% - 40px)", md: "calc(100% - 80px)" }}
             >
               <Avatar
                 sx={{
@@ -712,7 +705,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                   mr: "-8px",
                   background: "none",
                 }}
-                src={baseUrl + stockAPI + logoEndpoint + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+                src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
                 alt=" "
               />
               <Box sx={{ my: 1 }}>
@@ -724,10 +717,29 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid item>
-              <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ ml: "auto", borderRadius: 20 }}>
-                <CloseIcon />
-              </IconButton>
+            <Grid
+              container
+              width={{ xs: 40, md: 80 }}
+              direction={{ xs: "column", md: "row-reverse" }}
+              display="flex"
+              justifyContent={{ xs: "space-between" }}
+              sx={{ ml: "auto" }}
+            >
+              <Grid item>
+                <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ borderRadius: 20 }}>
+                  <CloseIcon />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  component={NavLink}
+                  to={`/stock/${props.stock.ticker}`}
+                  target="_blank"
+                  sx={{ borderRadius: 20 }}
+                >
+                  <OpenInNewIcon />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
         </DialogTitle>
@@ -794,7 +806,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("Sector"),
         }}
       >
-        <Typography variant="body1" display={"flex"}>
+        <Typography variant="body1" display="flex">
           <Skeleton
             variant="rectangular"
             width={1.55 * (theme.typography.body1.fontSize as number)}
@@ -806,7 +818,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <Box width={6} />
           <Skeleton width={105} />
         </Typography>
-        <Typography variant="body2" display={"flex"}>
+        <Typography variant="body2" display="flex">
           <Skeleton
             variant="rectangular"
             width={1.55 * (theme.typography.body1.fontSize as number)}

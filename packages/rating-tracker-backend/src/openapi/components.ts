@@ -14,38 +14,44 @@ export const components: OpenAPIV3.ComponentsObject = {
   schemas: {
     Country: {
       type: "string",
+      nullable: true,
       description: "The 2-letter ISO 3166-1 country code of the country the stock is based in.",
       enum: Array.from(countryArray),
       example: "US",
     },
     Industry: {
       type: "string",
+      nullable: true,
       description: "The main industry the company operates in.",
-      enum: Array.from(industryArray),
+      enum: [...Array.from(industryArray), null],
       example: "ConsumerElectronics",
     },
     Size: {
       type: "string",
+      nullable: true,
       description: "The size of the company.",
-      enum: Array.from(sizeArray),
+      enum: [...Array.from(sizeArray), null],
       example: "Large",
     },
     Style: {
       type: "string",
+      nullable: true,
       description: "The style of the stock.",
-      enum: Array.from(styleArray),
+      enum: [...Array.from(styleArray), null],
       example: "Growth",
     },
     Currency: {
       type: "string",
+      nullable: true,
       description: "The 3-letter ISO 4217 currency code of the currency the stock is traded in.",
-      enum: Array.from(currencyArray),
+      enum: [...Array.from(currencyArray), null],
       example: "USD",
     },
     MSCIESGRating: {
       type: "string",
+      nullable: true,
       description: "The MSCI ESG rating of the stock.",
-      enum: Array.from(msciESGRatingArray),
+      enum: [...Array.from(msciESGRatingArray), null],
       example: "AA",
     },
     Stock: {
@@ -76,25 +82,30 @@ export const components: OpenAPIV3.ComponentsObject = {
         style: {
           $ref: "#/components/schemas/Style",
         },
-        morningstarId: {
+        morningstarID: {
           type: "string",
+          nullable: true,
           example: "0P000000GY",
         },
         morningstarLastFetch: {
           type: "string",
+          nullable: true,
           format: "date-time",
           example: "2022-11-24T03:30:15.908Z",
         },
         starRating: {
           type: "integer",
+          nullable: true,
           example: 3,
         },
         dividendYieldPercent: {
           type: "number",
+          nullable: true,
           example: 0.62,
         },
         priceEarningRatio: {
           type: "number",
+          nullable: true,
           example: 17.82,
         },
         currency: {
@@ -102,51 +113,63 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         lastClose: {
           type: "number",
+          nullable: true,
           example: 148.31,
         },
         morningstarFairValue: {
           type: "number",
+          nullable: true,
           example: 130.0,
         },
         marketCap: {
-          type: "number",
+          type: "integer",
+          nullable: true,
           example: 2351000000000,
         },
         low52w: {
           type: "number",
+          nullable: true,
           example: 129.04,
         },
         high52w: {
           type: "number",
+          nullable: true,
           example: 182.13,
         },
-        marketScreenerId: {
+        marketScreenerID: {
           type: "string",
+          nullable: true,
           example: "APPLE-INC-4849",
         },
         marketScreenerLastFetch: {
           type: "string",
+          nullable: true,
           format: "date-time",
           example: "2022-11-24T03:30:15.908Z",
         },
         analystConsensus: {
           type: "number",
+          nullable: true,
           example: 8.1,
         },
         analystCount: {
           type: "integer",
+          nullable: true,
           example: 45,
         },
         analystTargetPrice: {
           type: "number",
+          nullable: true,
           example: 172.51,
         },
-        msciId: {
+        msciID: {
           type: "string",
+          nullable: true,
           example: "apple-inc/IID000000002157615",
         },
         msciLastFetch: {
           type: "string",
+          nullable: true,
           format: "date-time",
           example: "2022-11-24T03:30:15.908Z",
         },
@@ -155,48 +178,59 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         msciTemperature: {
           type: "number",
+          nullable: true,
           example: 1.7,
         },
         ric: {
           type: "string",
+          nullable: true,
           example: "AAPL.O",
         },
         refinitivLastFetch: {
           type: "string",
+          nullable: true,
           format: "date-time",
           example: "2022-11-24T03:30:15.908Z",
         },
         refinitivESGScore: {
           type: "integer",
+          nullable: true,
           example: 80,
         },
         refinitivEmissions: {
           type: "integer",
+          nullable: true,
           example: 97,
         },
-        spId: {
-          type: "integer",
+        spID: {
+          type: "number",
+          nullable: true,
           example: 4004205,
         },
         spLastFetch: {
           type: "string",
+          nullable: true,
           format: "date-time",
           example: "2022-11-24T03:30:15.908Z",
         },
         spESGScore: {
           type: "integer",
+          nullable: true,
           example: 40,
         },
-        sustainalyticsId: {
+        sustainalyticsID: {
           type: "string",
+          nullable: true,
           example: "apple-inc/1007903183",
         },
         sustainalyticsESGRisk: {
           type: "number",
+          nullable: true,
           example: 16.7,
         },
         description: {
           type: "string",
+          nullable: true,
           example:
             "Apple designs a wide variety of consumer electronic devices, including smartphones (iPhone), tablets " +
             "(iPad), PCs (Mac), smartwatches (Apple Watch), AirPods, and TV boxes (Apple TV), among others. The " +
@@ -251,11 +285,13 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         avatar: {
           type: "string",
+          nullable: true,
           description: "The base64-encoded avatar of the user.",
           format: "binary",
         },
         phone: {
           type: "string",
+          nullable: true,
           pattern: REGEX_PHONE_NUMBER,
           description: "The phone number of the user, used for Signal messages.",
           example: "+491234567890",
@@ -267,6 +303,7 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         subscriptions: {
           type: "integer",
+          nullable: true,
           description: "The subscriptions of the user to different types of messages, encoded as a bitfield",
           example: 1,
         },

@@ -3,5 +3,6 @@
   "compilerOptions": {
     "sourceMap": false
   },
-  "exclude": ["src/**/*.test.ts", "src/**/__mocks__/*", "vitest.config.ts"]
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/__mocks__/*"]
 }

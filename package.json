@@ -14,6 +14,8 @@
     "dev:server": "conc --kill-others \"yarn workspace rating-tracker-backend dev:ts-node\" \"yarn workspace rating-tracker-frontend dev:vite\" \"yarn workspace rating-tracker-commons dev:build\" -n \",,ﯤ\" -p \"{name}\" -c #3178C6,#61DAFB,#3178C6 --timings",
     "dev:tools": "conc --kill-others \"yarn workspace rating-tracker-backend dev:tools\" -n \"\" -p \"{name}\" -c grey --timings",
     "test": "yarn workspaces foreach -pt run test",
+    "test:tools": "conc --kill-others \"yarn workspace rating-tracker-backend test:tools\" -n \"\" -p \"{name}\" -c grey --timings",
+    "test:prisma:migrate:init": "yarn workspace rating-tracker-backend test:prisma:migrate:init",
     "build": "yarn workspaces foreach -pt run build",
     "lint": "yarn workspaces foreach -pt run lint"
   },

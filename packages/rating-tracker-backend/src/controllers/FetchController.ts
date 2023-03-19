@@ -4,11 +4,17 @@ import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 import { Builder, By, Capabilities, until, WebDriver } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
-import APIError from "../lib/apiError.js";
-import { Stock } from "../models/stock.js";
+import APIError from "../utils/apiError.js";
 import chalk from "chalk";
 import {
   Currency,
+  fetchMarketScreenerEndpointPath,
+  fetchMorningstarEndpointPath,
+  fetchMSCIEndpointPath,
+  fetchRefinitivEndpointPath,
+  fetchSPEndpointPath,
+  fetchSustainalyticsEndpointPath,
+  GENERAL_ACCESS,
   Industry,
   isCurrency,
   isIndustry,
@@ -17,22 +23,22 @@ import {
   MSCIESGRating,
   Resource,
   Size,
+  Stock,
   Style,
   WRITE_STOCKS_ACCESS,
 } from "rating-tracker-commons";
-import { readAllStocks, readStock, updateStock } from "../redis/repositories/stock/stockRepository.js";
+import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable.js";
 import * as signal from "../signal/signal.js";
-import logger, { PREFIX_CHROME } from "../lib/logger.js";
-import { createResource, readResource } from "../redis/repositories/resource/resourceRepository.js";
+import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
+import { createResource, readResource } from "../redis/repositories/resourceRepository.js";
 import axios from "axios";
 import dotenv from "dotenv";
+import Router from "../utils/router.js";
 
-dotenv.config({
-  path: ".env.local",
-});
+dotenv.config();
 
-const SIGNAL_PREFIX_ERROR = "⚠️ ";
-const SIGNAL_PREFIX_INFO = "ℹ️ ";
+const SIGNAL_PREFIX_ERROR = "⚠️ " as const;
+const SIGNAL_PREFIX_INFO = "ℹ️ " as const;
 
 const XPATH_INDUSTRY = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.." as const;
 const XPATH_SIZE_STYLE = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Stock Style')]/.." as const;
@@ -49,101 +55,100 @@ const XPATH_SPREAD_AVERAGE_TARGET =
 
 const XPATH_SP_PANEL = "//*/div[@class='panel-set__first-column']/h1[@id='company-name']/.." as const;
 
-const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings";
+const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings" as const;
+
+/**
+ * Creates and returns a new WebDriver instance.
+ *
+ * @param {boolean} headless whether to run the browser in headless mode
+ * @returns {Promise<WebDriver>} a Promise that resolves to a WebDriver instance
+ * @throws an {@link APIError} if the WebDriver cannot be created
+ */
+const getDriver = async (headless?: boolean) => {
+  const url = process.env.SELENIUM_URL;
+  const options = new Options().addArguments("window-size=1080x3840"); // convenient for screenshots
+  headless && options.headless(); // In headless mode, the browser window is not shown.
+
+  return await new Builder()
+    .usingServer(url)
+    .withCapabilities(
+      new Capabilities()
+        // Use Chrome as the browser.
+        .setBrowserName("chrome")
+        // Do not wait for all resources to load. This speeds up the page load.
+        .setPageLoadStrategy("eager")
+    )
+    .setChromeOptions(options)
+    .build()
+    .then((driver) => driver)
+    .catch((e) => {
+      throw new APIError(502, `Unable to connect to Selenium WebDriver: ${e.message}`);
+    });
+};
+
+/**
+ * Shuts down the given WebDriver instance gracefully, deallocating all associated resources.
+ *
+ * @param {WebDriver} driver the WebDriver instance to shut down
+ * @returns {Promise<void>} a Promise that resolves when the WebDriver has been shut down
+ * @throws an {@link APIError} if the WebDriver cannot be shut down gracefully
+ */
+const quitDriver = async (driver: WebDriver): Promise<void> => {
+  try {
+    await driver.quit();
+  } catch (e) {
+    logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to shut down Selenium WebDriver gracefully: ${e}`));
+  }
+};
+
+/**
+ * Creates a screenshot of the current page and stores it in Redis.
+ *
+ * @param {WebDriver} driver the WebDriver instance in use
+ * @param {Stock} stock the affected stock
+ * @param {string} dataProvider the name of the data provider
+ * @returns {Promise<string>} a Promise that resolves to a string holding a general informational message and a URL to
+ * the screenshot
+ */
+const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvider: string): Promise<string> => {
+  const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.png`;
+  try {
+    const screenshot = await driver.takeScreenshot();
+    // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
+    await createResource(
+      {
+        url: screenshotID,
+        fetchDate: new Date(),
+        content: screenshot, // base64-encoded PNG image
+      },
+      60 * 60 * 24 // We only store the screenshot for 24 hours.
+    );
+    return `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
+      process.env.DOMAIN
+    }/api/resource/${screenshotID}.`;
+  } catch (e) {
+    logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to take screenshot “${screenshotID}”: ${e}`));
+    return "";
+  }
+};
 
 /**
  * This class is responsible for fetching data from external data providers.
  */
-class FetchController {
-  /**
-   * Creates and returns a new WebDriver instance.
-   *
-   * @param {boolean} headless whether to run the browser in headless mode
-   * @returns {Promise<WebDriver>} a Promise that resolves to a WebDriver instance
-   * @throws an {@link APIError} if the WebDriver cannot be created
-   */
-  async getDriver(headless?: boolean) {
-    const url = process.env.SELENIUM_URL;
-    const options = new Options().addArguments("window-size=1080x3840"); // convenient for screenshots
-    headless && options.headless(); // In headless mode, the browser window is not shown.
-
-    return await new Builder()
-      .usingServer(url)
-      .withCapabilities(
-        new Capabilities()
-          // Use Chrome as the browser.
-          .setBrowserName("chrome")
-          // Do not wait for all resources to load. This speeds up the page load.
-          .setPageLoadStrategy("eager")
-      )
-      .setChromeOptions(options)
-      .build()
-      .then((driver) => driver)
-      .catch((e) => {
-        throw new APIError(502, `Unable to connect to Selenium WebDriver: ${e.message}`);
-      });
-  }
-
-  /**
-   * Shuts down the given WebDriver instance gracefully, deallocating all associated resources.
-   *
-   * @param {WebDriver} driver the WebDriver instance to shut down
-   * @returns {Promise<void>} a Promise that resolves when the WebDriver has been shut down
-   * @throws an {@link APIError} if the WebDriver cannot be shut down gracefully
-   */
-  async quitDriver(driver: WebDriver) {
-    try {
-      await driver.quit();
-    } catch (e) {
-      logger.warn(PREFIX_CHROME + chalk.yellowBright(`Unable to shut down Selenium WebDriver gracefully: ${e}`));
-    }
-  }
-
-  /**
-   * Creates a screenshot of the current page and stores it in Redis.
-   *
-   * @param {WebDriver} driver the WebDriver instance in use
-   * @param {Stock} stock the affected stock
-   * @param {string} dataProvider the name of the data provider
-   * @returns {Promise<string>} a Promise that resolves to a string holding a general informational message and a URL to
-   * the screenshot
-   */
-  async takeScreenshot(driver: WebDriver, stock: Stock, dataProvider: string): Promise<string> {
-    const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.png`;
-    try {
-      const screenshot = await driver.takeScreenshot();
-      await createResource(
-        {
-          url: screenshotID,
-          fetchDate: new Date(),
-          content: screenshot, // base64-encoded PNG image
-        },
-        60 * 60 * 24 // We only store the screenshot for 24 hours.
-      );
-      return `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
-        process.env.DOMAIN
-      }/api/resource/${screenshotID}.`;
-    } catch (e) {
-      logger.warn(PREFIX_CHROME + chalk.yellowBright(`Unable to take screenshot “${screenshotID}”: ${e}`));
-      return "";
-    }
-  }
-
+export class FetchController {
   /**
    * Fetches data from Morningstar Italy.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchMorningstarEndpointPath,
+    method: "post",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchMorningstarData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -151,25 +156,30 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].morningstarId) {
+        if (!stocks[0].morningstarID) {
           // If the only stock to use does not have a Morningstar ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have a Morningstar ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      // When no specific stock is requested, we fetch all stocks from the database which have a Morningstar ID.
+      [stocks] = await readAllStocks({
+        where: {
+          morningstarID: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          morningstarLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.morningstarId) // Only stocks with a Morningstar ID are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) => (a.morningstarLastFetch ?? new Date(0)).getTime() - (b.morningstarLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -180,7 +190,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver(true);
+    const driver = await getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -189,7 +199,7 @@ class FetchController {
         new Date().getTime() - stock.morningstarLastFetch.getTime() < 1000 * 60 * 60 * 12
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping Morningstar fetch since last successful fetch was ${formatDistance(
               stock.morningstarLastFetch.getTime(),
               new Date().getTime(),
@@ -214,8 +224,8 @@ class FetchController {
 
       try {
         await driver.get(
-          `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarId}` +
-            `&LanguageId=en-US&SecurityToken=${stock.morningstarId}]3]0]E0WWE$$ALL`
+          `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarID}` +
+            `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`
         );
         await driver.wait(
           until.elementLocated(By.id("SnapshotContent")),
@@ -236,12 +246,12 @@ class FetchController {
             throw new TypeError(`Extracted industry “${industryString}” is no valid industry.`);
           }
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract industry: ${e}`));
-          if (stock.industry !== undefined) {
-            // If an industry for the stock is already stored in Redis, but we cannot extract it now from the page, we
-            // log this as an error and send a message.
+          logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract industry: ${e}`));
+          if (stock.industry !== null) {
+            // If an industry for the stock is already stored in the database, but we cannot extract it now from the
+            // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of industry failed unexpectedly. This incident will be reported.`
                 )
@@ -267,13 +277,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract size and style: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract size and style: ${e}`)
           );
-          if (stock.size !== undefined || stock.style !== undefined) {
-            // If size or style for the stock are already stored in Redis, but we cannot extract them now from the page,
-            // we log this as an error and send a message.
+          if (stock.size !== null || stock.style !== null) {
+            // If size or style for the stock are already stored in the database, but we cannot extract them now from
+            // the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of size and style failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -292,12 +302,14 @@ class FetchController {
           }
           starRating = +starRatingString;
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract star rating: ${e}`));
-          if (stock.starRating !== undefined) {
-            // If a star rating for the stock is already stored in Redis, but we cannot extract it now from the page, we
-            // log this as an error and send a message.
+          logger.warn(
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract star rating: ${e}`)
+          );
+          if (stock.starRating !== null) {
+            // If a star rating for the stock is already stored in the database, but we cannot extract it now from the
+            // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of star rating failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -320,13 +332,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`)
           );
-          if (stock.dividendYieldPercent !== undefined) {
-            // If a dividend yield for the stock is already stored in Redis, but we cannot extract it now from the page,
-            // we log this as an error and send a message.
+          if (stock.dividendYieldPercent !== null) {
+            // If a dividend yield for the stock is already stored in the database, but we cannot extract it now from
+            // the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of dividend yield failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -349,13 +361,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`)
           );
-          if (stock.priceEarningRatio !== undefined) {
-            // If a price earning ratio for the stock is already stored in Redis, but we cannot extract it now from the
-            // page, we log this as an error and send a message.
+          if (stock.priceEarningRatio !== null) {
+            // If a price earning ratio for the stock is already stored in the database, but we cannot extract it now
+            // from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of price earning ratio failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -375,12 +387,12 @@ class FetchController {
             throw new TypeError(`Extracted currency code “${currencyString}” is no valid currency code.`);
           }
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract currency: ${e}`));
-          if (stock.currency !== undefined) {
-            // If a currency for the stock is already stored in Redis, but we cannot extract it now from the page, we
-            // log this as an error and send a message.
+          logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract currency: ${e}`));
+          if (stock.currency !== null) {
+            // If a currency for the stock is already stored in the database, but we cannot extract it now from the
+            // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of currency failed unexpectedly. This incident will be reported.`
                 )
@@ -401,12 +413,14 @@ class FetchController {
             lastClose = +lastCloseString;
           }
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract last close: ${e}`));
-          if (stock.lastClose !== undefined) {
-            // If a last close for the stock is already stored in Redis, but we cannot extract it now from the page, we
-            // log this as an error and send a message.
+          logger.warn(
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract last close: ${e}`)
+          );
+          if (stock.lastClose !== null) {
+            // If a last close for the stock is already stored in the database, but we cannot extract it now from the
+            // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of last close failed unexpectedly. This incident will be reported.`
                 )
@@ -431,13 +445,14 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`)
+            PREFIX_SELENIUM +
+              chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`)
           );
-          if (stock.morningstarFairValue !== undefined) {
-            // If a Morningstar Fair Value for the stock is already stored in Redis, but we cannot extract it now from
-            // the page, we log this as an error and send a message.
+          if (stock.morningstarFairValue !== null) {
+            // If a Morningstar Fair Value for the stock is already stored in the database, but we cannot extract it
+            // now from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of Morningstar Fair Value failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -468,13 +483,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`)
           );
-          if (stock.marketCap !== undefined) {
-            // If a market capitalization for the stock is already stored in Redis, but we cannot extract it now from
-            // the page, we log this as an error and send a message.
+          if (stock.marketCap !== null) {
+            // If a market capitalization for the stock is already stored in the database, but we cannot extract it now
+            // from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of Market Capitalization failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -506,13 +521,13 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`)
           );
-          if (stock.low52w !== undefined || stock.high52w !== undefined) {
-            // If a 52 week price range for the stock is already stored in Redis, but we cannot extract it now from
-            // the page, we log this as an error and send a message.
+          if (stock.low52w !== null || stock.high52w !== null) {
+            // If a 52 week price range for the stock is already stored in the database, but we cannot extract it now
+            // from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of 52 week price range failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -525,12 +540,14 @@ class FetchController {
         try {
           description = await driver.findElement(By.xpath(XPATH_DESCRIPTION)).getText();
         } catch (e) {
-          logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract description: ${e}`));
-          if (stock.description !== undefined) {
-            // If a description for the stock is already stored in Redis, but we cannot extract it now from
+          logger.warn(
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract description: ${e}`)
+          );
+          if (stock.description !== null) {
+            // If a description for the stock is already stored in the database, but we cannot extract it now from
             // the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of description failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -543,8 +560,8 @@ class FetchController {
         if (errorMessage.includes("\n")) {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
-          errorMessage += `\n${await this.takeScreenshot(driver, stock, "morningstar")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
+          errorMessage += `\n${await takeScreenshot(driver, stock, "morningstar")}`;
+          await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -552,7 +569,7 @@ class FetchController {
           successfulCount += 1;
           consecutiveErrorCount = 0;
         }
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           industry,
           size,
@@ -575,18 +592,20 @@ class FetchController {
         consecutiveErrorCount += 1;
         if (req.query.ticker) {
           // If the request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${String(e.message).split(/[\n:{]/)[0]}`
           );
         }
-        logger.error(PREFIX_CHROME + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e}`));
-        signal.sendMessage(
+        logger.error(
+          PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e}`)
+        );
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "morningstar")}`,
+            }\n${await takeScreenshot(driver, stock, "morningstar")}`,
           "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -594,13 +613,13 @@ class FetchController {
       if (consecutiveErrorCount >= 5) {
         // If we have 5 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from Morningstar after ${consecutiveErrorCount} consecutive failures, ` +
                 `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from Morningstar after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -609,11 +628,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 
@@ -622,16 +641,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchMarketScreenerEndpointPath,
+    method: "post",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchMarketScreenerData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -639,26 +656,30 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].marketScreenerId) {
+        if (!stocks[0].marketScreenerID) {
           // If the only stock to use does not have a MarketScreener ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have a MarketScreener ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      // When no specific stock is requested, we fetch all stocks from the database which have a Market Screener ID.
+      [stocks] = await readAllStocks({
+        where: {
+          marketScreenerID: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          marketScreenerLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.marketScreenerId) // Only stocks with a MarketScreener ID are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) =>
-          (a.marketScreenerLastFetch ?? new Date(0)).getTime() - (b.marketScreenerLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -669,7 +690,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver(true);
+    const driver = await getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -678,7 +699,7 @@ class FetchController {
         new Date().getTime() - stock.marketScreenerLastFetch.getTime() < 1000 * 60 * 60 * 12
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping MarketScreener fetch because last fetch was ${formatDistance(
               stock.marketScreenerLastFetch.getTime(),
               new Date().getTime(),
@@ -692,7 +713,7 @@ class FetchController {
       let analystTargetPrice: number;
 
       try {
-        await driver.get(`https://www.marketscreener.com/quote/stock/${stock.marketScreenerId}/`);
+        await driver.get(`https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/`);
         // Wait for the page to load for a maximum of 5 seconds.
         await driver.wait(until.elementLocated(By.id("zbCenter")), 5000);
 
@@ -710,13 +731,13 @@ class FetchController {
               .match(/(\d+(\.\d+)?)/g)[0]; // Extract the first decimal number from the title.
           } catch (e) {
             logger.warn(
-              PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`)
+              PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`)
             );
-            if (stock.analystConsensus !== undefined) {
-              // If an analyst consensus is already stored in Redis, but we cannot extract it from the page, we log
-              // this as an error and send a message.
+            if (stock.analystConsensus !== null) {
+              // If an analyst consensus is already stored in the database, but we cannot extract it from the page, we
+              // log this as an error and send a message.
               logger.error(
-                PREFIX_CHROME +
+                PREFIX_SELENIUM +
                   chalk.redBright(
                     `Stock ${stock.ticker}: Extraction of analyst consensus failed unexpectedly. ` +
                       `This incident will be reported.`
@@ -730,13 +751,13 @@ class FetchController {
             analystCount = +(await (await consensusTableDiv.findElement(By.xpath(XPATH_ANALYST_COUNT))).getText());
           } catch (e) {
             logger.warn(
-              PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`)
+              PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`)
             );
-            if (stock.analystCount !== undefined) {
-              // If an analyst count is already stored in Redis, but we cannot extract it from the page, we log
+            if (stock.analystCount !== null) {
+              // If an analyst count is already stored in the database, but we cannot extract it from the page, we log
               // this as an error and send a message.
               logger.error(
-                PREFIX_CHROME +
+                PREFIX_SELENIUM +
                   chalk.redBright(
                     `Stock ${stock.ticker}: Extraction of analyst count failed unexpectedly. ` +
                       `This incident will be reported.`
@@ -760,13 +781,14 @@ class FetchController {
                 1);
           } catch (e) {
             logger.warn(
-              PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`)
+              PREFIX_SELENIUM +
+                chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`)
             );
-            if (stock.analystTargetPrice !== undefined) {
-              // If an analyst target price is already stored in Redis, but we cannot extract it from the page, we log
-              // this as an error and send a message.
+            if (stock.analystTargetPrice !== null) {
+              // If an analyst target price is already stored in the database, but we cannot extract it from the page,
+              // we log this as an error and send a message.
               logger.error(
-                PREFIX_CHROME +
+                PREFIX_SELENIUM +
                   chalk.redBright(
                     `Stock ${stock.ticker}: Extraction of analyst target price failed unexpectedly. ` +
                       `This incident will be reported.`
@@ -777,17 +799,14 @@ class FetchController {
           }
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`)
+            PREFIX_SELENIUM +
+              chalk.yellowBright(`Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`)
           );
-          if (
-            stock.analystConsensus !== undefined ||
-            stock.analystCount !== undefined ||
-            stock.analystTargetPrice !== undefined
-          ) {
-            // If any of the analyst-related information is already stored in Redis, but we cannot extract it from the
-            // page, we log this as an error and send a message.
+          if (stock.analystConsensus !== null || stock.analystCount !== null || stock.analystTargetPrice !== null) {
+            // If any of the analyst-related information is already stored in the database, but we cannot extract it
+            // from the page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -800,8 +819,8 @@ class FetchController {
         if (errorMessage.includes("\n")) {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
-          errorMessage += `\n${await this.takeScreenshot(driver, stock, "marketscreener")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
+          errorMessage += `\n${await takeScreenshot(driver, stock, "marketscreener")}`;
+          await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -809,7 +828,7 @@ class FetchController {
           successfulCount += 1;
           consecutiveErrorCount = 0;
         }
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           marketScreenerLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
           analystConsensus,
@@ -822,20 +841,20 @@ class FetchController {
         consecutiveErrorCount += 1;
         if (req.query.ticker) {
           // If this request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${String(e.message).split(/[\n:{]/)[0]}`
           );
         }
         logger.error(
-          PREFIX_CHROME + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e}`)
+          PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e}`)
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "marketscreener")}`,
+            }\n${await takeScreenshot(driver, stock, "marketscreener")}`,
           "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -843,13 +862,13 @@ class FetchController {
       if (consecutiveErrorCount >= 5) {
         // If we have 5 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from MarketScreener after ${consecutiveErrorCount} consecutive failures,` +
                 ` ${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from MarketScreener after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -858,11 +877,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 
@@ -871,16 +890,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchMSCIEndpointPath,
+    method: "post",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchMSCIData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -888,25 +905,30 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].msciId) {
+        if (!stocks[0].msciID) {
           // If the only stock to use does not have an MSCI ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have an MSCI ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      // When no specific stock is requested, we fetch all stocks from the database which have an MSCI ID.
+      [stocks] = await readAllStocks({
+        where: {
+          msciID: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          msciLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.msciId) // Only stocks with an MSCI ID are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) => (a.msciLastFetch ?? new Date(0)).getTime() - (b.msciLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -917,7 +939,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver();
+    const driver = await getDriver();
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -926,7 +948,7 @@ class FetchController {
         new Date().getTime() - stock.msciLastFetch.getTime() < 1000 * 60 * 60 * 24 * 14
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping MSCI fetch since last successful fetch was ${formatDistance(
               stock.msciLastFetch.getTime(),
               new Date().getTime(),
@@ -938,13 +960,13 @@ class FetchController {
       if (successfulCount >= 50) {
         // If we have fetched 50 stocks successfully, we stop fetching data to avoid rate limiting.
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.greenBright(
               `Successfully fetched MSCI information for ${successfulCount} stocks (${errorCount} errors). ` +
                 `Pausing now to avoid rate limiting. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_INFO +
             `Successfully fetched MSCI information for ${successfulCount} stocks (${errorCount} errors). ` +
             `Pausing now to avoid rate limiting. Will continue next time.`,
@@ -962,7 +984,7 @@ class FetchController {
           await new Promise((resolve) => setTimeout(resolve, 15000));
         }
         await driver.get(
-          `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${stock.msciId}`
+          `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${stock.msciID}`
         );
         await driver.wait(
           until.elementsLocated(By.className("esg-expandable")),
@@ -979,13 +1001,13 @@ class FetchController {
           msciESGRating = esgClassName.substring(esgClassName.lastIndexOf("-") + 1).toUpperCase() as MSCIESGRating;
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`)
           );
-          if (stock.msciESGRating !== undefined) {
-            // If an MSCI ESG Rating is already stored in Redis, but we cannot extract it from the page, we log this as
-            // an error and send a message.
+          if (stock.msciESGRating !== null) {
+            // If an MSCI ESG Rating is already stored in the database, but we cannot extract it from the page, we log
+            // this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of MSCI ESG Rating failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -1002,14 +1024,14 @@ class FetchController {
             .match(/(\d+(\.\d+)?)/g)[0];
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME +
+            PREFIX_SELENIUM +
               chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`)
           );
-          if (stock.msciTemperature !== undefined) {
-            // If an MSCI Implied Temperature Rise is already stored in Redis, but we cannot extract it from the page,
-            // we log this as an error and send a message.
+          if (stock.msciTemperature !== null) {
+            // If an MSCI Implied Temperature Rise is already stored in the database, but we cannot extract it from the
+            // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of MSCI Implied Temperature Rise failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -1024,8 +1046,8 @@ class FetchController {
         if (errorMessage.includes("\n")) {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
-          errorMessage += `\n${await this.takeScreenshot(driver, stock, "msci")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
+          errorMessage += `\n${await takeScreenshot(driver, stock, "msci")}`;
+          await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -1033,7 +1055,7 @@ class FetchController {
           successfulCount += 1;
           consecutiveErrorCount = 0;
         }
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           msciLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
           msciESGRating,
@@ -1045,18 +1067,20 @@ class FetchController {
         consecutiveErrorCount += 1;
         if (req.query.ticker) {
           // If this request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${String(e.message).split(/[\n:{]/)[0]}`
           );
         }
-        logger.error(PREFIX_CHROME + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MSCI information: ${e}`));
-        signal.sendMessage(
+        logger.error(
+          PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MSCI information: ${e}`)
+        );
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "msci")}`,
+            }\n${await takeScreenshot(driver, stock, "msci")}`,
           "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -1064,13 +1088,13 @@ class FetchController {
       if (consecutiveErrorCount >= 10) {
         // If we have 10 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from MSCI after ${consecutiveErrorCount} consecutive failures, ` +
                 `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from MSCI after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -1079,11 +1103,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks);
     }
   }
 
@@ -1092,16 +1116,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchRefinitivEndpointPath,
+    method: "post",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchRefinitivData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -1115,19 +1137,24 @@ class FetchController {
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      // When no specific stock is requested, we fetch all stocks from the database which have a RIC.
+      [stocks] = await readAllStocks({
+        where: {
+          ric: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          refinitivLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.ric) // Only stocks with a RIC are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) => (a.refinitivLastFetch ?? new Date(0)).getTime() - (b.refinitivLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -1138,7 +1165,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver(true);
+    const driver = await getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1147,7 +1174,7 @@ class FetchController {
         new Date().getTime() - stock.refinitivLastFetch.getTime() < 1000 * 60 * 60 * 24 * 7
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping Refinitiv fetch because last fetch was ${formatDistance(
               stock.refinitivLastFetch.getTime(),
               new Date().getTime(),
@@ -1181,13 +1208,13 @@ class FetchController {
           refinitivESGScore = +refinitivJSON.esgScore["TR.TRESG"].score;
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`)
           );
-          if (stock.refinitivESGScore !== undefined) {
-            // If a Refinitiv ESG Score is already stored in Redis, but we cannot extract it from the page, we log this
-            // as an error and send a message.
+          if (stock.refinitivESGScore !== null) {
+            // If a Refinitiv ESG Score is already stored in the database, but we cannot extract it from the page, we
+            // log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of Refinitiv ESG Score failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -1201,13 +1228,13 @@ class FetchController {
           refinitivEmissions = +refinitivJSON.esgScore["TR.TRESGEmissions"].score;
         } catch (e) {
           logger.warn(
-            PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`)
           );
-          if (stock.refinitivEmissions !== undefined) {
-            // If a Refinitiv Emissions Rating is already stored in Redis, but we cannot extract it from the page, we
-            // log this as an error and send a message.
+          if (stock.refinitivEmissions !== null) {
+            // If a Refinitiv Emissions Rating is already stored in the database, but we cannot extract it from the
+            // page, we log this as an error and send a message.
             logger.error(
-              PREFIX_CHROME +
+              PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of Refinitiv Emissions failed unexpectedly. ` +
                     `This incident will be reported.`
@@ -1220,8 +1247,8 @@ class FetchController {
         if (errorMessage.includes("\n")) {
           // An error occurred if and only if the error message contains a newline character.
           // We take a screenshot and send a message.
-          errorMessage += `\n${await this.takeScreenshot(driver, stock, "refinitiv")}`;
-          signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
+          errorMessage += `\n${await takeScreenshot(driver, stock, "refinitiv")}`;
+          await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
           errorCount += 1;
           consecutiveErrorCount += 1;
@@ -1229,7 +1256,7 @@ class FetchController {
           successfulCount += 1;
           consecutiveErrorCount = 0;
         }
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           refinitivLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
           refinitivESGScore,
@@ -1241,7 +1268,7 @@ class FetchController {
         consecutiveErrorCount += 1;
         if (req.query.ticker) {
           // If this request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             (e as Error).message.includes("Limit exceeded") ? 429 : 502,
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${String(e.message).split(/[\n:{]/)[0]}`
@@ -1250,13 +1277,13 @@ class FetchController {
         if ((e as Error).message.includes("Limit exceeded")) {
           // If the limit has been exceeded, we stop fetching data and log an error.
           logger.error(
-            PREFIX_CHROME +
+            PREFIX_SELENIUM +
               chalk.redBright(
                 `Aborting fetching information from Refinitiv after exceeding limit ` +
                   `(${successfulCount} successful fetches). Will continue next time.`
               )
           );
-          signal.sendMessage(
+          await signal.sendMessage(
             SIGNAL_PREFIX_ERROR +
               `Aborting fetching information from Refinitiv after exceeding limit ` +
               `(${successfulCount} successful fetches). Will continue next time.`,
@@ -1265,13 +1292,13 @@ class FetchController {
           break;
         }
         logger.error(
-          PREFIX_CHROME + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e}`)
+          PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e}`)
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
               String(e.message).split(/[\n:{]/)[0]
-            }\n${await this.takeScreenshot(driver, stock, "refinitiv")}`,
+            }\n${await takeScreenshot(driver, stock, "refinitiv")}`,
           "fetchError"
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -1279,13 +1306,13 @@ class FetchController {
       if (consecutiveErrorCount >= 5) {
         // If we have 5 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from Refinitiv after ${consecutiveErrorCount} consecutive failures, ` +
                 `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from Refinitiv after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -1294,11 +1321,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 
@@ -1307,16 +1334,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchSPEndpointPath,
+    method: "post",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchSPData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -1324,25 +1349,30 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].spId) {
+        if (!stocks[0].spID) {
           // If the only stock to use does not have an S&P ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have an S&P ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      // When no specific stock is requested, we fetch all stocks from the database which have a Standard & Poor’s ID.
+      [stocks] = await readAllStocks({
+        where: {
+          spID: {
+            not: null,
+          },
+        },
+        orderBy: {
+          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+          spLastFetch: "asc",
+        },
+      });
     }
 
-    stocks = stocks
-      .filter((stock) => stock.spId) // Only stocks with an S&P ID are considered.
-      .sort(
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        (a, b) => (a.spLastFetch ?? new Date(0)).getTime() - (b.spLastFetch ?? new Date(0)).getTime()
-      );
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -1353,7 +1383,7 @@ class FetchController {
     let successfulCount = 0;
     let errorCount = 0;
     let consecutiveErrorCount = 0;
-    const driver = await this.getDriver(true);
+    const driver = await getDriver(true);
     for await (const stock of stocks) {
       if (
         !req.query.noSkip &&
@@ -1362,7 +1392,7 @@ class FetchController {
         new Date().getTime() - stock.spLastFetch.getTime() < 1000 * 60 * 60 * 24 * 7
       ) {
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Stock ${stock.ticker}: Skipping S&P fetch because last fetch was ${formatDistance(
               stock.spLastFetch.getTime(),
               new Date().getTime(),
@@ -1374,7 +1404,7 @@ class FetchController {
       let spESGScore: number;
 
       try {
-        await driver.get(`https://www.spglobal.com/esg/scores/results?cid=${stock.spId}`);
+        await driver.get(`https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`);
         // Wait for the page to load for a maximum of 5 seconds.
         await driver.wait(until.elementLocated(By.xpath(XPATH_SP_PANEL)), 5000);
 
@@ -1392,7 +1422,7 @@ class FetchController {
 
         spESGScore = +(await (await driver.findElement(By.id("esg-score"))).getText());
 
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           spLastFetch: new Date(),
           spESGScore,
@@ -1403,28 +1433,28 @@ class FetchController {
       } catch (e) {
         if (req.query.ticker) {
           // If this request was for a single stock, we shut down the driver and throw an error.
-          await this.quitDriver(driver);
+          await quitDriver(driver);
           throw new APIError(
             502,
             `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`
           );
         }
-        logger.warn(PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`));
-        if (stock.spESGScore !== undefined) {
-          // If an S&P ESG Score is already stored in Redis, but we cannot extract it from the page, we log this as an
-          // error and send a message.
+        logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`));
+        if (stock.spESGScore !== null) {
+          // If an S&P ESG Score is already stored in the database, but we cannot extract it from the page, we log this
+          // as an error and send a message.
           logger.error(
-            PREFIX_CHROME +
+            PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of S&P ESG Score failed unexpectedly. ` +
                   `This incident will be reported.`
               )
           );
-          signal.sendMessage(
+          await signal.sendMessage(
             SIGNAL_PREFIX_ERROR +
               `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
                 String(e.message).split(/[\n:{]/)[0]
-              }\n${await this.takeScreenshot(driver, stock, "sp")}`,
+              }\n${await takeScreenshot(driver, stock, "sp")}`,
             "fetchError"
           );
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
@@ -1438,13 +1468,13 @@ class FetchController {
       if (consecutiveErrorCount >= 5) {
         // If we have 5 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from S&P after ${consecutiveErrorCount} consecutive failures, ` +
                 `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from S&P after ${consecutiveErrorCount} consecutive failures, ` +
             `${successfulCount} successful fetches and ${errorCount} total failures. Will continue next time.`,
@@ -1453,11 +1483,11 @@ class FetchController {
         break;
       }
     }
-    await this.quitDriver(driver);
+    await quitDriver(driver);
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 
@@ -1466,16 +1496,14 @@ class FetchController {
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
-   * @returns {Promise<Response>} a Promise that resolves to a Response object when the request has been processed
    * @throws an {@link APIError} in case of a severe error
    */
+  @Router({
+    path: fetchSustainalyticsEndpointPath,
+    method: "post",
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
   async fetchSustainalyticsData(req: Request, res: Response) {
-    if (!(res.locals.user?.hasAccessRight(WRITE_STOCKS_ACCESS) || res.locals.userIsCron)) {
-      throw new APIError(
-        403,
-        "This user account does not have the necessary access rights to fetch data from providers."
-      );
-    }
     let stocks: Stock[];
 
     if (req.query.ticker) {
@@ -1483,20 +1511,26 @@ class FetchController {
       const ticker = req.query.ticker;
       if (typeof ticker === "string") {
         stocks = [await readStock(ticker)];
-        if (!stocks[0].sustainalyticsId) {
+        if (!stocks[0].sustainalyticsID) {
           // If the only stock to use does not have a Sustainalytics ID, we throw an error.
           throw new APIError(404, `Stock ${ticker} does not have a Sustainalytics ID.`);
         }
       }
     } else {
-      // When no specific stock is requested, we fetch all stocks from Redis.
-      stocks = (await readAllStocks()).map((stockEntity) => new Stock(stockEntity));
+      // When no specific stock is requested, we fetch all stocks from the database which have a Sustainalytics ID.
+      [stocks] = await readAllStocks({
+        where: {
+          sustainalyticsID: {
+            not: null,
+          },
+        },
+      });
     }
 
-    stocks = stocks.filter((stock) => stock.sustainalyticsId); // Only stocks with a Sustainalytics ID are considered.
     if (stocks.length === 0) {
       // If no stocks are left, we return a 204 No Content response.
-      return res.status(204).end();
+      res.status(204).end();
+      return;
     }
     if (req.query.detach) {
       // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
@@ -1513,7 +1547,7 @@ class FetchController {
         // We try to read the cached Sustainalytics data first.
         sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
         logger.info(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             `Using cached Sustainalytics data because last fetch was ${formatDistance(
               sustainalyticsXMLResource.fetchDate,
               new Date().getTime(),
@@ -1532,7 +1566,7 @@ class FetchController {
           )
           .then(async (response) => {
             const sustainalyticsXMLLines: string[] = [];
-            response.data.split("\n").forEach((line) => {
+            response.data.split("\n").forEach((line: string) => {
               // We only keep the lines that contain the data we need.
               if (line.includes(`<a data-href="`) || line.includes(`<div class="col-2">`)) {
                 sustainalyticsXMLLines.push(line.trim());
@@ -1564,21 +1598,21 @@ class FetchController {
 
       try {
         // Look for the Sustainalytics ID in the XML lines.
-        const sustainalyticsIdIndex = sustainalyticsXMLLines.findIndex(
+        const sustainalyticsIDIndex = sustainalyticsXMLLines.findIndex(
           (line, index) =>
-            line.startsWith(`<a data-href="/${stock.sustainalyticsId}`) &&
+            line.startsWith(`<a data-href="/${stock.sustainalyticsID}`) &&
             sustainalyticsXMLLines[index + 1].startsWith(`<div class="col-2">`)
         );
-        if (sustainalyticsIdIndex === -1) {
+        if (sustainalyticsIDIndex === -1) {
           // If the Sustainalytics ID is not found, we throw an error.
-          throw new APIError(404, `Cannot find Sustainalytics ID ${stock.sustainalyticsId} in XML.`);
+          throw new APIError(404, `Cannot find Sustainalytics ID ${stock.sustainalyticsID} in XML.`);
         }
-        const sustainalyticsESGRiskLine = sustainalyticsXMLLines[sustainalyticsIdIndex + 1];
+        const sustainalyticsESGRiskLine = sustainalyticsXMLLines[sustainalyticsIDIndex + 1];
         sustainalyticsESGRisk = +sustainalyticsESGRiskLine // Example: <div class="col-2">25.2</div>
           .substring(sustainalyticsESGRiskLine.indexOf(">") + 1)
           .match(/(\d+(\.\d+)?)/g)[0];
 
-        // Update the stock in Redis.
+        // Update the stock in the database.
         await updateStock(stock.ticker, {
           sustainalyticsESGRisk,
         });
@@ -1594,19 +1628,19 @@ class FetchController {
           );
         }
         logger.warn(
-          PREFIX_CHROME + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`)
+          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`)
         );
-        if (stock.sustainalyticsESGRisk !== undefined) {
-          // If a Sustainalytics ESG Risk is already stored in Redis, but we cannot extract it from the page, we log
-          // this as an error and send a message.
+        if (stock.sustainalyticsESGRisk !== null) {
+          // If a Sustainalytics ESG Risk is already stored in the database, but we cannot extract it from the page, we
+          // log this as an error and send a message.
           logger.error(
-            PREFIX_CHROME +
+            PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of Sustainalytics ESG Risk failed unexpectedly. ` +
                   `This incident will be reported.`
               )
           );
-          signal.sendMessage(
+          await signal.sendMessage(
             SIGNAL_PREFIX_ERROR +
               `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${
                 String(e.message).split(/[\n:{]/)[0]
@@ -1623,14 +1657,14 @@ class FetchController {
       if (consecutiveErrorCount >= 10) {
         // If we have 10 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
-          PREFIX_CHROME +
+          PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting extracting information from Sustainalytics after ${consecutiveErrorCount} ` +
                 `consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. ` +
                 `Will continue next time.`
             )
         );
-        signal.sendMessage(
+        await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting extracting information from Sustainalytics after ${consecutiveErrorCount} ` +
             `consecutive failures, ${successfulCount} successful fetches and ${errorCount} total failures. ` +
@@ -1641,11 +1675,9 @@ class FetchController {
       }
     }
     if (updatedStocks.length === 0) {
-      return res.status(204).end();
+      res.status(204).end();
     } else {
-      return res.status(200).json(updatedStocks);
+      res.status(200).json(updatedStocks).end();
     }
   }
 }
-
-export default new FetchController();

@@ -16,11 +16,11 @@ import {
   superSectorName,
   superSectorOfSector,
 } from "rating-tracker-commons";
-import formatMarketCap from "../../lib/formatters";
+import formatMarketCap from "../../utils/formatters";
 import Range52WSlider from "../Range52WSlider";
 import SectorIcon from "../SectorIcon";
 import StyleBox from "../StyleBox";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
@@ -31,7 +31,7 @@ import {
   RefinitivNavigator,
   SPNavigator,
   SustainalyticsNavigator,
-} from "../../lib/navigators";
+} from "../../utils/navigators";
 import StarRating from "../StarRating";
 
 /**
@@ -367,7 +367,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
                     <Box display="inline-block">{props.stock.currency ?? ""}</Box>
                   </Tooltip>{" "}
-                  {props.stock.marketCap !== undefined ? formatMarketCap(props.stock) : "–"}
+                  {props.stock.marketCap !== null ? formatMarketCap(props.stock) : "–"}
                 </>
               ) : (
                 <Skeleton width={60} sx={{ ml: "auto" }} />
@@ -392,33 +392,31 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={7.5}>
             {props.stock ? (
               <>
-                {props.stock?.lastClose !== undefined &&
-                  props.stock?.low52w !== undefined &&
-                  props.stock?.high52w !== undefined && (
-                    <Range52WSlider
-                      size="small"
-                      sx={{
-                        mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
-                        mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
-                      }}
-                      value={props.stock.lastClose}
-                      min={props.stock.low52w}
-                      max={props.stock.high52w}
-                      marks={[
-                        {
-                          value: props.stock.low52w,
-                          label: props.stock.low52w?.toFixed(2),
-                        },
-                        {
-                          value: props.stock.high52w,
-                          label: props.stock.high52w?.toFixed(2),
-                        },
-                      ]}
-                      valueLabelDisplay="on"
-                      valueLabelFormat={(value) => value.toFixed(2)}
-                      disabled
-                    />
-                  )}
+                {props.stock?.lastClose !== null && props.stock?.low52w !== null && props.stock?.high52w !== null && (
+                  <Range52WSlider
+                    size="small"
+                    sx={{
+                      mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
+                      mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
+                    }}
+                    value={props.stock.lastClose}
+                    min={props.stock.low52w}
+                    max={props.stock.high52w}
+                    marks={[
+                      {
+                        value: props.stock.low52w,
+                        label: props.stock.low52w?.toFixed(2),
+                      },
+                      {
+                        value: props.stock.high52w,
+                        label: props.stock.high52w?.toFixed(2),
+                      },
+                    ]}
+                    valueLabelDisplay="on"
+                    valueLabelFormat={(value) => value.toFixed(2)}
+                    disabled
+                  />
+                )}
               </>
             ) : (
               <Skeleton variant="rectangular" width={150} height={42} />
@@ -457,8 +455,8 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={6}>
             {props.stock ? (
               <BlueIconChip
-                icon={<EmojiEventsIcon />}
-                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.getTotalScore()))}</strong>}
+                icon={<VerifiedIcon />}
+                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.totalScore))}</strong>}
                 sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
               />
             ) : (
@@ -491,7 +489,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             {props.stock ? (
               <YellowIconChip
                 icon={<PriceCheckIcon />}
-                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.getFinancialScore()))}</strong>}
+                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.financialScore))}</strong>}
                 sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
               />
             ) : (
@@ -524,7 +522,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             {props.stock ? (
               <GreenIconChip
                 icon={<NaturePeopleIcon />}
-                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.getESGScore()))}</strong>}
+                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.esgScore))}</strong>}
                 sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
               />
             ) : (
@@ -642,11 +640,9 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
                 {props.stock ? (
                   <>
-                    {props?.stock.morningstarFairValue !== undefined &&
-                      props?.stock.lastClose !== undefined &&
-                      props?.stock.getPercentageToLastClose("morningstarFairValue") !== undefined &&
-                      `${props.stock?.lastClose > props.stock?.morningstarFairValue ? "+" : ""}${Math.round(
-                        props.stock?.getPercentageToLastClose("morningstarFairValue")
+                    {props?.stock.morningstarFairValuePercentageToLastClose !== null &&
+                      `${props?.stock.morningstarFairValuePercentageToLastClose > 0 ? "+" : ""}${Math.round(
+                        props.stock?.morningstarFairValuePercentageToLastClose
                       )}\u2009%`}
                   </>
                 ) : (
@@ -681,7 +677,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock?.analystConsensus !== undefined && (
+                {props.stock?.analystConsensus !== null && (
                   <MarketScreenerNavigator stock={props.stock}>
                     <Chip
                       label={<strong>{props.stock.analystConsensus}</strong>}
@@ -772,12 +768,10 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
                 {props.stock ? (
                   <>
-                    {props.stock?.analystTargetPrice !== undefined &&
-                      props.stock?.analystCount !== undefined &&
-                      props.stock?.lastClose !== undefined &&
-                      props.stock?.getPercentageToLastClose("analystTargetPrice") !== undefined &&
-                      `${props.stock.lastClose > props.stock.analystTargetPrice ? "+" : ""}${Math.round(
-                        props.stock.getPercentageToLastClose("analystTargetPrice")
+                    {props.stock?.analystCount !== null &&
+                      props.stock?.analystTargetPricePercentageToLastClose !== null &&
+                      `${props.stock?.analystTargetPricePercentageToLastClose > 0 ? "+" : ""}${Math.round(
+                        props.stock.analystTargetPricePercentageToLastClose
                       )}\u2009%`}
                   </>
                 ) : (
@@ -800,10 +794,10 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Typography variant="body1" sx={{ textAlign: "right" }}>
               {props.stock ? (
                 <>
-                  {props.stock?.analystTargetPrice !== undefined &&
-                    props.stock?.analystCount !== undefined &&
-                    props.stock?.lastClose !== undefined &&
-                    props.stock?.getPercentageToLastClose("analystTargetPrice") !== undefined &&
+                  {props.stock?.analystTargetPrice !== null &&
+                    props.stock?.analystCount !== null &&
+                    props.stock?.lastClose !== null &&
+                    props.stock?.analystTargetPricePercentageToLastClose !== null &&
                     `n\u2009=\u2009${props.stock?.analystCount}`}
                 </>
               ) : (
@@ -887,11 +881,11 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.msciTemperature !== undefined && (
+                {props.stock.msciTemperature !== null && (
                   <MSCINavigator stock={props.stock}>
                     <TemperatureChip
                       icon={<ThermostatIcon />}
-                      label={<strong>{props.stock.msciTemperature + "°C"}</strong>}
+                      label={<strong>{props.stock.msciTemperature + "\u2009℃"}</strong>}
                       size="small"
                       sx={{ width: 72, ml: "49.5px", mt: "4px" }}
                       style={{ cursor: "inherit" }}
@@ -929,7 +923,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.refinitivESGScore !== undefined && (
+                {props.stock.refinitivESGScore !== null && (
                   <RefinitivNavigator stock={props.stock}>
                     <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
                       {props.stock.refinitivESGScore}
@@ -969,7 +963,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.refinitivEmissions !== undefined && (
+                {props.stock.refinitivEmissions !== null && (
                   <RefinitivNavigator stock={props.stock}>
                     <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
                       {props.stock.refinitivEmissions}
@@ -1010,7 +1004,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.spESGScore !== undefined && (
+                {props.stock.spESGScore !== null && (
                   <SPNavigator stock={props.stock}>
                     <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
                       {props.stock.spESGScore}
@@ -1052,7 +1046,7 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.sustainalyticsESGRisk !== undefined && (
+                {props.stock.sustainalyticsESGRisk !== null && (
                   <SustainalyticsNavigator stock={props.stock}>
                     <Chip
                       label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}

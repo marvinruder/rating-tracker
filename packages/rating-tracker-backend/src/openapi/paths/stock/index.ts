@@ -1,5 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { conflict, forbidden, notFound, unauthorized } from "../../responses/clientError.js";
+import { badRequest, conflict, forbidden, notFound, unauthorized } from "../../responses/clientError.js";
 import { created, noContent, okStock } from "../../responses/success.js";
 import * as stock from "../../parameters/stock.js";
 
@@ -101,6 +101,7 @@ const patch: OpenAPIV3.OperationObject = {
       required: true,
     },
     stock.name,
+    stock.isin,
     {
       ...stock.country,
       schema: {
@@ -108,15 +109,15 @@ const patch: OpenAPIV3.OperationObject = {
       },
     },
     {
-      ...stock.morningstarId,
+      ...stock.morningstarID,
       allowEmptyValue: true,
     },
     {
-      ...stock.marketScreenerId,
+      ...stock.marketScreenerID,
       allowEmptyValue: true,
     },
     {
-      ...stock.msciId,
+      ...stock.msciID,
       allowEmptyValue: true,
     },
     {
@@ -124,16 +125,17 @@ const patch: OpenAPIV3.OperationObject = {
       allowEmptyValue: true,
     },
     {
-      ...stock.spId,
+      ...stock.spID,
       allowEmptyValue: true,
     },
     {
-      ...stock.sustainalyticsId,
+      ...stock.sustainalyticsID,
       allowEmptyValue: true,
     },
   ],
   responses: {
     "204": noContent,
+    "400": badRequest,
     "401": unauthorized,
     "403": forbidden,
     "404": notFound,

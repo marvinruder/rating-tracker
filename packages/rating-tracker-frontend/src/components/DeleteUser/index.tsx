@@ -1,10 +1,10 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { User } from "rating-tracker-commons";
+import { User, userManagementEndpointPath } from "rating-tracker-commons";
 import { useState } from "react";
 import axios from "axios";
-import { baseUrl, userManagementAPI } from "../../endpoints";
+import { baseUrl } from "../../router";
 import { useNotification } from "../../contexts/NotificationContext";
 
 /**
@@ -25,7 +25,7 @@ const DeleteUser = (props: DeleteUserProps): JSX.Element => {
     props.user &&
       (setRequestInProgress(true),
       axios
-        .delete(baseUrl + userManagementAPI + `/${props.user.email}`)
+        .delete(baseUrl + userManagementEndpointPath + `/${props.user.email}`)
         // Update the user list after the user was deleted.
         .then(() => props.getUsers && props.getUsers())
         .catch((e) => {

@@ -152,9 +152,9 @@ const style: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by Morningstar.
  */
-const morningstarId: OpenAPIV3.ParameterObject = {
+const morningstarID: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "morningstarId",
+  name: "morningstarID",
   description: "The identifier of a stock used by Morningstar",
   schema: {
     type: "string",
@@ -165,9 +165,9 @@ const morningstarId: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by Market Screener.
  */
-const marketScreenerId: OpenAPIV3.ParameterObject = {
+const marketScreenerID: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "marketScreenerId",
+  name: "marketScreenerID",
   description: "The identifier of a stock used by Market Screener",
   schema: {
     type: "string",
@@ -178,9 +178,9 @@ const marketScreenerId: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by MSCI.
  */
-const msciId: OpenAPIV3.ParameterObject = {
+const msciID: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "msciId",
+  name: "msciID",
   description: "The identifier of a stock used by MSCI",
   schema: {
     type: "string",
@@ -204,12 +204,13 @@ const ric: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by Standard & Poor’s.
  */
-const spId: OpenAPIV3.ParameterObject = {
+const spID: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "spId",
+  name: "spID",
   description: "The identifier of a stock used by Standard & Poor’s",
   schema: {
     type: "integer",
+    nullable: true,
     example: "4004205",
   },
 };
@@ -217,9 +218,9 @@ const spId: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by Sustainalytics.
  */
-const sustainalyticsId: OpenAPIV3.ParameterObject = {
+const sustainalyticsID: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "sustainalyticsId",
+  name: "sustainalyticsID",
   description: "The identifier of a stock used by Sustainalytics",
   schema: {
     type: "string",
@@ -650,12 +651,12 @@ export {
   industry,
   size,
   style,
-  morningstarId,
-  marketScreenerId,
-  msciId,
+  morningstarID,
+  marketScreenerID,
+  msciID,
   ric,
-  spId,
-  sustainalyticsId,
+  spID,
+  sustainalyticsID,
   starRatingMin,
   starRatingMax,
   dividendYieldPercentMin,

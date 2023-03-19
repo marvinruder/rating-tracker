@@ -7,7 +7,12 @@ export default defineConfig({
     },
     coverage: {
       provider: "istanbul",
-      exclude: ["**/__mocks__/**"],
+      exclude: ["**/__mocks__/**", "prisma", "test"],
     },
+    exclude: ["**/*.live.test.ts"],
+    forceRerunTriggers: ["**/*.live.test.ts"],
+    useAtomics: true,
+    globals: true,
+    clearMocks: true,
   },
 });

@@ -1,5 +1,5 @@
 import { MessageType, REGEX_PHONE_NUMBER } from "rating-tracker-commons";
-import { readAllUsers } from "../redis/repositories/user/userRepository.js";
+import { readAllUsers } from "../db/tables/userTable.js";
 import { send } from "./signalBase.js";
 
 /**

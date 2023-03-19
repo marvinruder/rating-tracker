@@ -8,12 +8,6 @@ import { NotificationProvider } from "./contexts/NotificationContext";
 import NotificationSnackbar from "./components/NotificationSnackbar";
 
 /**
- * The globalThis.regeneratorRuntime = undefined addresses a potentially unsafe-eval problem
- * Source: https://github.com/facebook/regenerator/issues/378#issuecomment-802628326
- */
-globalThis.regeneratorRuntime = undefined;
-
-/**
  * The Rating Tracker Application.
  *
  * @returns {JSX.Element} The component.

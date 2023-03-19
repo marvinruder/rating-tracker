@@ -51,7 +51,7 @@ const Logo = (): JSX.Element => {
           <QueryStatsIcon fontSize="inherit" />
         </Badge>
       </LogoSignWrapper>
-      <LogoTextWrapper display={"flex"} alignItems={"flex-end"}>
+      <LogoTextWrapper display="flex" alignItems="flex-end">
         <LogoText>{packageInfo.title}</LogoText>
       </LogoTextWrapper>
     </LogoWrapper>

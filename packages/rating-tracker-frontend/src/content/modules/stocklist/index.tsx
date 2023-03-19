@@ -3,7 +3,8 @@ import PageTitleWrapper from "../../../components/PageTitleWrapper";
 import { Card, Container } from "@mui/material";
 import Footer from "../../../components/Footer";
 
-import StocksTable, { StockFilter } from "./StocksTable";
+import StocksTable from "./StocksTable";
+import { StockFilter } from "../../../types/StockFilter";
 import { useState } from "react";
 import { StockListColumn, stockListColumnArray } from "rating-tracker-commons";
 

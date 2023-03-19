@@ -17,9 +17,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationContext from "../../../../contexts/NotificationContext";
 import { UserContext } from "../../../../router";
 import axios from "axios";
-import { baseUrl, sessionAPI } from "../../../../endpoints";
+import { baseUrl } from "../../../../router";
 import { useNavigate } from "react-router";
 import ProfileSettings from "../../../../components/ProfileSettings";
+import { sessionEndpointPath } from "rating-tracker-commons";
 
 const HeaderUserbox = (): JSX.Element => {
   const [open, setOpen] = useState(false);
@@ -33,7 +34,7 @@ const HeaderUserbox = (): JSX.Element => {
   const signOut = async () => {
     try {
       // Delete the session
-      await axios.delete(baseUrl + sessionAPI);
+      await axios.delete(baseUrl + sessionEndpointPath);
       // This is only reached if signing out was successful
       clearUser();
       setNotification({

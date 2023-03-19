@@ -8,7 +8,7 @@ import { accepted, noContent, okStockList } from "../../responses/success.js";
 /**
  * Fetch information from Market Screener
  */
-const get: OpenAPIV3.OperationObject = {
+const post: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchMarketScreenerData",
   summary: "Market Screener Fetch API",
@@ -34,4 +34,4 @@ const get: OpenAPIV3.OperationObject = {
   },
 };
 
-export { get };
+export { post };

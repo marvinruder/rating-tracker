@@ -8,7 +8,7 @@ import { accepted, noContent, okStockList } from "../../responses/success.js";
 /**
  * Fetch information from Refinitiv ESG company scores
  */
-const get: OpenAPIV3.OperationObject = {
+const post: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchRefinitivData",
   summary: "Refinitiv Fetch API",
@@ -35,4 +35,4 @@ const get: OpenAPIV3.OperationObject = {
   },
 };
 
-export { get };
+export { post };

@@ -6,7 +6,11 @@ import SidebarLayout from "./layouts/SidebarLayout";
 
 import SuspenseLoader from "./components/SuspenseLoader";
 import axios from "axios";
-import { baseUrl, userAPI } from "./endpoints";
+
+/**
+ * The base URL of the backend API server.
+ */
+export const baseUrl = `${document.location.protocol}//${document.location.hostname}/api`;
 
 /**
  * A wrapper for lazy-loaded components that adds a suspense loader. While the component is loading, the suspense
@@ -39,7 +43,7 @@ const loader = (Component: React.LazyExoticComponent<React.ComponentType<any>>) 
  * The login application.
  * Since it is displayed first, we load it right away and do not use a suspense loader.
  */
-import LoginApp from "./content/applications/Users/Login";
+import LoginApp from "./content/applications/Users/login";
 
 // Modules
 
@@ -49,7 +53,7 @@ import LoginApp from "./content/applications/Users/Login";
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const StockList = loader(lazy(() => import("./content/modules/StockList")));
+const StockList = loader(lazy(() => import("./content/modules/stocklist")));
 
 /**
  * The user management module, loaded only when needed.
@@ -65,7 +69,7 @@ const UserManagement = loader(lazy(() => import("./content/modules/UserManagemen
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const Stock = loader(lazy(() => import("./content/modules/Stock")));
+const Stock = loader(lazy(() => import("./content/modules/stock")));
 
 /**
  * The 404 Not Found error page.
@@ -78,7 +82,7 @@ import Status404 from "./content/pages/Status/Status404";
  * Since it is a fairly small component, we load it right away and do not use a suspense loader.
  */
 import Status500 from "./content/pages/Status/Status500";
-import { User } from "rating-tracker-commons";
+import { User, userEndpointPath } from "rating-tracker-commons";
 
 /**
  * An object provided by the user context.
@@ -132,7 +136,7 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
   useEffect(() => {
     // Check if the user is authenticated
     axios
-      .get(baseUrl + userAPI)
+      .get(baseUrl + userEndpointPath)
       .then((response) => {
         setUser(new User(response.data));
       })

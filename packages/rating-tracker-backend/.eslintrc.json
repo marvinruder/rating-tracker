@@ -30,6 +30,5 @@
         "code": 120
       }
     ]
-  },
-  "ignorePatterns": ["vitest.config.ts"]
+  }
 }

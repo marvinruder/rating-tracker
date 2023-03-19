@@ -1,27 +1,29 @@
 /**
  * An array of attribute names by which a list of stocks can be sorted.
  */
-export const sortableAttributeArray = [
-  "name",
-  "size",
-  "style",
-  "starRating",
-  "dividendYieldPercent",
-  "priceEarningRatio",
-  "morningstarFairValue",
-  "52w",
-  "analystConsensus",
-  "analystTargetPrice",
-  "msciESGRating",
-  "msciTemperature",
-  "refinitivESGScore",
-  "refinitivEmissions",
-  "spESGScore",
-  "sustainalyticsESGRisk",
-  "financialScore",
-  "esgScore",
-  "totalScore",
-] as const;
+export const sortableAttributeArray =
+  // : Partial<(keyof Stock)[]>
+  [
+    "name",
+    "size",
+    "style",
+    "starRating",
+    "dividendYieldPercent",
+    "priceEarningRatio",
+    "morningstarFairValuePercentageToLastClose",
+    "positionIn52w",
+    "analystConsensus",
+    "analystTargetPricePercentageToLastClose",
+    "msciESGRating",
+    "msciTemperature",
+    "refinitivESGScore",
+    "refinitivEmissions",
+    "spESGScore",
+    "sustainalyticsESGRisk",
+    "financialScore",
+    "esgScore",
+    "totalScore",
+  ] as const;
 
 /**
  * An attribute name by which a list of stocks can be sorted.

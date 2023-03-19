@@ -21,7 +21,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../router";
-import { baseUrl, userAPI } from "../../endpoints";
+import { baseUrl } from "../../router";
 import { useNotification } from "../../contexts/NotificationContext";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
@@ -30,8 +30,9 @@ import {
   messageTypeName,
   REGEX_PHONE_NUMBER,
   subscriptionOfMessageType,
+  userEndpointPath,
 } from "rating-tracker-commons";
-import { convertAvatar } from "../../lib/imageManipulation";
+import { convertAvatar } from "../../utils/imageManipulation";
 
 /**
  * A dialog to edit the user’s own information.
@@ -108,7 +109,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
       setRequestInProgress(true);
       axios
         .patch(
-          baseUrl + userAPI,
+          baseUrl + userEndpointPath,
           avatar !== user.avatar
             ? {
                 avatar, // Include payload with avatar only if it has changed.
@@ -188,7 +189,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   return (
     <>
       <DialogContent sx={{ p: 0, pb: 2 }}>
-        <Grid container mt={2} maxWidth={"sm"}>
+        <Grid container mt={2} maxWidth="sm">
           <Grid item xs={12} sm={6} md={4}>
             {processingAvatar ? (
               <Avatar
@@ -252,7 +253,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   error={nameError}
                   label="Name"
                   value={name}
-                  placeholder={"Jane Doe"}
+                  placeholder="Jane Doe"
                   fullWidth
                   required
                 />
@@ -265,7 +266,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                     pattern: REGEX_PHONE_NUMBER,
                   }}
                   onChange={(event) => {
-                    setPhone(event.target.value);
+                    setPhone(event.target.value.replaceAll(/[^0-9+]+/g, "").substring(0, 16));
                     setPhoneError(false);
                   }}
                   error={phoneError}

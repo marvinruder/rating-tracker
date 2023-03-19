@@ -19,19 +19,19 @@ packages/*/dist
 packages/*/.vite
 
 # local dev environment
-packages/rating-tracker-backend/local-dev/nginx/certs
-packages/rating-tracker-backend/local-dev/nginx/dhparam
-packages/rating-tracker-backend/local-dev/redis
-packages/rating-tracker-backend/local-dev/signal-cli
+packages/rating-tracker-backend/dev/nginx/certs
+packages/rating-tracker-backend/dev/nginx/dhparam
+packages/rating-tracker-backend/dev/postgresql
+packages/rating-tracker-backend/dev/redis
+packages/rating-tracker-backend/dev/signal-cli
+
+# Prisma
+packages/rating-tracker-backend/prisma/client
 
 # misc
 .DS_Store
 node_modules/.cache
-packages/*/.env
-packages/*/.env.local
-packages/*/.env.development.local
-packages/*/.env.test.local
-packages/*/.env.production.local
+packages/*/.env*
 stash
 .dccache
 .eslintcache

@@ -6,16 +6,20 @@ import SimpleWebAuthnServer, {
 import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
-import { createSession } from "../redis/repositories/session/sessionRepository.js";
-import APIError from "../lib/apiError.js";
-import { createUser, readUser, updateUser, userExists } from "../redis/repositories/user/userRepository.js";
-import { sessionTTLInSeconds } from "../redis/repositories/session/sessionRepositoryBase.js";
-import { GENERAL_ACCESS } from "rating-tracker-commons";
-import { User } from "../models/user.js";
+import { createSession } from "../redis/repositories/sessionRepository.js";
+import APIError from "../utils/apiError.js";
+import { createUser, readUserWithCredentials, updateUserWithCredentials, userExists } from "../db/tables/userTable.js";
+import { sessionTTLInSeconds } from "../redis/repositories/sessionRepository.js";
+import {
+  GENERAL_ACCESS,
+  optionalUserValuesNull,
+  registerEndpointPath,
+  signInEndpointPath,
+  UserWithCredentials,
+} from "rating-tracker-commons";
+import Router from "../utils/router.js";
 
-dotenv.config({
-  path: ".env.local",
-});
+dotenv.config();
 
 const rpName = "Rating Tracker";
 // Using only the domain name allows us to use the same code for several subdomains.
@@ -29,15 +33,20 @@ const currentChallenges = {};
 /**
  * This class is responsible for handling all registration and authentication requests.
  */
-class AuthController {
+export class AuthController {
   /**
    * Generates a registration challenge for the user to register.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a response containing the registration challenge.
    * @throws an {@link APIError} if the user already exists.
    */
+  @Router({
+    path: registerEndpointPath,
+    method: "get",
+    accessRights: 0,
+    rateLimited: true,
+  })
   async getRegistrationOptions(req: Request, res: Response) {
     const email = req.query.email;
     const name = req.query.name;
@@ -61,20 +70,23 @@ class AuthController {
         },
       });
       currentChallenges[email] = options.challenge;
-      return res.status(200).json(options);
+      res.status(200).json(options).end();
     }
   }
 
-  // This function is not tested because it is difficult to mock creating a valid challenge response.
-  /* istanbul ignore next -- @preserve */
   /**
    * Verifies the registration response and creates a new user if the request is valid.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a response with status code 201 if the registration was successful.
    * @throws an {@link APIError} if the registration failed or the user already exists.
    */
+  @Router({
+    path: registerEndpointPath,
+    method: "post",
+    accessRights: 0,
+    rateLimited: true,
+  })
   async postRegistrationResponse(req: Request, res: Response) {
     const email = req.query.email;
     const name = req.query.name;
@@ -95,17 +107,17 @@ class AuthController {
         throw new APIError(500, error.message);
       }
 
-      const { verified } = verification; // If the verification was successful, this will hold true.
-      const { registrationInfo } = verification;
+      const { verified, registrationInfo } = verification;
       // The following information is required to verify the user’s identity in the future.
-      // We store it in Redis.
+      // We store it in the database.
       const { credentialPublicKey, credentialID, counter } = registrationInfo;
       if (
-        verified &&
+        verified && // If the verification was successful, this will hold true.
         // We attempt to create a new user with the provided information.
         // If the user already exists, createUser(…)  will return false and we throw an error.
         !(await createUser(
-          new User({
+          new UserWithCredentials({
+            ...optionalUserValuesNull,
             email,
             name,
             accessRights: 0, // Users need to be manually approved before they can access the app.
@@ -118,7 +130,7 @@ class AuthController {
         throw new APIError(403, "This email address is already registered. Please sign in.");
       }
       if (verified) {
-        return res.status(201).end();
+        res.status(201).end();
       }
       // We do not provide too much information about the error to the user.
       throw new APIError(400, "Registration failed");
@@ -128,34 +140,41 @@ class AuthController {
   /**
    * Generates an authentication challenge for any user to sign in. The challenge is not related to any specific user.
    *
-   * @param {Request} req Request object
+   * @param {Request} _ Request object
    * @param {Response} res Response object
-   * @returns {Response} a response containing the authentication challenge.
    */
-  getAuthenticationOptions(req: Request, res: Response) {
+  @Router({
+    path: signInEndpointPath,
+    method: "get",
+    accessRights: 0,
+    rateLimited: true,
+  })
+  getAuthenticationOptions(_: Request, res: Response) {
     const options = SimpleWebAuthnServer.generateAuthenticationOptions({
       rpID: rpID,
       userVerification: "required", // Require the user to verify their identity with a PIN or biometric sensor.
     });
     currentChallenges[options.challenge] = options.challenge;
-    return res.status(200).json(options);
+    res.status(200).json(options).end();
   }
 
-  // This function is not tested because it is difficult to mock creating a valid challenge response.
-  /* istanbul ignore next -- @preserve */
   /**
    * Verifies the authentication response and creates a session cookie if the challenge response is valid.
    *
    * @param {Request} req Request object
    * @param {Response} res Response object
-   * @returns {Response} a response with status code 204 and the session cookie set if the authentication was
-   * successful.
    * @throws an {@link APIError} if the authentication failed or the user lacks access rights.
    */
+  @Router({
+    path: signInEndpointPath,
+    method: "post",
+    accessRights: 0,
+    rateLimited: true,
+  })
   async postAuthenticationResponse(req: Request, res: Response) {
-    // We retrieve the user from Redis, who we identified by the email address in the challenge response.
+    // We retrieve the user from the database, who we identified by the email address in the challenge response.
     const email = req.body.response.userHandle;
-    const user = await readUser(email);
+    const user = await readUserWithCredentials(email);
 
     let verification: VerifiedAuthenticationResponse;
     try {
@@ -166,7 +185,7 @@ class AuthController {
         expectedOrigin: origin,
         expectedRPID: rpID,
         authenticator: {
-          // This information is stored for each user in Redis.
+          // This information is stored for each user in the database.
           credentialID: Buffer.from(user.credentialID, "base64"),
           credentialPublicKey: Buffer.from(user.credentialPublicKey, "base64"),
           counter: user.counter,
@@ -177,9 +196,9 @@ class AuthController {
       throw new APIError(500, error.message);
     }
 
-    const { verified } = verification; // If the verification was successful, this will hold true.
-    const { authenticationInfo } = verification;
+    const { verified, authenticationInfo } = verification;
     const { newCounter } = authenticationInfo;
+    // If the verification was successful, this will hold true.
     if (verified) {
       // We use bitwise AND to check if the user has the GENERAL_ACCESS bit set.
       if (!user.hasAccessRight(GENERAL_ACCESS)) {
@@ -187,10 +206,11 @@ class AuthController {
       }
       // The counter variable will increment if the client’s authenticator tracks the number of authentications.
       // Not supported by all authenticators.
-      await updateUser(email, { counter: newCounter });
+      await updateUserWithCredentials(email, { counter: newCounter });
 
       // We create and store a session cookie for the user.
       const authToken = randomUUID();
+      // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
       await createSession({ sessionID: authToken, email });
       res.cookie("authToken", authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
@@ -198,10 +218,9 @@ class AuthController {
         secure: process.env.NODE_ENV !== "development", // allow plain HTTP in development
         sameSite: true,
       });
-      return res.status(204).end();
+      res.status(204).end();
+    } else {
+      throw new APIError(400, "Authentication failed");
     }
-    throw new APIError(400, "Authentication failed");
   }
 }
-
-export default new AuthController();
