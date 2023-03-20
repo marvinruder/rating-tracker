@@ -47,7 +47,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint", "npm:8.36.0"],\
             ["pino", "npm:8.11.0"],\
             ["pino-pretty", "npm:10.0.0"],\
-            ["prettier", "npm:2.8.4"],\
+            ["prettier", "npm:2.8.5"],\
             ["typescript", "patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=85af82"]\
           ],\
           "linkType": "SOFT"\
@@ -5461,7 +5461,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/prettier", null],\
             ["eslint", "npm:8.36.0"],\
             ["eslint-config-prettier", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:8.7.0"],\
-            ["prettier", "npm:2.8.4"],\
+            ["prettier", "npm:2.8.5"],\
             ["prettier-linter-helpers", "npm:1.0.0"]\
           ],\
           "packagePeers": [\
@@ -8680,10 +8680,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["prettier", [\
-        ["npm:2.8.4", {\
-          "packageLocation": "./.yarn/cache/prettier-npm-2.8.4-ba64a351d1-c173064bf3.zip/node_modules/prettier/",\
+        ["npm:2.8.5", {\
+          "packageLocation": "./.yarn/cache/prettier-npm-2.8.5-3f60833fcb-b7f8d30e14.zip/node_modules/prettier/",\
           "packageDependencies": [\
-            ["prettier", "npm:2.8.4"]\
+            ["prettier", "npm:2.8.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8946,7 +8946,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint", "npm:8.36.0"],\
             ["pino", "npm:8.11.0"],\
             ["pino-pretty", "npm:10.0.0"],\
-            ["prettier", "npm:2.8.4"],\
+            ["prettier", "npm:2.8.5"],\
             ["typescript", "patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=85af82"]\
           ],\
           "linkType": "SOFT"\
@@ -8987,7 +8987,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["glob", "npm:9.3.0"],\
             ["pino", "npm:8.11.0"],\
             ["pino-pretty", "npm:10.0.0"],\
-            ["prettier", "npm:2.8.4"],\
+            ["prettier", "npm:2.8.5"],\
             ["prisma", "npm:4.11.0"],\
             ["rating-tracker-commons", "workspace:packages/rating-tracker-commons"],\
             ["redis", "npm:4.6.5"],\
@@ -9017,7 +9017,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-config-prettier", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:8.7.0"],\
             ["eslint-plugin-jsdoc", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:40.1.0"],\
             ["eslint-plugin-prettier", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:4.2.1"],\
-            ["prettier", "npm:2.8.4"],\
+            ["prettier", "npm:2.8.5"],\
             ["typescript", "patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=85af82"],\
             ["vite", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:4.2.0"],\
             ["vitest", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:0.29.3"]\
@@ -9058,7 +9058,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["nprogress", "npm:0.2.0"],\
             ["numeral", "npm:2.0.6"],\
             ["particlesjs", "npm:2.2.3"],\
-            ["prettier", "npm:2.8.4"],\
+            ["prettier", "npm:2.8.5"],\
             ["rating-tracker-commons", "workspace:packages/rating-tracker-commons"],\
             ["react", "npm:18.2.0"],\
             ["react-apexcharts", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:1.4.0"],\
