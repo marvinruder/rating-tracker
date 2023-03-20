@@ -6,6 +6,7 @@ WORKDIR /workdir
 COPY . .
 RUN \
   yarn --immutable && \
+  yarn unplug pino-pretty && \
   yarn workspace rating-tracker-backend test:prisma:migrate:init
 
 ENTRYPOINT [ "/bin/sh" ]
