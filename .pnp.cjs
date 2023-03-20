@@ -45,6 +45,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["concurrently", "npm:7.6.0"],\
             ["eslint", "npm:8.36.0"],\
+            ["pino", "npm:8.11.0"],\
+            ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.4"],\
             ["typescript", "patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=85af82"]\
           ],\
@@ -8942,6 +8944,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rating-tracker", "workspace:."],\
             ["concurrently", "npm:7.6.0"],\
             ["eslint", "npm:8.36.0"],\
+            ["pino", "npm:8.11.0"],\
+            ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.4"],\
             ["typescript", "patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=85af82"]\
           ],\

@@ -20,6 +20,10 @@
     "lint": "yarn workspaces foreach -pt run lint"
   },
   "packageManager": "yarn@3.5.0",
+  "dependencies": {
+    "pino": "8.11.0",
+    "pino-pretty": "10.0.0"
+  },
   "devDependencies": {
     "concurrently": "7.6.0",
     "eslint": "8.36.0",
