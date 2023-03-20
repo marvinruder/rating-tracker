@@ -309,14 +309,15 @@ tests.push({
   testName: "filters and sorts stock list – example 16",
   testFunction: async () => {
     const res = await supertest
-      .get(`/api${stockListEndpointPath}?totalScoreMin=40&totalScoreMax=60&sortBy=name`)
+      .get(`/api${stockListEndpointPath}?totalScoreMin=30&totalScoreMax=60&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect(res.body.count).toBe(3);
-    expect(res.body.stocks).toHaveLength(3);
+    expect(res.body.count).toBe(4);
+    expect(res.body.stocks).toHaveLength(4);
     expect(res.body.stocks[0].name).toMatch("Allianz");
-    expect(res.body.stocks[1].name).toMatch("Kion");
-    expect(res.body.stocks[2].name).toMatch("Ørsted");
+    expect(res.body.stocks[1].name).toMatch("Danone");
+    expect(res.body.stocks[2].name).toMatch("Kion");
+    expect(res.body.stocks[3].name).toMatch("Ørsted");
   },
 });
 
