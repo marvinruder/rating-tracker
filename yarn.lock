@@ -7290,6 +7290,8 @@ __metadata:
   dependencies:
     concurrently: 7.6.0
     eslint: 8.36.0
+    pino: 8.11.0
+    pino-pretty: 10.0.0
     prettier: 2.8.4
     typescript: 5.0.2
   languageName: unknown
