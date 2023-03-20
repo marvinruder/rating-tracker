@@ -23,32 +23,32 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
     autoFetchSchedule,
     async () => {
       // Fetch data from MSCI, Refinitiv, S&P and Sustainalytics in parallel and detach the processes
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMSCIEndpointPath}`, {
+      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMSCIEndpointPath}`, undefined, {
         params: { detach: "true" },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },
       });
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchRefinitivEndpointPath}`, {
+      await axios.post(`http://localhost:${process.env.PORT}/api${fetchRefinitivEndpointPath}`, undefined, {
         params: { detach: "true" },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },
       });
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchSPEndpointPath}`, {
+      await axios.post(`http://localhost:${process.env.PORT}/api${fetchSPEndpointPath}`, undefined, {
         params: { detach: "true" },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },
       });
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchSustainalyticsEndpointPath}`, {
+      await axios.post(`http://localhost:${process.env.PORT}/api${fetchSustainalyticsEndpointPath}`, undefined, {
         params: { detach: "true" },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },
       });
       // Fetch data from Morningstar first
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMorningstarEndpointPath}`, {
+      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMorningstarEndpointPath}`, undefined, {
         params: { detach: "false" },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
@@ -56,7 +56,7 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
       });
       // Fetch data from Marketscreener after Morningstar, so Market Screener can use the up-to-date Last Close price to
       // calculate the analyst target price properly
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMarketScreenerEndpointPath}`, {
+      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMarketScreenerEndpointPath}`, undefined, {
         params: { detach: "true" },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
