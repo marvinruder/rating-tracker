@@ -8581,7 +8581,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],\
       ["pino-pretty", [\
         ["npm:10.0.0", {\
-          "packageLocation": "./.yarn/cache/pino-pretty-npm-10.0.0-6c83b3ab2b-af45c69fdb.zip/node_modules/pino-pretty/",\
+          "packageLocation": "./.yarn/unplugged/pino-pretty-npm-10.0.0-6c83b3ab2b/node_modules/pino-pretty/",\
           "packageDependencies": [\
             ["pino-pretty", "npm:10.0.0"],\
             ["colorette", "npm:2.0.19"],\

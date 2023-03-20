@@ -13,8 +13,8 @@ RUN \
   yarn build && \
   yarn config set enableGlobalCache false && \
   yarn cache clean && \
-  yarn workspaces focus --production rating-tracker-backend && \
-  yarn unplug pino-pretty
+  yarn workspace rating-tracker-backend unplug pino-pretty && \
+  yarn workspaces focus --production rating-tracker-backend
 
 # Create directories for run container and copy only necessary files
 RUN mkdir -p /workdir/app/packages/rating-tracker-backend/public /workdir/app/packages/rating-tracker-commons /workdir/app/.yarn && \

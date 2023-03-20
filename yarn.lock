@@ -7294,6 +7294,9 @@ __metadata:
     pino-pretty: 10.0.0
     prettier: 2.8.5
     typescript: 5.0.2
+  dependenciesMeta:
+    pino-pretty@10.0.0:
+      unplugged: true
   languageName: unknown
   linkType: soft
 
