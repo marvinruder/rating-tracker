@@ -241,7 +241,12 @@ const getESGScore = (stock: OmitDynamicAttributesStock): number => {
  * @returns {number} The score, ranging from -1 (poor) to 1 (excellent).
  */
 const getTotalScore = (stock: OmitDynamicAttributesStock): number => {
-  return getFinancialScore(stock) * 0.5 + getESGScore(stock) * 0.5;
+  const financialScore = getFinancialScore(stock);
+  const esgScore = getESGScore(stock);
+
+  return financialScore > 0 && esgScore > 0
+    ? (2 * (financialScore * esgScore)) / (financialScore + esgScore)
+    : Math.min(financialScore, esgScore);
 };
 
 /**
