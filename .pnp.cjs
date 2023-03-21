@@ -2690,10 +2690,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/cron", [\
-        ["npm:2.0.0", {\
-          "packageLocation": "./.yarn/cache/@types-cron-npm-2.0.0-ea513eeeaf-392d2cfca5.zip/node_modules/@types/cron/",\
+        ["npm:2.0.1", {\
+          "packageLocation": "./.yarn/cache/@types-cron-npm-2.0.1-a230f75b9e-4268c78475.zip/node_modules/@types/cron/",\
           "packageDependencies": [\
-            ["@types/cron", "npm:2.0.0"],\
+            ["@types/cron", "npm:2.0.1"],\
             ["@types/luxon", "npm:3.2.0"],\
             ["@types/node", "npm:18.15.3"]\
           ],\
@@ -8959,7 +8959,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rating-tracker-backend", "workspace:packages/rating-tracker-backend"],\
             ["@prisma/client", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:4.11.0"],\
             ["@simplewebauthn/server", "npm:7.2.0"],\
-            ["@types/cron", "npm:2.0.0"],\
+            ["@types/cron", "npm:2.0.1"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/node", "npm:18.15.3"],\
             ["@types/selenium-webdriver", "npm:4.1.13"],\
