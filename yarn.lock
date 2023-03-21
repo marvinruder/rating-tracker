@@ -6960,12 +6960,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.5":
-  version: 2.8.5
-  resolution: "prettier@npm:2.8.5"
+"prettier@npm:2.8.6":
+  version: 2.8.6
+  resolution: "prettier@npm:2.8.6"
   bin:
     prettier: bin-prettier.js
-  checksum: b7f8d30e14061e0478bc5a59d4d889688d804c173a0daa91b1b85dc08eef5eb6956d1b59f4037770776fda5b967f6c9ca3b7a8a43c50bedb4c7b182029f865aa
+  checksum: 8ac94fa67aec0e65743ea15ebf954ef2f1e52638abd129dc04e8b49e8bb3224c0233c98df6b5c98efd31bd2a43866590486559438ee4ead09dc81be389068572
   languageName: node
   linkType: hard
 
@@ -7197,7 +7197,7 @@ __metadata:
     glob: 9.3.1
     pino: 8.11.0
     pino-pretty: 10.0.0
-    prettier: 2.8.5
+    prettier: 2.8.6
     prisma: 4.11.0
     rating-tracker-commons: "workspace:*"
     redis: 4.6.5
@@ -7225,7 +7225,7 @@ __metadata:
     eslint-config-prettier: 8.7.0
     eslint-plugin-jsdoc: 40.1.0
     eslint-plugin-prettier: 4.2.1
-    prettier: 2.8.5
+    prettier: 2.8.6
     typescript: 5.0.2
     vite: 4.2.1
     vitest: 0.29.5
@@ -7264,7 +7264,7 @@ __metadata:
     nprogress: 0.2.0
     numeral: 2.0.6
     particlesjs: 2.2.3
-    prettier: 2.8.5
+    prettier: 2.8.6
     rating-tracker-commons: "workspace:*"
     react: 18.2.0
     react-apexcharts: 1.4.0
@@ -7292,7 +7292,7 @@ __metadata:
     eslint: 8.36.0
     pino: 8.11.0
     pino-pretty: 10.0.0
-    prettier: 2.8.5
+    prettier: 2.8.6
     typescript: 5.0.2
   dependenciesMeta:
     pino-pretty@10.0.0:
