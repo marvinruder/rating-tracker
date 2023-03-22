@@ -55,7 +55,7 @@ export class StockController {
         OR: [
           {
             ticker: {
-              contains: (req.query.name as string).trim(),
+              startsWith: (req.query.name as string).trim(),
               mode: "insensitive",
             },
           },
@@ -466,6 +466,7 @@ export class StockController {
     if (sortBy && typeof sortBy === "string" && isSortableAttribute(sortBy)) {
       const sort = String(req.query.sortDesc).toLowerCase() === "true" ? "desc" : "asc";
       switch (sortBy) {
+        case "ticker":
         case "name":
         case "size":
         case "style":

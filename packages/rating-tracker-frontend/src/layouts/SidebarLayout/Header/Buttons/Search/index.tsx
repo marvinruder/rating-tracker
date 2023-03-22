@@ -198,12 +198,21 @@ const HeaderSearch = (): JSX.Element => {
       .get(baseUrl + stockListEndpointPath, {
         params: {
           name: currentSearchValue,
-          sortBy: "name",
-          count: 10, // Only request the first 10 results
+          sortBy: "ticker",
         },
       })
       .then((res) => {
-        setStocks(res.data.stocks);
+        const upperCaseSearchValue = currentSearchValue.toLocaleUpperCase();
+        setStocks(
+          res.data.stocks
+            .sort(
+              // Sort stocks to the top if their ticker starts with the search value (case-insensitive)
+              (a: Stock, b: Stock) =>
+                +b.ticker.toLocaleUpperCase().startsWith(upperCaseSearchValue) -
+                +a.ticker.toLocaleUpperCase().startsWith(upperCaseSearchValue)
+            )
+            .slice(0, 10) // Only use the first 10 results
+        );
         setCount(res.data.count);
       })
       .catch((e) => {

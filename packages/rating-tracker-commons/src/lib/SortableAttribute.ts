@@ -4,6 +4,7 @@
 export const sortableAttributeArray =
   // : Partial<(keyof Stock)[]>
   [
+    "ticker",
     "name",
     "size",
     "style",
