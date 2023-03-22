@@ -198,7 +198,7 @@ const HeaderSearch = (): JSX.Element => {
       .get(baseUrl + stockListEndpointPath, {
         params: {
           name: currentSearchValue,
-          sortBy: "name",
+          sortBy: "ticker",
           count: 10, // Only request the first 10 results
         },
       })
