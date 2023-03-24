@@ -47,7 +47,7 @@
     "redis": "4.6.5",
     "redis-om": "0.3.6",
     "response-time": "2.3.2",
-    "selenium-webdriver": "4.8.1",
+    "selenium-webdriver": "4.8.2",
     "swagger-ui-express": "4.6.2"
   },
   "devDependencies": {
