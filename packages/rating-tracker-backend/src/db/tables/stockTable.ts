@@ -189,6 +189,10 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
         default:
           break;
       }
+    } else {
+      // If a value is undefined, i.e. has not been set in the fetch controller, we delete it from the object to not
+      // overwrite existing values.
+      delete newValues[k];
     }
   }
   if (isNewData || forceUpdate) {
