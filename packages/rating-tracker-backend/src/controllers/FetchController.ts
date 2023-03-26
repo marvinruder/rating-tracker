@@ -18,6 +18,7 @@ import {
   Industry,
   isCurrency,
   isIndustry,
+  isMSCIESGRating,
   isSize,
   isStyle,
   MSCIESGRating,
@@ -265,6 +266,9 @@ export class FetchController {
             // Example: "Stock Style\nLarge-Blend"
             .replace("Stock Style\n", "") // Remove headline
             .split("-");
+          if (sizeAndStyle.length !== 2) {
+            throw new TypeError("No valid size and style available.");
+          }
           if (isSize(sizeAndStyle[0])) {
             size = sizeAndStyle[0];
           } else {
@@ -509,6 +513,7 @@ export class FetchController {
             high52w = null;
           } else {
             if (
+              range52wStrings.length !== 2 ||
               range52wStrings[0].length === 0 ||
               range52wStrings[1].length === 0 ||
               Number.isNaN(+range52wStrings[0]) ||
@@ -725,10 +730,18 @@ export class FetchController {
           const consensusTableDiv = await driver.findElement(By.xpath(XPATH_CONSENSUS_DIV));
 
           try {
-            analystConsensus = +(
+            const analystConsensusMatches = (
               await (await consensusTableDiv.findElement(By.xpath(XPATH_CONSENSUS_NOTE))).getAttribute("title")
             ) // Example: " Note : 9.1 / 10"
-              .match(/(\d+(\.\d+)?)/g)[0]; // Extract the first decimal number from the title.
+              .match(/(\d+(\.\d+)?)/g); // Extract the first decimal number from the title.
+            if (
+              analystConsensusMatches === null ||
+              analystConsensusMatches.length < 1 ||
+              Number.isNaN(+analystConsensusMatches[0])
+            ) {
+              throw new TypeError(`Extracted analyst consensus is no valid number.`);
+            }
+            analystConsensus = +analystConsensusMatches[0];
           } catch (e) {
             logger.warn(
               PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`)
@@ -772,13 +785,19 @@ export class FetchController {
             if (!stock.lastClose) {
               throw new Error("No Last Close price available to compare spread against.");
             }
-            analystTargetPrice =
-              stock.lastClose *
-              (+(await (await consensusTableDiv.findElement(By.xpath(XPATH_SPREAD_AVERAGE_TARGET))).getText())
-                .replaceAll(",", ".")
-                .match(/(\-)?\d+(\.\d+)?/g)[0] /
-                100 +
-                1);
+            const analystTargetPriceMatches = (
+              await (await consensusTableDiv.findElement(By.xpath(XPATH_SPREAD_AVERAGE_TARGET))).getText()
+            )
+              .replaceAll(",", ".")
+              .match(/(\-)?\d+(\.\d+)?/g);
+            if (
+              analystTargetPriceMatches === null ||
+              analystTargetPriceMatches.length !== 1 ||
+              Number.isNaN(+analystTargetPriceMatches[0])
+            ) {
+              throw new TypeError(`Extracted analyst target price is no valid number.`);
+            }
+            analystTargetPrice = stock.lastClose * (+analystTargetPriceMatches[0] / 100 + 1);
           } catch (e) {
             logger.warn(
               PREFIX_SELENIUM +
@@ -998,7 +1017,12 @@ export class FetchController {
           const esgClassName = await driver
             .findElement(By.className("ratingdata-company-rating"))
             .getAttribute("class"); // Example: "esg-rating-circle-bbb"
-          msciESGRating = esgClassName.substring(esgClassName.lastIndexOf("-") + 1).toUpperCase() as MSCIESGRating;
+          const msciESGRatingString = esgClassName.substring(esgClassName.lastIndexOf("-") + 1).toUpperCase();
+          if (isMSCIESGRating(msciESGRatingString)) {
+            msciESGRating = msciESGRatingString;
+          } else {
+            throw new TypeError(`Extracted MSCI ESG Rating “${msciESGRatingString}” is no valid MSCI ESG Rating.`);
+          }
         } catch (e) {
           logger.warn(
             PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`)
@@ -1018,10 +1042,18 @@ export class FetchController {
         }
 
         try {
-          msciTemperature = +(
+          const msciTemperatureMatches = (
             await driver.findElement(By.className("implied-temp-rise-value")).getAttribute("outerText")
           ) // Example: "2.5°C"
-            .match(/(\d+(\.\d+)?)/g)[0];
+            .match(/(\d+(\.\d+)?)/g);
+          if (
+            msciTemperatureMatches === null ||
+            msciTemperatureMatches.length !== 1 ||
+            Number.isNaN(+msciTemperatureMatches[0])
+          ) {
+            throw new TypeError(`Extracted MSCI Implied Temperature Rise is no valid number.`);
+          }
+          msciTemperature = +msciTemperatureMatches[0];
         } catch (e) {
           logger.warn(
             PREFIX_SELENIUM +
@@ -1194,7 +1226,13 @@ export class FetchController {
         await driver.wait(until.elementLocated(By.css("pre")), 5000);
 
         // Extract the JSON content from the page.
-        const refinitivJSON = JSON.parse(await (await driver.findElement(By.css("pre"))).getText());
+        const refinitivJSONText = await (await driver.findElement(By.css("pre"))).getText();
+
+        if (refinitivJSONText === "{}") {
+          throw new APIError(502, "No Refinitiv information available.");
+        }
+
+        const refinitivJSON = JSON.parse(refinitivJSONText);
 
         if (refinitivJSON.status && refinitivJSON.status.limitExceeded === true) {
           // If the limit has been exceeded, we stop fetching data and throw an error.
@@ -1608,9 +1646,18 @@ export class FetchController {
           throw new APIError(404, `Cannot find Sustainalytics ID ${stock.sustainalyticsID} in XML.`);
         }
         const sustainalyticsESGRiskLine = sustainalyticsXMLLines[sustainalyticsIDIndex + 1];
-        sustainalyticsESGRisk = +sustainalyticsESGRiskLine // Example: <div class="col-2">25.2</div>
+        const sustainalyticsESGRiskMatches = sustainalyticsESGRiskLine // Example: <div class="col-2">25.2</div>
           .substring(sustainalyticsESGRiskLine.indexOf(">") + 1)
-          .match(/(\d+(\.\d+)?)/g)[0];
+          .match(/(\d+(\.\d+)?)/g);
+
+        if (
+          sustainalyticsESGRiskMatches === null ||
+          sustainalyticsESGRiskMatches.length < 1 ||
+          Number.isNaN(+sustainalyticsESGRiskMatches[0])
+        ) {
+          throw new TypeError(`Extracted Sustainalytics ESG Risk is no valid number.`);
+        }
+        sustainalyticsESGRisk = +sustainalyticsESGRiskMatches[0];
 
         // Update the stock in the database.
         await updateStock(stock.ticker, {
