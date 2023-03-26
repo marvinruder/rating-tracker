@@ -468,8 +468,6 @@ export class StockController {
       switch (sortBy) {
         case "ticker":
         case "name":
-        case "size":
-        case "style":
         case "financialScore":
         case "esgScore":
         case "totalScore":
