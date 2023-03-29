@@ -43,7 +43,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["concurrently", "npm:7.6.0"],\
+            ["concurrently", "npm:8.0.1"],\
             ["eslint", "npm:8.37.0"],\
             ["pino", "npm:8.11.0"],\
             ["pino-pretty", "npm:10.0.0"],\
@@ -4563,16 +4563,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["concurrently", [\
-        ["npm:7.6.0", {\
-          "packageLocation": "./.yarn/cache/concurrently-npm-7.6.0-2eabc58c36-f705c9a796.zip/node_modules/concurrently/",\
+        ["npm:8.0.1", {\
+          "packageLocation": "./.yarn/cache/concurrently-npm-8.0.1-67a3307bfd-cce10ab1bb.zip/node_modules/concurrently/",\
           "packageDependencies": [\
-            ["concurrently", "npm:7.6.0"],\
+            ["concurrently", "npm:8.0.1"],\
             ["chalk", "npm:4.1.2"],\
             ["date-fns", "npm:2.29.3"],\
             ["lodash", "npm:4.17.21"],\
             ["rxjs", "npm:7.8.0"],\
             ["shell-quote", "npm:1.8.0"],\
-            ["spawn-command", "npm:0.0.2"],\
+            ["spawn-command", "npm:0.0.2-1"],\
             ["supports-color", "npm:8.1.1"],\
             ["tree-kill", "npm:1.2.2"],\
             ["yargs", "npm:17.7.1"]\
@@ -8974,7 +8974,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["rating-tracker", "workspace:."],\
-            ["concurrently", "npm:7.6.0"],\
+            ["concurrently", "npm:8.0.1"],\
             ["eslint", "npm:8.37.0"],\
             ["pino", "npm:8.11.0"],\
             ["pino-pretty", "npm:10.0.0"],\
@@ -9002,7 +9002,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "npm:3.1.6"],\
             ["axios", "npm:1.3.4"],\
             ["chalk", "npm:5.2.0"],\
-            ["concurrently", "npm:7.6.0"],\
+            ["concurrently", "npm:8.0.1"],\
             ["cookie-parser", "npm:1.4.6"],\
             ["cron", "npm:2.3.0"],\
             ["date-fns", "npm:2.29.3"],\
@@ -9956,10 +9956,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["spawn-command", [\
-        ["npm:0.0.2", {\
-          "packageLocation": "./.yarn/cache/spawn-command-npm-0.0.2-014d4d5d9f-e35c5d2817.zip/node_modules/spawn-command/",\
+        ["npm:0.0.2-1", {\
+          "packageLocation": "./.yarn/cache/spawn-command-npm-0.0.2-1-b5bde7f215-2cac851933.zip/node_modules/spawn-command/",\
           "packageDependencies": [\
-            ["spawn-command", "npm:0.0.2"]\
+            ["spawn-command", "npm:0.0.2-1"]\
           ],\
           "linkType": "HARD"\
         }]\
