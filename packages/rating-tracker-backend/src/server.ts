@@ -87,6 +87,13 @@ server.app.use(
     },
   })
 );
+
+// Serve the SPA to any route not belonging to the API and not matching an existing file.
+/* istanbul ignore next -- @preserve */ // The SPA index file does not exist during tests
+server.app.get(/^(?!\/api).+/, (_, res) => {
+  res.setHeader("Cache-Control", "public, max-age=0").sendFile(path.join(staticContentPath, "index.html"));
+});
+
 logger.info(PREFIX_NODEJS + `Serving static content from ${staticContentPath}`);
 logger.info("");
 
