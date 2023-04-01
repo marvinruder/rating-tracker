@@ -8,6 +8,10 @@ import {
   Box,
   DialogActions,
   Button,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Divider,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
@@ -47,6 +51,8 @@ const EditStock = (props: EditStockProps): JSX.Element => {
   const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
   // The value of the text field in the country autocomplete.
   const [countryInputValue, setCountryInputValue] = useState<string>(countryName[props.stock?.country]);
+  // Whether to clear information related to the data provider before fetching
+  const [clear, setClear] = useState<boolean>(false);
   const [morningstarID, setMorningstarID] = useState<string>(props.stock?.morningstarID);
   const [morningstarIDRequestInProgress, setMorningstarIDRequestInProgress] = useState<boolean>(false);
   const [marketScreenerID, setMarketScreenerID] = useState<string>(props.stock?.marketScreenerID);
@@ -89,7 +95,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             marketScreenerID: marketScreenerID !== props.stock.marketScreenerID ? marketScreenerID : undefined,
             msciID: msciID !== props.stock.msciID ? msciID : undefined,
             ric: ric !== props.stock.ric ? ric : undefined,
-            spID: spID !== props.stock.spID ? spID : undefined,
+            spID: spID !== props.stock.spID ? (spID === null ? "" : spID) : undefined,
             sustainalyticsID: sustainalyticsID !== props.stock.sustainalyticsID ? sustainalyticsID : undefined,
           },
         })
@@ -123,7 +129,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             // If a Morningstar ID was set, we fetch data from Morningstar using the new ID.
             axios
               .post(baseUrl + fetchMorningstarEndpointPath, undefined, {
-                params: { ticker: props.stock.ticker, noSkip: true },
+                params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
               .catch((e) => {
@@ -170,7 +176,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             // If a Market Screener ID was set, we fetch data from Market Screener using the new ID.
             axios
               .post(baseUrl + fetchMarketScreenerEndpointPath, undefined, {
-                params: { ticker: props.stock.ticker, noSkip: true },
+                params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
               .catch((e) => {
@@ -217,7 +223,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             // If an MSCI ID was set, we fetch data from MSCI using the new ID.
             axios
               .post(baseUrl + fetchMSCIEndpointPath, undefined, {
-                params: { ticker: props.stock.ticker, noSkip: true },
+                params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
               .catch((e) => {
@@ -264,7 +270,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             // If a RIC was set, we fetch data from Refinitiv using the new RIC.
             axios
               .post(baseUrl + fetchRefinitivEndpointPath, undefined, {
-                params: { ticker: props.stock.ticker, noSkip: true },
+                params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
               .catch((e) => {
@@ -311,7 +317,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             // If an S&P ID was set, we fetch data from S&P using the new ID.
             axios
               .post(baseUrl + fetchSPEndpointPath, undefined, {
-                params: { ticker: props.stock.ticker, noSkip: true },
+                params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
               .catch((e) => {
@@ -370,7 +376,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
             // If a Sustainalytics ID was set, we fetch data from Sustainalytics using the new ID.
             axios
               .post(baseUrl + fetchSustainalyticsEndpointPath, undefined, {
-                params: { ticker: props.stock.ticker },
+                params: { ticker: props.stock.ticker, clear },
               })
               .then(() => {})
               .catch((e) => {
@@ -463,6 +469,28 @@ const EditStock = (props: EditStockProps): JSX.Element => {
               disableClearable
               renderInput={(params) => <TextField {...params} label="Country" error={countryError} />}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <Divider sx={{ my: 1, width: "100%" }} />
+          </Grid>
+          <Grid item xs={12}>
+            <FormGroup>
+              <FormControlLabel
+                sx={{ pb: 2 }}
+                control={<Checkbox checked={clear} onChange={() => setClear((prev) => !prev)} />}
+                label={
+                  <>
+                    <Typography variant="body1" fontWeight="bold" color="text.primary">
+                      Clear saved values
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      If an certain attribute value is no longer available, check this option before refetching to clear
+                      all attribute values available from the selected data provider.
+                    </Typography>
+                  </>
+                }
+              />
+            </FormGroup>
           </Grid>
           <Grid item xs={12} container spacing={1} alignItems="center">
             <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>

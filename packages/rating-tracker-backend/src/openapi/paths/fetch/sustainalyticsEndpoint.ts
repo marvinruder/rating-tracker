@@ -21,6 +21,7 @@ const post: OpenAPIV3.OperationObject = {
         "If not present, all stocks known to the system will be used",
     },
     fetch.detach,
+    fetch.clear,
   ],
   responses: {
     "200": okStockList,

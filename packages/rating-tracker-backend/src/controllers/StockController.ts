@@ -655,7 +655,7 @@ export class StockController {
   async patch(req: Request, res: Response) {
     const ticker = req.params[0];
     const { name, isin, country, morningstarID, marketScreenerID, msciID, ric, sustainalyticsID } = req.query;
-    const spID = req.query.spID === null ? "" : req.query.spID;
+    const spID = req.query.spID === null ? "" : req.query.spID ? +req.query.spID : undefined;
     if (
       typeof ticker === "string" &&
       (typeof name === "string" || typeof name === "undefined") &&
@@ -668,16 +668,40 @@ export class StockController {
       ((typeof spID === "string" && spID === "") || typeof spID === "number" || typeof spID === "undefined") &&
       (typeof sustainalyticsID === "string" || typeof sustainalyticsID === "undefined")
     ) {
+      // If a data provider ID is removed (i.e., set to an empty string), we remove all information available from that
+      // data provider as well.
       await updateStock(ticker, {
         name,
         isin,
         country,
         morningstarID: morningstarID === "" ? null : morningstarID,
+        industry: morningstarID === "" ? null : undefined,
+        size: morningstarID === "" ? null : undefined,
+        style: morningstarID === "" ? null : undefined,
+        starRating: morningstarID === "" ? null : undefined,
+        dividendYieldPercent: morningstarID === "" ? null : undefined,
+        priceEarningRatio: morningstarID === "" ? null : undefined,
+        currency: morningstarID === "" ? null : undefined,
+        lastClose: morningstarID === "" ? null : undefined,
+        morningstarFairValue: morningstarID === "" ? null : undefined,
+        marketCap: morningstarID === "" ? null : undefined,
+        low52w: morningstarID === "" ? null : undefined,
+        high52w: morningstarID === "" ? null : undefined,
+        description: morningstarID === "" ? null : undefined,
         marketScreenerID: marketScreenerID === "" ? null : marketScreenerID,
+        analystConsensus: marketScreenerID === "" ? null : undefined,
+        analystCount: marketScreenerID === "" ? null : undefined,
+        analystTargetPrice: marketScreenerID === "" ? null : undefined,
         msciID: msciID === "" ? null : msciID,
+        msciESGRating: msciID === "" ? null : undefined,
+        msciTemperature: msciID === "" ? null : undefined,
         ric: ric === "" ? null : ric,
-        spID: spID === "" ? null : (spID as unknown as number | null | undefined),
+        refinitivESGScore: ric === "" ? null : undefined,
+        refinitivEmissions: ric === "" ? null : undefined,
+        spID: spID === "" ? null : spID,
+        spESGScore: spID === "" ? null : undefined,
         sustainalyticsID: sustainalyticsID === "" ? null : sustainalyticsID,
+        sustainalyticsESGRisk: sustainalyticsID === "" ? null : undefined,
       });
       res.status(204).end();
     }

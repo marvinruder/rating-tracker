@@ -26,4 +26,17 @@ const noSkip: OpenAPIV3.ParameterObject = {
   },
 };
 
-export { detach, noSkip };
+/**
+ * Whether to clear information related to the data provider before fetching
+ */
+const clear: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "clear",
+  description: "Whether to clear information related to the data provider before fetching",
+  schema: {
+    type: "boolean",
+    example: "false",
+  },
+};
+
+export { detach, noSkip, clear };
