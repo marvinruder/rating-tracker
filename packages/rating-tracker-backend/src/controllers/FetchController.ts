@@ -209,19 +209,19 @@ export class FetchController {
         );
         continue;
       }
-      let industry: Industry;
-      let size: Size;
-      let style: Style;
-      let starRating: number;
-      let dividendYieldPercent: number;
-      let priceEarningRatio: number;
-      let currency: Currency;
-      let lastClose: number;
-      let morningstarFairValue: number;
-      let marketCap: number;
-      let low52w: number;
-      let high52w: number;
-      let description: string;
+      let industry: Industry = req.query.clear ? null : undefined;
+      let size: Size = req.query.clear ? null : undefined;
+      let style: Style = req.query.clear ? null : undefined;
+      let starRating: number = req.query.clear ? null : undefined;
+      let dividendYieldPercent: number = req.query.clear ? null : undefined;
+      let priceEarningRatio: number = req.query.clear ? null : undefined;
+      let currency: Currency = req.query.clear ? null : undefined;
+      let lastClose: number = req.query.clear ? null : undefined;
+      let morningstarFairValue: number = req.query.clear ? null : undefined;
+      let marketCap: number = req.query.clear ? null : undefined;
+      let low52w: number = req.query.clear ? null : undefined;
+      let high52w: number = req.query.clear ? null : undefined;
+      let description: string = req.query.clear ? null : undefined;
 
       try {
         await driver.get(
@@ -481,7 +481,7 @@ export class FetchController {
               marketCap = +marketCapText;
             }
             if (!marketCapText.match(/\d+/) || Number.isNaN(marketCap)) {
-              marketCap = undefined;
+              marketCap = req.query.clear ? null : undefined;
               throw new TypeError(`Extracted market capitalization is no valid number.`);
             }
           }
@@ -615,8 +615,8 @@ export class FetchController {
         );
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Cool down for 3 seconds.
       }
-      if (consecutiveErrorCount >= 5) {
-        // If we have 5 consecutive errors, we stop fetching data, since something is probably wrong.
+      if (consecutiveErrorCount >= 10) {
+        // If we have 10 consecutive errors, we stop fetching data, since something is probably wrong.
         logger.error(
           PREFIX_SELENIUM +
             chalk.redBright(
@@ -713,9 +713,9 @@ export class FetchController {
         );
         continue;
       }
-      let analystConsensus: number;
-      let analystCount: number;
-      let analystTargetPrice: number;
+      let analystConsensus: number = req.query.clear ? null : undefined;
+      let analystCount: number = req.query.clear ? null : undefined;
+      let analystTargetPrice: number = req.query.clear ? null : undefined;
 
       try {
         await driver.get(`https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/`);
@@ -993,8 +993,8 @@ export class FetchController {
         );
         break;
       }
-      let msciESGRating: MSCIESGRating;
-      let msciTemperature: number;
+      let msciESGRating: MSCIESGRating = req.query.clear ? null : undefined;
+      let msciTemperature: number = req.query.clear ? null : undefined;
 
       try {
         await driver.manage().deleteAllCookies(); // Delete all cookies since MSCI allows only 4 requests per session.
@@ -1215,8 +1215,8 @@ export class FetchController {
         );
         continue;
       }
-      let refinitivESGScore: number;
-      let refinitivEmissions: number;
+      let refinitivESGScore: number = req.query.clear ? null : undefined;
+      let refinitivEmissions: number = req.query.clear ? null : undefined;
 
       try {
         // Delete all cookies since Refinitiv allows only 100 requests per session.
@@ -1439,7 +1439,7 @@ export class FetchController {
         );
         continue;
       }
-      let spESGScore: number;
+      let spESGScore: number = req.query.clear ? null : undefined;
 
       try {
         await driver.get(`https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`);
@@ -1632,7 +1632,7 @@ export class FetchController {
     const sustainalyticsXMLLines = sustainalyticsXMLResource.content.split("\n");
 
     for await (const stock of stocks) {
-      let sustainalyticsESGRisk: number;
+      let sustainalyticsESGRisk: number = req.query.clear ? null : undefined;
 
       try {
         // Look for the Sustainalytics ID in the XML lines.

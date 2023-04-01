@@ -22,6 +22,7 @@ const post: OpenAPIV3.OperationObject = {
     },
     fetch.detach,
     fetch.noSkip,
+    fetch.clear,
   ],
   responses: {
     "200": okStockList,

@@ -16,6 +16,7 @@ import {
   expectStockListLengthToBe,
   supertest,
 } from "../../test/liveTestHelpers";
+import { sentMessages } from "../signal/__mocks__/signalBase";
 import client from "../db/client";
 
 export const suiteName = "Stock API";
@@ -391,13 +392,13 @@ tests.push({
   testName: "supports pagination",
   testFunction: async () => {
     const resAllStocks = await supertest
-      .get(`/api${stockListEndpointPath}`)
+      .get(`/api${stockListEndpointPath}?sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(resAllStocks.status).toBe(200);
     expect(resAllStocks.body.count).toBe(11);
     expect(resAllStocks.body.stocks).toHaveLength(11);
     const resPagination = await supertest
-      .get(`/api${stockListEndpointPath}?offset=5&count=5`)
+      .get(`/api${stockListEndpointPath}?sortBy=name&offset=5&count=5`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(resPagination.body.stocks[0].name).toBe(resAllStocks.body.stocks[5].name);
     expect(resPagination.body.stocks[4].name).toBe(resAllStocks.body.stocks[9].name);
@@ -538,6 +539,17 @@ tests.push({
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toBeNull();
     expect((res.body as Stock).spID).toBeNull();
+    // Removing a data provider’s ID removes attribute values related to it as well
+    expect((res.body as Stock).industry).toBeNull();
+    expect((res.body as Stock).size).toBeNull();
+    expect((res.body as Stock).style).toBeNull();
+    expect((res.body as Stock).starRating).toBeNull();
+    expect((res.body as Stock).morningstarFairValue).toBeNull();
+    expect((res.body as Stock).morningstarFairValuePercentageToLastClose).toBeNull();
+    expect((res.body as Stock).marketCap).toBeNull();
+    expect((res.body as Stock).spESGScore).toBeNull();
+    expect(sentMessages[0].message).toMatch("🔴");
+    expect(sentMessages[0].message).not.toMatch("🟢");
   },
 });
 

@@ -14,14 +14,16 @@ import * as resourceRepository from "../src/redis/repositories/resourceRepositor
 import * as sessionRepository from "../src/redis/repositories/sessionRepository";
 import { SpyInstance } from "vitest";
 import { listener } from "../src/server";
+import { sentMessages } from "../src/signal/__mocks__/signalBase";
+import * as signal from "../src/signal/signal";
 
 vi.mock("../src/utils/logger");
 vi.mock("../src/signal/signalBase");
 vi.mock("@simplewebauthn/server", async () => await import("./moduleMocks/@simplewebauthn/server"));
 
 /**
- * An array of spy functions on methods that alter the state of PostgreSQL or Redis. Must only be called in tests
- * explicitly marked as unsafe.
+ * An array of spy functions on methods that alter the state of PostgreSQL or Redis, or send Signal messages. Must only
+ * be called in tests explicitly marked as unsafe.
  */
 const unsafeSpies: SpyInstance[] = [];
 
@@ -34,6 +36,7 @@ unsafeSpies.push(vi.spyOn(userTable, "deleteUser"));
 unsafeSpies.push(vi.spyOn(resourceRepository, "createResource"));
 unsafeSpies.push(vi.spyOn(sessionRepository, "createSession"));
 unsafeSpies.push(vi.spyOn(sessionRepository, "deleteSession"));
+unsafeSpies.push(vi.spyOn(signal, "sendMessage"));
 
 beforeAll(async () => {
   // Apply the seeds
@@ -42,6 +45,8 @@ beforeAll(async () => {
 
 afterEach(async (context) => {
   if (context.meta.name.toLowerCase().includes("unsafe")) {
+    // Clears Signal message array
+    sentMessages.length = 0;
     // Apply the seeds if an unsafe test modified the content
     await Promise.all([applyPostgresSeeds(), applyRedisSeeds()]);
     // Check if a safe test has been marked as unsafe
@@ -49,8 +54,9 @@ afterEach(async (context) => {
       expect(unsafeSpies.some((spy) => spy.mock.calls.length)).toBeTruthy();
     }
   } else {
-    // If a test is not marked as unsafe, it must not use an unsafe method
+    // If a test is not marked as unsafe, it must not use an unsafe method or send Signal messages
     unsafeSpies.forEach((spy) => expect(spy).not.toHaveBeenCalled());
+    expect(sentMessages).toHaveLength(0);
   }
 });
 

@@ -132,7 +132,7 @@ export const currencyArray = [
   "SGD",
   "SHP",
   "SLE",
-  "SLL", // Ceases to be legal tender effective 1 April 2023
+  "SLL", // Ceases to be legal tender effective 1 January 2024
   "SOS",
   "SRD",
   "SSP",
@@ -334,7 +334,7 @@ export const currencyName: Record<Currency, string> = {
   SGD: "Singapore Dollar",
   SHP: "Saint Helena Pound",
   SLE: "Leone",
-  SLL: "Leone", // Ceases to be legal tender effective 1 April 2023
+  SLL: "Leone", // Ceases to be legal tender effective 1 January 2024
   SOS: "Somali Shilling",
   SRD: "Surinam Dollar",
   SSP: "South Sudanese Pound",
