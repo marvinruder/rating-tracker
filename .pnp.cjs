@@ -6247,12 +6247,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:9.3.2", {\
-          "packageLocation": "./.yarn/cache/glob-npm-9.3.2-7f7a770d63-f3d188e9f7.zip/node_modules/glob/",\
+        ["npm:9.3.4", {\
+          "packageLocation": "./.yarn/cache/glob-npm-9.3.4-620b7422ab-bcf49eaf47.zip/node_modules/glob/",\
           "packageDependencies": [\
-            ["glob", "npm:9.3.2"],\
+            ["glob", "npm:9.3.4"],\
             ["fs.realpath", "npm:1.0.0"],\
-            ["minimatch", "npm:7.4.2"],\
+            ["minimatch", "npm:8.0.2"],\
             ["minipass", "npm:4.2.5"],\
             ["path-scurry", "npm:1.6.1"]\
           ],\
@@ -7720,10 +7720,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:7.4.2", {\
-          "packageLocation": "./.yarn/cache/minimatch-npm-7.4.2-da654284bf-9e341b04e6.zip/node_modules/minimatch/",\
+        ["npm:8.0.2", {\
+          "packageLocation": "./.yarn/cache/minimatch-npm-8.0.2-9b42b2fab1-ceb5086720.zip/node_modules/minimatch/",\
           "packageDependencies": [\
-            ["minimatch", "npm:7.4.2"],\
+            ["minimatch", "npm:8.0.2"],\
             ["brace-expansion", "npm:2.0.1"]\
           ],\
           "linkType": "HARD"\
@@ -9015,7 +9015,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-async-errors", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:3.1.1"],\
             ["express-openapi-validator", "npm:5.0.3"],\
             ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.7.0"],\
-            ["glob", "npm:9.3.2"],\
+            ["glob", "npm:9.3.4"],\
             ["pino", "npm:8.11.0"],\
             ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.7"],\
