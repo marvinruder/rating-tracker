@@ -8358,7 +8358,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["parse-bmfont-xml", "npm:1.1.4"],\
             ["xml-parse-from-string", "npm:1.0.1"],\
-            ["xml2js", "npm:0.4.23"]\
+            ["xml2js", "npm:0.5.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11861,10 +11861,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["xml2js", [\
-        ["npm:0.4.23", {\
-          "packageLocation": "./.yarn/cache/xml2js-npm-0.4.23-93a8b2e10b-ca0cf2dfbf.zip/node_modules/xml2js/",\
+        ["npm:0.5.0", {\
+          "packageLocation": "./.yarn/cache/xml2js-npm-0.5.0-06e57a2771-1aa71d62e5.zip/node_modules/xml2js/",\
           "packageDependencies": [\
-            ["xml2js", "npm:0.4.23"],\
+            ["xml2js", "npm:0.5.0"],\
             ["sax", "npm:1.2.4"],\
             ["xmlbuilder", "npm:11.0.1"]\
           ],\

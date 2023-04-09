@@ -24,7 +24,7 @@ services:
       - all
     security_opt:
       - no-new-privileges
-    command: redis-server --appendonly yes --no-appendfsync-on-rewrite yes --aclfile /etc/redis/users.acl
+    command: redis-server --aclfile /etc/redis/users.acl
     ports:
       - "127.0.0.1:6379:6379"
     volumes:
