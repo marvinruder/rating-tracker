@@ -6,7 +6,7 @@ dotenv.config({
 
 import applyPostgresSeeds from "./seeds/postgres";
 import applyRedisSeeds from "./seeds/redis";
-import glob from "glob";
+import { glob } from "glob";
 import { LiveTestSuite } from "./liveTestHelpers";
 import * as stockTable from "../src/db/tables/stockTable";
 import * as userTable from "../src/db/tables/userTable";
