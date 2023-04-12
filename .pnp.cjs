@@ -6385,10 +6385,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["happy-dom", [\
-        ["npm:9.1.9", {\
-          "packageLocation": "./.yarn/cache/happy-dom-npm-9.1.9-cc506c4226-2a2542a996.zip/node_modules/happy-dom/",\
+        ["npm:9.2.1", {\
+          "packageLocation": "./.yarn/cache/happy-dom-npm-9.2.1-61ce7eea12-67277a384a.zip/node_modules/happy-dom/",\
           "packageDependencies": [\
-            ["happy-dom", "npm:9.1.9"],\
+            ["happy-dom", "npm:9.2.1"],\
             ["css.escape", "npm:1.5.1"],\
             ["he", "npm:1.2.0"],\
             ["iconv-lite", "npm:0.6.3"],\
@@ -7368,7 +7368,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["local-pkg", "npm:0.4.3"],\
             ["@vitest/coverage-istanbul", "virtual:de61dda1fdc8c2e15645eceb5924b32afed20b1ee1ccde843e51821bfdf40c99c23e9e1db13c2f28ac01c98a08e94c4231443d16968abdef812d0f219d528205#npm:0.30.1"],\
-            ["happy-dom", "npm:9.1.9"],\
+            ["happy-dom", "npm:9.2.1"],\
             ["vitest", "virtual:de61dda1fdc8c2e15645eceb5924b32afed20b1ee1ccde843e51821bfdf40c99c23e9e1db13c2f28ac01c98a08e94c4231443d16968abdef812d0f219d528205#npm:0.30.1"]\
           ],\
           "linkType": "HARD"\
@@ -9093,7 +9093,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-jsdoc", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:40.3.0"],\
             ["eslint-plugin-prettier", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:4.2.1"],\
             ["eslint-plugin-react", "virtual:084dc6313e14c62da9d54070649a38f4d8358f5988250dfe082ecb850901b9e2d9412b79e2e953b75cec9e7bb0d4c36d878a939cecee7e2795d7c93c61dd6951#npm:7.32.2"],\
-            ["happy-dom", "npm:9.1.9"],\
+            ["happy-dom", "npm:9.2.1"],\
             ["jimp", "npm:0.22.7"],\
             ["nprogress", "npm:0.2.0"],\
             ["numeral", "npm:2.0.6"],\
@@ -11653,7 +11653,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chai", "npm:4.3.7"],\
             ["concordance", "npm:5.0.4"],\
             ["debug", "virtual:d308674d86394045a3178d86fc0909ad49c0ac9801ba12776e517bdaf3dfe3537e24a9c79fd8f2bd15e4a7d8be7fae6252874fd98e2dbd2728333f46ec685014#npm:4.3.4"],\
-            ["happy-dom", "npm:9.1.9"],\
+            ["happy-dom", "npm:9.2.1"],\
             ["jsdom", null],\
             ["local-pkg", "npm:0.4.3"],\
             ["magic-string", "npm:0.30.0"],\
