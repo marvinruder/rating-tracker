@@ -8,19 +8,23 @@ node {
 
         def GIT_COMMIT_HASH
         def image
+        def PGPORT
+        def REDISPORT
 
         stage('Clone repository') {
             checkout scm
-            GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
+            GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
+            PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
+            REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
-            sh "sed -i 's/127.0.0.1/172.17.0.1/g' packages/rating-tracker-backend/test/.env"
+            sh "sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/rating-tracker-backend/test/.env"
         }
 
         parallel(
             testenv: {
                 stage('Start test environment') {
                     sh """
-                    docker compose -f packages/rating-tracker-backend/test/docker-compose.yml up --force-recreate -V -d
+                    PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/rating-tracker-backend/test/docker-compose.yml up --force-recreate -V -d
                     """
                 }
             },
@@ -70,7 +74,7 @@ node {
                     """
                     withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
                         sh """#!/usr/bin/env bash
-                        bash <(curl -Ls https://coverage.codacy.com/get.sh) report \$(find . -name 'clover.xml' -printf '-r %p ') --commit-uuid $GIT_COMMIT_HASH
+                        bash <(curl -Ls https://coverage.codacy.com/get.sh) report \$(find . -name 'clover.xml' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')
                         """
                     }
                 }
@@ -91,7 +95,7 @@ node {
 
         stage ('Cleanup') {
             sh """
-            docker compose -f packages/rating-tracker-backend/test/docker-compose.yml down -t 0
+            docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/rating-tracker-backend/test/docker-compose.yml down -t 0
             docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true

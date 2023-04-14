@@ -10,7 +10,7 @@ services:
       - no-new-privileges
     command: "redis-server --appendonly no --save \"\""
     ports:
-      - "63791:6379"
+      - ${REDISPORT}:6379
 
   postgres-test:
     image: postgres:alpine
@@ -22,7 +22,7 @@ services:
     security_opt:
       - no-new-privileges
     ports:
-      - "54321:5432"
+      - ${PGPORT}:5432
     environment:
       POSTGRES_DB: "rating-tracker-test"
       POSTGRES_USER: "rating-tracker-test"
