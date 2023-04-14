@@ -14,8 +14,8 @@ node {
         stage('Clone repository') {
             checkout scm
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
-            PGPORT = sh (script: "seq 49152 65535 | shuf | head -n 1", returnStdout: true)
-            REDISPORT = sh (script: "seq 49152 65535 | shuf | head -n 1", returnStdout: true)
+            PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
+            REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
             sh "sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/rating-tracker-backend/test/.env"
         }
