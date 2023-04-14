@@ -24,7 +24,7 @@ node {
             testenv: {
                 stage('Start test environment') {
                     sh """
-                    docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/rating-tracker-backend/test/docker-compose.yml up --force-recreate -V -d
+                    PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/rating-tracker-backend/test/docker-compose.yml up --force-recreate -V -d
                     """
                 }
             },
@@ -95,7 +95,7 @@ node {
 
         stage ('Cleanup') {
             sh """
-            docker compose -f packages/rating-tracker-backend/test/docker-compose.yml down -t 0
+            docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/rating-tracker-backend/test/docker-compose.yml down -t 0
             docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true
