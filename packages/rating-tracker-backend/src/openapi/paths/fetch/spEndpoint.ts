@@ -23,6 +23,7 @@ const post: OpenAPIV3.OperationObject = {
     fetch.detach,
     fetch.noSkip,
     fetch.clear,
+    fetch.concurrency,
   ],
   responses: {
     "200": okStockList,
