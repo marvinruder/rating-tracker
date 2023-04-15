@@ -6207,14 +6207,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["glob", [\
-        ["npm:10.0.0", {\
-          "packageLocation": "./.yarn/cache/glob-npm-10.0.0-2ee461f777-3852a6b847.zip/node_modules/glob/",\
+        ["npm:10.1.0", {\
+          "packageLocation": "./.yarn/cache/glob-npm-10.1.0-674e64b133-93021661bf.zip/node_modules/glob/",\
           "packageDependencies": [\
-            ["glob", "npm:10.0.0"],\
+            ["glob", "npm:10.1.0"],\
             ["fs.realpath", "npm:1.0.0"],\
             ["minimatch", "npm:9.0.0"],\
             ["minipass", "npm:5.0.0"],\
-            ["path-scurry", "npm:1.6.4"]\
+            ["path-scurry", "npm:1.7.0"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -8502,10 +8502,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["path-scurry", [\
-        ["npm:1.6.4", {\
-          "packageLocation": "./.yarn/cache/path-scurry-npm-1.6.4-6d612a3f34-bd5262b51d.zip/node_modules/path-scurry/",\
+        ["npm:1.7.0", {\
+          "packageLocation": "./.yarn/cache/path-scurry-npm-1.7.0-e40ac7023f-4e86df0fa6.zip/node_modules/path-scurry/",\
           "packageDependencies": [\
-            ["path-scurry", "npm:1.6.4"],\
+            ["path-scurry", "npm:1.7.0"],\
             ["lru-cache", "npm:9.0.0"],\
             ["minipass", "npm:5.0.0"]\
           ],\
@@ -9034,7 +9034,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-async-errors", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:3.1.1"],\
             ["express-openapi-validator", "npm:5.0.3"],\
             ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.7.0"],\
-            ["glob", "npm:10.0.0"],\
+            ["glob", "npm:10.1.0"],\
             ["pino", "npm:8.11.0"],\
             ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.7"],\
