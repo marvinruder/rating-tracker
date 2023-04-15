@@ -39,4 +39,17 @@ const clear: OpenAPIV3.ParameterObject = {
   },
 };
 
-export { detach, noSkip, clear };
+/**
+ * How many WebDrivers to use in parallel
+ */
+const concurrency: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "concurrency",
+  description: "How many WebDrivers to use in parallel",
+  schema: {
+    type: "integer",
+    example: "2",
+  },
+};
+
+export { detach, noSkip, clear, concurrency };

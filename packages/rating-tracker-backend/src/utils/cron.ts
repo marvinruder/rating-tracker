@@ -22,25 +22,6 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
   new cron.CronJob(
     autoFetchSchedule,
     async () => {
-      // Fetch data from MSCI, Refinitiv, S&P and Sustainalytics in parallel and detach the processes
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMSCIEndpointPath}`, undefined, {
-        params: { detach: "true" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchRefinitivEndpointPath}`, undefined, {
-        params: { detach: "true" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchSPEndpointPath}`, undefined, {
-        params: { detach: "true" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
       await axios.post(`http://localhost:${process.env.PORT}/api${fetchSustainalyticsEndpointPath}`, undefined, {
         params: { detach: "true" },
         headers: {
@@ -49,7 +30,7 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
       });
       // Fetch data from Morningstar first
       await axios.post(`http://localhost:${process.env.PORT}/api${fetchMorningstarEndpointPath}`, undefined, {
-        params: { detach: "false" },
+        params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },
@@ -57,7 +38,26 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
       // Fetch data from Marketscreener after Morningstar, so Market Screener can use the up-to-date Last Close price to
       // calculate the analyst target price properly
       await axios.post(`http://localhost:${process.env.PORT}/api${fetchMarketScreenerEndpointPath}`, undefined, {
-        params: { detach: "true" },
+        params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+        headers: {
+          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+        },
+      });
+      await axios.post(`http://localhost:${process.env.PORT}/api${fetchRefinitivEndpointPath}`, undefined, {
+        params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+        headers: {
+          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+        },
+      });
+      await axios.post(`http://localhost:${process.env.PORT}/api${fetchSPEndpointPath}`, undefined, {
+        params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+        headers: {
+          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+        },
+      });
+      // Fetch data from MSCI with only two WebDrivers to avoid being banned
+      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMSCIEndpointPath}`, undefined, {
+        params: { detach: "false", concurrency: 2 },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },

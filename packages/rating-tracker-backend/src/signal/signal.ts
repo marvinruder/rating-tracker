@@ -2,6 +2,9 @@ import { MessageType, REGEX_PHONE_NUMBER } from "rating-tracker-commons";
 import { readAllUsers } from "../db/tables/userTable.js";
 import { send } from "./signalBase.js";
 
+export const SIGNAL_PREFIX_ERROR = "⚠️ " as const;
+export const SIGNAL_PREFIX_INFO = "ℹ️ " as const;
+
 /**
  * Send a message to all users subscribed to the given message type.
  *

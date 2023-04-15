@@ -10,7 +10,6 @@ services:
     security_opt:
       - no-new-privileges
     ports:
-      - "80:80"
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -54,11 +53,10 @@ services:
     shm_size: '256mb'
 
   selenium:
-    image: seleniarm/standalone-chromium:latest
+    image: seleniarm/standalone-chromium
     restart: unless-stopped
     environment:
-      - SE_NODE_MAX_SESSIONS=4
-      # - START_XVFB=false
+      - SE_NODE_MAX_SESSIONS=2
     cap_drop:
       - all
     security_opt:
