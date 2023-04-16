@@ -8,7 +8,7 @@ WORKDIR /workdir
 COPY . .
 
 # Build and create local production caches while using global mirror
-RUN --mount=type=cache,target=/tmp/global,ro \
+RUN \
   yarn build && \
   yarn config set enableGlobalCache false && \
   yarn cache clean && \

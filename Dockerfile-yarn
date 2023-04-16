@@ -3,17 +3,20 @@ ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
+# Copy files required for installing dependencies
 COPY .yarn ./.yarn
 COPY package.json .yarnrc.yml yarn.lock ./
 COPY packages/rating-tracker-backend/package.json ./packages/rating-tracker-backend/
 COPY packages/rating-tracker-commons/package.json ./packages/rating-tracker-commons/
 COPY packages/rating-tracker-frontend/package.json ./packages/rating-tracker-frontend/
 
-RUN --mount=type=cache,target=/tmp/global \
-  ls -la && \
-  yarn --immutable
-COPY . .
-RUN --mount=type=cache,target=/tmp/global \
-  yarn workspace rating-tracker-backend test:prisma:migrate:init
+# Install dependencies
+RUN yarn --immutable
+
+# Copy files required for Prisma
+COPY packages/rating-tracker-backend/prisma ./packages/rating-tracker-backend/prisma
+
+# Initialize Prisma for tests and generate client
+RUN yarn workspace rating-tracker-backend test:prisma:migrate:init
 
 ENTRYPOINT [ "/bin/sh" ]
