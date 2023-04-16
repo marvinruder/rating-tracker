@@ -36,6 +36,8 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
         .setBrowserName("chrome")
         // Do not wait for all resources to load. This speeds up the page load.
         .setPageLoadStrategy(pageLoadStrategy ?? "none")
+        // Silently dismiss all unexpected prompts
+        .setAlertBehavior("dismiss")
     )
     .setChromeOptions(options)
     .build()

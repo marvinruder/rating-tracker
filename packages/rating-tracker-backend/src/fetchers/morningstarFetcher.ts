@@ -77,17 +77,14 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
     let description: string = req.query.clear ? null : undefined;
 
     try {
-      await driver.get(
+      const url =
         `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarID}` +
-          `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`
-      );
+        `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`;
+      await driver.get(url);
+      await driver.wait(until.urlIs(url)); // Wait until URL is present and previous content is removed.
       await driver.wait(
-        until.elementLocated(By.id("IntradayPriceSummary")),
-        20000 // Wait for most of the page to load for a maximum of 20 seconds.
-      );
-      await driver.wait(
-        until.elementLocated(By.id("CompanyProfile")),
-        10000 // Wait for the element to load for a maximum of 10 seconds.
+        until.elementLocated(By.css("#SnapshotBodyContent:has(#IntradayPriceSummary):has(#CompanyProfile)")),
+        30000 // Wait for the page to load for a maximum of 30 seconds.
       );
 
       // Prepare an error message header containing the stock name and ticker.

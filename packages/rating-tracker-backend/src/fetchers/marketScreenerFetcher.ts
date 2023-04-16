@@ -59,7 +59,9 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
     let analystTargetPrice: number = req.query.clear ? null : undefined;
 
     try {
-      await driver.get(`https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/`);
+      const url = `https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/`;
+      await driver.get(url);
+      await driver.wait(until.urlIs(url)); // Wait until URL is present and previous content is removed.
       // Wait for most of the page to load for a maximum of 20 seconds.
       await driver.wait(until.elementLocated(By.id("zbCenter")), 20000);
 

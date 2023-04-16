@@ -51,9 +51,11 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
     let spESGScore: number = req.query.clear ? null : undefined;
 
     try {
-      await driver.get(`https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`);
+      const url = `https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`;
+      await driver.get(url);
+      await driver.wait(until.urlIs(url)); // Wait until URL is present and previous content is removed.
       // Wait for the page to load for a maximum of 10 seconds.
-      await driver.wait(until.elementLocated(By.css("div.panel-set__first-column:has(h1#company-name)")), 10000);
+      await driver.wait(until.elementLocated(By.css("div.panel-set__first-column:has(h1#company-name)")), 15000);
 
       const lockedContent = await driver.findElements(By.className("lock__content"));
       if (

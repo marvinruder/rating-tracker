@@ -23,7 +23,7 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
     autoFetchSchedule,
     async () => {
       await axios.post(`http://localhost:${process.env.PORT}/api${fetchSustainalyticsEndpointPath}`, undefined, {
-        params: { detach: "true" },
+        params: { detach: "false" },
         headers: {
           Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
         },

@@ -53,9 +53,10 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
 
     try {
       await driver.manage().deleteAllCookies(); // Delete all cookies since MSCI allows only 4 requests per session.
-      await driver.get(
-        `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${stock.msciID}`
-      );
+      const url =
+        "https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/" + stock.msciID;
+      await driver.get(url);
+      await driver.wait(until.urlIs(url)); // Wait until URL is present and previous content is removed.
       await driver.wait(
         until.elementsLocated(By.className("esg-expandable")),
         15000 // Wait for the page to load for a maximum of 15 seconds.
