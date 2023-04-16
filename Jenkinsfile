@@ -31,17 +31,17 @@ node {
 
             dep: {
                 stage ('Install dependencies') {
-                    sh "mkdir -p /tmp/global && cp -rn /tmp/global ./global"
+                    sh "mkdir -p /tmp/global && cp -rn /tmp/global ."
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f Dockerfile-yarn .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
                     docker cp \$id:/workdir/.yarn/. ./.yarn
-                    docker cp \$id:/tmp/global/. ./global
+                    docker cp \$id:/workdir/global/. ./global
                     docker cp \$id:/workdir/.pnp.cjs .
                     docker cp \$id:/workdir/packages/rating-tracker-backend/prisma/client/. ./packages/rating-tracker-backend/prisma/client
                     docker rm -v \$id
                     """
-                    sh "cp -rn ./global /tmp/global"
+                    sh "cp -rn ./global /tmp"
                 }
             }
         )
