@@ -31,7 +31,7 @@ node {
 
             dep: {
                 stage ('Install dependencies') {
-                    sh "cp -rn /tmp/global ./global"
+                    sh "mkdir -p /tmp/global && cp -rn /tmp/global ./global"
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f Dockerfile-yarn .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
