@@ -4,7 +4,7 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 COPY . .
-RUN --mount=type=cache,target=/tmp/global \
+RUN --mount=type=cache,target=/tmp/global,id=rating-tracker-yarn-global \
   yarn --immutable && \
   yarn workspace rating-tracker-backend test:prisma:migrate:init
 
