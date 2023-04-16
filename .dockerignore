@@ -7,3 +7,4 @@
 !.yarn/versions
 !.yarn/unplugged
 !.yarn/install-state.gz
+.git
