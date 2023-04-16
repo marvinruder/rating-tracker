@@ -15,7 +15,7 @@ RUN yarn --immutable
 
 # Copy files required for Prisma
 COPY packages/rating-tracker-backend/prisma ./packages/rating-tracker-backend/prisma
-COPY packages/rating-tracker-backend/test/.env ./packages/rating-tracker-backend/test
+COPY packages/rating-tracker-backend/test/.env ./packages/rating-tracker-backend/test/
 
 # Initialize Prisma for tests and generate client
 RUN yarn workspace rating-tracker-backend test:prisma:migrate:init
