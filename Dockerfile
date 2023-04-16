@@ -20,7 +20,8 @@ RUN mkdir -p /workdir/app/packages/rating-tracker-backend/public /workdir/app/pa
   cp -r /workdir/.yarn/cache /workdir/.yarn/unplugged /workdir/app/.yarn && \
   cp -r /workdir/packages/rating-tracker-backend/dist /workdir/packages/rating-tracker-backend/package.json /workdir/app/packages/rating-tracker-backend && \
   cp -r /workdir/packages/rating-tracker-commons/dist /workdir/packages/rating-tracker-commons/package.json /workdir/app/packages/rating-tracker-commons && \
-  cp -r /workdir/packages/rating-tracker-frontend/dist/* /workdir/app/packages/rating-tracker-backend/public
+  cp -r /workdir/packages/rating-tracker-frontend/dist/* /workdir/app/packages/rating-tracker-backend/public && \
+  find /workdir/app -name '*.d.ts' -type f -delete
 
 FROM node:19.9.0-alpine as run
 ENV NODE_ENV production
