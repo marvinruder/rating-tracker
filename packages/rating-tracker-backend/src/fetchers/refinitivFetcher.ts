@@ -54,7 +54,9 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) =
     try {
       // Delete all cookies since Refinitiv allows only 100 requests per session.
       await driver.manage().deleteAllCookies();
-      await driver.get(`https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`);
+      const url = `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`;
+      await driver.get(url);
+      await driver.wait(until.urlIs(url)); // Wait until URL is present and previous content is removed.
       // Wait for the page to load for a maximum of 5 seconds.
       await driver.wait(until.elementLocated(By.css("pre")), 5000);
 
