@@ -5,9 +5,9 @@ WORKDIR /workdir
 
 COPY .yarn ./.yarn
 COPY package.json .yarnrc.yml yarn.lock ./
-COPY packages/rating-tracker-backend/package.json ./packages/rating-tracker-backend
-COPY packages/rating-tracker-commons/package.json ./packages/rating-tracker-commons
-COPY packages/rating-tracker-frontend/package.json ./packages/rating-tracker-frontend
+COPY packages/rating-tracker-backend/package.json ./packages/rating-tracker-backend/
+COPY packages/rating-tracker-commons/package.json ./packages/rating-tracker-commons/
+COPY packages/rating-tracker-frontend/package.json ./packages/rating-tracker-frontend/
 
 RUN --mount=type=cache,target=/tmp/global \
   ls -la && \
