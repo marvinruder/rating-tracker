@@ -9,7 +9,7 @@ WORKDIR /workdir
 
 COPY . .
 
-RUN --mount=type=cache,target=/tmp/global,id=rating-tracker-yarn-global,ro \
+RUN --mount=type=cache,target=/tmp/global,ro \
   yarn workspace rating-tracker-commons build && \
   yarn test
 
