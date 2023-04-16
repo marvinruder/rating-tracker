@@ -50,13 +50,13 @@ node {
 
             test: {
                 stage ('Run Tests') {
-                    docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
+                    docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .", "--no-cache")
                 }
             },
 
             build: {
                 stage ('Build Docker Image') {
-                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH")
+                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "--no-cache")
                 }
             }
 
