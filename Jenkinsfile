@@ -35,7 +35,6 @@ node {
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
                     docker cp \$id:/workdir/.yarn/. ./.yarn
-                    docker cp \$id:/workdir/global .
                     docker cp \$id:/workdir/.pnp.cjs .
                     docker cp \$id:/workdir/packages/rating-tracker-backend/prisma/client/. ./packages/rating-tracker-backend/prisma/client
                     docker rm -v \$id
