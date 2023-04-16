@@ -8,5 +8,5 @@
 !.yarn/unplugged
 !.yarn/install-state.gz
 packages/**/*.d.ts*
-packages/**/*.d.ts.map
+!packages/rating-tracker-backend/prisma/*.d.ts*
 packages/**/*.tsbuildinfo
