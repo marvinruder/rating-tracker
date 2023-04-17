@@ -1,12 +1,13 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 /* istanbul ignore file -- @preserve */
-import { Builder, Capabilities, WebDriver } from "selenium-webdriver";
+import { Builder, Capabilities, WebDriver, until } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome.js";
 import APIError from "./apiError.js";
 import logger, { PREFIX_SELENIUM } from "./logger.js";
 import chalk from "chalk";
 import { Stock } from "rating-tracker-commons";
 import { createResource } from "../redis/repositories/resourceRepository.js";
+import axios from "axios";
 
 /**
  * A page load strategy to use by the WebDriver.
@@ -48,17 +49,46 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
 };
 
 /**
- * Shuts down the given WebDriver instance gracefully, deallocating all associated resources.
+ * Let the WebDriver open a URL and wait until the URL is present and previous content is removed.
  *
  * @param {WebDriver} driver the WebDriver instance to shut down
+ * @param {string } url the URL to open
+ * @returns {Promise<boolean>} a Promise resolving to the boolean success of the operation
+ */
+export const openPageAndWait = async (driver: WebDriver, url: string): Promise<boolean> => {
+  try {
+    await driver.get(url);
+    await driver.wait(until.urlIs(url), 5000);
+    return true;
+  } catch (e) {
+    logger.error(PREFIX_SELENIUM + chalk.redBright(`Unable to open page ${url} (driver may be unhealthy): ${e}`));
+    return false;
+  }
+};
+
+/**
+ * Shuts down the given WebDriver instance gracefully, deallocating all associated resources.
+ * If a graceful shutdown fails, a DELETE request is sent to Selenium requesting to terminate the stale session
+ * forcefully.
+ *
+ * @param {WebDriver} driver the WebDriver instance to shut down
+ * @param {string} sessionID the ID of the WebDriver session
  * @returns {Promise<void>} a Promise that resolves when the WebDriver has been shut down
  * @throws an {@link APIError} if the WebDriver cannot be shut down gracefully
  */
-export const quitDriver = async (driver: WebDriver): Promise<void> => {
+export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise<void> => {
   try {
     await driver.quit();
   } catch (e) {
-    logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to shut down Selenium WebDriver gracefully: ${e}`));
+    logger.error(PREFIX_SELENIUM + chalk.redBright(`Unable to shut down Selenium WebDriver gracefully: ${e}`));
+    if (sessionID) {
+      logger.info(PREFIX_SELENIUM + `Attempting forceful shutdown of stale session ${sessionID}.`);
+      axios.delete(`${process.env.SELENIUM_URL}/session/${sessionID}`).catch((e) => {
+        logger.error(
+          PREFIX_SELENIUM + chalk.redBright(`An error occurred while forcefully terminating session ${sessionID}: ${e}`)
+        );
+      });
+    }
   }
 };
 

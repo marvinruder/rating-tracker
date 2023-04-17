@@ -2,7 +2,7 @@
 /* istanbul ignore file -- @preserve */
 import { Request } from "express";
 import { FetcherWorkspace } from "../controllers/FetchController.js";
-import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver.js";
+import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver.js";
 import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
 import { formatDistance } from "date-fns";
 import { MSCIESGRating, Stock, isMSCIESGRating } from "rating-tracker-commons";
@@ -21,9 +21,11 @@ import APIError from "../utils/apiError.js";
  * with errors)
  * @throws an {@link APIError} in case of a severe error
  */
-const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
+const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise<void> => {
   // Acquire a new session
-  const driver = await getDriver(true);
+  const driver = await getDriver(false, "eager");
+  const sessionID = (await driver.getSession()).getId();
+
   // Work while stocks are in the queue
   while (stocks.queued.length) {
     // Get the first stock in the queue
@@ -46,6 +48,7 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
             { addSuffix: true }
           )}`
       );
+      stocks.skipped.push(stock);
       continue;
     }
     let msciESGRating: MSCIESGRating = req.query.clear ? null : undefined;
@@ -55,8 +58,13 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
       await driver.manage().deleteAllCookies(); // Delete all cookies since MSCI allows only 4 requests per session.
       const url =
         "https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/" + stock.msciID;
-      await driver.get(url);
-      await driver.wait(until.urlIs(url)); // Wait until URL is present and previous content is removed.
+      const driverHealthy = await openPageAndWait(driver, url);
+      // When we were unable to open the page, we assume the driver is unhealthy and end.
+      if (!driverHealthy) {
+        // Have another driver attempt the fetch of the current stock
+        stocks.queued.push(stock);
+        break;
+      }
       await driver.wait(
         until.elementsLocated(By.className("esg-expandable")),
         15000 // Wait for the page to load for a maximum of 15 seconds.
@@ -145,7 +153,7 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
       stocks.failed.push(stock);
       if (req.query.ticker) {
         // If this request was for a single stock, we shut down the driver and throw an error.
-        await quitDriver(driver);
+        await quitDriver(driver, sessionID);
         throw new APIError(
           502,
           `Stock ${stock.ticker}: Unable to fetch MSCI information: ${String(e.message).split(/[\n:{]/)[0]}`
@@ -177,13 +185,15 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
             `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
           "fetchError"
         );
+        const skippedStocks = [...stocks.queued];
         stocks.queued.length = 0;
+        skippedStocks.forEach((skippedStock) => stocks.skipped.push(skippedStock));
       }
       break;
     }
   }
   // The queue is now empty, we end the session.
-  await quitDriver(driver);
+  await quitDriver(driver, sessionID);
 };
 
 export default msciFetcher;

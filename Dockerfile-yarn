@@ -4,8 +4,8 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 # Copy files required for installing dependencies
-COPY .yarn ./.yarn
 COPY global ./global
+COPY .yarn ./.yarn
 COPY package.json .yarnrc.yml yarn.lock ./
 COPY packages/rating-tracker-backend/package.json ./packages/rating-tracker-backend/
 COPY packages/rating-tracker-commons/package.json ./packages/rating-tracker-commons/
