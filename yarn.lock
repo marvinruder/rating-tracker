@@ -4929,9 +4929,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"happy-dom@npm:*, happy-dom@npm:9.8.0":
-  version: 9.8.0
-  resolution: "happy-dom@npm:9.8.0"
+"happy-dom@npm:*, happy-dom@npm:9.8.1":
+  version: 9.8.1
+  resolution: "happy-dom@npm:9.8.1"
   dependencies:
     css.escape: ^1.5.1
     he: ^1.2.0
@@ -4939,7 +4939,7 @@ __metadata:
     webidl-conversions: ^7.0.0
     whatwg-encoding: ^2.0.0
     whatwg-mimetype: ^3.0.0
-  checksum: 6766cd53bf1b42c4e4ed7d9bdfb2d148cd928e74ecd3e74999c5203d2ebca6104677fcea24e46b2e68075f889c57de51e56e9947109d93f9d0493a211267ee32
+  checksum: 62ffc7ca0bbdccb825baf223e375dafee00dcd854e5a7a3ac04a438eaecb51ccff65cdb0baa5869b37758e5a0e815c2603cb49752455af9a36c1fd4aaabcc059
   languageName: node
   linkType: hard
 
@@ -7303,7 +7303,7 @@ __metadata:
     eslint-plugin-jsdoc: 41.1.2
     eslint-plugin-prettier: 4.2.1
     eslint-plugin-react: 7.32.2
-    happy-dom: 9.8.0
+    happy-dom: 9.8.1
     jimp: 0.22.7
     nprogress: 0.2.0
     numeral: 2.0.6

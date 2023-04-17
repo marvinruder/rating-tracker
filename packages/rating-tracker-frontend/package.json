@@ -71,7 +71,7 @@
     "eslint-plugin-jsdoc": "41.1.2",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-react": "7.32.2",
-    "happy-dom": "9.8.0",
+    "happy-dom": "9.8.1",
     "prettier": "2.8.7",
     "typescript": "5.0.4",
     "vitest": "0.30.1"
