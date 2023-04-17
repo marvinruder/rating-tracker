@@ -2,7 +2,7 @@
 /* istanbul ignore file -- @preserve */
 import { Request } from "express";
 import { FetcherWorkspace } from "../controllers/FetchController.js";
-import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver.js";
+import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver.js";
 import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
 import { formatDistance } from "date-fns";
 import { Stock } from "rating-tracker-commons";
@@ -21,9 +21,11 @@ import APIError from "../utils/apiError.js";
  * with errors)
  * @throws an {@link APIError} in case of a severe error
  */
-const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
+const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise<void> => {
   // Acquire a new session
   const driver = await getDriver(true);
+  const sessionID = (await driver.getSession()).getId();
+
   // Work while stocks are in the queue
   while (stocks.queued.length) {
     // Get the first stock in the queue
@@ -46,14 +48,20 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
             { addSuffix: true }
           )}`
       );
+      stocks.skipped.push(stock);
       continue;
     }
     let spESGScore: number = req.query.clear ? null : undefined;
 
     try {
       const url = `https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`;
-      await driver.get(url);
-      await driver.wait(until.urlIs(url)); // Wait until URL is present and previous content is removed.
+      const driverHealthy = await openPageAndWait(driver, url);
+      // When we were unable to open the page, we assume the driver is unhealthy and end.
+      if (!driverHealthy) {
+        // Have another driver attempt the fetch of the current stock
+        stocks.queued.push(stock);
+        break;
+      }
       // Wait for the page to load for a maximum of 10 seconds.
       await driver.wait(until.elementLocated(By.css("div.panel-set__first-column:has(h1#company-name)")), 15000);
 
@@ -80,7 +88,7 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
     } catch (e) {
       if (req.query.ticker) {
         // If this request was for a single stock, we shut down the driver and throw an error.
-        await quitDriver(driver);
+        await quitDriver(driver, sessionID);
         throw new APIError(
           502,
           `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`
@@ -126,13 +134,15 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
             `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
           "fetchError"
         );
+        const skippedStocks = [...stocks.queued];
         stocks.queued.length = 0;
+        skippedStocks.forEach((skippedStock) => stocks.skipped.push(skippedStock));
       }
       break;
     }
   }
   // The queue is now empty, we end the session.
-  await quitDriver(driver);
+  await quitDriver(driver, sessionID);
 };
 
 export default spFetcher;

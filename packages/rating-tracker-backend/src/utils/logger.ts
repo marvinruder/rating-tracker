@@ -11,6 +11,7 @@ import { stockLogoEndpointPath } from "rating-tracker-commons";
 
 dotenv.config();
 
+export const PREFIX_CRON = chalk.whiteBright.bgGrey(" \ufba7 ") + chalk.grey(" ");
 export const PREFIX_NODEJS = chalk.whiteBright.bgHex("#339933")(" \uf898 ") + chalk.hex("#339933")(" ");
 export const PREFIX_REDIS = chalk.whiteBright.bgHex("#D82C20")(" \ue76d ") + chalk.hex("#D82C20")(" ");
 export const PREFIX_POSTGRES = chalk.whiteBright.bgHex("#336791")(" \ue76e ") + chalk.hex("#336791")(" ");
@@ -18,7 +19,7 @@ export const PREFIX_SELENIUM = chalk.whiteBright.bgHex("#43B02A")(" \ufc0d ") + 
 export const PREFIX_SIGNAL = chalk.whiteBright.bgHex("#4975E8")(" \uf868 ") + chalk.hex("#4975E8")(" ");
 
 const levelIcons = {
-  10: chalk.gray(" \uf002 "),
+  10: chalk.grey(" \uf002 "),
   20: chalk.blue(" \uf188 "),
   30: chalk.cyanBright(" \uf7fc "),
   40: chalk.yellowBright(" \uf071 "),

@@ -102,6 +102,7 @@ node {
             docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true
             docker image prune --filter label=stage=build -f
+            docker builder prune -f --keep-storage 1G
             rm -r global
             """
         }

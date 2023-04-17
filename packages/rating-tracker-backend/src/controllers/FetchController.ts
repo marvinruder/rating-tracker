@@ -39,6 +39,7 @@ const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyrating
  */
 export type FetcherWorkspace<T> = {
   queued: T[];
+  skipped: T[];
   successful: T[];
   failed: T[];
 };
@@ -127,11 +128,18 @@ export class FetchController {
 
     const stocks: FetcherWorkspace<Stock> = {
       queued: [...stockList],
+      skipped: [],
       successful: [],
       failed: [],
     };
 
+    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from Morningstar.`);
     await Promise.all([...Array(determineConcurrency(req))].map(() => morningstarFetcher(req, stocks)));
+    logger.info(PREFIX_SELENIUM + `Done fetching stocks from Morningstar.`);
+    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
+    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
+    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
+    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
     if (stocks.successful.length === 0) {
       res.status(204).end();
@@ -192,11 +200,18 @@ export class FetchController {
 
     const stocks: FetcherWorkspace<Stock> = {
       queued: [...stockList],
+      skipped: [],
       successful: [],
       failed: [],
     };
 
+    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from MarketScreener.`);
     await Promise.all([...Array(determineConcurrency(req))].map(() => marketScreenerFetcher(req, stocks)));
+    logger.info(PREFIX_SELENIUM + `Done fetching stocks from MarketScreener.`);
+    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
+    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
+    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
+    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
     if (stocks.successful.length === 0) {
       res.status(204).end();
@@ -257,11 +272,18 @@ export class FetchController {
 
     const stocks: FetcherWorkspace<Stock> = {
       queued: [...stockList],
+      skipped: [],
       successful: [],
       failed: [],
     };
 
+    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from MSCI.`);
     await Promise.all([...Array(determineConcurrency(req))].map(() => msciFetcher(req, stocks)));
+    logger.info(PREFIX_SELENIUM + `Done fetching stocks from MSCI.`);
+    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
+    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
+    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
+    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
     if (stocks.successful.length === 0) {
       res.status(204).end();
@@ -322,11 +344,18 @@ export class FetchController {
 
     const stocks: FetcherWorkspace<Stock> = {
       queued: [...stockList],
+      skipped: [],
       successful: [],
       failed: [],
     };
 
+    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from Refinitiv.`);
     await Promise.all([...Array(determineConcurrency(req))].map(() => refinitivFetcher(req, stocks)));
+    logger.info(PREFIX_SELENIUM + `Done fetching stocks from Refinitiv.`);
+    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
+    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
+    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
+    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
     if (stocks.successful.length === 0) {
       res.status(204).end();
@@ -387,11 +416,18 @@ export class FetchController {
 
     const stocks: FetcherWorkspace<Stock> = {
       queued: [...stockList],
+      skipped: [],
       successful: [],
       failed: [],
     };
 
+    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from S&P.`);
     await Promise.all([...Array(determineConcurrency(req))].map(() => spFetcher(req, stocks)));
+    logger.info(PREFIX_SELENIUM + `Done fetching stocks from S&P.`);
+    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
+    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
+    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
+    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
     if (stocks.successful.length === 0) {
       res.status(204).end();
@@ -569,17 +605,17 @@ export class FetchController {
         }
       }
       if (errorCount >= 10) {
-        // If we have 10 errors, we stop fetching data, since something is probably wrong.
+        // If we have 10 errors, we stop extracting data, since something is probably wrong.
         logger.error(
           PREFIX_SELENIUM +
             chalk.redBright(
-              `Aborting extracting information from Sustainalytics after ${successfulCount} successful fetches ` +
+              `Aborting extracting information from Sustainalytics after ${successfulCount} successful extractions ` +
                 `and ${errorCount} failures. Will continue next time.`
             )
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
-            `Aborting extracting information from Sustainalytics after ${successfulCount} successful fetches ` +
+            `Aborting extracting information from Sustainalytics after ${successfulCount} successful extractions ` +
             `and ${errorCount} failures. Will continue next time.`,
           "fetchError"
         );

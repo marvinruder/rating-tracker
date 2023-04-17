@@ -10,7 +10,7 @@ import {
   fetchSustainalyticsEndpointPath,
 } from "rating-tracker-commons";
 import chalk from "chalk";
-import logger from "./logger.js";
+import logger, { PREFIX_CRON } from "./logger.js";
 
 /**
  * Creates Cron jobs for regular fetching from data providers.
@@ -22,46 +22,66 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
   new cron.CronJob(
     autoFetchSchedule,
     async () => {
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchSustainalyticsEndpointPath}`, undefined, {
-        params: { detach: "false" },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
+      // Fetch data from MSCI with only two WebDrivers to avoid being banned
+      await axios
+        .post(`http://localhost:${process.env.PORT}/api${fetchMSCIEndpointPath}`, undefined, {
+          params: { detach: "false", concurrency: 2 },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        })
+        .catch((e) => logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the MSCI Cron Job: ${e}`)));
+      await axios
+        .post(`http://localhost:${process.env.PORT}/api${fetchRefinitivEndpointPath}`, undefined, {
+          params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        })
+        .catch((e) =>
+          logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the Refinitiv Cron Job: ${e}`))
+        );
+      await axios
+        .post(`http://localhost:${process.env.PORT}/api${fetchSPEndpointPath}`, undefined, {
+          params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        })
+        .catch((e) => logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the S&P Cron Job: ${e}`)));
+      await axios
+        .post(`http://localhost:${process.env.PORT}/api${fetchSustainalyticsEndpointPath}`, undefined, {
+          params: { detach: "false" },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        })
+        .catch((e) =>
+          logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the Sustainalytics Cron Job: ${e}`))
+        );
       // Fetch data from Morningstar first
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMorningstarEndpointPath}`, undefined, {
-        params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
+      await axios
+        .post(`http://localhost:${process.env.PORT}/api${fetchMorningstarEndpointPath}`, undefined, {
+          params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        })
+        .catch((e) =>
+          logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the Morningstar Cron Job: ${e}`))
+        );
       // Fetch data from Marketscreener after Morningstar, so Market Screener can use the up-to-date Last Close price to
       // calculate the analyst target price properly
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMarketScreenerEndpointPath}`, undefined, {
-        params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchRefinitivEndpointPath}`, undefined, {
-        params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchSPEndpointPath}`, undefined, {
-        params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
-      // Fetch data from MSCI with only two WebDrivers to avoid being banned
-      await axios.post(`http://localhost:${process.env.PORT}/api${fetchMSCIEndpointPath}`, undefined, {
-        params: { detach: "false", concurrency: 2 },
-        headers: {
-          Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-        },
-      });
+      await axios
+        .post(`http://localhost:${process.env.PORT}/api${fetchMarketScreenerEndpointPath}`, undefined, {
+          params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        })
+        .catch((e) =>
+          logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the MarketScreener Cron Job: ${e}`))
+        );
     },
     null,
     true

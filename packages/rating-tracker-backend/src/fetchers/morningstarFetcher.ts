@@ -2,7 +2,7 @@
 /* istanbul ignore file -- @preserve */
 import { Request } from "express";
 import { FetcherWorkspace } from "../controllers/FetchController.js";
-import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver.js";
+import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver.js";
 import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
 import { formatDistance } from "date-fns";
 import {
@@ -35,9 +35,11 @@ const XPATH_DESCRIPTION = "//*/div[@id='CompanyProfile']/div[1][not(.//h3)]" as 
  * with errors)
  * @throws an {@link APIError} in case of a severe error
  */
-const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>) => {
+const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise<void> => {
   // Acquire a new session
   const driver = await getDriver(true);
+  const sessionID = (await driver.getSession()).getId();
+
   // Work while stocks are in the queue
   while (stocks.queued.length) {
     // Get the first stock in the queue
@@ -60,6 +62,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             { addSuffix: true }
           )}`
       );
+      stocks.skipped.push(stock);
       continue;
     }
     let industry: Industry = req.query.clear ? null : undefined;
@@ -80,8 +83,13 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
       const url =
         `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarID}` +
         `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`;
-      await driver.get(url);
-      await driver.wait(until.urlIs(url)); // Wait until URL is present and previous content is removed.
+      const driverHealthy = await openPageAndWait(driver, url);
+      // When we were unable to open the page, we assume the driver is unhealthy and end.
+      if (!driverHealthy) {
+        // Have another driver attempt the fetch of the current stock
+        stocks.queued.push(stock);
+        break;
+      }
       await driver.wait(
         until.elementLocated(By.css("#SnapshotBodyContent:has(#IntradayPriceSummary):has(#CompanyProfile)")),
         30000 // Wait for the page to load for a maximum of 30 seconds.
@@ -441,7 +449,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
       stocks.failed.push(stock);
       if (req.query.ticker) {
         // If the request was for a single stock, we shut down the driver and throw an error.
-        await quitDriver(driver);
+        await quitDriver(driver, sessionID);
         throw new APIError(
           502,
           `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${String(e.message).split(/[\n:{]/)[0]}`
@@ -473,13 +481,15 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
           "fetchError"
         );
+        const skippedStocks = [...stocks.queued];
         stocks.queued.length = 0;
+        skippedStocks.forEach((skippedStock) => stocks.skipped.push(skippedStock));
       }
       break;
     }
   }
   // The queue is now empty, we end the session.
-  await quitDriver(driver);
+  await quitDriver(driver, sessionID);
 };
 
 export default morningstarFetcher;
