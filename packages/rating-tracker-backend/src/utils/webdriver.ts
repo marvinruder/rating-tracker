@@ -22,6 +22,8 @@ type PageLoadStrategy = "normal" | "eager" | "none";
  * @throws an {@link APIError} if the WebDriver cannot be created
  */
 export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadStrategy): Promise<WebDriver> => {
+  // Wait up to 1 second randomly to avoid a not yet identified bottleneck
+  await new Promise<void>((resolve) => setTimeout(() => resolve(), Math.random() * 1000));
   const url = process.env.SELENIUM_URL;
   const options = new chrome.Options()
     .addArguments("window-size=1080x3840") // convenient for screenshots

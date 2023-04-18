@@ -132,14 +132,25 @@ export class FetchController {
     };
 
     logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from Morningstar.`);
-    await Promise.all([...Array(determineConcurrency(req))].map(() => morningstarFetcher(req, stocks)));
+    const results = await Promise.allSettled(
+      [...Array(determineConcurrency(req))].map(() => morningstarFetcher(req, stocks))
+    );
     logger.info(PREFIX_SELENIUM + `Done fetching stocks from Morningstar.`);
     stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
     stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
     stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
     stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
-    if (stocks.successful.length === 0) {
+    // If stocks are still queued, something went wrong and we send an error response.
+    if (stocks.queued.length) {
+      // If fetchers threw an error, we rethrow the first one
+      const firstRejection: PromiseRejectedResult | undefined = results
+        .filter((result) => result.status === "rejected")
+        .pop() as PromiseRejectedResult;
+      throw firstRejection?.reason ?? new APIError(500, "An unknown error occurred while fetching from Morningstar.");
+    }
+
+    if (!stocks.successful.length) {
       res.status(204).end();
     } else {
       res.status(200).json(stocks.successful).end();
@@ -203,14 +214,27 @@ export class FetchController {
     };
 
     logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from MarketScreener.`);
-    await Promise.all([...Array(determineConcurrency(req))].map(() => marketScreenerFetcher(req, stocks)));
+    const results = await Promise.allSettled(
+      [...Array(determineConcurrency(req))].map(() => marketScreenerFetcher(req, stocks))
+    );
     logger.info(PREFIX_SELENIUM + `Done fetching stocks from MarketScreener.`);
     stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
     stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
     stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
     stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
-    if (stocks.successful.length === 0) {
+    // If stocks are still queued, something went wrong and we send an error response.
+    if (stocks.queued.length) {
+      // If fetchers threw an error, we rethrow the first one
+      const firstRejection: PromiseRejectedResult | undefined = results
+        .filter((result) => result.status === "rejected")
+        .pop() as PromiseRejectedResult;
+      throw (
+        firstRejection?.reason ?? new APIError(500, "An unknown error occurred while fetching from MarketScreener.")
+      );
+    }
+
+    if (!stocks.successful.length) {
       res.status(204).end();
     } else {
       res.status(200).json(stocks.successful).end();
@@ -274,14 +298,23 @@ export class FetchController {
     };
 
     logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from MSCI.`);
-    await Promise.all([...Array(determineConcurrency(req))].map(() => msciFetcher(req, stocks)));
+    const results = await Promise.allSettled([...Array(determineConcurrency(req))].map(() => msciFetcher(req, stocks)));
     logger.info(PREFIX_SELENIUM + `Done fetching stocks from MSCI.`);
     stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
     stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
     stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
     stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
-    if (stocks.successful.length === 0) {
+    // If stocks are still queued, something went wrong and we send an error response.
+    if (stocks.queued.length) {
+      // If fetchers threw an error, we rethrow the first one
+      const firstRejection: PromiseRejectedResult | undefined = results
+        .filter((result) => result.status === "rejected")
+        .pop() as PromiseRejectedResult;
+      throw firstRejection?.reason ?? new APIError(500, "An unknown error occurred while fetching from MSCI.");
+    }
+
+    if (!stocks.successful.length) {
       res.status(204).end();
     } else {
       res.status(200).json(stocks.successful);
@@ -345,14 +378,25 @@ export class FetchController {
     };
 
     logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from Refinitiv.`);
-    await Promise.all([...Array(determineConcurrency(req))].map(() => refinitivFetcher(req, stocks)));
+    const results = await Promise.allSettled(
+      [...Array(determineConcurrency(req))].map(() => refinitivFetcher(req, stocks))
+    );
     logger.info(PREFIX_SELENIUM + `Done fetching stocks from Refinitiv.`);
     stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
     stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
     stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
     stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
-    if (stocks.successful.length === 0) {
+    // If stocks are still queued, something went wrong and we send an error response.
+    if (stocks.queued.length) {
+      // If fetchers threw an error, we rethrow the first one
+      const firstRejection: PromiseRejectedResult | undefined = results
+        .filter((result) => result.status === "rejected")
+        .pop() as PromiseRejectedResult;
+      throw firstRejection?.reason ?? new APIError(500, "An unknown error occurred while fetching from Refinitiv.");
+    }
+
+    if (!stocks.successful.length) {
       res.status(204).end();
     } else {
       res.status(200).json(stocks.successful).end();
@@ -416,14 +460,23 @@ export class FetchController {
     };
 
     logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from S&P.`);
-    await Promise.all([...Array(determineConcurrency(req))].map(() => spFetcher(req, stocks)));
+    const results = await Promise.allSettled([...Array(determineConcurrency(req))].map(() => spFetcher(req, stocks)));
     logger.info(PREFIX_SELENIUM + `Done fetching stocks from S&P.`);
     stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
     stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
     stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
     stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
 
-    if (stocks.successful.length === 0) {
+    // If stocks are still queued, something went wrong and we send an error response.
+    if (stocks.queued.length) {
+      // If fetchers threw an error, we rethrow the first one
+      const firstRejection: PromiseRejectedResult | undefined = results
+        .filter((result) => result.status === "rejected")
+        .pop() as PromiseRejectedResult;
+      throw firstRejection?.reason ?? new APIError(500, "An unknown error occurred while fetching from S&P.");
+    }
+
+    if (!stocks.successful.length) {
       res.status(204).end();
     } else {
       res.status(200).json(stocks.successful).end();
