@@ -37,7 +37,6 @@ import { useNotification } from "../../contexts/NotificationContext";
 
 /**
  * A dialog to edit a new stock in the backend.
- *
  * @param {EditStockProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

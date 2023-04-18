@@ -399,7 +399,6 @@ const themeMap: { [key: string]: Theme } = {
 
 /**
  * Creates a theme based on the theme name.
- *
  * @param {string} theme The name of the theme to create.
  * @returns {Theme} The theme object.
  */

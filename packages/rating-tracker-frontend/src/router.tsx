@@ -15,14 +15,12 @@ export const baseUrl = `${document.location.protocol}//${document.location.hostn
 /**
  * A wrapper for lazy-loaded components that adds a suspense loader. While the component is loading, the suspense
  * loader will display a loading indicator.
- *
  * @param {React.LazyExoticComponent<React.ComponentType<any>>} Component The component to wrap.
  * @returns {JSX.Element} The component.
  */
 const loader = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => {
   /**
    * A wrapper for the suspense loader.
-   *
    * @param {JSX.IntrinsicAttributes} props The properties to pass to the component.
    * @returns {JSX.Element} The component.
    */
@@ -49,7 +47,6 @@ import LoginApp from "./content/applications/Users/login";
 
 /**
  * The stock list module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -57,7 +54,6 @@ const StockList = loader(lazy(() => import("./content/modules/stocklist")));
 
 /**
  * The user management module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -65,7 +61,6 @@ const UserManagement = loader(lazy(() => import("./content/modules/UserManagemen
 
 /**
  * The stock module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -110,7 +105,6 @@ export const UserContext = createContext<UserContextType>({} as UserContextType)
 /**
  * A wrapper ensuring that the user is authenticated before displaying the page.
  * Also provides a user context if the user is authenticated.
- *
  * @param {AuthWrapperProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

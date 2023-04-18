@@ -39,7 +39,6 @@ const prettyStream = pretty({
 
 /**
  * Provides the path of the log file for the current day.
- *
  * @returns {string} The path of the log file.
  */
 const getLogFilePath = () => {
@@ -51,7 +50,6 @@ const getLogFilePath = () => {
 
 /**
  * Creates a new stream to write to the log file.
- *
  * @returns {fs.WriteStream} The stream to write to the log file.
  */
 const getNewFileStream = () => {
@@ -100,7 +98,6 @@ new cron.CronJob(
 
 /**
  * Create a pretty prefix string from an HTTP method. The colors in use correspond to those used by the OpenAPI UI.
- *
  * @param {string} method The HTTP method.
  * @returns {string} A colored pretty prefix string.
  */
@@ -123,7 +120,6 @@ const highlightMethod = (method: string) => {
 
 /**
  * Create a pretty prefix string from an HTTP status code.
- *
  * @param {number} statusCode The HTTP status code.
  * @returns {string} A colored pretty prefix string.
  */
@@ -143,7 +139,6 @@ const statusCodeDescription = (statusCode: number) => {
 
 /**
  * A function logging API requests.
- *
  * @param {Request} req Request object
  * @param {Response} res Response object
  * @param {number} time The response time of the request.

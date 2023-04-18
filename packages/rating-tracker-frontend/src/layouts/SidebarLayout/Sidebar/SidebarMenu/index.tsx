@@ -156,7 +156,6 @@ const SubMenuWrapper = styled(Box)(
 
 /**
  * The menu inside the sidebar.
- *
  * @returns {JSX.Element} The component.
  */
 const SidebarMenu = (): JSX.Element => {

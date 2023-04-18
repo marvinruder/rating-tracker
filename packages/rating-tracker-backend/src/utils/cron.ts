@@ -14,7 +14,6 @@ import logger, { PREFIX_CRON } from "./logger.js";
 
 /**
  * Creates Cron jobs for regular fetching from data providers.
- *
  * @param {string} bypassAuthenticationForInternalRequestsToken A token that must be used in an authentication cookie
  * @param {string} autoFetchSchedule A cron-like schedule description.
  */

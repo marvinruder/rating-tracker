@@ -1,6 +1,5 @@
 /**
  * Converts an uploaded file to a base64-encoded string with smaller size and reduced quality.
- *
  * @param {File} file The uploaded file
  * @returns {string} The base64-encoded string containing the encoded image.
  */

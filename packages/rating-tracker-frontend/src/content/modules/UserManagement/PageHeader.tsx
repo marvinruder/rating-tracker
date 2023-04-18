@@ -4,7 +4,6 @@ import { FC } from "react";
 
 /**
  * A header for the user list page. It contains the user list filters and column filter.
- *
  * @returns {JSX.Element} The component.
  */
 const PageHeader: FC = () => {

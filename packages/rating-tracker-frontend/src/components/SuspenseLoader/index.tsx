@@ -4,7 +4,6 @@ import { Box, CircularProgress } from "@mui/material";
 
 /**
  * A component that renders a loading indicator.
- *
  * @returns {JSX.Element} The component.
  */
 const SuspenseLoader = (): JSX.Element => {

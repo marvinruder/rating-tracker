@@ -17,7 +17,6 @@ const MainContent = styled(Box)(
 
 /**
  * Shows a 500 Internal Server Error page.
- *
  * @returns {JSX.Element} The component.
  */
 function Status500(): JSX.Element {

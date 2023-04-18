@@ -6,7 +6,6 @@ import logger, { PREFIX_SIGNAL } from "../utils/logger.js";
 
 /**
  * Send a message to a list of recipients.
- *
  * @param {string} url The URL of the Signal Client instance.
  * @param {string} message The message to send.
  * @param {string} number The number from which to send the message.

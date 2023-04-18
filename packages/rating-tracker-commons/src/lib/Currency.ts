@@ -192,7 +192,6 @@ export type Currency = (typeof currencyArray)[number];
 
 /**
  * Checks if a string is a valid ISO 4217 currency code.
- *
  * @param {string} s The string to check.
  * @returns {boolean} True if the string is a valid ISO 4217 currency code.
  */

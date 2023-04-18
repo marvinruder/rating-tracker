@@ -2,7 +2,6 @@ import { OmitDynamicAttributesStock } from "rating-tracker-commons";
 
 /**
  * Formats the market capitalization of a stock to a human readable format.
- *
  * @param {Stock} stock The stock to format the market capitalization of.
  * @returns {string} The formatted market capitalization.
  */

@@ -12,7 +12,6 @@ import { registerEndpointPath, signInEndpointPath } from "rating-tracker-commons
 
 /**
  * This component renders the login page.
- *
  * @returns {JSX.Element} The component.
  */
 const LoginApp = (): JSX.Element => {
@@ -26,7 +25,6 @@ const LoginApp = (): JSX.Element => {
 
   /**
    * Validates the email input field.
-   *
    * @returns {boolean} Whether the email input field contains a valid email address.
    */
   const validateEmail = () => {
@@ -35,7 +33,6 @@ const LoginApp = (): JSX.Element => {
 
   /**
    * Validates the name input field.
-   *
    * @returns {boolean} Whether the name input field contains a valid name.
    */
   const validateName = () => {
@@ -54,7 +51,6 @@ const LoginApp = (): JSX.Element => {
 
   /**
    * Reports an error to the user using a notification snackbar.
-   *
    * @param {AxiosError<any>} err The error to report.
    * @param {string} task A description of the task that caused the error.
    * @returns {void}

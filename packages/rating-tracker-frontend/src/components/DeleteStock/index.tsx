@@ -10,7 +10,6 @@ import { useNavigate } from "react-router";
 
 /**
  * A dialog to delete a stock from the backend.
- *
  * @param {DeleteStockProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

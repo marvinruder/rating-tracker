@@ -29,7 +29,6 @@ const XPATH_DESCRIPTION = "//*/div[@id='CompanyProfile']/div[1][not(.//h3)]" as 
 
 /**
  * Fetches data from Morningstar Italy.
- *
  * @param {Request} req Request object
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
  * with errors)

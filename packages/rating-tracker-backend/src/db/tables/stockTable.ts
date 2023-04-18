@@ -25,7 +25,6 @@ const parameterPrettyNames = {
 
 /**
  * Create a stock.
- *
  * @param {Stock} stock The stock to create.
  * @returns {boolean} Whether the stock was created.
  */
@@ -54,7 +53,6 @@ export const createStock = async (stock: OmitDynamicAttributesStock): Promise<bo
 
 /**
  * Read a stock.
- *
  * @param {string} ticker The ticker of the stock.
  * @returns {Promise<Stock>} A promise that resolves to the stock.
  * @throws an {@link APIError} if the stock does not exist.
@@ -71,7 +69,6 @@ export const readStock = async (ticker: string): Promise<Stock> => {
 
 /**
  * Query multiple stocks as well as their count after filtering.
- *
  * @param {Prisma.StockFindManyArgs} args An object with filtering, sorting and pagination options.
  * @returns {Promise<Stock[]>} A promise that resolves to a list of all stocks.
  */
@@ -86,7 +83,6 @@ export const readAllStocks = async (args?: Prisma.StockFindManyArgs): Promise<[S
 
 /**
  * Update a stock.
- *
  * @param {string} ticker The ticker of the stock.
  * @param {Partial<Omit<Stock, "ticker">>} newValues The new values for the stock.
  * @param {boolean} forceUpdate Whether new values are written into the database, even if they are equal to the stock’s
@@ -215,7 +211,6 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
 
 /**
  * Delete a stock.
- *
  * @param {string} ticker The ticker of the stock to delete.
  * @throws an {@link APIError} if the stock does not exist.
  */

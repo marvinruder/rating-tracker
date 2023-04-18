@@ -67,7 +67,6 @@ import { UserContext } from "../../router.js";
 
 /**
  * This component displays information about a stock in a table row that is used in the stock list.
- *
  * @param {StockRowProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -123,7 +122,6 @@ const StockRow = (props: StockRowProps): JSX.Element => {
   /**
    * Returns an appropriate CSS `display` property value for a column. The value is derived from the
    * columns filter values that are passed to the component.
-   *
    * @param {StockListColumn} column The column for which the display value should be returned.
    * @returns {"none" | undefined} The CSS `display` property value.
    */

@@ -33,7 +33,6 @@ import { Prisma } from "../../prisma/client/index.js";
 export class StockController {
   /**
    * Returns a list of stocks, which can be filtered, sorted and paginated.
-   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    */
@@ -503,7 +502,6 @@ export class StockController {
 
   /**
    * (Re-)Computes dynamic attributes of all stocks.
-   *
    * @param {Request} _ Request object
    * @param {Response} res Response object
    */
@@ -522,7 +520,6 @@ export class StockController {
 
   /**
    * Fetches the logo of a stock from Redis cache or TradeRepublic.
-   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    */
@@ -595,7 +592,6 @@ export class StockController {
 
   /**
    * Reads a single stock from the database.
-   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    */
@@ -613,7 +609,6 @@ export class StockController {
 
   /**
    * Creates a new stock in the database.
-   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    * @throws an {@link APIError} if a stock with the same ticker already exists
@@ -643,7 +638,6 @@ export class StockController {
 
   /**
    * Updates a stock in the database.
-   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    */
@@ -709,7 +703,6 @@ export class StockController {
 
   /**
    * Deletes a stock from the database.
-   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    */

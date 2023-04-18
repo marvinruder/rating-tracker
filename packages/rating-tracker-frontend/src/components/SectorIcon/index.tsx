@@ -6,7 +6,6 @@ import { useTheme } from "@mui/material";
 
 /**
  * A SVG icon representing a sector or super sector from the Morningstar Global Equity Classification Structure.
- *
  * @param {SectorIconProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -17,7 +16,6 @@ const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps): JSX.Element =>
 
   /**
    * Provides the SVG paths for the icon.
-   *
    * @returns {JSX.Element} The SVG paths for the icon.
    */
   const getPaths = (): JSX.Element => {
