@@ -4104,9 +4104,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:43.0.0":
-  version: 43.0.0
-  resolution: "eslint-plugin-jsdoc@npm:43.0.0"
+"eslint-plugin-jsdoc@npm:43.0.3":
+  version: 43.0.3
+  resolution: "eslint-plugin-jsdoc@npm:43.0.3"
   dependencies:
     "@es-joy/jsdoccomment": ~0.37.0
     are-docs-informative: ^0.0.2
@@ -4114,11 +4114,11 @@ __metadata:
     debug: ^4.3.4
     escape-string-regexp: ^4.0.0
     esquery: ^1.5.0
-    semver: ^7.3.8
+    semver: ^7.5.0
     spdx-expression-parse: ^3.0.1
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0
-  checksum: 43609c1f397c674b3b8a9f4ceea4f7556b1dbf30a16e5e3b0166c4142305a97706a629df4bbda4d0c675d970e8c9440d82afa2cf132fdd2beff2ad98f1c9ec87
+  checksum: 432a3f6b8303f1b624240255231bc473efb82d9edd1314ad0a4fc2ee28ef635061c8c921b258e7303b132ac0480a369371b1ec51f4a1e0f42232a2bad4f4c58e
   languageName: node
   linkType: hard
 
@@ -7277,7 +7277,7 @@ __metadata:
     eslint: 8.38.0
     eslint-config-google: 0.14.0
     eslint-config-prettier: 8.8.0
-    eslint-plugin-jsdoc: 43.0.0
+    eslint-plugin-jsdoc: 43.0.3
     eslint-plugin-prettier: 4.2.1
     express: 4.18.2
     express-async-errors: 3.1.1
@@ -7312,7 +7312,7 @@ __metadata:
     eslint: 8.38.0
     eslint-config-google: 0.14.0
     eslint-config-prettier: 8.8.0
-    eslint-plugin-jsdoc: 43.0.0
+    eslint-plugin-jsdoc: 43.0.3
     eslint-plugin-prettier: 4.2.1
     prettier: 2.8.7
     typescript: 5.0.4
@@ -7345,7 +7345,7 @@ __metadata:
     eslint: 8.38.0
     eslint-config-google: 0.14.0
     eslint-config-prettier: 8.8.0
-    eslint-plugin-jsdoc: 43.0.0
+    eslint-plugin-jsdoc: 43.0.3
     eslint-plugin-prettier: 4.2.1
     eslint-plugin-react: 7.32.2
     happy-dom: 9.8.1
@@ -7921,14 +7921,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.1.2, semver@npm:^7.3.2, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.3.8":
-  version: 7.3.8
-  resolution: "semver@npm:7.3.8"
+"semver@npm:^7.1.2, semver@npm:^7.3.2, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.3.8, semver@npm:^7.5.0":
+  version: 7.5.0
+  resolution: "semver@npm:7.5.0"
   dependencies:
     lru-cache: ^6.0.0
   bin:
     semver: bin/semver.js
-  checksum: ba9c7cbbf2b7884696523450a61fee1a09930d888b7a8d7579025ad93d459b2d1949ee5bbfeb188b2be5f4ac163544c5e98491ad6152df34154feebc2cc337c1
+  checksum: 2d266937756689a76f124ffb4c1ea3e1bbb2b263219f90ada8a11aebebe1280b13bb76cca2ca96bdee3dbc554cbc0b24752eb895b2a51577aa644427e9229f2b
   languageName: node
   linkType: hard
 
