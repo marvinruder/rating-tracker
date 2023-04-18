@@ -10,7 +10,6 @@ export type Size = (typeof sizeArray)[number];
 
 /**
  * Checks if a string is a valid size in the Morningstar Style Box.
- *
  * @param {string} s The string to check.
  * @returns {boolean} True if the string is a valid size in the Morningstar Style Box.
  */

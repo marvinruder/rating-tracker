@@ -21,7 +21,6 @@ const XPATH_SPREAD_AVERAGE_TARGET =
 
 /**
  * Fetches data from MarketScreener.
- *
  * @param {Request} req Request object
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
  * with errors)

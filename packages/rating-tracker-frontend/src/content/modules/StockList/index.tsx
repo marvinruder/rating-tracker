@@ -10,7 +10,6 @@ import { StockListColumn, stockListColumnArray } from "rating-tracker-commons";
 
 /**
  * A module that displays a list of stocks.
- *
  * @returns {JSX.Element} The component.
  */
 const StockListModule = (): JSX.Element => {

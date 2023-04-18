@@ -9,7 +9,6 @@ const TRANSITION_DURATION = 350;
 
 /**
  * A snackbar that displays a notification.
- *
  * @param {NotificationSnackbarProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -21,7 +20,6 @@ const NotificationSnackbar = (props: NotificationSnackbarProps): JSX.Element => 
 
   /**
    * A callback that is called when the snackbar is closed.
-   *
    * @param {Event | React.SyntheticEvent<any, Event>} _ The event that triggered the callback.
    * @param {SnackbarCloseReason} reason The reason why the snackbar was closed.
    */

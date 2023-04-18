@@ -25,7 +25,6 @@ const SidebarContext = createContext<SidebarContextType>({} as SidebarContextTyp
 
 /**
  * A provider for the sidebar context.
- *
  * @param {SidebarProviderProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

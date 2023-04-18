@@ -7,7 +7,6 @@ export const SIGNAL_PREFIX_INFO = "ℹ️ " as const;
 
 /**
  * Send a message to all users subscribed to the given message type.
- *
  * @param {string} message The message to send.
  * @param {MessageType} messageType The type of message to send.
  */

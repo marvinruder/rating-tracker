@@ -5,7 +5,6 @@ import { Box } from "@mui/material";
 
 /**
  * A base layout for the application.
- *
  * @param {BaseLayoutProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

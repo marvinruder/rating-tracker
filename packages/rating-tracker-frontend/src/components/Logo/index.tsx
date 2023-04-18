@@ -36,7 +36,6 @@ const LogoText = styled(Box)(
 
 /**
  * The Logo component, shown at the top of the sidebar. Contains the app name and version.
- *
  * @returns {JSX.Element} The Logo component
  */
 const Logo = (): JSX.Element => {

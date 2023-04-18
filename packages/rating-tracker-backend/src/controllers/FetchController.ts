@@ -46,7 +46,6 @@ export type FetcherWorkspace<T> = {
 
 /**
  * Determines the allowed number of fetchers that can work concurrently on fetching a list of stocks.
- *
  * @param {Request} req Request object
  * @returns {number} The number of fetchers to use.
  */
@@ -78,7 +77,6 @@ const determineConcurrency = (req: Request): number => {
 export class FetchController {
   /**
    * Fetches data from Morningstar Italy.
-   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    * @throws an {@link APIError} in case of a severe error
@@ -150,7 +148,6 @@ export class FetchController {
 
   /**
    * Fetches data from MarketScreener.
-   *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
    * @throws an {@link APIError} in case of a severe error
@@ -222,7 +219,6 @@ export class FetchController {
 
   /**
    * Fetches data from MSCI.
-   *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
    * @throws an {@link APIError} in case of a severe error
@@ -294,7 +290,6 @@ export class FetchController {
 
   /**
    * Fetches data from Refinitiv.
-   *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
    * @throws an {@link APIError} in case of a severe error
@@ -366,7 +361,6 @@ export class FetchController {
 
   /**
    * Fetches data from Standard & Poor’s.
-   *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
    * @throws an {@link APIError} in case of a severe error
@@ -438,7 +432,6 @@ export class FetchController {
 
   /**
    * Fetches data from Morningstar Sustainalytics.
-   *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
    * @throws an {@link APIError} in case of a severe error

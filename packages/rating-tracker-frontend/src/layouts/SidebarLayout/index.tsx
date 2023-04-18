@@ -7,7 +7,6 @@ import Header from "./Header";
 
 /**
  * A layout with a sidebar.
- *
  * @returns {JSX.Element} The component.
  */
 const SidebarLayout: FC = (): JSX.Element => {

@@ -25,7 +25,6 @@ export type Sector = (typeof sectorArray)[number];
 
 /**
  * Checks if a string is a valid sector.
- *
  * @param {string} s The string to check.
  * @returns {boolean} True if the string is a valid sector.
  */
@@ -139,7 +138,6 @@ export const sectorOfIndustryGroup: Record<IndustryGroup, Sector> = {
 
 /**
  * Returns an array of all industry groups in a sector.
- *
  * @param {Sector} sector The sector to get industry groups for.
  * @returns {IndustryGroup[]} The array of industry groups in the sector.
  */

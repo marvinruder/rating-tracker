@@ -9,7 +9,6 @@ import Router from "../utils/router.js";
 export class UserController {
   /**
    * Returns the current user fetched during session validation.
-   *
    * @param {Request} _ The request.
    * @param {Response} res The response.
    */
@@ -24,7 +23,6 @@ export class UserController {
 
   /**
    * Updates the current user in the database.
-   *
    * @param {Request} req The request.
    * @param {Response} res The response.
    */
@@ -55,7 +53,6 @@ export class UserController {
 
   /**
    * Deletes the current user from the database.
-   *
    * @param {Request} _ The request.
    * @param {Response} res The response.
    */

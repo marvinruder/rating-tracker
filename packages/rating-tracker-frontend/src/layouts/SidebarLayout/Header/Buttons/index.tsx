@@ -3,7 +3,6 @@ import HeaderSearch from "./Search";
 
 /**
  * Renders the buttons in the header.
- *
  * @returns {JSX.Element} The component.
  */
 const HeaderButtons = (): JSX.Element => {

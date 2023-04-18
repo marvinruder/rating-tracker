@@ -157,7 +157,6 @@ export type Industry = (typeof industryArray)[number];
 
 /**
  * Checks if a string is a valid industry.
- *
  * @param {string} s The string to check.
  * @returns {boolean} True if the string is a valid industry.
  */

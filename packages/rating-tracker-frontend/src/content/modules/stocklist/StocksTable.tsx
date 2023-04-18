@@ -22,7 +22,6 @@ import { StockFilter } from "../../../types/StockFilter";
 
 /**
  * The stocks table component.
- *
  * @param {StocksTableProps} props The component props.
  * @returns {JSX.Element} The stocks table component.
  */
@@ -84,7 +83,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
 
   /**
    * Handle a click on one of the pagination buttons.
-   *
    * @param {React.MouseEvent} _ The event.
    * @param {number} newPage The new page.
    */
@@ -94,7 +92,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
 
   /**
    * Handle a change in the number of rows per page, triggered by the row count dropdown.
-   *
    * @param {ChangeEvent<HTMLInputElement>} event The event.
    */
   const handleRowsPerPageChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -104,7 +101,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
 
   /**
    * Provides a handler for a click on one of the sort labels.
-   *
    * @param {SortableAttribute} attribute The attribute having been clicked.
    * @returns {() => void} The handler.
    */
@@ -133,7 +129,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
   /**
    * Returns an appropriate CSS `display` property value for a column. The value is derived from the
    * columns filter values that are passed to the component.
-   *
    * @param {StockListColumn} column The column for which the display value should be returned.
    * @returns {"none" | undefined} The CSS `display` property value.
    */

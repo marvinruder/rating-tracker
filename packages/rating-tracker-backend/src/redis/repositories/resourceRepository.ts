@@ -11,7 +11,6 @@ export const resourceRepository = client.fetchRepository(resourceSchema);
 
 /**
  * Fetch a resource from the repository.
- *
  * @param {string} id The ID of the resource to fetch.
  * @returns {ResourceEntity} The resource entity.
  */
@@ -21,7 +20,6 @@ const fetch = (id: string) => {
 
 /**
  * Save a resource to the repository.
- *
  * @param {ResourceEntity} resourceEntity The resource entity to save.
  * @returns {string} The ID of the saved resource.
  */
@@ -31,7 +29,6 @@ const save = (resourceEntity: ResourceEntity) => {
 
 /**
  * Have the repository expire a resource.
- *
  * @param {string} id The ID of the resource to expire.
  * @param {number} ttlInSeconds The time in seconds after which the resource should expire.
  * @returns {void}
@@ -52,7 +49,6 @@ const expire = (id: string, ttlInSeconds: number) => {
 
 /**
  * Create a resource.
- *
  * @param {Resource} resource The resource to create.
  * @param {number} ttlInSeconds The time in seconds after which the resource should expire.
  * @returns {boolean} Whether the resource was created.
@@ -76,7 +72,6 @@ export const createResource = async (resource: Resource, ttlInSeconds?: number):
 
 /**
  * Read a resource.
- *
  * @param {string} url The URL of the resource to read.
  * @returns {Resource} The resource.
  * @throws an {@link APIError} if the resource does not exist.

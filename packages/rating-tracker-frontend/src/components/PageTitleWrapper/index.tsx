@@ -10,7 +10,6 @@ const PageTitle = styled(Box)(
 
 /**
  * The wrapper for a page title.
- *
  * @param {PageTitleWrapperProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

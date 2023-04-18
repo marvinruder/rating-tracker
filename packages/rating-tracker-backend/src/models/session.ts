@@ -7,7 +7,6 @@ import { Entity, Schema } from "redis-om";
 export class Session extends CommonsSession {
   /**
    * Creates a new {@link Session} from its Redis entity.
-   *
    * @param {SessionEntity} sessionEntity The Redis entity of the session.
    */
   constructor(sessionEntity: SessionEntity) {
@@ -38,7 +37,6 @@ export class SessionEntity extends Entity {}
 
 /**
  * A Redis schema of a {@link SessionEntity}.
- *
  * @see {@link Session}
  */
 export const sessionSchema = new Schema(

@@ -8,7 +8,6 @@ import { useNotification } from "../../../contexts/NotificationContext";
 
 /**
  * The user table component.
- *
  * @returns {JSX.Element} The users table component.
  */
 const UserTable: FC = (): JSX.Element => {
