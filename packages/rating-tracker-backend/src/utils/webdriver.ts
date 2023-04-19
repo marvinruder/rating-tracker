@@ -29,7 +29,7 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
   const options = new chrome.Options()
     .addArguments("window-size=1080x3840") // convenient for screenshots
     .addArguments("--blink-settings=imagesEnabled=false"); // Do not load images
-  headless && options.headless(); // In headless mode, the browser window is not shown.
+  headless && options.addArguments("--headless=new"); // In headless mode, the browser window is not shown.
 
   return await new Builder()
     .usingServer(url)
