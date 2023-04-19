@@ -16,6 +16,7 @@ type PageLoadStrategy = "normal" | "eager" | "none";
 
 /**
  * Creates and returns a new WebDriver instance.
+ *
  * @param {boolean} headless whether to run the browser in headless mode
  * @param {PageLoadStrategy} pageLoadStrategy whether to run the browser in headless mode
  * @returns {Promise<WebDriver>} a Promise that resolves to a WebDriver instance
@@ -51,6 +52,7 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
 
 /**
  * Let the WebDriver open a URL and wait until the URL is present and previous content is removed.
+ *
  * @param {WebDriver} driver the WebDriver instance to shut down
  * @param {string } url the URL to open
  * @returns {Promise<boolean>} a Promise resolving to the boolean success of the operation
@@ -70,6 +72,7 @@ export const openPageAndWait = async (driver: WebDriver, url: string): Promise<b
  * Shuts down the given WebDriver instance gracefully, deallocating all associated resources.
  * If a graceful shutdown fails, a DELETE request is sent to Selenium requesting to terminate the stale session
  * forcefully.
+ *
  * @param {WebDriver} driver the WebDriver instance to shut down
  * @param {string} sessionID the ID of the WebDriver session
  * @returns {Promise<void>} a Promise that resolves when the WebDriver has been shut down
@@ -93,6 +96,7 @@ export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise
 
 /**
  * Creates a screenshot of the current page and stores it in Redis.
+ *
  * @param {WebDriver} driver the WebDriver instance in use
  * @param {Stock} stock the affected stock
  * @param {string} dataProvider the name of the data provider

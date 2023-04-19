@@ -23,6 +23,7 @@ const SidebarWrapper = styled(Box)(
 
 /**
  * The sidebar of the sidebar layout.
+ *
  * @returns {JSX.Element} The component.
  */
 const Sidebar = (): JSX.Element => {

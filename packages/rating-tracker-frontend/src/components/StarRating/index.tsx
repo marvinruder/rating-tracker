@@ -4,6 +4,7 @@ import { Box } from "@mui/material";
 
 /**
  * A component that displays a rating of 1 to 5 stars using full and empty star icons.
+ *
  * @param {StarRatingProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

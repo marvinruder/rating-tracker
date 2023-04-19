@@ -65,6 +65,7 @@ export class User {
 
   /**
    * Creates a new user from user information and remove credentials, if present.
+   *
    * @param {OmitFunctions<User | UserWithCredentials>} user The user information, possibly containing credentials.
    */
   constructor(user: OmitFunctions<User | UserWithCredentials>) {
@@ -83,6 +84,7 @@ export class User {
 
   /**
    * Checks whether the user has the given access right.
+   *
    * @param {number} accessRight The access right to check.
    * @returns {boolean} Whether the user has the given access right.
    */
@@ -92,6 +94,7 @@ export class User {
 
   /**
    * Computes the separate access rights a user has.
+   *
    * @returns {number[]} A list of access rights a user has.
    */
   public getAccessRights(): number[] {
@@ -103,6 +106,7 @@ export class User {
   /**
    * Checks whether the user has subscribed to the given message type, given either as a number or as a
    * {@link MessageType}.
+   *
    * @param {number | MessageType} subscription The subscription to check.
    * @returns {boolean} Whether the user has subscribed to the given message type.
    */
@@ -124,6 +128,7 @@ export class User {
 
   /**
    * Checks whether the user has the given message type enabled and the rights necessary to receive it.
+   *
    * @param {MessageType} messageType The message type to check.
    * @returns {boolean} Whether the user shall receive a message of the given message type.
    */
@@ -161,6 +166,7 @@ export class UserWithCredentials extends User {
 
   /**
    * Creates a new user from user information.
+   *
    * @param {OmitFunctions<User | UserWithCredentials>} user The user information.
    */
   constructor(user: OmitFunctions<User | UserWithCredentials>) {

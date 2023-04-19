@@ -36,6 +36,7 @@ const currentChallenges = {};
 export class AuthController {
   /**
    * Generates a registration challenge for the user to register.
+   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    * @throws an {@link APIError} if the user already exists.
@@ -75,6 +76,7 @@ export class AuthController {
 
   /**
    * Verifies the registration response and creates a new user if the request is valid.
+   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    * @throws an {@link APIError} if the registration failed or the user already exists.
@@ -137,6 +139,7 @@ export class AuthController {
 
   /**
    * Generates an authentication challenge for any user to sign in. The challenge is not related to any specific user.
+   *
    * @param {Request} _ Request object
    * @param {Response} res Response object
    */
@@ -157,6 +160,7 @@ export class AuthController {
 
   /**
    * Verifies the authentication response and creates a session cookie if the challenge response is valid.
+   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    * @throws an {@link APIError} if the authentication failed or the user lacks access rights.

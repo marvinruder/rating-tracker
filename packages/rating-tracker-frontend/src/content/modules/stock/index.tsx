@@ -12,6 +12,7 @@ import { useParams } from "react-router";
 
 /**
  * A module that displays the details of a stock.
+ *
  * @returns {JSX.Element} The component.
  */
 const StockModule = (): JSX.Element => {
@@ -21,6 +22,7 @@ const StockModule = (): JSX.Element => {
 
   /**
    * Fetches the stock with the given ticker.
+   *
    * @param {string} ticker The ticker of the stock to fetch.
    */
   const getStock = (ticker: string) => {

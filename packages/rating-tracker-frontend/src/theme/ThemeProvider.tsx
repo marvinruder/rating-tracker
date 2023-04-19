@@ -14,6 +14,7 @@ export const ThemeContext = createContext<ThemeContextType>({} as ThemeContextTy
 
 /**
  * A wrapped theme provider.
+ *
  * @param {ThemeProviderWrapperProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -24,6 +25,7 @@ const ThemeProviderWrapper: FC<ThemeProviderWrapperProps> = (props: ThemeProvide
 
   /**
    * Sets the theme name.
+   *
    * @param {string} themeName The name of the theme.
    */
   const setThemeName = (themeName: string): void => {

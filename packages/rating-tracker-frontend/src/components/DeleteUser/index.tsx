@@ -9,6 +9,7 @@ import { useNotification } from "../../contexts/NotificationContext";
 
 /**
  * A dialog to delete a user from the backend.
+ *
  * @param {DeleteUserProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

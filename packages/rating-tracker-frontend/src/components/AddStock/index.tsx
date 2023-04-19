@@ -43,6 +43,7 @@ import StockDetails from "../StockDetails";
 
 /**
  * A dialog to add a new stock to the backend.
+ *
  * @param {AddStockProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

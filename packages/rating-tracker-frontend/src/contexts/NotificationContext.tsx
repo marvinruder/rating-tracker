@@ -22,6 +22,7 @@ const NotificationContext = createContext<NotificationContextType>({} as Notific
 
 /**
  * A provider for the notification context.
+ *
  * @param {NotificationProviderProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -52,6 +53,7 @@ type NotificationProviderProps = {
 
 /**
  * Hook to use the notification context.
+ *
  * @returns {NotificationContextType} The notification context.
  */
 export const useNotification = (): NotificationContextType => useContext(NotificationContext);

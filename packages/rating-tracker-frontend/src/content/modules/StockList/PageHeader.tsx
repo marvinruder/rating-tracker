@@ -71,6 +71,7 @@ import { UserContext } from "../../../router";
 
 /**
  * A header for the stock list page. It contains the stock list filters and column filter.
+ *
  * @param {PageHeaderProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

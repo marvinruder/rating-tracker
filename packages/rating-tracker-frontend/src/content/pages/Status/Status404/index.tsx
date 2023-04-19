@@ -14,6 +14,7 @@ const MainContent = styled(Box)(
 
 /**
  * Shows a 404 Not Found page.
+ *
  * @returns {JSX.Element} The component.
  */
 const Status404 = (): JSX.Element => {

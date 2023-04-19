@@ -36,6 +36,7 @@ import { convertAvatar } from "../../utils/imageManipulation";
 
 /**
  * A dialog to edit the user’s own information.
+ *
  * @param {ProfileSettingsProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -74,6 +75,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
   /**
    * Validates the name input field.
+   *
    * @returns {boolean} Whether the name input field contains a valid name.
    */
   const validateName = () => {
@@ -82,6 +84,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
   /**
    * Validates the phone input field.
+   *
    * @returns {boolean} Whether the phone input field contains a valid phone number.
    */
   const validatePhone = () => {
@@ -153,6 +156,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
   /**
    * Resizes and stores the uploaded avatar in the state as a base64 string.
+   *
    * @param {React.ChangeEvent<HTMLInputElement>} e The upload event.
    */
   const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {

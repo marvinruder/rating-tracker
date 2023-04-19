@@ -18,6 +18,7 @@ export const sessionRepository = client.fetchRepository(sessionSchema);
 
 /**
  * Fetch a session from the repository.
+ *
  * @param {string} id The ID of the session to fetch.
  * @returns {SessionEntity} The session entity.
  */
@@ -27,6 +28,7 @@ const fetch = (id: string) => {
 
 /**
  * Sets the expiration time of a session to the configured TTL.
+ *
  * @param {string} id The ID of the session to refresh.
  * @returns {void}
  */
@@ -36,6 +38,7 @@ const refresh = (id: string) => {
 
 /**
  * Save a session to the repository.
+ *
  * @param {SessionEntity} sessionEntity The session entity to save.
  * @returns {string} The ID of the saved session.
  */
@@ -45,6 +48,7 @@ const save = (sessionEntity: SessionEntity) => {
 
 /**
  * Delete a session from the repository.
+ *
  * @param {string} id The ID of the session to delete.
  * @returns {void}
  */
@@ -54,6 +58,7 @@ const remove = (id: string) => {
 
 /**
  * Create a session.
+ *
  * @param {Session} session The session to create.
  * @returns {boolean} Whether the session was created.
  */
@@ -76,6 +81,7 @@ export const createSession = async (session: Session): Promise<boolean> => {
 
 /**
  * Fetch a session from Redis, refresh it, and return the corresponding user.
+ *
  * @param {string} sessionID The session ID.
  * @returns {User} The user corresponding to the session.
  * @throws an {@link APIError} if the session does not exist.
@@ -100,6 +106,7 @@ export const refreshSessionAndFetchUser = async (sessionID: string): Promise<Use
 
 /**
  * Delete a session from Redis.
+ *
  * @param {string} sessionID The session ID.
  */
 export const deleteSession = async (sessionID: string) => {
