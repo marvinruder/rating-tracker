@@ -55,6 +55,7 @@ export const messageTypeDescription: Record<MessageType, string> = {
 
 /**
  * Checks if a string is a valid type of message that can be sent to a user.
+ *
  * @param {string} s The string to check.
  * @returns {boolean} True if the string is a valid type of message that can be sent to a user.
  */

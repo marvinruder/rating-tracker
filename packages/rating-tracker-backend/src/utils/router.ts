@@ -46,6 +46,7 @@ const Router = <This>(options: RouterOptions): any => {
 
 /**
  * A router decorator. Allows for decorating controller methods with routing information.
+ *
  * @param {RouterOptions} options The router options.
  * @returns {any} some decorator magic
  */

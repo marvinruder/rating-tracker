@@ -10,6 +10,7 @@ export type Style = (typeof styleArray)[number];
 
 /**
  * Checks if a string is a valid style in the Morningstar Style Box.
+ *
  * @param {string} s The string to check.
  * @returns {boolean} True if the string is a valid style in the Morningstar Style Box.
  */

@@ -65,6 +65,7 @@ const DialogTitleWrapper = styled(DialogTitle)(
 
 /**
  * A search bar that can be activated from a button in the header.
+ *
  * @returns {JSX.Element} The component.
  */
 const HeaderSearch = (): JSX.Element => {
@@ -80,6 +81,7 @@ const HeaderSearch = (): JSX.Element => {
   useEffect(() => {
     /**
      * Checks whether the search shortcut ⌘F or ⌃F was pressed.
+     *
      * @param {KeyboardEvent} e The keyboard event.
      * @returns {boolean} Whether the search shortcut was pressed.
      */
@@ -87,6 +89,7 @@ const HeaderSearch = (): JSX.Element => {
 
     /**
      * Opens the search bar when the search shortcut is pressed.
+     *
      * @param {KeyboardEvent} e The keyboard event.
      */
     const searchShortcutHandler = (e: KeyboardEvent) => {
@@ -99,6 +102,7 @@ const HeaderSearch = (): JSX.Element => {
 
     /**
      * Navigates to the first stock in the search results when the ↩︎ key is pressed.
+     *
      * @param {KeyboardEvent} e The keyboard event.
      */
     const enterKeyHandler = (e: KeyboardEvent) => {
@@ -112,6 +116,7 @@ const HeaderSearch = (): JSX.Element => {
 
     /**
      * Closes the search bar when the ⎋ key is pressed.
+     *
      * @param {KeyboardEvent} e The keyboard event.
      */
     const escapeKeyHandler = (e: KeyboardEvent) => {
@@ -135,6 +140,7 @@ const HeaderSearch = (): JSX.Element => {
 
   /**
    * Handles the change of the search input.
+   *
    * @param {ChangeEvent<HTMLInputElement>} event The change event.
    */
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -184,6 +190,7 @@ const HeaderSearch = (): JSX.Element => {
 
   /**
    * Fetches a list of stocks matching the search value.
+   *
    * @param {string} currentSearchValue The current search value.
    */
   const getStocks = (currentSearchValue: string) => {

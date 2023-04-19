@@ -36,6 +36,7 @@ import StarRating from "../StarRating";
 
 /**
  * This component displays detailed information about a stock in a grid.
+ *
  * @param {StockDetailsProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

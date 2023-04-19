@@ -6,6 +6,7 @@ import { useTheme } from "@mui/material";
 
 /**
  * The background of the page, showing particles.
+ *
  * @returns {JSX.Element} The component.
  */
 const ParticleBackground = (): JSX.Element => {

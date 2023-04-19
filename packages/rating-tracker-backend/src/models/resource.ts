@@ -7,6 +7,7 @@ import { Entity, Schema } from "redis-om";
 export class Resource extends CommonsResource {
   /**
    * Creates a new {@link Resource} from its Redis entity.
+   *
    * @param {ResourceEntity} resourceEntity The Redis entity of the resource.
    */
   constructor(resourceEntity: ResourceEntity) {
@@ -42,6 +43,7 @@ export class ResourceEntity extends Entity {}
 
 /**
  * A Redis schema of a {@link ResourceEntity}.
+ *
  * @see {@link Resource}
  */
 export const resourceSchema = new Schema(

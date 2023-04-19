@@ -7,6 +7,7 @@ import UserTable from "./UserTable";
 
 /**
  * A module that displays a list of users.
+ *
  * @returns {JSX.Element} The component.
  */
 const UserManagementModule = (): JSX.Element => {

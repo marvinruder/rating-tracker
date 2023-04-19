@@ -10,6 +10,7 @@ import { UserContext } from "../../../router.js";
 
 /**
  * A header for the stock details page.
+ *
  * @param {PageHeaderProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */

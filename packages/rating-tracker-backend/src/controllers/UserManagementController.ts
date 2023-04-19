@@ -14,6 +14,7 @@ import Router from "../utils/router.js";
 export class UserManagementController {
   /**
    * Returns a list of users.
+   *
    * @param {Request} _ Request object
    * @param {Response} res Response object
    */
@@ -31,6 +32,7 @@ export class UserManagementController {
 
   /**
    * Reads a single user from the database.
+   *
    * @param {Request} req The request.
    * @param {Response} res The response.
    */
@@ -48,6 +50,7 @@ export class UserManagementController {
 
   /**
    * Updates a user in the database.
+   *
    * @param {Request} req The request.
    * @param {Response} res The response.
    */
@@ -80,6 +83,7 @@ export class UserManagementController {
 
   /**
    * Deletes a user from the database.
+   *
    * @param {Request} req The request.
    * @param {Response} res The response.
    */

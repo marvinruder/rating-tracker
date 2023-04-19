@@ -31,6 +31,7 @@ const HeaderWrapper = styled(Box)(
 
 /**
  * The header of the sidebar layout.
+ *
  * @returns {JSX.Element} The component.
  */
 const Header = (): JSX.Element => {

@@ -41,6 +41,7 @@ const ListItem = styled("li")(() => ({
 
 /**
  * This component displays information about a user in a table row that is used in the user list.
+ *
  * @param {UserRowProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -56,6 +57,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
 
   /**
    * Provides labels for the access rights of the user.
+   *
    * @returns {string[]} a list of strings containing access right labels.
    */
   const getAccessRightLabels = (): string[] => {
@@ -70,6 +72,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
 
   /**
    * A list of checkboxes for the access rights.
+   *
    * @returns {JSX.Element} The component.
    */
   const AccessRightCheckboxList = (): JSX.Element => {

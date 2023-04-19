@@ -18,6 +18,7 @@
     "require-jsdoc": 0,
     "valid-jsdoc": 0,
     "jsdoc/no-undefined-types": 0,
+    "jsdoc/tag-lines": ["warn", "never", { "startLines": 1 }],
     "new-cap": [
       "warn",
       {

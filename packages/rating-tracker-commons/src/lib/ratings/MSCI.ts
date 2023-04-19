@@ -10,6 +10,7 @@ export type MSCIESGRating = (typeof msciESGRatingArray)[number];
 
 /**
  * Checks if a string is a valid MSCI ESG Rating value.
+ *
  * @param {string} value The string to check.
  * @returns {boolean} True if the string is a valid MSCI ESG Rating value.
  */

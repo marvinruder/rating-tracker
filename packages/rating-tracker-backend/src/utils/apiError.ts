@@ -6,6 +6,7 @@ class APIError extends Error {
 
   /**
    * Creates a new instance of the {@link APIError} class.
+   *
    * @param {number} httpStatus The HTTP status code associated with the error.
    * @param {string} message A descriptive message for the error.
    */

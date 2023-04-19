@@ -3,6 +3,7 @@ import logger, { PREFIX_NODEJS } from "./logger.js";
 
 /**
  * An error handler. Logs an error and sends an error response to the client.
+ *
  * @param {Error} err The error that was thrown
  * @param {Request} _ Request object
  * @param {Response} res Response object

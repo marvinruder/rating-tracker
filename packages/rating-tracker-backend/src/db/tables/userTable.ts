@@ -7,6 +7,7 @@ import client from "../client.js";
 
 /**
  * Create a user with credentials.
+ *
  * @param {UserWithCredentials} user The user to create.
  * @returns {Promise<boolean>} A promise that resolves to true if the user was created, false if it already existed.
  */
@@ -37,6 +38,7 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
 
 /**
  * Read a user.
+ *
  * @param {string} email The email address of the user.
  * @returns {Promise<User>} A promise that resolves to the user.
  * @throws an {@link APIError} if the user does not exist.
@@ -54,6 +56,7 @@ export const readUser = async (email: string): Promise<User> => {
 
 /**
  * Read a user and include credentials.
+ *
  * @param {string} email The email address of the user.
  * @returns {Promise<UserWithCredentials>} A promise that resolves to the user.
  * @throws an {@link APIError} if the user does not exist.
@@ -71,6 +74,7 @@ export const readUserWithCredentials = async (email: string): Promise<UserWithCr
 
 /**
  * Read all users.
+ *
  * @returns {Promise<User[]>} A promise that resolves to a list of all users.
  */
 export const readAllUsers = async (): Promise<User[]> => {
@@ -80,6 +84,7 @@ export const readAllUsers = async (): Promise<User[]> => {
 
 /**
  * Check whether a user exists.
+ *
  * @param {string} email The email address of the user.
  * @returns {Promise<boolean>} A promise that resolves to true if the user exists, false otherwise.
  */
@@ -94,6 +99,7 @@ export const userExists = async (email: string): Promise<boolean> => {
 
 /**
  * Update a user.
+ *
  * @param {string} email The email address of the user.
  * @param {Partial<Omit<UserWithCredentials, "email">>} newValues The new values for the user.
  * @throws an {@link APIError} if the user does not exist.
@@ -140,6 +146,7 @@ export const updateUserWithCredentials = async (
 
 /**
  * Delete a user.
+ *
  * @param {string} email The email address of the user to delete.
  * @throws an {@link APIError} if the user does not exist.
  */

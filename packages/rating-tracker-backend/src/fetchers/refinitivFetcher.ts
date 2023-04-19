@@ -15,6 +15,7 @@ import APIError from "../utils/apiError.js";
 
 /**
  * Fetches data from Refinitiv.
+ *
  * @param {Request} req Request object
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
  * with errors)

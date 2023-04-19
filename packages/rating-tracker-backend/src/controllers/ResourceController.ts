@@ -10,6 +10,7 @@ import Router from "../utils/router.js";
 export class ResourceController {
   /**
    * Fetches a resource from Redis.
+   *
    * @param {Request} req Request object
    * @param {Response} res Response object
    * @throws an {@link APIError} if a resource of an unsupported type is requested

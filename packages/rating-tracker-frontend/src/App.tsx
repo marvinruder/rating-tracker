@@ -9,6 +9,7 @@ import NotificationSnackbar from "./components/NotificationSnackbar";
 
 /**
  * The Rating Tracker Application.
+ *
  * @returns {JSX.Element} The component.
  */
 const App = (): JSX.Element => {
