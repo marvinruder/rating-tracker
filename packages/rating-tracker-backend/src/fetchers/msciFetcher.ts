@@ -23,7 +23,7 @@ import APIError from "../utils/apiError.js";
  */
 const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise<void> => {
   // Acquire a new session
-  const driver = await getDriver(false, "eager");
+  const driver = await getDriver(true, "eager");
   const sessionID = (await driver.getSession()).getId();
 
   // Work while stocks are in the queue
