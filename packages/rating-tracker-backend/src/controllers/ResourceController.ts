@@ -25,7 +25,6 @@ export class ResourceController {
     // Use the file extension to determine the type of the resource
     switch (resourceID.split(".").pop().toUpperCase()) {
       case "PNG":
-        // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
         const resource = await readResource(resourceID);
         res.setHeader("Content-Type", "image/png").status(200).send(Buffer.from(resource.content, "base64")).end();
         break;

@@ -53,7 +53,6 @@ interface SwitchSelectorProps {
    * A method to set the value of the switch selector.
    *
    * @param {string} value The new value.
-   * @returns {void}
    */
   setValue: Dispatch<SetStateAction<string>>;
   /**

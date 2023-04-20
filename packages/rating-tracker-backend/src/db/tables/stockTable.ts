@@ -56,7 +56,7 @@ export const createStock = async (stock: OmitDynamicAttributesStock): Promise<bo
  * Read a stock.
  *
  * @param {string} ticker The ticker of the stock.
- * @returns {Promise<Stock>} A promise that resolves to the stock.
+ * @returns {Promise<Stock>} The stock.
  * @throws an {@link APIError} if the stock does not exist.
  */
 export const readStock = async (ticker: string): Promise<Stock> => {
@@ -73,7 +73,7 @@ export const readStock = async (ticker: string): Promise<Stock> => {
  * Query multiple stocks as well as their count after filtering.
  *
  * @param {Prisma.StockFindManyArgs} args An object with filtering, sorting and pagination options.
- * @returns {Promise<Stock[]>} A promise that resolves to a list of all stocks.
+ * @returns {Promise<Stock[]>} A list of all stocks.
  */
 export const readAllStocks = async (args?: Prisma.StockFindManyArgs): Promise<[Stock[], number]> => {
   return await client.$transaction([

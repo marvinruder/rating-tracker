@@ -115,7 +115,6 @@ server.app.use(async (req, res, next) => {
     // If a session cookie is present
     try {
       // Refresh the cookie on the server and append the user to the response
-      // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
       res.locals.user = await refreshSessionAndFetchUser(req.cookies.authToken);
       res.cookie("authToken", req.cookies.authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
