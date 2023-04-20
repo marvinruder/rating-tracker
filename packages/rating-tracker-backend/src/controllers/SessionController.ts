@@ -36,7 +36,6 @@ export class SessionController {
     accessRights: GENERAL_ACCESS,
   })
   async delete(req: Request, res: Response) {
-    // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
     await deleteSession(req.cookies.authToken);
     res.clearCookie("authToken", {
       httpOnly: true,

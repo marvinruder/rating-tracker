@@ -11,7 +11,7 @@ export const supertest = initSupertest(`http://localhost:${process.env.PORT}`);
  * Requests the full list of stocks from the server and tests that it has the expected length.
  *
  * @param {number} length The expected length of the stock list.
- * @returns {Promise<Stock[]>} A promise that resolves to the list of stocks returned by the server.
+ * @returns {Promise<Stock[]>} The list of stocks returned by the server.
  */
 export const expectStockListLengthToBe = async (length: number): Promise<Stock[]> => {
   const res = await supertest.get(`/api${stockListEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);

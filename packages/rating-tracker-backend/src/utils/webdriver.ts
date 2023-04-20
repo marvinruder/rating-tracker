@@ -19,7 +19,7 @@ type PageLoadStrategy = "normal" | "eager" | "none";
  *
  * @param {boolean} headless whether to run the browser in headless mode
  * @param {PageLoadStrategy} pageLoadStrategy whether to run the browser in headless mode
- * @returns {Promise<WebDriver>} a Promise that resolves to a WebDriver instance
+ * @returns {Promise<WebDriver>} The WebDriver instance
  * @throws an {@link APIError} if the WebDriver cannot be created
  */
 export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadStrategy): Promise<WebDriver> => {
@@ -55,7 +55,7 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
  *
  * @param {WebDriver} driver the WebDriver instance to shut down
  * @param {string } url the URL to open
- * @returns {Promise<boolean>} a Promise resolving to the boolean success of the operation
+ * @returns {Promise<boolean>} Whether the operation succeeded
  */
 export const openPageAndWait = async (driver: WebDriver, url: string): Promise<boolean> => {
   try {
@@ -75,7 +75,6 @@ export const openPageAndWait = async (driver: WebDriver, url: string): Promise<b
  *
  * @param {WebDriver} driver the WebDriver instance to shut down
  * @param {string} sessionID the ID of the WebDriver session
- * @returns {Promise<void>} a Promise that resolves when the WebDriver has been shut down
  * @throws an {@link APIError} if the WebDriver cannot be shut down gracefully
  */
 export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise<void> => {
@@ -100,14 +99,12 @@ export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise
  * @param {WebDriver} driver the WebDriver instance in use
  * @param {Stock} stock the affected stock
  * @param {string} dataProvider the name of the data provider
- * @returns {Promise<string>} a Promise that resolves to a string holding a general informational message and a URL to
- * the screenshot
+ * @returns {Promise<string>} A string holding a general informational message and a URL to the screenshot
  */
 export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvider: string): Promise<string> => {
   const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.png`;
   try {
     const screenshot = await driver.takeScreenshot();
-    // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
     await createResource(
       {
         url: screenshotID,

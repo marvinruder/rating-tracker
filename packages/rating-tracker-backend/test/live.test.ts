@@ -1,9 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config({
-  path: "test/.env", // Load test environment variables before connecting to database
-});
-
 import applyPostgresSeeds from "./seeds/postgres";
 import applyRedisSeeds from "./seeds/redis";
 import { glob } from "glob";

@@ -6,8 +6,6 @@ import client from "../../src/redis/client";
 
 /**
  * Clears and writes example resource data into the resource repository in Redis. Must only be used in tests.
- *
- * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
 const applyResourceSeed = async (): Promise<void> => {
   await resourceRepository.save(
@@ -19,8 +17,6 @@ const applyResourceSeed = async (): Promise<void> => {
 
 /**
  * Clears and writes example session data into the session repository in Redis. Must only be used in tests.
- *
- * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
 const applySessionSeed = async (): Promise<void> => {
   await sessionRepository.save(
@@ -37,8 +33,6 @@ const applySessionSeed = async (): Promise<void> => {
 
 /**
  * Clears and writes example data into the repositories in Redis. Must only be used in tests.
- *
- * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
 const applyRedisSeeds = async (): Promise<void> => {
   if (process.env.NODE_ENV !== "test") {

@@ -59,7 +59,7 @@ const LoginApp = (): JSX.Element => {
    * @param {string} task A description of the task that caused the error.
    * @returns {void}
    */
-  const reportError = (err: AxiosError<any>, task: string) =>
+  const reportError = (err: AxiosError<any>, task: string): void =>
     setNotification({
       severity: "error",
       title: `Error while ${task}`,

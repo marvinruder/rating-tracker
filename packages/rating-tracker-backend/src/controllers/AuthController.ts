@@ -210,7 +210,6 @@ export class AuthController {
 
       // We create and store a session cookie for the user.
       const authToken = randomUUID();
-      // deepcode ignore Ssrf: This is a custom function named `fetch()`, which does not perform a request
       await createSession({ sessionID: authToken, email });
       res.cookie("authToken", authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client

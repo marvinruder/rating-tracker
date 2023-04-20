@@ -414,8 +414,6 @@ const stockData: Stock[] = [
 
 /**
  * Clears and writes example stock data into the stock table in the database. Must only be used in tests.
- *
- * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
 const applyStockSeed = async (): Promise<void> => {
   await client.stock.deleteMany();
@@ -427,8 +425,6 @@ const applyStockSeed = async (): Promise<void> => {
 
 /**
  * Clears and writes example user data into the user table in the database. Must only be used in tests.
- *
- * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
 const applyUserSeed = async (): Promise<void> => {
   await client.user.deleteMany();
@@ -463,8 +459,6 @@ const applyUserSeed = async (): Promise<void> => {
 
 /**
  * Clears and writes example data into the tables in the database. Must only be used in tests.
- *
- * @returns {Promise<void>} a Promise that resolves after the operation is complete.
  */
 const applyPostgresSeeds = async (): Promise<void> => {
   if (process.env.NODE_ENV !== "test") {

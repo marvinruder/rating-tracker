@@ -20,9 +20,9 @@ export const sessionRepository = client.fetchRepository(sessionSchema);
  * Fetch a session from the repository.
  *
  * @param {string} id The ID of the session to fetch.
- * @returns {SessionEntity} The session entity.
+ * @returns {Promise<SessionEntity>} The session entity.
  */
-const fetch = (id: string) => {
+const fetchSession = (id: string): Promise<SessionEntity> => {
   return sessionRepository.fetch(id);
 };
 
@@ -30,9 +30,9 @@ const fetch = (id: string) => {
  * Sets the expiration time of a session to the configured TTL.
  *
  * @param {string} id The ID of the session to refresh.
- * @returns {void}
+ * @returns {Promise<void>}
  */
-const refresh = (id: string) => {
+const refreshSession = (id: string): Promise<void> => {
   return sessionRepository.expire(id, sessionTTLInSeconds);
 };
 
@@ -40,9 +40,9 @@ const refresh = (id: string) => {
  * Save a session to the repository.
  *
  * @param {SessionEntity} sessionEntity The session entity to save.
- * @returns {string} The ID of the saved session.
+ * @returns {Promise<string>} The ID of the saved session.
  */
-const save = (sessionEntity: SessionEntity) => {
+const saveSession = (sessionEntity: SessionEntity): Promise<string> => {
   return sessionRepository.save(sessionEntity);
 };
 
@@ -50,9 +50,9 @@ const save = (sessionEntity: SessionEntity) => {
  * Delete a session from the repository.
  *
  * @param {string} id The ID of the session to delete.
- * @returns {void}
+ * @returns {Promise<void>}
  */
-const remove = (id: string) => {
+const removeSession = (id: string): Promise<void> => {
   return sessionRepository.remove(id);
 };
 
@@ -63,7 +63,8 @@ const remove = (id: string) => {
  * @returns {boolean} Whether the session was created.
  */
 export const createSession = async (session: Session): Promise<boolean> => {
-  const existingSession = await fetch(session.sessionID); // Attempt to fetch an existing session with the same ID
+  // Attempt to fetch an existing session with the same ID
+  const existingSession = await fetchSession(session.sessionID);
   // Difficult to test since session IDs are always created randomly
   /* istanbul ignore next -- @preserve */
   if (existingSession && existingSession.email) {
@@ -74,8 +75,10 @@ export const createSession = async (session: Session): Promise<boolean> => {
   const sessionEntity = new SessionEntity(sessionSchema, session.sessionID, {
     ...session,
   });
-  logger.info(PREFIX_REDIS + `Created session for “${session.email}” with entity ID ${await save(sessionEntity)}.`);
-  await refresh(session.sessionID); // Let the session expire after 30 minutes
+  logger.info(
+    PREFIX_REDIS + `Created session for “${session.email}” with entity ID ${await saveSession(sessionEntity)}.`
+  );
+  await refreshSession(session.sessionID); // Let the session expire after 30 minutes
   return true;
 };
 
@@ -87,9 +90,9 @@ export const createSession = async (session: Session): Promise<boolean> => {
  * @throws an {@link APIError} if the session does not exist.
  */
 export const refreshSessionAndFetchUser = async (sessionID: string): Promise<User> => {
-  const sessionEntity = await fetch(sessionID);
+  const sessionEntity = await fetchSession(sessionID);
   if (sessionEntity && sessionEntity.email) {
-    refresh(sessionID); // Let the session expire after 30 minutes
+    refreshSession(sessionID); // Let the session expire after 30 minutes
     return await readUser(sessionEntity.email);
   }
   throw new APIError(404, `Session ${sessionID} not found.`);
@@ -110,12 +113,12 @@ export const refreshSessionAndFetchUser = async (sessionID: string): Promise<Use
  * @param {string} sessionID The session ID.
  */
 export const deleteSession = async (sessionID: string) => {
-  const sessionEntity = await fetch(sessionID);
+  const sessionEntity = await fetchSession(sessionID);
   // Not reached in current tests since a user can only delete their current session
   /* istanbul ignore else -- @preserve */
   if (sessionEntity && sessionEntity.email) {
     const email = new Session(sessionEntity).email;
-    await remove(sessionEntity.entityId);
+    await removeSession(sessionEntity.entityId);
     logger.info(PREFIX_REDIS + `Deleted session ${sessionID} for user “${email}”.`);
   } else {
     throw new APIError(404, `Session ${sessionID} not found.`);

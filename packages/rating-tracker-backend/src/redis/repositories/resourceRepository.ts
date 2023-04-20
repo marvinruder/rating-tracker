@@ -13,9 +13,9 @@ export const resourceRepository = client.fetchRepository(resourceSchema);
  * Fetch a resource from the repository.
  *
  * @param {string} id The ID of the resource to fetch.
- * @returns {ResourceEntity} The resource entity.
+ * @returns {Promise<ResourceEntity>} The resource entity.
  */
-const fetch = (id: string) => {
+const fetchResource = (id: string): Promise<ResourceEntity> => {
   return resourceRepository.fetch(id);
 };
 
@@ -23,9 +23,9 @@ const fetch = (id: string) => {
  * Save a resource to the repository.
  *
  * @param {ResourceEntity} resourceEntity The resource entity to save.
- * @returns {string} The ID of the saved resource.
+ * @returns {Promise<string>} A string containing the ID of the saved resource.
  */
-const save = (resourceEntity: ResourceEntity) => {
+const saveResource = (resourceEntity: ResourceEntity): Promise<string> => {
   return resourceRepository.save(resourceEntity);
 };
 
@@ -34,9 +34,9 @@ const save = (resourceEntity: ResourceEntity) => {
  *
  * @param {string} id The ID of the resource to expire.
  * @param {number} ttlInSeconds The time in seconds after which the resource should expire.
- * @returns {void}
+ * @returns {Promise<void>}
  */
-const expire = (id: string, ttlInSeconds: number) => {
+const expireResource = (id: string, ttlInSeconds: number): Promise<void> => {
   return resourceRepository.expire(id, ttlInSeconds);
 };
 
@@ -55,10 +55,10 @@ const expire = (id: string, ttlInSeconds: number) => {
  *
  * @param {Resource} resource The resource to create.
  * @param {number} ttlInSeconds The time in seconds after which the resource should expire.
- * @returns {boolean} Whether the resource was created.
+ * @returns {Promise<boolean>} Whether the resource was created.
  */
 export const createResource = async (resource: Resource, ttlInSeconds?: number): Promise<boolean> => {
-  const existingResource = await fetch(resource.url); // Attempt to fetch an existing resource with the same URL
+  const existingResource = await fetchResource(resource.url); // Attempt to fetch an existing resource with the same URL
   // Difficult to test since the implementation always checks whether a cached resource exists before creating a new one
   /* istanbul ignore next -- @preserve */
   if (existingResource && existingResource.content) {
@@ -69,8 +69,9 @@ export const createResource = async (resource: Resource, ttlInSeconds?: number):
   const resourceEntity = new ResourceEntity(resourceSchema, resource.url, {
     ...resource,
   });
-  logger.info(PREFIX_REDIS + `Created resource with entity ID ${await save(resourceEntity)}.`);
-  ttlInSeconds && (await expire(resource.url, ttlInSeconds)); // If set, let the resource expire after the given time
+  logger.info(PREFIX_REDIS + `Created resource with entity ID ${await saveResource(resourceEntity)}.`);
+  // If set, let the resource expire after the given time
+  ttlInSeconds && (await expireResource(resource.url, ttlInSeconds));
   return true;
 };
 
@@ -78,11 +79,11 @@ export const createResource = async (resource: Resource, ttlInSeconds?: number):
  * Read a resource.
  *
  * @param {string} url The URL of the resource to read.
- * @returns {Resource} The resource.
+ * @returns {Promise<Resource>} The resource.
  * @throws an {@link APIError} if the resource does not exist.
  */
-export const readResource = async (url: string) => {
-  const resourceEntity = await fetch(url);
+export const readResource = async (url: string): Promise<Resource> => {
+  const resourceEntity = await fetchResource(url);
   if (resourceEntity && resourceEntity.content) {
     return new Resource(resourceEntity);
   } else {

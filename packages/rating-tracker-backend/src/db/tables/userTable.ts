@@ -9,7 +9,7 @@ import client from "../client.js";
  * Create a user with credentials.
  *
  * @param {UserWithCredentials} user The user to create.
- * @returns {Promise<boolean>} A promise that resolves to true if the user was created, false if it already existed.
+ * @returns {Promise<boolean>} Whether the user was created or existed already.
  */
 export const createUser = async (user: UserWithCredentials): Promise<boolean> => {
   // Attempt to find an existing user with the same email address
@@ -40,7 +40,7 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
  * Read a user.
  *
  * @param {string} email The email address of the user.
- * @returns {Promise<User>} A promise that resolves to the user.
+ * @returns {Promise<User>} The user.
  * @throws an {@link APIError} if the user does not exist.
  */
 export const readUser = async (email: string): Promise<User> => {
@@ -58,7 +58,7 @@ export const readUser = async (email: string): Promise<User> => {
  * Read a user and include credentials.
  *
  * @param {string} email The email address of the user.
- * @returns {Promise<UserWithCredentials>} A promise that resolves to the user.
+ * @returns {Promise<UserWithCredentials>} The user.
  * @throws an {@link APIError} if the user does not exist.
  */
 export const readUserWithCredentials = async (email: string): Promise<UserWithCredentials> => {
@@ -75,7 +75,7 @@ export const readUserWithCredentials = async (email: string): Promise<UserWithCr
 /**
  * Read all users.
  *
- * @returns {Promise<User[]>} A promise that resolves to a list of all users.
+ * @returns {Promise<User[]>} A list of all users.
  */
 export const readAllUsers = async (): Promise<User[]> => {
   const users = await client.user.findMany();
@@ -86,7 +86,7 @@ export const readAllUsers = async (): Promise<User[]> => {
  * Check whether a user exists.
  *
  * @param {string} email The email address of the user.
- * @returns {Promise<boolean>} A promise that resolves to true if the user exists, false otherwise.
+ * @returns {Promise<boolean>} Whether the user exists.
  */
 export const userExists = async (email: string): Promise<boolean> => {
   try {
