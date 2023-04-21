@@ -1,4 +1,4 @@
-FROM node:19.9.0-alpine as test
+FROM node:20.0.0-alpine as test
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
