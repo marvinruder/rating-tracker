@@ -269,7 +269,9 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
                     title={
                       <>
                         <Typography variant="body1" paddingBottom={1}>
-                          An overall score that combines the financial and ESG scores via equal weighting.
+                          An overall score that combines the financial and ESG scores, computed as the harmonic mean of
+                          both, so that a stock has to perform well in both financial and ESG ratings to obtain a good
+                          total score.
                         </Typography>
                         <Typography variant="body2">
                           Values range from 0 to 100, where a score of 0 indicates an average-performing company and a

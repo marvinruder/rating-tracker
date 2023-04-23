@@ -49,7 +49,7 @@ export type Stock = {
    */
   esgScore: number;
   /**
-   * he stock’s score based on both its financial and ESG ratings.
+   * The stock’s score based on both its financial and ESG ratings.
    */
   totalScore: number;
   /**

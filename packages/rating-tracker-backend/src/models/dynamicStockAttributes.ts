@@ -235,7 +235,8 @@ const getESGScore = (stock: OmitDynamicAttributesStock): number => {
 };
 
 /**
- * Provides a score for the stock based on both its financial and ESG ratings.
+ * Provides a score for the stock based on both its financial and ESG ratings. The harmonic mean of both numbers is used
+ * so that a stock has to perform well in both financial and ESG ratings to obtain a good total score.
  *
  * @param {Stock} stock The stock.
  * @returns {number} The score, ranging from -1 (poor) to 1 (excellent).
