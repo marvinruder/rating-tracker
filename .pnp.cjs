@@ -6236,12 +6236,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["glob", [\
-        ["npm:10.2.1", {\
-          "packageLocation": "./.yarn/cache/glob-npm-10.2.1-16228b79f0-760a624138.zip/node_modules/glob/",\
+        ["npm:10.2.2", {\
+          "packageLocation": "./.yarn/cache/glob-npm-10.2.2-4cf80ebee7-33cbbbea74.zip/node_modules/glob/",\
           "packageDependencies": [\
-            ["glob", "npm:10.2.1"],\
+            ["glob", "npm:10.2.2"],\
             ["foreground-child", "npm:3.1.1"],\
-            ["fs.realpath", "npm:1.0.0"],\
             ["jackspeak", "npm:2.0.3"],\
             ["minimatch", "npm:9.0.0"],\
             ["minipass", "npm:5.0.0"],\
@@ -9068,7 +9067,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-async-errors", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:3.1.1"],\
             ["express-openapi-validator", "npm:5.0.3"],\
             ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.7.0"],\
-            ["glob", "npm:10.2.1"],\
+            ["glob", "npm:10.2.2"],\
             ["pino", "npm:8.11.0"],\
             ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.7"],\
