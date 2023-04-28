@@ -44,7 +44,7 @@
     "pino": "8.11.0",
     "pino-pretty": "10.0.0",
     "rating-tracker-commons": "workspace:*",
-    "redis": "4.6.5",
+    "redis": "4.6.6",
     "redis-om": "0.3.6",
     "response-time": "2.3.2",
     "selenium-webdriver": "4.9.0",
