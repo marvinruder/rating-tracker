@@ -74,10 +74,12 @@ node {
                     docker cp \$id:/workdir/packages/rating-tracker-frontend/coverage/. ./coverage/frontend
                     docker rm -v \$id
                     """
-                    withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
-                        sh """#!/usr/bin/env bash
-                        bash <(curl -Ls https://coverage.codacy.com/get.sh) report \$(find . -name 'clover.xml' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')
-                        """
+                    lock('codacy-coverage-reporter') {
+                        withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
+                            sh """#!/usr/bin/env bash
+                            bash <(curl -Ls https://coverage.codacy.com/get.sh) report \$(find . -name 'clover.xml' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')
+                            """
+                        }
                     }
                 }
             },
