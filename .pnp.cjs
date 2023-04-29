@@ -2939,10 +2939,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/selenium-webdriver", [\
-        ["npm:4.1.13", {\
-          "packageLocation": "./.yarn/cache/@types-selenium-webdriver-npm-4.1.13-cba94c83dc-78f0613656.zip/node_modules/@types/selenium-webdriver/",\
+        ["npm:4.1.14", {\
+          "packageLocation": "./.yarn/cache/@types-selenium-webdriver-npm-4.1.14-02c7a016ec-a1b4c2cd36.zip/node_modules/@types/selenium-webdriver/",\
           "packageDependencies": [\
-            ["@types/selenium-webdriver", "npm:4.1.13"],\
+            ["@types/selenium-webdriver", "npm:4.1.14"],\
             ["@types/ws", "npm:8.5.4"]\
           ],\
           "linkType": "HARD"\
@@ -9045,7 +9045,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cron", "npm:2.0.1"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/node", "npm:18.16.3"],\
-            ["@types/selenium-webdriver", "npm:4.1.13"],\
+            ["@types/selenium-webdriver", "npm:4.1.14"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@typescript-eslint/eslint-plugin", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:5.59.1"],\
             ["@typescript-eslint/parser", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:5.59.1"],\
