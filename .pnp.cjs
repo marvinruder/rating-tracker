@@ -65,10 +65,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@apidevtools/json-schema-ref-parser", [\
-        ["npm:9.0.9", {\
-          "packageLocation": "./.yarn/cache/@apidevtools-json-schema-ref-parser-npm-9.0.9-cda77aa4ae-b21f6bdd37.zip/node_modules/@apidevtools/json-schema-ref-parser/",\
+        ["npm:9.1.2", {\
+          "packageLocation": "./.yarn/cache/@apidevtools-json-schema-ref-parser-npm-9.1.2-563d0b267a-5bd6885db0.zip/node_modules/@apidevtools/json-schema-ref-parser/",\
           "packageDependencies": [\
-            ["@apidevtools/json-schema-ref-parser", "npm:9.0.9"],\
+            ["@apidevtools/json-schema-ref-parser", "npm:9.1.2"],\
             ["@jsdevtools/ono", "npm:7.1.3"],\
             ["@types/json-schema", "npm:7.0.11"],\
             ["call-me-maybe", "npm:1.0.2"],\
@@ -3626,10 +3626,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:c462ad203319eeb65fc49123e96d909afd6b0363f1b7a44a93c771a28edd7bca0d5787228be4d86f81aef0f6075ba1c7024f9013c248fd9ecc14621c751bc468#npm:1.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/ajv-draft-04-virtual-9b56257deb/0/cache/ajv-draft-04-npm-1.0.0-6fc962dbab-3f11fa0e7f.zip/node_modules/ajv-draft-04/",\
+        ["virtual:95e9fadff5b935a1a9345ca95cb65a86d6c44be1a1f2f23857f8d760f582ba2cca999914ffa898a05c76b112ad22e3e73819378a483f4b67c3d94a8f3f7f0ecc#npm:1.0.0", {\
+          "packageLocation": "./.yarn/__virtual__/ajv-draft-04-virtual-fb0dcb5f47/0/cache/ajv-draft-04-npm-1.0.0-6fc962dbab-3f11fa0e7f.zip/node_modules/ajv-draft-04/",\
           "packageDependencies": [\
-            ["ajv-draft-04", "virtual:c462ad203319eeb65fc49123e96d909afd6b0363f1b7a44a93c771a28edd7bca0d5787228be4d86f81aef0f6075ba1c7024f9013c248fd9ecc14621c751bc468#npm:1.0.0"],\
+            ["ajv-draft-04", "virtual:95e9fadff5b935a1a9345ca95cb65a86d6c44be1a1f2f23857f8d760f582ba2cca999914ffa898a05c76b112ad22e3e73819378a483f4b67c3d94a8f3f7f0ecc#npm:1.0.0"],\
             ["@types/ajv", null],\
             ["ajv", "npm:8.12.0"]\
           ],\
@@ -3648,10 +3648,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:c462ad203319eeb65fc49123e96d909afd6b0363f1b7a44a93c771a28edd7bca0d5787228be4d86f81aef0f6075ba1c7024f9013c248fd9ecc14621c751bc468#npm:2.1.1", {\
-          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-a9027260e5/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
+        ["virtual:95e9fadff5b935a1a9345ca95cb65a86d6c44be1a1f2f23857f8d760f582ba2cca999914ffa898a05c76b112ad22e3e73819378a483f4b67c3d94a8f3f7f0ecc#npm:2.1.1", {\
+          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-cd9b18b7bf/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
           "packageDependencies": [\
-            ["ajv-formats", "virtual:c462ad203319eeb65fc49123e96d909afd6b0363f1b7a44a93c771a28edd7bca0d5787228be4d86f81aef0f6075ba1c7024f9013c248fd9ecc14621c751bc468#npm:2.1.1"],\
+            ["ajv-formats", "virtual:95e9fadff5b935a1a9345ca95cb65a86d6c44be1a1f2f23857f8d760f582ba2cca999914ffa898a05c76b112ad22e3e73819378a483f4b67c3d94a8f3f7f0ecc#npm:2.1.1"],\
             ["@types/ajv", null],\
             ["ajv", "npm:8.12.0"]\
           ],\
@@ -5751,17 +5751,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["express-openapi-validator", [\
-        ["npm:5.0.3", {\
-          "packageLocation": "./.yarn/cache/express-openapi-validator-npm-5.0.3-c462ad2033-34d9fea25d.zip/node_modules/express-openapi-validator/",\
+        ["npm:5.0.4", {\
+          "packageLocation": "./.yarn/cache/express-openapi-validator-npm-5.0.4-95e9fadff5-5f41d63232.zip/node_modules/express-openapi-validator/",\
           "packageDependencies": [\
-            ["express-openapi-validator", "npm:5.0.3"],\
+            ["express-openapi-validator", "npm:5.0.4"],\
+            ["@apidevtools/json-schema-ref-parser", "npm:9.1.2"],\
             ["@types/multer", "npm:1.4.7"],\
             ["ajv", "npm:8.12.0"],\
-            ["ajv-draft-04", "virtual:c462ad203319eeb65fc49123e96d909afd6b0363f1b7a44a93c771a28edd7bca0d5787228be4d86f81aef0f6075ba1c7024f9013c248fd9ecc14621c751bc468#npm:1.0.0"],\
-            ["ajv-formats", "virtual:c462ad203319eeb65fc49123e96d909afd6b0363f1b7a44a93c771a28edd7bca0d5787228be4d86f81aef0f6075ba1c7024f9013c248fd9ecc14621c751bc468#npm:2.1.1"],\
+            ["ajv-draft-04", "virtual:95e9fadff5b935a1a9345ca95cb65a86d6c44be1a1f2f23857f8d760f582ba2cca999914ffa898a05c76b112ad22e3e73819378a483f4b67c3d94a8f3f7f0ecc#npm:1.0.0"],\
+            ["ajv-formats", "virtual:95e9fadff5b935a1a9345ca95cb65a86d6c44be1a1f2f23857f8d760f582ba2cca999914ffa898a05c76b112ad22e3e73819378a483f4b67c3d94a8f3f7f0ecc#npm:2.1.1"],\
             ["content-type", "npm:1.0.5"],\
             ["express", "npm:4.18.2"],\
-            ["json-schema-ref-parser", "npm:9.0.9"],\
             ["lodash.clonedeep", "npm:4.5.0"],\
             ["lodash.get", "npm:4.4.2"],\
             ["lodash.uniq", "npm:4.5.0"],\
@@ -7265,16 +7265,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/json-parse-even-better-errors-npm-2.3.1-144d62256e-798ed4cf33.zip/node_modules/json-parse-even-better-errors/",\
           "packageDependencies": [\
             ["json-parse-even-better-errors", "npm:2.3.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["json-schema-ref-parser", [\
-        ["npm:9.0.9", {\
-          "packageLocation": "./.yarn/cache/json-schema-ref-parser-npm-9.0.9-1203e379cb-e05166a84c.zip/node_modules/json-schema-ref-parser/",\
-          "packageDependencies": [\
-            ["json-schema-ref-parser", "npm:9.0.9"],\
-            ["@apidevtools/json-schema-ref-parser", "npm:9.0.9"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9066,7 +9056,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-prettier", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:4.2.1"],\
             ["express", "npm:4.18.2"],\
             ["express-async-errors", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:3.1.1"],\
-            ["express-openapi-validator", "npm:5.0.3"],\
+            ["express-openapi-validator", "npm:5.0.4"],\
             ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.7.0"],\
             ["glob", "npm:10.2.2"],\
             ["pino", "npm:8.11.0"],\
