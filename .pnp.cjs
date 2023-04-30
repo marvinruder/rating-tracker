@@ -4576,7 +4576,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["concurrently", "npm:8.0.1"],\
             ["chalk", "npm:4.1.2"],\
-            ["date-fns", "npm:2.29.3"],\
+            ["date-fns", "npm:2.30.0"],\
             ["lodash", "npm:4.17.21"],\
             ["rxjs", "npm:7.8.0"],\
             ["shell-quote", "npm:1.8.0"],\
@@ -4794,10 +4794,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["date-fns", [\
-        ["npm:2.29.3", {\
-          "packageLocation": "./.yarn/cache/date-fns-npm-2.29.3-fef7e3c72c-e01cf5b62a.zip/node_modules/date-fns/",\
+        ["npm:2.30.0", {\
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.30.0-895c790e0f-f7be015232.zip/node_modules/date-fns/",\
           "packageDependencies": [\
-            ["date-fns", "npm:2.29.3"]\
+            ["date-fns", "npm:2.30.0"],\
+            ["@babel/runtime", "npm:7.21.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9056,7 +9057,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["concurrently", "npm:8.0.1"],\
             ["cookie-parser", "npm:1.4.6"],\
             ["cron", "npm:2.3.0"],\
-            ["date-fns", "npm:2.29.3"],\
+            ["date-fns", "npm:2.30.0"],\
             ["dotenv", "npm:16.0.3"],\
             ["eslint", "npm:8.39.0"],\
             ["eslint-config-google", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:0.14.0"],\
@@ -9129,7 +9130,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apexcharts", "npm:3.39.0"],\
             ["axios", "npm:1.4.0"],\
             ["clsx", "npm:1.2.1"],\
-            ["date-fns", "npm:2.29.3"],\
+            ["date-fns", "npm:2.30.0"],\
             ["eslint", "npm:8.39.0"],\
             ["eslint-config-google", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:0.14.0"],\
             ["eslint-config-prettier", "virtual:90c10f10e1a9f35612cc2e92c0b9422d91b236e492bc27a97b58c14b28b7c5e95b3bfbb9cd1be8db34efcac51e473087f8709e8cf151c9af6d3b332b8f4c0ad5#npm:8.8.0"],\
