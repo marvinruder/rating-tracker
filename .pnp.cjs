@@ -45,7 +45,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["concurrently", "npm:8.0.1"],\
             ["eslint", "npm:8.39.0"],\
-            ["pino", "npm:8.11.0"],\
+            ["pino", "npm:8.12.0"],\
             ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.8"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
@@ -8623,10 +8623,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pino", [\
-        ["npm:8.11.0", {\
-          "packageLocation": "./.yarn/cache/pino-npm-8.11.0-8f5941659a-1bcc2b9b44.zip/node_modules/pino/",\
+        ["npm:8.12.0", {\
+          "packageLocation": "./.yarn/cache/pino-npm-8.12.0-1239cf3b39-22cc6ad954.zip/node_modules/pino/",\
           "packageDependencies": [\
-            ["pino", "npm:8.11.0"],\
+            ["pino", "npm:8.12.0"],\
             ["atomic-sleep", "npm:1.0.0"],\
             ["fast-redact", "npm:3.1.2"],\
             ["on-exit-leak-free", "npm:2.1.0"],\
@@ -9018,7 +9018,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rating-tracker", "workspace:."],\
             ["concurrently", "npm:8.0.1"],\
             ["eslint", "npm:8.39.0"],\
-            ["pino", "npm:8.11.0"],\
+            ["pino", "npm:8.12.0"],\
             ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.8"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
@@ -9059,7 +9059,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-openapi-validator", "npm:5.0.4"],\
             ["express-rate-limit", "virtual:4ab4f24a2b10597a9647c5394051a0492198b7c68ac22c705b09c48266ee89ffc4fd2c5de1704a4f6b1fc7b77b7f3e43983b69d74c737ef8fa65691088667847#npm:6.7.0"],\
             ["glob", "npm:10.2.2"],\
-            ["pino", "npm:8.11.0"],\
+            ["pino", "npm:8.12.0"],\
             ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.8"],\
             ["prisma", "npm:4.13.0"],\
