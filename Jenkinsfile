@@ -31,7 +31,7 @@ node {
 
             dep: {
                 stage ('Install dependencies') {
-                    sh "mkdir -p /tmp/global && cp -arn /tmp/global ."
+                    sh "mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global ."
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f Dockerfile-yarn .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
@@ -41,7 +41,7 @@ node {
                     docker cp \$id:/workdir/packages/rating-tracker-backend/prisma/client/. ./packages/rating-tracker-backend/prisma/client
                     docker rm -v \$id
                     """
-                    sh "cp -arn ./global /tmp"
+                    sh "cp -arn ./global /home/jenkins/.cache/yarn"
                 }
             }
         )
