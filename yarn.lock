@@ -7361,13 +7361,8 @@ __metadata:
   dependencies:
     concurrently: 8.0.1
     eslint: 8.39.0
-    pino: 8.12.1
-    pino-pretty: 10.0.0
     prettier: 2.8.8
     typescript: 5.0.4
-  dependenciesMeta:
-    pino-pretty@10.0.0:
-      unplugged: true
   languageName: unknown
   linkType: soft
 

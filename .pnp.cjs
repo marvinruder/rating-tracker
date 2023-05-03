@@ -45,8 +45,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["concurrently", "npm:8.0.1"],\
             ["eslint", "npm:8.39.0"],\
-            ["pino", "npm:8.12.1"],\
-            ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.8"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
           ],\
@@ -8655,7 +8653,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],\
       ["pino-pretty", [\
         ["npm:10.0.0", {\
-          "packageLocation": "./.yarn/unplugged/pino-pretty-npm-10.0.0-6c83b3ab2b/node_modules/pino-pretty/",\
+          "packageLocation": "./.yarn/cache/pino-pretty-npm-10.0.0-6c83b3ab2b-af45c69fdb.zip/node_modules/pino-pretty/",\
           "packageDependencies": [\
             ["pino-pretty", "npm:10.0.0"],\
             ["colorette", "npm:2.0.19"],\
@@ -9018,8 +9016,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rating-tracker", "workspace:."],\
             ["concurrently", "npm:8.0.1"],\
             ["eslint", "npm:8.39.0"],\
-            ["pino", "npm:8.12.1"],\
-            ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.8"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
           ],\
