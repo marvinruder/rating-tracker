@@ -23,10 +23,13 @@ RUN mkdir -p /workdir/app/packages/rating-tracker-backend/public /workdir/app/pa
   cp -r /workdir/packages/rating-tracker-frontend/dist/* /workdir/app/packages/rating-tracker-backend/public && \
   find /workdir/app -name '*.d.ts' -type f -delete
 
-FROM node:20.1.0-alpine as run
+FROM alpine:3.17.3 as run
 ENV NODE_ENV production
 WORKDIR /app
-RUN apk add --no-cache dumb-init
+RUN --mount=type=cache,target=/var/cache/apk apk add dumb-init
+COPY --from=build /etc/passwd /etc
+COPY --from=build /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
+COPY --from=build /usr/local/bin/node /usr/local/bin
 USER node
 COPY --from=build --chown=node:node /workdir/app .
 CMD [ "node", "--experimental-loader", "./.pnp.loader.mjs", "-r", "./.pnp.cjs", "packages/rating-tracker-backend/dist/src/server.js" ]
