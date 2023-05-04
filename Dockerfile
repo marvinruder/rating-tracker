@@ -1,4 +1,4 @@
-FROM node:19.9.0-alpine as build
+FROM node:20.1.0-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
@@ -23,7 +23,7 @@ RUN mkdir -p /workdir/app/packages/rating-tracker-backend/public /workdir/app/pa
   cp -r /workdir/packages/rating-tracker-frontend/dist/* /workdir/app/packages/rating-tracker-backend/public && \
   find /workdir/app -name '*.d.ts' -type f -delete
 
-FROM node:19.9.0-alpine as run
+FROM node:20.1.0-alpine as run
 ENV NODE_ENV production
 WORKDIR /app
 RUN apk add --no-cache dumb-init
