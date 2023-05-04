@@ -28,7 +28,7 @@ ENV NODE_ENV production
 WORKDIR /app
 RUN --mount=type=cache,target=/var/cache/apk apk add dumb-init
 COPY --from=build /etc/passwd /etc
-COPY --from=build /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib
+COPY --from=build /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
 COPY --from=build /usr/local/bin/node /usr/local/bin
 USER node
 COPY --from=build --chown=node:node /workdir/app .
