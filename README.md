@@ -55,6 +55,18 @@ Based on their access rights, users can subscribe to updates of stock ratings, f
 
 When fetching a stock fails, a screenshot of the page the fetch was attempted from is stored and a link to them is sent to stock maintainers who subscribed to error reports, so they can analyze and fix the issue.
 
+#### Logging
+
+Logs are printed to `stdout` as well as rotating log files with [`pino-pretty`](https://yarnpkg.com/package/pino-pretty). While the `stdout` log output is already rendered with beautiful colors and icons in a [p10k](https://github.com/romkatv/powerlevel10k)-like fashion (for which a [font supporting all characters](https://github.com/romkatv/powerlevel10k/blob/master/font.md) may be required), the log files are JSON-formatted and can be pretty-printed using [`pino-pretty`](https://yarnpkg.com/package/pino-pretty). A minimal containerized setup can be added to your `.zshrc` or `.bashrc` like this:
+
+```shell
+# ~/.zshrc
+alias pino-pretty="{ (echo -e \"FROM node:alpine\nRUN yarn global add pino-pretty\nENTRYPOINT [ \\\"pino-pretty\\\" ]\" | docker build -q - -t pino-pretty > /dev/null) && docker run -i --rm pino-pretty; }"
+
+# To view a log file:
+cat logs/rating-tracker.log | pino-pretty | less
+```
+
 #### …and more to come!
 
 Planned features are documented [here](https://github.com/marvinruder/rating-tracker/issues?q=is%3Aopen+is%3Aissue+label%3Afeature). If you feel that something is missing, feel free to [request a feature](https://github.com/marvinruder/rating-tracker/issues/new?assignees=marvinruder&labels=feature&template=feature_request.md&title=)!
