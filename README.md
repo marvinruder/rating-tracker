@@ -61,7 +61,7 @@ Logs are printed to `stdout` as well as rotating log files with [`pino-pretty`](
 
 ```shell
 # ~/.zshrc
-alias pino-pretty="{ (echo -e \"FROM node:alpine\nRUN yarn global add pino-pretty\nENTRYPOINT [ \\\"pino-pretty\\\" ]\" | docker build -q - -t pino-pretty > /dev/null) && docker run -i --rm pino-pretty; }"
+alias pino-pretty="{ (echo -e \"FROM node:alpine\nRUN yarn global add pino-pretty\nENTRYPOINT [ \\\"pino-pretty\\\" ]\" | docker build -q - -t pino-pretty > /dev/null) && docker run -i --rm pino-pretty -c; }"
 
 # To view a log file:
 cat logs/rating-tracker.log | pino-pretty | less
@@ -77,9 +77,167 @@ An instance of the Rating Tracker is publicly available at https://ratingtracker
 
 ## Deployment
 
+Rating Tracker is built to be deployed using Docker or a similar container platform.
+
 ### Prerequisites
 
-### Example Setup using Docker Compose
+To run Rating Tracker, the following services must be available:
+
+* [PostgreSQL](https://hub.docker.com/_/postgres), storing information related to stocks and users
+* [Redis](https://hub.docker.com/_/redis), caching session IDs, stock logos and other resources
+* [Selenium (Chrome Standalone)](https://hub.docker.com/r/selenium/standalone-chrome), fetching stock information from websites (a [Grid setup](https://www.selenium.dev/documentation/grid/getting_started/#hub-and-node) with a [hub](https://hub.docker.com/r/selenium/hub) and [Chrome-based nodes](https://hub.docker.com/r/selenium/node-chrome) can also be used)
+* [Signal Messenger REST API](https://hub.docker.com/r/bbernhard/signal-cli-rest-api), sending notifications via the Signal messenger
+* [nginx](https://hub.docker.com/_/nginx), set up as a reverse proxy to provide SSL encryption (required for most WebAuthn clients)
+
+### Minimal Example Setup using Docker Compose
+
+Docker Compose is the preferred way to run Rating Tracker together with all the services it depends on. The following configuration file shows an exemplary setup.
+
+<details>
+<summary>View Docker Compose configuration</summary>
+
+```yml
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:alpine
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_DB: "rating-tracker"
+      POSTGRES_USER: "rating-tracker"
+      POSTGRES_PASSWORD: "********"
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+    shm_size: '256mb'
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+    command: redis-server --save 60 1 --activedefrag yes --aclfile /etc/redis/users.acl
+    volumes:
+      - ./redis/data:/data
+      - ./redis/config:/etc/redis # the ACL file with the user and password must be created in this folder
+
+  selenium:
+    image: selenium/standalone-chrome
+    environment:
+      - SE_NODE_MAX_SESSIONS=4 # adjust to your CPU
+    ports:
+      - "127.0.0.1:4444:4444"
+    shm_size: '2gb'
+
+  signal:
+    image: bbernhard/signal-cli-rest-api
+    environment:
+      - MODE=native
+      - AUTO_RECEIVE_SCHEDULE=0 * * * *
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./signal-cli:/home/.local/share/signal-cli
+
+  rating-tracker:
+    image: marvinruder/rating-tracker
+    tty: true # required for colored output to stdout
+    environment:
+      PORT: 21076
+      DOMAIN: "example.com"
+      SUBDOMAIN: "ratingtracker"
+      LOG_FILE: "/app/logs/rating-tracker-log-(DATE).log" # (DATE) is replaced by the current date to support log rotation
+      DATABASE_URL: "postgresql://rating-tracker:********@postgres:5432/rating-tracker?schema=rating-tracker"
+      REDIS_URL: "redis://redis:6379"
+      REDIS_USER: "rating-tracker"
+      REDIS_PASS: "********"
+      SELENIUM_URL: "http://selenium:4444"
+      SELENIUM_MAX_CONCURRENCY: 4 # must be ≤ SE_NODE_MAX_SESSIONS of Selenium container
+      AUTO_FETCH_SCHEDULE: "0 0 0 * * *" # this format includes seconds
+      SIGNAL_URL: "http://signal:8080"
+      SIGNAL_SENDER: "+12345678900"
+    ports:
+      - "127.0.0.1:443:21076" # optional if nginx runs in same Docker Compose setup
+    volumes:
+      - ./logs/rating-tracker:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - selenium
+      - signal
+    restart: unless-stopped
+```
+</details>
+
+The port bindings are optional but helpful to connect to the services from the host, e.g. for debugging purposes. 
+
+### Setup steps
+
+#### Initialize database setup
+
+Rating Tracker uses Prisma to interact with a PostgreSQL database. Although not officially recommended, a quick, easy and fairly safe way to initialize a new database with the required tables, constraints and indexes is to 
+
+1. Clone the repository and run `yarn` from within the `packages/rating-tracker-backend` folder.
+2. Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
+3. Run `yarn pnpify prisma migrate deploy`.
+
+#### Create Redis user and password
+
+Create the file `users.acl`  with the following content: 
+
+```
+user default off
+user rating-tracker allcommands allkeys allchannels on >********
+```
+
+Refer to the exemplary Docker Compose setup for information on where to place the ACL file.
+
+To use a password hash, first create the file above and start up Redis, then connect, authenticate and run `ACL GETUSER rating-tracker`. The output shows the hash of the password, which can then be used in the ACL file:
+
+```
+user default off
+user rating-tracker allcommands allkeys allchannels on #07ab59f4[…]072e07fb
+```
+
+More info on ACL files in Redis can be found [here](https://redis.io/docs/management/security/acl/).
+
+#### Create Signal account
+
+Run a shell in the `signal` container and proceed with [this excellent documentation](https://github.com/AsamK/signal-cli/wiki/Quickstart#set-up-an-account).
+
+#### Configure webserver as reverse proxy
+
+After setting up NGINX as a webserver with SSL, the following virtual host configuration can be used to run a reverse proxy which also adds security- and privacy-related HTTP headers compatible with Rating Tracker.
+
+<details>
+<summary>View NGINX configuration</summary>
+
+```
+add_header "Content-Security-Policy" "default-src 'self'; img-src 'self' data:; style-src-elem 'self' 'unsafe-inline'; frame-ancestors 'none'; form-action 'self'; base-uri 'none';";
+add_header "Strict-Transport-Security" "max-age=31536000; includeSubDomains" always;
+add_header "X-Frame-Options" "DENY";
+add_header "X-Content-Type-Options" "nosniff";
+add_header "Referrer-Policy" "same-origin";
+add_header "Cross-Origin-Opener-Policy" "same-origin";
+add_header "Cross-Origin-Resource-Policy" "same-site";
+add_header "Cross-Origin-Embedder-Policy" "require-corp";
+add_header "Permissions-Policy" "interest-cohort=();";
+
+resolver 127.0.0.11 valid=15s; # DNS resolver from Docker to resolve Docker Compose container names
+
+location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    set $target_host rating-tracker; # use 127.0.0.1 here if nginx runs outside of Docker Compose setup
+    proxy_pass http://$target_host:21076;
+}
+```
+</details>
+
+### Supported environment variables
 
 ## API References
 
