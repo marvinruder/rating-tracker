@@ -1,7 +1,7 @@
 /**
  * This class is used to throw errors in the application which are associated with an HTTP status code.
  */
-class APIError extends Error {
+export default class APIError extends Error {
   status: number;
 
   /**
@@ -21,5 +21,3 @@ class APIError extends Error {
     Object.setPrototypeOf(this, APIError.prototype);
   }
 }
-
-export default APIError;

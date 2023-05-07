@@ -19,7 +19,7 @@ import { sendMessage } from "../signal/signal.js";
  * @param {string} bypassAuthenticationForInternalRequestsToken A token that must be used in an authentication cookie
  * @param {string} autoFetchSchedule A cron-like schedule description.
  */
-const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, autoFetchSchedule: string) => {
+export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchSchedule: string) => {
   new cron.CronJob(
     autoFetchSchedule,
     async () => {
@@ -125,5 +125,3 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
   );
   logger.info("");
 };
-
-export default setupCronJobs;

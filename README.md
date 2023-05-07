@@ -41,7 +41,7 @@ The fetching can be scheduled by providing a Cron-like specifier in an environme
 
 #### Stock Logos
 
-When providing an ISIN for a stock, its logo is automatically fetched and cached from TradeRepublic.
+When providing an ISIN for a stock, its logo is automatically fetched and cached from TradeRepublic broker.
 
 #### Rating Scores
 

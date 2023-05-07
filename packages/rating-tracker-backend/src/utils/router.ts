@@ -50,7 +50,7 @@ const Router = <This>(options: RouterOptions): any => {
  * @param {RouterOptions} options The router options.
  * @returns {any} some decorator magic
  */
-const Router = <This>(options: RouterOptions): any => {
+export default <This>(options: RouterOptions): any => {
   return (controllerClass: This, controllerFnName: string) => {
     const controllerFn = controllerClass[controllerFnName];
     const controllerFnWithAccessRightCheck = async (req: Request, res: Response, next: NextFunction) => {
@@ -80,5 +80,3 @@ const Router = <This>(options: RouterOptions): any => {
       : router[options.method](options.path, controllerFnWithAccessRightCheck);
   };
 };
-
-export default Router;

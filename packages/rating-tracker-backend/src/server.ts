@@ -11,6 +11,14 @@ import responseTime from "response-time";
 import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository.js";
 import path from "path";
 import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger.js";
+import { fileURLToPath } from "url";
+import errorHandler from "./utils/errorHandler.js";
+import setupCronJobs from "./utils/cron.js";
+import startup from "./utils/startup.js";
+
+dotenv.config();
+
+startup();
 
 // Import all controllers
 import "./controllers/AuthController.js";
@@ -23,13 +31,8 @@ import "./controllers/StockController.js";
 import "./controllers/UserController.js";
 import "./controllers/UserManagementController.js";
 
-import { fileURLToPath } from "url";
-import errorHandler from "./utils/errorHandler.js";
-import setupCronJobs from "./utils/cron.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-dotenv.config();
 
 /**
  * A token that is used to bypass authentication for requests sent by Cron jobs. It is generated randomly and changes on
