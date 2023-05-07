@@ -20,9 +20,8 @@ A web service fetching and providing financial and ESG ratings for stocks.
 
 Stocks and their information are presented in a paginated table which offers comprehensive and in-depth sorting and filtering by many of the available attributes.
 
-<img style="height:250px;"/>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist.png" alt="Rating Tracker Stock List" style="height:500px; width:960px;"/>
+  <img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist.png" alt="Rating Tracker Stock List" />
 </p>
 
 #### Automatic and scheduled data fetching from several providers
