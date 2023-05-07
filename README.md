@@ -20,9 +20,7 @@ A web service fetching and providing financial and ESG ratings for stocks.
 
 Stocks and their information are presented in a paginated table which offers comprehensive and in-depth sorting and filtering by many of the available attributes.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist.png" alt="Rating Tracker Stock List" />
-</p>
+<img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist.png" alt="Rating Tracker Stock List" />
 
 #### Automatic and scheduled data fetching from several providers
 
@@ -51,9 +49,14 @@ The financial and ESG score are used to compute a total score using the harmonic
 
 The Rating Tracker supports multiple users, who can self-register via WebAuthn and access the application after being granted fine-grained access by an administrator, for whom a “User Management” web interface is provided.
 
+<img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/usermanagement.png" alt="Rating Tracker User Management" />
+
 #### Notification Messages via Signal
 
 Based on their access rights, users can subscribe to updates of stock ratings, fetch error reports, or new user registrations by providing a phone number capable of receiving messages via the instant messenger [Signal](https://signal.org).
+
+<img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/profile.png" alt="Rating Tracker Profile Settings" style="max-height: 50%;" />
+<img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/signal.png" alt="Rating Tracker Signal Notifications" />
 
 #### Error reports with screenshots
 
