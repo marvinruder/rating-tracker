@@ -320,7 +320,7 @@ Environment variables in development can easily be defined in an `.env` file:
 <details>
 <summary>See all development environment variables</summary>
 
-```bash
+```shell
 # .env
 DATABASE_URL="postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker"
 REDIS_URL=redis://127.0.0.1:6379

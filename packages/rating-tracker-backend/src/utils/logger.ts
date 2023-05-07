@@ -194,7 +194,13 @@ export const requestLogger = (req: Request, res: Response, time: number) => {
             .join(" ") +
           "\n ╰─" +
           statusCodeDescription(res.statusCode) + // HTTP response status code
-          ` after ${Math.round(time)} ms` // Response time
+          ` ${
+            res.hasHeader("Content-Length") && res.hasHeader("Content-Type")
+              ? `sent ${res.getHeader("Content-Length")} bytes of type “${
+                  res.getHeader("Content-Type").toString().split(";")[0]
+                }” `
+              : ""
+          }after ${Math.round(time)} ms` // Response time
       )
       .split("\n")
       .forEach((line) => logger.info(line)); // Show newlines in the log in a pretty way
