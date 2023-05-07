@@ -182,6 +182,8 @@ Rating Tracker uses Prisma to interact with a PostgreSQL database. Although not 
 2. Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
 3. Run `yarn pnpify prisma migrate deploy`.
 
+<div id="ACL">
+
 #### Create Redis user and password
 
 Create the file `users.acl`  with the following content: 
@@ -237,9 +239,39 @@ location / {
 ```
 </details>
 
+#### Initial admin registration and activation
+
+After setting up your Rating Tracker instance, navigate to its URL and register, creating WebAuthn credentials. Then manually connect to the database and set the new user’s `accessRights` value to `255`, granting ultimate access. After that, you can log in using your credentials. This is a one-time setup step, all other users can be granted access via the User Management web interface.
+
 ### Supported environment variables
 
-## API References
+Variables in bold font are mandatory.
+
+<details>
+<summary>View complete list of environment variables</summary>
+
+
+Variable | Example Value | Explanation
+---------|---------------|------------
+**`PORT`** | `21076` | The TCP port Rating Tracker is served on.
+**`DOMAIN`** | `example.com` | The domain Rating Tracker will be available at. This is especially important for WebAuthn, since credentials will only be offered to the user by their client when the domain provided as part of the registration or authentication challence matches the domain of the URL the user navigated to.
+`SUBDOMAIN` | `ratingtracker` | An optional subdomain. Credentials created for one domain can be used to authenticate to different Rating Tracker instances served on all subdomains of that domain, making it easy to use multiple deployment stages, development servers etc.
+**`DATABASE_URL`** | `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker` | The connection URL of the PostgreSQL instance, specifying username, password, host, port, database and schema. Can also use the PostgreSQL service name as hostname if set up within the same Docker Compose file.
+**`REDIS_URL`** | `redis://127.0.0.1:6379` | The URL of the Redis instance. Can also use the Redis service name as hostname if set up within the same Docker Compose file.
+**`REDIS_USER`**, **`REDIS_PASS`**,  | `rating-tracker`, `********` | The username and password to connect to the Redis instance. Read more [here](#ACL) on how to set up a password-protected Redis user.
+**`SELENIUM_URL`** | `http://127.0.0.1:4444` | The URL of the Selenium instance. Can also use the Selenium service name as hostname if set up within the same Docker Compose file.
+`LOG_FILE` | `/var/log/rating-tracker-(DATE).log` | A file path for storing Rating Tracker log files. The string `(DATE)` will be replaced by the current date. If unset, logs are stored in the `/tmp` directory.
+`LOG_LEVEL` | `debug` | The level for the log outputs to `stdout`. Can be one of `fatal`, `error`, `warn`, `info`, `debug`, `trace`. If unset, `info` will be used. 
+`AUTO_FETCH_SCHEDULE` | `0 30 2 * * *` | A Cron-like specification of a schedule for when to fetch all stocks from all providers. The format in use includes seconds, so the example value resolves to “every day at 2:30:00 AM”. If unset, no automatic fetching will happen.
+`SELENIUM_MAX_CONCURRENCY` | `4` | The number of Selenium WebDrivers used concurrently when fetching information for multiple stocks. The Selenium instance should be set up to allow for the creation of at least that many sessions. If unset, no concurrent fetches will be performed.
+`SIGNAL_URL` | `http://127.0.0.1:8080` | The URL of the Signal REST API. Can also use the Signal REST API service name as hostname if set up within the same Docker Compose file. If unset, no Signal notification messages will be sent.
+`SIGNAL_SENDER` | `+12345678900` | The phone number of the Signal account registered with the Signal CLI service, which will be used to send notification messages. If unset, no Signal notification messages will be sent.
+
+</details>
+
+## API Reference
+
+Any Rating Tracker instance’s API is self-documented, its OpenAPI web interface is hosted at [`/api-docs`](https://ratingtracker.mruder.dev/api-docs/). The complete OpenAPI specification document can be downloaded at [`/api-spec/v3`](https://ratingtracker.mruder.dev/api-spec/v3).
 
 ## Development
 
