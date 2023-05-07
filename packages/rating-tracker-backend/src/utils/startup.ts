@@ -1,6 +1,7 @@
 import chalk from "chalk";
 
-const logo = chalk.hex("#2971D6")(`
+const logo = chalk.bold(
+  chalk.hex("#2971D6")(`
                                     ήΒω
                                   ;βΪΆ
                         ;       ρΪΪΓε
@@ -17,7 +18,8 @@ const logo = chalk.hex("#2971D6")(`
 
  Welcome to Rating Tracker (${process.env.NODE_ENV ?? "no specific"} environment)!
 
-`);
+`)
+);
 
 /**
  * Mandatory environment variables. If not set, Rating Tracker cannot run.
