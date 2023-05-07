@@ -20,6 +20,11 @@ A web service fetching and providing financial and ESG ratings for stocks.
 
 Stocks and their information are presented in a paginated table which offers comprehensive and in-depth sorting and filtering by many of the available attributes.
 
+<img style="height:250px;"/>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/main/docs/images/stocklist.png" alt="Rating Tracker Stock List" style="height:500px; width:960px;"/>
+</p>
+
 #### Automatic and scheduled data fetching from several providers
 
 By providing identifiers for stocks from [Morningstar](https://www.morningstar.it/it/), [MarketScreener](https://www.marketscreener.com), [MSCI](https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool), [Refinitiv](https://www.refinitiv.com/en/sustainable-finance/esg-scores), [Standard & Poor’s](https://www.spglobal.com/esg/solutions/data-intelligence-esg-scores) and [Sustainalytics](https://www.sustainalytics.com/esg-ratings) in the “Add Stock” dialog, Rating Tracker can automatically fetch financial data as well as financial and ESG ratings. Information is fetched by a [Selenium](https://www.selenium.dev)-automated Chrome browser. The identifiers to use can be found in the provider’s URL for the stock as shown in the following examples:
