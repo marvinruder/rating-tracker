@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import { NextFunction, Request, Response } from "express";
 import logger, { PREFIX_NODEJS } from "./logger.js";
-import APIError from "./apiError.js";
 
 /**
  * An error handler. Logs an error and sends an error response to the client.
@@ -15,7 +14,7 @@ import APIError from "./apiError.js";
 export default (err: Error, _: Request, res: Response, __: NextFunction) => {
   logger.error(PREFIX_NODEJS + chalk.redBright(err)); // Log the error
   // Send an error response to the client
-  res.status(err instanceof APIError && err.status ? err.status : 500).json({
+  res.status("status" in err && err.status && typeof err.status === "number" ? err.status : 500).json({
     message: err.message,
   });
 };

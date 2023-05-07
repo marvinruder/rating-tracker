@@ -15,7 +15,7 @@ const logo = chalk.hex("#2971D6")(`
                             ΅΅΅  ΅ΨΪΈώ
                                     ΫΆ΅
 
-          Welcome to Rating Tracker!
+ Welcome to Rating Tracker (${process.env.NODE_ENV ?? "no specific"} environment)!
 
 `);
 
