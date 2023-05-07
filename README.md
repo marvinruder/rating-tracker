@@ -20,7 +20,11 @@ A web service fetching and providing financial and ESG ratings for stocks.
 
 Stocks and their information are presented in a paginated table which offers comprehensive and in-depth sorting and filtering by many of the available attributes.
 
-![Rating Tracker Stock List](https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist-light.png">
+  <img alt="Rating Tracker Stock List" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist-light.png">
+</picture>
 
 #### Automatic and scheduled data fetching from several providers
 
@@ -49,17 +53,27 @@ The financial and ESG score are used to compute a total score using the harmonic
 
 The Rating Tracker supports multiple users, who can self-register via WebAuthn and access the application after being granted fine-grained access by an administrator, for whom a “User Management” web interface is provided.
 
-![Rating Tracker User Management](https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/usermanagement.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/usermanagement-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/usermanagement-light.png">
+  <img alt="Rating Tracker User Management" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/usermanagement-light.png">
+</picture>
 
 #### Notification Messages via Signal
 
 Based on their access rights, users can subscribe to updates of stock ratings, fetch error reports, or new user registrations by providing a phone number capable of receiving messages via the instant messenger [Signal](https://signal.org).
 
-<p align="center" style="max-width: 50%;">
-  <img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/profile.png" alt="Rating Tracker Profile Settings" />
-</div>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/profile-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/profile-light.png">
+  <img alt="Rating Tracker Profile Settings" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/profile-light.png">
+</picture>
 
-![Rating Tracker Signal Notifications](https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/signal.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/signal-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/signal-light.png">
+  <img alt="Rating Tracker Signal Notifications" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/signal-light.png">
+</picture>
 
 #### Error reports with screenshots
 
@@ -76,6 +90,13 @@ alias pino-pretty="{ (echo -e \"FROM node:alpine\nRUN yarn global add pino-prett
 # To view a log file:
 cat logs/rating-tracker.log | pino-pretty | less
 ```
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/log-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/log-light.png">
+  <img alt="Rating Tracker Log Output" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/log-light.png">
+</picture>
+
 
 #### …and more to come!
 
