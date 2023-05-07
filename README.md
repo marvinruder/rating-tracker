@@ -55,7 +55,7 @@ The Rating Tracker supports multiple users, who can self-register via WebAuthn a
 
 Based on their access rights, users can subscribe to updates of stock ratings, fetch error reports, or new user registrations by providing a phone number capable of receiving messages via the instant messenger [Signal](https://signal.org).
 
-<div style="margin: auto; margin-bottom: 15px; display: block; max-width: 50%;">
+<p align="center" style="max-width: 50%;">
   <img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/profile.png" alt="Rating Tracker Profile Settings" />
 </div>
 
