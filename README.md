@@ -178,7 +178,7 @@ The port bindings are optional but helpful to connect to the services from the h
 
 Rating Tracker uses Prisma to interact with a PostgreSQL database. Although not officially recommended, a quick, easy and fairly safe way to initialize a new database with the required tables, constraints and indexes is to 
 
-1. Clone the repository and run `yarn` from within the `packages/rating-tracker-backend` folder.
+1. Clone the repository and run `yarn` from within the [`packages/rating-tracker-backend`](https://github.com/marvinruder/rating-tracker/tree/main/packages/rating-tracker-backend) folder.
 2. Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
 3. Run `yarn pnpify prisma migrate deploy`.
 
@@ -206,7 +206,7 @@ More info on ACL files in Redis can be found [here](https://redis.io/docs/manage
 
 #### Create Signal account
 
-Run a shell in the `signal` container and proceed with [this excellent documentation](https://github.com/AsamK/signal-cli/wiki/Quickstart#set-up-an-account).
+Run a shell in the Signal REST API container and proceed with [this excellent documentation](https://github.com/AsamK/signal-cli/wiki/Quickstart#set-up-an-account).
 
 #### Configure webserver as reverse proxy
 
@@ -250,16 +250,15 @@ Variables in bold font are mandatory.
 <details>
 <summary>View complete list of environment variables</summary>
 
-
 Variable | Example Value | Explanation
 ---------|---------------|------------
 **`PORT`** | `21076` | The TCP port Rating Tracker is served on.
 **`DOMAIN`** | `example.com` | The domain Rating Tracker will be available at. This is especially important for WebAuthn, since credentials will only be offered to the user by their client when the domain provided as part of the registration or authentication challence matches the domain of the URL the user navigated to.
 `SUBDOMAIN` | `ratingtracker` | An optional subdomain. Credentials created for one domain can be used to authenticate to different Rating Tracker instances served on all subdomains of that domain, making it easy to use multiple deployment stages, development servers etc.
 **`DATABASE_URL`** | `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker` | The connection URL of the PostgreSQL instance, specifying username, password, host, port, database and schema. Can also use the PostgreSQL service name as hostname if set up within the same Docker Compose file.
-**`REDIS_URL`** | `redis://127.0.0.1:6379` | The URL of the Redis instance. Can also use the Redis service name as hostname if set up within the same Docker Compose file.
-**`REDIS_USER`**, **`REDIS_PASS`**,  | `rating-tracker`, `********` | The username and password to connect to the Redis instance. Read more [here](#ACL) on how to set up a password-protected Redis user.
 **`SELENIUM_URL`** | `http://127.0.0.1:4444` | The URL of the Selenium instance. Can also use the Selenium service name as hostname if set up within the same Docker Compose file.
+**`REDIS_URL`** | `redis://127.0.0.1:6379` | The URL of the Redis instance. Can also use the Redis service name as hostname if set up within the same Docker Compose file.
+`REDIS_USER`, `REDIS_PASS`,  | `rating-tracker`, `********` | The username and password to connect to the Redis instance. Read more [here](#ACL) on how to set up a password-protected Redis user. If unset, the Redis instance must grant write access to the default user.
 `LOG_FILE` | `/var/log/rating-tracker-(DATE).log` | A file path for storing Rating Tracker log files. The string `(DATE)` will be replaced by the current date. If unset, logs are stored in the `/tmp` directory.
 `LOG_LEVEL` | `debug` | The level for the log outputs to `stdout`. Can be one of `fatal`, `error`, `warn`, `info`, `debug`, `trace`. If unset, `info` will be used. 
 `AUTO_FETCH_SCHEDULE` | `0 30 2 * * *` | A Cron-like specification of a schedule for when to fetch all stocks from all providers. The format in use includes seconds, so the example value resolves to “every day at 2:30:00 AM”. If unset, no automatic fetching will happen.
@@ -275,11 +274,56 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 
 ## Development
 
-### Create an environment for developing and testing
+### Create an environment for developing
+
+An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](https://github.com/marvinruder/rating-tracker/tree/main/packages/rating-tracker-backend/dev) folder. The `scripts` section in the [`package.json`](https://github.com/marvinruder/rating-tracker/blob/main/package.json) provides helpful commands:
+
+* Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis, Selenium and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server. The NGINX configuration might require adjustment to your situation.
+* Run `yarn prisma:migrate:dev` to initialize the PostgreSQL database and generate the Prisma client.
+* Run `yarn dev:server` to start the backend server as well as the Vite frontend development server.
+
+NB: The `dev:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
+
+Environment variables in development can easily be defined in an `.env` file:
+
+<details>
+<summary>See all development environment variables</summary>
+
+```bash
+# .env
+DATABASE_URL="postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker"
+REDIS_URL=redis://127.0.0.1:6379
+SELENIUM_URL=http://127.0.0.1:4444
+SELENIUM_MAX_CONCURRENCY=2
+SIGNAL_URL=http://127.0.0.1:8080
+
+NODE_ENV=development
+DOMAIN=example.com
+SUBDOMAIN=ratingtracker
+PORT=3001
+REDIS_USER="rating-tracker"
+REDIS_PASS="********"
+POSTGRES_USER="rating-tracker"
+POSTGRES_PASS="********"
+SIGNAL_SENDER="+12345678900"
+# AUTO_FETCH_SCHEDULE=" 0 * * * * *" # runs every minute, activate for debugging only
+LOG_LEVEL=trace
+```
+</details>
 
 ### Run tests
 
+A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](https://github.com/marvinruder/rating-tracker/tree/main/packages/rating-tracker-backend/test) folder. The `scripts` section in the [`package.json`](https://github.com/marvinruder/rating-tracker/blob/main/package.json) provides helpful commands:
+
+* Run `yarn test:tools` to start PostgreSQL and Redis.
+* Run `yarn test:prisma:migrate:init` to initialize the PostgreSQL database.
+* Run `yarn test` to run all tests from all packages. Additionally, the packages’ `package.json` configurations contain a `test:watch` script to run tests in watch mode.
+
+NB: The `test:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
+
 ### Contribute
+
+Contributions are welcome!
 
 ## Disclaimer
 
