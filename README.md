@@ -251,7 +251,7 @@ After setting up NGINX as a webserver with SSL, the following virtual host confi
 <details>
 <summary>View NGINX configuration</summary>
 
-```
+```nginx
 add_header "Content-Security-Policy" "default-src 'self'; img-src 'self' data:; style-src-elem 'self' 'unsafe-inline'; frame-ancestors 'none'; form-action 'self'; base-uri 'none';";
 add_header "Strict-Transport-Security" "max-age=31536000; includeSubDomains" always;
 add_header "X-Frame-Options" "DENY";
