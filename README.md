@@ -7,7 +7,7 @@
 
 <img style="height:48px;"/>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/rating-tracker-frontend/public/assets/images/favicon/favicon-192.png" alt="Rating Tracker Logo" style="height:96px; width:96px;"/>
+  <img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets/images/favicon/favicon-192.png" alt="Rating Tracker Logo" style="height:96px; width:96px;"/>
 </p>
 
 # Rating Tracker
@@ -209,7 +209,7 @@ The port bindings are optional but helpful to connect to the services from the h
 
 Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. Although not officially recommended, a quick, easy and fairly safe way to initialize a new database with the required tables, constraints and indexes is to 
 
-1. Clone the repository and run `yarn` from within the [`packages/rating-tracker-backend`](https://github.com/marvinruder/rating-tracker/tree/main/packages/rating-tracker-backend) folder.
+1. Clone the repository and run `yarn` from within the [`packages/backend`](https://github.com/marvinruder/rating-tracker/tree/main/packages/backend) folder.
 2. Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
 3. Run `yarn pnpify prisma migrate deploy`.
 
@@ -305,7 +305,7 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 
 ### Create an environment for developing
 
-An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](https://github.com/marvinruder/rating-tracker/tree/main/packages/rating-tracker-backend/dev) folder. The `scripts` section in the [`package.json`](https://github.com/marvinruder/rating-tracker/blob/main/package.json) provides helpful commands:
+An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](https://github.com/marvinruder/rating-tracker/tree/main/packages/backend/dev) folder. The `scripts` section in the [`package.json`](https://github.com/marvinruder/rating-tracker/blob/main/package.json) provides helpful commands:
 
 * Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis, Selenium and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
 * Run `yarn prisma:migrate:dev` to initialize the PostgreSQL database and generate the Prisma client.
@@ -342,7 +342,7 @@ LOG_LEVEL=trace
 
 ### Run tests
 
-A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](https://github.com/marvinruder/rating-tracker/tree/main/packages/rating-tracker-backend/test) folder. The `scripts` section in the [`package.json`](https://github.com/marvinruder/rating-tracker/blob/main/package.json) provides helpful commands:
+A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](https://github.com/marvinruder/rating-tracker/tree/main/packages/backend/test) folder. The `scripts` section in the [`package.json`](https://github.com/marvinruder/rating-tracker/blob/main/package.json) provides helpful commands:
 
 * Run `yarn test:tools` to start PostgreSQL and Redis.
 * Run `yarn test:prisma:migrate:init` to initialize the PostgreSQL database.

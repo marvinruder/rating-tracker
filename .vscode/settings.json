@@ -9,9 +9,5 @@
   "eslint.nodePath": ".yarn/sdks",
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "eslint.packageManager": "yarn",
-  "eslint.workingDirectories": [
-    "packages/rating-tracker-backend",
-    "packages/rating-tracker-commons",
-    "packages/rating-tracker-frontend"
-  ]
+  "eslint.workingDirectories": ["packages/backend", "packages/commons", "packages/frontend"]
 }

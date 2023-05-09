@@ -17,14 +17,14 @@ node {
             PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
-            sh "sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/rating-tracker-backend/test/.env"
+            sh "sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env"
         }
 
         parallel(
             testenv: {
                 stage('Start test environment') {
                     sh """
-                    PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/rating-tracker-backend/test/docker-compose.yml up --force-recreate -V -d
+                    PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
                     """
                 }
             },
@@ -38,7 +38,7 @@ node {
                     docker cp \$id:/workdir/.yarn/. ./.yarn
                     docker cp \$id:/workdir/global .
                     docker cp \$id:/workdir/.pnp.cjs .
-                    docker cp \$id:/workdir/packages/rating-tracker-backend/prisma/client/. ./packages/rating-tracker-backend/prisma/client
+                    docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                     docker rm -v \$id
                     """
                     sh "cp -arn ./global /home/jenkins/.cache/yarn"
@@ -69,9 +69,9 @@ node {
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
                     mkdir -p coverage/{backend,commons,frontend}
-                    docker cp \$id:/workdir/packages/rating-tracker-backend/coverage/. ./coverage/backend
-                    docker cp \$id:/workdir/packages/rating-tracker-commons/coverage/. ./coverage/commons
-                    docker cp \$id:/workdir/packages/rating-tracker-frontend/coverage/. ./coverage/frontend
+                    docker cp \$id:/workdir/packages/backend/coverage/. ./coverage/backend
+                    docker cp \$id:/workdir/packages/commons/coverage/. ./coverage/commons
+                    docker cp \$id:/workdir/packages/frontend/coverage/. ./coverage/frontend
                     docker rm -v \$id
                     """
                     lock('codacy-coverage-reporter') {
@@ -99,7 +99,7 @@ node {
 
         stage ('Cleanup') {
             sh """
-            docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/rating-tracker-backend/test/docker-compose.yml down -t 0
+            docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/backend/test/docker-compose.yml down -t 0
             docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true

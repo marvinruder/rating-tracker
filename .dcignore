@@ -1,5 +1,5 @@
 .pnp.*
 .yarn/*
-packages/rating-tracker-backend/prisma
-packages/rating-tracker-frontend/.vite/deps
-packages/rating-tracker-frontend/.vite/deps_temp
+packages/backend/prisma
+packages/frontend/.vite/deps
+packages/frontend/.vite/deps_temp

@@ -7,18 +7,18 @@ WORKDIR /workdir
 COPY global ./global
 COPY .yarn ./.yarn
 COPY package.json .yarnrc.yml yarn.lock ./
-COPY packages/rating-tracker-backend/package.json ./packages/rating-tracker-backend/
-COPY packages/rating-tracker-commons/package.json ./packages/rating-tracker-commons/
-COPY packages/rating-tracker-frontend/package.json ./packages/rating-tracker-frontend/
+COPY packages/backend/package.json ./packages/backend/
+COPY packages/commons/package.json ./packages/commons/
+COPY packages/frontend/package.json ./packages/frontend/
 
 # Install dependencies
 RUN yarn --immutable
 
 # Copy files required for Prisma
-COPY packages/rating-tracker-backend/prisma ./packages/rating-tracker-backend/prisma
-COPY packages/rating-tracker-backend/test/.env ./packages/rating-tracker-backend/test/
+COPY packages/backend/prisma ./packages/backend/prisma
+COPY packages/backend/test/.env ./packages/backend/test/
 
 # Initialize Prisma for tests and generate client
-RUN yarn workspace rating-tracker-backend test:prisma:migrate:init
+RUN yarn workspace @rating-tracker/backend test:prisma:migrate:init
 
 ENTRYPOINT [ "/bin/sh" ]

@@ -4,4 +4,4 @@ packages/*/dist
 .yarn/
 README.md
 
-packages/rating-tracker-frontend/public/index.css
+packages/frontend/public/index.css
