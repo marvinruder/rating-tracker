@@ -7,7 +7,7 @@
 
 <img style="height:48px;"/>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets/images/favicon/favicon-192.png" alt="Rating Tracker Logo" style="height:96px; width:96px;"/>
+  <img src="/packages/frontend/public/assets/images/favicon/favicon-192.png" alt="Rating Tracker Logo" style="height:96px; width:96px;"/>
 </p>
 
 # Rating Tracker
@@ -21,9 +21,9 @@ A web service fetching and providing financial and ESG ratings for stocks.
 Stocks and their information are presented in a paginated table which offers comprehensive and in-depth sorting and filtering by many of the available attributes.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist-light.png">
-  <img alt="Rating Tracker Stock List" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/stocklist-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/stocklist-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/stocklist-light.png">
+  <img alt="Rating Tracker Stock List" src="/docs/images/stocklist-light.png">
 </picture>
 
 #### Automatic and scheduled data fetching from several providers
@@ -54,9 +54,9 @@ The financial and ESG score are used to compute a total score using the harmonic
 The Rating Tracker supports multiple users, who can self-register via WebAuthn and access the application after being granted fine-grained access by an administrator, for whom a “User Management” web interface is provided.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/usermanagement-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/usermanagement-light.png">
-  <img alt="Rating Tracker User Management" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/usermanagement-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/usermanagement-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/usermanagement-light.png">
+  <img alt="Rating Tracker User Management" src="/docs/images/usermanagement-light.png">
 </picture>
 
 #### Notification Messages via Signal
@@ -64,15 +64,15 @@ The Rating Tracker supports multiple users, who can self-register via WebAuthn a
 Based on their access rights, users can subscribe to updates of stock ratings, fetch error reports, or new user registrations by providing a phone number capable of receiving messages via the instant messenger [Signal](https://signal.org).
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/profile-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/profile-light.png">
-  <img alt="Rating Tracker Profile Settings" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/profile-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/profile-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/profile-light.png">
+  <img alt="Rating Tracker Profile Settings" src="/docs/images/profile-light.png">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/signal-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/signal-light.png">
-  <img alt="Rating Tracker Signal Notifications" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/signal-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/signal-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/signal-light.png">
+  <img alt="Rating Tracker Signal Notifications" src="/docs/images/signal-light.png">
 </picture>
 
 #### Error reports with screenshots
@@ -92,9 +92,9 @@ cat logs/rating-tracker.log | pino-pretty | less
 ```
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/log-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/log-light.png">
-  <img alt="Rating Tracker Log Output" src="https://raw.githubusercontent.com/marvinruder/rating-tracker/150-add-readmes/docs/images/log-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/log-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/log-light.png">
+  <img alt="Rating Tracker Log Output" src="/docs/images/log-light.png">
 </picture>
 
 
