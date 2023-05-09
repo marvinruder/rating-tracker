@@ -19,14 +19,14 @@ packages/*/dist
 packages/*/.vite
 
 # local dev environment
-packages/rating-tracker-backend/dev/nginx/certs
-packages/rating-tracker-backend/dev/nginx/dhparam
-packages/rating-tracker-backend/dev/postgresql
-packages/rating-tracker-backend/dev/redis
-packages/rating-tracker-backend/dev/signal-cli
+packages/backend/dev/nginx/certs
+packages/backend/dev/nginx/dhparam
+packages/backend/dev/postgresql
+packages/backend/dev/redis
+packages/backend/dev/signal-cli
 
 # Prisma
-packages/rating-tracker-backend/prisma/client
+packages/backend/prisma/client
 
 # misc
 .DS_Store

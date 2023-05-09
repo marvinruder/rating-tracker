@@ -1,0 +1,54 @@
+import chalk from "chalk";
+
+const logo = chalk.bold(
+  chalk.hex("#2971D6")(`
+                                    ήΒω
+                                  ;βΪΆ
+                        ;       ρΪΪΓε
+                        θΪΝ    ·βΪβ΅
+              ;μ     ;βΪΪΪΈωι;ΪΪΡ
+              ρΪΪΝ·  ώΪΪΓ
+            ;βΪβώΈΪψβΪβ΅ ;φβΪΪΪβΝω
+          ;ΈΪΈ   ΫΈΪΈ  ήΪΪΓ   ΅ΨΪβλ
+          ήΪΈ΅      ΅  ίΪΪ       ΪΪΈ
+        ΅ΫΆρ           ΈΪψ     ;ΪΪΓ
+                        ΫΪΈΒΚββΪΪΪω
+                            ΅΅΅  ΅ΨΪΈώ
+                                    ΫΆ΅
+
+ Welcome to Rating Tracker (${process.env.NODE_ENV ?? "no specific"} environment)!
+
+`)
+);
+
+/**
+ * Mandatory environment variables. If not set, Rating Tracker cannot run.
+ */
+const mandatoryEnvVars: string[] = ["PORT", "DOMAIN", "DATABASE_URL", "SELENIUM_URL", "REDIS_URL"];
+
+/**
+ * The startup method prints a welcome message and checks whether all mandatory environment variables are set. If not,
+ * the process is exited with code 1.
+ */
+export default () => {
+  // Print welcome message
+  console.log(logo);
+
+  try {
+    // Check whether all mandatory environment variables are set
+    mandatoryEnvVars.forEach((name: string) => {
+      if (!process.env[name]) {
+        throw new Error(`Environment variable ${name} not set. Exiting.`);
+      }
+    });
+  } catch (e) {
+    if (e instanceof Error) {
+      // Print error message and exit
+      console.error("\x07" + chalk.red(` \uf658 ${e.message}`));
+      process.exit(1);
+    } else {
+      /* istanbul ignore next -- @preserve */ // This should never occur, since always Errors are thrown.
+      throw e; // if something else than an error was thrown
+    }
+  }
+};
