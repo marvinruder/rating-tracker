@@ -231,7 +231,7 @@ Refer to the [exemplary Docker Compose setup](#minimal-example-setup-using-docke
 
 To use a password hash, first create the file above and start up Redis, then connect, authenticate and run `ACL GETUSER rating-tracker`. The output shows the hash of the password, which can then be used in the ACL file:
 
-```
+```ACL
 user default off
 user rating-tracker allcommands allkeys allchannels on #07ab59f4[…]072e07fb
 ```
@@ -367,4 +367,4 @@ This software is provided under the conditions of the [MIT License](/LICENSE). U
 
 ## Authors
 
-- [Marvin A. Ruder (he/him)](https://github.com/marvinruder)
+-   [Marvin A. Ruder (he/him)](https://github.com/marvinruder)
