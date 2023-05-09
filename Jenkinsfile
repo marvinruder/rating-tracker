@@ -96,7 +96,7 @@ node {
                             image.push(branch_tag)
                             def dockerPushRM = docker.image('chko/docker-pushrm')
                             dockerPushRM.pull()
-                            dockerPushRM.withRun("--rm -t -v \$(pwd):/repo -e DOCKER_USER -e DOCKER_PASS --file /repo/README.md $imagename") {}
+                            dockerPushRM.withRun('--rm -t -v \$(pwd):/repo -e DOCKER_USER -e DOCKER_PASS', "--file /repo/README.md $imagename") {}
                             sh 'docker logout'
                         }
                     }
