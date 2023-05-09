@@ -120,8 +120,6 @@ To run Rating Tracker, the following services must be available:
 * [Signal Messenger REST API](https://hub.docker.com/r/bbernhard/signal-cli-rest-api), sending notifications via the Signal messenger
 * [nginx](https://hub.docker.com/_/nginx), set up as a reverse proxy to provide SSL encryption (required for most WebAuthn clients)
 
-<div id="docker-compose-config" />
-
 ### Minimal Example Setup using Docker Compose
 
 Docker Compose is the preferred way to run Rating Tracker together with all the services it depends on. The following configuration file shows an exemplary setup.
@@ -205,8 +203,6 @@ services:
 
 The port bindings are optional but helpful to connect to the services from the host, e.g. for debugging purposes. 
 
-<div id="setup" />
-
 ### Setup steps
 
 #### Initialize database setup
@@ -217,8 +213,6 @@ Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the Postgre
 2. Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
 3. Run `yarn pnpify prisma migrate deploy`.
 
-<div id="ACL" />
-
 #### Create Redis user and password
 
 Create the file `users.acl`  with the following content: 
@@ -228,7 +222,7 @@ user default off
 user rating-tracker allcommands allkeys allchannels on >********
 ```
 
-Refer to the [exemplary Docker Compose setup](#docker-compose-config) for information on where to place the ACL file.
+Refer to the [exemplary Docker Compose setup](#minimal-example-setup-using-docker-compose) for information on where to place the ACL file.
 
 To use a password hash, first create the file above and start up Redis, then connect, authenticate and run `ACL GETUSER rating-tracker`. The output shows the hash of the password, which can then be used in the ACL file:
 
@@ -290,16 +284,16 @@ Variable | Example Value | Explanation
 **`PORT`** | `21076` | The TCP port Rating Tracker is served on.
 **`DOMAIN`** | `example.com` | The domain Rating Tracker will be available at. This is especially important for WebAuthn, since credentials will only be offered to the user by their client when the domain provided as part of the registration or authentication challence matches the domain of the URL the user navigated to.
 `SUBDOMAIN` | `ratingtracker` | An optional subdomain. Credentials created for one domain can be used to authenticate to different Rating Tracker instances served on all subdomains of that domain, making it easy to use multiple deployment stages, development servers etc.
-**`DATABASE_URL`** | `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker` | The connection URL of the PostgreSQL instance, specifying username, password, host, port, database and schema. Can also use the PostgreSQL service name (e.g. `postgres` in [this configuration](#docker-compose-config)) as hostname if set up within the same Docker Compose file.
-**`SELENIUM_URL`** | `http://127.0.0.1:4444` | The URL of the Selenium instance. Can also use the Selenium service name (e.g. `selenium` in [this configuration](#docker-compose-config)) as hostname if set up within the same Docker Compose file.
-**`REDIS_URL`** | `redis://127.0.0.1:6379` | The URL of the Redis instance. Can also use the Redis service name (e.g. `redis` in [this configuration](#docker-compose-config)) as hostname if set up within the same Docker Compose file.
-`REDIS_USER`, `REDIS_PASS`,  | `rating-tracker`, `********` | The username and password to connect to the Redis instance. Read more [here](#ACL) on how to set up a password-protected Redis user. If unset, the Redis instance must grant write access to the default user.
+**`DATABASE_URL`** | `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker` | The connection URL of the PostgreSQL instance, specifying username, password, host, port, database and schema. Can also use the PostgreSQL service name (e.g. `postgres` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file.
+**`SELENIUM_URL`** | `http://127.0.0.1:4444` | The URL of the Selenium instance. Can also use the Selenium service name (e.g. `selenium` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file.
+**`REDIS_URL`** | `redis://127.0.0.1:6379` | The URL of the Redis instance. Can also use the Redis service name (e.g. `redis` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file.
+`REDIS_USER`, `REDIS_PASS`,  | `rating-tracker`, `********` | The username and password to connect to the Redis instance. Read more [here](#create-redis-user-and-password) on how to set up a password-protected Redis user. If unset, the Redis instance must grant write access to the default user.
 `LOG_FILE` | `/var/log/rating-tracker-(DATE).log` | A file path for storing Rating Tracker log files. The string `(DATE)` will be replaced by the current date. If unset, logs are stored in the `/tmp` directory.
 `LOG_LEVEL` | `debug` | The level for the log outputs to `stdout`. Can be one of `fatal`, `error`, `warn`, `info`, `debug`, `trace`. If unset, `info` will be used. 
 `AUTO_FETCH_SCHEDULE` | `0 30 2 * * *` | A Cron-like specification of a schedule for when to fetch all stocks from all providers. The format in use includes seconds, so the example value resolves to “every day at 2:30:00 AM”. If unset, no automatic fetching will happen.
-`SELENIUM_MAX_CONCURRENCY` | `4` | The number of Selenium WebDrivers used concurrently when fetching information for multiple stocks. The Selenium instance should be set up to allow for the creation of at least that many sessions. If unset, no concurrent fetches will be performed.
-`SIGNAL_URL` | `http://127.0.0.1:8080` | The URL of the Signal REST API. Can also use the Signal REST API service name (e.g. `signal` in [this configuration](#docker-compose-config)) as hostname if set up within the same Docker Compose file. If unset, no Signal notification messages will be sent.
-`SIGNAL_SENDER` | `+12345678900` | The phone number of the Signal account registered with the Signal CLI service, which will be used to send notification messages. If unset, no Signal notification messages will be sent.
+`SELENIUM_MAX_CONCURRENCY` | `4` | The number of Selenium WebDrivers used concurrently when fetching information for multiple stocks. The Selenium instance should be set up to allow for the creation of at least that many sessions, as done in [this configuration](#minimal-example-setup-using-docker-compose) using the environment variable `SE_NODE_MAX_SESSIONS`. If unset, no concurrent fetches will be performed.
+`SIGNAL_URL` | `http://127.0.0.1:8080` | The URL of the Signal REST API. Can also use the Signal REST API service name (e.g. `signal` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file. If unset, no Signal notification messages will be sent.
+`SIGNAL_SENDER` | `+12345678900` | The phone number of the Signal account registered with the Signal CLI service, which will be used to send notification messages. Read more [here](#create-signal-account) on how to register a Signal account. If unset, no Signal notification messages will be sent.
 
 </details>
 
@@ -313,7 +307,7 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 
 An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](https://github.com/marvinruder/rating-tracker/tree/main/packages/rating-tracker-backend/dev) folder. The `scripts` section in the [`package.json`](https://github.com/marvinruder/rating-tracker/blob/main/package.json) provides helpful commands:
 
-* Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis, Selenium and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup) for details). The NGINX configuration might require adjustment to your situation.
+* Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis, Selenium and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
 * Run `yarn prisma:migrate:dev` to initialize the PostgreSQL database and generate the Prisma client.
 * Run `yarn dev:server` to start the backend server as well as the Vite frontend development server.
 
