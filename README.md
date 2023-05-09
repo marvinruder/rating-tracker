@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/github/license/marvinruder/rating-tracker)](https://github.com/marvinruder/rating-tracker/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/marvinruder/rating-tracker)](/LICENSE)
 [![Codacy Quality Badge](https://app.codacy.com/project/badge/Grade/6a7a7b68631a42ef88fc478a709141ea)](https://www.codacy.com/gh/marvinruder/rating-tracker/dashboard)
 [![Codacy Coverage Badge](https://app.codacy.com/project/badge/Coverage/6a7a7b68631a42ef88fc478a709141ea)](https://www.codacy.com/gh/marvinruder/rating-tracker/dashboard)
 [![Jenkins Badge](https://jenkins.mruder.dev/buildStatus/icon?job=rating-tracker-multibranch%2Fmain)](https://jenkins.mruder.dev/job/rating-tracker-multibranch)
@@ -209,7 +209,7 @@ The port bindings are optional but helpful to connect to the services from the h
 
 Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. Although not officially recommended, a quick, easy and fairly safe way to initialize a new database with the required tables, constraints and indexes is to 
 
-1. Clone the repository and run `yarn` from within the [`packages/backend`](https://github.com/marvinruder/rating-tracker/tree/main/packages/backend) folder.
+1. Clone the repository and run `yarn` from within the [`packages/backend`](/packages/backend) folder.
 2. Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
 3. Run `yarn pnpify prisma migrate deploy`.
 
@@ -305,7 +305,7 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 
 ### Create an environment for developing
 
-An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](https://github.com/marvinruder/rating-tracker/tree/main/packages/backend/dev) folder. The `scripts` section in the [`package.json`](https://github.com/marvinruder/rating-tracker/blob/main/package.json) provides helpful commands:
+An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](/packages/backend/dev) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
 * Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis, Selenium and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
 * Run `yarn prisma:migrate:dev` to initialize the PostgreSQL database and generate the Prisma client.
@@ -342,7 +342,7 @@ LOG_LEVEL=trace
 
 ### Run tests
 
-A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](https://github.com/marvinruder/rating-tracker/tree/main/packages/backend/test) folder. The `scripts` section in the [`package.json`](https://github.com/marvinruder/rating-tracker/blob/main/package.json) provides helpful commands:
+A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](/packages/backend/test) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
 * Run `yarn test:tools` to start PostgreSQL and Redis.
 * Run `yarn test:prisma:migrate:init` to initialize the PostgreSQL database.
@@ -356,7 +356,7 @@ Contributions are welcome!
 
 ## Disclaimer
 
-This software is provided under the conditions of the [MIT License](https://github.com/marvinruder/rating-tracker/blob/main/LICENSE). Use this tool at your own risk. Excessive data fetching from providers, publishing or selling the information obtained by fetching is not recommended. Your actions may have consequences… 🦋
+This software is provided under the conditions of the [MIT License](/LICENSE). Use this tool at your own risk. Excessive data fetching from providers, publishing or selling the information obtained by fetching is not recommended. Your actions may have consequences… 🦋
 
 ## Authors
 
