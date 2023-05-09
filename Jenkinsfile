@@ -94,7 +94,9 @@ node {
                         } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                             image.push(branch_tag)
-                            docker.run('chko/docker-pushrm', "--rm -t -v \$(pwd):/repo -e DOCKER_USER -e DOCKER_PASS --file /repo/README.md $imagename")
+                            def dockerPushRM = docker.image('chko/docker-pushrm')
+                            dockerPushRM.pull()
+                            dockerPushRM.withRun("--rm -t -v \$(pwd):/repo -e DOCKER_USER -e DOCKER_PASS --file /repo/README.md $imagename") {}
                             sh 'docker logout'
                         }
                     }
