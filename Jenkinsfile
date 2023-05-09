@@ -95,7 +95,7 @@ node {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                             image.push(branch_tag)
                             sh 'docker logout'
-                            sh "cat README.md | sed 's/\"\/docs\/images/\"https:\/\/raw.githubusercontent.com\/marvinruder\/rating-tracker\/main\/docs\/images/' > /tmp/README-$GIT_COMMIT_HASH"
+                            sh "cat README.md | sed 's|\"/docs/images|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/docs/images|' > /tmp/README-$GIT_COMMIT_HASH"
                             sh "docker run --rm -t -v /tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --debug --file /tmp/README-$GIT_COMMIT_HASH $imagename"
                         }
                     }
