@@ -30,12 +30,12 @@ Stocks and their information are presented in a paginated table which offers com
 
 By providing identifiers for stocks from [Morningstar](https://www.morningstar.it/it/), [MarketScreener](https://www.marketscreener.com), [MSCI](https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool), [Refinitiv](https://www.refinitiv.com/en/sustainable-finance/esg-scores), [Standard & Poor’s](https://www.spglobal.com/esg/solutions/data-intelligence-esg-scores) and [Sustainalytics](https://www.sustainalytics.com/esg-ratings) in the “Add Stock” dialog, Rating Tracker can automatically fetch financial data as well as financial and ESG ratings. Information is fetched by a [Selenium](https://www.selenium.dev)-automated Chrome browser. The identifiers to use can be found in the provider’s URL for the stock as shown in the following examples:
 
-- Morningstar: `https://tools.morningstar.it/it/stockreport/default.aspx?Site=it&id=`**`0P000000GY`**`&LanguageId=it-IT&SecurityToken=`**`0P000000GY`**`]3]0]E0WWE$$ALL`
-- MarketScreener: `https://www.marketscreener.com/quote/stock/`**`APPLE-INC-4849`**
-- MSCI: `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/`**`apple-inc/IID000000002157615`**
-- Refinitiv: `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=`**`AAPL.O`** (see also [Refinitiv Identification Code](https://en.wikipedia.org/wiki/Refinitiv_Identification_Code))
-- Standard & Poor’s: `https://www.spglobal.com/esg/scores/results?cid=`**`4004205`**
-- Sustainalytics: `https://www.sustainalytics.com/esg-rating/`**`apple-inc/1007903183`**
+-   Morningstar: `https://tools.morningstar.it/it/stockreport/default.aspx?Site=it&id=`**`0P000000GY`**`&LanguageId=it-IT&SecurityToken=`**`0P000000GY`**`]3]0]E0WWE$$ALL`
+-   MarketScreener: `https://www.marketscreener.com/quote/stock/`**`APPLE-INC-4849`**
+-   MSCI: `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/`**`apple-inc/IID000000002157615`**
+-   Refinitiv: `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=`**`AAPL.O`** (see also [Refinitiv Identification Code](https://en.wikipedia.org/wiki/Refinitiv_Identification_Code))
+-   Standard & Poor’s: `https://www.spglobal.com/esg/scores/results?cid=`**`4004205`**
+-   Sustainalytics: `https://www.sustainalytics.com/esg-rating/`**`apple-inc/1007903183`**
 
 The fetching can be scheduled by providing a Cron-like specifier in an environment variable. See below for details.
 
@@ -97,7 +97,6 @@ cat logs/rating-tracker.log | pino-pretty | less
   <img alt="Rating Tracker Log Output" src="/docs/images/log-light.png">
 </picture>
 
-
 #### …and more to come!
 
 Planned features are documented [here](https://github.com/marvinruder/rating-tracker/issues?q=is%3Aopen+is%3Aissue+label%3Afeature). If you feel that something is missing, feel free to [request a feature](https://github.com/marvinruder/rating-tracker/issues/new?assignees=marvinruder&labels=feature&template=feature_request.md&title=)!
@@ -114,11 +113,11 @@ Rating Tracker is built to be deployed using Docker or a similar container platf
 
 To run Rating Tracker, the following services must be available:
 
-* [PostgreSQL](https://hub.docker.com/_/postgres), storing information related to stocks and users
-* [Redis](https://hub.docker.com/_/redis), caching session IDs, stock logos and other resources
-* [Selenium (Chrome Standalone)](https://hub.docker.com/r/selenium/standalone-chrome), fetching stock information from websites (a [Grid setup](https://www.selenium.dev/documentation/grid/getting_started/#hub-and-node) with a [hub](https://hub.docker.com/r/selenium/hub) and [Chrome-based nodes](https://hub.docker.com/r/selenium/node-chrome) can also be used)
-* [Signal Messenger REST API](https://hub.docker.com/r/bbernhard/signal-cli-rest-api), sending notifications via the Signal messenger
-* [nginx](https://hub.docker.com/_/nginx), set up as a reverse proxy to provide SSL encryption (required for most WebAuthn clients)
+-   [PostgreSQL](https://hub.docker.com/_/postgres), storing information related to stocks and users
+-   [Redis](https://hub.docker.com/_/redis), caching session IDs, stock logos and other resources
+-   [Selenium (Chrome Standalone)](https://hub.docker.com/r/selenium/standalone-chrome), fetching stock information from websites (a [Grid setup](https://www.selenium.dev/documentation/grid/getting_started/#hub-and-node) with a [hub](https://hub.docker.com/r/selenium/hub) and [Chrome-based nodes](https://hub.docker.com/r/selenium/node-chrome) can also be used)
+-   [Signal Messenger REST API](https://hub.docker.com/r/bbernhard/signal-cli-rest-api), sending notifications via the Signal messenger
+-   [nginx](https://hub.docker.com/_/nginx), set up as a reverse proxy to provide SSL encryption (required for most WebAuthn clients)
 
 <!-- <div id="minimal-example-setup-using-docker-compose"></div> -->
 
@@ -213,9 +212,9 @@ The port bindings are optional but helpful to connect to the services from the h
 
 Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. Although not officially recommended, a quick, easy and fairly safe way to initialize a new database with the required tables, constraints and indexes is to 
 
-1. Clone the repository and run `yarn` from within the [`packages/backend`](/packages/backend) folder.
-2. Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
-3. Run `yarn pnpify prisma migrate deploy`.
+1.  Clone the repository and run `yarn` from within the [`packages/backend`](/packages/backend) folder.
+2.  Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
+3.  Run `yarn pnpify prisma migrate deploy`.
 
 <!-- <div id="create-redis-user-and-password"></div> -->
 
@@ -223,7 +222,7 @@ Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the Postgre
 
 Create the file `users.acl`  with the following content: 
 
-```
+```ACL
 user default off
 user rating-tracker allcommands allkeys allchannels on >********
 ```
@@ -315,9 +314,9 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 
 An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](/packages/backend/dev) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
-* Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis, Selenium and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
-* Run `yarn prisma:migrate:dev` to initialize the PostgreSQL database and generate the Prisma client.
-* Run `yarn dev:server` to start the backend server as well as the Vite frontend development server.
+-   Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis, Selenium and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
+-   Run `yarn prisma:migrate:dev` to initialize the PostgreSQL database and generate the Prisma client.
+-   Run `yarn dev:server` to start the backend server as well as the Vite frontend development server.
 
 NB: The `dev:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
 
@@ -352,9 +351,9 @@ LOG_LEVEL=trace
 
 A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](/packages/backend/test) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
-* Run `yarn test:tools` to start PostgreSQL and Redis.
-* Run `yarn test:prisma:migrate:init` to initialize the PostgreSQL database.
-* Run `yarn test` to run all tests from all packages. Additionally, the packages’ `package.json` configurations contain a `test:watch` script to run tests in watch mode.
+-   Run `yarn test:tools` to start PostgreSQL and Redis.
+-   Run `yarn test:prisma:migrate:init` to initialize the PostgreSQL database.
+-   Run `yarn test` to run all tests from all packages. Additionally, the packages’ `package.json` configurations contain a `test:watch` script to run tests in watch mode.
 
 NB: The `test:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
 
