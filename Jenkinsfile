@@ -96,7 +96,7 @@ node {
                             image.push(branch_tag)
                             sh 'docker logout'
                             sh "mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|\"/docs/images|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/docs/images|' > /home/jenkins/.cache/README/$GIT_COMMIT_HASH"
-                            sh "docker run --rm -t -v /tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --debug --file /tmp/jenkins-cache/README/$GIT_COMMIT_HASH $imagename"
+                            sh "docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --debug --file /tmp/jenkins-cache/README/$GIT_COMMIT_HASH $imagename"
                         }
                     }
                 }
