@@ -46,7 +46,9 @@ export default () => {
       // Print error message and exit
       console.error("\x07" + chalk.red(` \uf658 ${e.message}`));
       process.exit(1);
+    } else {
+      /* istanbul ignore next -- @preserve */ // This should never occur, since always Errors are thrown.
+      throw e; // if something else than an error was thrown
     }
-    throw e; // if something else than an error was thrown
   }
 };
