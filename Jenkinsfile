@@ -91,7 +91,7 @@ node {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                             image.push(main_tag)
                             sh 'docker logout'
-                            sh "mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|' > /home/jenkins/.cache/README/$GIT_COMMIT_HASH"
+                            sh "mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/$GIT_COMMIT_HASH"
                             sh "docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/$GIT_COMMIT_HASH $imagename"
                         } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'

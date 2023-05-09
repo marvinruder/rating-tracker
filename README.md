@@ -120,6 +120,8 @@ To run Rating Tracker, the following services must be available:
 * [Signal Messenger REST API](https://hub.docker.com/r/bbernhard/signal-cli-rest-api), sending notifications via the Signal messenger
 * [nginx](https://hub.docker.com/_/nginx), set up as a reverse proxy to provide SSL encryption (required for most WebAuthn clients)
 
+<!-- <div id="minimal-example-setup-using-docker-compose"></div> -->
+
 ### Minimal Example Setup using Docker Compose
 
 Docker Compose is the preferred way to run Rating Tracker together with all the services it depends on. The following configuration file shows an exemplary setup.
@@ -203,6 +205,8 @@ services:
 
 The port bindings are optional but helpful to connect to the services from the host, e.g. for debugging purposes. 
 
+<!-- <div id="setup-steps"></div> -->
+
 ### Setup steps
 
 #### Initialize database setup
@@ -212,6 +216,8 @@ Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the Postgre
 1. Clone the repository and run `yarn` from within the [`packages/backend`](/packages/backend) folder.
 2. Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
 3. Run `yarn pnpify prisma migrate deploy`.
+
+<!-- <div id="create-redis-user-and-password"></div> -->
 
 #### Create Redis user and password
 
@@ -232,6 +238,8 @@ user rating-tracker allcommands allkeys allchannels on #07ab59f4[…]072e07fb
 ```
 
 More info on ACL files in Redis can be found [here](https://redis.io/docs/management/security/acl/).
+
+<!-- <div id="create-signal-account"></div> -->
 
 #### Create Signal account
 
