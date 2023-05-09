@@ -95,7 +95,7 @@ node {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                             image.push(branch_tag)
                             sh 'docker logout'
-                            docker.image('chko/docker-pushrm').inside('-e DOCKER_USER -e DOCKER_PASS') {
+                            docker.image('chko/docker-pushrm').inside {
                                 sh "/docker-pushrm --debug --file \$(pwd)/README.md $imagename"
                             }
                         }
