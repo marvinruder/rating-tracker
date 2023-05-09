@@ -86,11 +86,16 @@ node {
 
             dockerhub: {
                 stage ('Publish Docker Image') {
-                    docker.withRegistry('', 'dockerhub') {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         if (env.BRANCH_NAME == 'main') {
+                            sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                             image.push(main_tag)
+                            sh 'docker logout'
                         } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
+                            sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                             image.push(branch_tag)
+                            docker.run('chko/docker-pushrm', "--rm -t -v \$(pwd):/repo -e DOCKER_USER -e DOCKER_PASS --file /repo/README.md $imagename")
+                            sh 'docker logout'
                         }
                     }
                 }
