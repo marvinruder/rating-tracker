@@ -1,12 +1,11 @@
 node {
     withEnv([
         'imagename=marvinruder/rating-tracker',
-        'main_tag=latest',
-        'branch_tag=SNAPSHOT',
-        'FORCE_COLOR=true'
+        'FORCE_COLOR=true',
     ]) {
 
         def GIT_COMMIT_HASH
+        def GIT_TAG
         def image
         def PGPORT
         def REDISPORT
@@ -14,6 +13,26 @@ node {
         stage('Clone repository') {
             checkout scm
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
+            GIT_TAG = sh (script: "git tag | head -n 1", returnStdout: true)
+            if (env.GIT_TAG != '') {
+                def VERSION
+                def MAJOR
+                def MINOR
+                def PATCH
+                VERSION = sh (script: "echo $GIT_TAG | sed 's/^v//'", returnStdout: true)
+                MAJOR = sh (script: "if [[ $GIT_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)$/\1.\2.\3/'; fi", returnStdout: true)
+                MINOR = sh (script: "if [[ $GIT_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)$/\1.\2.\3/'; fi", returnStdout: true)
+                PATCH = sh (script: "if [[ $GIT_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)$/\1.\2.\3/'; fi", returnStdout: true)
+                sh """
+                echo $VERSION
+                echo $MAJOR
+                echo $MINOR
+                echo $PATCH
+                """
+                if (env.MAJOR != '') {
+                    sh "echo $VERSION: $MAJOR - $MINOR - $PATCH"
+                }
+            }
             PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
@@ -89,15 +108,14 @@ node {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         if (env.BRANCH_NAME == 'main') {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                            image.push(main_tag)
-                            sh 'docker logout'
+                            image.push('edge')
                             sh "mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/$GIT_COMMIT_HASH"
                             sh "docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/$GIT_COMMIT_HASH $imagename"
                         } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                            image.push(branch_tag)
-                            sh 'docker logout'
+                            image.push('snapshot')
                         }
+                        sh 'docker logout'
                     }
                 }
             }
