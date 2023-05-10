@@ -100,7 +100,7 @@ node {
                             def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/' | tr -d '\\n'; fi\"", returnStdout: true)
                             image.push(VERSION)
                             if (MAJOR) {
-                                // image.push('latest')
+                                image.push('latest')
                                 image.push(MINOR)
                                 image.push(MAJOR)
                             }
