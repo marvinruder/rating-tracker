@@ -13,25 +13,6 @@ node {
             checkout scm
             sh 'printenv'
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
-            if (env.TAG_NAME) {
-                def VERSION
-                def MAJOR
-                def MINOR
-                def PATCH
-                VERSION = sh (script: "echo \$TAG_NAME | sed 's/^v//'", returnStdout: true)
-                MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2.\\3/'; fi\"", returnStdout: true)
-                MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2.\\3/'; fi\"", returnStdout: true)
-                PATCH = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2.\\3/'; fi\"", returnStdout: true)
-                sh """
-                echo $VERSION
-                echo $MAJOR
-                echo $MINOR
-                echo $PATCH
-                """
-                if (MAJOR) {
-                    sh "echo $VERSION: $MAJOR - $MINOR - $PATCH"
-                }
-            }
             PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
@@ -113,6 +94,17 @@ node {
                         } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                             image.push('snapshot')
+                        }
+                        if (env.TAG_NAME) {
+                            def VERSION = sh (script: "echo \$TAG_NAME | sed 's/^v//'", returnStdout: true)
+                            def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/'; fi\"", returnStdout: true)
+                            def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/'; fi\"", returnStdout: true)
+                            image.push(VERSION)
+                            if (MAJOR) {
+                                image.push('latest')
+                                image.push(MINOR)
+                                image.push(MAJOR)
+                            }
                         }
                         sh 'docker logout'
                     }
