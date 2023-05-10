@@ -14,22 +14,22 @@ node {
             checkout scm
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
             GIT_TAG = sh (script: "git tag | head -n 1", returnStdout: true)
-            if (env.GIT_TAG != '') {
+            if (env.GIT_TAG) {
                 def VERSION
                 def MAJOR
                 def MINOR
                 def PATCH
                 VERSION = sh (script: "echo $GIT_TAG | sed 's/^v//'", returnStdout: true)
-                MAJOR = sh (script: "/bin/bash -c \\\"if [[ $GIT_TAG =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2.\\3/'; fi\"", returnStdout: true)
-                MINOR = sh (script: "/bin/bash -c \\\"if [[ $GIT_TAG =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2.\\3/'; fi\"", returnStdout: true)
-                PATCH = sh (script: "/bin/bash -c \\\"if [[ $GIT_TAG =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2.\\3/'; fi\"", returnStdout: true)
+                MAJOR = sh (script: "/bin/bash -c \"if [[ $GIT_TAG =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2.\\3/'; fi\"", returnStdout: true)
+                MINOR = sh (script: "/bin/bash -c \"if [[ $GIT_TAG =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2.\\3/'; fi\"", returnStdout: true)
+                PATCH = sh (script: "/bin/bash -c \"if [[ $GIT_TAG =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2.\\3/'; fi\"", returnStdout: true)
                 sh """
                 echo $VERSION
                 echo $MAJOR
                 echo $MINOR
                 echo $PATCH
                 """
-                if (env.MAJOR != '') {
+                if (env.MAJOR) {
                     sh "echo $VERSION: $MAJOR - $MINOR - $PATCH"
                 }
             }
