@@ -24,7 +24,7 @@ RUN mkdir -p /workdir/app/packages/backend/public /workdir/app/packages/commons 
   find /workdir/app -name '*.d.ts' -type f -delete
 
 
-FROM alpine:3.17.3 as run
+FROM alpine:3.18.0 as run
 ARG BUILD_DATE
 LABEL \
   org.opencontainers.image.title="Rating Tracker" \
