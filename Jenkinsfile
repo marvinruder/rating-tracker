@@ -11,7 +11,6 @@ node {
 
         stage('Clone repository') {
             checkout scm
-            sh 'printenv'
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
             PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
@@ -96,12 +95,12 @@ node {
                             image.push('snapshot')
                         }
                         if (env.TAG_NAME) {
-                            def VERSION = sh (script: "echo \$TAG_NAME | sed 's/^v//'", returnStdout: true)
-                            def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/'; fi\"", returnStdout: true)
-                            def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/'; fi\"", returnStdout: true)
+                            def VERSION = sh (script: "echo \$TAG_NAME | sed 's/^v//' | tr -d '\\n'", returnStdout: true)
+                            def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/' | tr -d '\\n'; fi\"", returnStdout: true)
+                            def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/' | tr -d '\\n'; fi\"", returnStdout: true)
                             image.push(VERSION)
                             if (MAJOR) {
-                                image.push('latest')
+                                // image.push('latest')
                                 image.push(MINOR)
                                 image.push(MAJOR)
                             }
