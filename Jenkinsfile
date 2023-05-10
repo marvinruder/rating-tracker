@@ -92,7 +92,7 @@ node {
                             sh "docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/$GIT_COMMIT_HASH $imagename"
                         } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                            image.push('snapshot')
+                            image.push('SNAPSHOT')
                         }
                         if (env.TAG_NAME) {
                             def VERSION = sh (script: "echo \$TAG_NAME | sed 's/^v//' | tr -d '\\n'", returnStdout: true)
