@@ -20,9 +20,9 @@ node {
                 def MINOR
                 def PATCH
                 VERSION = sh (script: "echo $GIT_TAG | sed 's/^v//'", returnStdout: true)
-                MAJOR = sh (script: "if [[ $GIT_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)$/\1.\2.\3/'; fi", returnStdout: true)
-                MINOR = sh (script: "if [[ $GIT_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)$/\1.\2.\3/'; fi", returnStdout: true)
-                PATCH = sh (script: "if [[ $GIT_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)$/\1.\2.\3/'; fi", returnStdout: true)
+                MAJOR = sh (script: "if [[ $GIT_TAG =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)$/\\1.\\2.\\3/'; fi", returnStdout: true)
+                MINOR = sh (script: "if [[ $GIT_TAG =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)$/\\1.\\2.\\3/'; fi", returnStdout: true)
+                PATCH = sh (script: "if [[ $GIT_TAG =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo $GIT_TAG | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)$/\\1.\\2.\\3/'; fi", returnStdout: true)
                 sh """
                 echo $VERSION
                 echo $MAJOR
