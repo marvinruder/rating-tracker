@@ -44,4 +44,4 @@ COPY --from=build /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
 COPY --from=build /usr/local/bin/node /usr/local/bin
 USER node
 COPY --from=build --chown=node:node /workdir/app .
-CMD [ "node", "--experimental-loader", "./.pnp.loader.mjs", "-r", "./.pnp.cjs", "packages/backend/dist/src/server.js" ]
+CMD [ "dumb-init", "node", "--experimental-loader", "./.pnp.loader.mjs", "-r", "./.pnp.cjs", "packages/backend/dist/src/server.js" ]
