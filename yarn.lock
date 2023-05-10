@@ -1653,7 +1653,7 @@ __metadata:
     eslint: 8.40.0
     eslint-config-google: 0.14.0
     eslint-config-prettier: 8.8.0
-    eslint-plugin-jsdoc: 44.2.0
+    eslint-plugin-jsdoc: 44.2.2
     eslint-plugin-prettier: 4.2.1
     express: 4.18.2
     express-async-errors: 3.1.1
@@ -1687,7 +1687,7 @@ __metadata:
     eslint: 8.40.0
     eslint-config-google: 0.14.0
     eslint-config-prettier: 8.8.0
-    eslint-plugin-jsdoc: 44.2.0
+    eslint-plugin-jsdoc: 44.2.2
     eslint-plugin-prettier: 4.2.1
     prettier: 2.8.8
     typescript: 5.0.4
@@ -1721,7 +1721,7 @@ __metadata:
     eslint: 8.40.0
     eslint-config-google: 0.14.0
     eslint-config-prettier: 8.8.0
-    eslint-plugin-jsdoc: 44.2.0
+    eslint-plugin-jsdoc: 44.2.2
     eslint-plugin-prettier: 4.2.1
     eslint-plugin-react: 7.32.2
     happy-dom: 9.10.9
@@ -4342,9 +4342,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:44.2.0":
-  version: 44.2.0
-  resolution: "eslint-plugin-jsdoc@npm:44.2.0"
+"eslint-plugin-jsdoc@npm:44.2.2":
+  version: 44.2.2
+  resolution: "eslint-plugin-jsdoc@npm:44.2.2"
   dependencies:
     "@es-joy/jsdoccomment": ~0.38.0
     are-docs-informative: ^0.0.2
@@ -4356,7 +4356,7 @@ __metadata:
     spdx-expression-parse: ^3.0.1
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0
-  checksum: 8d4c5a3bac1835283f793153ad3726ccb5a9f0722717886b450fce7452776a5f78d4db0b5f8ed68899ec5481fea52b6d9278b7199d717c077f3f6f9e83d0b267
+  checksum: 0bb0f21ffe0994423a75b96176022f34dbf8968a21cb23dd1471080e8fa5fda46d3c3d1100f49654616cc143cdc00d3f12f4484ad94b71427a9eee229a831e72
   languageName: node
   linkType: hard
 
