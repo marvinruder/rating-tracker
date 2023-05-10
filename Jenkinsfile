@@ -14,7 +14,7 @@ node {
             checkout scm
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
             GIT_TAG = sh (script: "git tag | head -n 1", returnStdout: true)
-            if (env.GIT_TAG) {
+            if (GIT_TAG) {
                 def VERSION
                 def MAJOR
                 def MINOR
@@ -29,7 +29,7 @@ node {
                 echo $MINOR
                 echo $PATCH
                 """
-                if (env.MAJOR) {
+                if (MAJOR) {
                     sh "echo $VERSION: $MAJOR - $MINOR - $PATCH"
                 }
             }
