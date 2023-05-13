@@ -2530,7 +2530,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-jsdoc", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:44.2.3"],\
             ["eslint-plugin-prettier", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:4.2.1"],\
             ["eslint-plugin-react", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:7.32.2"],\
-            ["happy-dom", "npm:9.17.0"],\
+            ["happy-dom", "npm:9.18.3"],\
             ["jimp", "npm:0.22.8"],\
             ["nprogress", "npm:0.2.0"],\
             ["numeral", "npm:2.0.6"],\
@@ -6700,10 +6700,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["happy-dom", [\
-        ["npm:9.17.0", {\
-          "packageLocation": "./.yarn/cache/happy-dom-npm-9.17.0-c5d2fae63b-2402bbaafb.zip/node_modules/happy-dom/",\
+        ["npm:9.18.3", {\
+          "packageLocation": "./.yarn/cache/happy-dom-npm-9.18.3-9e8a6cbb40-0709a046ce.zip/node_modules/happy-dom/",\
           "packageDependencies": [\
-            ["happy-dom", "npm:9.17.0"],\
+            ["happy-dom", "npm:9.18.3"],\
             ["css.escape", "npm:1.5.1"],\
             ["entities", "npm:4.5.0"],\
             ["iconv-lite", "npm:0.6.3"],\
@@ -7684,7 +7684,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["local-pkg", "npm:0.4.3"],\
             ["@vitest/coverage-istanbul", "virtual:de61dda1fdc8c2e15645eceb5924b32afed20b1ee1ccde843e51821bfdf40c99c23e9e1db13c2f28ac01c98a08e94c4231443d16968abdef812d0f219d528205#npm:0.31.0"],\
-            ["happy-dom", "npm:9.17.0"],\
+            ["happy-dom", "npm:9.18.3"],\
             ["vitest", "virtual:de61dda1fdc8c2e15645eceb5924b32afed20b1ee1ccde843e51821bfdf40c99c23e9e1db13c2f28ac01c98a08e94c4231443d16968abdef812d0f219d528205#npm:0.31.0"]\
           ],\
           "linkType": "HARD"\
@@ -11889,7 +11889,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chai", "npm:4.3.7"],\
             ["concordance", "npm:5.0.4"],\
             ["debug", "virtual:531b6e79f7bcef9fa432316ab3ce4b1417df151c8e8350181023a666d55724fcedfdfe50cba6ee7c25a5adbd4f024013f036b79fb10bed8621708e2f7d85e6c6#npm:4.3.4"],\
-            ["happy-dom", "npm:9.17.0"],\
+            ["happy-dom", "npm:9.18.3"],\
             ["jsdom", null],\
             ["local-pkg", "npm:0.4.3"],\
             ["magic-string", "npm:0.30.0"],\
