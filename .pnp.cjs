@@ -2461,7 +2461,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-async-errors", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:3.1.1"],\
             ["express-openapi-validator", "npm:5.0.4"],\
             ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.7.0"],\
-            ["glob", "npm:10.2.3"],\
+            ["glob", "npm:10.2.4"],\
             ["pino", "npm:8.14.1"],\
             ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.8"],\
@@ -6511,14 +6511,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["glob", [\
-        ["npm:10.2.3", {\
-          "packageLocation": "./.yarn/cache/glob-npm-10.2.3-324f53b7d5-338c7522a6.zip/node_modules/glob/",\
+        ["npm:10.2.4", {\
+          "packageLocation": "./.yarn/cache/glob-npm-10.2.4-49f715fccc-29845faaa1.zip/node_modules/glob/",\
           "packageDependencies": [\
-            ["glob", "npm:10.2.3"],\
+            ["glob", "npm:10.2.4"],\
             ["foreground-child", "npm:3.1.1"],\
             ["jackspeak", "npm:2.2.0"],\
             ["minimatch", "npm:9.0.0"],\
-            ["minipass", "npm:5.0.0"],\
+            ["minipass", "npm:6.0.0"],\
             ["path-scurry", "npm:1.7.0"]\
           ],\
           "linkType": "HARD"\
@@ -8061,6 +8061,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/minipass-npm-5.0.0-c64fb63c92-425dab2887.zip/node_modules/minipass/",\
           "packageDependencies": [\
             ["minipass", "npm:5.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:6.0.0", {\
+          "packageLocation": "./.yarn/cache/minipass-npm-6.0.0-d6209e5a86-c408b1224b.zip/node_modules/minipass/",\
+          "packageDependencies": [\
+            ["minipass", "npm:6.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
