@@ -52,7 +52,7 @@ const Logo = (): JSX.Element => {
         </Badge>
       </LogoSignWrapper>
       <LogoTextWrapper display="flex" alignItems="flex-end">
-        <LogoText>{packageInfo.title}</LogoText>
+        <LogoText>Rating Tracker</LogoText>
       </LogoTextWrapper>
     </LogoWrapper>
   );

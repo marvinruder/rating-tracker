@@ -1,4 +1,6 @@
 import chalk from "chalk";
+import dotenv from "dotenv";
+dotenv.config();
 
 const logo = chalk.bold(
   chalk.hex("#2971D6")(`
@@ -30,7 +32,7 @@ const mandatoryEnvVars: string[] = ["PORT", "DOMAIN", "DATABASE_URL", "SELENIUM_
  * The startup method prints a welcome message and checks whether all mandatory environment variables are set. If not,
  * the process is exited with code 1.
  */
-export default () => {
+export const startup = (): void => {
   // Print welcome message
   console.log(logo);
 
@@ -52,3 +54,6 @@ export default () => {
     }
   }
 };
+
+// Run the startup method, so it is executed before all other imports.
+startup();

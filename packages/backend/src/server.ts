@@ -1,6 +1,7 @@
+import "./utils/startup.js";
+
 import { randomUUID } from "node:crypto";
 import cookieParser from "cookie-parser";
-import dotenv from "dotenv";
 import express from "express";
 import { router } from "./utils/router.js";
 import SwaggerUI from "swagger-ui-express";
@@ -14,11 +15,8 @@ import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger.js";
 import { fileURLToPath } from "url";
 import errorHandler from "./utils/errorHandler.js";
 import setupCronJobs from "./utils/cron.js";
-import startup from "./utils/startup.js";
-
+import dotenv from "dotenv";
 dotenv.config();
-
-startup();
 
 // Import all controllers
 import "./controllers/AuthController.js";

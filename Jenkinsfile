@@ -14,8 +14,10 @@ node {
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
             PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
-            sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
-            sh "sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env"
+            sh """
+            cat .yarnrc-ci-add.yml >> .yarnrc.yml
+            sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
+            """
         }
 
         parallel(
@@ -95,15 +97,21 @@ node {
                             image.push('SNAPSHOT')
                         }
                         if (env.TAG_NAME) {
+                            sh "docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container"
                             def VERSION = sh (script: "echo \$TAG_NAME | sed 's/^v//' | tr -d '\\n'", returnStdout: true)
                             def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/' | tr -d '\\n'; fi\"", returnStdout: true)
                             def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/' | tr -d '\\n'; fi\"", returnStdout: true)
-                            image.push(VERSION)
                             if (MAJOR) {
-                                image.push('latest')
-                                image.push(MINOR)
-                                image.push(MAJOR)
+                                sh "docker builder build --builder builder-$GIT_COMMIT_HASH --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest ."
+                            } else {
+                                sh "docker builder build --builder builder-$GIT_COMMIT_HASH --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION ."
                             }
+                            sh """
+                            docker builder rm builder-$GIT_COMMIT_HASH
+                            docker container ls -f "name=buildx_buildkit_builder-$GIT_COMMIT_HASH" -q | xargs -r docker container rm -f
+                            docker images -f "dangling=true" -q | xargs -r docker rmi -f
+                            docker volume ls -qf dangling=true | xargs -r docker volume rm
+                            """
                         }
                         sh 'docker logout'
                     }
