@@ -32,8 +32,8 @@ RUN mkdir -p /workdir/app/packages/backend/public /workdir/app/packages/commons 
   cp -r /workdir/packages/commons/dist /workdir/packages/commons/package.json /workdir/app/packages/commons && \
   cp -r /workdir/packages/frontend/dist/* /workdir/app/packages/backend/public && \
   find /workdir/app -name '*.d.ts' -type f -delete && \
-  # Selenium builds binaries for more than one operating system, we delete those as we do not need them
-  find /workdir/app/.yarn/unplugged/selenium-webdriver-npm-*/node_modules/selenium-webdriver/bin/* -maxdepth 0 | grep -v $TARGETOS | xargs rm -r
+  # Remove binaries of unused Selenium Manager
+  rm -r /workdir/app/.yarn/unplugged/selenium-webdriver-npm-*/node_modules/selenium-webdriver/bin
 
 
 FROM alpine:3.18.0 as run
