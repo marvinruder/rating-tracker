@@ -17,7 +17,7 @@ node {
             sh """
             cat .yarnrc-ci-add.yml >> .yarnrc.yml
             sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
-            docker builder create --use --name builder-$GIT_COMMIT_HASH --driver docker-container
+            docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container
             """
         }
 
@@ -57,7 +57,8 @@ node {
 
             build: {
                 stage ('Build Docker Image') {
-                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "--platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
+                    sh 'docker builder ls'
+                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "--builder builder-$GIT_COMMIT_HASH --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
                 }
             }
 
