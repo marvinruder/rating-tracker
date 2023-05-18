@@ -27,7 +27,6 @@ export default mergeConfig(
       chunkSizeWarningLimit: 600,
       cssCodeSplit: false,
       rollupOptions: {
-        maxParallelFileOps: 512,
         output: {
           manualChunks: {
             ...renderChunks(dependencies),
