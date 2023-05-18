@@ -4,6 +4,7 @@ ENV NODE_ENV production
 ENV FORCE_COLOR true
 ARG BUILDARCH
 ARG TARGETARCH
+ARG TARGETOS
 
 WORKDIR /workdir
 
@@ -12,6 +13,7 @@ COPY . .
 RUN \
   if [ "$BUILDARCH" != "$TARGETARCH" ]; then \
   yarn rebuild && \
+  rm -r /workdir/app/packages/backend/src/prisma/client && \
   yarn workspace @rating-tracker/backend prisma:generate; \
   fi
 
@@ -29,7 +31,9 @@ RUN mkdir -p /workdir/app/packages/backend/public /workdir/app/packages/commons 
   cp -r /workdir/packages/backend/dist /workdir/packages/backend/package.json /workdir/app/packages/backend && \
   cp -r /workdir/packages/commons/dist /workdir/packages/commons/package.json /workdir/app/packages/commons && \
   cp -r /workdir/packages/frontend/dist/* /workdir/app/packages/backend/public && \
-  find /workdir/app -name '*.d.ts' -type f -delete
+  find /workdir/app -name '*.d.ts' -type f -delete && \
+  # Selenium builds binaries for more than one operating system, we delete those as we do not need them
+  find /workdir/app/.yarn/unplugged/selenium-webdriver-npm-*/node_modules/selenium-webdriver/bin/* -maxdepth 0 | grep -v $TARGETOS | xargs rm -r
 
 
 FROM alpine:3.18.0 as run
