@@ -8,6 +8,12 @@ WORKDIR /workdir
 
 COPY . .
 
+RUN \
+  if [ "$BUILDARCH" != "$TARGETARCH" ]; then \
+  yarn rebuild && \
+  yarn workspace @rating-tracker/backend prisma:generate; \
+  fi
+
 # Build and create local production caches while using global mirror
 RUN \
   yarn build && \
