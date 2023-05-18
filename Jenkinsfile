@@ -17,7 +17,7 @@ node {
             sh """
             cat .yarnrc-ci-add.yml >> .yarnrc.yml
             sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
-            docker builder create --use --name $GIT_COMMIT_HASH --driver docker-container
+            docker builder create --use --name builder-$GIT_COMMIT_HASH --driver docker-container
             """
         }
 
@@ -122,7 +122,7 @@ node {
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true
             docker image prune --filter label=stage=build -f
             docker builder prune -f --keep-storage 4G
-            docker builder rm $GIT_COMMIT_HASH
+            docker builder rm builder-$GIT_COMMIT_HASH
             rm -r global
             """
         }
