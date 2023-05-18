@@ -14,8 +14,11 @@ node {
             GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
             PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
-            sh "cat .yarnrc-ci-add.yml >> .yarnrc.yml"
-            sh "sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env"
+            sh """
+            cat .yarnrc-ci-add.yml >> .yarnrc.yml
+            sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
+            docker builder create --use --name $GIT_COMMIT_HASH --driver docker-container
+            """
         }
 
         parallel(
@@ -119,6 +122,7 @@ node {
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true
             docker image prune --filter label=stage=build -f
             docker builder prune -f --keep-storage 4G
+            docker builder rm $GIT_COMMIT_HASH
             rm -r global
             """
         }
