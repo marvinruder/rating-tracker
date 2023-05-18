@@ -13,7 +13,7 @@ COPY . .
 RUN \
   if [ "$BUILDARCH" != "$TARGETARCH" ]; then \
   yarn rebuild && \
-  rm -r /workdir/app/packages/backend/src/prisma/client && \
+  rm -r /workdir/app/packages/backend/prisma/client && \
   yarn workspace @rating-tracker/backend prisma:generate; \
   fi
 
