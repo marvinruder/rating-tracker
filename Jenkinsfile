@@ -17,7 +17,6 @@ node {
             sh """
             cat .yarnrc-ci-add.yml >> .yarnrc.yml
             sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
-            docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container
             """
         }
 
@@ -57,8 +56,7 @@ node {
 
             build: {
                 stage ('Build Docker Image') {
-                    sh 'docker builder ls'
-                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "--builder builder-$GIT_COMMIT_HASH --load --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
+                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "--build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
                 }
             }
 
@@ -98,6 +96,12 @@ node {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                             image.push('SNAPSHOT')
                         }
+                        def A = 'a'
+                        sh """
+                        docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container
+                        docker builder build --builder builder-$GIT_COMMIT_HASH --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$A -t $imagename:b .
+                        docker builder rm builder-$GIT_COMMIT_HASH
+                        """
                         if (env.TAG_NAME) {
                             def VERSION = sh (script: "echo \$TAG_NAME | sed 's/^v//' | tr -d '\\n'", returnStdout: true)
                             def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/' | tr -d '\\n'; fi\"", returnStdout: true)
@@ -123,7 +127,6 @@ node {
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true
             docker image prune --filter label=stage=build -f
             docker builder prune -f --keep-storage 4G
-            docker builder rm builder-$GIT_COMMIT_HASH
             rm -r global
             """
         }
