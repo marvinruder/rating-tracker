@@ -96,22 +96,17 @@ node {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                             image.push('SNAPSHOT')
                         }
-                        def A = 'a'
-                        sh """
-                        docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container
-                        docker builder build --builder builder-$GIT_COMMIT_HASH --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$A -t $imagename:b .
-                        docker builder rm builder-$GIT_COMMIT_HASH
-                        """
                         if (env.TAG_NAME) {
+                            sh "docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container"
                             def VERSION = sh (script: "echo \$TAG_NAME | sed 's/^v//' | tr -d '\\n'", returnStdout: true)
                             def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/' | tr -d '\\n'; fi\"", returnStdout: true)
                             def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/' | tr -d '\\n'; fi\"", returnStdout: true)
-                            image.push(VERSION)
                             if (MAJOR) {
-                                image.push('latest')
-                                image.push(MINOR)
-                                image.push(MAJOR)
+                                sh "docker builder build --builder builder-$GIT_COMMIT_HASH --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION $imagename:$MINOR $imagename:$MAJOR $imagename:latest ."
+                            } else {
+                                sh "docker builder build --builder builder-$GIT_COMMIT_HASH --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION ."
                             }
+                            sh "docker builder rm builder-$GIT_COMMIT_HASH"
                         }
                         sh 'docker logout'
                     }
