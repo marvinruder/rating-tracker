@@ -106,7 +106,12 @@ node {
                             } else {
                                 sh "docker builder build --builder builder-$GIT_COMMIT_HASH --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION ."
                             }
-                            sh "docker builder rm builder-$GIT_COMMIT_HASH"
+                            sh """
+                            docker builder rm builder-$GIT_COMMIT_HASH
+                            docker container ls -f "name=buildx_buildkit_builder-$GIT_COMMIT_HASH" -q | xargs -r docker container rm -f
+                            docker images -f "dangling=true" -q | xargs -r docker rmi -f
+                            docker volume ls -qf dangling=true | xargs -r docker volume rm
+                            """
                         }
                         sh 'docker logout'
                     }
