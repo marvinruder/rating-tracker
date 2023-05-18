@@ -2,7 +2,7 @@ FROM node:20.2.0-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
-ARG TARGETARCH=unknown
+ARG TARGETARCH
 
 WORKDIR /workdir
 
@@ -27,7 +27,7 @@ RUN mkdir -p /workdir/app/packages/backend/public /workdir/app/packages/commons 
 
 FROM alpine:3.18.0 as run
 ARG BUILD_DATE
-ARG TARGETARCH=unknown
+ARG TARGETARCH
 LABEL \
   org.opencontainers.image.title="Rating Tracker" \
   org.opencontainers.image.authors="Marvin A. Ruder <ratingtracker@mruder.dev>" \
