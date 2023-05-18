@@ -1,7 +1,8 @@
 node {
     withEnv([
         'imagename=marvinruder/rating-tracker',
-        'FORCE_COLOR=true'
+        'FORCE_COLOR=true',
+        'DOCKER_BUILDKIT=1'
     ]) {
 
         def GIT_COMMIT_HASH
