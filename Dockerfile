@@ -2,6 +2,7 @@ FROM node:20.2.0-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
+ARG BUILDARCH
 ARG TARGETARCH
 
 WORKDIR /workdir
