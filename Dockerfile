@@ -2,6 +2,7 @@ FROM node:20.2.0-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
+ARG TARGETARCH
 
 WORKDIR /workdir
 
@@ -26,6 +27,7 @@ RUN mkdir -p /workdir/app/packages/backend/public /workdir/app/packages/commons 
 
 FROM alpine:3.18.0 as run
 ARG BUILD_DATE
+ARG TARGETARCH
 LABEL \
   org.opencontainers.image.title="Rating Tracker" \
   org.opencontainers.image.authors="Marvin A. Ruder <ratingtracker@mruder.dev>" \
@@ -38,7 +40,7 @@ LABEL \
   org.opencontainers.image.created=$BUILD_DATE
 ENV NODE_ENV production
 WORKDIR /app
-RUN --mount=type=cache,target=/var/cache/apk apk add dumb-init
+RUN --mount=type=cache,id=apk-${TARGETARCH},target=/var/cache/apk apk add dumb-init
 COPY --from=build /etc/passwd /etc
 COPY --from=build /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
 COPY --from=build /usr/local/bin/node /usr/local/bin

@@ -58,7 +58,7 @@ node {
             build: {
                 stage ('Build Docker Image') {
                     sh 'docker builder ls'
-                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "--builder builder-$GIT_COMMIT_HASH --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
+                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "--builder builder-$GIT_COMMIT_HASH --load --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
                 }
             }
 
