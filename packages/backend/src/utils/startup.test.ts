@@ -1,10 +1,12 @@
-import startup from "./startup.js";
+import { startup } from "./startup.js";
+
+vi.hoisted(() => {
+  // Hide console messages
+  vi.spyOn(console, "log").mockImplementation(() => {});
+  vi.spyOn(console, "error").mockImplementation(() => {});
+});
 
 const mockExit = vi.spyOn(process, "exit").mockImplementation((() => {}) as () => never);
-
-// Hide console messages
-vi.spyOn(console, "log").mockImplementation(() => {});
-vi.spyOn(console, "error").mockImplementation(() => {});
 
 describe("startup routine", () => {
   it("fails when mandatory environment variable is unset", () => {
