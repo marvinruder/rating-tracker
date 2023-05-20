@@ -8,6 +8,7 @@ dotenv.config();
  */
 let ratingTrackerColor: string;
 
+/* istanbul ignore next -- @preserve */ // The color depends on the environment, which is fixed to `test` in tests
 switch (process.env.NODE_ENV) {
   case "production":
     ratingTrackerColor = "#2971D6";
