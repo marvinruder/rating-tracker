@@ -7,6 +7,11 @@ dotenv.config({
 });
 
 export default defineConfig({
+  optimizeDeps: {
+    exclude: [
+      "./src/utils/startup", // Vitest does not support parsing import assertions, one of which must be used here
+    ],
+  },
   test: {
     cache: {
       dir: ".vitest",

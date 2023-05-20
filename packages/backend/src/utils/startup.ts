@@ -1,9 +1,33 @@
 import chalk from "chalk";
 import dotenv from "dotenv";
+import packageInfo from "../../package.json" assert { type: "json" };
+
 dotenv.config();
 
+/**
+ * The color to style the logo in.
+ */
+let ratingTrackerColor: string;
+
+switch (process.env.NODE_ENV) {
+  case "production":
+    ratingTrackerColor = "#2971D6";
+    break;
+  case "development":
+    ratingTrackerColor = "#D68E29";
+    break;
+  case "test":
+    ratingTrackerColor = "#6E9F18";
+    break;
+  default:
+    ratingTrackerColor = "#808080";
+}
+
+/**
+ * An ASCII art logo, shown as a welcome message.
+ */
 const logo = chalk.bold(
-  chalk.hex("#2971D6")(`
+  chalk.hex(ratingTrackerColor)(`
                                     ήΒω
                                   ;βΪΆ
                         ;       ρΪΪΓε
@@ -18,7 +42,7 @@ const logo = chalk.bold(
                             ΅΅΅  ΅ΨΪΈώ
                                     ΫΆ΅
 
- Welcome to Rating Tracker (${process.env.NODE_ENV ?? "no specific"} environment)!
+ Welcome to Rating Tracker v${packageInfo.version} (${process.env.NODE_ENV ?? "no specific"} environment)!
 
 `)
 );
