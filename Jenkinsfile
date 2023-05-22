@@ -17,7 +17,6 @@ node {
             sh """
             cat .yarnrc-ci-add.yml >> .yarnrc.yml
             sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
-            mkdir -p ./packages/wasm
             """
         }
 
@@ -34,6 +33,7 @@ node {
                 stage ('Compile WebAssembly utils') {
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-wasm", "-f Dockerfile-wasm .")
                     sh """
+                    mkdir -p ./packages/wasm
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
                     docker cp \$id:/workdir/pkg/. ./packages/wasm
                     docker rm -v \$id
