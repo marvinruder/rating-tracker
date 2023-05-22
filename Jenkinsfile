@@ -37,6 +37,7 @@ node {
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
                     docker cp \$id:/workdir/pkg/. ./packages/wasm
                     docker rm -v \$id
+                    docker rmi $imagename:build-$GIT_COMMIT_HASH-wasm || true
                     sed -i -E 's/"module": "([A-Za-z0-9\\-\\.]+)",/"main": "\\1",\\n  "module": "\\1",/g' packages/wasm/package.json
                     """
                 }
@@ -53,6 +54,7 @@ node {
                     docker cp \$id:/workdir/.pnp.cjs .
                     docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                     docker rm -v \$id
+                    docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
                     """
                     sh "cp -arn ./global /home/jenkins/.cache/yarn"
                 }
@@ -64,6 +66,15 @@ node {
             test: {
                 stage ('Run Tests') {
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
+                    sh """
+                    id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
+                    mkdir -p coverage/{backend,commons,frontend}
+                    docker cp \$id:/workdir/packages/backend/coverage/. ./coverage/backend
+                    docker cp \$id:/workdir/packages/commons/coverage/. ./coverage/commons
+                    docker cp \$id:/workdir/packages/frontend/coverage/. ./coverage/frontend
+                    docker rm -v \$id
+                    docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
+                    """
                 }
             },
 
@@ -79,14 +90,6 @@ node {
 
             codacy: {
                 stage ('Publish coverage results to Codacy') {
-                    sh """
-                    id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
-                    mkdir -p coverage/{backend,commons,frontend}
-                    docker cp \$id:/workdir/packages/backend/coverage/. ./coverage/backend
-                    docker cp \$id:/workdir/packages/commons/coverage/. ./coverage/commons
-                    docker cp \$id:/workdir/packages/frontend/coverage/. ./coverage/frontend
-                    docker rm -v \$id
-                    """
                     lock('codacy-coverage-reporter') {
                         withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
                             sh """#!/usr/bin/env bash
@@ -134,9 +137,7 @@ node {
 
         stage ('Cleanup') {
             sh """
-            docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/backend/test/docker-compose.yml down -t 0
-            docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
-            docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
+            docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/backend/test/docker-compose.yml down -t 0            
             docker rmi $imagename:build-$GIT_COMMIT_HASH || true
             docker image prune --filter label=stage=build -f
             docker builder prune -f --keep-storage 4G
