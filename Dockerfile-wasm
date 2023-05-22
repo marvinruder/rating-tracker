@@ -1,0 +1,23 @@
+FROM rust:alpine3.17
+
+WORKDIR /workdir
+
+RUN --mount=type=cache,target=/var/cache/apk apk add wasm-pack binaryen pkgconfig openssl-dev
+RUN rustup target add wasm32-unknown-unknown
+
+COPY wasm/Cargo.toml .
+COPY wasm/Cargo.lock .
+COPY wasm/config.toml .
+
+RUN \
+  mkdir ./src && echo 'pub fn tmp() {}' > ./src/lib.rs && \
+  wasm-pack build --release && \
+  rm -r ./src/lib.rs ./target/wasm32-*/release/wasm.*
+
+COPY wasm/src/* ./src/
+
+RUN \
+  touch ./src/* && \
+  wasm-pack build -s rating-tracker --release
+
+ENTRYPOINT [ "/bin/sh" ]

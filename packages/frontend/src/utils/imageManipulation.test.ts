@@ -19,6 +19,6 @@ describe("Avatar Conversion", () => {
   });
 
   it("converts favicon-dev properly", async () => {
-    expect(await convertAvatar(favicon192)).toMatch(/AFABQAUAFABQAUAFABQAUAFABQAUAf\/Z$/);
+    expect(await convertAvatar(favicon192)).toMatchSnapshot();
   });
 });

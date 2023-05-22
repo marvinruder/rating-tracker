@@ -34,6 +34,7 @@
     "@mui/lab": "5.0.0-alpha.131",
     "@mui/material": "5.13.2",
     "@rating-tracker/commons": "workspace:*",
+    "@rating-tracker/wasm": "workspace:*",
     "@simplewebauthn/browser": "7.2.0",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
@@ -42,7 +43,6 @@
     "axios": "1.4.0",
     "clsx": "1.2.1",
     "date-fns": "2.30.0",
-    "jimp": "0.22.8",
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "particlesjs": "2.2.3",
@@ -58,6 +58,8 @@
     "tsparticles-engine": "2.9.3",
     "vite": "4.3.8",
     "vite-plugin-html": "3.2.0",
+    "vite-plugin-top-level-await": "1.3.1",
+    "vite-plugin-wasm": "3.2.2",
     "vite-tsconfig-paths": "4.2.0"
   },
   "devDependencies": {
