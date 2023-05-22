@@ -37,7 +37,7 @@ node {
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
                     docker cp \$id:/workdir/pkg/. ./packages/wasm
                     docker rm -v \$id
-                    sed -iE 's/"module": "([A-Za-z0-9\-\.]+)",/"module": "\1",\n  "main": "\1",/g' packages/wasm/package.json
+                    sed -iE 's/"module": "([A-Za-z0-9\\-\\.]+)",/"module": "\\1",\\n  "main": "\\1",/g' packages/wasm/package.json
                     """
                 }
             }
