@@ -40,7 +40,7 @@ node {
                     sed -iE 's/"module": "([A-Za-z0-9\\-\\.]+)",/"module": "\\1",\\n  "main": "\\1",/g' packages/wasm/package.json
                     """
                 }
-            }
+            },
 
             dep: {
                 stage ('Install dependencies') {
