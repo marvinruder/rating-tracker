@@ -32,7 +32,7 @@ import {
   subscriptionOfMessageType,
   userEndpointPath,
 } from "@rating-tracker/commons";
-import { convertAvatar } from "../../utils/imageManipulation";
+import ConvertAvatarWorker from "../../utils/imageManipulation?worker&inline";
 
 /**
  * A dialog to edit the user’s own information.
@@ -78,7 +78,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    *
    * @returns {boolean} Whether the name input field contains a valid name.
    */
-  const validateName = () => {
+  const validateName = (): boolean => {
     return (document.getElementById("inputName") as HTMLInputElement).reportValidity();
   };
 
@@ -87,7 +87,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    *
    * @returns {boolean} Whether the phone input field contains a valid phone number.
    */
-  const validatePhone = () => {
+  const validatePhone = (): boolean => {
     return (document.getElementById("inputPhone") as HTMLInputElement).reportValidity();
   };
 
@@ -160,30 +160,31 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    * @param {React.ChangeEvent<HTMLInputElement>} e The upload event.
    */
   const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      setProcessingAvatar(true);
+    setProcessingAvatar(true);
 
-      const file = e.target.files?.[0];
-      if (!file) {
-        setProcessingAvatar(false);
-        return;
-      }
-      const processedAvatar = await convertAvatar(file);
-      avatar === processedAvatar ? setProcessingAvatar(false) : setAvatar(processedAvatar);
-    } catch (e) {
-      setNotification({
-        severity: "error",
-        title: "Error while processing image",
-        message:
-          e.response?.status && e.response?.data?.message
-            ? `${e.response.status}: ${e.response.data.message}`
-            : e.message ?? "No additional information available.",
-      });
+    const file = e.target.files?.[0];
+    if (!file) {
       setProcessingAvatar(false);
-    } finally {
+      return;
+    }
+
+    const worker = new ConvertAvatarWorker();
+    worker.postMessage(file);
+    worker.onmessage = (message: MessageEvent<{ result: string; isError?: boolean }>) => {
+      if (message.data.isError) {
+        setNotification({
+          severity: "error",
+          title: "Error while processing image",
+          message: "Refer to the error console for detailed information.",
+        });
+        setProcessingAvatar(false);
+      } else {
+        avatar === message.data.result ? setProcessingAvatar(false) : setAvatar(message.data.result);
+      }
       // Clear the file input to allow the same file to be uploaded again.
       e.target.value = "";
-    }
+      worker.terminate();
+    };
   };
 
   return (
@@ -199,8 +200,7 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   margin: "auto",
                 }}
               >
-                {/* Disable animation because of high CPU load. */}
-                <CircularProgress disableShrink />
+                <CircularProgress />
               </Avatar>
             ) : (
               <Avatar
@@ -215,15 +215,24 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
             )}
             <Box width="100%" display="flex" justifyContent="center" mt={1}>
               <Tooltip title={user.avatar ? "Change your avatar" : "Upload an avatar"} arrow>
-                <IconButton color="primary" component="label">
-                  <input hidden accept="image/*" type="file" onChange={uploadAvatar} />
-                  <AddAPhotoIcon />
-                </IconButton>
+                <Box>
+                  <IconButton color="primary" component="label" disabled={processingAvatar}>
+                    <input hidden accept="image/*" type="file" onChange={uploadAvatar} />
+                    <AddAPhotoIcon />
+                  </IconButton>
+                </Box>
               </Tooltip>
               <Tooltip title="Delete your avatar" arrow>
-                <IconButton color="error" sx={{ ml: 1, display: !avatar && "none" }} onClick={() => setAvatar("")}>
-                  <DeleteIcon />
-                </IconButton>
+                <Box>
+                  <IconButton
+                    color="error"
+                    sx={{ ml: 1, display: !avatar && "none" }}
+                    onClick={() => setAvatar("")}
+                    disabled={processingAvatar}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
               </Tooltip>
             </Box>
           </Grid>

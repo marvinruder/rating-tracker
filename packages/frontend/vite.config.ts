@@ -59,6 +59,9 @@ export default mergeConfig(
       topLevelAwait(),
       wasm(),
     ],
+    worker: {
+      plugins: [wasm(), topLevelAwait()],
+    },
   }),
   defineVitestConfig({
     test: {
