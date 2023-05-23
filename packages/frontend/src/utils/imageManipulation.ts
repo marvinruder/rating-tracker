@@ -1,5 +1,7 @@
 import * as wasm from "@rating-tracker/wasm";
 
+await wasm;
+
 /**
  * Converts an uploaded file to a base64-encoded string with smaller size and reduced quality.
  *
