@@ -170,8 +170,8 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
     const worker = new ConvertAvatarWorker();
     worker.postMessage(file);
-    worker.onmessage = (message: MessageEvent<{ result: string; isError?: boolean }>) => {
-      if (message.data.isError) {
+    worker.onmessage = (message: MessageEvent<{ result: string } | { isError: true }>) => {
+      if (!("result" in message.data)) {
         setNotification({
           severity: "error",
           title: "Error while processing image",

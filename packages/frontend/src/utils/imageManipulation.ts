@@ -12,5 +12,5 @@ export const convertAvatar = async (file: File): Promise<string> =>
 self.onmessage = async (message: { data: File }) => {
   await convertAvatar(message.data)
     .then((result) => self.postMessage({ result }))
-    .catch(() => self.postMessage({ result: "", isError: true }));
+    .catch(() => self.postMessage({ isError: true }));
 };
