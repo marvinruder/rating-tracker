@@ -6,7 +6,7 @@ import * as wasm from "@rating-tracker/wasm";
  * @param {File} file The uploaded file
  * @returns {string} The base64-encoded string containing the encoded image.
  */
-export const convertAvatar = async (file: File): Promise<string> =>
+const convertAvatar = async (file: File): Promise<string> =>
   `data:image/jpeg;base64,${wasm.convert_avatar(new Uint8Array(await file.arrayBuffer()))}`;
 
 self.onmessage = async (message: { data: File }) => {
