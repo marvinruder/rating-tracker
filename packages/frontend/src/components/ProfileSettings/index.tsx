@@ -32,7 +32,7 @@ import {
   subscriptionOfMessageType,
   userEndpointPath,
 } from "@rating-tracker/commons";
-import ConvertAvatarWorker from "../../utils/imageManipulation?worker";
+import ConvertAvatarWorker from "../../utils/imageManipulation?worker&inline";
 
 /**
  * A dialog to edit the user’s own information.
@@ -170,7 +170,6 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
     const worker = new ConvertAvatarWorker();
     worker.postMessage(file);
-    console.log("Message posted");
     worker.onmessage = (message: MessageEvent<{ result: string } | { isError: true }>) => {
       if (!("result" in message.data)) {
         setNotification({

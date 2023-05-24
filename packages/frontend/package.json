@@ -39,7 +39,7 @@
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "@vitejs/plugin-react": "4.0.0",
-    "@vitest/web-worker": "^0.31.1",
+    "@vitest/web-worker": "0.31.1",
     "apexcharts": "3.40.0",
     "axios": "1.4.0",
     "clsx": "1.2.1",
