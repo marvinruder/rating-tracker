@@ -316,7 +316,7 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 
 An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](/packages/backend/dev) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
--   Run `yarn build:wasm` to build the WebAssembly utilities and create the `wasm` package. This requires [Rust](https://www.rust-lang.org) and [wasm-pack](https://github.com/rustwasm/wasm-pack) to be installed.
+-   Run `yarn build:wasm` to build the WebAssembly utilities and create the `wasm` package. This requires [Rust](https://www.rust-lang.org) and [wasm-pack](https://rustwasm.github.io/wasm-pack/) to be installed.
 -   Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis, Selenium and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
 -   Run `yarn prisma:migrate:dev` to initialize the PostgreSQL database and generate the Prisma client.
 -   Run `yarn dev:server` to start the backend server as well as the Vite frontend development server.
@@ -354,7 +354,7 @@ LOG_LEVEL=trace
 
 A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](/packages/backend/test) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
--   Run `yarn build:wasm` to build the WebAssembly utilities and create the `wasm` package. This requires [Rust](https://www.rust-lang.org) and [wasm-pack](https://github.com/rustwasm/wasm-pack) to be installed.
+-   Run `yarn build:wasm` to build the WebAssembly utilities and create the `wasm` package. This requires [Rust](https://www.rust-lang.org) and [wasm-pack](https://rustwasm.github.io/wasm-pack/) to be installed.
 -   Manually create a `main` entry in the `package.json` of the `wasm` package pointing to the same file as the `module` entry.
 -   Run `yarn test:tools` to start PostgreSQL and Redis.
 -   Run `yarn test:prisma:migrate:init` to initialize the PostgreSQL database.
