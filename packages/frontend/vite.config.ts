@@ -60,6 +60,7 @@ export default mergeConfig(
       wasm(),
     ],
     worker: {
+      format: "es",
       plugins: [wasm(), topLevelAwait()],
     },
   }),
