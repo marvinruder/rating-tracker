@@ -33,7 +33,6 @@ node {
                 stage ('Compile WebAssembly utils') {
                     docker.build("$imagename:build-$GIT_COMMIT_HASH-wasm", "-f Dockerfile-wasm .")
                     sh """
-                    mkdir -p ./packages/wasm
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
                     docker cp \$id:/workdir/pkg/. ./packages/wasm
                     docker rm -v \$id
