@@ -10,6 +10,7 @@ COPY package.json .yarnrc.yml yarn.lock ./
 COPY packages/backend/package.json ./packages/backend/
 COPY packages/commons/package.json ./packages/commons/
 COPY packages/frontend/package.json ./packages/frontend/
+COPY packages/wasm/package.json ./packages/wasm/
 
 # Install dependencies
 RUN yarn --immutable
