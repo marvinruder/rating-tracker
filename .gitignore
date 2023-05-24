@@ -29,7 +29,8 @@ packages/backend/dev/signal-cli
 packages/backend/prisma/client
 
 # Rust
-packages/wasm
+packages/wasm/*
+!packages/wasm/package.json
 wasm/target
 
 # misc

@@ -1,0 +1,26 @@
+{
+  "name": "@rating-tracker/wasm",
+  "collaborators": [
+    "Marvin A. Ruder <ratingtracker@mruder.dev>"
+  ],
+  "description": "A collection of utilities written in Rust and compiled to WebAssembly",
+  "version": "1.0.2",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marvinruder/rating-tracker"
+  },
+  "files": [
+    "wasm_bg.wasm",
+    "wasm.js",
+    "wasm_bg.js",
+    "wasm.d.ts"
+  ],
+  "main": "wasm.js",
+  "module": "wasm.js",
+  "types": "wasm.d.ts",
+  "sideEffects": [
+    "./wasm.js",
+    "./snippets/*"
+  ]
+}
