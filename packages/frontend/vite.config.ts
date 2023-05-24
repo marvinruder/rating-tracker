@@ -1,12 +1,14 @@
 import { defineConfig as defineVitestConfig, configDefaults as vitestConfigDefaults } from "vitest/config";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
+import topLevelAwait from "vite-plugin-top-level-await";
+import wasm from "vite-plugin-wasm";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { dependencies } from "./package.json";
 import fs from "fs";
 
-const chunkList = ["@mui/material", "jimp/browser/lib/jimp.js"];
+const chunkList = ["@mui/material"];
 
 const renderChunks = (deps: Record<string, string>) => {
   const chunks = {};
@@ -24,7 +26,6 @@ const nprogressCSS = fs.readFileSync(nprogressCSSPath, "utf8");
 export default mergeConfig(
   defineViteConfig({
     build: {
-      chunkSizeWarningLimit: 600,
       cssCodeSplit: false,
       rollupOptions: {
         output: {
@@ -55,7 +56,13 @@ export default mergeConfig(
         },
         verbose: process.env.NODE_ENV === "development",
       }),
+      topLevelAwait(),
+      wasm(),
     ],
+    worker: {
+      format: "es",
+      plugins: [wasm(), topLevelAwait()],
+    },
   }),
   defineVitestConfig({
     test: {

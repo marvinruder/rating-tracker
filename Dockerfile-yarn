@@ -11,6 +11,9 @@ COPY packages/backend/package.json ./packages/backend/
 COPY packages/commons/package.json ./packages/commons/
 COPY packages/frontend/package.json ./packages/frontend/
 
+# Create dummy package.json for yarn
+RUN mkdir -p ./packages/wasm && echo '{"name":"@rating-tracker/wasm"}' > ./packages/wasm/package.json
+
 # Install dependencies
 RUN yarn --immutable
 

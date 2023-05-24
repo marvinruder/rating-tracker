@@ -9,11 +9,5 @@
   "assignees": ["ruder.marvin@icloud.com"],
   "updateLockFiles": true,
   "postUpdateOptions": ["yarnDedupeHighest"],
-  "rangeStrategy": "pin",
-  "packageRules": [
-    {
-      "matchPackageNames": ["jimp"],
-      "automerge": false
-    }
-  ]
+  "rangeStrategy": "pin"
 }

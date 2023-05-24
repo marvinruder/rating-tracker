@@ -1,0 +1,30 @@
+[package]
+name = "wasm"
+version = "1.0.1"
+authors = ["Marvin A. Ruder <ratingtracker@mruder.dev>"]
+description = "A collection of utilities written in Rust and compiled to WebAssembly"
+license = "MIT"
+repository = "https://github.com/marvinruder/rating-tracker"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+base64 = "0.21.1"
+console_error_panic_hook = "0.1.7"
+image = "0.24.6"
+kamadak-exif = "0.5.5"
+wasm-bindgen = "0.2.86"
+
+[profile.release]
+lto = true
+opt-level = 's'
+debug = false
+rpath = false
+debug-assertions = false
+codegen-units = 1
+panic = 'abort'
+incremental = false

@@ -28,6 +28,10 @@ packages/backend/dev/signal-cli
 # Prisma
 packages/backend/prisma/client
 
+# Rust
+packages/wasm
+wasm/target
+
 # misc
 .DS_Store
 node_modules/.cache
