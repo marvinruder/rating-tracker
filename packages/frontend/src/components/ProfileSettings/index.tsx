@@ -32,7 +32,7 @@ import {
   subscriptionOfMessageType,
   userEndpointPath,
 } from "@rating-tracker/commons";
-import ConvertAvatarWorker from "../../utils/imageManipulation?worker&inline";
+import ConvertAvatarWorker from "../../utils/imageManipulation?worker";
 
 /**
  * A dialog to edit the user’s own information.
