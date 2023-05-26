@@ -1633,7 +1633,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cron", "npm:2.0.1"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/node", "npm:18.16.15"],\
-            ["@types/selenium-webdriver", "npm:4.1.14"],\
+            ["@types/selenium-webdriver", "npm:4.1.15"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@typescript-eslint/eslint-plugin", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:5.59.7"],\
             ["@typescript-eslint/parser", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:5.59.7"],\
@@ -2486,10 +2486,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/selenium-webdriver", [\
-        ["npm:4.1.14", {\
-          "packageLocation": "./.yarn/cache/@types-selenium-webdriver-npm-4.1.14-02c7a016ec-a1b4c2cd36.zip/node_modules/@types/selenium-webdriver/",\
+        ["npm:4.1.15", {\
+          "packageLocation": "./.yarn/cache/@types-selenium-webdriver-npm-4.1.15-77976c9cd6-810ccb9155.zip/node_modules/@types/selenium-webdriver/",\
           "packageDependencies": [\
-            ["@types/selenium-webdriver", "npm:4.1.14"],\
+            ["@types/selenium-webdriver", "npm:4.1.15"],\
             ["@types/ws", "npm:8.5.4"]\
           ],\
           "linkType": "HARD"\
