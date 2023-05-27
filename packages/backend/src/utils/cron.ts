@@ -83,7 +83,7 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
       // Fetch data from Morningstar first
       await axios
         .post(`http://localhost:${process.env.PORT}/api${fetchMorningstarEndpointPath}`, undefined, {
-          params: { noSkip: "true", detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+          params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
           headers: {
             Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
           },
