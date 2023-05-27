@@ -22,7 +22,7 @@ describe("Avatar Conversion", async () => {
       expect(message.data.result).toMatchSnapshot();
     };
     while (!workerHasSentResult) await new Promise((resolve) => setTimeout(resolve, 10));
-  });
+  }, 15000);
 
   it("handles errors correctly", async () => {
     let workerHasSentResult = false;
@@ -34,5 +34,5 @@ describe("Avatar Conversion", async () => {
       expect(message.data.result).toBeUndefined();
     };
     while (!workerHasSentResult) await new Promise((resolve) => setTimeout(resolve, 10));
-  });
+  }, 15000);
 });

@@ -27,6 +27,8 @@ const XPATH_INDUSTRY = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'I
 const XPATH_SIZE_STYLE = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Stock Style')]/.." as const;
 const XPATH_DESCRIPTION = "//*/div[@id='CompanyProfile']/div[1][not(.//h3)]" as const;
 
+const MAX_RETRIES = 10;
+
 /**
  * Fetches data from Morningstar Italy.
  *
@@ -90,10 +92,31 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
         stocks.queued.push(stock);
         break;
       }
-      await driver.wait(
-        until.elementLocated(By.css("#SnapshotBodyContent:has(#IntradayPriceSummary):has(#CompanyProfile)")),
-        30000 // Wait for the page to load for a maximum of 30 seconds.
-      );
+
+      let attempts = 1;
+      while (attempts > 0) {
+        try {
+          await driver.wait(
+            until.elementLocated(By.css("#SnapshotBodyContent:has(#IntradayPriceSummary):has(#CompanyProfile)")),
+            30000 // Wait for the page to load for a maximum of 30 seconds.
+          );
+          attempts = 0; // Page load succeeded.
+        } catch (e) {
+          // We probably stumbled upon a temporary 502 Bad Gateway or 429 Too Many Requests error, which persists for a
+          // few minutes. We periodically retry to fetch the page.
+          if (++attempts > MAX_RETRIES) {
+            throw e; // Too many attempts failed, we throw the last error.
+          }
+          logger.warn(
+            PREFIX_SELENIUM +
+              chalk.yellowBright(
+                `Unable to load Morningstar page for ${stock.name} (${stock.ticker}). ` +
+                  `Will retry (attempt ${attempts} of ${MAX_RETRIES})`
+              )
+          );
+          await openPageAndWait(driver, url); // Load the page once again
+        }
+      }
 
       // Prepare an error message header containing the stock name and ticker.
       let errorMessage = `Error while fetching Morningstar data for ${stock.name} (${stock.ticker}):`;
