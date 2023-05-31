@@ -1234,7 +1234,7 @@ __metadata:
     cookie-parser: 1.4.6
     cron: 2.3.1
     date-fns: 2.30.0
-    dotenv: 16.1.1
+    dotenv: 16.1.3
     eslint: 8.41.0
     eslint-config-google: 0.14.0
     eslint-config-prettier: 8.8.0
@@ -3687,10 +3687,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:16.1.1, dotenv@npm:^16.0.0":
-  version: 16.1.1
-  resolution: "dotenv@npm:16.1.1"
-  checksum: e3786267ce7951e747edef6bf45ac60fdba8b846201f82f8811b7222e78aef9cdc51763f07696934d4feebab2ab4d01b1d61ac9301919a8f317dc66672127814
+"dotenv@npm:16.1.3, dotenv@npm:^16.0.0":
+  version: 16.1.3
+  resolution: "dotenv@npm:16.1.3"
+  checksum: 8f73bae720161cf365b679de162fe79a05f5b7a21d0d2b8bf9fb0601a2ed30f7e9dc49fa8b752d93206e4b7d427eccea2f383a1622cd5da4a1824f43bf8f780b
   languageName: node
   linkType: hard
 
