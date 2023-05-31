@@ -1645,7 +1645,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cookie-parser", "npm:1.4.6"],\
             ["cron", "npm:2.3.1"],\
             ["date-fns", "npm:2.30.0"],\
-            ["dotenv", "npm:16.1.0"],\
+            ["dotenv", "npm:16.1.1"],\
             ["eslint", "npm:8.41.0"],\
             ["eslint-config-google", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:0.14.0"],\
             ["eslint-config-prettier", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:8.8.0"],\
@@ -4611,10 +4611,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["dotenv", [\
-        ["npm:16.1.0", {\
-          "packageLocation": "./.yarn/cache/dotenv-npm-16.1.0-bd87824efa-5c193d6405.zip/node_modules/dotenv/",\
+        ["npm:16.1.1", {\
+          "packageLocation": "./.yarn/cache/dotenv-npm-16.1.1-a491d06a0f-e3786267ce.zip/node_modules/dotenv/",\
           "packageDependencies": [\
-            ["dotenv", "npm:16.1.0"]\
+            ["dotenv", "npm:16.1.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10699,7 +10699,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["colorette", "npm:2.0.20"],\
             ["connect-history-api-fallback", "npm:1.6.0"],\
             ["consola", "npm:2.15.3"],\
-            ["dotenv", "npm:16.1.0"],\
+            ["dotenv", "npm:16.1.1"],\
             ["dotenv-expand", "npm:8.0.3"],\
             ["ejs", "npm:3.1.9"],\
             ["fast-glob", "npm:3.2.12"],\
