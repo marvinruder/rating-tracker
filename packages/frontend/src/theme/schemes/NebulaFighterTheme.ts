@@ -718,6 +718,7 @@ const NebulaFighterTheme = createTheme({
     MuiListItemButton: {
       styleOverrides: {
         root: {
+          borderRadius: 0,
           "& .MuiTouchRipple-root": {
             opacity: 0.3,
           },
@@ -835,7 +836,7 @@ const NebulaFighterTheme = createTheme({
           },
         },
         padding: {
-          padding: "12px",
+          padding: 8,
 
           "& .MuiListItem-button": {
             borderRadius: 6,
@@ -891,11 +892,8 @@ const NebulaFighterTheme = createTheme({
     },
     MuiMenu: {
       styleOverrides: {
-        paper: {
-          padding: 12,
-        },
         list: {
-          padding: 12,
+          padding: 8,
 
           "& .MuiMenuItem-root.MuiButtonBase-root": {
             fontSize: 12,
@@ -919,6 +917,8 @@ const NebulaFighterTheme = createTheme({
     MuiMenuItem: {
       styleOverrides: {
         root: {
+          paddingLeft: 6,
+          paddingRight: 12,
           background: "transparent",
           transition: "all .2s",
 
@@ -1015,7 +1015,7 @@ const NebulaFighterTheme = createTheme({
         root: {
           borderBottomColor: colors.alpha.black[10],
           fontSize: 12,
-          padding: 8,
+          padding: 6,
           lineHeight: "1rem",
         },
         head: {

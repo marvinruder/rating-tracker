@@ -8,6 +8,10 @@ import {
   Divider,
   Grid,
   IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Skeleton,
   styled,
   TableCell,
@@ -20,6 +24,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
@@ -116,6 +121,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
     },
   }));
 
+  const [optionsMenuOpen, setOptionsMenuOpen] = useState<boolean>(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
@@ -139,6 +145,51 @@ const StockRow = (props: StockRowProps): JSX.Element => {
   return props.stock ? (
     // Actual stock row
     <TableRow hover sx={{ height: 59 }}>
+      {/* Actions */}
+      {props.getStocks && (
+        <TableCell style={{ whiteSpace: "nowrap" }}>
+          <Tooltip title="Options" arrow>
+            <IconButton
+              id={`option-button-${props.stock.ticker}`}
+              size="small"
+              color="secondary"
+              onClick={() => setOptionsMenuOpen(true)}
+            >
+              <ArrowDropDownIcon />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            open={optionsMenuOpen}
+            onClose={() => setOptionsMenuOpen(false)}
+            anchorEl={() => document.getElementById(`option-button-${props.stock.ticker}`)}
+          >
+            <MenuItem component={NavLink} to={`/stock/${props.stock.ticker}`} target="_blank">
+              <ListItemIcon>
+                <OpenInNewIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Open in new tab</ListItemText>
+            </MenuItem>
+            <MenuItem
+              onClick={() => setEditDialogOpen(true)}
+              sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+            >
+              <ListItemIcon>
+                <EditIcon color="primary" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Edit Stock</ListItemText>
+            </MenuItem>
+            <MenuItem
+              onClick={() => setDeleteDialogOpen(true)}
+              sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+            >
+              <ListItemIcon>
+                <DeleteIcon color="error" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Delete Stock</ListItemText>
+            </MenuItem>
+          </Menu>
+        </TableCell>
+      )}
       {/* Name and Logo */}
       <TableCell>
         <Box
@@ -639,54 +690,6 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <Box sx={{ float: "right" }}>{props.stock.marketCap !== null ? formatMarketCap(props.stock) : "–"}</Box>
         </Typography>
       </TableCell>
-      {/* Actions */}
-      {props.getStocks && (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
-          <Tooltip title="Open in new tab" arrow>
-            <IconButton component={NavLink} to={`/stock/${props.stock.ticker}`} target="_blank" size="small">
-              <OpenInNewIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip
-            title={
-              user.hasAccessRight(WRITE_STOCKS_ACCESS)
-                ? "Edit Stock"
-                : "You do not have the necessary access rights to update stocks."
-            }
-            arrow
-          >
-            <Box display="inline-block">
-              <IconButton
-                color="primary"
-                size="small"
-                onClick={() => setEditDialogOpen(true)}
-                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Box>
-          </Tooltip>
-          <Tooltip
-            title={
-              user.hasAccessRight(WRITE_STOCKS_ACCESS)
-                ? "Delete Stock"
-                : "You do not have the necessary access rights to delete stocks."
-            }
-            arrow
-          >
-            <Box display="inline-block">
-              <IconButton
-                color="error"
-                size="small"
-                onClick={() => setDeleteDialogOpen(true)}
-                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </Box>
-          </Tooltip>
-        </TableCell>
-      )}
       {/* Details Dialog */}
       <Dialog open={detailsDialogOpen} onClose={() => setDetailsDialogOpen(false)} maxWidth="lg">
         <DialogTitle>
@@ -717,29 +720,10 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid
-              container
-              width={{ xs: 40, md: 80 }}
-              direction={{ xs: "column", md: "row-reverse" }}
-              display="flex"
-              justifyContent={{ xs: "space-between" }}
-              sx={{ ml: "auto" }}
-            >
-              <Grid item>
-                <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ borderRadius: 20 }}>
-                  <CloseIcon />
-                </IconButton>
-              </Grid>
-              <Grid item>
-                <IconButton
-                  component={NavLink}
-                  to={`/stock/${props.stock.ticker}`}
-                  target="_blank"
-                  sx={{ borderRadius: 20 }}
-                >
-                  <OpenInNewIcon />
-                </IconButton>
-              </Grid>
+            <Grid item>
+              <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ borderRadius: 20 }}>
+                <CloseIcon />
+              </IconButton>
             </Grid>
           </Grid>
         </DialogTitle>
@@ -760,6 +744,17 @@ const StockRow = (props: StockRowProps): JSX.Element => {
   ) : (
     // Skeleton of a stock row
     <TableRow hover sx={{ height: 59 }}>
+      {/* Actions */}
+      {props.getStocks && (
+        <TableCell style={{ whiteSpace: "nowrap" }}>
+          <Skeleton
+            sx={{ m: "4px", display: "inline-block", verticalAlign: "middle" }}
+            variant="circular"
+            width={2 * (theme.typography.body1.fontSize as number) - 4}
+            height={2 * (theme.typography.body1.fontSize as number) - 4}
+          />
+        </TableCell>
+      )}
       {/* Stock */}
       <TableCell>
         <Box style={{ display: "flex", alignItems: "center" }}>
@@ -1012,29 +1007,6 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <Skeleton width={75} />
         </Typography>
       </TableCell>
-      {/* Actions */}
-      {props.getStocks && (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
-          <Skeleton
-            sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
-            variant="circular"
-            width={2 * (theme.typography.body1.fontSize as number) - 4}
-            height={2 * (theme.typography.body1.fontSize as number) - 4}
-          />
-          <Skeleton
-            sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
-            variant="circular"
-            width={2 * (theme.typography.body1.fontSize as number) - 4}
-            height={2 * (theme.typography.body1.fontSize as number) - 4}
-          />
-          <Skeleton
-            sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
-            variant="circular"
-            width={2 * (theme.typography.body1.fontSize as number) - 4}
-            height={2 * (theme.typography.body1.fontSize as number) - 4}
-          />
-        </TableCell>
-      )}
     </TableRow>
   );
 };

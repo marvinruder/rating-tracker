@@ -151,6 +151,8 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
         <Table size="small">
           <TableHead>
             <TableRow sx={{ height: 52.5 }}>
+              {/* Actions */}
+              <TableCell></TableCell>
               {/* Name and Logo */}
               <TableCell>
                 <TableSortLabel
@@ -731,8 +733,6 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
                   <Box display="inline-block">Market Cap</Box>
                 </Tooltip>
               </TableCell>
-              {/* Actions */}
-              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
