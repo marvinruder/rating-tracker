@@ -4,7 +4,7 @@ import { deleteSession } from "../redis/repositories/sessionRepository.js";
 import Router from "../utils/router.js";
 
 /**
- * This class is responsible for providing session information.
+ * This class is responsible for handling session information.
  */
 export class SessionController {
   /**

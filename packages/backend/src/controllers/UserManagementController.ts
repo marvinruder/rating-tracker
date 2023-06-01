@@ -9,7 +9,7 @@ import { deleteUser, readAllUsers, readUser, updateUserWithCredentials } from ".
 import Router from "../utils/router.js";
 
 /**
- * This class is responsible for providing user information.
+ * This class is responsible for handling information of other users.
  */
 export class UserManagementController {
   /**

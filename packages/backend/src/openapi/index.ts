@@ -18,8 +18,14 @@ import * as signInEndpoint from "./paths/auth/signInEndpoint.js";
 import * as resourceEndpoint from "./paths/resource/index.js";
 import * as userManagementEndpoint from "./paths/userManagement/index.js";
 import * as userEndpoint from "./paths/user/index.js";
+import * as watchlistEndpoint from "./paths/watchlist/index.js";
+import * as watchlistSummaryEndpoint from "./paths/watchlist/summaryEndpoint.js";
+import * as favoriteEndpoint from "./paths/favorite/index.js";
+import * as favoriteListEndpoint from "./paths/favorite/listEndpoint.js";
 import { servers } from "./servers.js";
 import {
+  favoriteEndpointPath,
+  favoriteListEndpointPath,
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
   fetchMSCIEndpointPath,
@@ -38,6 +44,8 @@ import {
   userEndpointPath,
   userListEndpointPath,
   userManagementEndpointPath,
+  watchlistEndpointPath,
+  watchlistSummaryEndpointPath,
 } from "@rating-tracker/commons";
 
 /**
@@ -78,6 +86,10 @@ export const openapiDocument: OpenAPIV3.Document = {
     [`/api${userManagementEndpointPath}/{email}`]: userManagementEndpoint,
     [`/api${userListEndpointPath}`]: userListEndpoint,
     [`/api${userEndpointPath}`]: userEndpoint,
+    [`/api${watchlistEndpointPath}/{id}`]: watchlistEndpoint,
+    [`/api${watchlistSummaryEndpointPath}`]: watchlistSummaryEndpoint,
+    [`/api${favoriteEndpointPath}/{ticker}`]: favoriteEndpoint,
+    [`/api${favoriteListEndpointPath}`]: favoriteListEndpoint,
   },
   tags: [],
   components: components,

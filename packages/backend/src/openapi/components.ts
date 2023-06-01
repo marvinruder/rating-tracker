@@ -274,7 +274,7 @@ export const components: OpenAPIV3.ComponentsObject = {
       properties: {
         email: {
           type: "string",
-          description: "The email address of a user, used as their ID",
+          description: "The email address of a user, used as their ID.",
           format: "email",
           example: "jane.doe@example.com",
         },
@@ -298,14 +298,76 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
         accessRights: {
           type: "integer",
-          description: "The access rights of the user, encoded as a bitfield",
+          description: "The access rights of the user, encoded as a bitfield.",
           example: 1,
         },
         subscriptions: {
           type: "integer",
           nullable: true,
-          description: "The subscriptions of the user to different types of messages, encoded as a bitfield",
+          description: "The subscriptions of the user to different types of messages, encoded as a bitfield.",
           example: 1,
+        },
+      },
+    },
+    Watchlist: {
+      type: "object",
+      description: "A named list of stocks of a certain interest to a user.",
+      properties: {
+        id: {
+          type: "integer",
+          description: "A unique identifier of the watchlist.",
+          example: 0,
+        },
+        name: {
+          type: "string",
+          description: "The name of the watchlist.",
+          example: "Favorites",
+        },
+        subscribed: {
+          type: "boolean",
+          description: "Whether the user subscribed to updates for the watchlist’s stocks.",
+          example: true,
+        },
+        stocks: {
+          type: "array",
+          description: "The list of stocks on the watchlist.",
+          items: {
+            $ref: "#/components/schemas/Stock",
+          },
+        },
+      },
+    },
+    WatchlistSummary: {
+      type: "object",
+      description:
+        "A named list of stocks of a certain interest to a user. Includes only the number of stocks, but not the " +
+        "stock objects themselves.",
+      properties: {
+        id: {
+          type: "integer",
+          description: "A unique identifier of the watchlist.",
+          example: 0,
+        },
+        name: {
+          type: "string",
+          description: "The name of the watchlist.",
+          example: "Favorites",
+        },
+        subscribed: {
+          type: "boolean",
+          description: "Whether the user subscribed to updates for the watchlist’s stocks.",
+          example: true,
+        },
+        _count: {
+          type: "object",
+          description: "The number of certain objects within the watchlist.",
+          properties: {
+            stocks: {
+              type: "integer",
+              description: "The number of stocks within the watchlist.",
+              example: 1,
+            },
+          },
         },
       },
     },

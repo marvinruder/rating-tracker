@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-import client from "../../src/db/client";
 import {
   GENERAL_ACCESS,
   OmitDynamicAttributesStock,
@@ -7,6 +6,7 @@ import {
   Stock,
   STOCK_UPDATE_MESSAGE,
 } from "@rating-tracker/commons";
+import client from "../../src/db/client";
 import { addDynamicAttributesToStockData } from "../../src/models/dynamicStockAttributes.js";
 
 const stockData: Stock[] = [
@@ -458,6 +458,33 @@ const applyUserSeed = async (): Promise<void> => {
 };
 
 /**
+ * Clears and writes example watchlist data into the watchlist table in the database. Must only be used in tests.
+ */
+const applyWatchlistSeed = async (): Promise<void> => {
+  await client.watchlist.deleteMany();
+
+  await client.watchlist.create({
+    data: {
+      name: "Favorites",
+      email: "jane.doe@example.com",
+      stocks: {
+        connect: [{ ticker: "exampleAAPL" }, { ticker: "exampleTSM" }],
+      },
+      subscribed: true,
+    },
+  });
+  await client.watchlist.create({
+    data: {
+      name: "Fævørites",
+      email: "jane.doe@example.com",
+      stocks: {
+        connect: [{ ticker: "exampleNOVO B" }, { ticker: "exampleORSTED" }],
+      },
+    },
+  });
+};
+
+/**
  * Clears and writes example data into the tables in the database. Must only be used in tests.
  */
 const applyPostgresSeeds = async (): Promise<void> => {
@@ -466,6 +493,7 @@ const applyPostgresSeeds = async (): Promise<void> => {
   }
 
   await Promise.all([applyStockSeed(), applyUserSeed()]);
+  await applyWatchlistSeed();
 };
 
 export default applyPostgresSeeds;

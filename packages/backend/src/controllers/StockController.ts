@@ -26,7 +26,7 @@ import Router from "../utils/router.js";
 import { Prisma } from "../../prisma/client/index.js";
 
 /**
- * This class is responsible for providing stock data.
+ * This class is responsible for handling stock data.
  */
 export class StockController {
   /**
