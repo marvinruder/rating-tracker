@@ -201,9 +201,8 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element =>
               : "You do not have the necessary access rights to create stocks."
           }
         >
-          <Box display="inline-block">
+          <Box display="inline-block" ml={1} mt={1}>
             <IconButton
-              sx={{ ml: 1, mt: 1 }}
               color="primary"
               onClick={() => setAddStockOpen(true)}
               disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
@@ -213,46 +212,52 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element =>
           </Box>
         </Tooltip>
         <Tooltip arrow title="Filter stock list">
-          <IconButton sx={{ ml: 1, mt: 1 }} color="primary" onClick={() => setFilterOpen(true)}>
-            <TuneIcon />
-          </IconButton>
+          <Box display="inline-block" ml={1} mt={1}>
+            <IconButton color="primary" onClick={() => setFilterOpen(true)}>
+              <TuneIcon />
+            </IconButton>
+          </Box>
         </Tooltip>
         <Tooltip arrow title="Filter columns">
-          <IconButton sx={{ ml: 1, mt: 1 }} color="primary" onClick={() => setColumnFilterOpen(true)}>
-            <FilterListIcon />
-          </IconButton>
+          <Box display="inline-block" ml={1} mt={1}>
+            <IconButton color="primary" onClick={() => setColumnFilterOpen(true)}>
+              <FilterListIcon />
+            </IconButton>
+          </Box>
         </Tooltip>
         <Tooltip arrow title="Clear all filters">
-          <IconButton
-            sx={{ display: !props.filtersInUse && "none", ml: 1, mt: 1 }}
-            color="error"
-            onClick={() => {
-              // Reset all filters to their default values
-              props.setFilter({});
-              props.setColumnFilter([...stockListColumnArray]);
-              setTotalScoreInput([0, 100]);
-              setFinancialScoreInput([0, 100]);
-              setEsgScoreInput([0, 100]);
-              setDividendYieldPercentInput([0, 20]);
-              setPriceEarningRatioInput([0, 100]);
-              setStarRatingInput([0, 5]);
-              setMorningstarFairValueDiffInput([-50, 50]);
-              setAnalystConsensusInput([0, 10]);
-              setAnalystCountInput([0, 60]);
-              setAnalystTargetDiffInput([-50, 50]);
-              setMSCIESGRatingInput(["AAA", "None"]);
-              setMSCITemperatureInput([1.0, 4.0]);
-              setRefinitivESGScoreInput([0, 100]);
-              setRefinitivEmissionsInput([0, 100]);
-              setSPESGScoreInput([0, 100]);
-              setSustainalyticsESGRiskInput([0, 50]);
-              setStyleboxInput({});
-              setCountryInput([]);
-              setIndustryInput([]);
-            }}
-          >
-            <ClearIcon />
-          </IconButton>
+          <Box display="inline-block" ml={1} mt={1}>
+            <IconButton
+              sx={{ display: !props.filtersInUse && "none" }}
+              color="error"
+              onClick={() => {
+                // Reset all filters to their default values
+                props.setFilter({});
+                props.setColumnFilter([...stockListColumnArray]);
+                setTotalScoreInput([0, 100]);
+                setFinancialScoreInput([0, 100]);
+                setEsgScoreInput([0, 100]);
+                setDividendYieldPercentInput([0, 20]);
+                setPriceEarningRatioInput([0, 100]);
+                setStarRatingInput([0, 5]);
+                setMorningstarFairValueDiffInput([-50, 50]);
+                setAnalystConsensusInput([0, 10]);
+                setAnalystCountInput([0, 60]);
+                setAnalystTargetDiffInput([-50, 50]);
+                setMSCIESGRatingInput(["AAA", "None"]);
+                setMSCITemperatureInput([1.0, 4.0]);
+                setRefinitivESGScoreInput([0, 100]);
+                setRefinitivEmissionsInput([0, 100]);
+                setSPESGScoreInput([0, 100]);
+                setSustainalyticsESGRiskInput([0, 50]);
+                setStyleboxInput({});
+                setCountryInput([]);
+                setIndustryInput([]);
+              }}
+            >
+              <ClearIcon />
+            </IconButton>
+          </Box>
         </Tooltip>
         <Dialog maxWidth="lg" open={addStockOpen}>
           <AddStock onClose={() => (setAddStockOpen(false), props.triggerRefetch())} />

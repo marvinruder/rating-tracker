@@ -1,12 +1,15 @@
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import StarIcon from "@mui/icons-material/Star";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import DeleteStock from "../../../components/DeleteStock";
 import EditStock from "../../../components/EditStock";
-import { Stock, stockLogoEndpointPath, WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
+import { favoriteEndpointPath, Stock, stockLogoEndpointPath, WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
 import { useContext, useState } from "react";
-import { baseUrl } from "../../../router";
-import { UserContext } from "../../../router.js";
+import { baseUrl, UserContext } from "../../../router";
+import { useNotification } from "../../../contexts/NotificationContext";
+import axios from "axios";
 
 /**
  * A header for the stock details page.
@@ -20,6 +23,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
 
   const { user } = useContext(UserContext);
   const theme = useTheme();
+  const { setNotification } = useNotification();
 
   return (
     <>
@@ -71,6 +75,33 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
           )}
         </Grid>
         <Grid item ml="auto">
+          <Tooltip arrow title={props.isFavorite ? "Remove from favorites" : "Add to favorites"}>
+            <Box display="inline-block" ml={1} mt={1}>
+              <IconButton
+                color={props.isFavorite ? "warning" : undefined}
+                onClick={() => {
+                  (props.isFavorite ? axios.delete : axios.put)(
+                    baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`
+                  )
+                    .then(() => props.getStock && props.getStock())
+                    .catch((e) => {
+                      setNotification({
+                        severity: "error",
+                        title: props.isFavorite
+                          ? `Error while removing “${props.stock.name}” from favorites`
+                          : `Error while adding “${props.stock.name}” to favorites`,
+                        message:
+                          e.response?.status && e.response?.data?.message
+                            ? `${e.response.status}: ${e.response.data.message}`
+                            : e.message ?? "No additional information available.",
+                      });
+                    });
+                }}
+              >
+                {props.isFavorite ? <StarIcon /> : <StarOutlineIcon />}
+              </IconButton>
+            </Box>
+          </Tooltip>
           <Tooltip
             arrow
             title={
@@ -79,9 +110,8 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
                 : "You do not have the necessary access rights to update stocks."
             }
           >
-            <Box display="inline-block">
+            <Box display="inline-block" ml={1} mt={1}>
               <IconButton
-                sx={{ ml: 1, mt: 1 }}
                 color="primary"
                 onClick={() => setEditDialogOpen(true)}
                 disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
@@ -98,9 +128,8 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
                 : "You do not have the necessary access rights to delete stocks."
             }
           >
-            <Box display="inline-block">
+            <Box display="inline-block" ml={1} mt={1}>
               <IconButton
-                sx={{ ml: 1, mt: 1 }}
                 color="error"
                 onClick={() => setDeleteDialogOpen(true)}
                 disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
@@ -115,7 +144,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
         <EditStock stock={props.stock} getStocks={props.getStock} onClose={() => setEditDialogOpen(false)} />
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DeleteStock stock={props.stock} onClose={() => setDeleteDialogOpen(false)} navigateTo="/stocklist" />
+        <DeleteStock stock={props.stock} onClose={() => setDeleteDialogOpen(false)} navigateTo="/stock" />
       </Dialog>
     </>
   );
@@ -129,6 +158,10 @@ interface PageHeaderProps {
    * The stock to display.
    */
   stock?: Stock;
+  /**
+   * Whether the stock is a favorite stock of the user.
+   */
+  isFavorite?: boolean;
   /**
    * A method to update the stock, e.g. after editing.
    */

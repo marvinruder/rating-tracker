@@ -1,7 +1,7 @@
 import { Card, Container, useMediaQuery } from "@mui/material";
 import axios from "axios";
 import { baseUrl } from "../../../router";
-import { Stock, stockEndpointPath } from "@rating-tracker/commons";
+import { Stock, favoriteListEndpointPath, stockEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import Footer from "../../../components/Footer";
 import PageTitleWrapper from "../../../components/PageTitleWrapper";
@@ -17,6 +17,7 @@ import { useParams } from "react-router";
  */
 const StockModule = (): JSX.Element => {
   const [stock, setStock] = useState<Stock>();
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   const { setNotification } = useNotification();
 
@@ -33,6 +34,19 @@ const StockModule = (): JSX.Element => {
         setNotification({
           severity: "error",
           title: "Error while fetching the stock",
+          message:
+            e.response?.status && e.response?.data?.message
+              ? `${e.response.status}: ${e.response.data.message}`
+              : e.message ?? "No additional information available.",
+        });
+      });
+    axios
+      .get(baseUrl + favoriteListEndpointPath)
+      .then((res) => setIsFavorite((res.data.stocks as Stock[]).find((stock) => ticker === stock.ticker) !== undefined))
+      .catch((e) => {
+        setNotification({
+          severity: "error",
+          title: "Error while fetching favorites",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`
@@ -70,7 +84,7 @@ const StockModule = (): JSX.Element => {
   return (
     <>
       <PageTitleWrapper maxWidth={false}>
-        <PageHeader stock={stock} getStock={() => getStock(ticker)} />
+        <PageHeader stock={stock} getStock={() => getStock(ticker)} isFavorite={isFavorite} />
       </PageTitleWrapper>
       <Container maxWidth={false}>
         <Card sx={{ width: detailsCardWidth, m: "auto" }}>

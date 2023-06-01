@@ -4,8 +4,9 @@ import { alpha, Box, List, styled, Button, ListItem, Divider, useTheme } from "@
 import { NavLink as RouterLink } from "react-router-dom";
 import SidebarContext from "../../../../contexts/SidebarContext";
 
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import TableRowsIcon from "@mui/icons-material/TableRows";
+import ListIcon from "@mui/icons-material/List";
 import { UserContext } from "../../../../router";
 import { ADMINISTRATIVE_ACCESS } from "@rating-tracker/commons";
 
@@ -177,10 +178,21 @@ const SidebarMenu = (): JSX.Element => {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/stocklist"
-                  startIcon={<TableRowsIcon />}
+                  to="/stock"
+                  startIcon={<ListIcon />}
                 >
-                  Stock List
+                  All Stocks
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/watchlist"
+                  startIcon={<StickyNote2Icon />}
+                >
+                  Watchlists
                 </Button>
               </ListItem>
             </List>

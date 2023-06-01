@@ -31,6 +31,8 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import StarIcon from "@mui/icons-material/Star";
+import StarsIcon from "@mui/icons-material/Stars";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import SectorIcon from "../SectorIcon";
 import StarRating from "../StarRating";
@@ -38,6 +40,7 @@ import StyleBox from "../StyleBox";
 import {
   countryNameWithFlag,
   currencyName,
+  favoriteEndpointPath,
   groupOfIndustry,
   industryDescription,
   industryGroupName,
@@ -71,7 +74,9 @@ import {
 } from "../../utils/navigators";
 import Range52WSlider from "../Range52WSlider";
 import { NavLink } from "react-router-dom";
-import { UserContext } from "../../router.js";
+import { UserContext } from "../../router";
+import axios from "axios";
+import { useNotification } from "../../contexts/NotificationContext";
 
 /**
  * This component displays information about a stock in a table row that is used in the stock list.
@@ -82,6 +87,7 @@ import { UserContext } from "../../router.js";
 const StockRow = (props: StockRowProps): JSX.Element => {
   const { user } = useContext(UserContext);
   const theme = useTheme();
+  const { setNotification } = useNotification();
 
   /**
    * Displays a chip with a colored icon. The color depends on the value of the stock's
@@ -153,14 +159,14 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         height: 59,
         backgroundColor: props.isFavorite && theme.colors.warning.lighter,
         ":hover, &.MuiTableRow-hover:hover": {
-          backgroundColor: props.isFavorite && darken(theme.colors.warning.lighter, 0.2),
+          backgroundColor: props.isFavorite && darken(theme.colors.warning.lighter, 0.15),
         },
       }}
     >
       {/* Actions */}
       {props.getStocks && (
         <TableCell style={{ whiteSpace: "nowrap" }}>
-          <Tooltip title="Options" arrow>
+          <Tooltip title="Options" placement="top" arrow>
             <IconButton
               id={`option-button-${props.stock.ticker}`}
               size="small"
@@ -175,11 +181,43 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             onClose={() => setOptionsMenuOpen(false)}
             anchorEl={() => document.getElementById(`option-button-${props.stock.ticker}`)}
           >
-            <MenuItem component={NavLink} to={`/stock/${props.stock.ticker}`} target="_blank">
+            <MenuItem
+              onClick={() => setOptionsMenuOpen(false)}
+              component={NavLink}
+              to={`/stock/${props.stock.ticker}`}
+              target="_blank"
+            >
               <ListItemIcon>
                 <OpenInNewIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText>Open in new tab</ListItemText>
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                (props.isFavorite ? axios.delete : axios.put)(baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`)
+                  .then(() => props.getStocks && props.getStocks())
+                  .catch((e) => {
+                    setNotification({
+                      severity: "error",
+                      title: props.isFavorite
+                        ? `Error while removing “${props.stock.name}” from favorites`
+                        : `Error while adding “${props.stock.name}” to favorites`,
+                      message:
+                        e.response?.status && e.response?.data?.message
+                          ? `${e.response.status}: ${e.response.data.message}`
+                          : e.message ?? "No additional information available.",
+                    });
+                  });
+              }}
+            >
+              <ListItemIcon>
+                {props.isFavorite ? (
+                  <StarOutlineIcon color="warning" fontSize="small" />
+                ) : (
+                  <StarIcon color="warning" fontSize="small" />
+                )}
+              </ListItemIcon>
+              <ListItemText>{props.isFavorite ? "Remove from Favorites" : "Mark as favorite"}</ListItemText>
             </MenuItem>
             <MenuItem
               onClick={() => setEditDialogOpen(true)}
@@ -217,16 +255,11 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             badgeContent={
               props.isFavorite ? (
                 <Tooltip title="This stock is marked as a favorite" arrow>
-                  <StarIcon sx={{ width: 12, height: 12 }} />
+                  <StarsIcon sx={{ width: 16, height: 16 }} color="warning" />
                 </Tooltip>
               ) : undefined
             }
-            componentsProps={{
-              badge: { style: { width: 16, height: 16, minWidth: 16, paddingLeft: 0, paddingRight: 0 } },
-            }}
             overlap="circular"
-            sx={{ px: 0 }}
-            color="warning"
           >
             <Avatar
               sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
@@ -723,12 +756,7 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       <Dialog open={detailsDialogOpen} onClose={() => setDetailsDialogOpen(false)} maxWidth="lg">
         <DialogTitle>
           <Grid container justifyContent="space-between">
-            <Grid
-              item
-              display="flex"
-              alignItems="center"
-              maxWidth={{ xs: "calc(100% - 40px)", md: "calc(100% - 80px)" }}
-            >
+            <Grid item display="flex" alignItems="center" maxWidth="calc(100% - 40px)">
               <Avatar
                 sx={{
                   width: 112,

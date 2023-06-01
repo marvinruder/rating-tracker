@@ -506,6 +506,13 @@ const PureLightTheme = createTheme({
         },
       },
     },
+    MuiCardActionArea: {
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+        },
+      },
+    },
     MuiRadio: {
       styleOverrides: {
         root: {

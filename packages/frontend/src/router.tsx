@@ -72,6 +72,14 @@ const UserManagement = loader(lazy(() => import("./content/modules/UserManagemen
 const Stock = loader(lazy(() => import("./content/modules/Stock")));
 
 /**
+ * The watchlist summary module, loaded only when needed.
+ *
+ * @param {JSX.IntrinsicAttributes} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSummary")));
+
+/**
  * The 404 Not Found error page.
  * Since it is a fairly small component, we load it right away and do not use a suspense loader.
  */
@@ -150,7 +158,7 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
       // If the user is authenticated, display the page
       props.isLoginPage ? (
         // If an authenticated user tries to access the login page, redirect them to the stock list
-        <Navigate to="/stocklist" replace />
+        <Navigate to="/stock" replace />
       ) : (
         // If any other page was requested, show it and provide the user context
         <UserContext.Provider value={{ user, clearUser, refetchUser }}>{props.children}</UserContext.Provider>
@@ -202,7 +210,7 @@ const routes: RouteObject[] = [
     ),
     children: [
       {
-        path: "stocklist",
+        path: "stock",
         element: <StockList />,
       },
       {
@@ -212,6 +220,10 @@ const routes: RouteObject[] = [
       {
         path: "usermanagement",
         element: <UserManagement />,
+      },
+      {
+        path: "watchlist",
+        element: <WatchlistSummary />,
       },
     ],
   },

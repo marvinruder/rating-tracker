@@ -1,7 +1,9 @@
 import { useContext } from "react";
 
 import { Box, alpha, lighten, IconButton, Tooltip, styled, useTheme, Divider } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
+import { NavLink as RouterLink, useLocation } from "react-router-dom";
 
 import SidebarContext from "../../../contexts/SidebarContext";
 
@@ -37,6 +39,7 @@ const HeaderWrapper = styled(Box)(
 const Header = (): JSX.Element => {
   const { toggleSidebar } = useContext(SidebarContext);
   const theme = useTheme();
+  const location = useLocation();
 
   return (
     <HeaderWrapper
@@ -63,14 +66,34 @@ const Header = (): JSX.Element => {
           my: 1,
           display: "inline-block",
           // Since the sidebar is hidden on small screens, we need to show the menu button.
-          visibility: { lg: "hidden", xs: "visible" },
         }}
       >
-        <Tooltip arrow title="Toggle Menu">
-          <IconButton color="primary" onClick={toggleSidebar}>
-            <MenuIcon />
-          </IconButton>
-        </Tooltip>
+        <Box component="span" sx={{ display: { lg: "none", xs: undefined } }}>
+          <Tooltip arrow title="Toggle Menu">
+            <IconButton color="primary" onClick={toggleSidebar}>
+              <MenuIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Box
+          component="span"
+          sx={{
+            mr: 1,
+            my: 1,
+            display: location.pathname.split("/").filter((component) => component).length > 1 ? "inline-block" : "none",
+          }}
+        >
+          <Tooltip arrow title="Go back">
+            <IconButton
+              color="primary"
+              disableRipple
+              component={RouterLink}
+              to={location.pathname.split("/").slice(0, -1).join("/")}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </Box>
       <Box display="flex" alignItems="center">
         <HeaderButtons />
