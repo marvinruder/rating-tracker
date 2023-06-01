@@ -1,7 +1,9 @@
 import {
   Avatar,
+  Badge,
   Box,
   Chip,
+  darken,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -28,6 +30,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import StarIcon from "@mui/icons-material/Star";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import SectorIcon from "../SectorIcon";
 import StarRating from "../StarRating";
@@ -144,7 +147,16 @@ const StockRow = (props: StockRowProps): JSX.Element => {
 
   return props.stock ? (
     // Actual stock row
-    <TableRow hover sx={{ height: 59 }}>
+    <TableRow
+      hover
+      sx={{
+        height: 59,
+        backgroundColor: props.isFavorite && theme.colors.warning.lighter,
+        ":hover, &.MuiTableRow-hover:hover": {
+          backgroundColor: props.isFavorite && darken(theme.colors.warning.lighter, 0.2),
+        },
+      }}
+    >
       {/* Actions */}
       {props.getStocks && (
         <TableCell style={{ whiteSpace: "nowrap" }}>
@@ -200,11 +212,28 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             cursor: "pointer",
           }}
         >
-          <Avatar
-            sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
-            src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
-            alt=" "
-          />
+          <Badge
+            anchorOrigin={{ vertical: "top", horizontal: "left" }}
+            badgeContent={
+              props.isFavorite ? (
+                <Tooltip title="This stock is marked as a favorite" arrow>
+                  <StarIcon sx={{ width: 12, height: 12 }} />
+                </Tooltip>
+              ) : undefined
+            }
+            componentsProps={{
+              badge: { style: { width: 16, height: 16, minWidth: 16, paddingLeft: 0, paddingRight: 0 } },
+            }}
+            overlap="circular"
+            sx={{ px: 0 }}
+            color="warning"
+          >
+            <Avatar
+              sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
+              src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+              alt=" "
+            />
+          </Badge>
           <Box width={8} />
           <Box>
             <Typography variant="body1" fontWeight="bold" color="text.primary" width={160} noWrap>
@@ -1019,6 +1048,10 @@ interface StockRowProps {
    * The stock to display
    */
   stock?: Stock;
+  /**
+   * Whether the stock is a favorite stock of the user.
+   */
+  isFavorite?: boolean;
   /**
    * A method to update the stock list, e.g. after a stock was modified or deleted.
    */

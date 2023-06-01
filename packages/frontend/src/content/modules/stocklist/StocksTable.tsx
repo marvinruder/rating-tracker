@@ -13,7 +13,13 @@ import {
   Tooltip,
   Box,
 } from "@mui/material";
-import { SortableAttribute, Stock, StockListColumn, stockListEndpointPath } from "@rating-tracker/commons";
+import {
+  SortableAttribute,
+  Stock,
+  StockListColumn,
+  favoriteListEndpointPath,
+  stockListEndpointPath,
+} from "@rating-tracker/commons";
 import { baseUrl } from "../../../router";
 import StockRow from "../../../components/StockRow";
 import { useNotification } from "../../../contexts/NotificationContext";
@@ -30,6 +36,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
   const [count, setCount] = useState<number>(-1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(25);
   const [stocks, setStocks] = useState<Stock[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<SortableAttribute>("totalScore");
   const [sortDesc, setSortDesc] = useState<boolean>(true);
@@ -44,41 +51,56 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
    */
   const getStocks = () => {
     setStocksFinal(false);
-    axios
-      .get(baseUrl + stockListEndpointPath, {
-        params: {
-          // Pagination
-          offset: page * rowsPerPage,
-          count: rowsPerPage > 0 ? rowsPerPage : undefined,
-          // Sorting
-          sortBy: sortBy,
-          sortDesc: sortDesc,
-          // Filtering
-          ...props.filter,
-          // Do not include raw country and industry arrays in the request.
-          countries: undefined,
-          industries: undefined,
-          country: props.filter.countries?.length > 0 ? props.filter.countries.join(",") : undefined,
-          industry: props.filter.industries?.length > 0 ? props.filter.industries.join(",") : undefined,
-        },
-      })
-      .then((res) => {
-        setStocks(res.data.stocks);
-        setCount(res.data.count);
-      })
-      .catch((e) => {
-        setNotification({
-          severity: "error",
-          title: "Error while fetching stock information",
-          message:
-            e.response?.status && e.response?.data?.message
-              ? `${e.response.status}: ${e.response.data.message}`
-              : e.message ?? "No additional information available.",
-        });
-        setStocks([]);
-        setCount(0);
-      })
-      .finally(() => setStocksFinal(true));
+    Promise.allSettled([
+      axios
+        .get(baseUrl + stockListEndpointPath, {
+          params: {
+            // Pagination
+            offset: page * rowsPerPage,
+            count: rowsPerPage > 0 ? rowsPerPage : undefined,
+            // Sorting
+            sortBy: sortBy,
+            sortDesc: sortDesc,
+            // Filtering
+            ...props.filter,
+            // Do not include raw country and industry arrays in the request.
+            countries: undefined,
+            industries: undefined,
+            country: props.filter.countries?.length > 0 ? props.filter.countries.join(",") : undefined,
+            industry: props.filter.industries?.length > 0 ? props.filter.industries.join(",") : undefined,
+          },
+        })
+        .then((res) => {
+          setStocks(res.data.stocks);
+          setCount(res.data.count);
+        })
+        .catch((e) => {
+          setNotification({
+            severity: "error",
+            title: "Error while fetching stock information",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+          setStocks([]);
+          setCount(0);
+        }),
+      axios
+        .get(baseUrl + favoriteListEndpointPath)
+        .then((res) => setFavorites((res.data.stocks as Stock[]).map((stock) => stock.ticker)))
+        .catch((e) => {
+          setNotification({
+            severity: "error",
+            title: "Error while fetching favorites",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+          setFavorites([]);
+        }),
+    ]).finally(() => setStocksFinal(true));
   };
 
   /**
@@ -740,7 +762,15 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
               ? stocks.map(
                   (
                     stock // Render stock rows
-                  ) => <StockRow stock={stock} getStocks={getStocks} key={stock.ticker} columns={props.columns} />
+                  ) => (
+                    <StockRow
+                      stock={stock}
+                      isFavorite={favorites.includes(stock.ticker)}
+                      getStocks={getStocks}
+                      key={stock.ticker}
+                      columns={props.columns}
+                    />
+                  )
                 )
               : [...Array(rowsPerPage > 0 ? rowsPerPage : 100)].map(
                   (
