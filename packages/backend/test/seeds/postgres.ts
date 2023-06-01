@@ -461,7 +461,8 @@ const applyUserSeed = async (): Promise<void> => {
  * Clears and writes example watchlist data into the watchlist table in the database. Must only be used in tests.
  */
 const applyWatchlistSeed = async (): Promise<void> => {
-  await client.watchlist.deleteMany();
+  // Due to ON DELETE CASCADE, no watchlists should be present after deleting all users
+  expect(client.watchlist.count()).resolves.toBe(0);
 
   await client.watchlist.create({
     data: {
