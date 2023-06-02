@@ -15,10 +15,12 @@ tests.push({
     expect(res.body.length).toBe(2);
     expect(res.body[0].name).toBe("Favorites");
     expect(res.body[1].name).toBe("Fævørites");
-    expect(res.body[0].stocks).toBeUndefined();
-    expect(res.body[1].stocks).toBeUndefined();
     expect(res.body[0].subscribed).toBeTruthy();
     expect(res.body[1].subscribed).toBeFalsy();
+
+    // The summary does not contain the full stock objects
+    expect(res.body[0].stocks[0].ticker).toBe("exampleAAPL");
+    expect(Object.entries(res.body[0].stocks[0])).toHaveLength(1);
   },
 });
 

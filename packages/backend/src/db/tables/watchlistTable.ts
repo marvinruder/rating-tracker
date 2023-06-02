@@ -135,9 +135,9 @@ export const readAllWatchlists = async (email: string): Promise<WatchlistSummary
       id: true,
       name: true,
       subscribed: true,
-      _count: {
+      stocks: {
         select: {
-          stocks: true,
+          ticker: true,
         },
       },
     },

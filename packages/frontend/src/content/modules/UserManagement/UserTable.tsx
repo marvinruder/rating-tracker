@@ -74,7 +74,7 @@ const UserTable: FC = (): JSX.Element => {
                 )
               : [...Array(10)].map(
                   (
-                    _undef,
+                    _,
                     key // Render skeleton rows
                   ) => <UserRow key={key} getUsers={getUsers} />
                 )}

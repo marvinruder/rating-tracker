@@ -1,8 +1,12 @@
-import { Typography, Grid } from "@mui/material";
+import { Box, Dialog, Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import AddWatchlist from "../../../components/dialogs/AddWatchlist";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 
-const PageHeader: FC = (): JSX.Element => {
+const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element => {
+  const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
+
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
@@ -11,8 +15,24 @@ const PageHeader: FC = (): JSX.Element => {
         </Typography>
         <Typography variant="subtitle2">View and organize your favorite or otherwise noteworthy stocks.</Typography>
       </Grid>
+      <Grid item ml="auto">
+        <Tooltip arrow title="Create a new watchlist">
+          <Box display="inline-block" ml={1} mt={1}>
+            <IconButton color="primary" onClick={() => setAddWatchlistOpen(true)}>
+              <AddIcon />
+            </IconButton>
+          </Box>
+        </Tooltip>
+        <Dialog maxWidth="lg" open={addWatchlistOpen} onClose={() => setAddWatchlistOpen(false)}>
+          <AddWatchlist onClose={() => (setAddWatchlistOpen(false), props.getWatchlists())} />
+        </Dialog>
+      </Grid>
     </Grid>
   );
 };
+
+interface PageHeaderProps {
+  getWatchlists: () => void;
+}
 
 export default PageHeader;

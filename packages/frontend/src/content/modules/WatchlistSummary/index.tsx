@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { baseUrl } from "../../../router";
 import axios from "axios";
 import { useNotification } from "../../../contexts/NotificationContext";
-import WatchlistCard from "../../../components/WatchlistCard/index.js";
+import WatchlistCard from "../../../components/WatchlistCard";
 
 /**
  * A module that displays an overview of the user’s watchlists.
@@ -29,9 +29,7 @@ const WatchlistSummaryModule = (): JSX.Element => {
   const getWatchlists = () => {
     axios
       .get(baseUrl + watchlistSummaryEndpointPath)
-      .then((res) => {
-        setWatchlistSummaries(res.data);
-      })
+      .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setNotification({
           severity: "error",
@@ -49,7 +47,7 @@ const WatchlistSummaryModule = (): JSX.Element => {
   return (
     <>
       <PageTitleWrapper maxWidth={false}>
-        <PageHeader />
+        <PageHeader getWatchlists={getWatchlists} />
       </PageTitleWrapper>
       <Container maxWidth={false}>
         <Grid container spacing={2}>
@@ -61,8 +59,8 @@ const WatchlistSummaryModule = (): JSX.Element => {
               ))
             : [...Array(3)].map(
                 (
-                  _undef,
-                  key // Render skeleton rows
+                  _,
+                  key // Render skeleton cards
                 ) => (
                   <Grid item xs={12} sm={6} md={4} key={key}>
                     <WatchlistCard />

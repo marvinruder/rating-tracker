@@ -20,7 +20,7 @@ import AddLinkIcon from "@mui/icons-material/AddLink";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import LinkIcon from "@mui/icons-material/Link";
 import axios from "axios";
-import { baseUrl } from "../../router";
+import { baseUrl } from "../../../router";
 import {
   countryArray,
   countryName,
@@ -38,8 +38,8 @@ import {
   stockEndpointPath,
 } from "@rating-tracker/commons";
 import { useState } from "react";
-import { useNotification } from "../../contexts/NotificationContext";
-import StockDetails from "../StockDetails";
+import { useNotification } from "../../../contexts/NotificationContext";
+import StockDetails from "../../StockDetails";
 
 /**
  * A dialog to add a new stock to the backend.

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Box, alpha, lighten, IconButton, Tooltip, styled, useTheme, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
-import { NavLink as RouterLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import SidebarContext from "../../../contexts/SidebarContext";
 
@@ -87,7 +87,7 @@ const Header = (): JSX.Element => {
             <IconButton
               color="primary"
               disableRipple
-              component={RouterLink}
+              component={NavLink}
               to={location.pathname.split("/").slice(0, -1).join("/")}
             >
               <ArrowBackIcon />

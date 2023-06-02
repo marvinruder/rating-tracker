@@ -26,6 +26,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
@@ -56,12 +58,15 @@ import {
   superSectorDescription,
   superSectorName,
   superSectorOfSector,
+  WatchlistSummary,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
 import { baseUrl } from "../../router";
 import { useContext, useState } from "react";
-import DeleteStock from "../DeleteStock";
-import EditStock from "../EditStock";
+import DeleteStock from "../dialogs/DeleteStock";
+import EditStock from "../dialogs/EditStock";
+import AddStockToWatchlist from "../dialogs/AddStockToWatchlist";
+import RemoveStockFromWatchlist from "../dialogs/RemoveStockFromWatchlist";
 import StockDetails from "../StockDetails";
 import formatMarketCap from "../../utils/formatters";
 import {
@@ -134,6 +139,8 @@ const StockRow = (props: StockRowProps): JSX.Element => {
   const [detailsDialogOpen, setDetailsDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [addToWatchlistDialogOpen, setAddToWatchlistDialogOpen] = useState<boolean>(false);
+  const [removeFromWatchlistDialogOpen, setRemoveFromWatchlistDialogOpen] = useState<boolean>(false);
 
   /**
    * Returns an appropriate CSS `display` property value for a column. The value is derived from the
@@ -192,51 +199,75 @@ const StockRow = (props: StockRowProps): JSX.Element => {
               </ListItemIcon>
               <ListItemText>Open in new tab</ListItemText>
             </MenuItem>
-            <MenuItem
-              onClick={() => {
-                (props.isFavorite ? axios.delete : axios.put)(baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`)
-                  .then(() => props.getStocks && props.getStocks())
-                  .catch((e) => {
-                    setNotification({
-                      severity: "error",
-                      title: props.isFavorite
-                        ? `Error while removing “${props.stock.name}” from favorites`
-                        : `Error while adding “${props.stock.name}” to favorites`,
-                      message:
-                        e.response?.status && e.response?.data?.message
-                          ? `${e.response.status}: ${e.response.data.message}`
-                          : e.message ?? "No additional information available.",
+            {!props.watchlist && (
+              <MenuItem
+                onClick={() => {
+                  (props.isFavorite ? axios.delete : axios.put)(
+                    baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`
+                  )
+                    .then(() => props.getStocks && props.getStocks())
+                    .catch((e) => {
+                      setNotification({
+                        severity: "error",
+                        title: props.isFavorite
+                          ? `Error while removing “${props.stock.name}” from favorites`
+                          : `Error while adding “${props.stock.name}” to favorites`,
+                        message:
+                          e.response?.status && e.response?.data?.message
+                            ? `${e.response.status}: ${e.response.data.message}`
+                            : e.message ?? "No additional information available.",
+                      });
                     });
-                  });
-              }}
-            >
-              <ListItemIcon>
-                {props.isFavorite ? (
-                  <StarOutlineIcon color="warning" fontSize="small" />
-                ) : (
-                  <StarIcon color="warning" fontSize="small" />
-                )}
-              </ListItemIcon>
-              <ListItemText>{props.isFavorite ? "Remove from Favorites" : "Mark as favorite"}</ListItemText>
-            </MenuItem>
-            <MenuItem
-              onClick={() => setEditDialogOpen(true)}
-              sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
-            >
-              <ListItemIcon>
-                <EditIcon color="primary" fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Edit Stock</ListItemText>
-            </MenuItem>
-            <MenuItem
-              onClick={() => setDeleteDialogOpen(true)}
-              sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
-            >
-              <ListItemIcon>
-                <DeleteIcon color="error" fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Delete Stock</ListItemText>
-            </MenuItem>
+                }}
+              >
+                <ListItemIcon>
+                  {props.isFavorite ? (
+                    <StarOutlineIcon color="warning" fontSize="small" />
+                  ) : (
+                    <StarIcon color="warning" fontSize="small" />
+                  )}
+                </ListItemIcon>
+                <ListItemText>{props.isFavorite ? "Remove from Favorites" : "Mark as favorite"}</ListItemText>
+              </MenuItem>
+            )}
+            {!props.watchlist && (
+              <MenuItem onClick={() => setAddToWatchlistDialogOpen(true)}>
+                <ListItemIcon>
+                  <BookmarkAddIcon color="success" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Add to watchlist…</ListItemText>
+              </MenuItem>
+            )}
+            {!props.watchlist && (
+              <MenuItem
+                onClick={() => setEditDialogOpen(true)}
+                sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+              >
+                <ListItemIcon>
+                  <EditIcon color="primary" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Edit Stock…</ListItemText>
+              </MenuItem>
+            )}
+            {!props.watchlist && (
+              <MenuItem
+                onClick={() => setDeleteDialogOpen(true)}
+                sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+              >
+                <ListItemIcon>
+                  <DeleteIcon color="error" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Delete Stock…</ListItemText>
+              </MenuItem>
+            )}
+            {props.watchlist && (
+              <MenuItem onClick={() => setRemoveFromWatchlistDialogOpen(true)}>
+                <ListItemIcon>
+                  <BookmarkRemoveIcon color="error" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Remove from “{props.watchlist.name}”</ListItemText>
+              </MenuItem>
+            )}
           </Menu>
         </TableCell>
       )}
@@ -789,6 +820,17 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <StockDetails stock={props.stock} />
         </DialogContent>
       </Dialog>
+      {/* Add to Watchlist Dialog */}
+      <Dialog
+        maxWidth="xs"
+        open={addToWatchlistDialogOpen}
+        onClose={() => (setAddToWatchlistDialogOpen(false), setOptionsMenuOpen(false))}
+      >
+        <AddStockToWatchlist
+          stock={props.stock}
+          onClose={() => (setAddToWatchlistDialogOpen(false), setOptionsMenuOpen(false))}
+        />
+      </Dialog>
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onClose={() => (setEditDialogOpen(false), props.getStocks && props.getStocks())}>
         <EditStock stock={props.stock} getStocks={props.getStocks} onClose={() => setEditDialogOpen(false)} />
@@ -796,6 +838,15 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       {/* Delete Dialog */}
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DeleteStock stock={props.stock} getStocks={props.getStocks} onClose={() => setDeleteDialogOpen(false)} />
+      </Dialog>
+      {/* Remove from Watchlist Dialog */}
+      <Dialog open={removeFromWatchlistDialogOpen} onClose={() => setRemoveFromWatchlistDialogOpen(false)}>
+        <RemoveStockFromWatchlist
+          stock={props.stock}
+          watchlist={props.watchlist}
+          getWatchlist={props.getStocks}
+          onClose={() => setRemoveFromWatchlistDialogOpen(false)}
+        />
       </Dialog>
     </TableRow>
   ) : (
@@ -1080,6 +1131,10 @@ interface StockRowProps {
    * Whether the stock is a favorite stock of the user.
    */
   isFavorite?: boolean;
+  /**
+   * A watchlist the stock is in. If set, the stock row is shown as part of that watchlist’s stocks.
+   */
+  watchlist?: WatchlistSummary;
   /**
    * A method to update the stock list, e.g. after a stock was modified or deleted.
    */

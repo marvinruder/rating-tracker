@@ -23,8 +23,8 @@ export type Watchlist = {
 };
 
 /**
- * A named list of stocks of a certain interest to a user. Includes only the number of stocks, but not the stock objects
- * themselves.
+ * A named list of stocks of a certain interest to a user. Includes only the tickers of the stocks, but not the full
+ * stock objects themselves.
  */
 export type WatchlistSummary = {
   /**
@@ -40,12 +40,12 @@ export type WatchlistSummary = {
    */
   subscribed: boolean;
   /**
-   * The number of certain objects within the watchlist.
+   * The list of stocks on the watchlist. Includes only the tickers of the stocks
    */
-  _count: {
+  stocks: {
     /**
-     * The number of stocks within the watchlist.
+     * The ticker symbol of a stock.
      */
-    stocks: number;
-  };
+    ticker: string;
+  }[];
 };

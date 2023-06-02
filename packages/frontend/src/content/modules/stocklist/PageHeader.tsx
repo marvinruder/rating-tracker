@@ -64,7 +64,7 @@ import {
 } from "@rating-tracker/commons";
 import React from "react";
 import NestedCheckboxList from "../../../components/NestedCheckboxList";
-import AddStock from "../../../components/AddStock";
+import AddStock from "../../../components/dialogs/AddStock";
 import StarRating from "../../../components/StarRating";
 import { StockFilter } from "../../../types/StockFilter";
 import { UserContext } from "../../../router";

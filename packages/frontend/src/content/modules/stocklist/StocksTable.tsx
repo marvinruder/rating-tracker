@@ -774,7 +774,7 @@ const StocksTable: FC<StocksTableProps> = (props: StocksTableProps): JSX.Element
                 )
               : [...Array(rowsPerPage > 0 ? rowsPerPage : 100)].map(
                   (
-                    _undef,
+                    _,
                     key // Render skeleton rows
                   ) => <StockRow key={key} getStocks={getStocks} columns={props.columns} />
                 )}

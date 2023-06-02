@@ -1,0 +1,115 @@
+import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import { watchlistEndpointPath, WatchlistSummary } from "@rating-tracker/commons";
+import axios from "axios";
+import { useState } from "react";
+import { baseUrl } from "../../../router";
+import { useNotification } from "../../../contexts/NotificationContext";
+
+/**
+ * A dialog to rename a new watchlist in the backend.
+ *
+ * @param {RenameWatchlistProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
+  const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
+  const [name, setName] = useState<string>(props.watchlist?.name);
+  const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
+  const { setNotification } = useNotification();
+
+  /**
+   * Checks for errors in the input fields.
+   */
+  const validate = () => {
+    // The following fields are required.
+    setNameError(!name);
+  };
+
+  /**
+   * Updates the watchlist in the backend.
+   */
+  const updateWatchlist = () => {
+    props.watchlist &&
+      props.getWatchlists &&
+      (setRequestInProgress(true),
+      axios
+        .patch(baseUrl + watchlistEndpointPath + `/${props.watchlist.id}`, undefined, {
+          params: {
+            // Only send the parameters that have changed.
+            name: name !== props.watchlist.name ? name : undefined,
+          },
+        })
+        .then(props.getWatchlists) // Update the watchlists in the parent component.
+        .catch((e) => {
+          setNotification({
+            severity: "error",
+            title: "Error while updating watchlist",
+            message:
+              e.response?.status && e.response?.data?.message
+                ? `${e.response.status}: ${e.response.data.message}`
+                : e.message ?? "No additional information available.",
+          });
+        })
+        .finally(() => (setRequestInProgress(false), props.onClose())));
+  };
+
+  return (
+    <>
+      <DialogTitle>
+        <Typography variant="h3">Rename Watchlist “{props.watchlist.name}”</Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Grid container spacing={1} mt={0} maxWidth={600} alignItems="center">
+          <Grid item xs={12}>
+            <TextField
+              onChange={(event) => {
+                setName(event.target.value);
+                setNameError(false);
+              }}
+              error={nameError}
+              label="Watchlist name"
+              value={name}
+              placeholder="e.g. Noteworthy Stocks"
+              fullWidth
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions sx={{ p: 2.6666, pt: 0 }}>
+        <Button onClick={() => (props.onClose(), props.getWatchlists && props.getWatchlists())}>Cancel</Button>
+        <LoadingButton
+          loading={requestInProgress}
+          variant="contained"
+          onClick={updateWatchlist}
+          onMouseOver={validate} // Validate input fields on hover
+          disabled={nameError}
+          startIcon={<PublishedWithChangesIcon />}
+        >
+          Update Watchlist
+        </LoadingButton>
+      </DialogActions>
+    </>
+  );
+};
+
+/**
+ * Properties for the RenameWatchlist component.
+ */
+interface RenameWatchlistProps {
+  /**
+   * The watchlist to rename.
+   */
+  watchlist: WatchlistSummary;
+  /**
+   * A method to update the watchlist list after the watchlist was renameed.
+   */
+  getWatchlists?: () => void;
+  /**
+   * A method that is called when the dialog is closed.
+   */
+  onClose: () => void;
+}
+
+export default RenameWatchlist;

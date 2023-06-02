@@ -80,6 +80,14 @@ const Stock = loader(lazy(() => import("./content/modules/Stock")));
 const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSummary")));
 
 /**
+ * The watchlist module, loaded only when needed.
+ *
+ * @param {JSX.IntrinsicAttributes} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const Watchlist = loader(lazy(() => import("./content/modules/Watchlist")));
+
+/**
  * The 404 Not Found error page.
  * Since it is a fairly small component, we load it right away and do not use a suspense loader.
  */
@@ -224,6 +232,10 @@ const routes: RouteObject[] = [
       {
         path: "watchlist",
         element: <WatchlistSummary />,
+      },
+      {
+        path: "watchlist/:id",
+        element: <Watchlist />,
       },
     ],
   },

@@ -1,10 +1,12 @@
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import DeleteStock from "../../../components/DeleteStock";
-import EditStock from "../../../components/EditStock";
+import DeleteStock from "../../../components/dialogs/DeleteStock";
+import EditStock from "../../../components/dialogs/EditStock";
+import AddStockToWatchlist from "../../../components/dialogs/AddStockToWatchlist";
 import { favoriteEndpointPath, Stock, stockLogoEndpointPath, WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
 import { useContext, useState } from "react";
 import { baseUrl, UserContext } from "../../../router";
@@ -18,6 +20,7 @@ import axios from "axios";
  * @returns {JSX.Element} The component.
  */
 const PageHeader = (props: PageHeaderProps): JSX.Element => {
+  const [addToWatchlistDialogOpen, setAddToWatchlistDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 
@@ -65,7 +68,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
               />
               <Box>
                 <Typography variant="h3">
-                  <Skeleton width={320} />
+                  <Skeleton width={240} />
                 </Typography>
                 <Typography variant="subtitle2">
                   <Skeleton width={120} />
@@ -74,72 +77,98 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
             </>
           )}
         </Grid>
-        <Grid item ml="auto">
-          <Tooltip arrow title={props.isFavorite ? "Remove from favorites" : "Add to favorites"}>
-            <Box display="inline-block" ml={1} mt={1}>
-              <IconButton
-                color={props.isFavorite ? "warning" : undefined}
-                onClick={() => {
-                  (props.isFavorite ? axios.delete : axios.put)(
-                    baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`
-                  )
-                    .then(() => props.getStock && props.getStock())
-                    .catch((e) => {
-                      setNotification({
-                        severity: "error",
-                        title: props.isFavorite
-                          ? `Error while removing “${props.stock.name}” from favorites`
-                          : `Error while adding “${props.stock.name}” to favorites`,
-                        message:
-                          e.response?.status && e.response?.data?.message
-                            ? `${e.response.status}: ${e.response.data.message}`
-                            : e.message ?? "No additional information available.",
+        <Grid item ml="auto" mt={1} height={40}>
+          {props.stock ? (
+            <Tooltip arrow title={props.isFavorite ? "Remove from favorites" : "Add to favorites"}>
+              <Box display="inline-block" ml={1}>
+                <IconButton
+                  color={props.isFavorite ? "warning" : undefined}
+                  onClick={() => {
+                    (props.isFavorite ? axios.delete : axios.put)(
+                      baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`
+                    )
+                      .then(() => props.getStock && props.getStock())
+                      .catch((e) => {
+                        setNotification({
+                          severity: "error",
+                          title: props.isFavorite
+                            ? `Error while removing “${props.stock.name}” from favorites`
+                            : `Error while adding “${props.stock.name}” to favorites`,
+                          message:
+                            e.response?.status && e.response?.data?.message
+                              ? `${e.response.status}: ${e.response.data.message}`
+                              : e.message ?? "No additional information available.",
+                        });
                       });
-                    });
-                }}
-              >
-                {props.isFavorite ? <StarIcon /> : <StarOutlineIcon />}
-              </IconButton>
-            </Box>
-          </Tooltip>
-          <Tooltip
-            arrow
-            title={
-              user.hasAccessRight(WRITE_STOCKS_ACCESS)
-                ? "Edit Stock"
-                : "You do not have the necessary access rights to update stocks."
-            }
-          >
-            <Box display="inline-block" ml={1} mt={1}>
-              <IconButton
-                color="primary"
-                onClick={() => setEditDialogOpen(true)}
-                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
-              >
-                <EditIcon />
-              </IconButton>
-            </Box>
-          </Tooltip>
-          <Tooltip
-            arrow
-            title={
-              user.hasAccessRight(WRITE_STOCKS_ACCESS)
-                ? "Delete Stock"
-                : "You do not have the necessary access rights to delete stocks."
-            }
-          >
-            <Box display="inline-block" ml={1} mt={1}>
-              <IconButton
-                color="error"
-                onClick={() => setDeleteDialogOpen(true)}
-                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          </Tooltip>
+                  }}
+                >
+                  {props.isFavorite ? <StarIcon /> : <StarOutlineIcon />}
+                </IconButton>
+              </Box>
+            </Tooltip>
+          ) : (
+            <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
+          )}
+          {props.stock ? (
+            <Tooltip arrow title="Add to watchlist">
+              <Box display="inline-block" ml={1}>
+                <IconButton color="success" onClick={() => setAddToWatchlistDialogOpen(true)}>
+                  <BookmarkAddIcon />
+                </IconButton>
+              </Box>
+            </Tooltip>
+          ) : (
+            <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
+          )}
+          {props.stock ? (
+            <Tooltip
+              arrow
+              title={
+                user.hasAccessRight(WRITE_STOCKS_ACCESS)
+                  ? "Edit Stock"
+                  : "You do not have the necessary access rights to update stocks."
+              }
+            >
+              <Box display="inline-block" ml={1}>
+                <IconButton
+                  color="primary"
+                  onClick={() => setEditDialogOpen(true)}
+                  disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Box>
+            </Tooltip>
+          ) : (
+            <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
+          )}
+          {props.stock ? (
+            <Tooltip
+              arrow
+              title={
+                user.hasAccessRight(WRITE_STOCKS_ACCESS)
+                  ? "Delete Stock"
+                  : "You do not have the necessary access rights to delete stocks."
+              }
+            >
+              <Box display="inline-block" ml={1}>
+                <IconButton
+                  color="error"
+                  onClick={() => setDeleteDialogOpen(true)}
+                  disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            </Tooltip>
+          ) : (
+            <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
+          )}
         </Grid>
       </Grid>
+      <Dialog maxWidth="xs" open={addToWatchlistDialogOpen} onClose={() => setAddToWatchlistDialogOpen(false)}>
+        <AddStockToWatchlist stock={props.stock} onClose={() => setAddToWatchlistDialogOpen(false)} />
+      </Dialog>
       <Dialog open={editDialogOpen} onClose={() => (setEditDialogOpen(false), props.getStock && props.getStock())}>
         <EditStock stock={props.stock} getStocks={props.getStock} onClose={() => setEditDialogOpen(false)} />
       </Dialog>

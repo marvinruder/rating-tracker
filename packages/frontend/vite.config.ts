@@ -27,6 +27,7 @@ export default mergeConfig(
   defineViteConfig({
     build: {
       cssCodeSplit: false,
+      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
           manualChunks: {

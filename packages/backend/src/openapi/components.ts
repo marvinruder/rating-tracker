@@ -340,8 +340,8 @@ export const components: OpenAPIV3.ComponentsObject = {
     WatchlistSummary: {
       type: "object",
       description:
-        "A named list of stocks of a certain interest to a user. Includes only the number of stocks, but not the " +
-        "stock objects themselves.",
+        "A named list of stocks of a certain interest to a user. Includes only the tickers of the stocks, but not " +
+        "the full stock objects themselves.",
       properties: {
         id: {
           type: "integer",
@@ -358,14 +358,18 @@ export const components: OpenAPIV3.ComponentsObject = {
           description: "Whether the user subscribed to updates for the watchlist’s stocks.",
           example: true,
         },
-        _count: {
-          type: "object",
-          description: "The number of certain objects within the watchlist.",
-          properties: {
-            stocks: {
-              type: "integer",
-              description: "The number of stocks within the watchlist.",
-              example: 1,
+        stocks: {
+          type: "array",
+          description: "The list of stocks on the watchlist. Includes only the tickers of the stocks",
+          items: {
+            type: "object",
+            description: "An object containing only the ticker symbol of a stock.",
+            properties: {
+              ticker: {
+                type: "string",
+                description: "The ticker symbol of a stock.",
+                example: "AAPL",
+              },
             },
           },
         },
