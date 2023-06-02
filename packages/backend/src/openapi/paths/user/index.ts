@@ -9,7 +9,7 @@ import * as user from "../../parameters/user.js";
 const get: OpenAPIV3.OperationObject = {
   tags: ["User API"],
   operationId: "getUser",
-  summary: "Get User API",
+  summary: "Read User API",
   description: "Get information about the current user",
   responses: {
     "200": okUser,

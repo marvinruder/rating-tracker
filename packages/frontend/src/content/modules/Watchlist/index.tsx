@@ -54,9 +54,7 @@ const WatchlistModule = (): JSX.Element => {
 
   const { id } = useParams();
 
-  useEffect(() => {
-    getWatchlist(Number(id));
-  }, [id]);
+  useEffect(() => getWatchlist(Number(id)), [id]);
 
   return (
     <>
@@ -473,24 +471,19 @@ const WatchlistModule = (): JSX.Element => {
                 </TableHead>
                 <TableBody>
                   {watchlist?.stocks
-                    ? watchlist.stocks.map(
-                        (
-                          stock // Render stock rows
-                        ) => (
-                          <StockRow
-                            stock={stock}
-                            getStocks={() => getWatchlist(Number(id))}
-                            key={stock.ticker}
-                            watchlist={watchlist}
-                          />
-                        )
-                      )
-                    : [...Array(10)].map(
-                        (
-                          _,
-                          key // Render skeleton rows
-                        ) => <StockRow key={key} getStocks={() => getWatchlist(Number(id))} />
-                      )}
+                    ? watchlist.stocks.map((stock) => (
+                        // Render stock rows
+                        <StockRow
+                          stock={stock}
+                          getStocks={() => getWatchlist(Number(id))}
+                          key={stock.ticker}
+                          watchlist={watchlist}
+                        />
+                      ))
+                    : [...Array(10)].map((_, key) => (
+                        // Render skeleton rows
+                        <StockRow key={key} getStocks={() => getWatchlist(Number(id))} />
+                      ))}
                 </TableBody>
               </Table>
             </TableContainer>

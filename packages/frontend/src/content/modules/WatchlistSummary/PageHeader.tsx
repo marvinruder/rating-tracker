@@ -4,6 +4,12 @@ import AddWatchlist from "../../../components/dialogs/AddWatchlist";
 
 import { FC, useState } from "react";
 
+/**
+ * A header for the watchlist summaries page.
+ *
+ * @param {PageHeaderProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
 const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element => {
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
 
@@ -32,6 +38,9 @@ const PageHeader: FC<PageHeaderProps> = (props: PageHeaderProps): JSX.Element =>
 };
 
 interface PageHeaderProps {
+  /**
+   * A method to update the watchlist summaries, e.g. after a new watchlist was created.
+   */
   getWatchlists: () => void;
 }
 

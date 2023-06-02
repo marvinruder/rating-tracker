@@ -26,6 +26,12 @@ import DeleteWatchlist from "../dialogs/DeleteWatchlist";
 import RenameWatchlist from "../dialogs/RenameWatchlist";
 import { NavLink } from "react-router-dom";
 
+/**
+ * This component displays information about a watchlist in a card used in the watchlist summary module.
+ *
+ * @param {WatchlistCardProps} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
 const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
   const isFavorites = props.watchlist?.name === "Favorites";
   const [renameDialogOpen, setRenameDialogOpen] = useState<boolean>(false);

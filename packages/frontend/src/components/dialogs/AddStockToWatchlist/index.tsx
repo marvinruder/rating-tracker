@@ -36,9 +36,7 @@ const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Element => {
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
   const { setNotification } = useNotification();
 
-  useEffect(() => {
-    getWatchlists(); // Get stocks whenever pagination, sorting or filtering changes, or when explicitly requested.
-  }, []);
+  useEffect(() => getWatchlists(), []);
 
   /**
    * Get the watchlists from the backend.
@@ -50,7 +48,7 @@ const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Element => {
       .catch((e) => {
         setNotification({
           severity: "error",
-          title: "Error while fetching stock information",
+          title: "Error while fetching watchlists",
           message:
             e.response?.status && e.response?.data?.message
               ? `${e.response.status}: ${e.response.data.message}`

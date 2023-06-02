@@ -4,6 +4,9 @@ import { Watchlist, WatchlistSummary } from "@rating-tracker/commons";
 import client from "../client.js";
 import { readStock } from "./stockTable.js";
 
+/**
+ * The name of the dedicated Favorites watchlist.
+ */
 export const FAVORITES_NAME = "Favorites";
 
 /**
@@ -73,7 +76,8 @@ export const readFavorites = async (email: string): Promise<Watchlist> => {
         },
       },
       where: {
-        AND: [{ email }, { name: FAVORITES_NAME }],
+        email,
+        name: FAVORITES_NAME,
       },
     });
   } catch (e) {

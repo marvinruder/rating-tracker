@@ -8,7 +8,7 @@ import { baseUrl } from "../../../router";
 import { useNotification } from "../../../contexts/NotificationContext";
 
 /**
- * A dialog to rename a new watchlist in the backend.
+ * A dialog to rename a watchlist in the backend.
  *
  * @param {RenameWatchlistProps} props The properties of the component.
  * @returns {JSX.Element} The component.
@@ -103,7 +103,7 @@ interface RenameWatchlistProps {
    */
   watchlist: WatchlistSummary;
   /**
-   * A method to update the watchlist list after the watchlist was renameed.
+   * A method to update the watchlist summaries after the watchlist was renamed.
    */
   getWatchlists?: () => void;
   /**

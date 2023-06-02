@@ -81,7 +81,7 @@ interface DeleteWatchlistProps {
    */
   watchlist: WatchlistSummary;
   /**
-   * A method to update the watchlist list after the watchlist was deleted.
+   * A method to update the watchlist summaries after the watchlist was deleted.
    */
   getWatchlists?: () => void;
   /**
