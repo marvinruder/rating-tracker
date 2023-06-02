@@ -55,7 +55,7 @@ export const openapiDocument: OpenAPIV3.Document = {
   openapi: "3.0.0",
   info: {
     title: "Rating Tracker Backend",
-    version: "1.0.2",
+    version: "2.0.0",
     contact: {
       name: "Marvin A. Ruder",
       email: "ratingtracker@mruder.dev",
