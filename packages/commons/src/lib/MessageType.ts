@@ -41,7 +41,7 @@ export const subscriptionOfMessageType: Record<MessageType, number> = {
 export const messageTypeName: Record<MessageType, string> = {
   userManagement: "User Management",
   fetchError: "Fetch Errors",
-  stockUpdate: "Stock Updates",
+  stockUpdate: "All Stock Updates",
 };
 
 /**
@@ -50,7 +50,7 @@ export const messageTypeName: Record<MessageType, string> = {
 export const messageTypeDescription: Record<MessageType, string> = {
   userManagement: "Receive a message when a new user signs up for the service.",
   fetchError: "Receive a message when fetching information about a stock fails.",
-  stockUpdate: "Receive a message when a stock’s information is updated.",
+  stockUpdate: "Receive a message when any stock’s rating information is updated.",
 };
 
 /**

@@ -51,6 +51,18 @@ The fetched ratings of a stock are aggregated to both a financial and ESG score 
 
 The financial and ESG score are used to compute a total score using the harmonic mean of both numbers, so that a stock has to perform well in both financial and ESG ratings to obtain a good total score.
 
+#### Watchlists
+
+Stocks noteworthy to a user can be organized in watchlists. A dedicated Favorites watchlist is provided by default and can easily be maintained by clicking the star icon for a stock. 
+
+Users can subscribe to a watchlist, so they receive [notifications](#notification-messages-via-signal) when a stock’s rating is updated.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/watchlists-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/watchlists-light.png">
+  <img alt="Rating Tracker Watchlists" src="/docs/images/watchlists-light.png">
+</picture>
+
 #### User Management
 
 The Rating Tracker supports multiple users, who can self-register via WebAuthn and access the application after being granted fine-grained access by an administrator, for whom a “User Management” web interface is provided.
@@ -60,6 +72,8 @@ The Rating Tracker supports multiple users, who can self-register via WebAuthn a
   <source media="(prefers-color-scheme: light)" srcset="/docs/images/usermanagement-light.png">
   <img alt="Rating Tracker User Management" src="/docs/images/usermanagement-light.png">
 </picture>
+
+<!-- <div id="notification-messages-via-signal"></div> -->
 
 #### Notification Messages via Signal
 
