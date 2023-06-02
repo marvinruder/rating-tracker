@@ -1,11 +1,12 @@
 import { useContext } from "react";
 
 import { alpha, Box, List, styled, Button, ListItem, Divider, useTheme } from "@mui/material";
-import { NavLink as RouterLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import SidebarContext from "../../../../contexts/SidebarContext";
 
+import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import TableRowsIcon from "@mui/icons-material/TableRows";
+import ListIcon from "@mui/icons-material/List";
 import { UserContext } from "../../../../router";
 import { ADMINISTRATIVE_ACCESS } from "@rating-tracker/commons";
 
@@ -41,7 +42,7 @@ const SubMenuWrapper = styled(Box)(
     .MuiList-root {
 
       .MuiListItem-root {
-        padding: 1px 0;
+        padding: 4px 0;
 
         .MuiBadge-root {
           position: absolute;
@@ -116,7 +117,7 @@ const SubMenuWrapper = styled(Box)(
           }
 
           .MuiListItem-root {
-            padding: 1px 0;
+            padding: 4px 0;
 
             .MuiButton-root {
               padding: ${theme.spacing(0.8, 3)};
@@ -173,14 +174,19 @@ const SidebarMenu = (): JSX.Element => {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
+                <Button disableRipple component={NavLink} onClick={closeSidebar} to="/stock" startIcon={<ListIcon />}>
+                  All Stocks
+                </Button>
+              </ListItem>
+              <ListItem component="div">
                 <Button
                   disableRipple
-                  component={RouterLink}
+                  component={NavLink}
                   onClick={closeSidebar}
-                  to="/stocklist"
-                  startIcon={<TableRowsIcon />}
+                  to="/watchlist"
+                  startIcon={<CollectionsBookmarkIcon />}
                 >
-                  Stock List
+                  Watchlists
                 </Button>
               </ListItem>
             </List>
@@ -193,7 +199,7 @@ const SidebarMenu = (): JSX.Element => {
                   <ListItem component="div">
                     <Button
                       disableRipple
-                      component={RouterLink}
+                      component={NavLink}
                       onClick={closeSidebar}
                       to="/usermanagement"
                       startIcon={<ManageAccountsIcon />}

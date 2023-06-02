@@ -29,7 +29,7 @@ import {
   userManagementEndpointPath,
 } from "@rating-tracker/commons";
 import { useState } from "react";
-import DeleteUser from "../DeleteUser";
+import DeleteUser from "../dialogs/DeleteUser";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { baseUrl } from "../../router";
 import axios from "axios";

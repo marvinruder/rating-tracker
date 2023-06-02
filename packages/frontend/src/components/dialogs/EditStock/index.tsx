@@ -32,8 +32,8 @@ import {
 } from "@rating-tracker/commons";
 import axios from "axios";
 import { useState } from "react";
-import { baseUrl } from "../../router";
-import { useNotification } from "../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
+import { useNotification } from "../../../contexts/NotificationContext";
 
 /**
  * A dialog to edit a new stock in the backend.

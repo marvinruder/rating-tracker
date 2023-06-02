@@ -20,6 +20,7 @@ dotenv.config();
 
 // Import all controllers
 import "./controllers/AuthController.js";
+import "./controllers/FavoriteController.js";
 import "./controllers/FetchController.js";
 import "./controllers/ResourceController.js";
 import "./controllers/SessionController.js";
@@ -28,6 +29,7 @@ import "./controllers/StatusController.js";
 import "./controllers/StockController.js";
 import "./controllers/UserController.js";
 import "./controllers/UserManagementController.js";
+import "./controllers/WatchlistController.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

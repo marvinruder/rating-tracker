@@ -40,7 +40,7 @@ const HeaderUserbox = (): JSX.Element => {
       setNotification({
         severity: "success",
         title: "See you next time!",
-        message: "Signing out successful",
+        message: "Signed out successfully",
       });
       navigate("/login");
     } catch (e) {

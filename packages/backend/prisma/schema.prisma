@@ -53,18 +53,29 @@ model Stock {
   sustainalyticsESGRisk                     Float?
   description                               String?
   marketCap                                 Float?
+  watchlists                                Watchlist[]
 }
 
 model User {
-  email               String  @id @db.VarChar(255)
-  name                String  @db.VarChar(255)
+  email               String      @id @db.VarChar(255)
+  name                String      @db.VarChar(255)
   avatar              String?
-  phone               String? @db.VarChar(16)
-  accessRights        Int     @default(0) @db.SmallInt
-  subscriptions       Int?    @db.SmallInt
-  credentialID        String  @db.VarChar(255)
-  credentialPublicKey String  @db.VarChar(8192)
-  counter             Int     @default(0)
+  phone               String?     @db.VarChar(16)
+  accessRights        Int         @default(0) @db.SmallInt
+  subscriptions       Int?        @db.SmallInt
+  credentialID        String      @db.VarChar(255)
+  credentialPublicKey String      @db.VarChar(8192)
+  counter             Int         @default(0)
+  watchlists          Watchlist[]
+}
+
+model Watchlist {
+  id         Int     @id @default(autoincrement())
+  name       String
+  subscribed Boolean @default(false)
+  stocks     Stock[]
+  user       User    @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
+  email      String  @db.VarChar(255)
 }
 
 enum Country {

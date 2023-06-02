@@ -9,6 +9,13 @@
   "eslint.nodePath": ".yarn/sdks",
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "eslint.packageManager": "yarn",
-  "eslint.workingDirectories": ["packages/backend", "packages/commons", "packages/frontend"],
-  "rust-analyzer.linkedProjects": ["./wasm/Cargo.toml"]
+  "eslint.workingDirectories": [
+    "packages/backend",
+    "packages/commons",
+    "packages/frontend"
+  ],
+  "rust-analyzer.linkedProjects": [
+    "./wasm/Cargo.toml"
+  ],
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

@@ -277,10 +277,10 @@ const StockDetails = (props: StockDetailsProps): JSX.Element => {
             ) : (
               <>
                 <Typography variant="body1">
-                  <Skeleton width={100} />
+                  <Skeleton width={100} height={21} />
                 </Typography>
                 <Typography variant="body1">
-                  <Skeleton width={130} />
+                  <Skeleton width={130} height={21} />
                 </Typography>
                 <Typography variant="body1">
                   <Skeleton width={160} />

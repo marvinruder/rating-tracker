@@ -4,7 +4,7 @@ import { updateUserWithCredentials, deleteUser } from "../db/tables/userTable.js
 import Router from "../utils/router.js";
 
 /**
- * This class is responsible for providing user information.
+ * This class is responsible for handling user information.
  */
 export class UserController {
   /**

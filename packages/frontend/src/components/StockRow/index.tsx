@@ -1,13 +1,19 @@
 import {
   Avatar,
+  Badge,
   Box,
   Chip,
+  darken,
   Dialog,
   DialogContent,
   DialogTitle,
   Divider,
   Grid,
   IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Skeleton,
   styled,
   TableCell,
@@ -20,9 +26,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import StarIcon from "@mui/icons-material/Star";
+import StarsIcon from "@mui/icons-material/Stars";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import SectorIcon from "../SectorIcon";
 import StarRating from "../StarRating";
@@ -30,6 +42,7 @@ import StyleBox from "../StyleBox";
 import {
   countryNameWithFlag,
   currencyName,
+  favoriteEndpointPath,
   groupOfIndustry,
   industryDescription,
   industryGroupName,
@@ -45,12 +58,15 @@ import {
   superSectorDescription,
   superSectorName,
   superSectorOfSector,
+  WatchlistSummary,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
 import { baseUrl } from "../../router";
 import { useContext, useState } from "react";
-import DeleteStock from "../DeleteStock";
-import EditStock from "../EditStock";
+import DeleteStock from "../dialogs/DeleteStock";
+import EditStock from "../dialogs/EditStock";
+import AddStockToWatchlist from "../dialogs/AddStockToWatchlist";
+import RemoveStockFromWatchlist from "../dialogs/RemoveStockFromWatchlist";
 import StockDetails from "../StockDetails";
 import formatMarketCap from "../../utils/formatters";
 import {
@@ -63,7 +79,9 @@ import {
 } from "../../utils/navigators";
 import Range52WSlider from "../Range52WSlider";
 import { NavLink } from "react-router-dom";
-import { UserContext } from "../../router.js";
+import { UserContext } from "../../router";
+import axios from "axios";
+import { useNotification } from "../../contexts/NotificationContext";
 
 /**
  * This component displays information about a stock in a table row that is used in the stock list.
@@ -74,6 +92,7 @@ import { UserContext } from "../../router.js";
 const StockRow = (props: StockRowProps): JSX.Element => {
   const { user } = useContext(UserContext);
   const theme = useTheme();
+  const { setNotification } = useNotification();
 
   /**
    * Displays a chip with a colored icon. The color depends on the value of the stock's
@@ -116,9 +135,12 @@ const StockRow = (props: StockRowProps): JSX.Element => {
     },
   }));
 
+  const [optionsMenuOpen, setOptionsMenuOpen] = useState<boolean>(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [addToWatchlistDialogOpen, setAddToWatchlistDialogOpen] = useState<boolean>(false);
+  const [removeFromWatchlistDialogOpen, setRemoveFromWatchlistDialogOpen] = useState<boolean>(false);
 
   /**
    * Returns an appropriate CSS `display` property value for a column. The value is derived from the
@@ -138,7 +160,117 @@ const StockRow = (props: StockRowProps): JSX.Element => {
 
   return props.stock ? (
     // Actual stock row
-    <TableRow hover sx={{ height: 59 }}>
+    <TableRow
+      hover
+      sx={{
+        height: 59,
+        backgroundColor: props.isFavorite && theme.colors.warning.lighter,
+        ":hover, &.MuiTableRow-hover:hover": {
+          backgroundColor: props.isFavorite && darken(theme.colors.warning.lighter, 0.15),
+        },
+      }}
+    >
+      {/* Actions */}
+      {props.getStocks && (
+        <TableCell style={{ whiteSpace: "nowrap" }}>
+          <Tooltip title="Options" placement="top" arrow>
+            <IconButton
+              id={`option-button-${props.stock.ticker}`}
+              size="small"
+              color="secondary"
+              onClick={() => setOptionsMenuOpen(true)}
+            >
+              <ArrowDropDownIcon />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            open={optionsMenuOpen}
+            onClose={() => setOptionsMenuOpen(false)}
+            anchorEl={() => document.getElementById(`option-button-${props.stock.ticker}`)}
+          >
+            <MenuItem
+              onClick={() => setOptionsMenuOpen(false)}
+              component={NavLink}
+              to={`/stock/${props.stock.ticker}`}
+              target="_blank"
+            >
+              <ListItemIcon>
+                <OpenInNewIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Open in new tab</ListItemText>
+            </MenuItem>
+            {!props.watchlist && (
+              <MenuItem
+                onClick={() => {
+                  (props.isFavorite ? axios.delete : axios.put)(
+                    baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`
+                  )
+                    .then(() => props.getStocks && props.getStocks())
+                    .catch((e) => {
+                      setNotification({
+                        severity: "error",
+                        title: props.isFavorite
+                          ? `Error while removing “${props.stock.name}” from favorites`
+                          : `Error while adding “${props.stock.name}” to favorites`,
+                        message:
+                          e.response?.status && e.response?.data?.message
+                            ? `${e.response.status}: ${e.response.data.message}`
+                            : e.message ?? "No additional information available.",
+                      });
+                    });
+                }}
+              >
+                <ListItemIcon>
+                  {props.isFavorite ? (
+                    <StarOutlineIcon color="warning" fontSize="small" />
+                  ) : (
+                    <StarIcon color="warning" fontSize="small" />
+                  )}
+                </ListItemIcon>
+                <ListItemText>{props.isFavorite ? "Remove from Favorites" : "Mark as favorite"}</ListItemText>
+              </MenuItem>
+            )}
+            {!props.watchlist && (
+              <MenuItem onClick={() => setAddToWatchlistDialogOpen(true)}>
+                <ListItemIcon>
+                  <BookmarkAddIcon color="success" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Add to watchlist…</ListItemText>
+              </MenuItem>
+            )}
+            {!props.watchlist && (
+              <MenuItem
+                onClick={() => setEditDialogOpen(true)}
+                sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+              >
+                <ListItemIcon>
+                  <EditIcon color="primary" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Edit Stock…</ListItemText>
+              </MenuItem>
+            )}
+            {!props.watchlist && (
+              <MenuItem
+                onClick={() => setDeleteDialogOpen(true)}
+                sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+              >
+                <ListItemIcon>
+                  <DeleteIcon color="error" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Delete Stock…</ListItemText>
+              </MenuItem>
+            )}
+            {props.watchlist && (
+              <MenuItem onClick={() => setRemoveFromWatchlistDialogOpen(true)}>
+                <ListItemIcon>
+                  <BookmarkRemoveIcon color="error" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Remove from “{props.watchlist.name}”</ListItemText>
+              </MenuItem>
+            )}
+          </Menu>
+        </TableCell>
+      )}
       {/* Name and Logo */}
       <TableCell>
         <Box
@@ -149,11 +281,23 @@ const StockRow = (props: StockRowProps): JSX.Element => {
             cursor: "pointer",
           }}
         >
-          <Avatar
-            sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
-            src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
-            alt=" "
-          />
+          <Badge
+            anchorOrigin={{ vertical: "top", horizontal: "left" }}
+            badgeContent={
+              props.isFavorite ? (
+                <Tooltip title="This stock is marked as a favorite" arrow>
+                  <StarsIcon sx={{ width: 16, height: 16 }} color="warning" />
+                </Tooltip>
+              ) : undefined
+            }
+            overlap="circular"
+          >
+            <Avatar
+              sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
+              src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+              alt=" "
+            />
+          </Badge>
           <Box width={8} />
           <Box>
             <Typography variant="body1" fontWeight="bold" color="text.primary" width={160} noWrap>
@@ -639,64 +783,11 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <Box sx={{ float: "right" }}>{props.stock.marketCap !== null ? formatMarketCap(props.stock) : "–"}</Box>
         </Typography>
       </TableCell>
-      {/* Actions */}
-      {props.getStocks && (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
-          <Tooltip title="Open in new tab" arrow>
-            <IconButton component={NavLink} to={`/stock/${props.stock.ticker}`} target="_blank" size="small">
-              <OpenInNewIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip
-            title={
-              user.hasAccessRight(WRITE_STOCKS_ACCESS)
-                ? "Edit Stock"
-                : "You do not have the necessary access rights to update stocks."
-            }
-            arrow
-          >
-            <Box display="inline-block">
-              <IconButton
-                color="primary"
-                size="small"
-                onClick={() => setEditDialogOpen(true)}
-                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Box>
-          </Tooltip>
-          <Tooltip
-            title={
-              user.hasAccessRight(WRITE_STOCKS_ACCESS)
-                ? "Delete Stock"
-                : "You do not have the necessary access rights to delete stocks."
-            }
-            arrow
-          >
-            <Box display="inline-block">
-              <IconButton
-                color="error"
-                size="small"
-                onClick={() => setDeleteDialogOpen(true)}
-                disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </Box>
-          </Tooltip>
-        </TableCell>
-      )}
       {/* Details Dialog */}
       <Dialog open={detailsDialogOpen} onClose={() => setDetailsDialogOpen(false)} maxWidth="lg">
         <DialogTitle>
           <Grid container justifyContent="space-between">
-            <Grid
-              item
-              display="flex"
-              alignItems="center"
-              maxWidth={{ xs: "calc(100% - 40px)", md: "calc(100% - 80px)" }}
-            >
+            <Grid item display="flex" alignItems="center" maxWidth="calc(100% - 40px)">
               <Avatar
                 sx={{
                   width: 112,
@@ -717,29 +808,10 @@ const StockRow = (props: StockRowProps): JSX.Element => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid
-              container
-              width={{ xs: 40, md: 80 }}
-              direction={{ xs: "column", md: "row-reverse" }}
-              display="flex"
-              justifyContent={{ xs: "space-between" }}
-              sx={{ ml: "auto" }}
-            >
-              <Grid item>
-                <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ borderRadius: 20 }}>
-                  <CloseIcon />
-                </IconButton>
-              </Grid>
-              <Grid item>
-                <IconButton
-                  component={NavLink}
-                  to={`/stock/${props.stock.ticker}`}
-                  target="_blank"
-                  sx={{ borderRadius: 20 }}
-                >
-                  <OpenInNewIcon />
-                </IconButton>
-              </Grid>
+            <Grid item>
+              <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ borderRadius: 20 }}>
+                <CloseIcon />
+              </IconButton>
             </Grid>
           </Grid>
         </DialogTitle>
@@ -747,6 +819,17 @@ const StockRow = (props: StockRowProps): JSX.Element => {
         <DialogContent sx={{ p: 0, pb: 1 }}>
           <StockDetails stock={props.stock} />
         </DialogContent>
+      </Dialog>
+      {/* Add to Watchlist Dialog */}
+      <Dialog
+        maxWidth="xs"
+        open={addToWatchlistDialogOpen}
+        onClose={() => (setAddToWatchlistDialogOpen(false), setOptionsMenuOpen(false))}
+      >
+        <AddStockToWatchlist
+          stock={props.stock}
+          onClose={() => (setAddToWatchlistDialogOpen(false), setOptionsMenuOpen(false))}
+        />
       </Dialog>
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onClose={() => (setEditDialogOpen(false), props.getStocks && props.getStocks())}>
@@ -756,10 +839,30 @@ const StockRow = (props: StockRowProps): JSX.Element => {
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DeleteStock stock={props.stock} getStocks={props.getStocks} onClose={() => setDeleteDialogOpen(false)} />
       </Dialog>
+      {/* Remove from Watchlist Dialog */}
+      <Dialog open={removeFromWatchlistDialogOpen} onClose={() => setRemoveFromWatchlistDialogOpen(false)}>
+        <RemoveStockFromWatchlist
+          stock={props.stock}
+          watchlist={props.watchlist}
+          getWatchlist={props.getStocks}
+          onClose={() => setRemoveFromWatchlistDialogOpen(false)}
+        />
+      </Dialog>
     </TableRow>
   ) : (
     // Skeleton of a stock row
     <TableRow hover sx={{ height: 59 }}>
+      {/* Actions */}
+      {props.getStocks && (
+        <TableCell style={{ whiteSpace: "nowrap" }}>
+          <Skeleton
+            sx={{ m: "4px", display: "inline-block", verticalAlign: "middle" }}
+            variant="circular"
+            width={2 * (theme.typography.body1.fontSize as number) - 4}
+            height={2 * (theme.typography.body1.fontSize as number) - 4}
+          />
+        </TableCell>
+      )}
       {/* Stock */}
       <TableCell>
         <Box style={{ display: "flex", alignItems: "center" }}>
@@ -1012,29 +1115,6 @@ const StockRow = (props: StockRowProps): JSX.Element => {
           <Skeleton width={75} />
         </Typography>
       </TableCell>
-      {/* Actions */}
-      {props.getStocks && (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
-          <Skeleton
-            sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
-            variant="circular"
-            width={2 * (theme.typography.body1.fontSize as number) - 4}
-            height={2 * (theme.typography.body1.fontSize as number) - 4}
-          />
-          <Skeleton
-            sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
-            variant="circular"
-            width={2 * (theme.typography.body1.fontSize as number) - 4}
-            height={2 * (theme.typography.body1.fontSize as number) - 4}
-          />
-          <Skeleton
-            sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
-            variant="circular"
-            width={2 * (theme.typography.body1.fontSize as number) - 4}
-            height={2 * (theme.typography.body1.fontSize as number) - 4}
-          />
-        </TableCell>
-      )}
     </TableRow>
   );
 };
@@ -1047,6 +1127,14 @@ interface StockRowProps {
    * The stock to display
    */
   stock?: Stock;
+  /**
+   * Whether the stock is a favorite stock of the user.
+   */
+  isFavorite?: boolean;
+  /**
+   * A watchlist the stock is in. If set, the stock row is shown as part of that watchlist’s stocks.
+   */
+  watchlist?: WatchlistSummary;
   /**
    * A method to update the stock list, e.g. after a stock was modified or deleted.
    */

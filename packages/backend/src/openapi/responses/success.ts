@@ -67,6 +67,20 @@ const okStockList: OpenAPIV3.ResponseObject = {
 };
 
 /**
+ * A response with a 200 OK status code and an object containing an array of Stock objects and a count.
+ */
+const okStockListWithCount: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "application/json": {
+      schema: {
+        $ref: "#/components/schemas/StockListWithCount",
+      },
+    },
+  },
+};
+
+/**
  * A response with a 200 OK status code and an array of User objects.
  */
 const okUserList: OpenAPIV3.ResponseObject = {
@@ -84,14 +98,31 @@ const okUserList: OpenAPIV3.ResponseObject = {
 };
 
 /**
- * A response with a 200 OK status code and an object containing an array of Stock objects and a count.
+ * A response with a 200 OK status code and a Watchlist object body.
  */
-const okStockListWithCount: OpenAPIV3.ResponseObject = {
+const okWatchlist: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
       schema: {
-        $ref: "#/components/schemas/StockListWithCount",
+        $ref: "#/components/schemas/Watchlist",
+      },
+    },
+  },
+};
+
+/**
+ * A response with a 200 OK status code and an array of Watchlist Summary objects.
+ */
+const okWatchlistSummary: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "application/json": {
+      schema: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/WatchlistSummary",
+        },
       },
     },
   },
@@ -139,6 +170,26 @@ const created: OpenAPIV3.ResponseObject = {
 };
 
 /**
+ * A response with a 201 Created status code containing the ID of the newly created watchlist.
+ */
+const createdWatchlistID: OpenAPIV3.ResponseObject = {
+  description: "Created with ID of new watchlist",
+  content: {
+    "application/json": {
+      schema: {
+        properties: {
+          id: {
+            type: "integer",
+            description: "A unique identifier of the watchlist.",
+            example: 0,
+          },
+        },
+      },
+    },
+  },
+};
+
+/**
  * A response with a 202 Accepted status code.
  */
 const accepted: OpenAPIV3.ResponseObject = {
@@ -158,11 +209,14 @@ export {
   okSVG,
   okStock,
   okStockList,
-  okUserList,
   okStockListWithCount,
+  okUserList,
+  okWatchlist,
+  okWatchlistSummary,
   okOperational,
   okUser,
   accepted,
   created,
+  createdWatchlistID,
   noContent,
 };

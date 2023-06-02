@@ -109,4 +109,10 @@ describe("Message Subscriptions", () => {
     expect(userWithIllegalSubscription.isAllowedAndWishesToReceiveMessage("fetchError")).toBe(false);
     expect(userWithIllegalSubscription.isAllowedAndWishesToReceiveMessage("stockUpdate")).toBe(true);
   });
+
+  it("may receive additional messages they opted-in for elsewhere if they have the rights for that", () => {
+    expect(userWhoDoesNotGiveAFuckAboutAnything.isAllowedToReceiveMessage("stockUpdate")).toBe(true);
+    expect(userWhoDoesNotGiveAFuckAboutAnything.isAllowedToReceiveMessage("fetchError")).toBe(true);
+    expect(userWhoDoesNotGiveAFuckAboutAnything.isAllowedToReceiveMessage("userManagement")).toBe(true);
+  });
 });

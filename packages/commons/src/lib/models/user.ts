@@ -133,9 +133,16 @@ export class User {
    * @returns {boolean} Whether the user shall receive a message of the given message type.
    */
   public isAllowedAndWishesToReceiveMessage(messageType: MessageType): boolean {
-    if (!this.hasSubscribedTo(messageType)) {
-      return false;
-    }
+    return this.hasSubscribedTo(messageType) && this.isAllowedToReceiveMessage(messageType);
+  }
+
+  /**
+   * Checks whether the user has the rights necessary to receive a message of the given message type.
+   *
+   * @param {MessageType} messageType The message type to check.
+   * @returns {boolean} Whether the user shall receive a message of the given message type.
+   */
+  public isAllowedToReceiveMessage(messageType: MessageType): boolean {
     switch (messageType) {
       case "userManagement":
         return this.hasAccessRight(ADMINISTRATIVE_ACCESS);

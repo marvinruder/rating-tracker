@@ -9,7 +9,7 @@ import * as stock from "../../parameters/stock.js";
 const get: OpenAPIV3.OperationObject = {
   tags: ["Stock API"],
   operationId: "getStock",
-  summary: "Get Stock API",
+  summary: "Read Stock API",
   description: "Get the specified stock",
   parameters: [
     {

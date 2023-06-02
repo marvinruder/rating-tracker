@@ -108,6 +108,20 @@ tests.push({
 });
 
 tests.push({
+  testName: "[unsafe] updating a single stock on a user’s subscribed-to watchlist sends a message to the user",
+  testFunction: async () => {
+    await updateStock("exampleAAPL", {
+      starRating: 4,
+    });
+
+    for (const sentMessage of sentMessages) {
+      expect(sentMessage.recipients).toHaveLength(2);
+      expect(sentMessage.recipients).toContain("+123456789");
+    }
+  },
+});
+
+tests.push({
   testName: "[unsafe] cannot update a stock with an invalid property",
   testFunction: async () => {
     await createStock({

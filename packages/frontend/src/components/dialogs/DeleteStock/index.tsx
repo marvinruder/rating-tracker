@@ -4,8 +4,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Stock, stockEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import axios from "axios";
-import { baseUrl } from "../../router";
-import { useNotification } from "../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
+import { useNotification } from "../../../contexts/NotificationContext";
 import { useNavigate } from "react-router";
 
 /**
