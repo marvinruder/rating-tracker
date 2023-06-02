@@ -205,7 +205,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
     // The message string contains a newline character if and only if a parameter changed for which we want to send a
     // message
     if (signalMessage.includes("\n")) {
-      await signal.sendMessage(signalMessage, "stockUpdate");
+      await signal.sendMessage(signalMessage, "stockUpdate", stock);
     }
   } else {
     // No new data was provided

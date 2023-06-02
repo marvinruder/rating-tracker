@@ -78,8 +78,32 @@ export const readUserWithCredentials = async (email: string): Promise<UserWithCr
  * @returns {Promise<User[]>} A list of all users.
  */
 export const readAllUsers = async (): Promise<User[]> => {
-  const users = await client.user.findMany();
-  return users.map((user) => new User(user));
+  return (await client.user.findMany()).map((user) => new User(user));
+};
+
+/**
+ * Read all users having at least one watchlist they subscribed to containing the given stock.
+ *
+ * @param {string} ticker The ticker of the stock.
+ * @returns {Promise<User[]>} The users in question.
+ */
+export const readUsersWithStockOnSubscribedWatchlist = async (ticker: string): Promise<User[]> => {
+  return (
+    await client.user.findMany({
+      where: {
+        watchlists: {
+          some: {
+            subscribed: true,
+            stocks: {
+              some: {
+                ticker,
+              },
+            },
+          },
+        },
+      },
+    })
+  ).map((user) => new User(user));
 };
 
 /**
