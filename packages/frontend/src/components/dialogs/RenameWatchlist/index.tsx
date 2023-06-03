@@ -38,7 +38,7 @@ const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
         .patch(baseUrl + watchlistEndpointPath + `/${props.watchlist.id}`, undefined, {
           params: {
             // Only send the parameters that have changed.
-            name: name !== props.watchlist.name ? name : undefined,
+            name: name !== props.watchlist.name ? name.trim() : undefined,
           },
         })
         .then(props.getWatchlists) // Update the watchlists in the parent component.

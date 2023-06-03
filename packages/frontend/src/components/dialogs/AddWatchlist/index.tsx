@@ -34,7 +34,7 @@ const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
     setRequestInProgress(true);
     axios
       .put(baseUrl + watchlistEndpointPath + `/new`, undefined, {
-        params: { name },
+        params: { name: name.trim() },
       })
       .then(() => {
         props.onClose();

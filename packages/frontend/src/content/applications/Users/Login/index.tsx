@@ -81,14 +81,14 @@ const LoginApp = (): JSX.Element => {
           try {
             // Request registration challenge
             const res = await axios.get(baseUrl + registerEndpointPath, {
-              params: { email, name },
+              params: { email: email.trim(), name: name.trim() },
             });
             // Ask the browser to perform the WebAuthn registration and store a corresponding credential
             const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
             try {
               // Send the registration challenge response to the server
               await axios.post(baseUrl + registerEndpointPath, authRes, {
-                params: { email, name },
+                params: { email: email.trim(), name: name.trim() },
                 headers: { "Content-Type": "application/json" },
               });
               // This is only reached if the registration was successful

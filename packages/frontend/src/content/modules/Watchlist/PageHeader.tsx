@@ -45,11 +45,7 @@ const PageHeader = (props: PageHeaderProps): JSX.Element => {
                       .patch(
                         baseUrl + watchlistEndpointPath + `/${props.watchlist.id}`,
                         {},
-                        {
-                          params: {
-                            subscribed: !props.watchlist.subscribed,
-                          },
-                        }
+                        { params: { subscribed: !props.watchlist.subscribed } }
                       )
                       .then(() => props.getWatchlist && props.getWatchlist())
                       .catch((e) => {

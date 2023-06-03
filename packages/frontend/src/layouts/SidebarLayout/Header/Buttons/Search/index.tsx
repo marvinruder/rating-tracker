@@ -196,10 +196,7 @@ const HeaderSearch = (): JSX.Element => {
   const getStocks = (currentSearchValue: string) => {
     axios
       .get(baseUrl + stockListEndpointPath, {
-        params: {
-          name: currentSearchValue,
-          sortBy: "ticker",
-        },
+        params: { name: currentSearchValue.trim(), sortBy: "ticker" },
       })
       .then((res) => {
         const upperCaseSearchValue = currentSearchValue.toLocaleUpperCase();
