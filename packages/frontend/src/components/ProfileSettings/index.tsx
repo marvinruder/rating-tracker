@@ -110,16 +110,12 @@ const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
       axios
         .patch(
           baseUrl + userEndpointPath,
-          avatar !== user.avatar
-            ? {
-                avatar, // Include payload with avatar only if it has changed.
-              }
-            : undefined,
+          avatar !== user.avatar ? { avatar } : undefined, // Include payload with avatar only if it has changed.
           {
             params: {
               // Only send the parameters that have changed.
-              name: name !== user.name ? name : undefined,
-              phone: phone !== user.phone ? phone : undefined,
+              name: name !== user.name ? name.trim() : undefined,
+              phone: phone !== user.phone ? phone.trim() : undefined,
               subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
             },
           }

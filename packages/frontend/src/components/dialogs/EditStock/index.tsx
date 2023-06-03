@@ -88,15 +88,15 @@ const EditStock = (props: EditStockProps): JSX.Element => {
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: {
             // Only send the parameters that have changed.
-            name: name !== props.stock.name ? name : undefined,
-            isin: isin !== props.stock.isin ? isin : undefined,
+            name: name !== props.stock.name ? name.trim() : undefined,
+            isin: isin !== props.stock.isin ? isin.trim() : undefined,
             country: country !== props.stock.country ? country : undefined,
-            morningstarID: morningstarID !== props.stock.morningstarID ? morningstarID : undefined,
-            marketScreenerID: marketScreenerID !== props.stock.marketScreenerID ? marketScreenerID : undefined,
-            msciID: msciID !== props.stock.msciID ? msciID : undefined,
-            ric: ric !== props.stock.ric ? ric : undefined,
+            morningstarID: morningstarID !== props.stock.morningstarID ? morningstarID.trim() : undefined,
+            marketScreenerID: marketScreenerID !== props.stock.marketScreenerID ? marketScreenerID.trim() : undefined,
+            msciID: msciID !== props.stock.msciID ? msciID.trim() : undefined,
+            ric: ric !== props.stock.ric ? ric.trim() : undefined,
             spID: spID !== props.stock.spID ? (spID === null ? "" : spID) : undefined,
-            sustainalyticsID: sustainalyticsID !== props.stock.sustainalyticsID ? sustainalyticsID : undefined,
+            sustainalyticsID: sustainalyticsID !== props.stock.sustainalyticsID ? sustainalyticsID.trim() : undefined,
           },
         })
         .then(props.getStocks) // Update the stocks in the parent component.
@@ -122,7 +122,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
       (setMorningstarIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
-          params: { morningstarID },
+          params: { morningstarID: morningstarID.trim() },
         })
         .then(() => {
           if (morningstarID) {
@@ -169,7 +169,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
       (setMarketScreenerIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
-          params: { marketScreenerID },
+          params: { marketScreenerID: marketScreenerID.trim() },
         })
         .then(() => {
           if (marketScreenerID) {
@@ -216,7 +216,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
       (setMSCIIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
-          params: { msciID },
+          params: { msciID: msciID.trim() },
         })
         .then(() => {
           if (msciID) {
@@ -263,7 +263,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
       (setRICRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
-          params: { ric },
+          params: { ric: ric.trim() },
         })
         .then(() => {
           if (ric) {
@@ -369,7 +369,7 @@ const EditStock = (props: EditStockProps): JSX.Element => {
       (setSustainalyticsIDRequestInProgress(true),
       axios
         .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
-          params: { sustainalyticsID },
+          params: { sustainalyticsID: sustainalyticsID.trim() },
         })
         .then(() => {
           if (sustainalyticsID) {
