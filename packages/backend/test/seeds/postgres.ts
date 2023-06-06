@@ -413,22 +413,18 @@ const stockData: Stock[] = [
 ].map((stock: OmitDynamicAttributesStock) => addDynamicAttributesToStockData({ ...optionalStockValuesNull, ...stock }));
 
 /**
- * Clears and writes example stock data into the stock table in the database. Must only be used in tests.
+ * Writes example stock data into the stock table in the database. Must only be used in tests.
  */
 const applyStockSeed = async (): Promise<void> => {
-  await client.stock.deleteMany();
-
   await client.stock.createMany({
     data: stockData,
   });
 };
 
 /**
- * Clears and writes example user data into the user table in the database. Must only be used in tests.
+ * Writes example user data into the user table in the database. Must only be used in tests.
  */
 const applyUserSeed = async (): Promise<void> => {
-  await client.user.deleteMany();
-
   await client.user.createMany({
     data: [
       {
@@ -458,12 +454,9 @@ const applyUserSeed = async (): Promise<void> => {
 };
 
 /**
- * Clears and writes example watchlist data into the watchlist table in the database. Must only be used in tests.
+ * Writes example watchlist data into the watchlist table in the database. Must only be used in tests.
  */
 const applyWatchlistSeed = async (): Promise<void> => {
-  // Due to ON DELETE CASCADE, no watchlists should be present after deleting all users
-  expect(client.watchlist.count()).resolves.toBe(0);
-
   await client.watchlist.create({
     data: {
       name: "Favorites",
@@ -493,7 +486,13 @@ const applyPostgresSeeds = async (): Promise<void> => {
     throw new Error("Refusing to apply seed when not in a test environment");
   }
 
-  await Promise.all([applyStockSeed(), applyUserSeed()]);
+  await client.$queryRaw`TRUNCATE TABLE "rating-tracker-test"."Stock" RESTART IDENTITY CASCADE`;
+  await client.$queryRaw`TRUNCATE TABLE "rating-tracker-test"."User" RESTART IDENTITY CASCADE`;
+  await client.$queryRaw`TRUNCATE TABLE "rating-tracker-test"."Watchlist" RESTART IDENTITY CASCADE`;
+  await client.$queryRaw`TRUNCATE TABLE "rating-tracker-test"."_StockToWatchlist" RESTART IDENTITY CASCADE`;
+
+  await applyStockSeed();
+  await applyUserSeed();
   await applyWatchlistSeed();
 };
 
