@@ -69,7 +69,8 @@ export default mergeConfig(
     test: {
       cache: { dir: ".vite/vitest" },
       coverage: {
-        provider: "istanbul",
+        enabled: true,
+        provider: "v8",
       },
     },
   })

@@ -1,5 +1,4 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
-/* istanbul ignore file -- @preserve */
 import { Builder, Capabilities, WebDriver, until } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome.js";
 import APIError from "./apiError.js";

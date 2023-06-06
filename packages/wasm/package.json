@@ -16,6 +16,7 @@
     "wasm_bg.js",
     "wasm.d.ts"
   ],
+  "main": "wasm.js",
   "module": "wasm.js",
   "types": "wasm.d.ts",
   "sideEffects": [

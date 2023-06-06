@@ -1,5 +1,4 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
-/* istanbul ignore file -- @preserve */
 import { Request } from "express";
 import { FetcherWorkspace } from "../controllers/FetchController.js";
 import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver.js";

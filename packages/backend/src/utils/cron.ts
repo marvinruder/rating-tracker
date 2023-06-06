@@ -1,4 +1,4 @@
-/* istanbul ignore file -- @preserve */ // We do not test Cron jobs
+// We do not test Cron jobs
 import * as cron from "cron";
 import axios, { AxiosError } from "axios";
 import {

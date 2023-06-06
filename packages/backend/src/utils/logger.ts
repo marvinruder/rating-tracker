@@ -1,4 +1,4 @@
-/* istanbul ignore file -- @preserve */ // We do not need to test the logger itself
+// We do not need to test the logger itself
 import pino from "pino";
 import pretty from "pino-pretty";
 import fs from "node:fs";
@@ -161,7 +161,7 @@ export const requestLogger = (req: Request, res: Response, time: number) => {
               chalk.yellow(
                 res.locals.user
                   ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})` // Authenticated user
-                  : /* istanbul ignore next -- @preserve */ // We do not test Cron jobs
+                  : /* c8 ignore next */ // We do not test Cron jobs
                   res.locals.userIsCron
                   ? "\ufba7 cron" // Cron job
                   : "\uf21b" // Unauthenticated user

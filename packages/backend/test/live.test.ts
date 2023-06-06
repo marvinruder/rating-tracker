@@ -75,7 +75,7 @@ const unsafeTestSuites: { [key: string]: LiveTestSuite } = {};
 
 // Get all test suites
 for await (const path of await glob("../**/*.live.test.ts")) {
-  const { tests, suiteName }: { tests: LiveTestSuite; suiteName: string } = await import(path);
+  const { tests, suiteName }: { tests: LiveTestSuite; suiteName: string } = await import("../" + path);
   testSuites[suiteName] = [];
   unsafeTestSuites[suiteName] = [];
   tests.forEach((test) =>
