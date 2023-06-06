@@ -60,12 +60,13 @@ const expireResource = (id: string, ttlInSeconds: number): Promise<void> => {
 export const createResource = async (resource: Resource, ttlInSeconds?: number): Promise<boolean> => {
   const existingResource = await fetchResource(resource.url); // Attempt to fetch an existing resource with the same URL
   // Difficult to test since the implementation always checks whether a cached resource exists before creating a new one
-  /* istanbul ignore next -- @preserve */
+  /* c8 ignore start */
   if (existingResource && existingResource.content) {
     // If that worked, a resource with the same URL already exists
     logger.warn(PREFIX_REDIS + chalk.yellowBright(`Skipping resource ${existingResource.url} – existing already.`));
     return false;
   }
+  /* c8 ignore stop */
   const resourceEntity = new ResourceEntity(resourceSchema, resource.url, {
     ...resource,
   });

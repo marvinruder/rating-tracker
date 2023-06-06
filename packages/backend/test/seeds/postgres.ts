@@ -60,7 +60,7 @@ const stockData: Stock[] = [
     style: "Growth",
     morningstarID: "0P000000GY",
     morningstarLastFetch: new Date("2022-12-16T21:58:54.979Z"),
-    starRating: 3,
+    starRating: 2,
     dividendYieldPercent: 0.67,
     priceEarningRatio: 22.32,
     currency: "USD",

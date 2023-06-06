@@ -177,10 +177,8 @@ export const updateWatchlist = async (
   // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
   for (k in newValues) {
     if (newValues[k] !== undefined) {
-      /* istanbul ignore next -- @preserve */ // Those properties are always caught by OpenAPI validation
-      if (watchlist[k] === undefined) {
-        throw new APIError(400, `Invalid property ${k} for watchlist ${watchlist.id}.`);
-      }
+      /* c8 ignore next */ // Those properties are always caught by OpenAPI validation
+      if (watchlist[k] === undefined) throw new APIError(400, `Invalid property ${k} for watchlist ${watchlist.id}.`);
       if (newValues[k] === watchlist[k]) {
         delete newValues[k];
         continue;

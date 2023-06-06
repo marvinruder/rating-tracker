@@ -64,7 +64,7 @@ server.app.disable("x-powered-by");
  */
 const staticContentPath = path.join(__dirname, "..", "..", "public");
 
-/* istanbul ignore next -- @preserve */ // This is not tested because it is only used in development servers
+/* c8 ignore next */ // This is not tested because it is only used in development servers
 if (!process.env.AUTO_FETCH_SCHEDULE || process.env.NODE_ENV === "development") {
   server.app.use(
     "/assets/images/favicon",
@@ -77,7 +77,7 @@ if (!process.env.AUTO_FETCH_SCHEDULE || process.env.NODE_ENV === "development") 
   );
 }
 
-/* istanbul ignore next -- @preserve */ // We do not have static resources in tests, so this middleware is not tested
+/* c8 ignore start */ // We do not have static resources in tests, so this middleware is not tested
 server.app.use(
   express.static(staticContentPath, {
     dotfiles: "ignore",
@@ -90,12 +90,14 @@ server.app.use(
     },
   })
 );
+/* c8 ignore stop */
 
 // Serve the SPA to any route not belonging to the API and not matching an existing file.
-/* istanbul ignore next -- @preserve */ // The SPA index file does not exist during tests
+/* c8 ignore start */ // The SPA index file does not exist during tests
 server.app.get(/^(?!\/api).+/, (_, res) => {
   res.setHeader("Cache-Control", "public, max-age=0").sendFile(path.join(staticContentPath, "index.html"));
 });
+/* c8 ignore stop */
 
 logger.info(PREFIX_NODEJS + `Serving static content from ${staticContentPath}`);
 logger.info("");
@@ -130,10 +132,11 @@ server.app.use(async (req, res, next) => {
       res.clearCookie("authToken");
     }
   }
-  /* istanbul ignore next -- @preserve */ // We do not test Cron jobs
+  /* c8 ignore start */ // We do not test Cron jobs
   if (req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken) {
     res.locals.userIsCron = true;
   }
+  /* c8 ignore stop */
   next();
 });
 
@@ -163,6 +166,7 @@ server.app.use(errorHandler);
 
 // Setup Cron Jobs
 process.env.AUTO_FETCH_SCHEDULE &&
+  /* c8 ignore next */ // We do not test Cron jobs
   setupCronJobs(bypassAuthenticationForInternalRequestsToken, process.env.AUTO_FETCH_SCHEDULE);
 
 export const listener = server.app.listen(process.env.PORT, () => {

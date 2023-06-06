@@ -139,10 +139,8 @@ export const updateUserWithCredentials = async (
   // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
   for (k in newValues) {
     if (newValues[k] !== undefined) {
-      /* istanbul ignore next -- @preserve */ // Those properties are always caught by OpenAPI validation
-      if (user[k] === undefined) {
-        throw new APIError(400, `Invalid property ${k} for user ${user.email}.`);
-      }
+      /* c8 ignore next */ // Those properties are always caught by OpenAPI validation
+      if (user[k] === undefined) throw new APIError(400, `Invalid property ${k} for user ${user.email}.`);
       if (newValues[k] === user[k]) {
         delete newValues[k];
         continue;

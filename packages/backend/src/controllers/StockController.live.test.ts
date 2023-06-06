@@ -126,13 +126,12 @@ tests.push({
       .get(`/api${stockListEndpointPath}?starRatingMin=3&starRatingMax=4&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect(res.body.count).toBe(5);
-    expect(res.body.stocks).toHaveLength(5);
+    expect(res.body.count).toBe(4);
+    expect(res.body.stocks).toHaveLength(4);
     expect(res.body.stocks[0].name).toMatch("Allianz");
-    expect(res.body.stocks[1].name).toMatch("Apple");
-    expect(res.body.stocks[2].name).toMatch("Danone");
-    expect(res.body.stocks[3].name).toMatch("Iberdrola");
-    expect(res.body.stocks[4].name).toMatch("MercadoLibre");
+    expect(res.body.stocks[1].name).toMatch("Danone");
+    expect(res.body.stocks[2].name).toMatch("Iberdrola");
+    expect(res.body.stocks[3].name).toMatch("MercadoLibre");
   },
 });
 

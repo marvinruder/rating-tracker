@@ -19,7 +19,7 @@ export const redis = createClient({
 });
 redis.on(
   "error", // This error only occurs when Redis server is not available, which is difficult to reproduce.
-  /* istanbul ignore next -- @preserve */ (err) => logger.error(PREFIX_REDIS + chalk.redBright(`Redis Client: ${err}`))
+  /* c8 ignore next */ (err) => logger.error(PREFIX_REDIS + chalk.redBright(`Redis Client: ${err}`))
 );
 await redis.connect();
 

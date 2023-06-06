@@ -1,4 +1,3 @@
-/* istanbul ignore file -- @preserve */
 // This file is not tested because tests must not depend on a running Signal Client instance
 import axios from "axios";
 import chalk from "chalk";

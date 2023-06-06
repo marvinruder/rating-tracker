@@ -8,7 +8,7 @@ dotenv.config();
  */
 let ratingTrackerColor: string;
 
-/* istanbul ignore next -- @preserve */ // The color depends on the environment, which is fixed to `test` in tests
+/* c8 ignore start */ // The color depends on the environment, which is fixed to `test` in tests
 switch (process.env.NODE_ENV) {
   case "production":
     ratingTrackerColor = "#2971D6";
@@ -22,6 +22,7 @@ switch (process.env.NODE_ENV) {
   default:
     ratingTrackerColor = "#808080";
 }
+/* c8 ignore stop */
 
 /**
  * An ASCII art logo, shown as a welcome message.
@@ -76,10 +77,8 @@ export const startup = (): void => {
       // Print error message and exit
       console.error("\x07" + chalk.red(` \uf658 ${e.message}`));
       process.exit(1);
-    } else {
-      /* istanbul ignore next -- @preserve */ // This should never occur, since always Errors are thrown.
-      throw e; // if something else than an error was thrown
-    }
+      /* c8 ignore next */ // This should never occur, since always Errors are thrown.
+    } else throw e; // if something else than an error was thrown
   }
 };
 

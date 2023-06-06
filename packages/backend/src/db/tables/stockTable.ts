@@ -163,7 +163,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
                 (newValues.msciESGRating ? msciESGRatingArray.indexOf(newValues.msciESGRating) : 7) <
                 (stock.msciESGRating
                   ? msciESGRatingArray.indexOf(stock.msciESGRating as MSCIESGRating)
-                  : /* istanbul ignore next -- @preserve */ // This never occurs with our test dataset
+                  : /* c8 ignore next */ // This never occurs with our test dataset
                     7)
                   ? SIGNAL_PREFIX_BETTER
                   : SIGNAL_PREFIX_WORSE;

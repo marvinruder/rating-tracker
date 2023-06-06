@@ -66,12 +66,13 @@ export const createSession = async (session: Session): Promise<boolean> => {
   // Attempt to fetch an existing session with the same ID
   const existingSession = await fetchSession(session.sessionID);
   // Difficult to test since session IDs are always created randomly
-  /* istanbul ignore next -- @preserve */
+  /* c8 ignore start */
   if (existingSession && existingSession.email) {
     // If that worked, a session with the same ID already exists
     logger.warn(PREFIX_REDIS + chalk.yellowBright(`Skipping session ${existingSession.entityId} – existing already.`));
     return false;
   }
+  /* c8 ignore stop */
   const sessionEntity = new SessionEntity(sessionSchema, session.sessionID, {
     ...session,
   });
@@ -114,13 +115,10 @@ export const refreshSessionAndFetchUser = async (sessionID: string): Promise<Use
  */
 export const deleteSession = async (sessionID: string) => {
   const sessionEntity = await fetchSession(sessionID);
-  // Not reached in current tests since a user can only delete their current session
-  /* istanbul ignore else -- @preserve */
   if (sessionEntity && sessionEntity.email) {
     const email = new Session(sessionEntity).email;
     await removeSession(sessionEntity.entityId);
     logger.info(PREFIX_REDIS + `Deleted session ${sessionID} for user “${email}”.`);
-  } else {
-    throw new APIError(404, `Session ${sessionID} not found.`);
-  }
+    /* c8 ignore next */ // Not reached in current tests since a user can only delete their current session
+  } else throw new APIError(404, `Session ${sessionID} not found.`);
 };
