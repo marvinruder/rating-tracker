@@ -2820,34 +2820,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@vitest/coverage-istanbul", [\
-        ["npm:0.32.0", {\
-          "packageLocation": "./.yarn/cache/@vitest-coverage-istanbul-npm-0.32.0-326066e58c-71ac3bf043.zip/node_modules/@vitest/coverage-istanbul/",\
-          "packageDependencies": [\
-            ["@vitest/coverage-istanbul", "npm:0.32.0"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:de61dda1fdc8c2e15645eceb5924b32afed20b1ee1ccde843e51821bfdf40c99c23e9e1db13c2f28ac01c98a08e94c4231443d16968abdef812d0f219d528205#npm:0.32.0", {\
-          "packageLocation": "./.yarn/__virtual__/@vitest-coverage-istanbul-virtual-6da263800e/0/cache/@vitest-coverage-istanbul-npm-0.32.0-326066e58c-71ac3bf043.zip/node_modules/@vitest/coverage-istanbul/",\
-          "packageDependencies": [\
-            ["@vitest/coverage-istanbul", "virtual:de61dda1fdc8c2e15645eceb5924b32afed20b1ee1ccde843e51821bfdf40c99c23e9e1db13c2f28ac01c98a08e94c4231443d16968abdef812d0f219d528205#npm:0.32.0"],\
-            ["@types/vitest", null],\
-            ["istanbul-lib-coverage", "npm:3.2.0"],\
-            ["istanbul-lib-instrument", "npm:5.2.1"],\
-            ["istanbul-lib-report", "npm:3.0.0"],\
-            ["istanbul-lib-source-maps", "npm:4.0.1"],\
-            ["istanbul-reports", "npm:3.1.5"],\
-            ["test-exclude", "npm:6.0.0"],\
-            ["vitest", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:0.32.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/vitest",\
-            "vitest"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@vitest/coverage-v8", [\
         ["npm:0.32.0", {\
           "packageLocation": "./.yarn/cache/@vitest-coverage-v8-npm-0.32.0-c621acd902-6f025b5a74.zip/node_modules/@vitest/coverage-v8/",\
@@ -6600,20 +6572,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["istanbul-lib-instrument", [\
-        ["npm:5.2.1", {\
-          "packageLocation": "./.yarn/cache/istanbul-lib-instrument-npm-5.2.1-1b3ad719a9-bf16f1803b.zip/node_modules/istanbul-lib-instrument/",\
-          "packageDependencies": [\
-            ["istanbul-lib-instrument", "npm:5.2.1"],\
-            ["@babel/core", "npm:7.21.8"],\
-            ["@babel/parser", "npm:7.21.8"],\
-            ["@istanbuljs/schema", "npm:0.1.3"],\
-            ["istanbul-lib-coverage", "npm:3.2.0"],\
-            ["semver", "npm:6.3.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["istanbul-lib-report", [\
         ["npm:3.0.0", {\
           "packageLocation": "./.yarn/cache/istanbul-lib-report-npm-3.0.0-660f97340a-3f29eb3f53.zip/node_modules/istanbul-lib-report/",\
@@ -6892,7 +6850,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/local-pkg-npm-0.4.3-de61dda1fd-7825aca531.zip/node_modules/local-pkg/",\
           "packageDependencies": [\
             ["local-pkg", "npm:0.4.3"],\
-            ["@vitest/coverage-istanbul", "virtual:de61dda1fdc8c2e15645eceb5924b32afed20b1ee1ccde843e51821bfdf40c99c23e9e1db13c2f28ac01c98a08e94c4231443d16968abdef812d0f219d528205#npm:0.32.0"],\
             ["vitest", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:0.32.0"]\
           ],\
           "linkType": "HARD"\
