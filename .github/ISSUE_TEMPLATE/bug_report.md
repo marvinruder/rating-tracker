@@ -20,15 +20,14 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Screenshots and Logs**
+If applicable, add screenshots and log snippets to help explain your problem.
 
 **Environment (please complete the following information):**
 
 - Version: [e.g. 2.0.1]
 - OS: [e.g. iOS]
-- Browser [e.g. chrome, safari]
-- Version [e.g. 22]
+- Browser [e.g. Chrome, Safari]
 
 **Additional context**
 Add any other context about the problem here.
