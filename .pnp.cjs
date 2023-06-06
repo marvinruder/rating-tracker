@@ -1664,7 +1664,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-async-errors", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:3.1.1"],\
             ["express-openapi-validator", "npm:5.0.4"],\
             ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.7.0"],\
-            ["glob", "npm:10.2.6"],\
+            ["glob", "npm:10.2.7"],\
             ["pino", "npm:8.14.1"],\
             ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.8"],\
@@ -5777,10 +5777,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["glob", [\
-        ["npm:10.2.6", {\
-          "packageLocation": "./.yarn/cache/glob-npm-10.2.6-dcc609070c-94c5964bfa.zip/node_modules/glob/",\
+        ["npm:10.2.7", {\
+          "packageLocation": "./.yarn/cache/glob-npm-10.2.7-25e89f4e5c-555205a746.zip/node_modules/glob/",\
           "packageDependencies": [\
-            ["glob", "npm:10.2.6"],\
+            ["glob", "npm:10.2.7"],\
             ["foreground-child", "npm:3.1.1"],\
             ["jackspeak", "npm:2.2.0"],\
             ["minimatch", "npm:9.0.1"],\
