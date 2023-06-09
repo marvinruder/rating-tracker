@@ -209,7 +209,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                   <Typography textOverflow="ellipsis" noWrap>
                     {props.isFavorite
                       ? `Remove “${props.stock.ticker}” from Favorites`
-                      : `Mark “${props.stock.ticker}” as favorite`}
+                      : `Mark “${props.stock.ticker}” as Favorite`}
                   </Typography>
                 </ListItemText>
               </MenuItem>
