@@ -7,7 +7,7 @@ import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import fs from "fs";
 
-const chunkList: string[] = ["@mui"];
+const chunkList: string[] = ["@mui", "StockRow|StockDetails"];
 
 const manualChunks = (id: string) => chunkList.find((chunk) => id.match(new RegExp(chunk)));
 
