@@ -31,6 +31,8 @@ export * from "./lib/stylebox/Style.js";
 
 export * from "./lib/Currency.js";
 
+export * from "./lib/ErrorMessages.js";
+
 export * from "./lib/MessageType.js";
 
 export * from "./lib/SortableAttribute.js";

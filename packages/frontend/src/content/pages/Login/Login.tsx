@@ -1,12 +1,11 @@
 import { Box, Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import axios from "axios";
-import { baseUrl } from "../../../router";
+import { UserContext, baseUrl } from "../../../router";
 import { SwitchSelector } from "../../../components/etc/SwitchSelector";
-import { useNavigate } from "react-router";
 import { useNotification } from "../../../contexts/NotificationContext";
 import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/commons";
 
@@ -16,13 +15,13 @@ import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/common
  * @returns {JSX.Element} The component.
  */
 export const LoginPage = (): JSX.Element => {
-  const navigate = useNavigate();
   const [action, setAction] = useState<"signIn" | "register">("signIn");
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [emailError, setEmailError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
   const { setNotification, setErrorNotification } = useNotification();
+  const { refetchUser } = useContext(UserContext);
 
   /**
    * Validates the email input field.
@@ -109,7 +108,7 @@ export const LoginPage = (): JSX.Element => {
               title: "Welcome back!",
               message: "Authentication successful",
             });
-            navigate("/");
+            refetchUser(); // After refetching, the user is redirected automatically
           } catch (e) {
             setErrorNotification(e, "processing authorization response");
           }

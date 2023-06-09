@@ -1,5 +1,5 @@
 import initSupertest, { CallbackHandler, Test } from "supertest";
-import { Stock, stockListEndpointPath } from "@rating-tracker/commons";
+import { Stock, UNAUTHORIZED_ERROR_MESSAGE, stockListEndpointPath } from "@rating-tracker/commons";
 import { TestFunction } from "vitest";
 
 /**
@@ -34,7 +34,7 @@ export const expectRouteToBePrivate = async (
   method = method ?? supertest.get;
   const res = await method(route);
   expect(res.status).toBe(401);
-  expect(res.body.message).toMatch("This endpoint is available to authenticated clients only. Please sign in.");
+  expect(res.body.message).toMatch(UNAUTHORIZED_ERROR_MESSAGE);
 };
 
 /**

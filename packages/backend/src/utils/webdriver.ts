@@ -114,7 +114,8 @@ export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvid
     );
     return `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
       process.env.DOMAIN
-    }/api${resourceEndpointPath}/${screenshotID}.`;
+      // Ensure the user is logged in before accessing the resource API endpoint.
+    }/login?redirect=${encodeURIComponent(`/api${resourceEndpointPath}/${screenshotID}`)}.`;
   } catch (e) {
     logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to take screenshot “${screenshotID}”: ${e}`));
     return "";

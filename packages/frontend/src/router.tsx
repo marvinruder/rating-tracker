@@ -1,10 +1,12 @@
 import { Suspense, lazy, useState, useEffect, createContext } from "react";
-import { Navigate } from "react-router-dom";
-import { RouteObject } from "react-router";
+import { Navigate, useSearchParams } from "react-router-dom";
+import { RouteObject, useLocation } from "react-router";
 import { SidebarLayout } from "./layouts";
 import { SuspenseLoader } from "./components/etc/SuspenseLoader";
 import axios from "axios";
 import { User, userEndpointPath } from "@rating-tracker/commons";
+import { NotificationProvider } from "./contexts/NotificationContext";
+import { NotificationSnackbar } from "./components/etc/NotificationSnackbar";
 
 /**
  * The base URL of the backend API server.
@@ -148,26 +150,44 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
       .then((response) => {
         setUser(new User(response.data));
       })
-      .catch(() => {})
+      // If unsuccessful, delete the user information so that the user is redirected to the login page
+      .catch(clearUser)
       .finally(() => setDone(true));
   }, [userToggle]);
 
+  const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+
+  /**
+   * The requested page, wrapped in a user and notification context.
+   *
+   * @returns {JSX.Element} The component.
+   */
+  const Page = (): JSX.Element => (
+    <UserContext.Provider value={{ user, clearUser, refetchUser }}>
+      <NotificationProvider>
+        {props.children}
+        <NotificationSnackbar snackbarProps={{ anchorOrigin: { horizontal: "center", vertical: "bottom" } }} />
+      </NotificationProvider>
+    </UserContext.Provider>
+  );
   return done ? (
     // If the request finished, evaluate the result
     user ? (
       // If the user is authenticated, display the page
       props.isLoginPage ? (
-        // If an authenticated user tries to access the login page, redirect them to the stock list
-        <Navigate to="/stock" replace />
+        // If an authenticated user tries to access the login page, redirect them to their desired page
+        // If no redirect was specified, redirect to the stock page
+        <Navigate to={searchParams.get("redirect") || "/stock"} replace />
       ) : (
-        // If any other page was requested, show it and provide the user context
-        <UserContext.Provider value={{ user, clearUser, refetchUser }}>{props.children}</UserContext.Provider>
+        <Page /> // If any other page was requested, show it
       )
     ) : // If the user is not authenticated, show them the login page
     props.isLoginPage ? (
-      props.children // If the login page was requested, show it
+      <Page /> // If the login page was requested, show it
     ) : (
-      <Navigate to="/login" replace /> // If any other page was requested, redirect to the login page
+      // If any other page was requested, redirect to the login page while retaining the requested path
+      <Navigate to={`/login?redirect=${encodeURIComponent(pathname)}`} replace />
     )
   ) : (
     <SuspenseLoader /> // While the request is still running, show a loading indicator
@@ -189,12 +209,24 @@ interface AuthWrapperProps {
 }
 
 /**
+ * A component that redirects to the current URL, triggering an HTTP request to the API instead of interpreting the
+ * API URL as a React route. This can happen if the `redirect` parameter contains a URL that is not a React route, but
+ * e.g. a screenshot resource URL.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const ForwardToAPI = (): JSX.Element => {
+  document.location = document.location;
+  return <></>;
+};
+
+/**
  * The different routes of the application.
  */
 const routes: RouteObject[] = [
   {
     // The home page redirects to the login page. If the user is already logged in, they will be redirected to the stock
-    // list.
+    // list from there.
     path: "/",
     element: <Navigate to="/login" replace />,
   },
@@ -255,6 +287,11 @@ const routes: RouteObject[] = [
         element: <Status500 />,
       },
     ],
+  },
+  {
+    // API requests are not handled by the router, but by the API client, so we need to trigger an HTTP request
+    path: "api*",
+    element: <ForwardToAPI />,
   },
   {
     // If no other route matches, display the 404 Not Found error page

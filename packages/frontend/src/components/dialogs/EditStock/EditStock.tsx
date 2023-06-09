@@ -29,8 +29,9 @@ import {
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
   fetchMorningstarEndpointPath,
+  SP_PREMIUM_STOCK_ERROR_MESSAGE,
 } from "@rating-tracker/commons";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { baseUrl } from "../../../router";
 import { useNotification } from "../../../contexts/NotificationContext";
@@ -247,16 +248,12 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
-              .catch((e) => {
-                if (
-                  (e.response?.data?.message as string | undefined)?.includes(
-                    "This stock’s ESG Score is available for S&P Premium subscribers only"
-                  )
-                ) {
+              .catch((e: AxiosError<{ message: string }>) => {
+                if (e.response?.data?.message?.includes(SP_PREMIUM_STOCK_ERROR_MESSAGE)) {
                   setNotification({
                     severity: "warning",
                     title: `Unable to fetch S&P Information for stock “${props.stock.name}” (${props.stock.ticker})`,
-                    message: "This stock’s ESG Score is available for S&P Premium subscribers only",
+                    message: e.response?.data?.message,
                   });
                 } else {
                   setErrorNotification(e, "fetching information from S&P");
