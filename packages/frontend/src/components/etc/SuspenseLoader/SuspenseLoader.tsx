@@ -27,7 +27,8 @@ export const SuspenseLoader = (): JSX.Element => {
       alignItems="center"
       justifyContent="center"
     >
-      <CircularProgress size={64} thickness={3} />
+      {/* Loading modules typically blocks the main thread, so we need to use disableShrink */}
+      <CircularProgress size={64} thickness={3} disableShrink />
     </Box>
   );
 };
