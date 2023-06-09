@@ -48,7 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["concurrently", "npm:8.1.0"],\
+            ["concurrently", "npm:8.2.0"],\
             ["eslint", "npm:8.42.0"],\
             ["prettier", "npm:2.8.8"],\
             ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"]\
@@ -1650,7 +1650,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "npm:3.1.6"],\
             ["axios", "npm:1.4.0"],\
             ["chalk", "npm:5.2.0"],\
-            ["concurrently", "npm:8.1.0"],\
+            ["concurrently", "npm:8.2.0"],\
             ["cookie-parser", "npm:1.4.6"],\
             ["cron", "npm:2.3.1"],\
             ["date-fns", "npm:2.30.0"],\
@@ -1765,7 +1765,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@rating-tracker/monorepo", "workspace:."],\
-            ["concurrently", "npm:8.1.0"],\
+            ["concurrently", "npm:8.2.0"],\
             ["eslint", "npm:8.42.0"],\
             ["prettier", "npm:2.8.8"],\
             ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"]\
@@ -4144,16 +4144,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["concurrently", [\
-        ["npm:8.1.0", {\
-          "packageLocation": "./.yarn/cache/concurrently-npm-8.1.0-3ea86b9cbf-f767345c6e.zip/node_modules/concurrently/",\
+        ["npm:8.2.0", {\
+          "packageLocation": "./.yarn/cache/concurrently-npm-8.2.0-be774a222e-eafe6a4d9b.zip/node_modules/concurrently/",\
           "packageDependencies": [\
-            ["concurrently", "npm:8.1.0"],\
+            ["concurrently", "npm:8.2.0"],\
             ["chalk", "npm:4.1.2"],\
             ["date-fns", "npm:2.30.0"],\
             ["lodash", "npm:4.17.21"],\
             ["rxjs", "npm:7.8.1"],\
             ["shell-quote", "npm:1.8.1"],\
-            ["spawn-command", "npm:0.0.2-1"],\
+            ["spawn-command", "npm:0.0.2"],\
             ["supports-color", "npm:8.1.1"],\
             ["tree-kill", "npm:1.2.2"],\
             ["yargs", "npm:17.7.2"]\
@@ -9151,10 +9151,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["spawn-command", [\
-        ["npm:0.0.2-1", {\
-          "packageLocation": "./.yarn/cache/spawn-command-npm-0.0.2-1-b5bde7f215-2cac851933.zip/node_modules/spawn-command/",\
+        ["npm:0.0.2", {\
+          "packageLocation": "./.yarn/cache/spawn-command-npm-0.0.2-014d4d5d9f-e35c5d2817.zip/node_modules/spawn-command/",\
           "packageDependencies": [\
-            ["spawn-command", "npm:0.0.2-1"]\
+            ["spawn-command", "npm:0.0.2"]\
           ],\
           "linkType": "HARD"\
         }]\
