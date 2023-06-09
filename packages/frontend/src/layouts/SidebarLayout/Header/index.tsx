@@ -18,7 +18,7 @@ import { HeaderUserbox } from "./Userbox";
 export const Header = (): JSX.Element => {
   const { toggleSidebar } = useContext(SidebarContext);
   const theme = useTheme();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   return (
     <Box
@@ -71,7 +71,7 @@ export const Header = (): JSX.Element => {
           sx={{
             mr: 1,
             my: 1,
-            display: location.pathname.split("/").filter((component) => component).length > 1 ? "inline-block" : "none",
+            display: pathname.split("/").filter((component) => component).length > 1 ? "inline-block" : "none",
           }}
         >
           <Tooltip arrow title="Go back">
@@ -79,7 +79,7 @@ export const Header = (): JSX.Element => {
               color="primary"
               disableRipple
               component={NavLink}
-              to={location.pathname.split("/").slice(0, -1).join("/")}
+              to={pathname.split("/").slice(0, -1).join("/")}
             >
               <ArrowBackIcon />
             </IconButton>

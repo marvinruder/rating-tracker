@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, Router as expressRouter } from "expres
 import APIError from "./apiError.js";
 export const router = expressRouter();
 import rateLimit from "express-rate-limit";
+import { FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
 
 /**
  * Rate limiter in use by authentication routes.
@@ -66,9 +67,7 @@ export default <This>(options: RouterOptions): any => {
           throw new APIError(
             // Use the correct error code and message based on whether a user is authenticated.
             res.locals.user ? 403 : 401,
-            res.locals.user
-              ? "The authenticated user account does not have the rights necessary to access this endpoint."
-              : "This endpoint is available to authenticated clients only. Please sign in."
+            res.locals.user ? FORBIDDEN_ERROR_MESSAGE : UNAUTHORIZED_ERROR_MESSAGE
           );
         }
       } catch (err) {

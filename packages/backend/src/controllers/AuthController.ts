@@ -11,6 +11,7 @@ import APIError from "../utils/apiError.js";
 import { createUser, readUserWithCredentials, updateUserWithCredentials, userExists } from "../db/tables/userTable.js";
 import { sessionTTLInSeconds } from "../redis/repositories/sessionRepository.js";
 import {
+  ALREADY_REGISTERED_ERROR_MESSAGE,
   GENERAL_ACCESS,
   optionalUserValuesNull,
   registerEndpointPath,
@@ -53,7 +54,7 @@ export class AuthController {
     // Users are required to provide an email address and a name to register.
     if (typeof email === "string" && typeof name === "string") {
       if (await userExists(email)) {
-        throw new APIError(403, "This email address is already registered. Please sign in.");
+        throw new APIError(403, ALREADY_REGISTERED_ERROR_MESSAGE);
       }
       // We generate the registration options and store the challenge for later verification.
       const options = SimpleWebAuthnServer.generateRegistrationOptions({
@@ -127,7 +128,7 @@ export class AuthController {
           })
         ))
       ) {
-        throw new APIError(403, "This email address is already registered. Please sign in.");
+        throw new APIError(403, ALREADY_REGISTERED_ERROR_MESSAGE);
       }
       if (verified) {
         res.status(201).end();

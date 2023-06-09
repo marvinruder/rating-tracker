@@ -1,4 +1,5 @@
 import {
+  ALREADY_REGISTERED_ERROR_MESSAGE,
   registerEndpointPath,
   signInEndpointPath,
   userEndpointPath,
@@ -147,7 +148,7 @@ tests.push({
   testFunction: async () => {
     const res = await supertest.get(`/api${registerEndpointPath}?email=jane.doe%40example.com&name=Jane%20Doe`);
     expect(res.status).toBe(403);
-    expect(res.body.message).toMatch("This email address is already registered. Please sign in.");
+    expect(res.body.message).toMatch(ALREADY_REGISTERED_ERROR_MESSAGE);
   },
 });
 

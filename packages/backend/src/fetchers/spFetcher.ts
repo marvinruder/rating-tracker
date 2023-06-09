@@ -4,7 +4,7 @@ import { FetcherWorkspace } from "../controllers/FetchController.js";
 import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver.js";
 import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
 import { formatDistance } from "date-fns";
-import { Stock } from "@rating-tracker/commons";
+import { SP_PREMIUM_STOCK_ERROR_MESSAGE, Stock } from "@rating-tracker/commons";
 import { By, until } from "selenium-webdriver";
 import chalk from "chalk";
 import * as signal from "../signal/signal.js";
@@ -73,16 +73,13 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
       ) {
         // If the content is available for premium subscribers only, we throw an error.
         // Sadly, we are not a premium subscriber :(
-        throw new Error("This stock’s ESG Score is available for S&P Premium subscribers only.");
+        throw new Error(SP_PREMIUM_STOCK_ERROR_MESSAGE);
       }
 
       spESGScore = +(await driver.findElement(By.id("esg-score")).getText());
 
       // Update the stock in the database.
-      await updateStock(stock.ticker, {
-        spLastFetch: new Date(),
-        spESGScore,
-      });
+      await updateStock(stock.ticker, { spLastFetch: new Date(), spESGScore });
       stocks.successful.push(await readStock(stock.ticker));
     } catch (e) {
       if (req.query.ticker) {

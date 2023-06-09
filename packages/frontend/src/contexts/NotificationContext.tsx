@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from "react";
 import { Notification } from "../types/Notification";
 import { AxiosError } from "axios";
+import { UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
+import { UserContext } from "../router";
 
 /**
  * An object provided by the notification context.
@@ -33,6 +35,8 @@ const NotificationContext = createContext<NotificationContextType>({} as Notific
  */
 export const NotificationProvider = (props: NotificationProviderProps): JSX.Element => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
+  const { clearUser } = useContext(UserContext);
+
   const setErrorNotification = (e: AxiosError<{ message: string }>, actionDescription: string) => {
     setNotification({
       severity: "error",
@@ -42,6 +46,8 @@ export const NotificationProvider = (props: NotificationProviderProps): JSX.Elem
           ? `Response Status Code ${e.response.status}: ${e.response.data.message}`
           : e.message ?? "No additional information available.",
     });
+    // If the user is no longer authenticated, clear the user information so that they are redirected to the login page
+    e.response?.status === 401 && e.response?.data?.message === UNAUTHORIZED_ERROR_MESSAGE && clearUser();
   };
 
   return (

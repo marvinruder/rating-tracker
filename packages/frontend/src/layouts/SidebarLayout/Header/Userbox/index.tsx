@@ -26,7 +26,7 @@ export const HeaderUserbox = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { setNotification, setErrorNotification } = useContext(NotificationContext);
-  const { user, clearUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   /**
    * Sign out the current user.
@@ -36,13 +36,12 @@ export const HeaderUserbox = (): JSX.Element => {
       // Delete the session
       await axios.delete(baseUrl + sessionEndpointPath);
       // This is only reached if signing out was successful
-      clearUser();
       setNotification({
         severity: "success",
         title: "See you next time!",
         message: "Signed out successfully",
       });
-      navigate("/login");
+      navigate("/");
     } catch (e) {
       setErrorNotification(e, "signing out");
     }
