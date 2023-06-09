@@ -5,21 +5,14 @@ import topLevelAwait from "vite-plugin-top-level-await";
 import wasm from "vite-plugin-wasm";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { dependencies } from "./package.json";
 import fs from "fs";
 
-const chunkList = ["@mui/material"];
+const chunkList: string[] = ["@mui"];
 
-const renderChunks = (deps: Record<string, string>) => {
-  const chunks = {};
-  Object.keys(deps).forEach((key) => {
-    if (chunkList.includes(key)) chunks[key] = [key];
-  });
-  return chunks;
-};
+const manualChunks = (id: string) => chunkList.find((chunk) => id.match(new RegExp(chunk)));
 
 const fontCSS = fs.readFileSync("src/fonts.css", "utf8");
-const switchSelectorCSS = fs.readFileSync("src/components/SwitchSelector/switchSelector.css", "utf8");
+const switchSelectorCSS = fs.readFileSync("src/components/etc/SwitchSelector/switchSelector.css", "utf8");
 const nprogressCSSPath = require.resolve("nprogress/nprogress.css");
 const nprogressCSS = fs.readFileSync(nprogressCSSPath, "utf8");
 
@@ -30,9 +23,7 @@ export default mergeConfig(
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
-          manualChunks: {
-            ...renderChunks(dependencies),
-          },
+          manualChunks,
         },
       },
     },

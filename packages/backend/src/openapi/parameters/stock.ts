@@ -3,7 +3,7 @@ import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 /**
  * The zero-based offset of a list. Used for pagination.
  */
-const offset: OpenAPIV3.ParameterObject = {
+export const offset: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "offset",
   description: "The zero-based offset of a list. Used for pagination.",
@@ -17,7 +17,7 @@ const offset: OpenAPIV3.ParameterObject = {
  * The number of entities to be returned. If omitted, all entities known to the service will be returned (maximum:
  * 10000).
  */
-const count: OpenAPIV3.ParameterObject = {
+export const count: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "count",
   description:
@@ -32,7 +32,7 @@ const count: OpenAPIV3.ParameterObject = {
 /**
  * A parameter by which a list is to be sorted.
  */
-const sortBy: OpenAPIV3.ParameterObject = {
+export const sortBy: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sortBy",
   description: "A parameter by which a list is to be sorted.",
@@ -44,7 +44,7 @@ const sortBy: OpenAPIV3.ParameterObject = {
 /**
  * Whether to sort descending.
  */
-const sortDesc: OpenAPIV3.ParameterObject = {
+export const sortDesc: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sortDesc",
   description: "Whether to sort descending.",
@@ -57,7 +57,7 @@ const sortDesc: OpenAPIV3.ParameterObject = {
 /**
  * The ticker symbol of a stock.
  */
-const ticker: OpenAPIV3.ParameterObject = {
+export const ticker: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "ticker",
   description: "The ticker symbol of a stock.",
@@ -70,7 +70,7 @@ const ticker: OpenAPIV3.ParameterObject = {
 /**
  * The name of a stock.
  */
-const name: OpenAPIV3.ParameterObject = {
+export const name: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "name",
   description: "The name of a stock",
@@ -83,7 +83,7 @@ const name: OpenAPIV3.ParameterObject = {
 /**
  * The ISIN of a stock.
  */
-const isin: OpenAPIV3.ParameterObject = {
+export const isin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "isin",
   description: "The ISIN of a stock.",
@@ -96,7 +96,7 @@ const isin: OpenAPIV3.ParameterObject = {
 /**
  * A country a stock is based in.
  */
-const country: OpenAPIV3.ParameterObject = {
+export const country: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "country",
   description: "A country a stock is based in.",
@@ -112,7 +112,7 @@ const country: OpenAPIV3.ParameterObject = {
 /**
  * An industry a stock operates in.
  */
-const industry: OpenAPIV3.ParameterObject = {
+export const industry: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "industry",
   description: "An industry a stock operates in.",
@@ -128,7 +128,7 @@ const industry: OpenAPIV3.ParameterObject = {
 /**
  * A stock size.
  */
-const size: OpenAPIV3.ParameterObject = {
+export const size: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "size",
   description: "A stock size.",
@@ -140,7 +140,7 @@ const size: OpenAPIV3.ParameterObject = {
 /**
  * A stock style.
  */
-const style: OpenAPIV3.ParameterObject = {
+export const style: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "style",
   description: "A stock style.",
@@ -152,7 +152,7 @@ const style: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by Morningstar.
  */
-const morningstarID: OpenAPIV3.ParameterObject = {
+export const morningstarID: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "morningstarID",
   description: "The identifier of a stock used by Morningstar",
@@ -165,7 +165,7 @@ const morningstarID: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by Market Screener.
  */
-const marketScreenerID: OpenAPIV3.ParameterObject = {
+export const marketScreenerID: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "marketScreenerID",
   description: "The identifier of a stock used by Market Screener",
@@ -178,7 +178,7 @@ const marketScreenerID: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by MSCI.
  */
-const msciID: OpenAPIV3.ParameterObject = {
+export const msciID: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciID",
   description: "The identifier of a stock used by MSCI",
@@ -191,7 +191,7 @@ const msciID: OpenAPIV3.ParameterObject = {
 /**
  * The Reuters Instrument Code of a stock used by Refintiv.
  */
-const ric: OpenAPIV3.ParameterObject = {
+export const ric: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "ric",
   description: "The Reuters Instrument Code of a stock used by Refintiv",
@@ -204,7 +204,7 @@ const ric: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by Standard & Poor’s.
  */
-const spID: OpenAPIV3.ParameterObject = {
+export const spID: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "spID",
   description: "The identifier of a stock used by Standard & Poor’s",
@@ -218,7 +218,7 @@ const spID: OpenAPIV3.ParameterObject = {
 /**
  * The identifier of a stock used by Sustainalytics.
  */
-const sustainalyticsID: OpenAPIV3.ParameterObject = {
+export const sustainalyticsID: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sustainalyticsID",
   description: "The identifier of a stock used by Sustainalytics",
@@ -231,7 +231,7 @@ const sustainalyticsID: OpenAPIV3.ParameterObject = {
 /**
  * The minimum star rating of a stock.
  */
-const starRatingMin: OpenAPIV3.ParameterObject = {
+export const starRatingMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "starRatingMin",
   description: "The minimum star rating of a stock.",
@@ -244,7 +244,7 @@ const starRatingMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum star rating of a stock.
  */
-const starRatingMax: OpenAPIV3.ParameterObject = {
+export const starRatingMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "starRatingMax",
   description: "The maximum star rating of a stock.",
@@ -257,7 +257,7 @@ const starRatingMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum dividend yield of a stock.
  */
-const dividendYieldPercentMin: OpenAPIV3.ParameterObject = {
+export const dividendYieldPercentMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "dividendYieldPercentMin",
   description: "The minimum dividend yield of a stock.",
@@ -270,7 +270,7 @@ const dividendYieldPercentMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum dividend yield of a stock.
  */
-const dividendYieldPercentMax: OpenAPIV3.ParameterObject = {
+export const dividendYieldPercentMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "dividendYieldPercentMax",
   description: "The maximum dividend yield of a stock.",
@@ -283,7 +283,7 @@ const dividendYieldPercentMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum price-earning ratio of a stock.
  */
-const priceEarningRatioMin: OpenAPIV3.ParameterObject = {
+export const priceEarningRatioMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "priceEarningRatioMin",
   description: "The minimum price-earning ratio of a stock.",
@@ -296,7 +296,7 @@ const priceEarningRatioMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum price-earning ratio of a stock.
  */
-const priceEarningRatioMax: OpenAPIV3.ParameterObject = {
+export const priceEarningRatioMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "priceEarningRatioMax",
   description: "The maximum price-earning ratio of a stock.",
@@ -309,7 +309,7 @@ const priceEarningRatioMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum difference between a stock’s fair value and its price.
  */
-const morningstarFairValueDiffMin: OpenAPIV3.ParameterObject = {
+export const morningstarFairValueDiffMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "morningstarFairValueDiffMin",
   description: "The minimum difference between a stock’s fair value and its price.",
@@ -322,7 +322,7 @@ const morningstarFairValueDiffMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum difference between a stock’s fair value and its price.
  */
-const morningstarFairValueDiffMax: OpenAPIV3.ParameterObject = {
+export const morningstarFairValueDiffMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "morningstarFairValueDiffMax",
   description: "The maximum difference between a stock’s fair value and its price.",
@@ -335,7 +335,7 @@ const morningstarFairValueDiffMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum analyst consensus of a stock.
  */
-const analystConsensusMin: OpenAPIV3.ParameterObject = {
+export const analystConsensusMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystConsensusMin",
   description: "The minimum analyst consensus of a stock.",
@@ -348,7 +348,7 @@ const analystConsensusMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum analyst consensus of a stock.
  */
-const analystConsensusMax: OpenAPIV3.ParameterObject = {
+export const analystConsensusMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystConsensusMax",
   description: "The maximum analyst consensus of a stock.",
@@ -361,7 +361,7 @@ const analystConsensusMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum difference between a stock’s analyst target price and its price.
  */
-const analystTargetDiffMin: OpenAPIV3.ParameterObject = {
+export const analystTargetDiffMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystTargetDiffMin",
   description: "The minimum difference between a stock’s analyst target price and its price.",
@@ -374,7 +374,7 @@ const analystTargetDiffMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum difference between a stock’s analyst target price and its price.
  */
-const analystTargetDiffMax: OpenAPIV3.ParameterObject = {
+export const analystTargetDiffMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystTargetDiffMax",
   description: "The maximum difference between a stock’s analyst target price and its price.",
@@ -387,7 +387,7 @@ const analystTargetDiffMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum number of analysts that cover a stock.
  */
-const analystCountMin: OpenAPIV3.ParameterObject = {
+export const analystCountMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystCountMin",
   description: "The minimum number of analysts that cover a stock.",
@@ -400,7 +400,7 @@ const analystCountMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum number of analysts that cover a stock.
  */
-const analystCountMax: OpenAPIV3.ParameterObject = {
+export const analystCountMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "analystCountMax",
   description: "The maximum number of analysts that cover a stock.",
@@ -413,7 +413,7 @@ const analystCountMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum MSCI ESG rating of a stock.
  */
-const msciESGRatingMin: OpenAPIV3.ParameterObject = {
+export const msciESGRatingMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciESGRatingMin",
   description: "The minimum MSCI ESG rating of a stock.",
@@ -425,7 +425,7 @@ const msciESGRatingMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum MSCI ESG rating of a stock.
  */
-const msciESGRatingMax: OpenAPIV3.ParameterObject = {
+export const msciESGRatingMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciESGRatingMax",
   description: "The maximum MSCI ESG rating of a stock.",
@@ -437,7 +437,7 @@ const msciESGRatingMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum MSCI Implied Temperature Rise of a stock.
  */
-const msciTemperatureMin: OpenAPIV3.ParameterObject = {
+export const msciTemperatureMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciTemperatureMin",
   description: "The minimum MSCI Implied Temperature Rise of a stock.",
@@ -450,7 +450,7 @@ const msciTemperatureMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum MSCI Implied Temperature Rise of a stock.
  */
-const msciTemperatureMax: OpenAPIV3.ParameterObject = {
+export const msciTemperatureMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "msciTemperatureMax",
   description: "The maximum MSCI Implied Temperature Rise of a stock.",
@@ -463,7 +463,7 @@ const msciTemperatureMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum Refinitiv ESG score of a stock.
  */
-const refinitivESGScoreMin: OpenAPIV3.ParameterObject = {
+export const refinitivESGScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "refinitivESGScoreMin",
   description: "The minimum Refinitiv ESG score of a stock.",
@@ -476,7 +476,7 @@ const refinitivESGScoreMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum Refinitiv ESG score of a stock.
  */
-const refinitivESGScoreMax: OpenAPIV3.ParameterObject = {
+export const refinitivESGScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "refinitivESGScoreMax",
   description: "The maximum Refinitiv ESG score of a stock.",
@@ -486,7 +486,7 @@ const refinitivESGScoreMax: OpenAPIV3.ParameterObject = {
   },
 };
 
-const refinitivEmissionsMin: OpenAPIV3.ParameterObject = {
+export const refinitivEmissionsMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "refinitivEmissionsMin",
   description: "The minimum Refinitiv Emissions rating of a stock.",
@@ -499,7 +499,7 @@ const refinitivEmissionsMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum Refinitiv Emissions rating of a stock.
  */
-const refinitivEmissionsMax: OpenAPIV3.ParameterObject = {
+export const refinitivEmissionsMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "refinitivEmissionsMax",
   description: "The maximum Refinitiv Emissions rating of a stock.",
@@ -512,7 +512,7 @@ const refinitivEmissionsMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum S&P ESG score of a stock.
  */
-const spESGScoreMin: OpenAPIV3.ParameterObject = {
+export const spESGScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "spESGScoreMin",
   description: "The minimum S&P ESG score of a stock.",
@@ -525,7 +525,7 @@ const spESGScoreMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum S&P ESG score of a stock.
  */
-const spESGScoreMax: OpenAPIV3.ParameterObject = {
+export const spESGScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "spESGScoreMax",
   description: "The maximum S&P ESG score of a stock.",
@@ -538,7 +538,7 @@ const spESGScoreMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum Sustainalytics ESG risk rating of a stock.
  */
-const sustainalyticsESGRiskMin: OpenAPIV3.ParameterObject = {
+export const sustainalyticsESGRiskMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sustainalyticsESGRiskMin",
   description: "The minimum Sustainalytics ESG risk rating of a stock.",
@@ -551,7 +551,7 @@ const sustainalyticsESGRiskMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum Sustainalytics ESG risk rating of a stock.
  */
-const sustainalyticsESGRiskMax: OpenAPIV3.ParameterObject = {
+export const sustainalyticsESGRiskMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "sustainalyticsESGRiskMax",
   description: "The maximum Sustainalytics ESG risk rating of a stock.",
@@ -564,7 +564,7 @@ const sustainalyticsESGRiskMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum financial score of a stock.
  */
-const financialScoreMin: OpenAPIV3.ParameterObject = {
+export const financialScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "financialScoreMin",
   description: "The minimum financial score of a stock.",
@@ -577,7 +577,7 @@ const financialScoreMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum financial score of a stock.
  */
-const financialScoreMax: OpenAPIV3.ParameterObject = {
+export const financialScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "financialScoreMax",
   description: "The maximum financial score of a stock.",
@@ -590,7 +590,7 @@ const financialScoreMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum ESG score of a stock.
  */
-const esgScoreMin: OpenAPIV3.ParameterObject = {
+export const esgScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "esgScoreMin",
   description: "The minimum ESG score of a stock.",
@@ -603,7 +603,7 @@ const esgScoreMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum ESG score of a stock.
  */
-const esgScoreMax: OpenAPIV3.ParameterObject = {
+export const esgScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "esgScoreMax",
   description: "The maximum ESG score of a stock.",
@@ -616,7 +616,7 @@ const esgScoreMax: OpenAPIV3.ParameterObject = {
 /**
  * The minimum total score of a stock.
  */
-const totalScoreMin: OpenAPIV3.ParameterObject = {
+export const totalScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "totalScoreMin",
   description: "The minimum total score of a stock.",
@@ -629,7 +629,7 @@ const totalScoreMin: OpenAPIV3.ParameterObject = {
 /**
  * The maximum total score of a stock.
  */
-const totalScoreMax: OpenAPIV3.ParameterObject = {
+export const totalScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "totalScoreMax",
   description: "The maximum total score of a stock.",
@@ -637,56 +637,4 @@ const totalScoreMax: OpenAPIV3.ParameterObject = {
     type: "number",
     example: 95,
   },
-};
-
-export {
-  offset,
-  count,
-  sortBy,
-  sortDesc,
-  ticker,
-  name,
-  isin,
-  country,
-  industry,
-  size,
-  style,
-  morningstarID,
-  marketScreenerID,
-  msciID,
-  ric,
-  spID,
-  sustainalyticsID,
-  starRatingMin,
-  starRatingMax,
-  dividendYieldPercentMin,
-  dividendYieldPercentMax,
-  priceEarningRatioMin,
-  priceEarningRatioMax,
-  morningstarFairValueDiffMin,
-  morningstarFairValueDiffMax,
-  analystConsensusMin,
-  analystConsensusMax,
-  analystCountMin,
-  analystCountMax,
-  analystTargetDiffMin,
-  analystTargetDiffMax,
-  msciESGRatingMin,
-  msciESGRatingMax,
-  msciTemperatureMin,
-  msciTemperatureMax,
-  refinitivESGScoreMin,
-  refinitivESGScoreMax,
-  refinitivEmissionsMin,
-  refinitivEmissionsMax,
-  spESGScoreMin,
-  spESGScoreMax,
-  sustainalyticsESGRiskMin,
-  sustainalyticsESGRiskMax,
-  financialScoreMin,
-  financialScoreMax,
-  esgScoreMin,
-  esgScoreMax,
-  totalScoreMin,
-  totalScoreMax,
 };

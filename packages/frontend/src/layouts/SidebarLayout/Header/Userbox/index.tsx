@@ -19,13 +19,13 @@ import { UserContext } from "../../../../router";
 import axios from "axios";
 import { baseUrl } from "../../../../router";
 import { useNavigate } from "react-router";
-import ProfileSettings from "../../../../components/ProfileSettings";
+import { ProfileSettings } from "./ProfileSettings";
 import { sessionEndpointPath } from "@rating-tracker/commons";
 
-const HeaderUserbox = (): JSX.Element => {
+export const HeaderUserbox = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { setNotification } = useContext(NotificationContext);
+  const { setNotification, setErrorNotification } = useContext(NotificationContext);
   const { user, clearUser } = useContext(UserContext);
 
   /**
@@ -44,16 +44,10 @@ const HeaderUserbox = (): JSX.Element => {
       });
       navigate("/login");
     } catch (e) {
-      setNotification({
-        severity: "error",
-        title: "Error while signing out",
-        message:
-          e.response?.status && e.response?.data?.message
-            ? `${e.response.status}: ${e.response.data.message}`
-            : e.message ?? "No additional information available.",
-      });
+      setErrorNotification(e, "signing out");
     }
   };
+
   return (
     <Box sx={{ my: 1 }}>
       <Tooltip arrow title="Open Profile Settings">
@@ -95,5 +89,3 @@ const HeaderUserbox = (): JSX.Element => {
     </Box>
   );
 };
-
-export default HeaderUserbox;

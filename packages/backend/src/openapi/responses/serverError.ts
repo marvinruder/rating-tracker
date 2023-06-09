@@ -3,7 +3,7 @@ import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 /**
  * A response with a 500 Internal Server Error status code and an Error object body.
  */
-const internalServerError: OpenAPIV3.ResponseObject = {
+export const internalServerError: OpenAPIV3.ResponseObject = {
   description: "Internal Server Error",
   content: {
     "application/json": {
@@ -17,7 +17,7 @@ const internalServerError: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 501 Not Implemented status code and an Error object body.
  */
-const notImplemented: OpenAPIV3.ResponseObject = {
+export const notImplemented: OpenAPIV3.ResponseObject = {
   description: "Not Implemented",
   content: {
     "application/json": {
@@ -31,7 +31,7 @@ const notImplemented: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 502 Bad Gateway status code and an Error object body.
  */
-const badGateway: OpenAPIV3.ResponseObject = {
+export const badGateway: OpenAPIV3.ResponseObject = {
   description: "Bad Gateway",
   content: {
     "application/json": {
@@ -41,5 +41,3 @@ const badGateway: OpenAPIV3.ResponseObject = {
     },
   },
 };
-
-export { internalServerError, notImplemented, badGateway };

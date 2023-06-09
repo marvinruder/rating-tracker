@@ -1,17 +1,15 @@
 import { Box } from "@mui/material";
-import HeaderSearch from "./Search";
+import { HeaderSearch } from "./Search";
 
 /**
  * Renders the buttons in the header.
  *
  * @returns {JSX.Element} The component.
  */
-const HeaderButtons = (): JSX.Element => {
+export const HeaderButtons = (): JSX.Element => {
   return (
     <Box sx={{ ml: 1, my: 1 }}>
       <HeaderSearch />
     </Box>
   );
 };
-
-export default HeaderButtons;

@@ -1,11 +1,10 @@
 import { Suspense, lazy, useState, useEffect, createContext } from "react";
 import { Navigate } from "react-router-dom";
 import { RouteObject } from "react-router";
-
-import SidebarLayout from "./layouts/SidebarLayout";
-
-import SuspenseLoader from "./components/SuspenseLoader";
+import { SidebarLayout } from "./layouts";
+import { SuspenseLoader } from "./components/etc/SuspenseLoader";
 import axios from "axios";
+import { User, userEndpointPath } from "@rating-tracker/commons";
 
 /**
  * The base URL of the backend API server.
@@ -43,7 +42,7 @@ const loader = (Component: React.LazyExoticComponent<React.ComponentType<any>>) 
  * The login application.
  * Since it is displayed first, we load it right away and do not use a suspense loader.
  */
-import LoginApp from "./content/applications/Users/Login";
+import LoginPage from "./content/pages";
 
 // Modules
 
@@ -53,7 +52,7 @@ import LoginApp from "./content/applications/Users/Login";
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const StockList = loader(lazy(() => import("./content/modules/StockList")));
+const StockList = loader(lazy(() => import("./content/modules/StockList/StockList")));
 
 /**
  * The user management module, loaded only when needed.
@@ -61,7 +60,7 @@ const StockList = loader(lazy(() => import("./content/modules/StockList")));
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const UserManagement = loader(lazy(() => import("./content/modules/UserManagement")));
+const UserManagement = loader(lazy(() => import("./content/modules/UserManagement/UserManagement")));
 
 /**
  * The stock module, loaded only when needed.
@@ -69,7 +68,7 @@ const UserManagement = loader(lazy(() => import("./content/modules/UserManagemen
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const Stock = loader(lazy(() => import("./content/modules/Stock")));
+const Stock = loader(lazy(() => import("./content/modules/Stock/Stock")));
 
 /**
  * The watchlist summary module, loaded only when needed.
@@ -77,7 +76,7 @@ const Stock = loader(lazy(() => import("./content/modules/Stock")));
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSummary")));
+const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSummary/WatchlistSummary")));
 
 /**
  * The watchlist module, loaded only when needed.
@@ -85,20 +84,13 @@ const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSu
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const Watchlist = loader(lazy(() => import("./content/modules/Watchlist")));
+const Watchlist = loader(lazy(() => import("./content/modules/Watchlist/Watchlist")));
 
 /**
- * The 404 Not Found error page.
- * Since it is a fairly small component, we load it right away and do not use a suspense loader.
+ * The 404 Not Found and 500 Internal Server Error error pages.
+ * Since those are fairly small components, we load them right away and do not use a suspense loader.
  */
-import Status404 from "./content/pages/Status/Status404";
-
-/**
- * The 500 Internal Server Error page.
- * Since it is a fairly small component, we load it right away and do not use a suspense loader.
- */
-import Status500 from "./content/pages/Status/Status500";
-import { User, userEndpointPath } from "@rating-tracker/commons";
+import { Status404, Status500 } from "./content/pages/Status";
 
 /**
  * An object provided by the user context.
@@ -243,7 +235,7 @@ const routes: RouteObject[] = [
     path: "login",
     element: (
       <AuthWrapper isLoginPage>
-        <LoginApp />
+        <LoginPage />
       </AuthWrapper>
     ),
   },

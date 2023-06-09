@@ -4,7 +4,7 @@ import { REGEX_PHONE_NUMBER } from "@rating-tracker/commons";
 /**
  * The email address of a user, used as their ID
  */
-const email: OpenAPIV3.ParameterObject = {
+export const email: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "email",
   description: "The email address of a user, used as their ID",
@@ -18,7 +18,7 @@ const email: OpenAPIV3.ParameterObject = {
 /**
  * The common name of a user
  */
-const name: OpenAPIV3.ParameterObject = {
+export const name: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "name",
   description: "The common name of a user",
@@ -31,7 +31,7 @@ const name: OpenAPIV3.ParameterObject = {
 /**
  * The phone number of a user, used for Signal messages
  */
-const phone: OpenAPIV3.ParameterObject = {
+export const phone: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "phone",
   description: "The phone number of a user, used for Signal messages",
@@ -45,7 +45,7 @@ const phone: OpenAPIV3.ParameterObject = {
 /**
  * The access rights of the user, encoded as a bitfield
  */
-const accessRights: OpenAPIV3.ParameterObject = {
+export const accessRights: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "accessRights",
   description: "The access rights of the user, encoded as a bitfield",
@@ -58,7 +58,7 @@ const accessRights: OpenAPIV3.ParameterObject = {
 /**
  * The subscriptions of the user to different types of messages, encoded as a bitfield
  */
-const subscriptions: OpenAPIV3.ParameterObject = {
+export const subscriptions: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "subscriptions",
   description: "The subscriptions of the user to different types of messages, encoded as a bitfield",
@@ -67,5 +67,3 @@ const subscriptions: OpenAPIV3.ParameterObject = {
     example: 1,
   },
 };
-
-export { email, name, phone, accessRights, subscriptions };

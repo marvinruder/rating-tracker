@@ -4,7 +4,7 @@ import * as chrome from "selenium-webdriver/chrome.js";
 import APIError from "./apiError.js";
 import logger, { PREFIX_SELENIUM } from "./logger.js";
 import chalk from "chalk";
-import { Stock } from "@rating-tracker/commons";
+import { Stock, resourceEndpointPath } from "@rating-tracker/commons";
 import { createResource } from "../redis/repositories/resourceRepository.js";
 import axios from "axios";
 
@@ -114,7 +114,7 @@ export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvid
     );
     return `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
       process.env.DOMAIN
-    }/api/resource/${screenshotID}.`;
+    }/api${resourceEndpointPath}/${screenshotID}.`;
   } catch (e) {
     logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to take screenshot “${screenshotID}”: ${e}`));
     return "";

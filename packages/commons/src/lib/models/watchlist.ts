@@ -1,6 +1,11 @@
 import { Stock } from "./stock.js";
 
 /**
+ * The name of the dedicated Favorites watchlist.
+ */
+export const FAVORITES_NAME = "Favorites";
+
+/**
  * A named list of stocks of a certain interest to a user.
  */
 export type Watchlist = {

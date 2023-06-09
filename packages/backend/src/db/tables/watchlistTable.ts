@@ -1,13 +1,8 @@
 import APIError from "../../utils/apiError.js";
 import logger, { PREFIX_POSTGRES } from "../../utils/logger.js";
-import { Watchlist, WatchlistSummary } from "@rating-tracker/commons";
+import { FAVORITES_NAME, Watchlist, WatchlistSummary } from "@rating-tracker/commons";
 import client from "../client.js";
 import { readStock } from "./stockTable.js";
-
-/**
- * The name of the dedicated Favorites watchlist.
- */
-export const FAVORITES_NAME = "Favorites";
 
 /**
  * Check whether the given user is the owner of the specified watchlist.
