@@ -4,7 +4,7 @@ import * as stock from "./stock.js";
 /**
  * The ticker symbol of a stock.
  */
-const id: OpenAPIV3.ParameterObject = {
+export const id: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "id",
   description: "A unique identifier of the watchlist.",
@@ -17,7 +17,7 @@ const id: OpenAPIV3.ParameterObject = {
 /**
  * The name of a watchlist.
  */
-const name: OpenAPIV3.ParameterObject = {
+export const name: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "name",
   description: "The name of the watchlist.",
@@ -30,7 +30,7 @@ const name: OpenAPIV3.ParameterObject = {
 /**
  * Whether the user subscribed to updates for the watchlist’s stocks.
  */
-const subscribed: OpenAPIV3.ParameterObject = {
+export const subscribed: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "subscribed",
   description: "Whether the user subscribed to updates for the watchlist’s stocks.",
@@ -43,7 +43,7 @@ const subscribed: OpenAPIV3.ParameterObject = {
 /**
  * A list of stocks to be added to the watchlist.
  */
-const stocksToAdd: OpenAPIV3.ParameterObject = {
+export const stocksToAdd: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "stocksToAdd",
   description: "A list of stocks to be added to the watchlist.",
@@ -57,7 +57,7 @@ const stocksToAdd: OpenAPIV3.ParameterObject = {
 /**
  * A list of stocks to be removed from the watchlist.
  */
-const stocksToRemove: OpenAPIV3.ParameterObject = {
+export const stocksToRemove: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "stocksToRemove",
   description: "A list of stocks to be removed from the watchlist.",
@@ -67,5 +67,3 @@ const stocksToRemove: OpenAPIV3.ParameterObject = {
     items: stock.ticker.schema,
   },
 };
-
-export { id, name, subscribed, stocksToAdd, stocksToRemove };

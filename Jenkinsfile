@@ -15,7 +15,9 @@ node {
             PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
             sh """
-            cat .yarnrc-ci-add.yml >> .yarnrc.yml
+            echo \"globalFolder: /workdir/global\" >> .yarnrc.yml
+            echo \"preferAggregateCacheInfo: true\" >> .yarnrc.yml
+            echo \"enableGlobalCache: true\" >> .yarnrc.yml
             sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
             """
         }
@@ -31,7 +33,7 @@ node {
 
             wasm: {
                 stage ('Compile WebAssembly utils') {
-                    docker.build("$imagename:build-$GIT_COMMIT_HASH-wasm", "-f Dockerfile-wasm .")
+                    docker.build("$imagename:build-$GIT_COMMIT_HASH-wasm", "-f docker/Dockerfile-wasm .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
                     docker cp \$id:/workdir/pkg/. ./packages/wasm
@@ -45,7 +47,7 @@ node {
             dep: {
                 stage ('Install dependencies') {
                     sh "mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global ."
-                    docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f Dockerfile-yarn .")
+                    docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f docker/Dockerfile-yarn .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
                     docker cp \$id:/workdir/.yarn/. ./.yarn
@@ -64,7 +66,7 @@ node {
 
             test: {
                 stage ('Run Tests') {
-                    docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f Dockerfile-test .")
+                    docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f docker/Dockerfile-test .")
                     sh """
                     id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
                     mkdir -p coverage/{backend,commons,frontend}
@@ -79,7 +81,7 @@ node {
 
             build: {
                 stage ('Build Docker Image') {
-                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "--build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
+                    image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "-f docker/Dockerfile --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
                 }
             }
 
@@ -117,9 +119,9 @@ node {
                             def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/' | tr -d '\\n'; fi\"", returnStdout: true)
                             def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/' | tr -d '\\n'; fi\"", returnStdout: true)
                             if (MAJOR) {
-                                sh "docker builder build --builder builder-$GIT_COMMIT_HASH --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest ."
+                                sh "docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest ."
                             } else {
-                                sh "docker builder build --builder builder-$GIT_COMMIT_HASH --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION ."
+                                sh "docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION ."
                             }
                             sh """
                             docker builder rm builder-$GIT_COMMIT_HASH

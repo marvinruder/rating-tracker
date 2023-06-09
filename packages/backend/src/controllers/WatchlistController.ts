@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
-import { GENERAL_ACCESS, watchlistEndpointPath, watchlistSummaryEndpointPath } from "@rating-tracker/commons";
-import Router from "../utils/router.js";
 import {
   FAVORITES_NAME,
+  GENERAL_ACCESS,
+  watchlistEndpointPath,
+  watchlistSummaryEndpointPath,
+} from "@rating-tracker/commons";
+import Router from "../utils/router.js";
+import {
   createWatchlist,
   deleteWatchlist,
   readAllWatchlists,

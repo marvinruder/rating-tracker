@@ -3,9 +3,9 @@ import router from "./router";
 
 import { CssBaseline } from "@mui/material";
 import ThemeProvider from "./theme/ThemeProvider";
-import ParticleBackground from "./components/ParticleBackground";
+import { NotificationSnackbar } from "./components/etc/NotificationSnackbar";
+import { ParticleBackground } from "./components/etc/ParticleBackground";
 import { NotificationProvider } from "./contexts/NotificationContext";
-import NotificationSnackbar from "./components/NotificationSnackbar";
 
 /**
  * The Rating Tracker Application.
@@ -23,11 +23,7 @@ const App = (): JSX.Element => {
       <CssBaseline />
       <NotificationProvider>
         {content}
-        <NotificationSnackbar
-          snackbarProps={{
-            anchorOrigin: { horizontal: "center", vertical: "bottom" },
-          }}
-        />
+        <NotificationSnackbar snackbarProps={{ anchorOrigin: { horizontal: "center", vertical: "bottom" } }} />
       </NotificationProvider>
       <ParticleBackground />
     </ThemeProvider>

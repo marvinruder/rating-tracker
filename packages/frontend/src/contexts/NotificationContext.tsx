@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState } from "react";
 import { Notification } from "../types/Notification";
+import { AxiosError } from "axios";
 
 /**
  * An object provided by the notification context.
  */
-export type NotificationContextType = {
+type NotificationContextType = {
   /**
    * The notification to be displayed.
    */
@@ -13,6 +14,10 @@ export type NotificationContextType = {
    * A method to set the notification to be displayed.
    */
   setNotification: React.Dispatch<React.SetStateAction<Notification | undefined>>;
+  /**
+   * A method to set an error notification to be displayed after an API request failed.
+   */
+  setErrorNotification: (e: unknown, actionDescription: string) => void; // rename to …OrClearSession in #295
 };
 
 /**
@@ -28,12 +33,23 @@ const NotificationContext = createContext<NotificationContextType>({} as Notific
  */
 export const NotificationProvider = (props: NotificationProviderProps): JSX.Element => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
+  const setErrorNotification = (e: AxiosError<{ message: string }>, actionDescription: string) => {
+    setNotification({
+      severity: "error",
+      title: `Error while ${actionDescription}`,
+      message:
+        e.response?.status && e.response?.data?.message
+          ? `Response Status Code ${e.response.status}: ${e.response.data.message}`
+          : e.message ?? "No additional information available.",
+    });
+  };
 
   return (
     <NotificationContext.Provider
       value={{
         notification,
         setNotification,
+        setErrorNotification,
       }}
     >
       {props.children}

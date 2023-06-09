@@ -1,48 +1,27 @@
 import { useContext } from "react";
 
-import { Box, alpha, lighten, IconButton, Tooltip, styled, useTheme, Divider } from "@mui/material";
+import { Box, alpha, lighten, IconButton, Tooltip, useTheme, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
 import { NavLink, useLocation } from "react-router-dom";
 
 import SidebarContext from "../../../contexts/SidebarContext";
 
-import HeaderButtons from "./Buttons";
-import HeaderUserbox from "./Userbox";
-
-/**
- * A wrapper for the header component.
- */
-const HeaderWrapper = styled(Box)(
-  ({ theme }) => `
-        // height: ${theme.header.height};
-        color: ${theme.header.textColor};
-        right: 0;
-        z-index: 6;
-        background-color: ${alpha(theme.header.background, 0.95)};
-        backdrop-filter: blur(3px);
-        position: fixed;
-        justify-content: space-between;
-        width: 100%;
-        @media (min-width: ${theme.breakpoints.values.lg}px) {
-            left: ${theme.sidebar.width};
-            width: auto;
-        }
-`
-);
+import { HeaderButtons } from "./Buttons";
+import { HeaderUserbox } from "./Userbox";
 
 /**
  * The header of the sidebar layout.
  *
  * @returns {JSX.Element} The component.
  */
-const Header = (): JSX.Element => {
+export const Header = (): JSX.Element => {
   const { toggleSidebar } = useContext(SidebarContext);
   const theme = useTheme();
   const location = useLocation();
 
   return (
-    <HeaderWrapper
+    <Box
       display="flex"
       alignItems="center"
       sx={{
@@ -57,6 +36,18 @@ const Header = (): JSX.Element => {
                 theme.colors.alpha.black[100],
                 0.1
               )}`,
+        color: theme.header.textColor,
+        right: 0,
+        zIndex: 6,
+        backgroundColor: alpha(theme.header.background, 0.95),
+        backdropFilter: "blur(3px)",
+        position: "fixed",
+        justifyContent: "space-between",
+        width: "100%",
+        [theme.breakpoints.up("lg")]: {
+          left: theme.sidebar.width,
+          width: "auto",
+        },
       }}
     >
       <Box
@@ -100,8 +91,6 @@ const Header = (): JSX.Element => {
         <Divider orientation="vertical" flexItem sx={{ m: 1 }} />
         <HeaderUserbox />
       </Box>
-    </HeaderWrapper>
+    </Box>
   );
 };
-
-export default Header;

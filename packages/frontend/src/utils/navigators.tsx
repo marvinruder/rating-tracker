@@ -8,7 +8,7 @@ import { Stock } from "@rating-tracker/commons";
  * @param {NavigatorProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const MorningstarNavigator = (props: NavigatorProps): JSX.Element => {
+export const MorningstarNavigator = (props: NavigatorProps): JSX.Element => {
   return props.stock?.morningstarID ? (
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
@@ -33,7 +33,7 @@ const MorningstarNavigator = (props: NavigatorProps): JSX.Element => {
  * @param {NavigatorProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const MarketScreenerNavigator = (props: NavigatorProps): JSX.Element => {
+export const MarketScreenerNavigator = (props: NavigatorProps): JSX.Element => {
   return props.stock?.marketScreenerID ? (
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
@@ -55,7 +55,7 @@ const MarketScreenerNavigator = (props: NavigatorProps): JSX.Element => {
  * @param {NavigatorProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const MSCINavigator = (props: NavigatorProps): JSX.Element => {
+export const MSCINavigator = (props: NavigatorProps): JSX.Element => {
   return props.stock?.msciID ? (
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
@@ -80,7 +80,7 @@ const MSCINavigator = (props: NavigatorProps): JSX.Element => {
  * @param {NavigatorProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const RefinitivNavigator = (props: NavigatorProps): JSX.Element => {
+export const RefinitivNavigator = (props: NavigatorProps): JSX.Element => {
   return props.stock?.ric ? (
     <Link
       onClick={() => navigator.clipboard.writeText(props.stock.name)} // Copy the stock name to the clipboard
@@ -103,7 +103,7 @@ const RefinitivNavigator = (props: NavigatorProps): JSX.Element => {
  * @param {NavigatorProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const SPNavigator = (props: NavigatorProps): JSX.Element => {
+export const SPNavigator = (props: NavigatorProps): JSX.Element => {
   return props.stock?.spID ? (
     <Link
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
@@ -125,7 +125,7 @@ const SPNavigator = (props: NavigatorProps): JSX.Element => {
  * @param {NavigatorProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-const SustainalyticsNavigator = (props: NavigatorProps): JSX.Element => {
+export const SustainalyticsNavigator = (props: NavigatorProps): JSX.Element => {
   return props.stock?.sustainalyticsID ? (
     <Link
       rel="noreferrer noopener"
@@ -154,12 +154,3 @@ interface NavigatorProps {
    */
   children: React.ReactNode;
 }
-
-export {
-  MorningstarNavigator,
-  MarketScreenerNavigator,
-  MSCINavigator,
-  RefinitivNavigator,
-  SPNavigator,
-  SustainalyticsNavigator,
-};

@@ -1,32 +1,42 @@
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import SidebarContext from "../../../contexts/SidebarContext";
 
-import { Box, Drawer, alpha, styled, Divider, useTheme, lighten, darken } from "@mui/material";
+import { Box, Drawer, alpha, Divider, useTheme, lighten, darken, BoxProps } from "@mui/material";
 
-import SidebarMenu from "./SidebarMenu";
-import Logo from "../../../components/Logo";
+import { SidebarMenu } from "./SidebarMenu";
+import { Logo } from "./Logo";
 
 /**
  * A wrapper for the sidebar component.
+ *
+ * @param {React.ReactNode} props The properties of the component.
+ * @returns {JSX.Element} The component.
  */
-const SidebarWrapper = styled(Box)(
-  ({ theme }) => `
-        width: ${theme.sidebar.width};
-        min-width: ${theme.sidebar.width};
-        color: ${theme.colors.alpha.trueWhite[70]};
-        position: relative;
-        z-index: 7;
-        height: 100%;
-        padding-bottom: 68px;
-`
-);
+const SidebarWrapper: FC<BoxProps & { children: React.ReactNode }> = (
+  props: BoxProps & { children: React.ReactNode }
+): JSX.Element => {
+  const theme = useTheme();
+  return (
+    <Box
+      width={theme.sidebar.width}
+      color={theme.colors.alpha.trueWhite[70]}
+      position="relative"
+      zIndex={7}
+      height="100%"
+      pb="68px"
+      {...props}
+    >
+      {props.children}
+    </Box>
+  );
+};
 
 /**
  * The sidebar of the sidebar layout.
  *
  * @returns {JSX.Element} The component.
  */
-const Sidebar = (): JSX.Element => {
+export const Sidebar = (): JSX.Element => {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   const closeSidebar = () => toggleSidebar();
   const theme = useTheme();
@@ -35,10 +45,7 @@ const Sidebar = (): JSX.Element => {
     <>
       <SidebarWrapper
         sx={{
-          display: {
-            xs: "none",
-            lg: "inline-block",
-          },
+          display: { xs: "none", lg: "inline-block" },
           position: "fixed",
           left: 0,
           top: 0,
@@ -52,38 +59,11 @@ const Sidebar = (): JSX.Element => {
         <Box mt={3} mx={2}>
           <Logo />
         </Box>
-        <Divider
-          sx={{
-            mt: 3,
-            mx: 2,
-            background: theme.colors.alpha.trueWhite[10],
-          }}
-        />
+        <Divider sx={{ mt: 3, mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
         <SidebarMenu />
-        {/* This would display another area at the bottom of the sidebar.
-        <Divider
-          sx={{
-            background: theme.colors.alpha.trueWhite[10],
-          }}
-        />
-        <Box p={2}>
-          <Button
-            href="https://bloomui.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="contained"
-            color="success"
-            size="small"
-            fullWidth
-          >
-            Upgrade to PRO
-          </Button>
-        </Box> */}
       </SidebarWrapper>
       <Drawer
-        sx={{
-          boxShadow: `${theme.sidebar.boxShadow}`,
-        }}
+        sx={{ boxShadow: `${theme.sidebar.boxShadow}` }}
         anchor={theme.direction === "rtl" ? "right" : "left"}
         open={sidebarToggle}
         onClose={closeSidebar}
@@ -101,18 +81,10 @@ const Sidebar = (): JSX.Element => {
           <Box mt={3} mx={2}>
             <Logo />
           </Box>
-          <Divider
-            sx={{
-              mt: 3,
-              mx: 2,
-              background: theme.colors.alpha.trueWhite[10],
-            }}
-          />
+          <Divider sx={{ mt: 3, mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
           <SidebarMenu />
         </SidebarWrapper>
       </Drawer>
     </>
   );
 };
-
-export default Sidebar;

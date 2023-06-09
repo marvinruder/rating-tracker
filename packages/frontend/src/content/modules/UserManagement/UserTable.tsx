@@ -3,7 +3,7 @@ import axios from "axios";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TableContainer } from "@mui/material";
 import { User, userListEndpointPath } from "@rating-tracker/commons";
 import { baseUrl } from "../../../router";
-import UserRow from "../../../components/UserRow";
+import UserRow from "./UserRow";
 import { useNotification } from "../../../contexts/NotificationContext";
 
 /**
@@ -15,7 +15,7 @@ const UserTable: FC = (): JSX.Element => {
   const [count, setCount] = useState<number>(-1);
   const [users, setUsers] = useState<User[]>([]);
   const [usersFinal, setUsersFinal] = useState<boolean>(false);
-  const { setNotification } = useNotification();
+  const { setErrorNotification } = useNotification();
 
   /**
    * Get the users from the backend.
@@ -29,14 +29,7 @@ const UserTable: FC = (): JSX.Element => {
         setCount(res.data.length);
       })
       .catch((e) => {
-        setNotification({
-          severity: "error",
-          title: "Error while fetching user information",
-          message:
-            e.response?.status && e.response?.data?.message
-              ? `${e.response.status}: ${e.response.data.message}`
-              : e.message ?? "No additional information available.",
-        });
+        setErrorNotification(e, "fetching users");
         setUsers([]);
         setCount(0);
       })

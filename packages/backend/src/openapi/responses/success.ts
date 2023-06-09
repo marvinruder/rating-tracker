@@ -3,14 +3,14 @@ import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 /**
  * A response with a 200 OK status code and an empty body.
  */
-const ok: OpenAPIV3.ResponseObject = {
+export const ok: OpenAPIV3.ResponseObject = {
   description: "OK",
 };
 
 /**
  * A response with a 200 OK status code and a generic object body.
  */
-const okObject: OpenAPIV3.ResponseObject = {
+export const okObject: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
@@ -24,7 +24,7 @@ const okObject: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 200 OK status code and an SVG body.
  */
-const okSVG: OpenAPIV3.ResponseObject = {
+export const okSVG: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "image/svg+xml": {
@@ -38,7 +38,7 @@ const okSVG: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 200 OK status code and a Stock object body.
  */
-const okStock: OpenAPIV3.ResponseObject = {
+export const okStock: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
@@ -52,7 +52,7 @@ const okStock: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 200 OK status code and an array of Stock objects.
  */
-const okStockList: OpenAPIV3.ResponseObject = {
+export const okStockList: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
@@ -69,7 +69,7 @@ const okStockList: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 200 OK status code and an object containing an array of Stock objects and a count.
  */
-const okStockListWithCount: OpenAPIV3.ResponseObject = {
+export const okStockListWithCount: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
@@ -83,7 +83,7 @@ const okStockListWithCount: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 200 OK status code and an array of User objects.
  */
-const okUserList: OpenAPIV3.ResponseObject = {
+export const okUserList: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
@@ -100,7 +100,7 @@ const okUserList: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 200 OK status code and a Watchlist object body.
  */
-const okWatchlist: OpenAPIV3.ResponseObject = {
+export const okWatchlist: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
@@ -114,7 +114,7 @@ const okWatchlist: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 200 OK status code and an array of Watchlist Summary objects.
  */
-const okWatchlistSummary: OpenAPIV3.ResponseObject = {
+export const okWatchlistSummary: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
@@ -131,7 +131,7 @@ const okWatchlistSummary: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 200 OK status code and an object containing a status string.
  */
-const okOperational: OpenAPIV3.ResponseObject = {
+export const okOperational: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
@@ -151,7 +151,7 @@ const okOperational: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 200 OK status code and a User object body.
  */
-const okUser: OpenAPIV3.ResponseObject = {
+export const okUser: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
@@ -165,14 +165,14 @@ const okUser: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 201 Created status code.
  */
-const created: OpenAPIV3.ResponseObject = {
+export const created: OpenAPIV3.ResponseObject = {
   description: "Created",
 };
 
 /**
  * A response with a 201 Created status code containing the ID of the newly created watchlist.
  */
-const createdWatchlistID: OpenAPIV3.ResponseObject = {
+export const createdWatchlistID: OpenAPIV3.ResponseObject = {
   description: "Created with ID of new watchlist",
   content: {
     "application/json": {
@@ -192,31 +192,13 @@ const createdWatchlistID: OpenAPIV3.ResponseObject = {
 /**
  * A response with a 202 Accepted status code.
  */
-const accepted: OpenAPIV3.ResponseObject = {
+export const accepted: OpenAPIV3.ResponseObject = {
   description: "Accepted",
 };
 
 /**
  * A response with a 204 No Content status code.
  */
-const noContent: OpenAPIV3.ResponseObject = {
+export const noContent: OpenAPIV3.ResponseObject = {
   description: "No Content",
-};
-
-export {
-  ok,
-  okObject,
-  okSVG,
-  okStock,
-  okStockList,
-  okStockListWithCount,
-  okUserList,
-  okWatchlist,
-  okWatchlistSummary,
-  okOperational,
-  okUser,
-  accepted,
-  created,
-  createdWatchlistID,
-  noContent,
 };
