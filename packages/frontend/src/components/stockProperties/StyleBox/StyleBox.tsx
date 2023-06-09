@@ -20,31 +20,31 @@ export const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
       case "Small":
         switch (style) {
           case "Value":
-            return <path d="M1.5,9.5H5.5v4H1.5v-4Z" vectorEffect="non-scaling-stroke"></path>;
+            return <path d="M1.5,9.5H5.5v4H1.5v-4Z" vectorEffect="non-scaling-stroke" />;
           case "Blend":
-            return <path d="M5.5,9.5h4v4H5.5v-4Z" vectorEffect="non-scaling-stroke"></path>;
+            return <path d="M5.5,9.5h4v4H5.5v-4Z" vectorEffect="non-scaling-stroke" />;
           case "Growth":
-            return <path d="M9.5,9.5h4v4h-4v-4Z" vectorEffect="non-scaling-stroke"></path>;
+            return <path d="M9.5,9.5h4v4h-4v-4Z" vectorEffect="non-scaling-stroke" />;
         }
 
       case "Mid":
         switch (style) {
           case "Value":
-            return <path d="M1.5,5.5H5.5v4H1.5V5.5Z" vectorEffect="non-scaling-stroke"></path>;
+            return <path d="M1.5,5.5H5.5v4H1.5V5.5Z" vectorEffect="non-scaling-stroke" />;
           case "Blend":
-            return <path d="M5.5,5.5h4v4H5.5V5.5Z" vectorEffect="non-scaling-stroke"></path>;
+            return <path d="M5.5,5.5h4v4H5.5V5.5Z" vectorEffect="non-scaling-stroke" />;
           case "Growth":
-            return <path d="M9.5,5.5h4v4h-4V5.5Z" vectorEffect="non-scaling-stroke"></path>;
+            return <path d="M9.5,5.5h4v4h-4V5.5Z" vectorEffect="non-scaling-stroke" />;
         }
 
       case "Large":
         switch (style) {
           case "Value":
-            return <path d="M1.5,1.5H5.5V5.5H1.5V1.5Z" vectorEffect="non-scaling-stroke"></path>;
+            return <path d="M1.5,1.5H5.5V5.5H1.5V1.5Z" vectorEffect="non-scaling-stroke" />;
           case "Blend":
-            return <path d="M5.5,1.5h4V5.5H5.5V1.5Z" vectorEffect="non-scaling-stroke"></path>;
+            return <path d="M5.5,1.5h4V5.5H5.5V1.5Z" vectorEffect="non-scaling-stroke" />;
           case "Growth":
-            return <path d="M9.5,1.5h4V5.5h-4V1.5Z" vectorEffect="non-scaling-stroke"></path>;
+            return <path d="M9.5,1.5h4V5.5h-4V1.5Z" vectorEffect="non-scaling-stroke" />;
         }
     }
   };
@@ -63,7 +63,7 @@ export const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
         d="M1.5,1.5H13.5V13.5H1.5V1.5Zm4,0V13.5M9.5,1.5V13.5M1.5,5.5H13.5M1.5,9.5H13.5"
         vectorEffect="non-scaling-stroke"
         fill="none"
-      ></path>
+      />
       {getSquare(props.size, props.style)}
     </svg>
   );

@@ -160,7 +160,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
           <TableHead>
             <TableRow sx={{ height: 52.5 }}>
               {/* Actions */}
-              <TableCell></TableCell>
+              <TableCell />
               {/* Name and Logo */}
               <TableCell>
                 <TableSortLabel

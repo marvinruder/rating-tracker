@@ -156,7 +156,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               top: optionsMenuPositionEvent?.clientY,
               left: optionsMenuPositionEvent?.clientX,
             }}
-          ></Box>
+          />
           <Menu
             open={optionsMenuOpen}
             onClose={() => setOptionsMenuOpen(false)}
