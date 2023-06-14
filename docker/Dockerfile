@@ -36,7 +36,7 @@ RUN mkdir -p /workdir/app/packages/backend/public /workdir/app/packages/commons 
   rm -r /workdir/app/.yarn/unplugged/selenium-webdriver-npm-*/node_modules/selenium-webdriver/bin
 
 
-FROM alpine:3.18.0 as run
+FROM alpine:3.18.2 as run
 ARG BUILD_DATE
 ARG TARGETARCH
 LABEL \
