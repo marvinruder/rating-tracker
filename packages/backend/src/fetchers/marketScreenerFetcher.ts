@@ -12,11 +12,11 @@ import { SIGNAL_PREFIX_ERROR } from "../signal/signal.js";
 import { readStock, updateStock } from "../db/tables/stockTable.js";
 import APIError from "../utils/apiError.js";
 
-const XPATH_CONSENSUS_DIV = "//*/div[@class='tabTitleLeftWhite']/b[contains(text(), 'Consensus')]/../../../.." as const;
 const XPATH_ANALYST_COUNT =
-  "//div/table/tbody/tr/td[contains(text(), 'Number of Analysts')]/following-sibling::td" as const;
+  "//div[@class='card-content']/div/div/div[contains(text(), 'Number of Analysts')]/following-sibling::div" as const;
 const XPATH_SPREAD_AVERAGE_TARGET =
-  "//div/table/tbody/tr/td[contains(text(), 'Spread / Average Target')]/following-sibling::td" as const;
+  // eslint-disable-next-line max-len
+  "//div[@class='card-content']/div/div/div[contains(text(), 'Spread / Average Target')]/following-sibling::div" as const;
 
 /**
  * Fetches data from MarketScreener.
@@ -70,19 +70,19 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
         break;
       }
       // Wait for most of the page to load for a maximum of 20 seconds.
-      await driver.wait(until.elementLocated(By.id("zbCenter")), 20000);
+      await driver.wait(until.elementLocated(By.className("pcontent")), 20000);
 
       // Prepare an error message header containing the stock name and ticker.
       let errorMessage = `Error while fetching MarketScreener data for stock ${stock.ticker}:`;
 
       try {
         // Wait for the div containing all relevant analyst-related information for a maximum of 10 seconds.
-        const consensusTableDiv = await driver.wait(until.elementLocated(By.xpath(XPATH_CONSENSUS_DIV)), 10000);
+        const consensusTableDiv = await driver.wait(until.elementLocated(By.id("consensusDetail")), 10000);
 
         try {
           const analystConsensusMatches = (
-            await consensusTableDiv.findElement(By.css('div[title^="Note : "')).getAttribute("title")
-          ) // Example: " Note : 9.1 / 10"
+            await consensusTableDiv.findElement(By.css('div[title^="Rate : "')).getAttribute("title")
+          ) // Example: " Rate : 9.1 / 10"
             .match(/(\d+(\.\d+)?)/g); // Extract the first decimal number from the title.
           if (
             analystConsensusMatches === null ||
