@@ -25,7 +25,7 @@ If applicable, add screenshots and log snippets to help explain your problem.
 
 **Environment (please complete the following information):**
 
-- Version: [e.g. 2.1.0]
+- Version: [e.g. 2.1.1]
 - OS: [e.g. iOS]
 - Browser: [e.g. Chrome, Safari]
 
