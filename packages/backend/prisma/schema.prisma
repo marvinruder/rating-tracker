@@ -1,7 +1,6 @@
 generator client {
-  provider        = "prisma-client-js"
-  output          = "./client"
-  previewFeatures = ["orderByNulls"]
+  provider = "prisma-client-js"
+  output   = "./client"
 }
 
 datasource db {
