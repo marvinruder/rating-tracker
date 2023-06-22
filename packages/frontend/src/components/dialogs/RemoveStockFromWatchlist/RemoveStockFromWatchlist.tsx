@@ -16,7 +16,7 @@ import { useNotification } from "../../../contexts/NotificationContext";
 export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   /**
    * Removes the stock from the watchlist.

@@ -74,7 +74,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
     const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
     const [accessRights, setAccessRights] = useState<number>(props.user.accessRights);
 
-    const { setNotification, setErrorNotification } = useNotification();
+    const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
     /**
      * Updates the user’s access rights in the backend.

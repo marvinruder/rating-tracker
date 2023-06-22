@@ -16,7 +16,7 @@ import { useNotification } from "../../../contexts/NotificationContext";
 export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   /**
    * Deletes the user from the backend.

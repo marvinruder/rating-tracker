@@ -17,7 +17,7 @@ import { useNavigate } from "react-router";
 export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
   const navigate = useNavigate();
 
   /**

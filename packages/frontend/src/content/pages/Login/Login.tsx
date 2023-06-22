@@ -20,7 +20,7 @@ export const LoginPage = (): JSX.Element => {
   const [name, setName] = useState<string>("");
   const [emailError, setEmailError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
-  const { setNotification, setErrorNotification } = useNotification();
+  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
   const { refetchUser } = useContext(UserContext);
 
   /**

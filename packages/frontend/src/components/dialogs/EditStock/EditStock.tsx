@@ -66,7 +66,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
   const [spIDRequestInProgress, setSPIDRequestInProgress] = useState<boolean>(false);
   const [sustainalyticsID, setSustainalyticsID] = useState<string>(props.stock?.sustainalyticsID);
   const [sustainalyticsIDRequestInProgress, setSustainalyticsIDRequestInProgress] = useState<boolean>(false);
-  const { setNotification, setErrorNotification } = useNotification();
+  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   /**
    * Checks for errors in the input fields.

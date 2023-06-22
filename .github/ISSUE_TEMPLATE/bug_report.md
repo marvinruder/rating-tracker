@@ -27,7 +27,7 @@ If applicable, add screenshots and log snippets to help explain your problem.
 
 - Version: [e.g. 2.1.0]
 - OS: [e.g. iOS]
-- Browser [e.g. Chrome, Safari]
+- Browser: [e.g. Chrome, Safari]
 
 **Additional context**
 Add any other context about the problem here.

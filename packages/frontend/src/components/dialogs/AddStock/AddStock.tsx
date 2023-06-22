@@ -80,7 +80,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const [sustainalyticsIDRequestInProgress, setSustainalyticsIDRequestInProgress] = useState<boolean>(false);
   // Whether the Sustainalytics ID has been transmitted to the server.
   const [sustainalyticsIDSet, setSustainalyticsIDSet] = useState<boolean>(false);
-  const { setNotification, setErrorNotification } = useNotification();
+  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   /**
    * Checks for errors in the input fields.

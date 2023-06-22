@@ -49,7 +49,7 @@ export const HeaderSearch = (): JSX.Element => {
   const [count, setCount] = useState<number>(0);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
 
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
   const theme = useTheme();
   const navigate = useNavigate();
 

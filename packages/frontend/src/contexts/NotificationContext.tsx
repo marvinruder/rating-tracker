@@ -19,7 +19,7 @@ type NotificationContextType = {
   /**
    * A method to set an error notification to be displayed after an API request failed.
    */
-  setErrorNotification: (e: unknown, actionDescription: string) => void; // rename to …OrClearSession in #295
+  setErrorNotificationOrClearSession: (e: unknown, actionDescription: string) => void;
 };
 
 /**
@@ -37,7 +37,7 @@ export const NotificationProvider = (props: NotificationProviderProps): JSX.Elem
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
   const { clearUser } = useContext(UserContext);
 
-  const setErrorNotification = (e: AxiosError<{ message: string }>, actionDescription: string) => {
+  const setErrorNotificationOrClearSession = (e: AxiosError<{ message: string }>, actionDescription: string) => {
     setNotification({
       severity: "error",
       title: `Error while ${actionDescription}`,
@@ -51,13 +51,7 @@ export const NotificationProvider = (props: NotificationProviderProps): JSX.Elem
   };
 
   return (
-    <NotificationContext.Provider
-      value={{
-        notification,
-        setNotification,
-        setErrorNotification,
-      }}
-    >
+    <NotificationContext.Provider value={{ notification, setNotification, setErrorNotificationOrClearSession }}>
       {props.children}
     </NotificationContext.Provider>
   );

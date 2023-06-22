@@ -41,7 +41,7 @@ import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
  */
 export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const { user, refetchUser } = useContext(UserContext);
-  const { setNotification, setErrorNotification } = useNotification();
+  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>(user.name);
