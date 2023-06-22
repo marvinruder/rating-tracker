@@ -25,9 +25,7 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
   // Wait up to 1 second randomly to avoid a not yet identified bottleneck
   await new Promise<void>((resolve) => setTimeout(() => resolve(), Math.random() * 1000));
   const url = process.env.SELENIUM_URL;
-  const options = new chrome.Options()
-    .addArguments("window-size=1080x3840") // convenient for screenshots
-    .addArguments("--blink-settings=imagesEnabled=false"); // Do not load images
+  const options = new chrome.Options().addArguments("--blink-settings=imagesEnabled=false"); // Do not load images
   headless && options.addArguments("--headless=new"); // In headless mode, the browser window is not shown.
 
   return await new Builder()
@@ -43,7 +41,11 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
     )
     .setChromeOptions(options)
     .build()
-    .then((driver) => driver)
+    .then(async (driver) => {
+      // Use `setSize(…)` after https://github.com/SeleniumHQ/selenium/issues/12243 is resolved.
+      await driver.manage().window().setRect({ width: 1080, height: 3840 }); // convenient for screenshots
+      return driver;
+    })
     .catch((e) => {
       throw new APIError(502, `Unable to connect to Selenium WebDriver: ${e.message}`);
     });

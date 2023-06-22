@@ -15,7 +15,7 @@ const UserTable: FC = (): JSX.Element => {
   const [count, setCount] = useState<number>(-1);
   const [users, setUsers] = useState<User[]>([]);
   const [usersFinal, setUsersFinal] = useState<boolean>(false);
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   /**
    * Get the users from the backend.

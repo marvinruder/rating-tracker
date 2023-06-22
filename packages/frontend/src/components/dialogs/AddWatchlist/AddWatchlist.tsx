@@ -17,7 +17,7 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   /**
    * Checks for errors in the input fields.

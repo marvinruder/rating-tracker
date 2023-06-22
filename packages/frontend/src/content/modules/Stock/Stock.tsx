@@ -18,7 +18,7 @@ const StockModule = (): JSX.Element => {
   const [stock, setStock] = useState<Stock>();
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   /**
    * Fetches the stock with the given ticker.

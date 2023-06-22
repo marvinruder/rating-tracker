@@ -28,7 +28,7 @@ import {
  */
 const WatchlistModule = (): JSX.Element => {
   const [watchlist, setWatchlist] = useState<Watchlist>();
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   /**
    * Fetches the watchlist with the given ID.

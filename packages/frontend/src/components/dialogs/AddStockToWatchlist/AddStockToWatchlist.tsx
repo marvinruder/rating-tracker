@@ -40,7 +40,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
   const [watchlistsAlreadyContainingStock, setWatchlistsAlreadyContainingStock] = useState<number[]>([]);
   const [watchlistSummariesFinal, setWatchlistSummariesFinal] = useState<boolean>(false);
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   useEffect(() => getWatchlists(), []);
 

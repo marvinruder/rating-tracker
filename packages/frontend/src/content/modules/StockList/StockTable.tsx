@@ -40,7 +40,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<SortableAttribute>("totalScore");
   const [sortDesc, setSortDesc] = useState<boolean>(true);
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   useEffect(() => {
     getStocks(); // Get stocks whenever pagination, sorting or filtering changes, or when explicitly requested.

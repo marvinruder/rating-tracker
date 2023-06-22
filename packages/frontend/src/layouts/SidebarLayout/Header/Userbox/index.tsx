@@ -25,7 +25,7 @@ import { sessionEndpointPath } from "@rating-tracker/commons";
 export const HeaderUserbox = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { setNotification, setErrorNotification } = useContext(NotificationContext);
+  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useContext(NotificationContext);
   const { user } = useContext(UserContext);
 
   /**

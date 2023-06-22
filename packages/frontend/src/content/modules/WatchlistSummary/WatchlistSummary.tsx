@@ -16,7 +16,7 @@ import WatchlistCard from "./WatchlistCard";
 const WatchlistSummaryModule = (): JSX.Element => {
   const [watchlistSummaries, setWatchlistSummaries] = useState<WatchlistSummary[]>([]);
   const [watchlistSummariesFinal, setWatchlistSummariesFinal] = useState<boolean>(false);
-  const { setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   useEffect(() => getWatchlists(), []);
 

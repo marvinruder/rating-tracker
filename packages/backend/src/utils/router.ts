@@ -35,7 +35,7 @@ interface RouterOptions {
 
 // This way of using stable decorators is not yet supported by Vite(st).
 
-const Router = <This>(options: RouterOptions): any => {
+export default Router = <This>(options: RouterOptions): any => {
   return (
     controllerFn: (...args: [Request, Response]) => void | Promise<void>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
