@@ -1675,7 +1675,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-async-errors", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:3.1.1"],\
             ["express-openapi-validator", "npm:5.0.4"],\
             ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.7.0"],\
-            ["glob", "npm:10.3.0"],\
+            ["glob", "npm:10.3.1"],\
             ["pino", "npm:8.14.1"],\
             ["pino-pretty", "npm:10.0.0"],\
             ["prettier", "npm:2.8.8"],\
@@ -3717,7 +3717,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cacache", "npm:17.1.3"],\
             ["@npmcli/fs", "npm:3.1.0"],\
             ["fs-minipass", "npm:3.0.2"],\
-            ["glob", "npm:10.3.0"],\
+            ["glob", "npm:10.3.1"],\
             ["lru-cache", "npm:7.18.3"],\
             ["minipass", "npm:5.0.0"],\
             ["minipass-collect", "npm:1.0.2"],\
@@ -5809,15 +5809,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["glob", [\
-        ["npm:10.3.0", {\
-          "packageLocation": "./.yarn/cache/glob-npm-10.3.0-da3187b4ef-6fa4ac0a86.zip/node_modules/glob/",\
+        ["npm:10.3.1", {\
+          "packageLocation": "./.yarn/cache/glob-npm-10.3.1-100b936079-19c8c28056.zip/node_modules/glob/",\
           "packageDependencies": [\
-            ["glob", "npm:10.3.0"],\
+            ["glob", "npm:10.3.1"],\
             ["foreground-child", "npm:3.1.1"],\
             ["jackspeak", "npm:2.2.1"],\
             ["minimatch", "npm:9.0.1"],\
             ["minipass", "npm:6.0.2"],\
-            ["path-scurry", "npm:1.9.2"]\
+            ["path-scurry", "npm:1.10.0"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -6982,6 +6982,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["lru-cache", [\
+        ["npm:10.0.0", {\
+          "packageLocation": "./.yarn/cache/lru-cache-npm-10.0.0-256d74bb20-18f101675f.zip/node_modules/lru-cache/",\
+          "packageDependencies": [\
+            ["lru-cache", "npm:10.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:5.1.1", {\
           "packageLocation": "./.yarn/cache/lru-cache-npm-5.1.1-f475882a51-c154ae1cbb.zip/node_modules/lru-cache/",\
           "packageDependencies": [\
@@ -7002,13 +7009,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/lru-cache-npm-7.18.3-e68be5b11c-e550d77238.zip/node_modules/lru-cache/",\
           "packageDependencies": [\
             ["lru-cache", "npm:7.18.3"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:9.1.2", {\
-          "packageLocation": "./.yarn/cache/lru-cache-npm-9.1.2-4846dc8c34-d3415634be.zip/node_modules/lru-cache/",\
-          "packageDependencies": [\
-            ["lru-cache", "npm:9.1.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -7903,11 +7903,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["path-scurry", [\
-        ["npm:1.9.2", {\
-          "packageLocation": "./.yarn/cache/path-scurry-npm-1.9.2-e4789f2bee-92888dfb68.zip/node_modules/path-scurry/",\
+        ["npm:1.10.0", {\
+          "packageLocation": "./.yarn/cache/path-scurry-npm-1.10.0-53ecc28cea-3b66a4a6ab.zip/node_modules/path-scurry/",\
           "packageDependencies": [\
-            ["path-scurry", "npm:1.9.2"],\
-            ["lru-cache", "npm:9.1.2"],\
+            ["path-scurry", "npm:1.10.0"],\
+            ["lru-cache", "npm:10.0.0"],\
             ["minipass", "npm:6.0.2"]\
           ],\
           "linkType": "HARD"\
