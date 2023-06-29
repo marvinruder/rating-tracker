@@ -28,7 +28,7 @@
     "eslint-plugin-jsdoc": "46.4.2",
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.8.8",
-    "typescript": "5.1.5",
+    "typescript": "5.1.6",
     "vite": "4.3.9",
     "vitest": "0.32.2"
   }
