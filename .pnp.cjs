@@ -1660,7 +1660,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitest/coverage-v8", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:0.32.2"],\
             ["@yarnpkg/pnpify", "npm:3.1.6"],\
             ["axios", "npm:1.4.0"],\
-            ["chalk", "npm:5.2.0"],\
+            ["chalk", "npm:5.3.0"],\
             ["concurrently", "npm:8.2.0"],\
             ["cookie-parser", "npm:1.4.6"],\
             ["cron", "npm:2.3.1"],\
@@ -3886,10 +3886,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:5.2.0", {\
-          "packageLocation": "./.yarn/cache/chalk-npm-5.2.0-bedd808592-03d8060277.zip/node_modules/chalk/",\
+        ["npm:5.3.0", {\
+          "packageLocation": "./.yarn/cache/chalk-npm-5.3.0-d181999efb-623922e077.zip/node_modules/chalk/",\
           "packageDependencies": [\
-            ["chalk", "npm:5.2.0"]\
+            ["chalk", "npm:5.3.0"]\
           ],\
           "linkType": "HARD"\
         }]\
