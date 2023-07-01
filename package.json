@@ -22,7 +22,7 @@
     "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm",
     "lint": "yarn workspaces foreach -pt run lint"
   },
-  "packageManager": "yarn@3.6.0",
+  "packageManager": "yarn@3.6.1",
   "devDependencies": {
     "concurrently": "8.2.0",
     "eslint": "8.43.0",
