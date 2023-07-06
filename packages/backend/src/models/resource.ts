@@ -52,5 +52,5 @@ export const resourceSchema = new Schema(
     fetchDate: { type: "date" },
     content: { type: "string" },
   },
-  { dataStructure: "HASH" }
+  { dataStructure: "HASH" },
 );

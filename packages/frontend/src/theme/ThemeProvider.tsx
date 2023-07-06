@@ -407,7 +407,7 @@ export const ThemeContext = createContext<ThemeContextType>({} as ThemeContextTy
  */
 const ThemeProviderWrapper: FC<ThemeProviderWrapperProps> = (props: ThemeProviderWrapperProps): JSX.Element => {
   const [themeName, setThemeName] = useState<"dark" | "light">(
-    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
   );
 
   let theme: Theme;

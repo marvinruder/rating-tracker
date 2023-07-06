@@ -273,7 +273,7 @@ export class StockController {
       const msciESGRatingMin = req.query.msciESGRatingMin as string;
       if (isMSCIESGRating(msciESGRatingMin)) {
         filteredMSCIESGRatingArray = filteredMSCIESGRatingArray.filter(
-          (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) >= msciESGRatingArray.indexOf(msciESGRatingMin)
+          (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) >= msciESGRatingArray.indexOf(msciESGRatingMin),
         );
       }
     }
@@ -281,7 +281,7 @@ export class StockController {
       const msciESGRatingMax = req.query.msciESGRatingMax as string;
       if (isMSCIESGRating(msciESGRatingMax)) {
         filteredMSCIESGRatingArray = filteredMSCIESGRatingArray.filter(
-          (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) <= msciESGRatingArray.indexOf(msciESGRatingMax)
+          (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) <= msciESGRatingArray.indexOf(msciESGRatingMax),
         );
       }
     }
@@ -558,7 +558,7 @@ export class StockController {
               fetchDate: new Date(response.headers["date"]),
               content: response.data,
             },
-            maxAge
+            maxAge,
           );
           // Read the logo as a Resource object
           logoResource = await readResource(url);
@@ -573,7 +573,7 @@ export class StockController {
                 `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">` +
                 `</svg>`,
             },
-            60 * 60 * 24
+            60 * 60 * 24,
           );
           logoResource = await readResource(url);
         });
@@ -584,7 +584,7 @@ export class StockController {
       `max-age=${
         // Allow client-side caching as long as the logo is valid in the cache
         (60 * 60 * 24 - (new Date().getTime() - logoResource.fetchDate.getTime()) / 1000) | 0
-      }`
+      }`,
     );
     res.status(200).send(logoResource.content).end();
   }

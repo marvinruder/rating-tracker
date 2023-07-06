@@ -599,7 +599,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   <>
                     {props?.stock.morningstarFairValuePercentageToLastClose !== null &&
                       `${props?.stock.morningstarFairValuePercentageToLastClose > 0 ? "+" : ""}${Math.round(
-                        props.stock?.morningstarFairValuePercentageToLastClose
+                        props.stock?.morningstarFairValuePercentageToLastClose,
                       )}\u2009%`}
                   </>
                 ) : (
@@ -728,7 +728,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                     {props.stock?.analystCount !== null &&
                       props.stock?.analystTargetPricePercentageToLastClose !== null &&
                       `${props.stock?.analystTargetPricePercentageToLastClose > 0 ? "+" : ""}${Math.round(
-                        props.stock.analystTargetPricePercentageToLastClose
+                        props.stock.analystTargetPricePercentageToLastClose,
                       )}\u2009%`}
                   </>
                 ) : (

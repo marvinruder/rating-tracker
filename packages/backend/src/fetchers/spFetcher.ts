@@ -44,8 +44,8 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
           `Stock ${stock.ticker}: Skipping S&P fetch because last fetch was ${formatDistance(
             stock.spLastFetch.getTime(),
             new Date().getTime(),
-            { addSuffix: true }
-          )}`
+            { addSuffix: true },
+          )}`,
       );
       stocks.skipped.push(stock);
       continue;
@@ -68,7 +68,7 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
       if (
         lockedContent.length > 0 &&
         (await lockedContent[0].getText()).includes(
-          "This company's ESG Score and underlying data are available via our premium channels"
+          "This company's ESG Score and underlying data are available via our premium channels",
         )
       ) {
         // If the content is available for premium subscribers only, we throw an error.
@@ -87,7 +87,7 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
         await quitDriver(driver, sessionID);
         throw new APIError(
           502,
-          `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`
+          `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`,
         );
       }
       logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`));
@@ -98,15 +98,15 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
           PREFIX_SELENIUM +
             chalk.redBright(
               `Stock ${stock.ticker}: Extraction of S&P ESG Score failed unexpectedly. ` +
-                `This incident will be reported.`
-            )
+                `This incident will be reported.`,
+            ),
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${
               String(e.message).split(/[\n:{]/)[0]
             }\n${await takeScreenshot(driver, stock, "sp")}`,
-          "fetchError"
+          "fetchError",
         );
         stocks.failed.push(await readStock(stock.ticker));
       } else {
@@ -121,14 +121,14 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
           PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from S&P after ${stocks.successful.length} ` +
-                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`
-            )
+                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
+            ),
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from S&P after ${stocks.successful.length} ` +
             `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
-          "fetchError"
+          "fetchError",
         );
         const skippedStocks = [...stocks.queued];
         stocks.queued.length = 0;

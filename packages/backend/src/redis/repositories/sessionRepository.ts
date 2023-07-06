@@ -77,7 +77,7 @@ export const createSession = async (session: Session): Promise<boolean> => {
     ...session,
   });
   logger.info(
-    PREFIX_REDIS + `Created session for “${session.email}” with entity ID ${await saveSession(sessionEntity)}.`
+    PREFIX_REDIS + `Created session for “${session.email}” with entity ID ${await saveSession(sessionEntity)}.`,
   );
   await refreshSession(session.sessionID); // Let the session expire after 30 minutes
   return true;
@@ -93,7 +93,7 @@ export const createSession = async (session: Session): Promise<boolean> => {
 export const refreshSessionAndFetchUser = async (sessionID: string): Promise<User> => {
   const sessionEntity = await fetchSession(sessionID);
   if (sessionEntity && sessionEntity.email) {
-    refreshSession(sessionID); // Let the session expire after 30 minutes
+    await refreshSession(sessionID); // Let the session expire after 30 minutes
     return await readUser(sessionEntity.email);
   }
   throw new APIError(404, `Session ${sessionID} not found.`);

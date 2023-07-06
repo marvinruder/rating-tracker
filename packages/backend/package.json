@@ -22,6 +22,7 @@
     "test:redis": "REDISPORT=63791 docker compose -f test/docker-compose.yml up --force-recreate -V redis-test",
     "test:tools": "conc --kill-others \"yarn test:postgres\" \"yarn test:redis\" -n \",\" -p \"{name}\" -c #336791,#D82C20 --timings",
     "test:prisma:migrate:init": "env $(cat test/.env) pnpify prisma migrate dev --name init",
+    "prisma:studio": "pnpify prisma studio",
     "prisma:generate": "pnpify prisma generate",
     "prisma:migrate:dev": "pnpify prisma migrate dev",
     "build": "tsc --project tsconfig.build.json && mkdir -p dist/prisma && cp -rf prisma/* dist/prisma",

@@ -11,7 +11,7 @@ import { FC, useState } from "react";
  * @returns {JSX.Element} The component.
  */
 export const WatchlistSummaryHeader: FC<WatchlistSummaryHeaderProps> = (
-  props: WatchlistSummaryHeaderProps
+  props: WatchlistSummaryHeaderProps,
 ): JSX.Element => {
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
 

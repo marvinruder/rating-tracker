@@ -193,7 +193,7 @@ tests.push({
     const res = await supertest
       .get(
         `/api${stockListEndpointPath}?analystConsensusMin=7&analystConsensusMax=8.5` +
-          "&analystCountMin=20&analystCountMax=40&sortBy=name"
+          "&analystCountMin=20&analystCountMax=40&sortBy=name",
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
@@ -243,7 +243,7 @@ tests.push({
   testFunction: async () => {
     const res = await supertest
       .get(
-        `/api${stockListEndpointPath}?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name`
+        `/api${stockListEndpointPath}?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name`,
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
@@ -261,7 +261,7 @@ tests.push({
     const res = await supertest
       .get(
         `/api${stockListEndpointPath}?refinitivESGScoreMin=70&refinitivESGScoreMax=80&` +
-          "refinitivEmissionsMin=80&refinitivEmissionsMax=90&sortBy=name"
+          "refinitivEmissionsMin=80&refinitivEmissionsMax=90&sortBy=name",
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
@@ -277,7 +277,7 @@ tests.push({
     const res = await supertest
       .get(
         `/api${stockListEndpointPath}?spESGScoreMin=50&spESGScoreMax=85` +
-          "&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name"
+          "&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name",
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
@@ -294,7 +294,7 @@ tests.push({
     const res = await supertest
       .get(
         `/api${stockListEndpointPath}?financialScoreMin=0&financialScoreMax=50&esgScoreMin=40&esgScoreMax=60` +
-          "&sortBy=name"
+          "&sortBy=name",
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
@@ -354,7 +354,7 @@ tests.push({
             ) {
               // Stocks should be ordered by the numeric value of the sort criterion
               expect(res.body.stocks[i][sortCriterion])[toBeSortedInTheCorrectOrder](
-                res.body.stocks[i + 1][sortCriterion]
+                res.body.stocks[i + 1][sortCriterion],
               );
             } else if (
               typeof res.body.stocks[i][sortCriterion] === "string" &&
@@ -363,7 +363,7 @@ tests.push({
             ) {
               // Stocks should be ordered by the index of the enum value of the sort criterion
               expect(sortCriterionArray.indexOf(res.body.stocks[i][sortCriterion]))[toBeSortedInTheCorrectOrder](
-                sortCriterionArray.indexOf(res.body.stocks[i + 1][sortCriterion])
+                sortCriterionArray.indexOf(res.body.stocks[i + 1][sortCriterion]),
               );
             } else {
               if (
@@ -383,8 +383,8 @@ tests.push({
           }
         }
       },
-    })
-  )
+    }),
+  ),
 );
 
 tests.push({
@@ -415,7 +415,7 @@ tests.push({
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
     expect(res.body.toString()).toMatch(
-      `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">`
+      `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">`,
     );
 
     // attempting to read the logo of a stock for which no logo exists returns an empty SVG file
@@ -423,7 +423,7 @@ tests.push({
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
     expect(res.body.toString()).toMatch(
-      `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>`
+      `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>`,
     );
 
     // attempting to read a non-existent stock’s logo results in an error
@@ -439,11 +439,11 @@ tests.push({
   testFunction: async () => {
     await expectRouteToBePrivate(
       `/api${stockEndpointPath}/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321`,
-      supertest.put
+      supertest.put,
     );
     await expectSpecialAccessRightsToBeRequired(
       `/api${stockEndpointPath}/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321`,
-      supertest.put
+      supertest.put,
     );
     let res = await supertest
       .put(`/api${stockEndpointPath}/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321`)

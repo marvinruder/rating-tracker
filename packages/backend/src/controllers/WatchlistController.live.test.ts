@@ -85,7 +85,7 @@ tests.push({
     let res = await supertest.get(`/api${watchlistSummaryEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     const { id, subscribed } = res.body.find(
-      (watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites"
+      (watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites",
     );
     const favoritesID = res.body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Favorites").id;
     expect(subscribed).toBeFalsy();
@@ -95,7 +95,7 @@ tests.push({
       .patch(
         `/api${watchlistEndpointPath}/${id}` +
           `?stocksToAdd=exampleALV%2CexampleKGX&stocksToRemove=exampleNOVO%20B%2CexampleORSTED` +
-          `&name=Favoriten&subscribed=true`
+          `&name=Favoriten&subscribed=true`,
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
@@ -105,7 +105,7 @@ tests.push({
       .patch(
         `/api${watchlistEndpointPath}/${id}` +
           `?stocksToAdd=exampleALV%2CexampleKGX&stocksToRemove=exampleNOVO%20B%2CexampleORSTED` +
-          `&name=Favoriten&subscribed=true`
+          `&name=Favoriten&subscribed=true`,
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
@@ -173,7 +173,7 @@ tests.push({
     res = await supertest.get(`/api${watchlistSummaryEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(
-      res.body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites")
+      res.body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites"),
     ).toBeUndefined();
   },
 });

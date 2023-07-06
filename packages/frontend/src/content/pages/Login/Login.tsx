@@ -54,69 +54,71 @@ export const LoginPage = (): JSX.Element => {
   /**
    * Handles the click event of the login / register button.
    */
-  const onButtonClick = async () => {
-    switch (action) {
-      case "register":
-        // Validate input fields
-        validate();
-        if (validateEmail() && validateName()) {
-          try {
-            // Request registration challenge
-            const res = await axios.get(baseUrl + registerEndpointPath, {
-              params: { email: email.trim(), name: name.trim() },
-            });
-            // Ask the browser to perform the WebAuthn registration and store a corresponding credential
-            const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
+  const onButtonClick = () => {
+    void (async (): Promise<void> => {
+      switch (action) {
+        case "register":
+          // Validate input fields
+          validate();
+          if (validateEmail() && validateName()) {
             try {
-              // Send the registration challenge response to the server
-              await axios.post(baseUrl + registerEndpointPath, authRes, {
+              // Request registration challenge
+              const res = await axios.get(baseUrl + registerEndpointPath, {
                 params: { email: email.trim(), name: name.trim() },
-                headers: { "Content-Type": "application/json" },
               });
-              // This is only reached if the registration was successful
+              // Ask the browser to perform the WebAuthn registration and store a corresponding credential
+              const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
+              try {
+                // Send the registration challenge response to the server
+                await axios.post(baseUrl + registerEndpointPath, authRes, {
+                  params: { email: email.trim(), name: name.trim() },
+                  headers: { "Content-Type": "application/json" },
+                });
+                // This is only reached if the registration was successful
+                setNotification({
+                  severity: "success",
+                  title: "Welcome!",
+                  message:
+                    "Your registration was successful. Please note that a manual activation of your account may " +
+                    "still be necessary before you can access the page.",
+                });
+              } catch (e) {
+                setErrorNotification(e, "processing registration response");
+              }
+            } catch (e) {
+              setErrorNotification(e, "requesting registration challenge");
+            }
+          }
+          break;
+        case "signIn":
+          try {
+            // Request authentication challenge
+            const res = await axios.get(baseUrl + signInEndpointPath);
+            // Ask the browser to perform the WebAuthn authentication
+            const authRes = await SimpleWebAuthnBrowser.startAuthentication(res.data);
+            try {
+              // Send the authentication challenge response to the server
+              await axios.post(
+                baseUrl + signInEndpointPath,
+                { ...authRes, challenge: res.data.challenge },
+                { headers: { "Content-Type": "application/json" } },
+              );
+              // This is only reached if the authentication was successful
               setNotification({
                 severity: "success",
-                title: "Welcome!",
-                message:
-                  "Your registration was successful. Please note that a manual activation of your account may still " +
-                  "be necessary before you can access the page.",
+                title: "Welcome back!",
+                message: "Authentication successful",
               });
+              refetchUser(); // After refetching, the user is redirected automatically
             } catch (e) {
-              setErrorNotification(e, "processing registration response");
+              setErrorNotification(e, "processing authorization response");
             }
           } catch (e) {
-            setErrorNotification(e, "requesting registration challenge");
+            setErrorNotification(e, "requesting authentication challenge");
           }
-        }
-        break;
-      case "signIn":
-        try {
-          // Request authentication challenge
-          const res = await axios.get(baseUrl + signInEndpointPath);
-          // Ask the browser to perform the WebAuthn authentication
-          const authRes = await SimpleWebAuthnBrowser.startAuthentication(res.data);
-          try {
-            // Send the authentication challenge response to the server
-            await axios.post(
-              baseUrl + signInEndpointPath,
-              { ...authRes, challenge: res.data.challenge },
-              { headers: { "Content-Type": "application/json" } }
-            );
-            // This is only reached if the authentication was successful
-            setNotification({
-              severity: "success",
-              title: "Welcome back!",
-              message: "Authentication successful",
-            });
-            refetchUser(); // After refetching, the user is redirected automatically
-          } catch (e) {
-            setErrorNotification(e, "processing authorization response");
-          }
-        } catch (e) {
-          setErrorNotification(e, "requesting authentication challenge");
-        }
-        break;
-    }
+          break;
+      }
+    })();
   };
 
   return (

@@ -33,7 +33,7 @@ import { NavLink, useNavigate } from "react-router-dom";
  */
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: ReactElement<any, any> },
-  ref: Ref<unknown>
+  ref: Ref<unknown>,
 ) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
@@ -181,9 +181,9 @@ export const HeaderSearch = (): JSX.Element => {
               // Sort stocks to the top if their ticker starts with the search value (case-insensitive)
               (a: Stock, b: Stock) =>
                 +b.ticker.toLocaleUpperCase().startsWith(upperCaseSearchValue) -
-                +a.ticker.toLocaleUpperCase().startsWith(upperCaseSearchValue)
+                +a.ticker.toLocaleUpperCase().startsWith(upperCaseSearchValue),
             )
-            .slice(0, 10) // Only use the first 10 results
+            .slice(0, 10), // Only use the first 10 results
         );
         setCount(res.data.count);
       })

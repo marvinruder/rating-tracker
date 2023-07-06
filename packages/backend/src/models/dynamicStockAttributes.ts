@@ -260,7 +260,7 @@ const getTotalScore = (stock: OmitDynamicAttributesStock): number => {
  */
 const getPercentageToLastClose = (
   stock: OmitDynamicAttributesStock,
-  attribute: "morningstarFairValue" | "analystTargetPrice"
+  attribute: "morningstarFairValue" | "analystTargetPrice",
 ): number | null => {
   const result =
     stock[attribute] /* this also prevents division by zero */ && stock.lastClose
@@ -289,7 +289,7 @@ const getPositionIn52w = (stock: OmitDynamicAttributesStock): number | null => {
  * @returns {Omit<Stock, keyof OmitDynamicAttributesStock>} An object containing the dynamically generated attributes.
  */
 export const dynamicStockAttributes = (
-  stock: OmitDynamicAttributesStock
+  stock: OmitDynamicAttributesStock,
 ): Omit<Stock, keyof OmitDynamicAttributesStock> => ({
   financialScore: getFinancialScore(stock),
   esgScore: getESGScore(stock),

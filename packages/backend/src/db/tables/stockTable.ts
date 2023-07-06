@@ -40,7 +40,7 @@ export const createStock = async (stock: OmitDynamicAttributesStock): Promise<bo
     // If that worked, a stock with the same ticker already exists
     logger.warn(
       PREFIX_POSTGRES +
-        chalk.yellowBright(`Skipping stock “${stock.name}” – existing already (ticker ${existingStock.ticker}).`)
+        chalk.yellowBright(`Skipping stock “${stock.name}” – existing already (ticker ${existingStock.ticker}).`),
     );
     return false;
   } catch {
@@ -118,7 +118,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
           `    Property ${k} updated from ${
             // Format dates as ISO strings
             stock[k] instanceof Date ? (stock[k] as Date).toISOString() : stock[k]
-          } to ${newValues[k] instanceof Date ? (newValues[k] as Date).toISOString() : newValues[k]}`
+          } to ${newValues[k] instanceof Date ? (newValues[k] as Date).toISOString() : newValues[k]}`,
       );
 
       switch (k) {

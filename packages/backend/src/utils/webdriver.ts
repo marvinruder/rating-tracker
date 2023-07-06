@@ -37,7 +37,7 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
         // Do not wait for all resources to load. This speeds up the page load.
         .setPageLoadStrategy(pageLoadStrategy ?? "none")
         // Silently dismiss all unexpected prompts
-        .setAlertBehavior("dismiss")
+        .setAlertBehavior("dismiss"),
     )
     .setChromeOptions(options)
     .build()
@@ -87,7 +87,8 @@ export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise
       logger.info(PREFIX_SELENIUM + `Attempting forceful shutdown of stale session ${sessionID}.`);
       axios.delete(`${process.env.SELENIUM_URL}/session/${sessionID}`).catch((e) => {
         logger.error(
-          PREFIX_SELENIUM + chalk.redBright(`An error occurred while forcefully terminating session ${sessionID}: ${e}`)
+          PREFIX_SELENIUM +
+            chalk.redBright(`An error occurred while forcefully terminating session ${sessionID}: ${e}`),
         );
       });
     }
@@ -112,7 +113,7 @@ export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvid
         fetchDate: new Date(),
         content: screenshot, // base64-encoded PNG image
       },
-      60 * 60 * 24 // We only store the screenshot for 24 hours.
+      60 * 60 * 24, // We only store the screenshot for 24 hours.
     );
     return `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
       process.env.DOMAIN

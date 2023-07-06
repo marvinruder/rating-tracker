@@ -6,7 +6,7 @@
  */
 const convertAvatar = async (file: File): Promise<string> =>
   import("@rating-tracker/wasm").then(
-    async (wasm) => `data:image/jpeg;base64,${wasm.convert_avatar(new Uint8Array(await file.arrayBuffer()))}`
+    async (wasm) => `data:image/jpeg;base64,${wasm.convert_avatar(new Uint8Array(await file.arrayBuffer()))}`,
   );
 
 self.onmessage = async (message: { data: File }) => {

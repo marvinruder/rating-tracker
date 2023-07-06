@@ -125,7 +125,7 @@ export class AuthController {
             credentialID: Buffer.from(credentialID).toString("base64"),
             credentialPublicKey: Buffer.from(credentialPublicKey).toString("base64"),
             counter,
-          })
+          }),
         ))
       ) {
         throw new APIError(403, ALREADY_REGISTERED_ERROR_MESSAGE);

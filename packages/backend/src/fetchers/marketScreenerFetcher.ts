@@ -50,8 +50,8 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
           `Stock ${stock.ticker}: Skipping MarketScreener fetch because last fetch was ${formatDistance(
             stock.marketScreenerLastFetch.getTime(),
             new Date().getTime(),
-            { addSuffix: true }
-          )}`
+            { addSuffix: true },
+          )}`,
       );
       stocks.skipped.push(stock);
       continue;
@@ -94,7 +94,7 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
           analystConsensus = +analystConsensusMatches[0];
         } catch (e) {
           logger.warn(
-            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`),
           );
           if (stock.analystConsensus !== null) {
             // If an analyst consensus is already stored in the database, but we cannot extract it from the page, we
@@ -103,8 +103,8 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
               PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of analyst consensus failed unexpectedly. ` +
-                    `This incident will be reported.`
-                )
+                    `This incident will be reported.`,
+                ),
             );
             errorMessage += `\n\tUnable to extract Analyst Consensus: ${String(e.message).split(/[\n:{]/)[0]}`;
           }
@@ -114,7 +114,7 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
           analystCount = +(await consensusTableDiv.findElement(By.xpath(XPATH_ANALYST_COUNT)).getText());
         } catch (e) {
           logger.warn(
-            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`),
           );
           if (stock.analystCount !== null) {
             // If an analyst count is already stored in the database, but we cannot extract it from the page, we log
@@ -123,8 +123,8 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
               PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of analyst count failed unexpectedly. ` +
-                    `This incident will be reported.`
-                )
+                    `This incident will be reported.`,
+                ),
             );
             errorMessage += `\n\tUnable to extract Analyst Count: ${String(e.message).split(/[\n:{]/)[0]}`;
           }
@@ -150,7 +150,7 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
           analystTargetPrice = stock.lastClose * (+analystTargetPriceMatches[0] / 100 + 1);
         } catch (e) {
           logger.warn(
-            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`)
+            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`),
           );
           if (stock.analystTargetPrice !== null) {
             // If an analyst target price is already stored in the database, but we cannot extract it from the page,
@@ -159,15 +159,16 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
               PREFIX_SELENIUM +
                 chalk.redBright(
                   `Stock ${stock.ticker}: Extraction of analyst target price failed unexpectedly. ` +
-                    `This incident will be reported.`
-                )
+                    `This incident will be reported.`,
+                ),
             );
             errorMessage += `\n\tUnable to extract Analyst Target Price: ${String(e.message).split(/[\n:{]/)[0]}`;
           }
         }
       } catch (e) {
         logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`)
+          PREFIX_SELENIUM +
+            chalk.yellowBright(`Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`),
         );
         if (stock.analystConsensus !== null || stock.analystCount !== null || stock.analystTargetPrice !== null) {
           // If any of the analyst-related information is already stored in the database, but we cannot extract it
@@ -176,8 +177,8 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract Analyst Information: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -206,18 +207,18 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
         await quitDriver(driver, sessionID);
         throw new APIError(
           502,
-          `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${String(e.message).split(/[\n:{]/)[0]}`
+          `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${String(e.message).split(/[\n:{]/)[0]}`,
         );
       }
       logger.error(
-        PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e}`)
+        PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e}`),
       );
       await signal.sendMessage(
         SIGNAL_PREFIX_ERROR +
           `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
             String(e.message).split(/[\n:{]/)[0]
           }\n${await takeScreenshot(driver, stock, "marketscreener")}`,
-        "fetchError"
+        "fetchError",
       );
     }
     if (stocks.failed.length >= 10) {
@@ -228,14 +229,14 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
           PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from MarketScreener after ${stocks.successful.length} ` +
-                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`
-            )
+                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
+            ),
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from MarketScreener after ${stocks.successful.length} ` +
             `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
-          "fetchError"
+          "fetchError",
         );
         const skippedStocks = [...stocks.queued];
         stocks.queued.length = 0;

@@ -8,7 +8,7 @@ import ConvertAvatarWorker from "./imageManipulation?worker";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const favicon192Buffer = fs.readFileSync(
-  path.join(__dirname, "..", "..", "public", "assets", "images", "favicon-dev", "favicon-192.png")
+  path.join(__dirname, "..", "..", "public", "assets", "images", "favicon-dev", "favicon-192.png"),
 );
 const favicon192 = new File([favicon192Buffer], "favicon-192.png");
 

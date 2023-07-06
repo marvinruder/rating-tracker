@@ -27,7 +27,7 @@ export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): 
         .patch(
           baseUrl + watchlistEndpointPath + `/${props.watchlist.id}`,
           {},
-          { params: { stocksToRemove: [props.stock.ticker] } }
+          { params: { stocksToRemove: [props.stock.ticker] } },
         )
         .then(() => props.getWatchlist())
         .catch((e) => setErrorNotification(e, "removing stock from watchlist"))

@@ -132,7 +132,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
           "refinitivEmissions",
           "spESGScore",
           "dividendYieldPercent",
-        ].includes(attribute)
+        ].includes(attribute),
       );
     }
   };
@@ -747,7 +747,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
             {stocksFinal
               ? stocks.map(
                   (
-                    stock // Render stock rows
+                    stock, // Render stock rows
                   ) => (
                     <StockRow
                       stock={stock}
@@ -756,13 +756,13 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
                       key={stock.ticker}
                       columns={props.columns}
                     />
-                  )
+                  ),
                 )
               : [...Array(rowsPerPage > 0 ? rowsPerPage : 100)].map(
                   (
                     _,
-                    key // Render skeleton rows
-                  ) => <StockRow key={key} getStocks={getStocks} columns={props.columns} />
+                    key, // Render skeleton rows
+                  ) => <StockRow key={key} getStocks={getStocks} columns={props.columns} />,
                 )}
           </TableBody>
         </Table>

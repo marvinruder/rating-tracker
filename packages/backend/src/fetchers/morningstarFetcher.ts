@@ -60,8 +60,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
           `Stock ${stock.ticker}: Skipping Morningstar fetch since last successful fetch was ${formatDistance(
             stock.morningstarLastFetch.getTime(),
             new Date().getTime(),
-            { addSuffix: true }
-          )}`
+            { addSuffix: true },
+          )}`,
       );
       stocks.skipped.push(stock);
       continue;
@@ -97,7 +97,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
         try {
           await driver.wait(
             until.elementLocated(By.css("#SnapshotBodyContent:has(#IntradayPriceSummary):has(#CompanyProfile)")),
-            30000 // Wait for the page to load for a maximum of 30 seconds.
+            30000, // Wait for the page to load for a maximum of 30 seconds.
           );
           attempts = 0; // Page load succeeded.
         } catch (e) {
@@ -110,8 +110,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             PREFIX_SELENIUM +
               chalk.yellowBright(
                 `Unable to load Morningstar page for ${stock.name} (${stock.ticker}). ` +
-                  `Will retry (attempt ${attempts} of ${MAX_RETRIES})`
-              )
+                  `Will retry (attempt ${attempts} of ${MAX_RETRIES})`,
+              ),
           );
           await openPageAndWait(driver, url); // Load the page once again
         }
@@ -138,8 +138,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
           logger.error(
             PREFIX_SELENIUM +
               chalk.redBright(
-                `Stock ${stock.ticker}: Extraction of industry failed unexpectedly. This incident will be reported.`
-              )
+                `Stock ${stock.ticker}: Extraction of industry failed unexpectedly. This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract industry: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -165,7 +165,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
         }
       } catch (e) {
         logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract size and style: ${e}`)
+          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract size and style: ${e}`),
         );
         if (stock.size !== null || stock.style !== null) {
           // If size or style for the stock are already stored in the database, but we cannot extract them now from
@@ -174,8 +174,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of size and style failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract size and style: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -184,7 +184,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
       try {
         const starRatingString = (await driver.findElement(By.className("starsImg")).getAttribute("alt")).replaceAll(
           /\D/g,
-          ""
+          "",
         ); // Remove all non-digit characters
         if (starRatingString.length === 0 || Number.isNaN(+starRatingString)) {
           throw new TypeError(`Extracted star rating is no valid number.`);
@@ -199,8 +199,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of star rating failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract star rating: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -219,7 +219,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
         }
       } catch (e) {
         logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`)
+          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`),
         );
         if (stock.dividendYieldPercent !== null) {
           // If a dividend yield for the stock is already stored in the database, but we cannot extract it now from
@@ -228,8 +228,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of dividend yield failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract dividend yield: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -248,7 +248,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
         }
       } catch (e) {
         logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`)
+          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`),
         );
         if (stock.priceEarningRatio !== null) {
           // If a price earning ratio for the stock is already stored in the database, but we cannot extract it now
@@ -257,8 +257,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of price earning ratio failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract price earning ratio: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -281,8 +281,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
           logger.error(
             PREFIX_SELENIUM +
               chalk.redBright(
-                `Stock ${stock.ticker}: Extraction of currency failed unexpectedly. This incident will be reported.`
-              )
+                `Stock ${stock.ticker}: Extraction of currency failed unexpectedly. This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract currency: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -307,8 +307,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
           logger.error(
             PREFIX_SELENIUM +
               chalk.redBright(
-                `Stock ${stock.ticker}: Extraction of last close failed unexpectedly. This incident will be reported.`
-              )
+                `Stock ${stock.ticker}: Extraction of last close failed unexpectedly. This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract last close: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -331,7 +331,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
         }
       } catch (e) {
         logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`)
+          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`),
         );
         if (stock.morningstarFairValue !== null) {
           // If a Morningstar Fair Value for the stock is already stored in the database, but we cannot extract it
@@ -340,8 +340,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of Morningstar Fair Value failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract Morningstar Fair Value: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -368,7 +368,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
         }
       } catch (e) {
         logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`)
+          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`),
         );
         if (stock.marketCap !== null) {
           // If a market capitalization for the stock is already stored in the database, but we cannot extract it now
@@ -377,8 +377,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of Market Capitalization failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract Market Capitalization: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -407,7 +407,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
         }
       } catch (e) {
         logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`)
+          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`),
         );
         if (stock.low52w !== null || stock.high52w !== null) {
           // If a 52 week price range for the stock is already stored in the database, but we cannot extract it now
@@ -416,8 +416,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of 52 week price range failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract 52 week price range: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -434,8 +434,8 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of description failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract description: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -474,7 +474,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
         await quitDriver(driver, sessionID);
         throw new APIError(
           502,
-          `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${String(e.message).split(/[\n:{]/)[0]}`
+          `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${String(e.message).split(/[\n:{]/)[0]}`,
         );
       }
       logger.error(PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Morningstar data: ${e}`));
@@ -483,7 +483,7 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
           `Stock ${stock.ticker}: Unable to fetch Morningstar data: ${
             String(e.message).split(/[\n:{]/)[0]
           }\n${await takeScreenshot(driver, stock, "morningstar")}`,
-        "fetchError"
+        "fetchError",
       );
     }
     if (stocks.failed.length >= 10) {
@@ -494,14 +494,14 @@ const morningstarFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>)
           PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from Morningstar after ${stocks.successful.length} ` +
-                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`
-            )
+                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
+            ),
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from Morningstar after ${stocks.successful.length} ` +
             `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
-          "fetchError"
+          "fetchError",
         );
         const skippedStocks = [...stocks.queued];
         stocks.queued.length = 0;

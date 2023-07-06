@@ -35,8 +35,8 @@ export class WatchlistController {
       .json(
         (await readAllWatchlists(res.locals.user.email)).sort((a, b) =>
           // Sort the watchlists alphabetically, with the Favorites watchlist at the top
-          a.name === FAVORITES_NAME ? -1 : b.name === FAVORITES_NAME ? 1 : a.name.localeCompare(b.name)
-        )
+          a.name === FAVORITES_NAME ? -1 : b.name === FAVORITES_NAME ? 1 : a.name.localeCompare(b.name),
+        ),
       )
       .end();
   }
@@ -105,7 +105,7 @@ export class WatchlistController {
         res.locals.user.email,
         { name, subscribed },
         (stocksToAdd as string[] | undefined) ?? [],
-        (stocksToRemove as string[] | undefined) ?? []
+        (stocksToRemove as string[] | undefined) ?? [],
       );
       res.status(204).end();
     }
