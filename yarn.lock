@@ -1269,7 +1269,7 @@ __metadata:
     prettier: 3.0.0
     prisma: 5.0.0
     redis: 4.6.7
-    redis-om: 0.3.6
+    redis-om: 0.4.0
     response-time: 2.3.2
     selenium-webdriver: 4.10.0
     supertest: 6.3.3
@@ -5733,6 +5733,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsonpath-plus@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "jsonpath-plus@npm:7.2.0"
+  checksum: 05f447339d29be861e307d6e812aec1b9b88a3ba6bba286966a4e8bed3e752bee3d715eabfc21dce968be85ccb48bf79d2c1af78da7b9b74cd1b446d4d5d02f5
+  languageName: node
+  linkType: hard
+
 "jsx-ast-utils@npm:^2.4.1 || ^3.0.0":
   version: 3.3.3
   resolution: "jsx-ast-utils@npm:3.3.3"
@@ -5752,6 +5759,13 @@ __metadata:
     readable-stream: ~2.3.6
     setimmediate: ^1.0.5
   checksum: abc77bfbe33e691d4d1ac9c74c8851b5761fba6a6986630864f98d876f3fcc2d36817dfc183779f32c00157b5d53a016796677298272a714ae096dfe6b1c8b60
+  languageName: node
+  linkType: hard
+
+"just-clone@npm:^6.1.1":
+  version: 6.2.0
+  resolution: "just-clone@npm:6.2.0"
+  checksum: 2c3353e3524aba8adae499973d9b8663eed3a647c73fd60149ac8a10031353e82ff1941820b56c96d12263424f50e564c7dd1fd330cf6de630455909810e13a6
   languageName: node
   linkType: hard
 
@@ -7370,17 +7384,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis-om@npm:0.3.6":
-  version: 0.3.6
-  resolution: "redis-om@npm:0.3.6"
+"redis-om@npm:0.4.0":
+  version: 0.4.0
+  resolution: "redis-om@npm:0.4.0"
   dependencies:
-    redis: ^4.0.4
+    jsonpath-plus: ^7.2.0
+    just-clone: ^6.1.1
+    redis: ^4.6.4
     ulid: ^2.3.0
-  checksum: 035053894f9226bb1e4a01371fbdc82fa50fadf63bb4f2d3f23d7979f21aefee7e9de0c67cdbf6c343a47dd3ed939aa69fb798e3eb8081f9a5455f0639f3729e
+  checksum: ae72496ad8a8b73b7bcad843127662e1301301c81ee334353963c643a11f519bf5afbea388d996daa0285c97665354486c4a7fc91d42410423f5a7d20d407356
   languageName: node
   linkType: hard
 
-"redis@npm:4.6.7, redis@npm:^4.0.4":
+"redis@npm:4.6.7, redis@npm:^4.6.4":
   version: 4.6.7
   resolution: "redis@npm:4.6.7"
   dependencies:

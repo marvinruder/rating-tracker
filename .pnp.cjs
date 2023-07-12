@@ -1683,7 +1683,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:3.0.0"],\
             ["prisma", "npm:5.0.0"],\
             ["redis", "npm:4.6.7"],\
-            ["redis-om", "npm:0.3.6"],\
+            ["redis-om", "npm:0.4.0"],\
             ["response-time", "npm:2.3.2"],\
             ["selenium-webdriver", "npm:4.10.0"],\
             ["supertest", "npm:6.3.3"],\
@@ -6945,6 +6945,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["jsonpath-plus", [\
+        ["npm:7.2.0", {\
+          "packageLocation": "./.yarn/cache/jsonpath-plus-npm-7.2.0-c2ddc144a1-05f447339d.zip/node_modules/jsonpath-plus/",\
+          "packageDependencies": [\
+            ["jsonpath-plus", "npm:7.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["jsx-ast-utils", [\
         ["npm:3.3.3", {\
           "packageLocation": "./.yarn/cache/jsx-ast-utils-npm-3.3.3-3d3171e1e4-a2ed78cac4.zip/node_modules/jsx-ast-utils/",\
@@ -6965,6 +6974,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pako", "npm:1.0.11"],\
             ["readable-stream", "npm:2.3.8"],\
             ["setimmediate", "npm:1.0.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["just-clone", [\
+        ["npm:6.2.0", {\
+          "packageLocation": "./.yarn/cache/just-clone-npm-6.2.0-0ebdb2bfbe-2c3353e352.zip/node_modules/just-clone/",\
+          "packageDependencies": [\
+            ["just-clone", "npm:6.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8862,10 +8880,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["redis-om", [\
-        ["npm:0.3.6", {\
-          "packageLocation": "./.yarn/cache/redis-om-npm-0.3.6-42159be4d5-035053894f.zip/node_modules/redis-om/",\
+        ["npm:0.4.0", {\
+          "packageLocation": "./.yarn/cache/redis-om-npm-0.4.0-6cc0ac537e-ae72496ad8.zip/node_modules/redis-om/",\
           "packageDependencies": [\
-            ["redis-om", "npm:0.3.6"],\
+            ["redis-om", "npm:0.4.0"],\
+            ["jsonpath-plus", "npm:7.2.0"],\
+            ["just-clone", "npm:6.2.0"],\
             ["redis", "npm:4.6.7"],\
             ["ulid", "npm:2.3.0"]\
           ],\
