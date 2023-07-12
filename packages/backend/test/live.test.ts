@@ -81,7 +81,7 @@ for await (const path of await glob("../**/*.live.test.ts")) {
   tests.forEach((test) =>
     test.testName.toLowerCase().includes("unsafe")
       ? unsafeTestSuites[suiteName].push(test)
-      : testSuites[suiteName].push(test)
+      : testSuites[suiteName].push(test),
   );
 }
 
@@ -90,13 +90,13 @@ Object.entries(testSuites).forEach(
   ([suiteName, testSuite]) =>
     testSuite.length &&
     describe.concurrent(`${suiteName} – Concurrent Tests`, () =>
-      testSuite.forEach((test) => it.concurrent(test.testName, test.testFunction))
-    )
+      testSuite.forEach((test) => it.concurrent(test.testName, test.testFunction)),
+    ),
 );
 
 // Do not run unsafe tests concurrently
 Object.entries(unsafeTestSuites).forEach(
   ([suiteName, testSuite]) =>
     testSuite.length &&
-    describe(`${suiteName} – Unsafe Tests`, () => testSuite.forEach((test) => it(test.testName, test.testFunction)))
+    describe(`${suiteName} – Unsafe Tests`, () => testSuite.forEach((test) => it(test.testName, test.testFunction))),
 );
