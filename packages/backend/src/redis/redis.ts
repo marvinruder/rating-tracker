@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import dotenv from "dotenv";
 import { createClient } from "redis";
-import { Client } from "redis-om";
 import logger, { PREFIX_REDIS } from "../utils/logger.js";
 
 dotenv.config();
@@ -23,9 +22,4 @@ redis.on(
 );
 await redis.connect();
 
-/**
- * The Redis OM client used throughout the application.
- */
-const client = await new Client().use(redis);
-
-export default client;
+export default redis;

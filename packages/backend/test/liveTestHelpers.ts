@@ -29,7 +29,7 @@ export const expectStockListLengthToBe = async (length: number): Promise<Stock[]
  */
 export const expectRouteToBePrivate = async (
   route: string,
-  method?: (url: string, callback?: CallbackHandler) => Test
+  method?: (url: string, callback?: CallbackHandler) => Test,
 ): Promise<void> => {
   method = method ?? supertest.get;
   const res = await method(route);
@@ -45,13 +45,13 @@ export const expectRouteToBePrivate = async (
  */
 export const expectSpecialAccessRightsToBeRequired = async (
   route: string,
-  method?: (url: string, callback?: CallbackHandler) => Test
+  method?: (url: string, callback?: CallbackHandler) => Test,
 ): Promise<void> => {
   method = method ?? supertest.get;
   const res = await method(route).set("Cookie", ["authToken=anotherExampleSessionID"]);
   expect(res.status).toBe(403);
   expect(res.body.message).toMatch(
-    "The authenticated user account does not have the rights necessary to access this endpoint"
+    "The authenticated user account does not have the rights necessary to access this endpoint",
   );
 };
 

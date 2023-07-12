@@ -1,10 +1,11 @@
 import APIError from "../../utils/apiError.js";
-import { Session, SessionEntity, sessionSchema } from "../../models/session.js";
+import { isExistingSessionEntity, sessionSchema } from "../../models/session.js";
 import chalk from "chalk";
-import { User } from "@rating-tracker/commons";
+import { Session, User } from "@rating-tracker/commons";
 import { readUser } from "../../db/tables/userTable.js";
 import logger, { PREFIX_REDIS } from "../../utils/logger.js";
-import client from "../client.js";
+import redis from "../redis.js";
+import { Entity, EntityId, Repository } from "redis-om";
 
 /**
  * The time in seconds after which a session should expire.
@@ -14,47 +15,39 @@ export const sessionTTLInSeconds = 1800;
 /**
  * The session repository.
  */
-export const sessionRepository = client.fetchRepository(sessionSchema);
+export const sessionRepository = new Repository(sessionSchema, redis);
 
 /**
  * Fetch a session from the repository.
  *
- * @param {string} id The ID of the session to fetch.
- * @returns {Promise<SessionEntity>} The session entity.
+ * @param {string} sessionID The ID of the session to fetch.
+ * @returns {Promise<Entity>} The session entity.
  */
-const fetchSession = (id: string): Promise<SessionEntity> => {
-  return sessionRepository.fetch(id);
-};
+const fetchSession = (sessionID: string): Promise<Entity> => sessionRepository.fetch(sessionID);
 
 /**
  * Sets the expiration time of a session to the configured TTL.
  *
- * @param {string} id The ID of the session to refresh.
+ * @param {string} sessionID The ID of the session to refresh.
  * @returns {Promise<void>}
  */
-const refreshSession = (id: string): Promise<void> => {
-  return sessionRepository.expire(id, sessionTTLInSeconds);
-};
+const refreshSession = (sessionID: string): Promise<void> => sessionRepository.expire(sessionID, sessionTTLInSeconds);
 
 /**
  * Save a session to the repository.
  *
- * @param {SessionEntity} sessionEntity The session entity to save.
- * @returns {Promise<string>} The ID of the saved session.
+ * @param {Session} session The session to save.
+ * @returns {Promise<Entity>} The saved session entity, containing an {@link EntityId}.
  */
-const saveSession = (sessionEntity: SessionEntity): Promise<string> => {
-  return sessionRepository.save(sessionEntity);
-};
+const saveSession = (session: Session): Promise<Entity> => sessionRepository.save(session.sessionID, { ...session });
 
 /**
  * Delete a session from the repository.
  *
- * @param {string} id The ID of the session to delete.
+ * @param {string} sessionID The ID of the session to delete.
  * @returns {Promise<void>}
  */
-const removeSession = (id: string): Promise<void> => {
-  return sessionRepository.remove(id);
-};
+const removeSession = (sessionID: string): Promise<void> => sessionRepository.remove(sessionID);
 
 /**
  * Create a session.
@@ -67,17 +60,14 @@ export const createSession = async (session: Session): Promise<boolean> => {
   const existingSession = await fetchSession(session.sessionID);
   // Difficult to test since session IDs are always created randomly
   /* c8 ignore start */
-  if (existingSession && existingSession.email) {
+  if (isExistingSessionEntity(existingSession)) {
     // If that worked, a session with the same ID already exists
     logger.warn(PREFIX_REDIS + chalk.yellowBright(`Skipping session ${existingSession.entityId} – existing already.`));
     return false;
   }
   /* c8 ignore stop */
-  const sessionEntity = new SessionEntity(sessionSchema, session.sessionID, {
-    ...session,
-  });
   logger.info(
-    PREFIX_REDIS + `Created session for “${session.email}” with entity ID ${await saveSession(sessionEntity)}.`,
+    PREFIX_REDIS + `Created session for “${session.email}” with entity ID ${(await saveSession(session))[EntityId]}.`,
   );
   await refreshSession(session.sessionID); // Let the session expire after 30 minutes
   return true;
@@ -91,22 +81,13 @@ export const createSession = async (session: Session): Promise<boolean> => {
  * @throws an {@link APIError} if the session does not exist.
  */
 export const refreshSessionAndFetchUser = async (sessionID: string): Promise<User> => {
-  const sessionEntity = await fetchSession(sessionID);
-  if (sessionEntity && sessionEntity.email) {
+  const entity = await fetchSession(sessionID);
+  if (isExistingSessionEntity(entity)) {
     await refreshSession(sessionID); // Let the session expire after 30 minutes
-    return await readUser(sessionEntity.email);
+    return await readUser(entity.email);
   }
   throw new APIError(404, `Session ${sessionID} not found.`);
 };
-
-// export const readSession = async (sessionID: string) => {
-//   const sessionEntity = await fetch(sessionID);
-//   if (sessionEntity && sessionEntity.email) {
-//     return new Session(sessionEntity);
-//   } else {
-//     throw new APIError(404, `Session ${sessionID} not found.`);
-//   }
-// };
 
 /**
  * Delete a session from Redis.
@@ -114,10 +95,10 @@ export const refreshSessionAndFetchUser = async (sessionID: string): Promise<Use
  * @param {string} sessionID The session ID.
  */
 export const deleteSession = async (sessionID: string) => {
-  const sessionEntity = await fetchSession(sessionID);
-  if (sessionEntity && sessionEntity.email) {
-    const email = new Session(sessionEntity).email;
-    await removeSession(sessionEntity.entityId);
+  const entity = await fetchSession(sessionID);
+  if (isExistingSessionEntity(entity)) {
+    const { email } = entity;
+    await removeSession(entity[EntityId]);
     logger.info(PREFIX_REDIS + `Deleted session ${sessionID} for user “${email}”.`);
     /* c8 ignore next */ // Not reached in current tests since a user can only delete their current session
   } else throw new APIError(404, `Session ${sessionID} not found.`);
