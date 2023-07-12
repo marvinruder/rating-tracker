@@ -30,9 +30,9 @@ export const NestedCheckboxList = <
   FirstLevelType extends string,
   SecondLevelType extends string,
   ThirdLevelType extends string,
-  FourthLevelType extends string
+  FourthLevelType extends string,
 >(
-  props: NestedCheckboxListProps<FirstLevelType, SecondLevelType, ThirdLevelType, FourthLevelType>
+  props: NestedCheckboxListProps<FirstLevelType, SecondLevelType, ThirdLevelType, FourthLevelType>,
 ): JSX.Element => {
   const theme = useTheme();
 
@@ -59,7 +59,7 @@ export const NestedCheckboxList = <
           ? // Check all fourth-level elements that are children of the first-level element
             [...prev, ...fourthLevelElements]
           : // Uncheck all fourth-level elements that are children of the first-level element
-            prev.filter((p) => !fourthLevelElements.includes(p))
+            prev.filter((p) => !fourthLevelElements.includes(p)),
       );
     } else if (props.getThirdLevelElements) {
       // The third level is the last level of nesting
@@ -72,7 +72,7 @@ export const NestedCheckboxList = <
           ? // Check all third-level elements that are children of the first-level element
             [...prev, ...thirdLevelElements]
           : // Uncheck all third-level elements that are children of the first-level element
-            prev.filter((p) => !thirdLevelElements.includes(p))
+            prev.filter((p) => !thirdLevelElements.includes(p)),
       );
     } else if (props.getSecondLevelElements) {
       // The second level is the last level of nesting
@@ -83,8 +83,8 @@ export const NestedCheckboxList = <
             [...prev, ...props.getSecondLevelElements(firstLevelElement)]
           : prev.filter(
               // Uncheck all second-level elements that are children of the first-level element
-              (p) => !props.getSecondLevelElements(firstLevelElement).includes(p)
-            )
+              (p) => !props.getSecondLevelElements(firstLevelElement).includes(p),
+            ),
       );
     } else {
       // The first level is the last level of nesting (= we have no nesting in the list)
@@ -92,7 +92,7 @@ export const NestedCheckboxList = <
         (prev) =>
           prev.includes(firstLevelElement) // Previous state of the first-level element
             ? prev.filter((p) => p != firstLevelElement) // Uncheck the first-level element
-            : [...prev, firstLevelElement] // Check the first-level element
+            : [...prev, firstLevelElement], // Check the first-level element
       );
     }
   };
@@ -140,7 +140,7 @@ export const NestedCheckboxList = <
           ? // Check all fourth-level elements that are children of the second-level element
             [...prev, ...fourthLevelElements]
           : // Uncheck all fourth-level elements that are children of the second-level element
-            prev.filter((p) => !fourthLevelElements.includes(p))
+            prev.filter((p) => !fourthLevelElements.includes(p)),
       );
     } else if (props.getThirdLevelElements) {
       // The third level is the last level of nesting
@@ -151,8 +151,8 @@ export const NestedCheckboxList = <
             [...prev, ...props.getThirdLevelElements(secondLevelElement)]
           : prev.filter(
               // Uncheck all third-level elements that are children of the second-level element
-              (p) => !props.getThirdLevelElements(secondLevelElement).includes(p)
-            )
+              (p) => !props.getThirdLevelElements(secondLevelElement).includes(p),
+            ),
       );
     } else {
       // The second level is the last level of nesting (= we have no further nesting in the list)
@@ -160,7 +160,7 @@ export const NestedCheckboxList = <
         (prev) =>
           prev.includes(secondLevelElement) // Previous state of the second-level element
             ? prev.filter((p) => p != secondLevelElement) // Uncheck the second-level element
-            : [...prev, secondLevelElement] // Check the second-level element
+            : [...prev, secondLevelElement], // Check the second-level element
       );
     }
   };
@@ -206,8 +206,8 @@ export const NestedCheckboxList = <
             [...prev, ...props.getFourthLevelElements(thirdLevelElement)]
           : prev.filter(
               // Uncheck all fourth-level elements that are children of the third-level element
-              (p) => !props.getFourthLevelElements(thirdLevelElement).includes(p)
-            )
+              (p) => !props.getFourthLevelElements(thirdLevelElement).includes(p),
+            ),
       );
     } else {
       // The third level is the last level of nesting (= we have no further nesting in the list)
@@ -215,7 +215,7 @@ export const NestedCheckboxList = <
         (prev) =>
           prev.includes(thirdLevelElement) // Previous state of the third-level element
             ? prev.filter((p) => p != thirdLevelElement) // Uncheck the third-level element
-            : [...prev, thirdLevelElement] // Check the third-level element
+            : [...prev, thirdLevelElement], // Check the third-level element
       );
     }
   };
@@ -256,7 +256,7 @@ export const NestedCheckboxList = <
       (prev) =>
         prev.includes(fourthLevelElement) // Previous state of the fourth-level element
           ? prev.filter((p) => p != fourthLevelElement) // Uncheck the fourth-level element
-          : [...prev, fourthLevelElement] // Check the fourth-level element
+          : [...prev, fourthLevelElement], // Check the fourth-level element
     );
   };
 
@@ -462,7 +462,7 @@ interface NestedCheckboxListProps<
   FirstLevelType extends string,
   SecondLevelType extends string,
   ThirdLevelType extends string,
-  FourthLevelType extends string
+  FourthLevelType extends string,
 > {
   /**
    * The last-level elements that are currently selected. The parent elements states are derived from this.

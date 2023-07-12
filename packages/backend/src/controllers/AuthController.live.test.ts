@@ -36,7 +36,7 @@ tests.push({
           type: "webauthn.create",
           challenge,
           origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
-        })
+        }),
       ).toString("base64"),
     } as unknown;
 
@@ -55,7 +55,7 @@ tests.push({
             type: "webauthn.create",
             challenge: "Wrong challenge", // Oh no!
             origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
-          })
+          }),
         ).toString("base64"),
       },
     });
@@ -89,7 +89,7 @@ tests.push({
           type: "webauthn.get",
           challenge,
           origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
-        })
+        }),
       ).toString("base64"),
       userHandle: "jim.doe@example.com",
     };

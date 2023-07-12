@@ -1580,10 +1580,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@pkgr/utils", [\
-        ["npm:2.4.2", {\
-          "packageLocation": "./.yarn/cache/@pkgr-utils-npm-2.4.2-5333ff17f3-24e04c1212.zip/node_modules/@pkgr/utils/",\
+        ["npm:2.4.1", {\
+          "packageLocation": "./.yarn/cache/@pkgr-utils-npm-2.4.1-982147648e-6546828602.zip/node_modules/@pkgr/utils/",\
           "packageDependencies": [\
-            ["@pkgr/utils", "npm:2.4.2"],\
+            ["@pkgr/utils", "npm:2.4.1"],\
             ["cross-spawn", "npm:7.0.3"],\
             ["fast-glob", "npm:3.3.0"],\
             ["is-glob", "npm:4.0.3"],\
@@ -9834,7 +9834,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/synckit-npm-0.8.5-40a594eb38-8a9560e5d8.zip/node_modules/synckit/",\
           "packageDependencies": [\
             ["synckit", "npm:0.8.5"],\
-            ["@pkgr/utils", "npm:2.4.2"],\
+            ["@pkgr/utils", "npm:2.4.1"],\
             ["tslib", "npm:2.6.0"]\
           ],\
           "linkType": "HARD"\

@@ -354,7 +354,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 const filteredOptions = options.filter(
                   (option) =>
                     countryName[option].toUpperCase().startsWith(countryInputValue.trim().toUpperCase()) &&
-                    option != currentInputValue
+                    option != currentInputValue,
                 );
                 // If the text input is a valid country code, we show it as the first option.
                 isCountry(currentInputValue) && filteredOptions.unshift(currentInputValue);

@@ -58,12 +58,12 @@ tests.push({
     await expectRouteToBePrivate(`/api${userManagementEndpointPath}/john.doe%40example.com`, supertest.patch);
     await expectSpecialAccessRightsToBeRequired(
       `/api${userManagementEndpointPath}/john.doe%40example.com`,
-      supertest.patch
+      supertest.patch,
     );
     let res = await supertest
       .patch(
         `/api${userManagementEndpointPath}/john.doe%40example.com` +
-          "?name=John%20Doe%20II%2E&phone=%2B987654321&accessRights=1&subscriptions=0"
+          "?name=John%20Doe%20II%2E&phone=%2B987654321&accessRights=1&subscriptions=0",
       )
       .send({
         avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
@@ -101,7 +101,7 @@ tests.push({
     await expectRouteToBePrivate(`/api${userManagementEndpointPath}/john.doe%40example.com`, supertest.delete);
     await expectSpecialAccessRightsToBeRequired(
       `/api${userManagementEndpointPath}/john.doe%40example.com`,
-      supertest.delete
+      supertest.delete,
     );
     let res = await supertest
       .delete(`/api${userManagementEndpointPath}/john.doe%40example.com`)

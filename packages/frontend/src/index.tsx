@@ -26,5 +26,5 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </SidebarProvider>
+  </SidebarProvider>,
 );

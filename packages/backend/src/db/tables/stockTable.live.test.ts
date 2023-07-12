@@ -136,7 +136,7 @@ tests.push({
       questionableProperty: "This is not a valid property",
     };
     await expect(updateStock("NEWSTOCK", invalidValues)).rejects.toThrow(
-      "Invalid property questionableProperty for stock NEWSTOCK."
+      "Invalid property questionableProperty for stock NEWSTOCK.",
     );
   },
 });

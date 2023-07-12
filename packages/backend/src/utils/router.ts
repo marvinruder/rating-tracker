@@ -54,25 +54,27 @@ export default Router = <This>(options: RouterOptions): any => {
 export default <This>(options: RouterOptions): any => {
   return (controllerClass: This, controllerFnName: string) => {
     const controllerFn = controllerClass[controllerFnName];
-    const controllerFnWithAccessRightCheck = async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        if (
-          !options.accessRights || // Public Routes do not require an access right check
-          // Check if the user is authenticated and has the required access rights for the endpoint
-          res.locals.user?.hasAccessRight(options.accessRights) ||
-          res.locals.userIsCron // Allow Cron jobs to access all endpoints
-        ) {
-          await controllerFn(req, res);
-        } else {
-          throw new APIError(
-            // Use the correct error code and message based on whether a user is authenticated.
-            res.locals.user ? 403 : 401,
-            res.locals.user ? FORBIDDEN_ERROR_MESSAGE : UNAUTHORIZED_ERROR_MESSAGE
-          );
+    const controllerFnWithAccessRightCheck = (req: Request, res: Response, next: NextFunction) => {
+      void (async (): Promise<void> => {
+        try {
+          if (
+            !options.accessRights || // Public Routes do not require an access right check
+            // Check if the user is authenticated and has the required access rights for the endpoint
+            res.locals.user?.hasAccessRight(options.accessRights) ||
+            res.locals.userIsCron // Allow Cron jobs to access all endpoints
+          ) {
+            await controllerFn(req, res);
+          } else {
+            throw new APIError(
+              // Use the correct error code and message based on whether a user is authenticated.
+              res.locals.user ? 403 : 401,
+              res.locals.user ? FORBIDDEN_ERROR_MESSAGE : UNAUTHORIZED_ERROR_MESSAGE,
+            );
+          }
+        } catch (err) {
+          next(err);
         }
-      } catch (err) {
-        next(err);
-      }
+      })();
     };
     options.rateLimited
       ? router[options.method](options.path, rateLimiter, controllerFnWithAccessRightCheck)

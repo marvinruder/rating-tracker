@@ -22,7 +22,7 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
     // If that worked, a user with the same email address already exists
     logger.warn(
       PREFIX_POSTGRES +
-        chalk.yellowBright(`Skipping user “${user.name}” – existing already (email address ${existingUser.email}).`)
+        chalk.yellowBright(`Skipping user “${user.name}” – existing already (email address ${existingUser.email}).`),
     );
     return false;
   } catch {
@@ -130,7 +130,7 @@ export const userExists = async (email: string): Promise<boolean> => {
  */
 export const updateUserWithCredentials = async (
   email: string,
-  newValues: Partial<Omit<UserWithCredentials, "email">>
+  newValues: Partial<Omit<UserWithCredentials, "email">>,
 ) => {
   let k: keyof typeof newValues; // all keys of new values
   const user = await readUserWithCredentials(email); // Read the user from the database

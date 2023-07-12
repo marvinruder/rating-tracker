@@ -62,14 +62,14 @@ const UserTable: FC = (): JSX.Element => {
             {usersFinal
               ? users.map(
                   (
-                    user // Render user rows
-                  ) => <UserRow user={user} getUsers={getUsers} key={user.email} />
+                    user, // Render user rows
+                  ) => <UserRow user={user} getUsers={getUsers} key={user.email} />,
                 )
               : [...Array(10)].map(
                   (
                     _,
-                    key // Render skeleton rows
-                  ) => <UserRow key={key} getUsers={getUsers} />
+                    key, // Render skeleton rows
+                  ) => <UserRow key={key} getUsers={getUsers} />,
                 )}
           </TableBody>
           <TableFooter>

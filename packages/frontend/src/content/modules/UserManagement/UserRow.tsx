@@ -99,7 +99,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
                 `(${props.user.email}) have been updated successfully`,
             })
             // TODO close select
-          )
+          ),
         ) // Update the user in the table, show a notification, and close the dialog on success.
         .catch((e) => setErrorNotification(e, "updating user"))
         .finally(() => setRequestInProgress(false));
@@ -189,7 +189,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
               </li>
             ) : (
               <></>
-            )
+            ),
           )}
         </Box>
       </TableCell>

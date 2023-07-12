@@ -17,7 +17,7 @@ import { ADMINISTRATIVE_ACCESS } from "@rating-tracker/commons";
  * @returns {JSX.Element} The component.
  */
 const MenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
-  props: BoxProps & { children: React.ReactNode }
+  props: BoxProps & { children: React.ReactNode },
 ): JSX.Element => {
   const theme = useTheme();
   return (
@@ -46,7 +46,7 @@ const MenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
  * @returns {JSX.Element} The component.
  */
 const SubMenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
-  props: BoxProps & { children: React.ReactNode }
+  props: BoxProps & { children: React.ReactNode },
 ): JSX.Element => {
   const theme = useTheme();
   return (

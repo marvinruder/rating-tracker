@@ -61,7 +61,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
       user
         .getAccessRights() // Get a list of all access rights
         .flatMap((accessRight) => messageTypesAllowedWithGivenAccessRight[accessRight]) // Map to list of message types
-        .filter((messageType) => messageType !== undefined) // Filter out undefined values
+        .filter((messageType) => messageType !== undefined), // Filter out undefined values
     ),
   ].map(
     (messageType) =>
@@ -69,7 +69,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
         subscription: subscriptionOfMessageType[messageType],
         name: messageTypeName[messageType],
         description: messageTypeDescription[messageType],
-      }
+      },
   );
 
   /**
@@ -117,7 +117,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               phone: phone !== user.phone ? phone.trim() : undefined,
               subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
             },
-          }
+          },
         )
         .then(
           () => (
@@ -128,7 +128,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               message: "Your profile has been updated successfully.",
             }),
             props.onClose()
-          ) // Update the user in the context, show a notification, and close the dialog on success.
+          ), // Update the user in the context, show a notification, and close the dialog on success.
         )
         .catch((e) => setErrorNotification(e, "updating user"))
         .finally(() => setRequestInProgress(false));
@@ -145,7 +145,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    *
    * @param {React.ChangeEvent<HTMLInputElement>} e The upload event.
    */
-  const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProcessingAvatar(true);
 
     const file = e.target.files?.[0];

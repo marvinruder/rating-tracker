@@ -13,7 +13,7 @@ import { Logo } from "./Logo";
  * @returns {JSX.Element} The component.
  */
 const SidebarWrapper: FC<BoxProps & { children: React.ReactNode }> = (
-  props: BoxProps & { children: React.ReactNode }
+  props: BoxProps & { children: React.ReactNode },
 ): JSX.Element => {
   const theme = useTheme();
   return (

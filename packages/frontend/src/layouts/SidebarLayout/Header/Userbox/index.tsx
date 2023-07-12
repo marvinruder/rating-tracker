@@ -31,20 +31,22 @@ export const HeaderUserbox = (): JSX.Element => {
   /**
    * Sign out the current user.
    */
-  const signOut = async () => {
-    try {
-      // Delete the session
-      await axios.delete(baseUrl + sessionEndpointPath);
-      // This is only reached if signing out was successful
-      setNotification({
-        severity: "success",
-        title: "See you next time!",
-        message: "Signed out successfully",
-      });
-      navigate("/");
-    } catch (e) {
-      setErrorNotification(e, "signing out");
-    }
+  const signOut = () => {
+    void (async (): Promise<void> => {
+      try {
+        // Delete the session
+        await axios.delete(baseUrl + sessionEndpointPath);
+        // This is only reached if signing out was successful
+        setNotification({
+          severity: "success",
+          title: "See you next time!",
+          message: "Signed out successfully",
+        });
+        navigate("/");
+      } catch (e) {
+        setErrorNotification(e, "signing out");
+      }
+    })();
   };
 
   return (

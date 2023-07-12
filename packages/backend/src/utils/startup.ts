@@ -49,7 +49,7 @@ const logo = chalk.bold(
    (await import(`./packageInfo-${process.env.NODE_ENV === "test" ? "no-assert" : "assert.js"}`)).default.version
  } (${process.env.NODE_ENV ?? "no specific"} environment)!
 
-`)
+`),
 );
 
 /**

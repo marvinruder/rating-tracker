@@ -83,7 +83,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                   color={props.isFavorite ? "warning" : undefined}
                   onClick={() => {
                     (props.isFavorite ? axios.delete : axios.put)(
-                      baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`
+                      baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`,
                     )
                       .then(() => props.getStock && props.getStock())
                       .catch((e) => {

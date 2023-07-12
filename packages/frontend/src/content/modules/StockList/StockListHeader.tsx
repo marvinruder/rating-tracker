@@ -413,7 +413,7 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
                   <Slider
                     sx={{ width: "230px", ml: "10px", mr: "10px" }}
                     value={msciESGRatingInput.map((value) =>
-                      value === "None" ? 7 : msciESGRatingArray.findIndex((element) => element === value)
+                      value === "None" ? 7 : msciESGRatingArray.findIndex((element) => element === value),
                     )}
                     min={0}
                     max={7}

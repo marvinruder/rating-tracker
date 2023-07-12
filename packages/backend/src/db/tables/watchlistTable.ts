@@ -163,7 +163,7 @@ export const updateWatchlist = async (
   email: string,
   newValues: Partial<Omit<Watchlist, "id" | "stocks">>,
   stocksToAdd?: string[],
-  stocksToRemove?: string[]
+  stocksToRemove?: string[],
 ) => {
   let k: keyof typeof newValues; // all keys of new values
   const watchlist = await readWatchlist(id, email); // Read the watchlist from the database

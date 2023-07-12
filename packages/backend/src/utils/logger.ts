@@ -45,7 +45,7 @@ const prettyStream = pretty({
 const getLogFilePath = () => {
   return (process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).log").replaceAll(
     "(DATE)",
-    new Date().toISOString().split("T")[0]
+    new Date().toISOString().split("T")[0],
   );
 };
 
@@ -83,7 +83,7 @@ const logger = pino(
   {
     level: process.env.LOG_LEVEL ?? "info",
   },
-  multistream
+  multistream,
 );
 
 // Rotate the log file every day
@@ -95,7 +95,7 @@ new cron.CronJob(
     multistream.streams.find((stream) => stream.stream instanceof fs.WriteStream).stream = fileStream;
   },
   null,
-  true
+  true,
 );
 
 /**
@@ -164,12 +164,12 @@ export const requestLogger = (req: Request, res: Response, time: number) => {
                   : /* c8 ignore next */ // We do not test Cron jobs
                   res.locals.userIsCron
                   ? "\ufba7 cron" // Cron job
-                  : "\uf21b" // Unauthenticated user
+                  : "\uf21b", // Unauthenticated user
               ) +
               "  " +
               // use reverse proxy that sets this header to prevent CWE-134
               chalk.magentaBright("\uf98c" + req.headers["x-real-ip"]) + // IP address
-              " "
+              " ",
           ) +
           chalk.grey("") +
           "\n ├─" +
@@ -177,19 +177,19 @@ export const requestLogger = (req: Request, res: Response, time: number) => {
           chalk.bgGrey(
             ` ${req.originalUrl // URL path
               .slice(1, req.originalUrl.indexOf("?") == -1 ? undefined : req.originalUrl.indexOf("?"))
-              .replaceAll("/", "  ")} `
+              .replaceAll("/", "  ")} `,
           ) +
           chalk.grey("") +
           Object.entries(req.cookies) // Cookies
             .map(
               ([key, value]) =>
-                "\n ├─" + chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) + chalk.grey("") + " " + value
+                "\n ├─" + chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) + chalk.grey("") + " " + value,
             )
             .join(" ") +
           Object.entries(req.query) // Query parameters
             .map(
               ([key, value]) =>
-                "\n ├─" + chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) + chalk.grey("") + " " + value
+                "\n ├─" + chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) + chalk.grey("") + " " + value,
             )
             .join(" ") +
           "\n ╰─" +
@@ -200,7 +200,7 @@ export const requestLogger = (req: Request, res: Response, time: number) => {
                   res.getHeader("Content-Type").toString().split(";")[0]
                 }” `
               : ""
-          }after ${Math.round(time)} ms` // Response time
+          }after ${Math.round(time)} ms`, // Response time
       )
       .split("\n")
       .forEach((line) => logger.info(line)); // Show newlines in the log in a pretty way

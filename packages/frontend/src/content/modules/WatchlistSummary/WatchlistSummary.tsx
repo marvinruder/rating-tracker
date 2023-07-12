@@ -50,12 +50,12 @@ const WatchlistSummaryModule = (): JSX.Element => {
             : [...Array(3)].map(
                 (
                   _,
-                  key // Render skeleton cards
+                  key, // Render skeleton cards
                 ) => (
                   <Grid item xs={12} sm={6} md={4} key={key}>
                     <WatchlistCard />
                   </Grid>
-                )
+                ),
               )}
         </Grid>
       </Container>

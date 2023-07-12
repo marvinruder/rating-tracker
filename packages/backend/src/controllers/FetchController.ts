@@ -54,7 +54,7 @@ const determineConcurrency = (req: Request): number => {
   if (Number.isNaN(concurrency) || !Number.isSafeInteger(concurrency) || concurrency < 1) {
     logger.warn(
       PREFIX_SELENIUM +
-        chalk.yellowBright(`Invalid concurrency “${req.query.concurrency}” requested – using 1 fetcher only.`)
+        chalk.yellowBright(`Invalid concurrency “${req.query.concurrency}” requested – using 1 fetcher only.`),
     );
     concurrency = 1;
   }
@@ -63,8 +63,8 @@ const determineConcurrency = (req: Request): number => {
       PREFIX_SELENIUM +
         chalk.yellowBright(
           `Desired concurrency “${concurrency}” is larger than the server allows – ` +
-            `using maximum value ${Number(process.env.SELENIUM_MAX_CONCURRENCY)} instead.`
-        )
+            `using maximum value ${Number(process.env.SELENIUM_MAX_CONCURRENCY)} instead.`,
+        ),
     );
     concurrency = Number(process.env.SELENIUM_MAX_CONCURRENCY);
   }
@@ -561,8 +561,8 @@ export class FetchController {
             `Using cached Sustainalytics data because last fetch was ${formatDistance(
               sustainalyticsXMLResource.fetchDate,
               new Date().getTime(),
-              { addSuffix: true }
-            )}.`
+              { addSuffix: true },
+            )}.`,
         );
       } catch (e) {
         // If the cached data is not available, we fetch it freshly from the web.
@@ -572,7 +572,7 @@ export class FetchController {
             "page=1&pageSize=100000&resourcePackage=Sustainalytics", // Using a large pageSize to fetch all at once.
             {
               headers: { "Accept-Encoding": "gzip,deflate,compress" },
-            }
+            },
           )
           .then(async (response) => {
             const sustainalyticsXMLLines: string[] = [];
@@ -589,7 +589,7 @@ export class FetchController {
                 fetchDate: new Date(response.headers["date"]),
                 content: sustainalyticsXMLLines.join("\n"),
               },
-              60 * 60 * 24 * 7
+              60 * 60 * 24 * 7,
             );
             sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
           })
@@ -611,7 +611,7 @@ export class FetchController {
         const sustainalyticsIDIndex = sustainalyticsXMLLines.findIndex(
           (line, index) =>
             line.startsWith(`<a data-href="/${stock.sustainalyticsID}`) &&
-            sustainalyticsXMLLines[index + 1].startsWith(`<div class="col-2">`)
+            sustainalyticsXMLLines[index + 1].startsWith(`<div class="col-2">`),
         );
         if (sustainalyticsIDIndex === -1) {
           // If the Sustainalytics ID is not found, we throw an error.
@@ -642,11 +642,12 @@ export class FetchController {
           // If this request was for a single stock, we shut down the driver and throw an error.
           throw new APIError(
             (e as APIError).status ?? 500,
-            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${String(e.message).split(/[\n:{]/)[0]}`
+            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${String(e.message).split(/[\n:{]/)[0]}`,
           );
         }
         logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`)
+          PREFIX_SELENIUM +
+            chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`),
         );
         if (stock.sustainalyticsESGRisk !== null) {
           // If a Sustainalytics ESG Risk is already stored in the database, but we cannot extract it from the page, we
@@ -655,15 +656,15 @@ export class FetchController {
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of Sustainalytics ESG Risk failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           await signal.sendMessage(
             SIGNAL_PREFIX_ERROR +
               `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${
                 String(e.message).split(/[\n:{]/)[0]
               }`,
-            "fetchError"
+            "fetchError",
           );
           errorCount += 1;
         } else {
@@ -676,14 +677,14 @@ export class FetchController {
           PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting extracting information from Sustainalytics after ${successfulCount} successful extractions ` +
-                `and ${errorCount} failures. Will continue next time.`
-            )
+                `and ${errorCount} failures. Will continue next time.`,
+            ),
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting extracting information from Sustainalytics after ${successfulCount} successful extractions ` +
             `and ${errorCount} failures. Will continue next time.`,
-          "fetchError"
+          "fetchError",
         );
         break;
       }

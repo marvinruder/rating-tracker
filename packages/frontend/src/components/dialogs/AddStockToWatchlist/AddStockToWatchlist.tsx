@@ -62,7 +62,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
     setWatchlistsAlreadyContainingStock(
       watchlistSummaries
         .filter((watchlist) => watchlist.stocks.map((stock) => stock.ticker).includes(props.stock.ticker))
-        .map((watchlist) => watchlist.id)
+        .map((watchlist) => watchlist.id),
     );
   }, [watchlistSummaries]);
 
@@ -123,7 +123,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
             : [...Array(3)].map(
                 (
                   _,
-                  key // Render skeleton rows
+                  key, // Render skeleton rows
                 ) => (
                   <React.Fragment key={key}>
                     <Divider />
@@ -139,7 +139,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
                       </ListItemButton>
                     </ListItem>
                   </React.Fragment>
-                )
+                ),
               )}
           <Divider />
           <ListItem disablePadding disableGutters>

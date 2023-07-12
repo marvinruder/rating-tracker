@@ -46,5 +46,5 @@ export const sessionSchema = new Schema(
   {
     email: { type: "string" },
   },
-  { dataStructure: "HASH" }
+  { dataStructure: "HASH" },
 );

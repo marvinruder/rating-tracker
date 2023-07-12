@@ -44,8 +44,8 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
           `Stock ${stock.ticker}: Skipping MSCI fetch since last successful fetch was ${formatDistance(
             stock.msciLastFetch.getTime(),
             new Date().getTime(),
-            { addSuffix: true }
-          )}`
+            { addSuffix: true },
+          )}`,
       );
       stocks.skipped.push(stock);
       continue;
@@ -66,7 +66,7 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
       }
       await driver.wait(
         until.elementsLocated(By.className("esg-expandable")),
-        15000 // Wait for the page to load for a maximum of 15 seconds.
+        15000, // Wait for the page to load for a maximum of 15 seconds.
       );
 
       // Prepare an error message header containing the stock name and ticker.
@@ -83,7 +83,7 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
         }
       } catch (e) {
         logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`)
+          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`),
         );
         if (stock.msciESGRating !== null) {
           // If an MSCI ESG Rating is already stored in the database, but we cannot extract it from the page, we log
@@ -92,8 +92,8 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of MSCI ESG Rating failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract MSCI ESG Rating: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -115,7 +115,7 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
       } catch (e) {
         logger.warn(
           PREFIX_SELENIUM +
-            chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`)
+            chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`),
         );
         if (stock.msciTemperature !== null) {
           // If an MSCI Implied Temperature Rise is already stored in the database, but we cannot extract it from the
@@ -124,8 +124,8 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
             PREFIX_SELENIUM +
               chalk.redBright(
                 `Stock ${stock.ticker}: Extraction of MSCI Implied Temperature Rise failed unexpectedly. ` +
-                  `This incident will be reported.`
-              )
+                  `This incident will be reported.`,
+              ),
           );
           errorMessage += `\n\tUnable to extract MSCI Implied Temperature Rise: ${
             String(e.message).split(/[\n:{]/)[0]
@@ -155,7 +155,7 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
         await quitDriver(driver, sessionID);
         throw new APIError(
           502,
-          `Stock ${stock.ticker}: Unable to fetch MSCI information: ${String(e.message).split(/[\n:{]/)[0]}`
+          `Stock ${stock.ticker}: Unable to fetch MSCI information: ${String(e.message).split(/[\n:{]/)[0]}`,
         );
       }
       logger.error(PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MSCI information: ${e}`));
@@ -164,7 +164,7 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
           `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
             String(e.message).split(/[\n:{]/)[0]
           }\n${await takeScreenshot(driver, stock, "msci")}`,
-        "fetchError"
+        "fetchError",
       );
     }
     if (stocks.failed.length >= 5) {
@@ -175,14 +175,14 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
           PREFIX_SELENIUM +
             chalk.redBright(
               `Aborting fetching information from MSCI after ${stocks.successful.length} ` +
-                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`
-            )
+                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
+            ),
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
             `Aborting fetching information from MSCI after ${stocks.successful.length} ` +
             `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
-          "fetchError"
+          "fetchError",
         );
         const skippedStocks = [...stocks.queued];
         stocks.queued.length = 0;

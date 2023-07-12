@@ -181,7 +181,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               <MenuItem
                 onClick={() => {
                   (props.isFavorite ? axios.delete : axios.put)(
-                    baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`
+                    baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`,
                   )
                     .then(() => props.getStocks && props.getStocks())
                     .catch((e) => {
@@ -486,7 +486,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <Typography variant="body2" color="text.secondary" width={90} sx={{ textAlign: "right" }} noWrap>
             {props.stock.morningstarFairValuePercentageToLastClose !== null &&
               `${props.stock.morningstarFairValuePercentageToLastClose > 0 ? "+" : ""}${Math.round(
-                props.stock.morningstarFairValuePercentageToLastClose
+                props.stock.morningstarFairValuePercentageToLastClose,
               )}\u2009%`}
           </Typography>
         </MorningstarNavigator>
@@ -579,7 +579,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             {props.stock.analystCount !== null &&
               props.stock.analystTargetPricePercentageToLastClose !== null &&
               `${props.stock.analystTargetPricePercentageToLastClose > 0 ? "+" : ""}${Math.round(
-                props.stock.analystTargetPricePercentageToLastClose
+                props.stock.analystTargetPricePercentageToLastClose,
               )}\u2009%`}
           </Typography>
         </MarketScreenerNavigator>

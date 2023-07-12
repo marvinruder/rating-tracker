@@ -37,7 +37,7 @@ const StockListModule = (): JSX.Element => {
               (value) =>
                 typeof value !== "undefined" && // is different from undefined, and
                 (!Array.isArray(value) || // is not an array, or
-                  value.length > 0) // is an array with at least one element
+                  value.length > 0), // is an array with at least one element
             )
           }
         />
