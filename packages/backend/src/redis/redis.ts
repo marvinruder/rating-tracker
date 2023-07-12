@@ -22,4 +22,22 @@ redis.on(
 );
 await redis.connect();
 
+/**
+ * Checks if the Redis server is reachable.
+ *
+ * @returns {Promise<void>} A promise that resolves when the Redis server is reachable, or rejects with an error if it
+ * is not.
+ */
+export const redisIsReady = (): Promise<void> =>
+  redis.isReady
+    ? redis
+        .ping()
+        .then((pong) =>
+          pong === "PONG"
+            ? Promise.resolve()
+            : /* c8 ignore next */ Promise.reject(new Error("Redis is not reachable: server responded with " + pong)),
+        )
+    : /* c8 ignore next */ Promise.reject(new Error("Redis is not ready"));
+// The errors only occurs when Redis server is not available, which is difficult to reproduce.
+
 export default redis;

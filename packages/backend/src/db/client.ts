@@ -5,4 +5,15 @@ import { PrismaClient } from "../../prisma/client";
  */
 const client = new PrismaClient();
 
+/**
+ * Checks if the database is reachable.
+ *
+ * @returns {Promise<void>} A promise that resolves when the database is reachable, or rejects with an error if it is
+ * not.
+ */
+export const prismaIsReady = (): Promise<void> =>
+  client.$executeRaw`SELECT null`
+    .then(() => Promise.resolve())
+    .catch((e) => Promise.reject(new Error("Database is not reachable: " + e.message)));
+
 export default client;

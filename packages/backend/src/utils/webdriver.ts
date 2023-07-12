@@ -6,12 +6,24 @@ import logger, { PREFIX_SELENIUM } from "./logger.js";
 import chalk from "chalk";
 import { Stock, resourceEndpointPath } from "@rating-tracker/commons";
 import { createResource } from "../redis/repositories/resourceRepository.js";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 /**
  * A page load strategy to use by the WebDriver.
  */
 type PageLoadStrategy = "normal" | "eager" | "none";
+
+/**
+ * Checks if the Selenium instance is reachable.
+ *
+ * @returns {Promise<void>} A promise that resolves when the Selenium instance is reachable, or rejects with an error if
+ * it is not.
+ */
+export const seleniumIsReady = (): Promise<void> =>
+  axios
+    .get(`${process.env.SELENIUM_URL}/status`, { timeout: 1000 })
+    .then((res) => (res.data.value.ready ? Promise.resolve() : Promise.reject(new Error("Selenium is not ready"))))
+    .catch((e: AxiosError) => Promise.reject(new Error("Selenium is not reachable: " + e.message)));
 
 /**
  * Creates and returns a new WebDriver instance.

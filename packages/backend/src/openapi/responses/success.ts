@@ -129,20 +129,14 @@ export const okWatchlistSummary: OpenAPIV3.ResponseObject = {
 };
 
 /**
- * A response with a 200 OK status code and an object containing a status string.
+ * A response with a 200 OK status code and a Status object body.
  */
-export const okOperational: OpenAPIV3.ResponseObject = {
+export const okHealthy: OpenAPIV3.ResponseObject = {
   description: "OK",
   content: {
     "application/json": {
       schema: {
-        type: "object",
-        properties: {
-          status: {
-            type: "string",
-          },
-        },
-        required: ["status"],
+        $ref: "#/components/schemas/Status",
       },
     },
   },

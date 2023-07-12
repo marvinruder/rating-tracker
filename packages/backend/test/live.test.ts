@@ -13,6 +13,7 @@ import { sentMessages } from "../src/signal/__mocks__/signalBase";
 import * as signal from "../src/signal/signal";
 
 vi.mock("../src/utils/logger");
+vi.mock("../src/utils/webdriver");
 vi.mock("../src/signal/signalBase");
 vi.mock("@simplewebauthn/server", async () => await import("./moduleMocks/@simplewebauthn/server"));
 

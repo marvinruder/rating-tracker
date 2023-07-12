@@ -1,4 +1,11 @@
 /**
+ * A mock of the signalIsReadyOrUnused function. Always resolves to "No Signal URL provided".
+ *
+ * @returns {Promise<string | void>} A promise that resolves to "No Signal URL provided".
+ */
+export const signalIsReadyOrUnused = (): Promise<string | void> => Promise.resolve("No Signal URL provided");
+
+/**
  * A mock storage of sent Signal messages.
  */
 export const sentMessages: { message: string; recipients: string[] }[] = [];

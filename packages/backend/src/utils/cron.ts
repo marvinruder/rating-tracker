@@ -123,7 +123,7 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
       chalk.bgGrey.hex("#339933")("") +
       chalk.whiteBright.bgGrey(` Auto Fetch activated `) +
       chalk.grey("") +
-      chalk.green(" This instance will periodically fetch information from data providers for all known stocks."),
+      chalk.green(" This process will periodically fetch information from data providers for all known stocks."),
   );
   logger.info("");
 };

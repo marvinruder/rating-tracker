@@ -387,5 +387,17 @@ export const components: OpenAPIV3.ComponentsObject = {
       },
       required: ["message"],
     },
+    Status: {
+      type: "object",
+      properties: {
+        status: {
+          type: "string",
+        },
+        details: {
+          type: "string",
+        },
+      },
+      required: ["status"],
+    },
   },
 };
