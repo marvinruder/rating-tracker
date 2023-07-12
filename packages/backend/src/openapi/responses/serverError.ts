@@ -15,6 +15,20 @@ export const internalServerError: OpenAPIV3.ResponseObject = {
 };
 
 /**
+ * A response with a 500 Internal Server Error status code and a Status object body.
+ */
+export const internalServerErrorServerUnhealthy: OpenAPIV3.ResponseObject = {
+  description: "Internal Server Error – Server Unhealthy",
+  content: {
+    "application/json": {
+      schema: {
+        $ref: "#/components/schemas/Status",
+      },
+    },
+  },
+};
+
+/**
  * A response with a 501 Not Implemented status code and an Error object body.
  */
 export const notImplemented: OpenAPIV3.ResponseObject = {
