@@ -36,7 +36,7 @@
     "@rating-tracker/commons": "workspace:*",
     "@rating-tracker/wasm": "workspace:*",
     "@simplewebauthn/browser": "7.2.0",
-    "@types/react": "18.2.14",
+    "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "@vitejs/plugin-react": "4.0.3",
     "@vitest/web-worker": "0.33.0",
