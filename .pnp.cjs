@@ -1753,7 +1753,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["particlesjs", "npm:2.2.3"],\
             ["prettier", "npm:3.0.0"],\
             ["react", "npm:18.2.0"],\
-            ["react-apexcharts", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:1.4.0"],\
+            ["react-apexcharts", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:1.4.1"],\
             ["react-dom", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:18.2.0"],\
             ["react-particles", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:2.10.1"],\
             ["react-router", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:6.14.1"],\
@@ -8584,17 +8584,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["react-apexcharts", [\
-        ["npm:1.4.0", {\
-          "packageLocation": "./.yarn/cache/react-apexcharts-npm-1.4.0-13745d5b61-eb6c1fcfe7.zip/node_modules/react-apexcharts/",\
+        ["npm:1.4.1", {\
+          "packageLocation": "./.yarn/cache/react-apexcharts-npm-1.4.1-2dc909d883-32d1a946ad.zip/node_modules/react-apexcharts/",\
           "packageDependencies": [\
-            ["react-apexcharts", "npm:1.4.0"]\
+            ["react-apexcharts", "npm:1.4.1"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:1.4.0", {\
-          "packageLocation": "./.yarn/__virtual__/react-apexcharts-virtual-2c72c96090/0/cache/react-apexcharts-npm-1.4.0-13745d5b61-eb6c1fcfe7.zip/node_modules/react-apexcharts/",\
+        ["virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:1.4.1", {\
+          "packageLocation": "./.yarn/__virtual__/react-apexcharts-virtual-9941cd28b2/0/cache/react-apexcharts-npm-1.4.1-2dc909d883-32d1a946ad.zip/node_modules/react-apexcharts/",\
           "packageDependencies": [\
-            ["react-apexcharts", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:1.4.0"],\
+            ["react-apexcharts", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:1.4.1"],\
             ["@types/apexcharts", null],\
             ["@types/react", "npm:18.2.15"],\
             ["apexcharts", "npm:3.41.0"],\
