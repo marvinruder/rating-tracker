@@ -1337,7 +1337,7 @@ __metadata:
     react: 18.2.0
     react-apexcharts: 1.4.1
     react-dom: 18.2.0
-    react-particles: 2.10.1
+    react-particles: 2.11.0
     react-router: 6.14.1
     react-router-dom: 6.14.1
     react-switch-selector: 2.2.1
@@ -7235,15 +7235,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-particles@npm:2.10.1":
-  version: 2.10.1
-  resolution: "react-particles@npm:2.10.1"
+"react-particles@npm:2.11.0":
+  version: 2.11.0
+  resolution: "react-particles@npm:2.11.0"
   dependencies:
     deep-eql: ^4.1.3
-    tsparticles-engine: ^2.10.1
+    tsparticles-engine: ^2.11.0
   peerDependencies:
     react: ">=16"
-  checksum: 040a80aa34e46289df354fd8a3f37c96231f5e2a0fa95835a37e164164adb3658fed4e8fa4adff9a9363faec3395bb0bf2f6740ff73ba19127edad1da7de4e51
+  checksum: 726b7646bc937ba9465f7b5d65bd6c540084a9fb1a833f12bdbc39aacf5c31143599198dacf36ebb64017117a7ba58e0d5f9e38ff97c48a37d82004bae915197
   languageName: node
   linkType: hard
 
