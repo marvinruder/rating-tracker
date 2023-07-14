@@ -1759,7 +1759,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-router", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:6.14.1"],\
             ["react-router-dom", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:6.14.1"],\
             ["react-switch-selector", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:2.2.1"],\
-            ["react-tsparticles", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:2.10.1"],\
+            ["react-tsparticles", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:2.11.0"],\
             ["tsparticles", "npm:2.11.0"],\
             ["tsparticles-engine", "npm:2.11.0"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"],\
@@ -8795,17 +8795,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["react-tsparticles", [\
-        ["npm:2.10.1", {\
-          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-a1b27b893e/node_modules/react-tsparticles/",\
+        ["npm:2.11.0", {\
+          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-be4ab5d6a8/node_modules/react-tsparticles/",\
           "packageDependencies": [\
-            ["react-tsparticles", "npm:2.10.1"]\
+            ["react-tsparticles", "npm:2.11.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:2.10.1", {\
-          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-a1b27b893e/node_modules/react-tsparticles/",\
+        ["virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:2.11.0", {\
+          "packageLocation": "./.yarn/unplugged/react-tsparticles-virtual-be4ab5d6a8/node_modules/react-tsparticles/",\
           "packageDependencies": [\
-            ["react-tsparticles", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:2.10.1"],\
+            ["react-tsparticles", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:2.11.0"],\
             ["@types/react", "npm:18.2.15"],\
             ["deep-eql", "npm:4.1.3"],\
             ["react", "npm:18.2.0"],\

@@ -1341,7 +1341,7 @@ __metadata:
     react-router: 6.14.1
     react-router-dom: 6.14.1
     react-switch-selector: 2.2.1
-    react-tsparticles: 2.10.1
+    react-tsparticles: 2.11.0
     tsparticles: 2.11.0
     tsparticles-engine: 2.11.0
     typescript: 5.1.6
@@ -7308,15 +7308,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tsparticles@npm:2.10.1":
-  version: 2.10.1
-  resolution: "react-tsparticles@npm:2.10.1"
+"react-tsparticles@npm:2.11.0":
+  version: 2.11.0
+  resolution: "react-tsparticles@npm:2.11.0"
   dependencies:
     deep-eql: ^4.1.3
-    tsparticles-engine: ^2.10.1
+    tsparticles-engine: ^2.11.0
   peerDependencies:
     react: ">=16"
-  checksum: b4b75e62ea7da9006c8d1e12920c413c78c41f253e679914ed7dcdbccff4bab317f5c4d6e73d48980aff6508c25da5e3791e1ea3dea099f231fce95e98d8456b
+  checksum: f2a1617d5c341620f9ee51d349c69e5d8d25cb5c016de5a3964d4c5a214faa8d4f4a48588fcb8d8b56b763dbb93fcd3c1f3cb20a192edf6f54fc141c9696f1bf
   languageName: node
   linkType: hard
 
@@ -8523,7 +8523,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsparticles-engine@npm:2.11.0, tsparticles-engine@npm:^2.10.1, tsparticles-engine@npm:^2.11.0":
+"tsparticles-engine@npm:2.11.0, tsparticles-engine@npm:^2.11.0":
   version: 2.11.0
   resolution: "tsparticles-engine@npm:2.11.0"
   checksum: 1aad1c3969b38dec5b468220eba7a1a26982fd8b13567f37970fe8d1cd6e7609da8622e8b16599b6359ecc681a33e9672a8a697e5ea9f146b15cc709b9fa78d9
