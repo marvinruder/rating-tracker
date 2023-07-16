@@ -12,6 +12,7 @@ import {
 import chalk from "chalk";
 import logger, { PREFIX_CRON } from "./logger.js";
 import { sendMessage } from "../signal/signal.js";
+import APIError from "./apiError.js";
 
 /**
  * Creates Cron jobs for regular fetching from data providers.
@@ -32,10 +33,17 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
               Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
             },
           })
-          .catch(async (e: AxiosError) => {
-            logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the MSCI Cron Job: ${e}`));
+          .catch(async (e: AxiosError<APIError>) => {
+            logger.error(
+              PREFIX_CRON +
+                chalk.redBright(
+                  `An error occurred during the MSCI Cron Job: ${e.response?.data?.message ?? e.message}`,
+                ),
+            );
             await sendMessage(
-              `An error occurred during the MSCI Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
+              `An error occurred during the MSCI Cron Job: ${
+                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+              }`,
               "fetchError",
             );
           });
@@ -46,10 +54,17 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
               Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
             },
           })
-          .catch(async (e: AxiosError) => {
-            logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the Refinitiv Cron Job: ${e}`));
+          .catch(async (e: AxiosError<APIError>) => {
+            logger.error(
+              PREFIX_CRON +
+                chalk.redBright(
+                  `An error occurred during the Refinitiv Cron Job: ${e.response?.data?.message ?? e.message}`,
+                ),
+            );
             await sendMessage(
-              `An error occurred during the Refinitiv Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
+              `An error occurred during the Refinitiv Cron Job: ${
+                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+              }`,
               "fetchError",
             );
           });
@@ -60,10 +75,15 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
               Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
             },
           })
-          .catch(async (e: AxiosError) => {
-            logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the S&P Cron Job: ${e}`));
+          .catch(async (e: AxiosError<APIError>) => {
+            logger.error(
+              PREFIX_CRON +
+                chalk.redBright(`An error occurred during the S&P Cron Job: ${e.response?.data?.message ?? e.message}`),
+            );
             await sendMessage(
-              `An error occurred during the S&P Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
+              `An error occurred during the S&P Cron Job: ${
+                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+              }`,
               "fetchError",
             );
           });
@@ -74,10 +94,17 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
               Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
             },
           })
-          .catch(async (e: AxiosError) => {
-            logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the Sustainalytics Cron Job: ${e}`));
+          .catch(async (e: AxiosError<APIError>) => {
+            logger.error(
+              PREFIX_CRON +
+                chalk.redBright(
+                  `An error occurred during the Sustainalytics Cron Job: ${e.response?.data?.message ?? e.message}`,
+                ),
+            );
             await sendMessage(
-              `An error occurred during the Sustainalytics Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
+              `An error occurred during the Sustainalytics Cron Job: ${
+                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+              }`,
               "fetchError",
             );
           });
@@ -89,10 +116,17 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
               Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
             },
           })
-          .catch(async (e: AxiosError) => {
-            logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the Morningstar Cron Job: ${e}`));
+          .catch(async (e: AxiosError<APIError>) => {
+            logger.error(
+              PREFIX_CRON +
+                chalk.redBright(
+                  `An error occurred during the Morningstar Cron Job: ${e.response?.data?.message ?? e.message}`,
+                ),
+            );
             await sendMessage(
-              `An error occurred during the Morningstar Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
+              `An error occurred during the Morningstar Cron Job: ${
+                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+              }`,
               "fetchError",
             );
           });
@@ -105,10 +139,17 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
               Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
             },
           })
-          .catch(async (e: AxiosError) => {
-            logger.error(PREFIX_CRON + chalk.redBright(`An error occurred during the MarketScreener Cron Job: ${e}`));
+          .catch(async (e: AxiosError<APIError>) => {
+            logger.error(
+              PREFIX_CRON +
+                chalk.redBright(
+                  `An error occurred during the MarketScreener Cron Job: ${e.response?.data?.message ?? e.message}`,
+                ),
+            );
             await sendMessage(
-              `An error occurred during the MarketScreener Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
+              `An error occurred during the MarketScreener Cron Job: ${
+                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+              }`,
               "fetchError",
             );
           });

@@ -7,6 +7,8 @@ import chalk from "chalk";
 import { Stock, resourceEndpointPath } from "@rating-tracker/commons";
 import { createResource } from "../redis/repositories/resourceRepository.js";
 import axios, { AxiosError } from "axios";
+import * as signal from "../signal/signal.js";
+import { SIGNAL_PREFIX_ERROR } from "../signal/signal.js";
 
 /**
  * A page load strategy to use by the WebDriver.
@@ -23,7 +25,11 @@ export const seleniumIsReady = (): Promise<void> =>
   axios
     .get(`${process.env.SELENIUM_URL}/status`, { timeout: 1000 })
     .then((res) => (res.data.value.ready ? Promise.resolve() : Promise.reject(new Error("Selenium is not ready"))))
-    .catch((e: AxiosError) => Promise.reject(new Error("Selenium is not reachable: " + e.message)));
+    .catch((e) =>
+      e instanceof AxiosError
+        ? Promise.reject(new Error("Selenium is not reachable: " + e.message))
+        : Promise.reject(e),
+    );
 
 /**
  * Creates and returns a new WebDriver instance.
@@ -74,9 +80,16 @@ export const openPageAndWait = async (driver: WebDriver, url: string): Promise<b
   try {
     await driver.get(url);
     await driver.wait(until.urlIs(url), 5000);
+    throw new Error("Oh no!");
     return true;
   } catch (e) {
-    logger.error(PREFIX_SELENIUM + chalk.redBright(`Unable to open page ${url} (driver may be unhealthy): ${e}`));
+    logger.error(PREFIX_SELENIUM + chalk.redBright(`Unable to fetch from page ${url} (driver may be unhealthy): ${e}`));
+    await signal.sendMessage(
+      SIGNAL_PREFIX_ERROR +
+        `Unable to fetch from page ${url} (driver may be unhealthy): ${String(e.message).split(/[\n:{]/)[0]}`,
+      "fetchError",
+    );
+
     return false;
   }
 };
