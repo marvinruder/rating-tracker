@@ -14,8 +14,12 @@ export const signalIsReadyOrUnused = (): Promise<string | void> =>
     ? axios
         .get(`${process.env.SIGNAL_URL}/v1/health`, { timeout: 1000 })
         .then((res) => (res.status === 204 ? Promise.resolve() : Promise.reject(new Error("Signal is not ready"))))
-        .catch((e: AxiosError) => Promise.reject(new Error("Signal is not reachable: " + e.message)))
-    : Promise.resolve("No Signal URL provided");
+        .catch((e) =>
+          e instanceof AxiosError
+            ? Promise.reject(new Error("Signal is not reachable: " + e.message))
+            : Promise.reject(e),
+        )
+    : Promise.resolve("No Signal URL provided, skipping health check");
 
 /**
  * Send a message to a list of recipients.
