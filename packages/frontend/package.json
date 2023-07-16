@@ -42,7 +42,7 @@
     "@vitest/web-worker": "0.33.0",
     "apexcharts": "3.41.0",
     "axios": "1.4.0",
-    "clsx": "1.2.1",
+    "clsx": "2.0.0",
     "date-fns": "2.30.0",
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
