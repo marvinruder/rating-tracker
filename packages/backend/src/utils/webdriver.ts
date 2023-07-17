@@ -80,7 +80,6 @@ export const openPageAndWait = async (driver: WebDriver, url: string): Promise<b
   try {
     await driver.get(url);
     await driver.wait(until.urlIs(url), 5000);
-    throw new Error("Oh no!");
     return true;
   } catch (e) {
     logger.error(PREFIX_SELENIUM + chalk.redBright(`Unable to fetch from page ${url} (driver may be unhealthy): ${e}`));
