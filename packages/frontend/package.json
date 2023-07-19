@@ -30,9 +30,9 @@
   "dependencies": {
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
-    "@mui/icons-material": "5.14.0",
-    "@mui/lab": "5.0.0-alpha.136",
-    "@mui/material": "5.14.0",
+    "@mui/icons-material": "5.14.1",
+    "@mui/lab": "5.0.0-alpha.137",
+    "@mui/material": "5.14.1",
     "@rating-tracker/commons": "workspace:*",
     "@rating-tracker/wasm": "workspace:*",
     "@simplewebauthn/browser": "7.2.0",
