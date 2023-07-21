@@ -44,7 +44,7 @@
     "express-openapi-validator": "5.0.4",
     "express-rate-limit": "6.8.0",
     "pino": "8.14.1",
-    "pino-pretty": "10.0.1",
+    "pino-pretty": "10.1.0",
     "redis": "4.6.7",
     "redis-om": "0.4.0",
     "response-time": "2.3.2",
