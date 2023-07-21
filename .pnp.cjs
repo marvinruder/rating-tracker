@@ -1654,7 +1654,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@simplewebauthn/server", "npm:7.3.1"],\
             ["@types/cron", "npm:2.0.1"],\
             ["@types/express", "npm:4.17.17"],\
-            ["@types/node", "npm:18.16.19"],\
+            ["@types/node", "npm:18.16.20"],\
             ["@types/selenium-webdriver", "npm:4.1.15"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@typescript-eslint/eslint-plugin", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:6.1.0"],\
@@ -1730,7 +1730,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@rating-tracker/commons", "workspace:packages/commons"],\
             ["@rating-tracker/wasm", "workspace:packages/wasm"],\
             ["@simplewebauthn/browser", "npm:7.2.0"],\
-            ["@types/node", "npm:18.16.19"],\
+            ["@types/node", "npm:18.16.20"],\
             ["@types/react", "npm:18.2.15"],\
             ["@types/react-dom", "npm:18.2.7"],\
             ["@typescript-eslint/eslint-plugin", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:6.1.0"],\
@@ -1975,7 +1975,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@simplewebauthn/iso-webcrypto", "npm:7.2.0"],\
             ["@simplewebauthn/typescript-types", "npm:7.0.0"],\
-            ["@types/node", "npm:18.16.19"]\
+            ["@types/node", "npm:18.16.20"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1994,7 +1994,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@simplewebauthn/iso-webcrypto", "npm:7.2.0"],\
             ["@simplewebauthn/typescript-types", "npm:7.0.0"],\
             ["@types/debug", "npm:4.1.8"],\
-            ["@types/node", "npm:18.16.19"],\
+            ["@types/node", "npm:18.16.20"],\
             ["cbor-x", "npm:1.5.3"],\
             ["cross-fetch", "npm:3.1.6"],\
             ["debug", "virtual:352060d453a801a0fd16b073afb56a2607e33f96a5ff7faf9351853a737843ea6ad854442954d36ef1f89461751ed94f005ea67c746b39723d1da041a244f7d2#npm:4.3.4"]\
@@ -2413,10 +2413,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:18.16.19", {\
-          "packageLocation": "./.yarn/cache/@types-node-npm-18.16.19-aada4da69c-63c31f0961.zip/node_modules/@types/node/",\
+        ["npm:18.16.20", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.16.20-87e54efa8d-00ea5668e1.zip/node_modules/@types/node/",\
           "packageDependencies": [\
-            ["@types/node", "npm:18.16.19"]\
+            ["@types/node", "npm:18.16.20"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -10071,7 +10071,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node12", "npm:1.0.11"],\
             ["@tsconfig/node14", "npm:1.0.3"],\
             ["@tsconfig/node16", "npm:1.0.4"],\
-            ["@types/node", "npm:18.16.19"],\
+            ["@types/node", "npm:18.16.20"],\
             ["@types/swc__core", null],\
             ["@types/swc__wasm", null],\
             ["@types/typescript", null],\
@@ -10864,7 +10864,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["vite", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:4.4.6"],\
             ["@types/less", null],\
             ["@types/lightningcss", null],\
-            ["@types/node", "npm:18.16.19"],\
+            ["@types/node", "npm:18.16.20"],\
             ["@types/sass", null],\
             ["@types/stylus", null],\
             ["@types/sugarss", null],\
