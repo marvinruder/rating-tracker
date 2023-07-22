@@ -1,4 +1,4 @@
-FROM node:20.4.0-alpine as build
+FROM node:20.5.0-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
