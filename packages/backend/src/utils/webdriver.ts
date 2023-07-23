@@ -61,7 +61,7 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
     .build()
     .then(async (driver) => {
       // Use `setSize(…)` after https://github.com/SeleniumHQ/selenium/issues/12243 is resolved.
-      await driver.manage().window().setRect({ width: 1080, height: 3840 }); // convenient for screenshots
+      await driver.manage().window().setRect({ width: 1080, height: 7680 }); // convenient for screenshots of whole page
       return driver;
     })
     .catch((e) => {
