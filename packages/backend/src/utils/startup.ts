@@ -61,7 +61,7 @@ const mandatoryEnvVars: string[] = ["PORT", "DOMAIN", "DATABASE_URL", "SELENIUM_
  * The startup method prints a welcome message and checks whether all mandatory environment variables are set. If not,
  * the process is exited with code 1.
  */
-export const startup = (): void => {
+export const startup = () => {
   // Print welcome message
   console.log(logo);
 

@@ -51,7 +51,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
    */
   const getStocks = () => {
     setStocksFinal(false);
-    Promise.allSettled([
+    void Promise.allSettled([
       axios
         .get(baseUrl + stockListEndpointPath, {
           params: {
@@ -95,7 +95,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
    * @param {React.MouseEvent} _ The event.
    * @param {number} newPage The new page.
    */
-  const handlePageChange = (_: React.MouseEvent, newPage: number): void => {
+  const handlePageChange = (_: React.MouseEvent, newPage: number) => {
     setPage(newPage);
   };
 
@@ -104,7 +104,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
    *
    * @param {ChangeEvent<HTMLInputElement>} event The event.
    */
-  const handleRowsPerPageChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleRowsPerPageChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPage(0); // Go to the first page to not get confused.
     setRowsPerPage(parseInt(event.target.value));
   };

@@ -118,7 +118,7 @@ export const HeaderSearch = (): JSX.Element => {
    *
    * @param {ChangeEvent<HTMLInputElement>} event The change event.
    */
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
 
     if (event.target.value) {

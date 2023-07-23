@@ -84,7 +84,7 @@ export const RefinitivNavigator = (props: NavigatorProps): JSX.Element => {
   return props.stock?.ric ? (
     <Link
       // Copy the stock name to the clipboard
-      onClick={() => void (async (): Promise<void> => await navigator.clipboard.writeText(props.stock.name))()}
+      onClick={() => void navigator.clipboard.writeText(props.stock.name)}
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
       href="https://www.refinitiv.com/en/sustainable-finance/esg-scores"
       target="_blank" // Open in new tab

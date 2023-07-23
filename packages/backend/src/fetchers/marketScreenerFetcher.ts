@@ -135,17 +135,36 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
           if (!stock.lastClose) {
             throw new Error("No Last Close price available to compare spread against.");
           }
-          const analystTargetPriceMatches = (
-            await consensusTableDiv.findElement(By.xpath(XPATH_SPREAD_AVERAGE_TARGET)).getText()
-          )
-            .replaceAll(",", ".")
-            .match(/(\-)?\d+(\.\d+)?/g);
-          if (
-            analystTargetPriceMatches === null ||
-            analystTargetPriceMatches.length !== 1 ||
-            Number.isNaN(+analystTargetPriceMatches[0])
-          ) {
-            throw new TypeError(`Extracted analyst target price is no valid number.`);
+          // const analystTargetPriceMatches = (
+          //   await consensusTableDiv.findElement(By.xpath(XPATH_SPREAD_AVERAGE_TARGET)).getText()
+          // )
+          //   .replaceAll(",", ".")
+          //   .match(/(\-)?\d+(\.\d+)?/g);
+          // if (
+          //   analystTargetPriceMatches === null ||
+          //   analystTargetPriceMatches.length !== 1 ||
+          //   Number.isNaN(+analystTargetPriceMatches[0])
+          // ) {
+          //   throw new TypeError(`Extracted analyst target price is no valid number.`);
+          // }
+          const analystTargetPriceText = await consensusTableDiv
+            .findElement(By.xpath(XPATH_SPREAD_AVERAGE_TARGET))
+            .getText();
+          const analystTargetPriceMatches = analystTargetPriceText.replaceAll(",", ".").match(/(\-)?\d+(\.\d+)?/g);
+          if (analystTargetPriceMatches === null) {
+            throw new TypeError(
+              `Extracted analyst target price is no valid number (no matches in “${analystTargetPriceText}”).`,
+            );
+          }
+          if (analystTargetPriceMatches.length !== 1) {
+            throw new TypeError(
+              `Extracted analyst target price is no valid number (multiple matches in “${analystTargetPriceText}”).`,
+            );
+          }
+          if (Number.isNaN(+analystTargetPriceMatches[0])) {
+            throw new TypeError(
+              `Extracted analyst target price is no valid number (not a number: “${analystTargetPriceText}”).`,
+            );
           }
           analystTargetPrice = stock.lastClose * (+analystTargetPriceMatches[0] / 100 + 1);
         } catch (e) {
