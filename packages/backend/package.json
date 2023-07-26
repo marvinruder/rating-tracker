@@ -46,7 +46,7 @@
     "pino": "8.14.1",
     "pino-pretty": "10.2.0",
     "redis": "4.6.7",
-    "redis-om": "0.4.0",
+    "redis-om": "0.4.2",
     "response-time": "2.3.2",
     "selenium-webdriver": "4.10.0",
     "swagger-ui-express": "5.0.0"

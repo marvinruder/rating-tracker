@@ -1269,7 +1269,7 @@ __metadata:
     prettier: 3.0.0
     prisma: 5.0.0
     redis: 4.6.7
-    redis-om: 0.4.0
+    redis-om: 0.4.2
     response-time: 2.3.2
     selenium-webdriver: 4.10.0
     supertest: 6.3.3
@@ -7370,15 +7370,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis-om@npm:0.4.0":
-  version: 0.4.0
-  resolution: "redis-om@npm:0.4.0"
+"redis-om@npm:0.4.2":
+  version: 0.4.2
+  resolution: "redis-om@npm:0.4.2"
   dependencies:
     jsonpath-plus: ^7.2.0
     just-clone: ^6.1.1
     redis: ^4.6.4
     ulid: ^2.3.0
-  checksum: ae72496ad8a8b73b7bcad843127662e1301301c81ee334353963c643a11f519bf5afbea388d996daa0285c97665354486c4a7fc91d42410423f5a7d20d407356
+  checksum: eec2309d678547a507228271fc0ae6352434c7836cbc563d1f9ef1ca68a12c57224c53cf709cd772a410a5cbe504787ba3f83827cf966daa120c2d9cb0df38e3
   languageName: node
   linkType: hard
 

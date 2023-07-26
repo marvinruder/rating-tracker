@@ -1683,7 +1683,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:3.0.0"],\
             ["prisma", "npm:5.0.0"],\
             ["redis", "npm:4.6.7"],\
-            ["redis-om", "npm:0.4.0"],\
+            ["redis-om", "npm:0.4.2"],\
             ["response-time", "npm:2.3.2"],\
             ["selenium-webdriver", "npm:4.10.0"],\
             ["supertest", "npm:6.3.3"],\
@@ -8867,10 +8867,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["redis-om", [\
-        ["npm:0.4.0", {\
-          "packageLocation": "./.yarn/cache/redis-om-npm-0.4.0-6cc0ac537e-ae72496ad8.zip/node_modules/redis-om/",\
+        ["npm:0.4.2", {\
+          "packageLocation": "./.yarn/cache/redis-om-npm-0.4.2-215236514e-eec2309d67.zip/node_modules/redis-om/",\
           "packageDependencies": [\
-            ["redis-om", "npm:0.4.0"],\
+            ["redis-om", "npm:0.4.2"],\
             ["jsonpath-plus", "npm:7.2.0"],\
             ["just-clone", "npm:6.2.0"],\
             ["redis", "npm:4.6.7"],\
