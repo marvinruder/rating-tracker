@@ -1651,7 +1651,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@rating-tracker/backend", "workspace:packages/backend"],\
             ["@prisma/client", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.0.0"],\
             ["@rating-tracker/commons", "workspace:packages/commons"],\
-            ["@simplewebauthn/server", "npm:7.3.1"],\
+            ["@simplewebauthn/server", "npm:7.4.0"],\
             ["@types/cron", "npm:2.0.1"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/node", "npm:18.17.1"],\
@@ -1970,10 +1970,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/iso-webcrypto", [\
-        ["npm:7.2.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-iso-webcrypto-npm-7.2.0-db7b12b859-663b3cf8b8.zip/node_modules/@simplewebauthn/iso-webcrypto/",\
+        ["npm:7.4.0", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-iso-webcrypto-npm-7.4.0-029674c095-dfc22eb81c.zip/node_modules/@simplewebauthn/iso-webcrypto/",\
           "packageDependencies": [\
-            ["@simplewebauthn/iso-webcrypto", "npm:7.2.0"],\
+            ["@simplewebauthn/iso-webcrypto", "npm:7.4.0"],\
             ["@simplewebauthn/typescript-types", "npm:7.4.0"],\
             ["@types/node", "npm:18.17.1"]\
           ],\
@@ -1981,17 +1981,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/server", [\
-        ["npm:7.3.1", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-7.3.1-dcddc5ba7c-0657cd6a85.zip/node_modules/@simplewebauthn/server/",\
+        ["npm:7.4.0", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-7.4.0-31e153d56a-0dd76c4d3c.zip/node_modules/@simplewebauthn/server/",\
           "packageDependencies": [\
-            ["@simplewebauthn/server", "npm:7.3.1"],\
+            ["@simplewebauthn/server", "npm:7.4.0"],\
             ["@hexagon/base64", "npm:1.1.26"],\
             ["@peculiar/asn1-android", "npm:2.3.6"],\
             ["@peculiar/asn1-ecc", "npm:2.3.6"],\
             ["@peculiar/asn1-rsa", "npm:2.3.6"],\
             ["@peculiar/asn1-schema", "npm:2.3.6"],\
             ["@peculiar/asn1-x509", "npm:2.3.6"],\
-            ["@simplewebauthn/iso-webcrypto", "npm:7.2.0"],\
+            ["@simplewebauthn/iso-webcrypto", "npm:7.4.0"],\
             ["@simplewebauthn/typescript-types", "npm:7.4.0"],\
             ["@types/debug", "npm:4.1.8"],\
             ["@types/node", "npm:18.17.1"],\

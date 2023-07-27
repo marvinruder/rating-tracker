@@ -1237,7 +1237,7 @@ __metadata:
   dependencies:
     "@prisma/client": 5.0.0
     "@rating-tracker/commons": "workspace:*"
-    "@simplewebauthn/server": 7.3.1
+    "@simplewebauthn/server": 7.4.0
     "@types/cron": 2.0.1
     "@types/express": 4.17.17
     "@types/node": 18.17.1
@@ -1465,19 +1465,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/iso-webcrypto@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "@simplewebauthn/iso-webcrypto@npm:7.2.0"
+"@simplewebauthn/iso-webcrypto@npm:^7.4.0":
+  version: 7.4.0
+  resolution: "@simplewebauthn/iso-webcrypto@npm:7.4.0"
   dependencies:
-    "@simplewebauthn/typescript-types": "*"
+    "@simplewebauthn/typescript-types": ^7.4.0
     "@types/node": ^18.11.9
-  checksum: 663b3cf8b88987e5a87126d3f35f92941756682aa13af4816fffe3a9547eb344fc433f817502a7e7066d6179270afdd5ea18638a629c4218b433c77f6669f14b
+  checksum: dfc22eb81ccb55a4526321464219b6984b096d91c73f7db590505afc2e33371da884bdaa0f53d59f4cf66440467a6fe9d6acccd27036a81b9dc96805d4657b27
   languageName: node
   linkType: hard
 
-"@simplewebauthn/server@npm:7.3.1":
-  version: 7.3.1
-  resolution: "@simplewebauthn/server@npm:7.3.1"
+"@simplewebauthn/server@npm:7.4.0":
+  version: 7.4.0
+  resolution: "@simplewebauthn/server@npm:7.4.0"
   dependencies:
     "@hexagon/base64": ^1.1.25
     "@peculiar/asn1-android": ^2.3.3
@@ -1485,18 +1485,18 @@ __metadata:
     "@peculiar/asn1-rsa": ^2.3.4
     "@peculiar/asn1-schema": ^2.3.3
     "@peculiar/asn1-x509": ^2.3.4
-    "@simplewebauthn/iso-webcrypto": ^7.2.0
-    "@simplewebauthn/typescript-types": "*"
+    "@simplewebauthn/iso-webcrypto": ^7.4.0
+    "@simplewebauthn/typescript-types": ^7.4.0
     "@types/debug": ^4.1.7
     "@types/node": ^18.11.9
     cbor-x: ^1.4.1
     cross-fetch: ^3.1.5
     debug: ^4.3.2
-  checksum: 0657cd6a858361f590e888c475246730e1a0bd1c4988645ebd6aa8a39b3c6cf43182f101350886caec309b7498c398088c5083100c9514871653e444374c743a
+  checksum: 0dd76c4d3c66888fd482393e9d16f668441f66ad0a407874dd62817c5f9c58d107ed4cac3db0bfb514719a665c902524322e6c1b1d511b902c629fb204bd4115
   languageName: node
   linkType: hard
 
-"@simplewebauthn/typescript-types@npm:*, @simplewebauthn/typescript-types@npm:^7.4.0":
+"@simplewebauthn/typescript-types@npm:^7.4.0":
   version: 7.4.0
   resolution: "@simplewebauthn/typescript-types@npm:7.4.0"
   checksum: c53fd44eaf9a905ec79f3a7956bebb275dde47079bc8a05e20cf0b5b79cd358f63f60997efcad49d468110ae6d317782becf75c338aa6c48cacd09b839a583b7
