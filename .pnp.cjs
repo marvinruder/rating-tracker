@@ -1676,7 +1676,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.18.2"],\
             ["express-async-errors", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:3.1.1"],\
             ["express-openapi-validator", "npm:5.0.4"],\
-            ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.8.0"],\
+            ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.8.1"],\
             ["glob", "npm:10.3.3"],\
             ["pino", "npm:8.14.1"],\
             ["pino-pretty", "npm:10.2.0"],\
@@ -5423,17 +5423,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["express-rate-limit", [\
-        ["npm:6.8.0", {\
-          "packageLocation": "./.yarn/cache/express-rate-limit-npm-6.8.0-860e327cf5-57b92d9bbe.zip/node_modules/express-rate-limit/",\
+        ["npm:6.8.1", {\
+          "packageLocation": "./.yarn/cache/express-rate-limit-npm-6.8.1-9ec971b780-50b928b21d.zip/node_modules/express-rate-limit/",\
           "packageDependencies": [\
-            ["express-rate-limit", "npm:6.8.0"]\
+            ["express-rate-limit", "npm:6.8.1"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.8.0", {\
-          "packageLocation": "./.yarn/__virtual__/express-rate-limit-virtual-166da0e0c1/0/cache/express-rate-limit-npm-6.8.0-860e327cf5-57b92d9bbe.zip/node_modules/express-rate-limit/",\
+        ["virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.8.1", {\
+          "packageLocation": "./.yarn/__virtual__/express-rate-limit-virtual-31580039c7/0/cache/express-rate-limit-npm-6.8.1-9ec971b780-50b928b21d.zip/node_modules/express-rate-limit/",\
           "packageDependencies": [\
-            ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.8.0"],\
+            ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.8.1"],\
             ["@types/express", "npm:4.17.17"],\
             ["express", "npm:4.18.2"]\
           ],\
