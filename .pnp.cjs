@@ -1729,7 +1729,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mui/material", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:5.14.2"],\
             ["@rating-tracker/commons", "workspace:packages/commons"],\
             ["@rating-tracker/wasm", "workspace:packages/wasm"],\
-            ["@simplewebauthn/browser", "npm:7.2.0"],\
+            ["@simplewebauthn/browser", "npm:7.4.0"],\
             ["@types/node", "npm:18.17.1"],\
             ["@types/react", "npm:18.2.17"],\
             ["@types/react-dom", "npm:18.2.7"],\
@@ -1960,11 +1960,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/browser", [\
-        ["npm:7.2.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-browser-npm-7.2.0-66c050503c-1eb8193e67.zip/node_modules/@simplewebauthn/browser/",\
+        ["npm:7.4.0", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-browser-npm-7.4.0-f54180a767-dd5fdebeb2.zip/node_modules/@simplewebauthn/browser/",\
           "packageDependencies": [\
-            ["@simplewebauthn/browser", "npm:7.2.0"],\
-            ["@simplewebauthn/typescript-types", "npm:7.0.0"]\
+            ["@simplewebauthn/browser", "npm:7.4.0"],\
+            ["@simplewebauthn/typescript-types", "npm:7.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1974,7 +1974,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@simplewebauthn-iso-webcrypto-npm-7.2.0-db7b12b859-663b3cf8b8.zip/node_modules/@simplewebauthn/iso-webcrypto/",\
           "packageDependencies": [\
             ["@simplewebauthn/iso-webcrypto", "npm:7.2.0"],\
-            ["@simplewebauthn/typescript-types", "npm:7.0.0"],\
+            ["@simplewebauthn/typescript-types", "npm:7.4.0"],\
             ["@types/node", "npm:18.17.1"]\
           ],\
           "linkType": "HARD"\
@@ -1992,7 +1992,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@peculiar/asn1-schema", "npm:2.3.6"],\
             ["@peculiar/asn1-x509", "npm:2.3.6"],\
             ["@simplewebauthn/iso-webcrypto", "npm:7.2.0"],\
-            ["@simplewebauthn/typescript-types", "npm:7.0.0"],\
+            ["@simplewebauthn/typescript-types", "npm:7.4.0"],\
             ["@types/debug", "npm:4.1.8"],\
             ["@types/node", "npm:18.17.1"],\
             ["cbor-x", "npm:1.5.3"],\
@@ -2003,10 +2003,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/typescript-types", [\
-        ["npm:7.0.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-typescript-types-npm-7.0.0-cc6ca20415-11e55e7403.zip/node_modules/@simplewebauthn/typescript-types/",\
+        ["npm:7.4.0", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-typescript-types-npm-7.4.0-873642d566-c53fd44eaf.zip/node_modules/@simplewebauthn/typescript-types/",\
           "packageDependencies": [\
-            ["@simplewebauthn/typescript-types", "npm:7.0.0"]\
+            ["@simplewebauthn/typescript-types", "npm:7.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -1311,7 +1311,7 @@ __metadata:
     "@mui/material": 5.14.2
     "@rating-tracker/commons": "workspace:*"
     "@rating-tracker/wasm": "workspace:*"
-    "@simplewebauthn/browser": 7.2.0
+    "@simplewebauthn/browser": 7.4.0
     "@types/node": 18.17.1
     "@types/react": 18.2.17
     "@types/react-dom": 18.2.7
@@ -1456,12 +1456,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/browser@npm:7.2.0":
-  version: 7.2.0
-  resolution: "@simplewebauthn/browser@npm:7.2.0"
+"@simplewebauthn/browser@npm:7.4.0":
+  version: 7.4.0
+  resolution: "@simplewebauthn/browser@npm:7.4.0"
   dependencies:
-    "@simplewebauthn/typescript-types": "*"
-  checksum: 1eb8193e671307936cca3305b44860716e3c081effb83f11f35293cb411fc07e47c3e1ce0194322afab9d24b5e5cbde8c566daf8a21dcf8b2d872169cd04ce3d
+    "@simplewebauthn/typescript-types": ^7.4.0
+  checksum: dd5fdebeb2910422e18659697c9a96d0cc13a5af7406b35ea3e44269c2430b8619df5e7a91b360dca220e509d6686514c21119f60e73e64b721f0e82bfc9565f
   languageName: node
   linkType: hard
 
@@ -1496,10 +1496,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/typescript-types@npm:*":
-  version: 7.0.0
-  resolution: "@simplewebauthn/typescript-types@npm:7.0.0"
-  checksum: 11e55e74035e4a88287d5a615939c9cfffc6e05520dc947b68d77a1b5b301707137c2e29b5b279f91e3e4a9b472226fb6c7025144a6057990b6841145fdd4959
+"@simplewebauthn/typescript-types@npm:*, @simplewebauthn/typescript-types@npm:^7.4.0":
+  version: 7.4.0
+  resolution: "@simplewebauthn/typescript-types@npm:7.4.0"
+  checksum: c53fd44eaf9a905ec79f3a7956bebb275dde47079bc8a05e20cf0b5b79cd358f63f60997efcad49d468110ae6d317782becf75c338aa6c48cacd09b839a583b7
   languageName: node
   linkType: hard
 
