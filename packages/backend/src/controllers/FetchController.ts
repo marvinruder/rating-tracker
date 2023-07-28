@@ -145,7 +145,15 @@ export class FetchController {
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
       // If fetchers threw an error, we rethrow the first one
-      throw rejectedResult?.reason ?? new APIError(500, "Morningstar fetchers exited with non-empty queue.");
+      throw (
+        rejectedResult?.reason ??
+        new APIError(
+          500,
+          `Morningstar fetchers exited with stocks ${stocks.queued
+            .map((stock) => stock.ticker)
+            .join(", ")} still queued.`,
+        )
+      );
     }
 
     // If this request was for a single stock and an error occurred, we rethrow that error
@@ -230,7 +238,15 @@ export class FetchController {
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
       // If fetchers threw an error, we rethrow the first one
-      throw rejectedResult?.reason ?? new APIError(500, "MarketScreener fetchers exited with non-empty queue.");
+      throw (
+        rejectedResult?.reason ??
+        new APIError(
+          500,
+          `MarketScreener fetchers exited with stocks ${stocks.queued
+            .map((stock) => stock.ticker)
+            .join(", ")} still queued.`,
+        )
+      );
     }
 
     // If this request was for a single stock and an error occurred, we rethrow that error
@@ -315,7 +331,13 @@ export class FetchController {
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
       // If fetchers threw an error, we rethrow the first one
-      throw rejectedResult?.reason ?? new APIError(500, "MSCI fetchers exited with non-empty queue.");
+      throw (
+        rejectedResult?.reason ??
+        new APIError(
+          500,
+          `MSCI fetchers exited with stocks ${stocks.queued.map((stock) => stock.ticker).join(", ")} still queued.`,
+        )
+      );
     }
 
     // If this request was for a single stock and an error occurred, we rethrow that error
@@ -400,7 +422,15 @@ export class FetchController {
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
       // If fetchers threw an error, we rethrow the first one
-      throw rejectedResult?.reason ?? new APIError(500, "Refinitiv fetchers exited with non-empty queue.");
+      throw (
+        rejectedResult?.reason ??
+        new APIError(
+          500,
+          `Refinitiv fetchers exited with stocks ${stocks.queued
+            .map((stock) => stock.ticker)
+            .join(", ")} still queued.`,
+        )
+      );
     }
 
     // If this request was for a single stock and an error occurred, we rethrow that error
@@ -485,7 +515,13 @@ export class FetchController {
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
       // If fetchers threw an error, we rethrow the first one
-      throw rejectedResult?.reason ?? new APIError(500, "S&P fetchers exited with non-empty queue.");
+      throw (
+        rejectedResult?.reason ??
+        new APIError(
+          500,
+          `S&P fetchers exited with stocks ${stocks.queued.map((stock) => stock.ticker).join(", ")} still queued.`,
+        )
+      );
     }
 
     // If this request was for a single stock and an error occurred, we rethrow that error
