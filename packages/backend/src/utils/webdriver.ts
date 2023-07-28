@@ -7,8 +7,6 @@ import chalk from "chalk";
 import { Stock, resourceEndpointPath } from "@rating-tracker/commons";
 import { createResource } from "../redis/repositories/resourceRepository.js";
 import axios, { AxiosError } from "axios";
-import * as signal from "../signal/signal.js";
-import { SIGNAL_PREFIX_ERROR } from "../signal/signal.js";
 
 /**
  * A page load strategy to use by the WebDriver.
@@ -83,12 +81,6 @@ export const openPageAndWait = async (driver: WebDriver, url: string): Promise<b
     return true;
   } catch (e) {
     logger.error(PREFIX_SELENIUM + chalk.redBright(`Unable to fetch from page ${url} (driver may be unhealthy): ${e}`));
-    await signal.sendMessage(
-      SIGNAL_PREFIX_ERROR +
-        `Unable to fetch from page ${url} (driver may be unhealthy): ${String(e.message).split(/[\n:{]/)[0]}`,
-      "fetchError",
-    );
-
     return false;
   }
 };
