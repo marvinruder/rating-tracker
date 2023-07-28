@@ -1,3 +1,4 @@
+import packageInfo from "../../package.json" assert { type: "json" };
 import chalk from "chalk";
 import dotenv from "dotenv";
 
@@ -43,11 +44,7 @@ const logo = chalk.bold(
                             ΅΅΅  ΅ΨΪΈώ
                                     ΫΆ΅
 
- Welcome to Rating Tracker v${
-   // Vitest does not support parsing import assertions which are required by Node for JSON imports, so we need to get
-   // creative here
-   (await import(`./packageInfo-${process.env.NODE_ENV === "test" ? "no-assert" : "assert.js"}`)).default.version
- } (${process.env.NODE_ENV ?? "no specific"} environment)!
+ Welcome to Rating Tracker v${packageInfo.version} (${process.env.NODE_ENV ?? "no specific"} environment)!
 
 `),
 );
