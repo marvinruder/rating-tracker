@@ -15,10 +15,13 @@ import {
   Menu,
   MenuItem,
   Skeleton,
+  Slide,
+  SlideProps,
   TableCell,
   TableRow,
   Tooltip,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -96,6 +99,8 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
   const [addToWatchlistDialogOpen, setAddToWatchlistDialogOpen] = useState<boolean>(false);
   const [removeFromWatchlistDialogOpen, setRemoveFromWatchlistDialogOpen] = useState<boolean>(false);
 
+  const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
+
   /**
    * Returns an appropriate CSS `display` property value for a column. The value is derived from the
    * columns filter values that are passed to the component.
@@ -124,12 +129,20 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         },
       }}
       onContextMenu={(e) => {
-        e.preventDefault();
-        if (optionsMenuOpen) {
-          setOptionsMenuOpen(false);
-        } else {
-          setOptionsMenuPositionEvent(e);
-          setOptionsMenuOpen(true);
+        if (
+          !addToWatchlistDialogOpen &&
+          !removeFromWatchlistDialogOpen &&
+          !editDialogOpen &&
+          !deleteDialogOpen &&
+          !detailsDialogOpen
+        ) {
+          e.preventDefault();
+          if (optionsMenuOpen) {
+            setOptionsMenuOpen(false);
+          } else {
+            setOptionsMenuPositionEvent(e);
+            setOptionsMenuOpen(true);
+          }
         }
       }}
     >
@@ -785,7 +798,14 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Typography>
       </TableCell>
       {/* Details Dialog */}
-      <Dialog open={detailsDialogOpen} onClose={() => setDetailsDialogOpen(false)} maxWidth="lg">
+      <Dialog
+        open={detailsDialogOpen}
+        onClose={() => setDetailsDialogOpen(false)}
+        maxWidth="md"
+        fullScreen={fullScreenDialogs}
+        TransitionComponent={fullScreenDialogs ? Slide : undefined}
+        TransitionProps={{ direction: "up" } as SlideProps}
+      >
         <DialogTitle>
           <Grid container justifyContent="space-between">
             <Grid item display="flex" alignItems="center" maxWidth="calc(100% - 40px)">

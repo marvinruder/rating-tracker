@@ -19,6 +19,9 @@ import {
   ListItemButton,
   DialogActions,
   Divider,
+  Slide,
+  SlideProps,
+  Drawer,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
@@ -111,6 +114,10 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
 
   const { user } = useContext(UserContext);
 
+  const theme = useTheme();
+
+  const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
+
   /**
    * Possible widths for the filter container.
    */
@@ -178,8 +185,6 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
       style: styleboxInput.style,
     });
   };
-
-  const theme = useTheme();
 
   return (
     <Grid container justifyContent="space-between" alignItems="center">
@@ -258,10 +263,17 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
             </IconButton>
           </Box>
         </Tooltip>
-        <Dialog maxWidth="lg" open={addStockOpen}>
+        <Dialog
+          maxWidth="sm"
+          open={addStockOpen}
+          fullScreen={fullScreenDialogs}
+          TransitionComponent={fullScreenDialogs ? Slide : undefined}
+          TransitionProps={{ direction: "up" } as SlideProps}
+          fullWidth
+        >
           <AddStock onClose={() => (setAddStockOpen(false), props.triggerRefetch())} />
         </Dialog>
-        <Dialog onClose={() => setFilterOpen(false)} open={filterOpen} maxWidth="lg">
+        <Drawer anchor="right" onClose={() => setFilterOpen(false)} open={filterOpen}>
           <DialogTitle>
             <Typography variant="h3">Filter Stocks</Typography>
           </DialogTitle>
@@ -641,8 +653,8 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
               Apply
             </Button>
           </DialogActions>
-        </Dialog>
-        <Dialog onClose={() => setColumnFilterOpen(false)} open={columnFilterOpen}>
+        </Drawer>
+        <Drawer anchor="right" onClose={() => setColumnFilterOpen(false)} open={columnFilterOpen}>
           <DialogTitle minWidth={300}>
             <Typography variant="h3" pb={2}>
               Filter Columns
@@ -692,7 +704,7 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
               View Table
             </Button>
           </DialogActions>
-        </Dialog>
+        </Drawer>
       </Grid>
     </Grid>
   );

@@ -10,8 +10,11 @@ import {
   Hidden,
   IconButton,
   Skeleton,
+  Slide,
+  SlideProps,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationContext from "../../../../contexts/NotificationContext";
@@ -27,6 +30,8 @@ export const HeaderUserbox = (): JSX.Element => {
   const navigate = useNavigate();
   const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useContext(NotificationContext);
   const { user } = useContext(UserContext);
+
+  const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
 
   /**
    * Sign out the current user.
@@ -79,7 +84,13 @@ export const HeaderUserbox = (): JSX.Element => {
           </IconButton>
         </Tooltip>
       </Box>
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xl">
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullScreen={fullScreenDialogs}
+        TransitionComponent={fullScreenDialogs ? Slide : undefined}
+        TransitionProps={{ direction: "up" } as SlideProps}
+      >
         <DialogTitle>
           <Typography variant="h3">Profile Settings</Typography>
         </DialogTitle>

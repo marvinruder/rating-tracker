@@ -1,4 +1,4 @@
-import { Card, Container, useMediaQuery } from "@mui/material";
+import { Card, Container } from "@mui/material";
 import axios from "axios";
 import { baseUrl } from "../../../router";
 import { Stock, favoriteListEndpointPath, stockEndpointPath } from "@rating-tracker/commons";
@@ -42,33 +42,13 @@ const StockModule = (): JSX.Element => {
     getStock(ticker);
   }, [ticker]);
 
-  /**
-   * Possible widths of the details card.
-   */
-  let detailsCardWidth: 900 | 600 | 300;
-
-  switch (+useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")) {
-    case 2:
-      // The screen is at least 964px wide.
-      detailsCardWidth = 900;
-      break;
-    case 1:
-      // The screen is at least 664px, but less than 964px wide.
-      detailsCardWidth = 600;
-      break;
-    case 0:
-      // The screen is less than 664px wide.
-      detailsCardWidth = 300;
-      break;
-  }
-
   return (
     <>
       <PageHeaderWrapper maxWidth={false}>
         <StockHeader stock={stock} getStock={() => getStock(ticker)} isFavorite={isFavorite} />
       </PageHeaderWrapper>
       <Container maxWidth={false}>
-        <Card sx={{ width: detailsCardWidth, m: "auto" }}>
+        <Card sx={{ m: "auto", maxWidth: "lg" }}>
           <StockDetails stock={stock} />
         </Card>
       </Container>

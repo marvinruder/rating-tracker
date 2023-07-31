@@ -805,6 +805,9 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
         elevation2: {
           boxShadow: colors.shadows.cardSm,
         },
+        elevation16: {
+          boxShadow: colors.shadows.cardLg,
+        },
         elevation24: {
           boxShadow: colors.shadows.cardLg,
         },
