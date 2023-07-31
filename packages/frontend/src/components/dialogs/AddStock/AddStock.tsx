@@ -14,7 +14,6 @@ import {
   Stepper,
   TextField,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddLinkIcon from "@mui/icons-material/AddLink";
@@ -728,14 +727,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
           <Typography variant="h4" sx={{ mb: 2 }}>
             Here’s all we could find about your new stock:
           </Typography>
-          <Box
-            sx={
-              useMediaQuery("(min-width:664px)")
-                ? { ml: "-56px", width: 600, mr: "-32px" }
-                : { ml: "auto", width: 300, mr: "auto" }
-            }
-          >
-            <StockDetails stock={finalStock} maxWidth={600} />
+          <Box sx={{ ml: "-24px", width: "calc(100% + 48px)", mr: "-32px" }}>
+            <StockDetails stock={finalStock} maxColumns={2} />
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             Please check whether all expected fields are filled. If a field is not filled, an alert will not be raised

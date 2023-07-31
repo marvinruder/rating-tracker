@@ -801,7 +801,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       <Dialog
         open={detailsDialogOpen}
         onClose={() => setDetailsDialogOpen(false)}
-        maxWidth="lg"
+        maxWidth="md"
         fullScreen={fullScreenDialogs}
         TransitionComponent={fullScreenDialogs ? Slide : undefined}
         TransitionProps={{ direction: "up" } as SlideProps}

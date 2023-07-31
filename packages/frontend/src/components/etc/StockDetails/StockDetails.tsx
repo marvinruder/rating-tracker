@@ -44,27 +44,27 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
   /**
    * Possible widths of the details container.
    */
-  let detailsContainerWidth: 900 | 600 | 300;
+  let columns: 1 | 2 | 3;
 
   switch (+useMediaQuery("(min-width:964px)") + +useMediaQuery("(min-width:664px)")) {
     case 2:
       // The screen is at least 964px wide.
-      detailsContainerWidth = props.maxWidth && props.maxWidth < 900 ? props.maxWidth : 900;
+      columns = props.maxColumns && props.maxColumns < 3 ? props.maxColumns : 3;
       break;
     case 1:
       // The screen is at least 664px, but less than 964px wide.
-      detailsContainerWidth = props.maxWidth && props.maxWidth < 600 ? props.maxWidth : 600;
+      columns = props.maxColumns && props.maxColumns < 2 ? props.maxColumns : 2;
       break;
     case 0:
       // The screen is less than 664px wide.
-      detailsContainerWidth = props.maxWidth && props.maxWidth < 300 ? props.maxWidth : 300;
+      columns = props.maxColumns && props.maxColumns < 1 ? props.maxColumns : 1;
       break;
   }
 
   return (
-    <Grid container width={detailsContainerWidth} margin="auto">
+    <Grid container columns={columns} width="100%" margin="auto">
       {/* Key Figures */}
-      <Grid item width={300} order={1}>
+      <Grid item xs={1} order={1}>
         <Typography variant="h4" px="24px" py="16px">
           Key Figures
         </Typography>
@@ -74,7 +74,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Tooltip
               title={<Typography variant="body1">The Country of the company’s operational headquarters.</Typography>}
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">Country</Typography>
             </Tooltip>
@@ -112,7 +112,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">StyleBox</Typography>
             </Tooltip>
@@ -151,7 +151,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Tooltip
               title={<Typography variant="body1">A fine-grained categorization of a company’s business.</Typography>}
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">Industry</Typography>
             </Tooltip>
@@ -181,7 +181,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                       ]
                     }
                     arrow
-                    placement={detailsContainerWidth === 300 ? "bottom" : "right"}
+                    placement={columns === 1 ? "bottom" : "right"}
                   >
                     <Typography variant="body1">
                       {props.stock.industry &&
@@ -211,7 +211,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                       sectorDescription[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]
                     }
                     arrow
-                    placement={detailsContainerWidth === 300 ? "bottom" : "right"}
+                    placement={columns === 1 ? "bottom" : "right"}
                   >
                     <Typography variant="body1">
                       {props.stock.industry && sectorName[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]}
@@ -224,7 +224,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 <Tooltip
                   title={props.stock.industry && industryDescription[props.stock.industry]}
                   arrow
-                  placement={detailsContainerWidth === 300 ? "bottom" : "right"}
+                  placement={columns === 1 ? "bottom" : "right"}
                 >
                   <Typography variant="body1" ml={`${6 + 1.75 * (theme.typography.body1.fontSize as number)}px`}>
                     {props.stock.industry && industryName[props.stock.industry]}
@@ -251,7 +251,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
         </Grid>
       </Grid>
       {/* Financial Data */}
-      <Grid item width={300} order={detailsContainerWidth === 900 ? 2 : 5}>
+      <Grid item xs={1} order={columns === 3 ? 2 : 5}>
         <Typography variant="h4" px="24px" py="16px">
           Financial Data
         </Typography>
@@ -265,7 +265,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">Dividend Yield</Typography>
             </Tooltip>
@@ -291,7 +291,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">
                 P{"\u2009"}/{"\u2009"}E Ratio
@@ -312,7 +312,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">Market Cap</Typography>
             </Tooltip>
@@ -341,7 +341,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">52W Range</Typography>
             </Tooltip>
@@ -376,13 +376,13 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 )}
               </>
             ) : (
-              <Skeleton variant="rectangular" width={150} height={42} />
+              <Skeleton variant="rectangular" width={150} height={42} sx={{ ml: "auto" }} />
             )}
           </Grid>
         </Grid>
       </Grid>
       {/* Overall Scores */}
-      <Grid item width={300} order={detailsContainerWidth === 900 ? 3 : 2}>
+      <Grid item xs={1} order={columns === 3 ? 3 : 2}>
         <Typography variant="h4" px="24px" py="16px">
           Overall Scores
         </Typography>
@@ -402,20 +402,22 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="8px">
                 Total Score
               </Typography>
             </Tooltip>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={6} justifyContent="flex-end">
             {props.stock ? (
-              <BlueIconChip
-                icon={<VerifiedIcon />}
-                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.totalScore))}</strong>}
-                sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
-              />
+              <Box width="100%" display="inline-flex" justifyContent="end">
+                <BlueIconChip
+                  icon={<VerifiedIcon />}
+                  label={<strong>{Math.round(Math.max(0, 100 * props.stock?.totalScore))}</strong>}
+                  sx={{ width: 84, fontSize: 18 }}
+                />
+              </Box>
             ) : (
               <Skeleton variant="rounded" width={84} height={32} sx={{ ml: "auto" }} />
             )}
@@ -435,7 +437,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="8px">
                 Financial Score
@@ -444,11 +446,13 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           <Grid item xs={6}>
             {props.stock ? (
-              <YellowIconChip
-                icon={<PriceCheckIcon />}
-                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.financialScore))}</strong>}
-                sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
-              />
+              <Box width="100%" display="inline-flex" justifyContent="end">
+                <YellowIconChip
+                  icon={<PriceCheckIcon />}
+                  label={<strong>{Math.round(Math.max(0, 100 * props.stock?.financialScore))}</strong>}
+                  sx={{ width: 84, fontSize: 18 }}
+                />
+              </Box>
             ) : (
               <Skeleton variant="rounded" width={84} height={32} sx={{ ml: "auto" }} />
             )}
@@ -468,7 +472,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="8px">
                 ESG Score
@@ -477,18 +481,21 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           <Grid item xs={6}>
             {props.stock ? (
-              <GreenIconChip
-                icon={<NaturePeopleIcon />}
-                label={<strong>{Math.round(Math.max(0, 100 * props.stock?.esgScore))}</strong>}
-                sx={{ width: 84, fontSize: 18, ml: "37.5px" }}
-              />
+              <Box width="100%" display="inline-flex" justifyContent="end">
+                <GreenIconChip
+                  icon={<NaturePeopleIcon />}
+                  label={<strong>{Math.round(Math.max(0, 100 * props.stock?.esgScore))}</strong>}
+                  sx={{ width: 84, fontSize: 18 }}
+                />
+              </Box>
             ) : (
               <Skeleton variant="rounded" width={84} height={32} sx={{ ml: "auto" }} />
             )}
           </Grid>
         </Grid>
       </Grid>
-      <Grid item width={300} order={detailsContainerWidth === 900 ? 4 : 3}>
+      {/* Financial Ratings */}
+      <Grid item xs={1} order={columns === 3 ? 4 : 3}>
         {/* Financial Ratings */}
         <Typography variant="h4" px="24px" py="16px">
           Financial Ratings
@@ -512,7 +519,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">
                 Morningstar
@@ -525,10 +532,12 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <MorningstarNavigator stock={props.stock}>
               <Box
                 sx={{
-                  ml: "1.5px",
                   mt: "4px",
                   height: "24px",
                 }}
+                width="100%"
+                display="inline-flex"
+                justifyContent="end"
               >
                 {props.stock ? (
                   <StarRating value={props.stock.starRating} />
@@ -571,7 +580,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" height="35px">
                 Morningstar
@@ -624,10 +633,12 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
-              <Typography variant="h5" height="19px" mt="5px">
-                Analyst Consensus
+              <Typography variant="h5" height="35px">
+                Analyst
+                <br />
+                Consensus
               </Typography>
             </Tooltip>
           </Grid>
@@ -636,43 +647,45 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock?.analystConsensus !== null && (
                   <MarketScreenerNavigator stock={props.stock}>
-                    <Chip
-                      label={<strong>{props.stock.analystConsensus}</strong>}
-                      style={{ cursor: "inherit" }}
-                      sx={{
-                        backgroundColor:
-                          props.stock.analystConsensus <= 0.5
-                            ? theme.colors.consensus[0]
-                            : props.stock.analystConsensus <= 1.5
-                            ? theme.colors.consensus[1]
-                            : props.stock.analystConsensus <= 2.5
-                            ? theme.colors.consensus[2]
-                            : props.stock.analystConsensus <= 3.5
-                            ? theme.colors.consensus[3]
-                            : props.stock.analystConsensus <= 4.5
-                            ? theme.colors.consensus[4]
-                            : props.stock.analystConsensus <= 5.5
-                            ? theme.colors.consensus[5]
-                            : props.stock.analystConsensus <= 6.5
-                            ? theme.colors.consensus[6]
-                            : props.stock.analystConsensus <= 7.5
-                            ? theme.colors.consensus[7]
-                            : props.stock.analystConsensus <= 8.5
-                            ? theme.colors.consensus[8]
-                            : props.stock.analystConsensus <= 9.5
-                            ? theme.colors.consensus[9]
-                            : theme.colors.consensus[10],
-                        opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
-                        width: 60,
-                        ml: "61.5px",
-                      }}
-                      size="small"
-                    />
+                    <Box width="100%" display="inline-flex" justifyContent="end">
+                      <Chip
+                        label={<strong>{props.stock.analystConsensus}</strong>}
+                        style={{ cursor: "inherit" }}
+                        sx={{
+                          backgroundColor:
+                            props.stock.analystConsensus <= 0.5
+                              ? theme.colors.consensus[0]
+                              : props.stock.analystConsensus <= 1.5
+                              ? theme.colors.consensus[1]
+                              : props.stock.analystConsensus <= 2.5
+                              ? theme.colors.consensus[2]
+                              : props.stock.analystConsensus <= 3.5
+                              ? theme.colors.consensus[3]
+                              : props.stock.analystConsensus <= 4.5
+                              ? theme.colors.consensus[4]
+                              : props.stock.analystConsensus <= 5.5
+                              ? theme.colors.consensus[5]
+                              : props.stock.analystConsensus <= 6.5
+                              ? theme.colors.consensus[6]
+                              : props.stock.analystConsensus <= 7.5
+                              ? theme.colors.consensus[7]
+                              : props.stock.analystConsensus <= 8.5
+                              ? theme.colors.consensus[8]
+                              : props.stock.analystConsensus <= 9.5
+                              ? theme.colors.consensus[9]
+                              : theme.colors.consensus[10],
+                          opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
+                          width: 60,
+                          mt: "4px",
+                        }}
+                        size="small"
+                      />
+                    </Box>
                   </MarketScreenerNavigator>
                 )}
               </>
             ) : (
-              <Skeleton variant="rounded" width={60} height={24} sx={{ ml: "auto" }} />
+              <Skeleton variant="rounded" width={60} height={24} sx={{ ml: "auto", mt: "4px" }} />
             )}
           </Grid>
           {/* Analyst Target Price */}
@@ -694,7 +707,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" height="35px">
                 Analyst Target
@@ -742,7 +755,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Tooltip
               title={<Typography variant="body1">The number of analysts that cover a stock.</Typography>}
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">Analyst Count</Typography>
             </Tooltip>
@@ -765,7 +778,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
         </Grid>
       </Grid>
       {/* ESG Ratings */}
-      <Grid item width={300} order={detailsContainerWidth === 900 ? 5 : 4}>
+      <Grid item xs={1} order={columns === 3 ? 5 : 4}>
         <Typography variant="h4" px="24px" py="16px">
           ESG Ratings
         </Typography>
@@ -786,7 +799,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="5px" height="19px">
                 MSCI ESG Rating
@@ -798,21 +811,22 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock.msciESGRating && (
                   <MSCINavigator stock={props.stock}>
-                    <Chip
-                      label={<strong>{props.stock.msciESGRating}</strong>}
-                      style={{ cursor: "inherit" }}
-                      sx={{
-                        backgroundColor: ["AAA", "AA"].includes(props.stock.msciESGRating)
-                          ? theme.colors.msci.Leader
-                          : ["B", "CCC"].includes(props.stock.msciESGRating)
-                          ? theme.colors.msci.Laggard
-                          : theme.colors.msci.Average,
-                        color: theme.colors.alpha.trueWhite[100],
-                        width: 48,
-                        ml: "73.5px",
-                      }}
-                      size="small"
-                    />
+                    <Box width="100%" display="inline-flex" justifyContent="end">
+                      <Chip
+                        label={<strong>{props.stock.msciESGRating}</strong>}
+                        style={{ cursor: "inherit" }}
+                        sx={{
+                          backgroundColor: ["AAA", "AA"].includes(props.stock.msciESGRating)
+                            ? theme.colors.msci.Leader
+                            : ["B", "CCC"].includes(props.stock.msciESGRating)
+                            ? theme.colors.msci.Laggard
+                            : theme.colors.msci.Average,
+                          color: theme.colors.alpha.trueWhite[100],
+                          width: 48,
+                        }}
+                        size="small"
+                      />
+                    </Box>
                   </MSCINavigator>
                 )}
               </>
@@ -830,7 +844,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </Typography>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">MSCI Implied Temperature Rise</Typography>
             </Tooltip>
@@ -840,14 +854,16 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock.msciTemperature !== null && (
                   <MSCINavigator stock={props.stock}>
-                    <TemperatureChip
-                      stock={props.stock}
-                      icon={<ThermostatIcon />}
-                      label={<strong>{props.stock.msciTemperature + "\u2009℃"}</strong>}
-                      size="small"
-                      sx={{ width: 72, ml: "49.5px", mt: "4px" }}
-                      style={{ cursor: "inherit" }}
-                    />
+                    <Box width="100%" display="inline-flex" justifyContent="end">
+                      <TemperatureChip
+                        stock={props.stock}
+                        icon={<ThermostatIcon />}
+                        label={<strong>{props.stock.msciTemperature + "\u2009℃"}</strong>}
+                        size="small"
+                        sx={{ width: 72, mt: "4px" }}
+                        style={{ cursor: "inherit" }}
+                      />
+                    </Box>
                   </MSCINavigator>
                 )}
               </>
@@ -871,7 +887,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="6px" height="21px">
                 Refinitiv ESG Score
@@ -911,7 +927,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="6px" height="21px">
                 Refinitiv Emissions
@@ -952,7 +968,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="6px" height="21px">
                 S&P ESG Score
@@ -992,7 +1008,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={detailsContainerWidth === 300 ? "bottom" : "left"}
+              placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5">
                 Sustainalytics
@@ -1006,26 +1022,27 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock.sustainalyticsESGRisk !== null && (
                   <SustainalyticsNavigator stock={props.stock}>
-                    <Chip
-                      label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
-                      style={{ cursor: "inherit" }}
-                      sx={{
-                        backgroundColor:
-                          props.stock.sustainalyticsESGRisk < 10
-                            ? theme.colors.sustainalytics.negligible
-                            : props.stock.sustainalyticsESGRisk < 20
-                            ? theme.colors.sustainalytics.low
-                            : props.stock.sustainalyticsESGRisk < 30
-                            ? theme.colors.sustainalytics.medium
-                            : props.stock.sustainalyticsESGRisk < 40
-                            ? theme.colors.sustainalytics.high
-                            : theme.colors.sustainalytics.severe,
-                        width: 64,
-                        ml: "57.5px",
-                        mt: "4px",
-                      }}
-                      size="small"
-                    />
+                    <Box width="100%" display="inline-flex" justifyContent="end">
+                      <Chip
+                        label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
+                        style={{ cursor: "inherit" }}
+                        sx={{
+                          backgroundColor:
+                            props.stock.sustainalyticsESGRisk < 10
+                              ? theme.colors.sustainalytics.negligible
+                              : props.stock.sustainalyticsESGRisk < 20
+                              ? theme.colors.sustainalytics.low
+                              : props.stock.sustainalyticsESGRisk < 30
+                              ? theme.colors.sustainalytics.medium
+                              : props.stock.sustainalyticsESGRisk < 40
+                              ? theme.colors.sustainalytics.high
+                              : theme.colors.sustainalytics.severe,
+                          width: 64,
+                          mt: "4px",
+                        }}
+                        size="small"
+                      />
+                    </Box>
                   </SustainalyticsNavigator>
                 )}
               </>
@@ -1036,7 +1053,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
         </Grid>
       </Grid>
       {/* Description */}
-      <Grid item width={300} order={6} px="24px" pt="14px" pb="20px">
+      <Grid item xs={1} order={6} px="24px" pt="14px" pb="20px">
         <Typography variant="body1">
           {props.stock ? (
             <>{props.stock.description}</>
@@ -1068,7 +1085,7 @@ interface StockDetailsProps {
    */
   stock?: Stock;
   /**
-   * The maximum width of the component.
+   * The maximum columns of the component.
    */
-  maxWidth?: 600 | 300;
+  maxColumns?: 1 | 2;
 }
