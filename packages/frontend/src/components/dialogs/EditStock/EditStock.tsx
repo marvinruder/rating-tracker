@@ -540,7 +540,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ p: 2.6666, pt: 0 }}>
+      <DialogActions sx={{ p: 2.6666, pt: 1 }}>
         <Button onClick={() => (props.onClose(), props.getStocks && props.getStocks())}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}

@@ -159,7 +159,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
           <AddWatchlist onClose={() => (setAddWatchlistOpen(false), getWatchlists())} />
         </Dialog>
       </DialogContent>
-      <DialogActions sx={{ p: 2.6666, pt: 0 }}>
+      <DialogActions sx={{ p: 2.6666, pt: 1 }}>
         <Button onClick={props.onClose}>Cancel</Button>
       </DialogActions>
     </>

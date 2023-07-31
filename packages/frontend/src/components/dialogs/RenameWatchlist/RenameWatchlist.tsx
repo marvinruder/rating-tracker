@@ -68,7 +68,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ p: 2.6666, pt: 0 }}>
+      <DialogActions sx={{ p: 2.6666, pt: 1 }}>
         <Button onClick={() => (props.onClose(), props.getWatchlists && props.getWatchlists())}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}

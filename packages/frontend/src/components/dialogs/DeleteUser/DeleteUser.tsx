@@ -43,7 +43,7 @@ export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
       <DialogContent>
         Do you really want to delete the User “{props.user.name}” ({props.user.email})? This action cannot be reversed.
       </DialogContent>
-      <DialogActions sx={{ p: 2.6666, pt: 0 }}>
+      <DialogActions sx={{ p: 2.6666, pt: 1 }}>
         <Button onClick={props.onClose}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}

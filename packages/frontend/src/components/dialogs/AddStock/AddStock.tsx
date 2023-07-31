@@ -4,6 +4,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
@@ -461,7 +462,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
           variant="contained"
           onClick={putStock}
           onMouseOver={validate} // Validate input fields on hover
-          sx={{ mt: 1, ml: 1, float: "right" }}
+          sx={{ ml: 1, float: "right" }}
           disabled={tickerError || nameError || countryError}
           startIcon={<AddBoxIcon />}
         >
@@ -704,7 +705,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
           loading={requestInProgress}
           variant="contained"
           onClick={getAndShowStock}
-          sx={{ mt: 1, ml: 1, float: "right" }}
+          sx={{ ml: 1, float: "right" }}
           disabled={
             morningstarIDRequestInProgress ||
             marketScreenerIDRequestInProgress ||
@@ -728,10 +729,11 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             Here’s all we could find about your new stock:
           </Typography>
           <Box
-            sx={{
-              ml: useMediaQuery("(min-width:664px)") ? "-24px" : "-56px",
-              mr: "-32px",
-            }}
+            sx={
+              useMediaQuery("(min-width:664px)")
+                ? { ml: "-56px", width: 600, mr: "-32px" }
+                : { ml: "auto", width: 300, mr: "auto" }
+            }
           >
             <StockDetails stock={finalStock} maxWidth={600} />
           </Box>
@@ -750,7 +752,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       <DialogTitle>
         <Typography variant="h3">Add a new Stock</Typography>
       </DialogTitle>
-      <DialogContent sx={{ width: useMediaQuery("(min-width:664px)") ? 632 : 324 }}>
+      <DialogContent>
         <Stepper
           activeStep={activeStep}
           orientation="vertical"
@@ -759,43 +761,40 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             background: "none",
           }}
         >
-          {steps.map((step, index) => {
+          {steps.map((step) => {
             return (
               <Step key={step.title}>
                 <StepLabel optional={step.optional && <Typography variant="caption">Optional</Typography>}>
                   {step.title}
                 </StepLabel>
-                <StepContent>
-                  {step.content}
-                  <Box sx={{ mb: 2 }}>
-                    <Button
-                      onClick={handleBack}
-                      sx={{
-                        mt: 1,
-                        mr: 1,
-                        float: "left",
-                        visibility: step.noStepBack && "hidden",
-                      }}
-                    >
-                      {index === 0 ? "Cancel" : "Back"}
-                    </Button>
-                    {step.nextButton ?? (
-                      <LoadingButton
-                        variant="contained"
-                        onClick={handleNext}
-                        sx={{ mt: 1, ml: 1, float: "right" }}
-                        color={(step.buttonColor as AlertColor) ?? "primary"}
-                      >
-                        {index === steps.length - 1 ? "Finish" : "Continue"}
-                      </LoadingButton>
-                    )}
-                  </Box>
-                </StepContent>
+                <StepContent sx={{ pr: 0 }}>{step.content}</StepContent>
               </Step>
             );
           })}
         </Stepper>
       </DialogContent>
+      <DialogActions sx={{ p: 2.6666, pt: 1 }}>
+        <Button
+          onClick={handleBack}
+          sx={{
+            mr: 1,
+            float: "left",
+            visibility: steps[activeStep].noStepBack && "hidden",
+          }}
+        >
+          {activeStep === 0 ? "Cancel" : "Back"}
+        </Button>
+        {steps[activeStep].nextButton ?? (
+          <LoadingButton
+            variant="contained"
+            onClick={handleNext}
+            sx={{ ml: 1, float: "right" }}
+            color={(steps[activeStep].buttonColor as AlertColor) ?? "primary"}
+          >
+            {activeStep === steps.length - 1 ? "Finish" : "Continue"}
+          </LoadingButton>
+        )}
+      </DialogActions>
     </>
   );
 };

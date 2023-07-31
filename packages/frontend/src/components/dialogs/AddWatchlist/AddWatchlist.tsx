@@ -65,7 +65,7 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ p: 2.6666, pt: 0 }}>
+      <DialogActions sx={{ p: 2.6666, pt: 1 }}>
         <Button onClick={() => props.onClose()}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}

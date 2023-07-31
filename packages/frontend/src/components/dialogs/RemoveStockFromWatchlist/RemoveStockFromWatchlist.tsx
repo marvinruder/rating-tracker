@@ -45,7 +45,7 @@ export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): 
         Do you really want to remove the Stock “{props.stock.name}” ({props.stock.ticker}) from the watchlist “
         {props.watchlist.name}”?
       </DialogContent>
-      <DialogActions sx={{ p: 2.6666, pt: 0 }}>
+      <DialogActions sx={{ p: 2.6666, pt: 1 }}>
         <Button onClick={props.onClose}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}
