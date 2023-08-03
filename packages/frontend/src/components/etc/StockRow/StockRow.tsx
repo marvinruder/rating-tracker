@@ -849,7 +849,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       >
         <AddStockToWatchlist
           stock={props.stock}
-          onClose={() => (setAddToWatchlistDialogOpen(false), setOptionsMenuOpen(false))}
+          onClose={() => (setAddToWatchlistDialogOpen(false), setOptionsMenuOpen(false), props.getStocks())}
         />
       </Dialog>
       {/* Edit Dialog */}

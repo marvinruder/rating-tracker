@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip } from "@mui/material";
+import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -9,6 +9,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNotification } from "../../../contexts/NotificationContext";
 import { baseUrl } from "../../../router";
+import { StockTableFilters, StockTableFiltersProps } from "../../../components/etc/StockTableFilters";
 
 /**
  * A header for the watchlist details page.
@@ -30,7 +31,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
             {props.watchlist ? props.watchlist.name : <Skeleton width={160} />}
           </Typography>
         </Grid>
-        <Grid item ml="auto" height={40}>
+        <Grid item ml="auto" height={40} display="inline-flex">
           {props.watchlist ? (
             <Tooltip
               arrow
@@ -90,6 +91,8 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
           ) : (
             <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
           )}
+          <Divider orientation="vertical" component="div" sx={{ display: "inline-block", ml: 1, height: 40 }} />
+          <StockTableFilters {...props.stockTableFiltersProps} />
         </Grid>
       </Grid>
       {props.watchlist && (
@@ -129,4 +132,8 @@ interface WatchlistHeaderProps {
    * A method to update the watchlist, e.g. after editing.
    */
   getWatchlist?: () => void;
+  /**
+   * The properties of the stock table filters.
+   */
+  stockTableFiltersProps: StockTableFiltersProps;
 }
