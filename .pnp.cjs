@@ -1614,20 +1614,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@prisma/client", [\
-        ["npm:5.1.0", {\
-          "packageLocation": "./.yarn/unplugged/@prisma-client-virtual-d6e977a583/node_modules/@prisma/client/",\
+        ["npm:5.1.1", {\
+          "packageLocation": "./.yarn/unplugged/@prisma-client-virtual-1023a98e5c/node_modules/@prisma/client/",\
           "packageDependencies": [\
-            ["@prisma/client", "npm:5.1.0"]\
+            ["@prisma/client", "npm:5.1.1"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.1.0", {\
-          "packageLocation": "./.yarn/unplugged/@prisma-client-virtual-d6e977a583/node_modules/@prisma/client/",\
+        ["virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.1.1", {\
+          "packageLocation": "./.yarn/unplugged/@prisma-client-virtual-1023a98e5c/node_modules/@prisma/client/",\
           "packageDependencies": [\
-            ["@prisma/client", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.1.0"],\
-            ["@prisma/engines-version", "npm:5.1.0-28.a9b7003df90aa623086e4d6f4e43c72468e6339b"],\
+            ["@prisma/client", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.1.1"],\
+            ["@prisma/engines-version", "npm:5.1.1-1.6a3747c37ff169c90047725a05a6ef02e32ac97e"],\
             ["@types/prisma", null],\
-            ["prisma", "npm:5.1.0"]\
+            ["prisma", "npm:5.1.1"]\
           ],\
           "packagePeers": [\
             "@types/prisma",\
@@ -1637,19 +1637,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@prisma/engines", [\
-        ["npm:5.1.0", {\
-          "packageLocation": "./.yarn/unplugged/@prisma-engines-npm-5.1.0-5257f499f7/node_modules/@prisma/engines/",\
+        ["npm:5.1.1", {\
+          "packageLocation": "./.yarn/unplugged/@prisma-engines-npm-5.1.1-fc7aed99ab/node_modules/@prisma/engines/",\
           "packageDependencies": [\
-            ["@prisma/engines", "npm:5.1.0"]\
+            ["@prisma/engines", "npm:5.1.1"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@prisma/engines-version", [\
-        ["npm:5.1.0-28.a9b7003df90aa623086e4d6f4e43c72468e6339b", {\
-          "packageLocation": "./.yarn/cache/@prisma-engines-version-npm-5.1.0-28.a9b7003df90aa623086e4d6f4e43c72468e6339b-7a4c8d10d4-8c88311d29.zip/node_modules/@prisma/engines-version/",\
+        ["npm:5.1.1-1.6a3747c37ff169c90047725a05a6ef02e32ac97e", {\
+          "packageLocation": "./.yarn/cache/@prisma-engines-version-npm-5.1.1-1.6a3747c37ff169c90047725a05a6ef02e32ac97e-c6eeb14996-cfea78fe98.zip/node_modules/@prisma/engines-version/",\
           "packageDependencies": [\
-            ["@prisma/engines-version", "npm:5.1.0-28.a9b7003df90aa623086e4d6f4e43c72468e6339b"]\
+            ["@prisma/engines-version", "npm:5.1.1-1.6a3747c37ff169c90047725a05a6ef02e32ac97e"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1659,7 +1659,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/backend/",\
           "packageDependencies": [\
             ["@rating-tracker/backend", "workspace:packages/backend"],\
-            ["@prisma/client", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.1.0"],\
+            ["@prisma/client", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.1.1"],\
             ["@rating-tracker/commons", "workspace:packages/commons"],\
             ["@simplewebauthn/server", "npm:7.4.0"],\
             ["@types/cron", "npm:2.0.1"],\
@@ -1691,7 +1691,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pino", "npm:8.14.2"],\
             ["pino-pretty", "npm:10.2.0"],\
             ["prettier", "npm:3.0.1"],\
-            ["prisma", "npm:5.1.0"],\
+            ["prisma", "npm:5.1.1"],\
             ["redis", "npm:4.6.7"],\
             ["redis-om", "npm:0.4.2"],\
             ["response-time", "npm:2.3.2"],\
@@ -8347,11 +8347,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["prisma", [\
-        ["npm:5.1.0", {\
-          "packageLocation": "./.yarn/unplugged/prisma-npm-5.1.0-a997c7e40c/node_modules/prisma/",\
+        ["npm:5.1.1", {\
+          "packageLocation": "./.yarn/unplugged/prisma-npm-5.1.1-b7c73b99a0/node_modules/prisma/",\
           "packageDependencies": [\
-            ["prisma", "npm:5.1.0"],\
-            ["@prisma/engines", "npm:5.1.0"]\
+            ["prisma", "npm:5.1.1"],\
+            ["@prisma/engines", "npm:5.1.1"]\
           ],\
           "linkType": "HARD"\
         }]\
