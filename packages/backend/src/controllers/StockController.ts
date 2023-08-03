@@ -24,6 +24,7 @@ import APIError from "../utils/apiError.js";
 import axios from "axios";
 import Router from "../utils/router.js";
 import { Prisma } from "../../prisma/client/index.js";
+import { readWatchlist } from "../db/tables/watchlistTable.js";
 
 /**
  * This class is responsible for handling stock data.
@@ -460,6 +461,23 @@ export class StockController {
         });
       }
     }
+
+    if (req.query.watchlist !== undefined) {
+      const watchlistID = Number(req.query.watchlist);
+      if (!Number.isNaN(watchlistID)) {
+        // Check that the user has access to the watchlist
+        await readWatchlist(Number(req.query.watchlist), res.locals.user.email);
+        filters.push({
+          watchlists: {
+            some: {
+              id: watchlistID,
+              email: res.locals.user.email,
+            },
+          },
+        });
+      }
+    }
+
     const sortBy = req.query.sortBy;
     if (sortBy && typeof sortBy === "string" && isSortableAttribute(sortBy)) {
       const sort = String(req.query.sortDesc).toLowerCase() === "true" ? "desc" : "asc";

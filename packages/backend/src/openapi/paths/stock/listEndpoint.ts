@@ -1,6 +1,7 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 import * as stock from "../../parameters/stock.js";
-import { unauthorized } from "../../responses/clientError.js";
+import * as watchlist from "../../parameters/watchlist.js";
+import { forbidden, unauthorized } from "../../responses/clientError.js";
 import { okStockListWithCount } from "../../responses/success.js";
 
 /**
@@ -53,10 +54,15 @@ const get: OpenAPIV3.OperationObject = {
     stock.esgScoreMax,
     stock.totalScoreMin,
     stock.totalScoreMax,
+    {
+      ...watchlist.id,
+      name: "watchlist",
+    },
   ],
   responses: {
     "200": okStockListWithCount,
     "401": unauthorized,
+    "403": forbidden,
   },
 };
 

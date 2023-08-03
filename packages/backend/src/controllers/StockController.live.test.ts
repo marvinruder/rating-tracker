@@ -1,5 +1,6 @@
 import {
   Stock,
+  WatchlistSummary,
   msciESGRatingArray,
   sizeArray,
   sortableAttributeArray,
@@ -8,6 +9,7 @@ import {
   stockListEndpointPath,
   stockLogoEndpointPath,
   styleArray,
+  watchlistSummaryEndpointPath,
 } from "@rating-tracker/commons";
 import {
   LiveTestSuite,
@@ -318,6 +320,32 @@ tests.push({
     expect(res.body.stocks[1].name).toMatch("Danone");
     expect(res.body.stocks[2].name).toMatch("Kion");
     expect(res.body.stocks[3].name).toMatch("Ørsted");
+  },
+});
+
+tests.push({
+  testName: "filters and sorts stock list – example 17",
+  testFunction: async () => {
+    // Get the ID of the watchlist from the summary
+    let res = await supertest.get(`/api${watchlistSummaryEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    const { id } = res.body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites");
+
+    res = await supertest
+      .get(`/api${stockListEndpointPath}?watchlist=${id}&sortBy=name`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(2);
+    expect(res.body.stocks.length).toBe(2);
+    expect(res.body.stocks[0].name).toBe("Novo Nordisk A/S");
+    expect(res.body.stocks[1].name).toBe("Ørsted A/S");
+
+    // Attempting to read a list of a different user returns an error
+    res = await supertest
+      .get(`/api${stockListEndpointPath}?watchlist=${id}`)
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+    expect(res.status).toBe(403);
+    expect(res.body.message).toMatch("does not belong to user with email address john.doe");
   },
 });
 
