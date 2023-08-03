@@ -17,11 +17,12 @@ import {
   SortableAttribute,
   Stock,
   StockListColumn,
+  Watchlist,
   favoriteListEndpointPath,
   stockListEndpointPath,
 } from "@rating-tracker/commons";
 import { baseUrl } from "../../../router";
-import { StockRow } from "../../../components/etc/StockRow";
+import { StockRow } from "../StockRow";
 import { useNotification } from "../../../contexts/NotificationContext";
 import { StockFilter } from "../../../types/StockFilter";
 
@@ -31,7 +32,7 @@ import { StockFilter } from "../../../types/StockFilter";
  * @param {StockTableProps} props The component props.
  * @returns {JSX.Element} The stocks table component.
  */
-const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element => {
+export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element => {
   const [page, setPage] = useState<number>(0);
   const [count, setCount] = useState<number>(-1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(25);
@@ -43,8 +44,9 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
   const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   useEffect(() => {
-    getStocks(); // Get stocks whenever pagination, sorting or filtering changes, or when explicitly requested.
-  }, [page, rowsPerPage, sortBy, sortDesc, props.filter, props.triggerRefetch]);
+    // Get stocks whenever pagination, sorting or filtering changes, or when explicitly requested.
+    !props.loading && getStocks();
+  }, [page, rowsPerPage, sortBy, sortDesc, props.filter, props.triggerRefetch, props.loading]);
 
   /**
    * Get the stocks from the backend.
@@ -68,6 +70,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
             industries: undefined,
             country: props.filter.countries?.length > 0 ? props.filter.countries.join(",") : undefined,
             industry: props.filter.industries?.length > 0 ? props.filter.industries.join(",") : undefined,
+            watchlist: props.watchlist?.id,
           },
         })
         .then((res) => {
@@ -744,7 +747,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
             </TableRow>
           </TableHead>
           <TableBody>
-            {stocksFinal
+            {stocksFinal && !props.loading
               ? stocks.map(
                   (
                     stock, // Render stock rows
@@ -755,6 +758,7 @@ const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element =>
                       getStocks={getStocks}
                       key={stock.ticker}
                       columns={props.columns}
+                      watchlist={props.watchlist}
                     />
                   ),
                 )
@@ -810,6 +814,12 @@ interface StockTableProps {
    * The columns to display. If unset, all columns will be displayed.
    */
   columns?: StockListColumn[];
+  /**
+   * A watchlist. If set, the stock list will be filtered to only include stocks that are in the watchlist.
+   */
+  watchlist?: Watchlist;
+  /**
+   * Whether the skeleton rows should be shown.
+   */
+  loading?: boolean;
 }
-
-export default StockTable;

@@ -2,7 +2,7 @@ import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
 import * as stock from "./stock.js";
 
 /**
- * The ticker symbol of a stock.
+ * A unique identifier of the watchlist.
  */
 export const id: OpenAPIV3.ParameterObject = {
   in: "query",

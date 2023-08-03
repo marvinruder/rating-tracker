@@ -2,7 +2,7 @@ import StockListHeader from "./StockListHeader";
 import { Card, Container } from "@mui/material";
 import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 
-import StockTable from "./StockTable";
+import { StockTable } from "../../../components/etc/StockTable";
 import { StockFilter } from "../../../types/StockFilter";
 import { useState } from "react";
 import { StockListColumn, stockListColumnArray } from "@rating-tracker/commons";
@@ -26,20 +26,22 @@ const StockListModule = (): JSX.Element => {
     <>
       <PageHeaderWrapper maxWidth={false}>
         <StockListHeader
-          setFilter={setFilter}
-          columnFilter={columnFilter}
-          setColumnFilter={setColumnFilter}
+          stockTableFiltersProps={{
+            setFilter,
+            columnFilter,
+            setColumnFilter,
+            triggerRefetch,
+            filtersInUse:
+              columnFilter.length < stockListColumnArray.length || // If not all columns are shown, or
+              Object.values(filter).some(
+                // If at least one filter is set, i.e., if at least one value
+                (value) =>
+                  typeof value !== "undefined" && // is different from undefined, and
+                  (!Array.isArray(value) || // is not an array, or
+                    value.length > 0), // is an array with at least one element
+              ),
+          }}
           triggerRefetch={triggerRefetch}
-          filtersInUse={
-            columnFilter.length < stockListColumnArray.length || // If not all columns are shown, or
-            Object.values(filter).some(
-              // If at least one filter is set, i.e., if at least one value
-              (value) =>
-                typeof value !== "undefined" && // is different from undefined, and
-                (!Array.isArray(value) || // is not an array, or
-                  value.length > 0), // is an array with at least one element
-            )
-          }
         />
       </PageHeaderWrapper>
       <Container maxWidth={false}>

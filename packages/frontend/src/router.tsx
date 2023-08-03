@@ -290,7 +290,7 @@ const routes: RouteObject[] = [
   },
   {
     // API requests are not handled by the router, but by the API client, so we need to trigger an HTTP request
-    path: "api*",
+    path: "api/*",
     element: <ForwardToAPI />,
   },
   {
