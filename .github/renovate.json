@@ -9,5 +9,15 @@
   "assignees": ["ruder.marvin@icloud.com"],
   "updateLockFiles": true,
   "postUpdateOptions": ["yarnDedupeHighest"],
-  "rangeStrategy": "pin"
+  "rangeStrategy": "pin",
+  "packageRules": [
+    {
+      "groupName": "linting-formatting",
+      "matchPackagePatterns": ["eslint", "prettier"]
+    },
+    {
+      "groupName": "tsparticles",
+      "matchPackagePatterns": ["tsparticles"]
+    }
+  ]
 }

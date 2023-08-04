@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import type { Engine } from "tsparticles-engine";
-import Particles from "react-particles";
-import { loadFull } from "tsparticles";
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
 import { useTheme } from "@mui/material";
 
 /**
@@ -11,7 +11,7 @@ import { useTheme } from "@mui/material";
  */
 export const ParticleBackground = (): JSX.Element => {
   const particlesInit = useCallback(async (engine: Engine) => {
-    await loadFull(engine);
+    await loadSlim(engine);
   }, []);
   const theme = useTheme();
   return (
@@ -22,7 +22,7 @@ export const ParticleBackground = (): JSX.Element => {
         top: 0,
         left: 0,
         zIndex: -1,
-        filter: "blur(1px)",
+        filter: "blur(2px)",
       }}
       init={particlesInit}
       options={{
@@ -31,7 +31,7 @@ export const ParticleBackground = (): JSX.Element => {
         fpsLimit: 60,
         interactivity: {
           events: { onHover: { enable: true, mode: "repulse" } },
-          modes: { repulse: { distance: 100, speed: 0.1 } },
+          modes: { repulse: { distance: 100, speed: 0.05 } },
         },
         particles: {
           color: { value: theme.palette.primary.main },
@@ -39,7 +39,7 @@ export const ParticleBackground = (): JSX.Element => {
             color: theme.palette.primary.light,
             distance: 150,
             enable: true,
-            opacity: 0.5,
+            opacity: 0.4,
             width: 1,
           },
           move: {
@@ -47,7 +47,7 @@ export const ParticleBackground = (): JSX.Element => {
             enable: true,
             outModes: { default: "bounce" },
             random: false,
-            speed: 0.5,
+            speed: 0.25,
             straight: false,
           },
           number: { density: { enable: true, area: 800 }, value: 80 },
