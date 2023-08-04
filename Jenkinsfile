@@ -70,7 +70,7 @@ node('rating-tracker-build') {
                     stage ('Fail') {
                         sh "exit 1"
                     }
-                }
+                },
 
                 test: {
                     stage ('Run Tests') {
