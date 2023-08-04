@@ -1,4 +1,4 @@
-node('does-not-exist') {
+node('rating-tracker-build') {
     withEnv([
         'imagename=marvinruder/rating-tracker',
         'FORCE_COLOR=true'
