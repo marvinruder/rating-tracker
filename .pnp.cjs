@@ -1688,7 +1688,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-openapi-validator", "npm:5.0.4"],\
             ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.8.1"],\
             ["glob", "npm:10.3.3"],\
-            ["pino", "npm:8.14.2"],\
+            ["pino", "npm:8.15.0"],\
             ["pino-pretty", "npm:10.2.0"],\
             ["prettier", "npm:3.0.1"],\
             ["prisma", "npm:5.1.1"],\
@@ -8202,10 +8202,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pino", [\
-        ["npm:8.14.2", {\
-          "packageLocation": "./.yarn/cache/pino-npm-8.14.2-7104942fca-9b777472be.zip/node_modules/pino/",\
+        ["npm:8.15.0", {\
+          "packageLocation": "./.yarn/cache/pino-npm-8.15.0-4faf01bb31-9a54d0757f.zip/node_modules/pino/",\
           "packageDependencies": [\
-            ["pino", "npm:8.14.2"],\
+            ["pino", "npm:8.15.0"],\
             ["atomic-sleep", "npm:1.0.0"],\
             ["fast-redact", "npm:3.2.0"],\
             ["on-exit-leak-free", "npm:2.1.0"],\
