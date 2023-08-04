@@ -1331,18 +1331,16 @@ __metadata:
     eslint-plugin-react: 7.33.1
     nprogress: 0.2.0
     numeral: 2.0.6
-    particlesjs: 2.2.3
     prettier: 3.0.1
     react: 18.2.0
     react-apexcharts: 1.4.1
     react-dom: 18.2.0
-    react-particles: 2.12.1
     react-router: 6.14.2
     react-router-dom: 6.14.2
     react-switch-selector: 2.2.1
     react-tsparticles: 2.12.1
-    tsparticles: 2.12.0
     tsparticles-engine: 2.12.0
+    tsparticles-slim: 2.12.0
     typescript: 5.1.6
     vite: 4.4.8
     vite-plugin-html: 3.2.0
@@ -6721,13 +6719,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"particlesjs@npm:2.2.3":
-  version: 2.2.3
-  resolution: "particlesjs@npm:2.2.3"
-  checksum: 7e0872a4b1dc7c299ecc387ee78702575ad9b786bd6b60c35bf9d3496cc249cba9e64a05a62e99f3213d89297578215983b9eba57bac893acffe4ee3b71a2c23
-  languageName: node
-  linkType: hard
-
 "pascal-case@npm:^3.1.2":
   version: 3.1.2
   resolution: "pascal-case@npm:3.1.2"
@@ -7210,17 +7201,6 @@ __metadata:
   version: 18.2.0
   resolution: "react-is@npm:18.2.0"
   checksum: e72d0ba81b5922759e4aff17e0252bd29988f9642ed817f56b25a3e217e13eea8a7f2322af99a06edb779da12d5d636e9fda473d620df9a3da0df2a74141d53e
-  languageName: node
-  linkType: hard
-
-"react-particles@npm:2.12.1":
-  version: 2.12.1
-  resolution: "react-particles@npm:2.12.1"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-  peerDependencies:
-    react: ">=16"
-  checksum: 18bbd0b3a36f605b79cacc72b77b7d538a5397a26365e4fd4047662b08498a3345c41d82f4e203fa980911f04c666301793bddb25a7f7aad3769211ebd331be9
   languageName: node
   linkType: hard
 
@@ -8611,15 +8591,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsparticles-interaction-external-trail@npm:^2.12.0":
-  version: 2.12.0
-  resolution: "tsparticles-interaction-external-trail@npm:2.12.0"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-  checksum: 944fbbcbda888f558180a6e0f03d22ffa43c2e8c20aaa8db36d639009177c2d91a8232bb09e6989806b3fd56e71b0e2ab0c8a0f30ab5ca391b2642ac00f91c06
-  languageName: node
-  linkType: hard
-
 "tsparticles-interaction-particles-attract@npm:^2.12.0":
   version: 2.12.0
   resolution: "tsparticles-interaction-particles-attract@npm:2.12.0"
@@ -8674,30 +8645,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsparticles-plugin-absorbers@npm:^2.12.0":
-  version: 2.12.0
-  resolution: "tsparticles-plugin-absorbers@npm:2.12.0"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-  checksum: 226fd02e15419aa67f2eb917961eb76a84747659177794787539ee095e276b51e6e67bdb0887f9da0539918bea97c80e62a17e990f15c70c31083ec58ea3659f
-  languageName: node
-  linkType: hard
-
 "tsparticles-plugin-easing-quad@npm:^2.12.0":
   version: 2.12.0
   resolution: "tsparticles-plugin-easing-quad@npm:2.12.0"
   dependencies:
     tsparticles-engine: ^2.12.0
   checksum: 23b491a928fa8a9c57d103a27863d34be9b0a51e806eae9a778d535b658afe2b0bfa5407bd79cd391792550c50af62be5a7ac20ccf501658ed5e5de296fd404a
-  languageName: node
-  linkType: hard
-
-"tsparticles-plugin-emitters@npm:^2.12.0":
-  version: 2.12.0
-  resolution: "tsparticles-plugin-emitters@npm:2.12.0"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-  checksum: 5db4c7767314fa91eafb1f26c1364f3a4f5f7b55a2ecd3dc5154a849de4c7b3def6bbb31ca989e7e5adb39c2f952b3effbaf79d885bf9ecda08a3c9b14f46eaa
   languageName: node
   linkType: hard
 
@@ -8764,7 +8717,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsparticles-slim@npm:^2.12.0":
+"tsparticles-slim@npm:2.12.0":
   version: 2.12.0
   resolution: "tsparticles-slim@npm:2.12.0"
   dependencies:
@@ -8814,15 +8767,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsparticles-updater-destroy@npm:^2.12.0":
-  version: 2.12.0
-  resolution: "tsparticles-updater-destroy@npm:2.12.0"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-  checksum: ab52049c7846c7ecc74e59332094a0a4ebe41d51aed6dae6dcbc9ef61c9fdee72b619a96a0918f3c2f936330ad813b357d30542473e0a6daf15923acdf645fec
-  languageName: node
-  linkType: hard
-
 "tsparticles-updater-life@npm:^2.12.0":
   version: 2.12.0
   resolution: "tsparticles-updater-life@npm:2.12.0"
@@ -8850,15 +8794,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsparticles-updater-roll@npm:^2.12.0":
-  version: 2.12.0
-  resolution: "tsparticles-updater-roll@npm:2.12.0"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-  checksum: f3664bbf9dde83d46cb1ee847ab479d76ab48bf4f5f1fc06bb282484728c2b6e3f562419cbd7633e420746fa1018e50625ccd6afbf06eb3c85e900e8d75b606a
-  languageName: node
-  linkType: hard
-
 "tsparticles-updater-rotate@npm:^2.12.0":
   version: 2.12.0
   resolution: "tsparticles-updater-rotate@npm:2.12.0"
@@ -8883,51 +8818,6 @@ __metadata:
   dependencies:
     tsparticles-engine: ^2.12.0
   checksum: ddfb310cb965bf7345f21d0d6fd265936dd097b4a04c76bd7c312221dc98647f2befb3e4b502fd71437ecb2d75c7d3f1bcabc0d6f690b75791ffe4eb26b9c838
-  languageName: node
-  linkType: hard
-
-"tsparticles-updater-tilt@npm:^2.12.0":
-  version: 2.12.0
-  resolution: "tsparticles-updater-tilt@npm:2.12.0"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-  checksum: 14cb1881ed465e8812be2d86f29ef3987824388a22068a57fae4037ed9d734fac11184077f816e89d93d80912c8edf5ba9726853d1ab01029598ffc9b91214c4
-  languageName: node
-  linkType: hard
-
-"tsparticles-updater-twinkle@npm:^2.12.0":
-  version: 2.12.0
-  resolution: "tsparticles-updater-twinkle@npm:2.12.0"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-  checksum: d8c9e976d76a2387dc9e935fc7e84c106b6b3760732b54ad8b5a4c0a7e0fd0d3657bb483bd28b7540eafd057f522b6bfafaa30ae1ab63de2a4ecc45f10b32763
-  languageName: node
-  linkType: hard
-
-"tsparticles-updater-wobble@npm:^2.12.0":
-  version: 2.12.0
-  resolution: "tsparticles-updater-wobble@npm:2.12.0"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-  checksum: 0c066baa602fdd0fea59e871aa7734f96118775e1e806a4fc7dca71525b0bd6f0164593502f3005a06c99b5b351a89ea70d51b8c1b66d6b6ea9bb8c9959ac699
-  languageName: node
-  linkType: hard
-
-"tsparticles@npm:2.12.0":
-  version: 2.12.0
-  resolution: "tsparticles@npm:2.12.0"
-  dependencies:
-    tsparticles-engine: ^2.12.0
-    tsparticles-interaction-external-trail: ^2.12.0
-    tsparticles-plugin-absorbers: ^2.12.0
-    tsparticles-plugin-emitters: ^2.12.0
-    tsparticles-slim: ^2.12.0
-    tsparticles-updater-destroy: ^2.12.0
-    tsparticles-updater-roll: ^2.12.0
-    tsparticles-updater-tilt: ^2.12.0
-    tsparticles-updater-twinkle: ^2.12.0
-    tsparticles-updater-wobble: ^2.12.0
-  checksum: 926795c97bd9ca8f56d29809ebd9cdc4e6c72dcba841f2be0eed5375ed454d5ae6dd8bbfc506514a3082ba301ac654b1de956a2c46c31253f482239cec757028
   languageName: node
   linkType: hard
 
