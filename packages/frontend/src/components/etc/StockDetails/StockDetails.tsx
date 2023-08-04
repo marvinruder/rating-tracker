@@ -846,7 +846,11 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               arrow
               placement={columns === 1 ? "bottom" : "left"}
             >
-              <Typography variant="h5">MSCI Implied Temperature Rise</Typography>
+              <Typography variant="h5" height="35px">
+                MSCI Implied
+                <br />
+                Temperature Rise
+              </Typography>
             </Tooltip>
           </Grid>
           <Grid item xs={6}>
@@ -860,7 +864,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                         icon={<ThermostatIcon />}
                         label={<strong>{props.stock.msciTemperature + "\u2009℃"}</strong>}
                         size="small"
-                        sx={{ width: 72, mt: "4px" }}
+                        sx={{ width: 75, mt: "4px" }}
                         style={{ cursor: "inherit" }}
                       />
                     </Box>
@@ -868,7 +872,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 )}
               </>
             ) : (
-              <Skeleton variant="rounded" width={72} height={24} sx={{ mt: "4px", ml: "auto" }} />
+              <Skeleton variant="rounded" width={75} height={24} sx={{ mt: "4px", ml: "auto" }} />
             )}
           </Grid>
           {/* Refinitiv ESG Score */}

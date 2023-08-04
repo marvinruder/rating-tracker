@@ -635,7 +635,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               icon={<ThermostatIcon />}
               label={<strong>{props.stock.msciTemperature + "\u2009℃"}</strong>}
               size="small"
-              sx={{ width: 72 }}
+              sx={{ width: 75 }}
               style={{ cursor: "inherit" }}
             />
           </MSCINavigator>
@@ -1062,7 +1062,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           display: displayColumn("MSCI Implied Temperature Rise"),
         }}
       >
-        <Skeleton variant="rounded" width={72} height={24} />
+        <Skeleton variant="rounded" width={75} height={24} />
       </TableCell>
       {/* Refinitiv + Emissions */}
       <TableCell
