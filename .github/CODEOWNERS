@@ -1,0 +1,11 @@
+* @marvinruder
+
+# Files containing dependencies are maintained by Renovate and do not have a code owner
+package.json
+/.pnp.cjs
+/yarn.lock
+/docker/
+Dockerfile
+docker-compose.yml
+Cargo.toml
+Cargo.lock
