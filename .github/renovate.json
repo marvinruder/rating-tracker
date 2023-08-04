@@ -7,7 +7,7 @@
   "automergeType": "pr",
   "platformAutomerge": true,
   "automergeSchedule": ["after 7am"],
-  "assignees": ["ruder.marvin@icloud.com"],
+  "assigneesFromCodeOwners": true,
   "updateLockFiles": true,
   "postUpdateOptions": ["yarnDedupeHighest"],
   "rangeStrategy": "pin",
