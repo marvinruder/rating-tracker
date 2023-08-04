@@ -1,4 +1,4 @@
-node('rating-tracker-build') {
+node('does-not-exist') {
     withEnv([
         'imagename=marvinruder/rating-tracker',
         'FORCE_COLOR=true'
@@ -65,12 +65,6 @@ node('rating-tracker-build') {
             )
 
             parallel(
-
-                stop: {
-                    stage ('Fail') {
-                        sh "exit 1"
-                    }
-                },
 
                 test: {
                     stage ('Run Tests') {
