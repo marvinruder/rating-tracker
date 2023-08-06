@@ -44,6 +44,8 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>(user.email);
+  const [emailError, setEmailError] = useState<boolean>(false); // Error in the email text field.
   const [name, setName] = useState<string>(user.name);
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [phone, setPhone] = useState<string>(user.phone);
@@ -73,6 +75,15 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   );
 
   /**
+   * Validates the email input field.
+   *
+   * @returns {boolean} Whether the email input field contains a valid email address.
+   */
+  const validateEmail = (): boolean => {
+    return (document.getElementById("inputEmail") as HTMLInputElement).reportValidity();
+  };
+
+  /**
    * Validates the name input field.
    *
    * @returns {boolean} Whether the name input field contains a valid name.
@@ -95,6 +106,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    */
   const validate = () => {
     // The following fields are required.
+    setEmailError(!validateEmail());
     setNameError(!validateName());
     setPhoneError(!validatePhone());
   };
@@ -104,7 +116,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    */
   const updateProfile = () => {
     validate();
-    if (validateName() && validatePhone()) {
+    if (validateEmail() && validateName() && validatePhone()) {
       setRequestInProgress(true);
       axios
         .patch(
@@ -113,6 +125,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           {
             params: {
               // Only send the parameters that have changed.
+              email: email !== user.email ? email.trim() : undefined,
               name: name !== user.name ? name.trim() : undefined,
               phone: phone !== user.phone ? phone.trim() : undefined,
               subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
@@ -211,9 +224,20 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           <Grid item xs={12} sm={6} md={8}>
             <Grid container spacing={2} mt={0} pl={{ xs: "24px", sm: 0 }} pr="24px">
               <Grid item xs={12}>
-                <Tooltip title="To change your email address, please contact your administrator." arrow>
-                  <TextField label="Email address" value={user.email} disabled fullWidth />
-                </Tooltip>
+                <TextField
+                  id="inputEmail"
+                  type="email"
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                    setEmailError(false);
+                  }}
+                  error={emailError}
+                  label="Email address"
+                  value={email}
+                  placeholder="jane.doe@example.com"
+                  fullWidth
+                  required
+                />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -295,9 +319,11 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           onMouseOver={validate} // Validate input fields on hover
           disabled={
             // We cannot save if there are errors or if nothing has changed.
+            emailError ||
             nameError ||
             phoneError ||
-            (name === user.name &&
+            (email === user.email &&
+              name === user.name &&
               phone === user.phone &&
               avatar === user.avatar &&
               subscriptions === user.subscriptions)
