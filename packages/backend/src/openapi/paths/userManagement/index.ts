@@ -64,6 +64,10 @@ const patch: OpenAPIV3.OperationObject = {
       required: true,
     },
     {
+      ...user.email,
+      allowEmptyValue: true,
+    },
+    {
       ...user.name,
       allowEmptyValue: true,
     },

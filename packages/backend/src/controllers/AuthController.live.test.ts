@@ -11,6 +11,8 @@ export const suiteName = "Authentication API";
 
 export const tests: LiveTestSuite = [];
 
+const BASE_64_ID = Buffer.from("ID").toString("base64").replace(/=$/, "");
+
 tests.push({
   testName: "[unsafe] registers and authenticates a new user",
   testFunction: async () => {
@@ -38,17 +40,20 @@ tests.push({
           origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
         }),
       ).toString("base64"),
-    } as unknown;
+    } as object;
 
     // Post Registration Response
-    res = await supertest
-      .post(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`)
-      .send({ response });
+    res = await supertest.post(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`).send({
+      id: BASE_64_ID,
+      rawId: "ID",
+      response,
+    });
     expect(res.status).toBe(500); // Internal Server Error
-    expect(res.body.message).toMatch("Missing credential ID");
+    expect(res.body.message).toMatch("Credential ID was not base64url-encoded");
 
     res = await supertest.post(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`).send({
-      id: "ID",
+      id: BASE_64_ID,
+      rawId: BASE_64_ID,
       response: {
         clientDataJSON: Buffer.from(
           JSON.stringify({
@@ -63,13 +68,15 @@ tests.push({
     expect(res.body.message).toMatch("Registration failed");
 
     res = await supertest.post(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`).send({
-      id: "ID",
+      id: BASE_64_ID,
+      rawId: BASE_64_ID,
       response,
     });
     expect(res.status).toBe(201); // Successful registration
 
     res = await supertest.post(`/api${registerEndpointPath}?email=jim.doe%40example.com&name=Jim%20Doe`).send({
-      id: "ID",
+      id: BASE_64_ID,
+      rawId: BASE_64_ID,
       response,
     });
     expect(res.status).toBe(403); // Hey, we have done that already!
@@ -94,17 +101,30 @@ tests.push({
       userHandle: "jim.doe@example.com",
     };
 
-    // Post Registration Response
+    // Post Authentication Response
     res = await supertest.post(`/api${signInEndpointPath}`).send({
+      id: BASE_64_ID,
+      rawId: "ID",
       challenge,
       response,
     });
     expect(res.status).toBe(500); // Internal Server Error
-    expect(res.body.message).toMatch("Missing credential ID");
+    expect(res.body.message).toMatch("Credential ID was not base64url-encoded");
     expect(res.headers["set-cookie"]).toBeUndefined(); // no session cookie yet
 
     res = await supertest.post(`/api${signInEndpointPath}`).send({
-      id: "ID",
+      id: "ID", // not base64-encoded -- no existing user with that ID
+      rawId: "ID",
+      challenge,
+      response,
+    });
+    expect(res.status).toBe(404); // Not found
+    expect(res.body.message).toMatch("User with credential ID not found");
+    expect(res.headers["set-cookie"]).toBeUndefined(); // no session cookie yet
+
+    res = await supertest.post(`/api${signInEndpointPath}`).send({
+      id: BASE_64_ID,
+      rawId: BASE_64_ID,
       challenge: "Wrong challenge", // Oh no!
       response,
     });
@@ -113,7 +133,8 @@ tests.push({
     expect(res.headers["set-cookie"]).toBeUndefined(); // no session cookie yet
 
     res = await supertest.post(`/api${signInEndpointPath}`).send({
-      id: "ID",
+      id: BASE_64_ID,
+      rawId: BASE_64_ID,
       challenge,
       response,
     });
@@ -127,7 +148,8 @@ tests.push({
       .set("Cookie", ["authToken=exampleSessionID"]);
 
     res = await supertest.post(`/api${signInEndpointPath}`).send({
-      id: "ID",
+      id: BASE_64_ID,
+      rawId: BASE_64_ID,
       challenge,
       response,
     });

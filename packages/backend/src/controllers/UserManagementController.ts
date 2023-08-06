@@ -62,8 +62,10 @@ export class UserManagementController {
   async patch(req: Request, res: Response) {
     const email = req.params[0];
     const { name, phone, accessRights, subscriptions } = req.query;
+    const newEmail = req.query.email;
     const { avatar } = req.body;
     if (
+      (typeof newEmail === "string" || typeof newEmail === "undefined") &&
       (typeof name === "string" || typeof name === "undefined") &&
       (typeof avatar === "string" || typeof avatar === "undefined") &&
       (typeof phone === "string" || typeof phone === "undefined") &&
@@ -71,6 +73,7 @@ export class UserManagementController {
       (typeof subscriptions === "number" || typeof subscriptions === "undefined")
     ) {
       await updateUserWithCredentials(email, {
+        email: newEmail,
         name,
         avatar,
         phone,

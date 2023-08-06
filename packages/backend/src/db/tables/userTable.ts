@@ -73,6 +73,24 @@ export const readUserWithCredentials = async (email: string): Promise<UserWithCr
 };
 
 /**
+ * Read a user, identified by their credential ID, and include credentials.
+ *
+ * @param {string} credentialID The ID of the credential of the user.
+ * @returns {Promise<UserWithCredentials>} The user.
+ * @throws an {@link APIError} if the user does not exist.
+ */
+export const readUserByCredentialID = async (credentialID: string): Promise<UserWithCredentials> => {
+  try {
+    const user = await client.user.findUniqueOrThrow({
+      where: { credentialID: credentialID.replaceAll("-", "+") + "=" },
+    });
+    return new UserWithCredentials(user);
+  } catch {
+    throw new APIError(404, `User with credential ${credentialID} not found.`);
+  }
+};
+
+/**
  * Read all users.
  *
  * @returns {Promise<User[]>} A list of all users.
@@ -128,10 +146,7 @@ export const userExists = async (email: string): Promise<boolean> => {
  * @param {Partial<Omit<UserWithCredentials, "email">>} newValues The new values for the user.
  * @throws an {@link APIError} if the user does not exist.
  */
-export const updateUserWithCredentials = async (
-  email: string,
-  newValues: Partial<Omit<UserWithCredentials, "email">>,
-) => {
+export const updateUserWithCredentials = async (email: string, newValues: Partial<UserWithCredentials>) => {
   let k: keyof typeof newValues; // all keys of new values
   const user = await readUserWithCredentials(email); // Read the user from the database
   logger.info(PREFIX_POSTGRES + `Updating user ${email}…`);

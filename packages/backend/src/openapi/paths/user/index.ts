@@ -41,6 +41,10 @@ const patch: OpenAPIV3.OperationObject = {
   description: "Update the current user using the information provided.",
   parameters: [
     {
+      ...user.email,
+      allowEmptyValue: true,
+    },
+    {
       ...user.name,
       allowEmptyValue: true,
     },
