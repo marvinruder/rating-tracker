@@ -146,10 +146,7 @@ export const userExists = async (email: string): Promise<boolean> => {
  * @param {Partial<Omit<UserWithCredentials, "email">>} newValues The new values for the user.
  * @throws an {@link APIError} if the user does not exist.
  */
-export const updateUserWithCredentials = async (
-  email: string,
-  newValues: Partial<Omit<UserWithCredentials, "email">>,
-) => {
+export const updateUserWithCredentials = async (email: string, newValues: Partial<UserWithCredentials>) => {
   let k: keyof typeof newValues; // all keys of new values
   const user = await readUserWithCredentials(email); // Read the user from the database
   logger.info(PREFIX_POSTGRES + `Updating user ${email}…`);

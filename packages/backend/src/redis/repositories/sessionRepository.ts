@@ -90,6 +90,21 @@ export const refreshSessionAndFetchUser = async (sessionID: string): Promise<Use
 };
 
 /**
+ * Update a session from Redis.
+ *
+ * @param {string} sessionID The session ID.
+ * @param {string} email The email address to update the session with.
+ */
+export const updateSession = async (sessionID: string, email: string) => {
+  const entity = await fetchSession(sessionID);
+  if (isExistingSessionEntity(entity)) {
+    await saveSession({ sessionID: entity[EntityId], email });
+    logger.info(PREFIX_REDIS + `Updated session ${sessionID} for user “${email}”.`);
+    /* c8 ignore next */ // Not reached in current tests since a user can only update their current session
+  } else throw new APIError(404, `Session ${sessionID} not found.`);
+};
+
+/**
  * Delete a session from Redis.
  *
  * @param {string} sessionID The session ID.

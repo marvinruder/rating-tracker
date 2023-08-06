@@ -63,7 +63,7 @@ tests.push({
     let res = await supertest
       .patch(
         `/api${userManagementEndpointPath}/john.doe%40example.com` +
-          "?name=John%20Doe%20II%2E&phone=%2B987654321&accessRights=1&subscriptions=0",
+          "?name=John%20Doe%20II%2E&phone=%2B987654321&accessRights=1&subscriptions=0&email=john.doe.2%40example.com",
       )
       .send({
         avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
@@ -73,17 +73,17 @@ tests.push({
 
     // Check that the changes were applied
     res = await supertest
-      .get(`/api${userManagementEndpointPath}/john.doe%40example.com`)
+      .get(`/api${userManagementEndpointPath}/john.doe.2%40example.com`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect(res.body.email).toBe("john.doe@example.com");
+    expect(res.body.email).toBe("john.doe.2@example.com");
     expect(res.body.name).toBe("John Doe II.");
     expect(res.body.avatar).toBe("data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=");
     expect(res.body.phone).toBe("+987654321");
 
     // Changing nothing is useless, but fine
     res = await supertest
-      .patch(`/api${userManagementEndpointPath}/john.doe%40example.com?subscriptions=0`) // we did that before
+      .patch(`/api${userManagementEndpointPath}/john.doe.2%40example.com?subscriptions=0`) // we did that before
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
