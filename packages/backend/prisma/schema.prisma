@@ -62,7 +62,7 @@ model User {
   phone               String?     @db.VarChar(16)
   accessRights        Int         @default(0) @db.SmallInt
   subscriptions       Int?        @db.SmallInt
-  credentialID        String      @db.VarChar(255)
+  credentialID        String      @unique @db.VarChar(255)
   credentialPublicKey String      @db.VarChar(8192)
   counter             Int         @default(0)
   watchlists          Watchlist[]

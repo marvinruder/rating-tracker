@@ -8,7 +8,7 @@ import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import { createSession } from "../redis/repositories/sessionRepository.js";
 import APIError from "../utils/apiError.js";
-import { createUser, readUserWithCredentials, updateUserWithCredentials, userExists } from "../db/tables/userTable.js";
+import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable.js";
 import { sessionTTLInSeconds } from "../redis/repositories/sessionRepository.js";
 import {
   ALREADY_REGISTERED_ERROR_MESSAGE,
@@ -174,8 +174,8 @@ export class AuthController {
   })
   async postAuthenticationResponse(req: Request, res: Response) {
     // We retrieve the user from the database, who we identified by the email address in the challenge response.
-    const email = req.body.response.userHandle;
-    const user = await readUserWithCredentials(email);
+    const credentialID: string = req.body.id;
+    const user = await readUserByCredentialID(credentialID);
 
     let verification: VerifiedAuthenticationResponse;
     try {
@@ -207,11 +207,11 @@ export class AuthController {
       }
       // The counter variable will increment if the client’s authenticator tracks the number of authentications.
       // Not supported by all authenticators.
-      await updateUserWithCredentials(email, { counter: newCounter });
+      await updateUserWithCredentials(user.email, { counter: newCounter });
 
       // We create and store a session cookie for the user.
       const authToken = randomUUID();
-      await createSession({ sessionID: authToken, email });
+      await createSession({ sessionID: authToken, email: user.email });
       res.cookie("authToken", authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
         httpOnly: true,
