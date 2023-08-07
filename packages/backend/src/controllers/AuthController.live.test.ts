@@ -11,7 +11,7 @@ export const suiteName = "Authentication API";
 
 export const tests: LiveTestSuite = [];
 
-const BASE_64_ID = Buffer.from("ID").toString("base64").replace(/=$/, "");
+const BASE_64_ID = Buffer.from("ID").toString("base64");
 
 tests.push({
   testName: "[unsafe] registers and authenticates a new user",
