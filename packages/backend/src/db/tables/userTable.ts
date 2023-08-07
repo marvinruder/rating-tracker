@@ -80,10 +80,8 @@ export const readUserWithCredentials = async (email: string): Promise<UserWithCr
  * @throws an {@link APIError} if the user does not exist.
  */
 export const readUserByCredentialID = async (credentialID: string): Promise<UserWithCredentials> => {
-  let credentialIDWithPadding = credentialID.replaceAll("-", "+");
-  while (credentialIDWithPadding.length % 4 !== 0) {
-    credentialIDWithPadding += "=";
-  }
+  // Convert base64url (as specified in https://www.w3.org/TR/webauthn-2/) to base64 (which we store in database)
+  const credentialIDWithPadding = Buffer.from(credentialID, "base64url").toString("base64");
   try {
     const user = await client.user.findUniqueOrThrow({
       where: { credentialID: credentialIDWithPadding },
