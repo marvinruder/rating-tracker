@@ -80,9 +80,13 @@ export const readUserWithCredentials = async (email: string): Promise<UserWithCr
  * @throws an {@link APIError} if the user does not exist.
  */
 export const readUserByCredentialID = async (credentialID: string): Promise<UserWithCredentials> => {
+  let credentialIDWithPadding = credentialID.replaceAll("-", "+");
+  while (credentialIDWithPadding.length % 4 !== 0) {
+    credentialIDWithPadding += "=";
+  }
   try {
     const user = await client.user.findUniqueOrThrow({
-      where: { credentialID: credentialID.replaceAll("-", "+") + "=" },
+      where: { credentialID: credentialIDWithPadding },
     });
     return new UserWithCredentials(user);
   } catch {
