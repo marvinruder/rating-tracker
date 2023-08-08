@@ -2,8 +2,10 @@ FROM rust:1.71.1-alpine
 
 WORKDIR /workdir
 
-RUN --mount=type=cache,target=/var/cache/apk apk add wasm-pack binaryen pkgconfig openssl-dev
-RUN rustup target add wasm32-unknown-unknown
+RUN --mount=type=cache,target=/var/cache/apk \
+  apk add binaryen pkgconfig openssl-dev && \
+  wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh && \
+  rustup target add wasm32-unknown-unknown
 
 COPY wasm/Cargo.toml .
 COPY wasm/Cargo.lock .
