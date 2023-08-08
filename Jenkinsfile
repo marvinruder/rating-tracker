@@ -37,10 +37,10 @@ node('rating-tracker-build') {
                     wasm: {
                         stage ('Compile WebAssembly utils') {
                             sh """
-                            docker pull marvinruder/cache:rating-tracker-wasm || true
-                            docker builder build -t $imagename:job$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm --cache-to=type=inline .
-                            docker image tag $imagename:job$GIT_COMMIT_HASH-wasm marvinruder/cache:rating-tracker-wasm
-                            docker push marvinruder/cache:rating-tracker-wasm
+                            # docker pull marvinruder/cache:rating-tracker-wasm || true
+                            docker buildx build --builder builder-$GIT_COMMIT_HASH -t $imagename:job$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm-cache --cache-to=marvinruder/cache:rating-tracker-wasm-cache .
+                            # docker image tag $imagename:job$GIT_COMMIT_HASH-wasm marvinruder/cache:rating-tracker-wasm
+                            # docker push marvinruder/cache:rating-tracker-wasm
                             id=\$(docker create $imagename:job$GIT_COMMIT_HASH-wasm)
                             docker cp \$id:/workdir/pkg/. ./packages/wasm
                             docker rm -v \$id
@@ -117,9 +117,9 @@ node('rating-tracker-build') {
                                 def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/' | tr -d '\\n'; fi\"", returnStdout: true)
                                 def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/' | tr -d '\\n'; fi\"", returnStdout: true)
                                 if (MAJOR) {
-                                    sh("docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest .")
+                                    sh("docker buildx build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest .")
                                 } else {
-                                    sh("docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION .")
+                                    sh("docker buildx build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION .")
                                 }
                                 sh """
                                 docker images -f "dangling=true" -q | xargs -r docker rmi -f
