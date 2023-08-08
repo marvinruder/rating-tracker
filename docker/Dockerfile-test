@@ -13,4 +13,16 @@ RUN \
   yarn workspace @rating-tracker/commons build && \
   yarn test
 
-ENTRYPOINT [ "/bin/sh" ]
+FROM eclipse-temurin:17-jre-ubi9-minimal
+
+RUN \
+  bash <(curl -Ls https://coverage.codacy.com/get.sh) download && \
+  mkdir -p /coverage/{backend,commons,frontend}
+
+WORKDIR /coverage
+
+COPY --from=test /workdir/packages/backend/coverage/. /coverage/backend/.
+COPY --from=test /workdir/packages/commons/coverage/. /coverage/commons/.
+COPY --from=test /workdir/packages/frontend/coverage/. /coverage/frontend/.
+
+ENTRYPOINT [ "bash <(curl -Ls https://coverage.codacy.com/get.sh)" ]

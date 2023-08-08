@@ -46,6 +46,7 @@ node('rating-tracker-build') {
                             id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
                             docker cp \$id:/workdir/pkg/. ./packages/wasm
                             docker rm -v \$id
+                            docker rmi $imagename:build-$GIT_COMMIT_HASH-wasm || true
                             """
                         }
                     },
@@ -61,6 +62,7 @@ node('rating-tracker-build') {
                             docker cp \$id:/workdir/.pnp.cjs .
                             docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                             docker rm -v \$id
+                            docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
                             """
                             sh "cp -arn ./global /home/jenkins/.cache/yarn"
                         }
@@ -72,15 +74,6 @@ node('rating-tracker-build') {
                     test: {
                         stage ('Run Tests') {
                             docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f docker/Dockerfile-test .")
-                            sh """
-                            id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
-                            mkdir -p coverage/{backend,commons,frontend}
-                            docker cp \$id:/workdir/packages/backend/coverage/. ./coverage/backend
-                            docker cp \$id:/workdir/packages/commons/coverage/. ./coverage/commons
-                            docker cp \$id:/workdir/packages/frontend/coverage/. ./coverage/frontend
-                            docker rm -v \$id
-                            docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
-                            """
                         }
                     },
 
@@ -98,11 +91,10 @@ node('rating-tracker-build') {
                         stage ('Publish coverage results to Codacy') {
                             lock('codacy-coverage-reporter') {
                                 withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
-                                    sh """#!/usr/bin/env bash
-                                    bash <(curl -Ls https://coverage.codacy.com/get.sh) report \$(find . -name 'clover.xml' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')
-                                    """
+                                    docker.run("$imagename:build-$GIT_COMMIT_HASH-test", "--rm --env CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN report \$(find . -name 'clover.xml' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')")
                                 }
                             }
+                            sh "docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true"
                         }
                     },
 
