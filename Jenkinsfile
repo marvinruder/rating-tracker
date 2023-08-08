@@ -39,7 +39,7 @@ node('rating-tracker-build') {
                     wasm: {
                         stage ('Compile WebAssembly utils') {
                             sh """
-                            docker builder build --builder builder-$GIT_COMMIT_HASH --load -t $imagename:build-$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm  --cache-to type=registry,ref=marvinruder/cache:rating-tracker-wasm --cache-from type=registry,ref=marvinruder/cache:rating-tracker-wasm .
+                            docker builder build --builder builder-$GIT_COMMIT_HASH --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:build-$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm  --cache-to marvinruder/cache:rating-tracker-wasm --cache-from marvinruder/cache:rating-tracker-wasm .
                             id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
                             docker cp \$id:/workdir/pkg/. ./packages/wasm
                             docker rm -v \$id
