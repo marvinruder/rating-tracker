@@ -23,8 +23,8 @@ node('rating-tracker-build') {
                     echo \"enableGlobalCache: true\" >> .yarnrc.yml
                     sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
                     docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                     """
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                 }
 
                 parallel(
@@ -39,7 +39,7 @@ node('rating-tracker-build') {
                     wasm: {
                         stage ('Compile WebAssembly utils') {
                             sh """
-                            docker buildx build --load -t $imagename:build-$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm  --cache-to type=registry,ref=marvinruder/cache:rating-tracker-wasm --cache-from type=registry,ref=marvinruder/cache:rating-tracker-wasm .
+                            docker builder build --builder builder-$GIT_COMMIT_HASH --load -t $imagename:build-$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm  --cache-to type=registry,ref=marvinruder/cache:rating-tracker-wasm --cache-from type=registry,ref=marvinruder/cache:rating-tracker-wasm .
                             id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
                             docker cp \$id:/workdir/pkg/. ./packages/wasm
                             docker rm -v \$id
