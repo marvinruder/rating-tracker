@@ -91,7 +91,7 @@ node('rating-tracker-build') {
                         stage ('Publish coverage results to Codacy') {
                             lock('codacy-coverage-reporter') {
                                 withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
-                                    docker.run("$imagename:build-$GIT_COMMIT_HASH-test", "--rm --env CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN report \$(find . -name 'clover.xml' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')")
+                                    docker.image("$imagename:build-$GIT_COMMIT_HASH-test").run(["--rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN", "report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')"])
                                 }
                             }
                             sh "docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true"
