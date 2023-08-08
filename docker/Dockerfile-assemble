@@ -1,8 +1,9 @@
 FROM alpine:3.18.3 as assemble
 ARG TARGETARCH
-COPY app .
+COPY app /workdir/app
 WORKDIR /workdir/app/packages/backend/dist/prisma/client
-RUN ls; \
+RUN ls
+RUN \
   if [ "$TARGETARCH" == "amd64" ]; then \
   rm ./libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
   elif [ "$TARGETARCH" == "arm64" ]; then \
