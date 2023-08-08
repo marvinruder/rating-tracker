@@ -38,13 +38,13 @@ node('rating-tracker-build') {
                         stage ('Compile WebAssembly utils') {
                             sh """
                             docker pull marvinruder/cache:rating-tracker-wasm || true
-                            docker builder build -t $imagename:build-$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm --cache-to=type=inline .
-                            docker image tag $imagename:build-$GIT_COMMIT_HASH-wasm marvinruder/cache:rating-tracker-wasm
+                            docker builder build -t $imagename:job$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm --cache-to=type=inline .
+                            docker image tag $imagename:job$GIT_COMMIT_HASH-wasm marvinruder/cache:rating-tracker-wasm
                             docker push marvinruder/cache:rating-tracker-wasm
-                            id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
+                            id=\$(docker create $imagename:job$GIT_COMMIT_HASH-wasm)
                             docker cp \$id:/workdir/pkg/. ./packages/wasm
                             docker rm -v \$id
-                            docker rmi $imagename:build-$GIT_COMMIT_HASH-wasm || true
+                            docker rmi $imagename:job$GIT_COMMIT_HASH-wasm || true
                             """
                         }
                     },
@@ -52,15 +52,15 @@ node('rating-tracker-build') {
                     dep: {
                         stage ('Install dependencies') {
                             sh("mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global .")
-                            docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f docker/Dockerfile-yarn .")
+                            docker.build("$imagename:job$GIT_COMMIT_HASH-yarn", "-f docker/Dockerfile-yarn .")
                             sh """
-                            id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
+                            id=\$(docker create $imagename:job$GIT_COMMIT_HASH-yarn)
                             docker cp \$id:/workdir/.yarn/. ./.yarn
                             docker cp \$id:/workdir/global .
                             docker cp \$id:/workdir/.pnp.cjs .
                             docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                             docker rm -v \$id
-                            docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
+                            docker rmi $imagename:job$GIT_COMMIT_HASH-yarn || true
                             cp -arn ./global /home/jenkins/.cache/yarn
                             """
                         }
@@ -71,18 +71,18 @@ node('rating-tracker-build') {
 
                     test: {
                         stage ('Run Tests') {
-                            docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f docker/Dockerfile-test .")
+                            docker.build("$imagename:job$GIT_COMMIT_HASH-test", "-f docker/Dockerfile-test .")
                         }
                     },
 
                     build: {
                         stage ('Build Docker Image') {
-                            docker.build("$imagename:build-$GIT_COMMIT_HASH", "-f docker/Dockerfile-build .")
+                            docker.build("$imagename:job$GIT_COMMIT_HASH-build", "-f docker/Dockerfile-build .")
                             sh """
-                            id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-build)
+                            id=\$(docker create $imagename:job$GIT_COMMIT_HASH-build)
                             docker cp \$id:/workdir/app/. ./app
                             docker rm -v \$id
-                            docker rmi $imagename:build-$GIT_COMMIT_HASH-build || true
+                            docker rmi $imagename:job$GIT_COMMIT_HASH-build || true
                             """
                         }
                     }
@@ -95,16 +95,16 @@ node('rating-tracker-build') {
                         stage ('Publish coverage results to Codacy') {
                             lock('codacy-coverage-reporter') {
                                 withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
-                                    sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:build-$GIT_COMMIT_HASH-test report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')")
+                                    sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:job$GIT_COMMIT_HASH-test report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')")
                                 }
                             }
-                            sh("docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true")
+                            sh("docker rmi $imagename:job$GIT_COMMIT_HASH-test || true")
                         }
                     },
 
                     dockerhub: {
                         stage ('Publish Docker Image') {
-                            image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "-f docker/Dockerfile-assemble --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
+                            image = docker.build("$imagename:job$GIT_COMMIT_HASH", "-f docker/Dockerfile-assemble --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
                             if (env.BRANCH_NAME == 'main') {
                                 image.push('edge')
                                 sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/$GIT_COMMIT_HASH")
@@ -136,7 +136,7 @@ node('rating-tracker-build') {
                     sh """
                     docker logout
                     docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/backend/test/docker-compose.yml down -t 0            
-                    docker rmi $imagename:build-$GIT_COMMIT_HASH || true
+                    docker rmi $imagename:job$GIT_COMMIT_HASH || true
                     docker image prune --filter label=stage=build -f
                     docker builder prune -f --keep-storage 4G
                     docker builder rm builder-$GIT_COMMIT_HASH || true

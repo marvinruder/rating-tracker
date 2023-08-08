@@ -1,6 +1,5 @@
 FROM scratch as assemble
 ARG TARGETARCH
-
 COPY /workdir/app .
 WORKDIR /workdir/app/packages/backend/dist/prisma/client
 RUN \
