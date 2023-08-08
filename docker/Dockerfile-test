@@ -25,4 +25,4 @@ COPY --from=test /workdir/packages/backend/coverage/. /coverage/backend/.
 COPY --from=test /workdir/packages/commons/coverage/. /coverage/commons/.
 COPY --from=test /workdir/packages/frontend/coverage/. /coverage/frontend/.
 
-ENTRYPOINT "bash <(curl -Ls https://coverage.codacy.com/get.sh)"
+ENTRYPOINT [ "bash", "<(curl -Ls https://coverage.codacy.com/get.sh)" ]
