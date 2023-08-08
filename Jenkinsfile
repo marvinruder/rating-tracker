@@ -43,7 +43,6 @@ node('rating-tracker-build') {
                             id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
                             docker cp \$id:/workdir/pkg/. ./packages/wasm
                             docker rm -v \$id
-                            docker rmi $imagename:build-$GIT_COMMIT_HASH-wasm || true
                             """
                         }
                     },
@@ -59,7 +58,6 @@ node('rating-tracker-build') {
                             docker cp \$id:/workdir/.pnp.cjs .
                             docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                             docker rm -v \$id
-                            docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
                             """
                             sh "cp -arn ./global /home/jenkins/.cache/yarn"
                         }
