@@ -24,15 +24,13 @@ node('rating-tracker-build') {
                     sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
                     docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container
                     """
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
                 }
 
                 parallel(
                     testenv: {
                         stage('Start test environment') {
-                            sh """
-                            PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
-                            """
+                            sh("PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/backend/test/docker-compose.yml up --force-recreate -V -d")
                         }
                     },
 
@@ -53,7 +51,7 @@ node('rating-tracker-build') {
 
                     dep: {
                         stage ('Install dependencies') {
-                            sh "mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global ."
+                            sh("mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global .")
                             docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f docker/Dockerfile-yarn .")
                             sh """
                             id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
@@ -63,8 +61,8 @@ node('rating-tracker-build') {
                             docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                             docker rm -v \$id
                             docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
+                            cp -arn ./global /home/jenkins/.cache/yarn
                             """
-                            sh "cp -arn ./global /home/jenkins/.cache/yarn"
                         }
                     }
                 )
@@ -102,7 +100,7 @@ node('rating-tracker-build') {
                         stage ('Publish Docker Image') {
                             if (env.BRANCH_NAME == 'main') {
                                 image.push('edge')
-                                sh "mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/$GIT_COMMIT_HASH"
+                                sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/$GIT_COMMIT_HASH")
                                 // sh "docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/$GIT_COMMIT_HASH $imagename"
                             } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
                                 image.push('SNAPSHOT')
@@ -112,9 +110,9 @@ node('rating-tracker-build') {
                                 def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/' | tr -d '\\n'; fi\"", returnStdout: true)
                                 def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/' | tr -d '\\n'; fi\"", returnStdout: true)
                                 if (MAJOR) {
-                                    sh "docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest ."
+                                    sh("docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest .")
                                 } else {
-                                    sh "docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION ."
+                                    sh("docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION .")
                                 }
                                 sh """
                                 docker images -f "dangling=true" -q | xargs -r docker rmi -f
