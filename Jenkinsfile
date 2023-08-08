@@ -23,7 +23,7 @@ node('rating-tracker-build') {
                     echo \"enableGlobalCache: true\" >> .yarnrc.yml
                     sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
                     docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                     """
                 }
 
