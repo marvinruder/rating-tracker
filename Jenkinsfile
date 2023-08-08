@@ -77,7 +77,13 @@ node('rating-tracker-build') {
 
                     build: {
                         stage ('Build Docker Image') {
-                            image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "-f docker/Dockerfile --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
+                            docker.build("$imagename:build-$GIT_COMMIT_HASH", "-f docker/Dockerfile-build .")
+                            sh """
+                            id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-build)
+                            docker cp \$id:/workdir/app/. ./app
+                            docker rm -v \$id
+                            docker rmi $imagename:build-$GIT_COMMIT_HASH-build || true
+                            """
                         }
                     }
 
@@ -98,6 +104,7 @@ node('rating-tracker-build') {
 
                     dockerhub: {
                         stage ('Publish Docker Image') {
+                            image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "-f docker/Dockerfile-assemble --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
                             if (env.BRANCH_NAME == 'main') {
                                 image.push('edge')
                                 sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/$GIT_COMMIT_HASH")

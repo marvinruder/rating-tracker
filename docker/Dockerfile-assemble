@@ -1,0 +1,34 @@
+FROM scratch as assemble
+ARG TARGETARCH
+
+COPY /workdir/app .
+WORKDIR /workdir/app/packages/backend/dist/prisma/client
+RUN \
+  if [ "$TARGETARCH" == "amd64" ]; then \
+  rm ./libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node \
+  elif [ "$TARGETARCH" == "arm64" ]; then \
+  rm ./libquery_engine-linux-musl-openssl-3.0.x.so.node \
+  fi
+
+FROM alpine:3.18.3 as target
+ARG BUILD_DATE
+ARG TARGETARCH
+LABEL \
+  org.opencontainers.image.title="Rating Tracker" \
+  org.opencontainers.image.authors="Marvin A. Ruder <ratingtracker@mruder.dev>" \
+  org.opencontainers.image.description="A web service fetching and providing financial and ESG ratings for stocks." \
+  org.opencontainers.image.url="https://github.com/marvinruder/rating-tracker" \
+  org.opencontainers.image.source="https://github.com/marvinruder/rating-tracker" \
+  org.opencontainers.image.vendor="Marvin A. Ruder" \
+  org.opencontainers.image.licenses="MIT" \
+  org.opencontainers.image.version="2.1.7" \
+  org.opencontainers.image.created=$BUILD_DATE
+ENV NODE_ENV production
+WORKDIR /app
+RUN --mount=type=cache,id=apk-${TARGETARCH},target=/var/cache/apk apk add dumb-init
+COPY --from=node:20.5.0-alpine /etc/passwd /etc
+COPY --from=node:20.5.0-alpine /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
+COPY --from=node:20.5.0-alpine /usr/local/bin/node /usr/local/bin
+USER node
+COPY --from=assemble --chown=node:node /workdir/app .
+CMD [ "dumb-init", "node", "--experimental-loader", "./.pnp.loader.mjs", "-r", "./.pnp.cjs", "packages/backend/dist/src/server.js" ]
