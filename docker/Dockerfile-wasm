@@ -1,4 +1,4 @@
-FROM rust:alpine3.17
+FROM rust:1.71.1-alpine
 
 WORKDIR /workdir
 
@@ -18,6 +18,8 @@ COPY wasm/src/* ./src/
 
 RUN \
   touch ./src/* && \
-  wasm-pack build -s rating-tracker --release
+  wasm-pack build -s rating-tracker --release && \
+  sed -E -i.bak 's/"module": "([A-Za-z0-9\-\.]+)",/"main": "\1",\n  "module": "\1",/g ; s/^}$/}\n/' packages/wasm/package.json && \
+  rm packages/wasm/package.json.bak
 
 ENTRYPOINT [ "/bin/sh" ]

@@ -52,9 +52,9 @@ LABEL \
 ENV NODE_ENV production
 WORKDIR /app
 RUN --mount=type=cache,id=apk-${TARGETARCH},target=/var/cache/apk apk add dumb-init
-COPY --from=build /etc/passwd /etc
-COPY --from=build /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
-COPY --from=build /usr/local/bin/node /usr/local/bin
+COPY --from=node:20.5.0-alpine /etc/passwd /etc
+COPY --from=node:20.5.0-alpine /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
+COPY --from=node:20.5.0-alpine /usr/local/bin/node /usr/local/bin
 USER node
 COPY --from=build --chown=node:node /workdir/app .
 CMD [ "dumb-init", "node", "--experimental-loader", "./.pnp.loader.mjs", "-r", "./.pnp.cjs", "packages/backend/dist/src/server.js" ]
