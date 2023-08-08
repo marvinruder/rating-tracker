@@ -38,7 +38,7 @@ node('rating-tracker-build') {
                         stage ('Compile WebAssembly utils') {
                             sh """
                             docker pull marvinruder/cache:rating-tracker-wasm || true
-                            docker buildx build -t $imagename:job$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm --cache-to=type=inline .
+                            docker buildx build -t $imagename:job$GIT_COMMIT_HASH-wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=type=inline .
                             docker image tag $imagename:job$GIT_COMMIT_HASH-wasm marvinruder/cache:rating-tracker-wasm
                             docker push marvinruder/cache:rating-tracker-wasm
                             id=\$(docker create $imagename:job$GIT_COMMIT_HASH-wasm)
