@@ -103,7 +103,7 @@ node('rating-tracker-build') {
                     },
 
                     dockerhub: {
-                        stage ('Publish Docker Image') {
+                        stage ('Assemble and publish Docker Image') {
                             image = docker.build("$imagename:job$GIT_COMMIT_HASH", "-f docker/Dockerfile-assemble --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
                             if (env.BRANCH_NAME == 'main') {
                                 image.push('edge')

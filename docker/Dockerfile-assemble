@@ -1,6 +1,6 @@
 FROM scratch as assemble
 ARG TARGETARCH
-COPY /workdir/app .
+COPY app .
 WORKDIR /workdir/app/packages/backend/dist/prisma/client
 RUN \
   if [ "$TARGETARCH" == "amd64" ]; then \
