@@ -14,7 +14,7 @@ RUN \
   yarn cache clean && \
   yarn workspaces focus --production @rating-tracker/backend
 
-# Create directories for run container and copy only necessary files
+# Create directories for target container and copy only necessary files
 RUN mkdir -p /workdir/app/packages/backend/public /workdir/app/packages/commons /workdir/app/.yarn && \
   cp -r /workdir/.pnp.* /workdir/package.json /workdir/app && \
   cp -r /workdir/.yarn/cache /workdir/.yarn/unplugged /workdir/app/.yarn && \

@@ -13,7 +13,7 @@ RUN \
   yarn workspace @rating-tracker/commons build && \
   yarn test
 
-FROM eclipse-temurin:17-jre-ubi9-minimal
+FROM eclipse-temurin:17-jre-jammy as codacy
 
 RUN \
   curl -Ls https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
