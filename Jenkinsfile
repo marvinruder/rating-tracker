@@ -135,8 +135,8 @@ node('rating-tracker-build') {
                     docker logout
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID || true
-                    docker image prune --filter label=stage=build -f
-                    docker builder prune -f --keep-storage 4G
+                    docker builder prune -f --keep-storage 1G
+                    docker builder prune --builder rating-tracker -f --keep-storage 1G
                     rm -rf global
                     """
                 }
