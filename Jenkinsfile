@@ -122,7 +122,7 @@ node('rating-tracker-build') {
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || true
                     docker builder prune -f --keep-storage 2G
                     docker builder prune --builder rating-tracker -f --keep-storage 1G
-                    rm -rf global
+                    rm -rf global app
                     """
                 }
             }
