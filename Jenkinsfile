@@ -93,23 +93,25 @@ node('rating-tracker-build') {
                     },
                     dockerhub: {
                         stage ('Assemble and publish Docker Image') {
-                            image = docker.build("$imagename:job$JOB_ID", "-f docker/Dockerfile --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
+                            def tags = ""
                             if (env.BRANCH_NAME == 'main') {
-                                image.push('edge')
+                                tags += " -t $imagename:edge"
                                 sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
                                 // sh("docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/job$JOB_ID $imagename")
                             } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
-                                image.push('SNAPSHOT')
+                                tags += " -t $imagename:SNAPSHOT"
                             }
                             if (env.TAG_NAME) {
                                 def VERSION = sh (script: "echo -n \$TAG_NAME | sed 's/^v//'", returnStdout: true)
                                 def MAJOR = sh (script: "#!/bin/bash\nif [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo -n \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/'; fi", returnStdout: true)
                                 def MINOR = sh (script: "#!/bin/bash\nif [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo -n \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/'; fi", returnStdout: true)
+                                tags += " -t $imagename:$VERSION"
                                 if (MAJOR) {
-                                    sh("docker buildx build --builder rating-tracker -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest .")
-                                } else {
-                                    sh("docker buildx build --builder rating-tracker -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION .")
+                                    tags += " -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest"
                                 }
+                            }
+                            if (tags.length() > 0) {
+                                sh("docker buildx build --builder rating-tracker -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') $tags .")
                             }
                         }
                     }
