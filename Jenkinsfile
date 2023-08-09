@@ -97,7 +97,7 @@ node('rating-tracker-build') {
                                 tags += " -t $imagename:edge"
                                 sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
                                 // sh("docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/job$JOB_ID $imagename")
-                            } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
+                            } else if (!(env.BRANCH_NAME).startsWith('update')) {
                                 tags += " -t $imagename:SNAPSHOT"
                             }
                             if (env.TAG_NAME) {
@@ -106,7 +106,7 @@ node('rating-tracker-build') {
                                 def MINOR = sh (script: "#!/bin/bash\nif [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo -n \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/'; fi", returnStdout: true)
                                 tags += " -t $imagename:$VERSION"
                                 if (MAJOR) {
-                                    tags += " -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest"
+                                    tags += " -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:not-latest"
                                 }
                             }
                             if (tags.length() > 0) {
