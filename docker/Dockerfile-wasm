@@ -19,6 +19,6 @@ RUN \
   touch ./src/* && \
   wasm-pack build -s rating-tracker --release && \
   sed -E -i.bak 's/"module": "([A-Za-z0-9\-\.]+)",/"main": "\1",\n  "module": "\1",/g ; s/^}$/}\n/' pkg/package.json && \
-  rm -rf ./target pkg/package.json.bak
+  rm pkg/package.json.bak
 
 ENTRYPOINT [ "/bin/sh" ]
