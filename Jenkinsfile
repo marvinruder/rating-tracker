@@ -15,8 +15,8 @@ node('rating-tracker-build') {
                         stage('Clone repository') {
                             checkout scm
                             JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 8192))", returnStdout: true)
-                            PGPORT = sh (script: "echo -n \$((49151 + $JOB_ID))", returnStdout: true)
-                            REDISPORT = sh (script: "echo -n \$((57343 + $JOB_ID))", returnStdout: true)
+                            PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
+                            REDISPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
                             sh """
                             echo \"globalFolder: /workdir/global\" >> .yarnrc.yml
                             echo \"preferAggregateCacheInfo: true\" >> .yarnrc.yml
@@ -93,7 +93,7 @@ node('rating-tracker-build') {
                     },
                     dockerhub: {
                         stage ('Assemble and publish Docker Image') {
-                            image = docker.build("$imagename:job$JOB_ID", "-f docker/Dockerfile-assemble --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
+                            image = docker.build("$imagename:job$JOB_ID", "-f docker/Dockerfile --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
                             if (env.BRANCH_NAME == 'main') {
                                 image.push('edge')
                                 sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
