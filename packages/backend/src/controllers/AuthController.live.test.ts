@@ -191,15 +191,36 @@ tests.push({
 });
 
 tests.push({
-  testName: "[unsafe!] does not provide too many authentication challenges",
+  testName: "[unsafe!] rate limiter accepts X-Forwarded-For header from exactly one reverse proxy",
   testFunction: async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for await (const _ of [...Array(60)]) {
-      // Request 60 authentication challenges
-      await supertest.get(`/api${signInEndpointPath}`);
-    }
+    await Promise.all(
+      // Request 60 authentication challenges from different IP addresses
+      [...Array(60)].map(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        async (_, i) => await supertest.get(`/api${signInEndpointPath}`).set("X-Forwarded-For", `10.0.${i}.2`),
+      ),
+    );
+
+    // Since the requests were sent from different IP addresses, the rate limiter should not be active yet.
+    const res = await supertest.get(`/api${signInEndpointPath}`).set("X-Forwarded-For", `10.0.60.2`);
+    expect(res.status).toBe(200);
+  },
+});
+
+tests.push({
+  testName: "[unsafe!] rate limiter cannot be tricked with X-Forwarded-For header set by a client",
+  testFunction: async () => {
+    await Promise.all(
+      // Request 60 authentication challenges from the same client manipulating the X-Forwarded-For header
+      [...Array(60)].map(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        async (_, i) =>
+          await supertest.get(`/api${signInEndpointPath}`).set("X-Forwarded-For", `10.0.${i}.2, 10.0.0.254`),
+      ),
+    );
+
     // Those were too many. The rate limiter should now refuse to provide more.
-    const res = await supertest.get(`/api${signInEndpointPath}`);
+    const res = await supertest.get(`/api${signInEndpointPath}`).set("X-Forwarded-For", `10.0.60.2, 10.0.0.254`);
     expect(res.status).toBe(429);
   },
 });

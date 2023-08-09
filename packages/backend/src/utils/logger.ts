@@ -167,8 +167,7 @@ export const requestLogger = (req: Request, res: Response, time: number) => {
                   : "\uf21b", // Unauthenticated user
               ) +
               "  " +
-              // use reverse proxy that sets this header to prevent CWE-134
-              chalk.magentaBright("\uf98c" + req.headers["x-real-ip"]) + // IP address
+              chalk.magentaBright("\uf98c" + req.ip) + // IP address
               " ",
           ) +
           chalk.grey("") +
