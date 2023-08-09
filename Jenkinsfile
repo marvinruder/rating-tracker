@@ -5,7 +5,6 @@ node('rating-tracker-build') {
     ]) {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
             def JOB_ID
-            def image
             def PGPORT
             def REDISPORT
 
@@ -123,7 +122,7 @@ node('rating-tracker-build') {
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || true
                     docker builder prune -f --keep-storage 2G
-                    docker builder prune --builder rating-tracker -f --keep-storage 1G
+                    docker builder prune --builder rating-tracker -f --keep-storage 2G
                     rm -rf global app
                     """
                 }
