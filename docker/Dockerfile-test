@@ -7,16 +7,18 @@ ENV SIGNAL_SENDER +493012345678
 
 WORKDIR /workdir
 
+# Copy project files and WebAssembly package
 COPY . .
-
 COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
 
+# Run tests
 RUN \
   yarn workspace @rating-tracker/commons build && \
   yarn test
 
 FROM eclipse-temurin:17-jre-jammy as codacy
 
+# Download and extract Codacy coverage reporter
 RUN \
   curl -Ls https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
   chmod +x /usr/local/bin/codacy-coverage && \
@@ -25,6 +27,7 @@ RUN \
 
 WORKDIR /coverage
 
+# Copy coverage reports from test stage
 COPY --from=test /workdir/packages/backend/coverage/. /coverage/backend/.
 COPY --from=test /workdir/packages/commons/coverage/. /coverage/commons/.
 COPY --from=test /workdir/packages/frontend/coverage/. /coverage/frontend/.

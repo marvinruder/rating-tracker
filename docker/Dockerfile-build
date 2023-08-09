@@ -5,11 +5,11 @@ ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
+# Copy project files and WebAssembly package
 COPY . .
-
 COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
 
-# Build and create local production caches while using global mirror
+# Build and create local production cache from global mirror
 RUN \
   yarn build && \
   yarn config set enableGlobalCache false && \

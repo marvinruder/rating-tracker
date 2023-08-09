@@ -13,9 +13,13 @@ node('rating-tracker-build') {
                     scm: {
                         stage('Clone repository') {
                             checkout scm
+
+                            // Use random job identifier and test port numbers to avoid collisions
                             JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 8192))", returnStdout: true)
                             PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
                             REDISPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
+
+                            // Change config files for use in CI
                             sh """
                             echo \"globalFolder: /workdir/global\" >> .yarnrc.yml
                             echo \"preferAggregateCacheInfo: true\" >> .yarnrc.yml
@@ -26,7 +30,10 @@ node('rating-tracker-build') {
                     },
                     docker_env: {
                         stage('Start Docker environment') {
+                            // Log in to Docker Hub
                             sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
+
+                            // Create builder instance
                             sh "docker builder create --name rating-tracker --driver docker-container || true"
                         }
                     }
@@ -40,15 +47,22 @@ node('rating-tracker-build') {
                     },
                     wasm: {
                         stage ('Compile WebAssembly utils') {
+                            // Acquire mutex to avoid collisions while working with the marvinruder/rating-tracker:wasm image
                             lock('rating-tracker-wasm') {
+                                // Build the WebAssembly image while using registry cache
                                 sh("docker buildx build --builder rating-tracker --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=marvinruder/cache:rating-tracker-wasm .")
                             }
                         }
                     },
                     dep: {
                         stage ('Install dependencies') {
+                            // Copy global cache to workspace
                             sh("mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global .")
+
+                            // Install dependencies
                             docker.build("$imagename:job$JOB_ID-yarn", "-f docker/Dockerfile-yarn .")
+
+                            // Copy dependencies to workspace and cache
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-yarn)
                             docker cp \$id:/workdir/.yarn/. ./.yarn
@@ -66,12 +80,14 @@ node('rating-tracker-build') {
                 parallel(
                     test: {
                         stage ('Run Tests') {
-                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test .")
+                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm .")
                         }
                     },
                     build: {
                         stage ('Build Docker Image') {
                             docker.build("$imagename:job$JOB_ID-build", "-f docker/Dockerfile-build .")
+
+                            // Copy build artifacts to workspace
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
@@ -86,36 +102,51 @@ node('rating-tracker-build') {
                     codacy: {
                         stage ('Publish coverage results to Codacy') {
                             withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
+                                // Publish coverage results by running a container from the test image
                                 sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:job$JOB_ID-test report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $imagename:job$JOB_ID-test")
                             }
                         }
                     },
                     dockerhub: {
                         stage ('Assemble and publish Docker Image') {
+                            // Identify image tags
                             def tags = ""
                             if (env.TAG_NAME) {
+                                // A version tag is present
                                 def VERSION = sh (script: "echo -n \$TAG_NAME | sed 's/^v//'", returnStdout: true)
                                 def MAJOR = sh (script: "#!/bin/bash\nif [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo -n \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/'; fi", returnStdout: true)
                                 def MINOR = sh (script: "#!/bin/bash\nif [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo -n \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/'; fi", returnStdout: true)
+
+                                // Use the tag explicitly
                                 tags += " -t $imagename:$VERSION"
+
+                                // Check for semver syntax
                                 if (MAJOR) {
+                                    // Use the major and minor version as additional tags
                                     tags += " -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest"
                                 }
                             } else if (env.BRANCH_NAME == 'main') {
+                                // Images with tag `edge` are built from the main branch
                                 tags += " -t $imagename:edge"
+
+                                // Prepare update of README.md
                                 sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
                                 // sh("docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/job$JOB_ID $imagename")
                             } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
+                                // Images with tag `snapshot` are built from other branches, except when updating dependencies only
                                 tags += " -t $imagename:SNAPSHOT"
                             }
+
+                            // If tags are present, build and push the image for both amd64 and arm64 architectures
                             if (tags.length() > 0) {
-                                sh("docker buildx build --builder rating-tracker -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') $tags .")
+                                sh("docker buildx build --builder rating-tracker -f docker/Dockerfile --force-rm --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') $tags .")
                             }
                         }
                     }
                 )
             } finally {
                 stage ('Cleanup') {
+                    // Remove credentials and build artifacts
                     sh """
                     docker logout
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
