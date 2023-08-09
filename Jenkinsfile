@@ -4,16 +4,13 @@ node('rating-tracker-build') {
         'FORCE_COLOR=true'
     ]) {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-
             def JOB_ID
             def image
             def PGPORT
             def REDISPORT
 
             try {
-
                 parallel(
-
                     scm: {
                         stage('Clone repository') {
                             checkout scm
@@ -28,14 +25,12 @@ node('rating-tracker-build') {
                             """
                         }
                     },
-
                     docker_env: {
                         stage('Start Docker environment') {
                             sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
                             sh "docker builder create --name rating-tracker --driver docker-container || true"
                         }
                     }
-
                 )
 
                 parallel(
@@ -44,7 +39,6 @@ node('rating-tracker-build') {
                             sh("PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d")
                         }
                     },
-
                     wasm: {
                         stage ('Compile WebAssembly utils') {
                             lock('rating-tracker-wasm') {
@@ -52,7 +46,6 @@ node('rating-tracker-build') {
                             }
                         }
                     },
-
                     dep: {
                         stage ('Install dependencies') {
                             sh("mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global .")
@@ -72,13 +65,11 @@ node('rating-tracker-build') {
                 )
 
                 parallel(
-
                     test: {
                         stage ('Run Tests') {
                             docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test .")
                         }
                     },
-
                     build: {
                         stage ('Build Docker Image') {
                             docker.build("$imagename:job$JOB_ID-build", "-f docker/Dockerfile-build .")
@@ -90,11 +81,9 @@ node('rating-tracker-build') {
                             """
                         }
                     }
-
                 )
 
                 parallel(
-
                     codacy: {
                         stage ('Publish coverage results to Codacy') {
                             withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
@@ -102,7 +91,6 @@ node('rating-tracker-build') {
                             }
                         }
                     },
-
                     dockerhub: {
                         stage ('Assemble and publish Docker Image') {
                             image = docker.build("$imagename:job$JOB_ID", "-f docker/Dockerfile-assemble --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
@@ -126,20 +114,17 @@ node('rating-tracker-build') {
                         }
                     }
                 )
-
             } finally {
-
                 stage ('Cleanup') {
                     sh """
                     docker logout
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || true
-                    docker builder prune -f --keep-storage 1G
+                    docker builder prune -f --keep-storage 2G
                     docker builder prune --builder rating-tracker -f --keep-storage 1G
                     rm -rf global
                     """
                 }
-
             }
         }
     }
