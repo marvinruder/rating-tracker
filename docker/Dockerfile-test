@@ -16,7 +16,7 @@ RUN \
   yarn workspace @rating-tracker/commons build && \
   yarn test
 
-FROM eclipse-temurin:17-jre-jammy as codacy
+FROM eclipse-temurin:17.0.8_7-jre-jammy as codacy
 
 # Download and extract Codacy coverage reporter
 RUN \
