@@ -17,9 +17,9 @@ node('rating-tracker-build') {
                     scm: {
                         stage('Clone repository') {
                             checkout scm
-                            JOB_ID = sh (script: "printf \"%04d\" $((1 + RANDOM % 8192))", returnStdout: true)
-                            PGPORT = sh (script: "echo -n $((49151 + $JOB_ID))", returnStdout: true)
-                            REDISPORT = sh (script: "echo -n $((57343 + $JOB_ID))", returnStdout: true)
+                            JOB_ID = sh (script: "printf \"%04d\" \$((1 + RANDOM % 8192))", returnStdout: true)
+                            PGPORT = sh (script: "echo -n \$((49151 + $JOB_ID))", returnStdout: true)
+                            REDISPORT = sh (script: "echo -n \$((57343 + $JOB_ID))", returnStdout: true)
                             sh """
                             echo \"globalFolder: /workdir/global\" >> .yarnrc.yml
                             echo \"preferAggregateCacheInfo: true\" >> .yarnrc.yml
