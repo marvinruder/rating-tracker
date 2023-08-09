@@ -64,7 +64,7 @@ node('rating-tracker-build') {
                             docker cp \$id:/workdir/.pnp.cjs .
                             docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                             docker rm -v \$id
-                            docker rmi $imagename:job$JOB_ID-yarn || true
+                            docker rmi $imagename:job$JOB_ID-yarn
                             cp -arn ./global /home/jenkins/.cache/yarn
                             """
                         }
@@ -86,7 +86,7 @@ node('rating-tracker-build') {
                             id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
                             docker rm -v \$id
-                            docker rmi $imagename:job$JOB_ID-build || true
+                            docker rmi $imagename:job$JOB_ID-build
                             """
                         }
                     }
@@ -98,9 +98,8 @@ node('rating-tracker-build') {
                     codacy: {
                         stage ('Publish coverage results to Codacy') {
                             withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
-                                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:job$JOB_ID-test report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')")
+                                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:job$JOB_ID-test report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $imagename:job$JOB_ID-test")
                             }
-                            sh("docker rmi $imagename:job$JOB_ID-test || true")
                         }
                     },
 
@@ -134,7 +133,7 @@ node('rating-tracker-build') {
                     sh """
                     docker logout
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
-                    docker rmi $imagename:job$JOB_ID || true
+                    docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || true
                     docker builder prune -f --keep-storage 1G
                     docker builder prune --builder rating-tracker -f --keep-storage 1G
                     rm -rf global
