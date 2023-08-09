@@ -93,6 +93,7 @@ node('rating-tracker-build') {
                     dockerhub: {
                         stage ('Assemble and publish Docker Image') {
                             def tags = ""
+                            sh 'printenv'
                             if (env.BRANCH_NAME == 'main') {
                                 tags += " -t $imagename:edge"
                                 sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
