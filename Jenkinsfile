@@ -99,7 +99,7 @@ node('rating-tracker-build') {
                                 def MINOR = sh (script: "#!/bin/bash\nif [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo -n \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/'; fi", returnStdout: true)
                                 tags += " -t $imagename:$VERSION"
                                 if (MAJOR) {
-                                    tags += " -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:not-latest"
+                                    tags += " -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest"
                                 }
                             } else if (env.BRANCH_NAME == 'main') {
                                 tags += " -t $imagename:edge"
