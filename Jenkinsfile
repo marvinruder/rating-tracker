@@ -52,7 +52,6 @@ node('rating-tracker-build') {
                             id=\$(docker create $imagename:job$JOB_ID-wasm)
                             docker cp \$id:/workdir/pkg/. ./packages/wasm
                             docker rm -v \$id
-                            docker rmi $imagename:job$JOB_ID-wasm || true
                             """
                         }
                     },
