@@ -3,153 +3,160 @@ node('rating-tracker-build') {
         'imagename=marvinruder/rating-tracker',
         'FORCE_COLOR=true'
     ]) {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            def JOB_ID
+            def PGPORT
+            def REDISPORT
 
-        def GIT_COMMIT_HASH
-        def image
-        def PGPORT
-        def REDISPORT
+            try {
+                parallel(
+                    scm: {
+                        stage('Clone repository') {
+                            checkout scm
 
-        try {
+                            // Use random job identifier and test port numbers to avoid collisions
+                            JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 8192))", returnStdout: true)
+                            PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
+                            REDISPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
 
-            stage('Clone repository') {
-                checkout scm
-                GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H' | head -c 8", returnStdout: true)
-                PGPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
-                REDISPORT = sh (script: "seq 49152 65535 | shuf | head -c 5", returnStdout: true)
-                sh """
-                echo \"globalFolder: /workdir/global\" >> .yarnrc.yml
-                echo \"preferAggregateCacheInfo: true\" >> .yarnrc.yml
-                echo \"enableGlobalCache: true\" >> .yarnrc.yml
-                sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
-                """
-            }
+                            // Change config files for use in CI
+                            sh """
+                            echo \"globalFolder: /workdir/global\" >> .yarnrc.yml
+                            echo \"preferAggregateCacheInfo: true\" >> .yarnrc.yml
+                            echo \"enableGlobalCache: true\" >> .yarnrc.yml
+                            sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
+                            """
+                        }
+                    },
+                    docker_env: {
+                        stage('Start Docker environment') {
+                            // Log in to Docker Hub
+                            sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
 
-            parallel(
-                testenv: {
-                    stage('Start test environment') {
-                        sh """
-                        PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
-                        """
+                            // Create builder instance
+                            sh "docker builder create --name rating-tracker --driver docker-container || true"
+                        }
                     }
-                },
+                )
 
-                wasm: {
-                    stage ('Compile WebAssembly utils') {
-                        docker.build("$imagename:build-$GIT_COMMIT_HASH-wasm", "-f docker/Dockerfile-wasm .")
-                        sh """
-                        id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-wasm)
-                        docker cp \$id:/workdir/pkg/. ./packages/wasm
-                        docker rm -v \$id
-                        docker rmi $imagename:build-$GIT_COMMIT_HASH-wasm || true
-                        sed -i -E 's/"module": "([A-Za-z0-9\\-\\.]+)",/"main": "\\1",\\n  "module": "\\1",/g' packages/wasm/package.json
-                        """
+                parallel(
+                    testenv: {
+                        stage('Start test environment') {
+                            sh("PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d")
+                        }
+                    },
+                    wasm: {
+                        stage ('Compile WebAssembly utils') {
+                            // Acquire mutex to avoid collisions while working with the marvinruder/rating-tracker:wasm image
+                            lock('rating-tracker-wasm') {
+                                // Build the WebAssembly image while using registry cache
+                                sh("docker buildx build --builder rating-tracker --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=marvinruder/cache:rating-tracker-wasm .")
+                            }
+                        }
+                    },
+                    dep: {
+                        stage ('Install dependencies') {
+                            // Copy global cache to workspace
+                            sh("mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global .")
+
+                            // Install dependencies
+                            docker.build("$imagename:job$JOB_ID-yarn", "-f docker/Dockerfile-yarn .")
+
+                            // Copy dependencies to workspace and cache
+                            sh """
+                            id=\$(docker create $imagename:job$JOB_ID-yarn)
+                            docker cp \$id:/workdir/.yarn/. ./.yarn
+                            docker cp \$id:/workdir/global .
+                            docker cp \$id:/workdir/.pnp.cjs .
+                            docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
+                            docker rm -v \$id
+                            docker rmi $imagename:job$JOB_ID-yarn
+                            cp -arn ./global /home/jenkins/.cache/yarn
+                            """
+                        }
                     }
-                },
+                )
 
-                dep: {
-                    stage ('Install dependencies') {
-                        sh "mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global ."
-                        docker.build("$imagename:build-$GIT_COMMIT_HASH-yarn", "-f docker/Dockerfile-yarn .")
-                        sh """
-                        id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-yarn)
-                        docker cp \$id:/workdir/.yarn/. ./.yarn
-                        docker cp \$id:/workdir/global .
-                        docker cp \$id:/workdir/.pnp.cjs .
-                        docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
-                        docker rm -v \$id
-                        docker rmi $imagename:build-$GIT_COMMIT_HASH-yarn || true
-                        """
-                        sh "cp -arn ./global /home/jenkins/.cache/yarn"
+                parallel(
+                    test: {
+                        stage ('Run Tests') {
+                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm .")
+                        }
+                    },
+                    build: {
+                        stage ('Build Docker Image') {
+                            docker.build("$imagename:job$JOB_ID-build", "-f docker/Dockerfile-build .")
+
+                            // Copy build artifacts to workspace
+                            sh """
+                            id=\$(docker create $imagename:job$JOB_ID-build)
+                            docker cp \$id:/workdir/app/. ./app
+                            docker rm -v \$id
+                            docker rmi $imagename:job$JOB_ID-build
+                            """
+                        }
                     }
-                }
-            )
+                )
 
-            parallel(
-
-                test: {
-                    stage ('Run Tests') {
-                        docker.build("$imagename:build-$GIT_COMMIT_HASH-test", "-f docker/Dockerfile-test .")
-                        sh """
-                        id=\$(docker create $imagename:build-$GIT_COMMIT_HASH-test)
-                        mkdir -p coverage/{backend,commons,frontend}
-                        docker cp \$id:/workdir/packages/backend/coverage/. ./coverage/backend
-                        docker cp \$id:/workdir/packages/commons/coverage/. ./coverage/commons
-                        docker cp \$id:/workdir/packages/frontend/coverage/. ./coverage/frontend
-                        docker rm -v \$id
-                        docker rmi $imagename:build-$GIT_COMMIT_HASH-test || true
-                        """
-                    }
-                },
-
-                build: {
-                    stage ('Build Docker Image') {
-                        image = docker.build("$imagename:build-$GIT_COMMIT_HASH", "-f docker/Dockerfile --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') .")
-                    }
-                }
-
-            )
-
-            parallel(
-
-                codacy: {
-                    stage ('Publish coverage results to Codacy') {
-                        lock('codacy-coverage-reporter') {
+                parallel(
+                    codacy: {
+                        stage ('Publish coverage results to Codacy') {
                             withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
-                                sh """#!/usr/bin/env bash
-                                bash <(curl -Ls https://coverage.codacy.com/get.sh) report \$(find . -name 'clover.xml' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')
-                                """
+                                // Publish coverage results by running a container from the test image
+                                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:job$JOB_ID-test report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $imagename:job$JOB_ID-test")
                             }
                         }
-                    }
-                },
-
-                dockerhub: {
-                    stage ('Publish Docker Image') {
-                        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                            if (env.BRANCH_NAME == 'main') {
-                                sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                                image.push('edge')
-                                sh "mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/$GIT_COMMIT_HASH"
-                                // sh "docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/$GIT_COMMIT_HASH $imagename"
-                            } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
-                                sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                                image.push('SNAPSHOT')
-                            }
+                    },
+                    dockerhub: {
+                        stage ('Assemble and publish Docker Image') {
+                            // Identify image tags
+                            def tags = ""
                             if (env.TAG_NAME) {
-                                sh "docker builder create --name builder-$GIT_COMMIT_HASH --driver docker-container"
-                                def VERSION = sh (script: "echo \$TAG_NAME | sed 's/^v//' | tr -d '\\n'", returnStdout: true)
-                                def MAJOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/' | tr -d '\\n'; fi\"", returnStdout: true)
-                                def MINOR = sh (script: "/bin/bash -c \"if [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/' | tr -d '\\n'; fi\"", returnStdout: true)
+                                // A version tag is present
+                                def VERSION = sh (script: "echo -n \$TAG_NAME | sed 's/^v//'", returnStdout: true)
+                                def MAJOR = sh (script: "#!/bin/bash\nif [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo -n \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/'; fi", returnStdout: true)
+                                def MINOR = sh (script: "#!/bin/bash\nif [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo -n \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1.\\2/'; fi", returnStdout: true)
+
+                                // Use the tag explicitly
+                                tags += " -t $imagename:$VERSION"
+
+                                // Check for semver syntax
                                 if (MAJOR) {
-                                    sh "docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest ."
-                                } else {
-                                    sh "docker builder build --builder builder-$GIT_COMMIT_HASH -f docker/Dockerfile --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t $imagename:$VERSION ."
+                                    // Use the major and minor version as additional tags
+                                    tags += " -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest"
                                 }
-                                sh """
-                                docker builder rm builder-$GIT_COMMIT_HASH
-                                docker container ls -f "name=buildx_buildkit_builder-$GIT_COMMIT_HASH" -q | xargs -r docker container rm -f
-                                docker images -f "dangling=true" -q | xargs -r docker rmi -f
-                                docker volume ls -qf dangling=true | xargs -r docker volume rm
-                                """
+                            } else if (env.BRANCH_NAME == 'main') {
+                                // Images with tag `edge` are built from the main branch
+                                tags += " -t $imagename:edge"
+
+                                // Prepare update of README.md
+                                sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
+                                // sh("docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/job$JOB_ID $imagename")
+                            } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
+                                // Images with tag `snapshot` are built from other branches, except when updating dependencies only
+                                tags += " -t $imagename:SNAPSHOT"
                             }
-                            sh 'docker logout'
+
+                            // If tags are present, build and push the image for both amd64 and arm64 architectures
+                            if (tags.length() > 0) {
+                                sh("docker buildx build --builder rating-tracker -f docker/Dockerfile --force-rm --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') $tags .")
+                            }
                         }
                     }
+                )
+            } finally {
+                stage ('Cleanup') {
+                    // Remove credentials and build artifacts
+                    sh """
+                    docker logout
+                    docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
+                    docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || true
+                    docker builder prune -f --keep-storage 2G
+                    docker builder prune --builder rating-tracker -f --keep-storage 2G
+                    rm -rf global app
+                    """
                 }
-            )
-
-        } finally {
-
-            stage ('Cleanup') {
-                sh """
-                docker compose -p rating-tracker-test-$GIT_COMMIT_HASH -f packages/backend/test/docker-compose.yml down -t 0            
-                docker rmi $imagename:build-$GIT_COMMIT_HASH || true
-                docker image prune --filter label=stage=build -f
-                docker builder prune -f --keep-storage 4G
-                rm -rf global
-                """
             }
-
         }
     }
 }

@@ -1,23 +1,28 @@
-FROM rust:alpine3.17
+FROM rust:1.71.1-alpine as wasm
 
 WORKDIR /workdir
 
-RUN --mount=type=cache,target=/var/cache/apk apk add wasm-pack binaryen pkgconfig openssl-dev
-RUN rustup target add wasm32-unknown-unknown
+# Install required tools and libraries
+RUN --mount=type=cache,target=/var/cache/apk \
+  apk add binaryen pkgconfig musl-dev openssl-dev && \
+  wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
 
-COPY wasm/Cargo.toml .
-COPY wasm/Cargo.lock .
-COPY wasm/config.toml .
+# Get and build dependencies based on dummy `lib.rs`
+COPY wasm/Cargo.toml wasm/Cargo.lock wasm/config.toml ./
 
 RUN \
   mkdir ./src && echo 'pub fn tmp() {}' > ./src/lib.rs && \
   wasm-pack build --release && \
   rm -r ./src/lib.rs ./target/wasm32-*/release/wasm.*
 
+# Build WebAssembly package
 COPY wasm/src/* ./src/
 
 RUN \
   touch ./src/* && \
-  wasm-pack build -s rating-tracker --release
+  wasm-pack build -s rating-tracker --release && \
+  # Fix `package.json`
+  sed -E -i.bak 's/"module": "([A-Za-z0-9\-\.]+)",/"main": "\1",\n  "module": "\1",/g ; s/^}$/}\n/' pkg/package.json && \
+  rm pkg/package.json.bak
 
 ENTRYPOINT [ "/bin/sh" ]

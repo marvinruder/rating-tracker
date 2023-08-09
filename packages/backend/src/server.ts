@@ -54,10 +54,11 @@ class Server {
  */
 export const server = new Server();
 
-/**
- * Do not send information regarding the server's software and version for security reasons.
- */
+// Do not send information regarding the server's software and version for security reasons.
 server.app.disable("x-powered-by");
+
+// Trust the X-Forwarded-* headers set by exactly one reverse proxy.
+server.app.set("trust proxy", 1);
 
 /**
  * The static content path, where the compiled and minified frontend and static resources are stored.
