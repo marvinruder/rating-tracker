@@ -9,6 +9,8 @@ WORKDIR /workdir
 
 COPY . .
 
+COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
+
 RUN \
   yarn workspace @rating-tracker/commons build && \
   yarn test

@@ -47,12 +47,9 @@ node('rating-tracker-build') {
 
                     wasm: {
                         stage ('Compile WebAssembly utils') {
-                            sh """
-                            docker buildx build --builder rating-tracker --load -t $imagename:job$JOB_ID-wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=marvinruder/cache:rating-tracker-wasm .
-                            id=\$(docker create $imagename:job$JOB_ID-wasm)
-                            docker cp \$id:/workdir/pkg/. ./packages/wasm
-                            docker rm -v \$id
-                            """
+                            lock('rating-tracker-wasm') {
+                                sh("docker buildx build --builder rating-tracker --load -t $imagename:wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=marvinruder/cache:rating-tracker-wasm .")
+                            }
                         }
                     },
 
@@ -100,10 +97,8 @@ node('rating-tracker-build') {
 
                     codacy: {
                         stage ('Publish coverage results to Codacy') {
-                            lock('codacy-coverage-reporter') {
-                                withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
-                                    sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:job$JOB_ID-test report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')")
-                                }
+                            withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
+                                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:job$JOB_ID-test report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H')")
                             }
                             sh("docker rmi $imagename:job$JOB_ID-test || true")
                         }
