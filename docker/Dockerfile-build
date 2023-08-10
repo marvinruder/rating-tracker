@@ -9,22 +9,13 @@ WORKDIR /workdir
 COPY . .
 COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
 
-# Build and create local production cache from global mirror
-RUN \
-  yarn build && \
-  yarn config set enableGlobalCache false && \
-  yarn cache clean && \
-  yarn workspaces focus --production @rating-tracker/backend
+# Build Node.js bundle
+RUN yarn build
 
 # Create directories for target container and copy only necessary files
-RUN mkdir -p /workdir/app/packages/backend/public /workdir/app/packages/commons /workdir/app/.yarn && \
-  cp -r /workdir/.pnp.* /workdir/package.json /workdir/app && \
-  cp -r /workdir/.yarn/cache /workdir/.yarn/unplugged /workdir/app/.yarn && \
-  cp -r /workdir/packages/backend/dist /workdir/packages/backend/package.json /workdir/app/packages/backend && \
-  cp -r /workdir/packages/commons/dist /workdir/packages/commons/package.json /workdir/app/packages/commons && \
-  cp -r /workdir/packages/frontend/dist/* /workdir/app/packages/backend/public && \
-  find /workdir/app -name '*.d.ts' -type f -delete && \
-  # Remove binaries of unused Selenium Manager
-  rm -r /workdir/app/.yarn/unplugged/selenium-webdriver-npm-*/node_modules/selenium-webdriver/bin
+RUN mkdir -p app/packages/backend/public app/packages/backend/dist/prisma/client && \
+  cp -r packages/backend/dist app/packages/backend && \
+  cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* app/packages/backend/dist/prisma/client && \
+  cp -r packages/frontend/dist/* app/packages/backend/public
 
 ENTRYPOINT [ "/bin/sh" ]
