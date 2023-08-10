@@ -13,9 +13,9 @@ COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
 RUN yarn build
 
 # Create directories for target container and copy only necessary files
-RUN mkdir -p app/packages/backend/public app/packages/backend/dist/prisma/client && \
-  cp -r packages/backend/dist app/packages/backend && \
-  cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* app/packages/backend/dist/prisma/client && \
-  cp -r packages/frontend/dist/* app/packages/backend/public
+RUN mkdir -p app/public app/prisma/client && \
+  cp -r packages/backend/dist app && \
+  cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* app/prisma/client && \
+  cp -r packages/frontend/dist/* app/public
 
 ENTRYPOINT [ "/bin/sh" ]
