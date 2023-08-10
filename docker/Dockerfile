@@ -49,4 +49,4 @@ COPY --from=assemble --chown=node:node /workdir/app .
 
 HEALTHCHECK --interval=5m --start-period=15s CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
-CMD [ "dumb-init", "node", "--experimental-loader", "./.pnp.loader.mjs", "-r", "./.pnp.cjs", "packages/backend/dist/src/server.js" ]
+CMD [ "dumb-init", "node", "packages/backend/dist/server.mjs" ]
