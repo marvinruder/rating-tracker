@@ -12,7 +12,6 @@ import responseTime from "response-time";
 import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository.js";
 import path from "path";
 import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger.js";
-import { fileURLToPath } from "url";
 import errorHandler from "./utils/errorHandler.js";
 import setupCronJobs from "./utils/cron.js";
 import dotenv from "dotenv";
@@ -30,9 +29,6 @@ import "./controllers/StockController.js";
 import "./controllers/UserController.js";
 import "./controllers/UserManagementController.js";
 import "./controllers/WatchlistController.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 /**
  * A token that is used to bypass authentication for requests sent by Cron jobs. It is generated randomly and changes on
@@ -63,7 +59,7 @@ server.app.set("trust proxy", 1);
 /**
  * The static content path, where the compiled and minified frontend and static resources are stored.
  */
-const staticContentPath = path.join(__dirname, "..", "..", "public");
+const staticContentPath = path.join(__dirname, "public");
 
 /* c8 ignore next */ // This is not tested because it is only used in development servers
 if (!process.env.AUTO_FETCH_SCHEDULE || process.env.NODE_ENV === "development") {
