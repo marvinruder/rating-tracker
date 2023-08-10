@@ -11,7 +11,7 @@ import {
 } from "@rating-tracker/commons";
 import chalk from "chalk";
 import logger, { PREFIX_CRON } from "./logger.js";
-import { sendMessage } from "../signal/signal.js";
+import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal.js";
 import APIError from "./apiError.js";
 
 /**
@@ -41,9 +41,10 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
                 ),
             );
             await sendMessage(
-              `An error occurred during the MSCI Cron Job: ${
-                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
-              }`,
+              SIGNAL_PREFIX_ERROR +
+                `An error occurred during the MSCI Cron Job: ${
+                  String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+                }`,
               "fetchError",
             );
           });
@@ -62,9 +63,10 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
                 ),
             );
             await sendMessage(
-              `An error occurred during the Refinitiv Cron Job: ${
-                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
-              }`,
+              SIGNAL_PREFIX_ERROR +
+                `An error occurred during the Refinitiv Cron Job: ${
+                  String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+                }`,
               "fetchError",
             );
           });
@@ -81,9 +83,10 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
                 chalk.redBright(`An error occurred during the S&P Cron Job: ${e.response?.data?.message ?? e.message}`),
             );
             await sendMessage(
-              `An error occurred during the S&P Cron Job: ${
-                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
-              }`,
+              SIGNAL_PREFIX_ERROR +
+                `An error occurred during the S&P Cron Job: ${
+                  String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+                }`,
               "fetchError",
             );
           });
@@ -102,9 +105,10 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
                 ),
             );
             await sendMessage(
-              `An error occurred during the Sustainalytics Cron Job: ${
-                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
-              }`,
+              SIGNAL_PREFIX_ERROR +
+                `An error occurred during the Sustainalytics Cron Job: ${
+                  String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+                }`,
               "fetchError",
             );
           });
@@ -124,9 +128,10 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
                 ),
             );
             await sendMessage(
-              `An error occurred during the Morningstar Cron Job: ${
-                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
-              }`,
+              SIGNAL_PREFIX_ERROR +
+                `An error occurred during the Morningstar Cron Job: ${
+                  String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+                }`,
               "fetchError",
             );
           });
@@ -147,9 +152,10 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
                 ),
             );
             await sendMessage(
-              `An error occurred during the MarketScreener Cron Job: ${
-                String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
-              }`,
+              SIGNAL_PREFIX_ERROR +
+                `An error occurred during the MarketScreener Cron Job: ${
+                  String(e.response?.data?.message ?? e.message).split(/[\n:{]/)[0]
+                }`,
               "fetchError",
             );
           });
