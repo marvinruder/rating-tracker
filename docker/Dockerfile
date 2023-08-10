@@ -5,7 +5,7 @@ ARG TARGETARCH
 COPY app /workdir/app
 
 # Remove unused binaries
-WORKDIR /workdir/app/packages/backend/dist/prisma/client
+WORKDIR /workdir/app/prisma/client
 RUN \
   if [ "$TARGETARCH" == "amd64" ]; then \
   rm ./libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
