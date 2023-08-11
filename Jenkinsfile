@@ -36,8 +36,10 @@ node('rating-tracker-build') {
                         stage('Start test environment') {
                             // Create migration script from all migrations and inject IP and ports into test environment
                             sh """
-                            cat packages/backend/prisma/migrations/*/migration.sql > packages/backend/test/all_migrations.sql
-                            PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
+                            PG_MIGRATIONS=$(cat packages/backend/prisma/migrations/*/migration.sql | grep -v \"^--\")
+                            cat packages/backend/test/docker-compose.yml | grep -v all_migrations > packages/backend/test/docker-compose-dind.yml
+                            PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml up --force-recreate -V -d
+                            docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml exec psql -c \"\$PG_MIGRATIONS\"
                             sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
                             """
                         }
@@ -150,7 +152,7 @@ node('rating-tracker-build') {
                     // Remove credentials and build artifacts
                     sh """
                     docker logout
-                    docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
+                    docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || true
                     docker builder prune -f --keep-storage 2G
                     docker builder prune --builder rating-tracker -f --keep-storage 2G
