@@ -30,19 +30,14 @@ const levelIcons = {
 /**
  * The stream used to log messages to the standard output.
  */
-const prettyStream = pretty({
-  include: "level",
-  customPrettifiers: {
-    level: (level) => levelIcons[Number(level)],
-  },
-});
+const prettyStream = pretty({ include: "level", customPrettifiers: { level: (level) => levelIcons[Number(level)] } });
 
 /**
  * Provides the path of the log file for the current day.
  *
  * @returns {string} The path of the log file.
  */
-const getLogFilePath = () => {
+const getLogFilePath = (): string => {
   return (process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).log").replaceAll(
     "(DATE)",
     new Date().toISOString().split("T")[0],
@@ -54,11 +49,7 @@ const getLogFilePath = () => {
  *
  * @returns {fs.WriteStream} The stream to write to the log file.
  */
-const getNewFileStream = () => {
-  return fs.createWriteStream(getLogFilePath(), {
-    flags: "a",
-  });
-};
+const getNewFileStream = (): fs.WriteStream => fs.createWriteStream(getLogFilePath(), { flags: "a" });
 
 let fileStream = getNewFileStream();
 
@@ -66,25 +57,14 @@ let fileStream = getNewFileStream();
  * A multistream which writes to both the standard output and the log file.
  */
 const multistream = pino.multistream([
-  {
-    level: (process.env.LOG_LEVEL as pino.Level) ?? "info",
-    stream: prettyStream,
-  },
-  {
-    level: (process.env.LOG_LEVEL as pino.Level) ?? "info",
-    stream: fileStream,
-  },
+  { level: (process.env.LOG_LEVEL as pino.Level) ?? "info", stream: prettyStream },
+  { level: (process.env.LOG_LEVEL as pino.Level) ?? "info", stream: fileStream },
 ]);
 
 /**
  * The logger used to log messages to both the standard output and the log file.
  */
-const logger = pino(
-  {
-    level: process.env.LOG_LEVEL ?? "info",
-  },
-  multistream,
-);
+const logger = pino({ level: process.env.LOG_LEVEL ?? "info" }, multistream);
 
 // Rotate the log file every day
 new cron.CronJob(
@@ -104,7 +84,7 @@ new cron.CronJob(
  * @param {string} method The HTTP method.
  * @returns {string} A colored pretty prefix string.
  */
-const highlightMethod = (method: string) => {
+const highlightMethod = (method: string): string => {
   switch (method) {
     case "GET":
       return chalk.whiteBright.bgBlue(` ${method} `) + chalk.blue.bgGrey("");
@@ -127,7 +107,7 @@ const highlightMethod = (method: string) => {
  * @param {number} statusCode The HTTP status code.
  * @returns {string} A colored pretty prefix string.
  */
-const statusCodeDescription = (statusCode: number) => {
+const statusCodeDescription = (statusCode: number): string => {
   const statusCodeString = ` ${statusCode}  ${STATUS_CODES[statusCode]} `;
   switch (Math.floor(statusCode / 100)) {
     case 2: // Successful responses
@@ -147,64 +127,66 @@ const statusCodeDescription = (statusCode: number) => {
  * @param {Request} req Request object
  * @param {Response} res Response object
  * @param {number} time The response time of the request.
+ * @returns {void}
  */
-export const requestLogger = (req: Request, res: Response, time: number) => {
-  // Do not log requests for resources such as logos – those are far too many and only mildly interesting
-  if (!req.originalUrl.startsWith(`/api${stockLogoEndpointPath}`)) {
-    chalk
-      .white(
-        chalk.whiteBright.bgHex("#339933")(" \uf898 ") +
-          chalk.bgGrey.hex("#339933")("") +
-          chalk.bgGrey(
-            chalk.cyanBright(" \uf5ef " + new Date().toISOString()) + // Timestamp
-              "  " +
-              chalk.yellow(
-                res.locals.user
-                  ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})` // Authenticated user
-                  : /* c8 ignore next */ // We do not test Cron jobs
-                  res.locals.userIsCron
-                  ? "\ufba7 cron" // Cron job
-                  : "\uf21b", // Unauthenticated user
-              ) +
-              "  " +
-              chalk.magentaBright("\uf98c" + req.ip) + // IP address
-              " ",
-          ) +
-          chalk.grey("") +
-          "\n ├─" +
-          highlightMethod(req.method) + // HTTP request method
-          chalk.bgGrey(
-            ` ${req.originalUrl // URL path
-              .slice(1, req.originalUrl.indexOf("?") == -1 ? undefined : req.originalUrl.indexOf("?"))
-              .replaceAll("/", "  ")} `,
-          ) +
-          chalk.grey("") +
-          Object.entries(req.cookies) // Cookies
-            .map(
-              ([key, value]) =>
-                "\n ├─" + chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) + chalk.grey("") + " " + value,
-            )
-            .join(" ") +
-          Object.entries(req.query) // Query parameters
-            .map(
-              ([key, value]) =>
-                "\n ├─" + chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) + chalk.grey("") + " " + value,
-            )
-            .join(" ") +
-          "\n ╰─" +
-          statusCodeDescription(res.statusCode) + // HTTP response status code
-          ` ${
-            res.hasHeader("Content-Length") && res.hasHeader("Content-Type")
-              ? `sent ${res.getHeader("Content-Length")} bytes of type “${
-                  res.getHeader("Content-Type").toString().split(";")[0]
-                }” `
-              : ""
-          }after ${Math.round(time)} ms`, // Response time
-      )
-      .split("\n")
-      .forEach((line) => logger.info(line)); // Show newlines in the log in a pretty way
-    logger.info("");
-  }
-};
+export const requestLogger = (req: Request, res: Response, time: number): void =>
+  chalk
+    .white(
+      chalk.whiteBright.bgHex("#339933")(" \uf898 ") +
+        chalk.bgGrey.hex("#339933")("") +
+        chalk.bgGrey(
+          chalk.cyanBright(" \uf5ef " + new Date().toISOString()) + // Timestamp
+            "  " +
+            chalk.yellow(
+              res.locals.user
+                ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})` // Authenticated user
+                : /* c8 ignore next */ // We do not test Cron jobs
+                res.locals.userIsCron
+                ? "\ufba7 cron" // Cron job
+                : "\uf21b", // Unauthenticated user
+            ) +
+            "  " +
+            chalk.magentaBright("\uf98c" + req.ip) + // IP address
+            " ",
+        ) +
+        chalk.grey("") +
+        "\n ├─" +
+        highlightMethod(req.method) + // HTTP request method
+        chalk.bgGrey(
+          ` ${req.originalUrl // URL path
+            .slice(1, req.originalUrl.indexOf("?") == -1 ? undefined : req.originalUrl.indexOf("?"))
+            .replaceAll("/", "  ")} `,
+        ) +
+        chalk.grey("") +
+        Object.entries(req.cookies) // Cookies
+          .map(
+            ([key, value]) =>
+              "\n ├─" + chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) + chalk.grey("") + " " + value,
+          )
+          .join(" ") +
+        Object.entries(req.query) // Query parameters
+          .map(
+            ([key, value]) =>
+              "\n ├─" + chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) + chalk.grey("") + " " + value,
+          )
+          .join(" ") +
+        "\n ╰─" +
+        statusCodeDescription(res.statusCode) + // HTTP response status code
+        ` ${
+          res.hasHeader("Content-Length") && res.hasHeader("Content-Type")
+            ? `sent ${res.getHeader("Content-Length")} bytes of type “${
+                res.getHeader("Content-Type").toString().split(";")[0]
+              }” `
+            : ""
+        }after ${Math.round(time)} ms
+`, // Response time
+    )
+    .split("\n")
+    // Log internal requests or requests for resources such as logos as debug messages – those are far too many and
+    // typically only mildly interesting
+    .forEach((line) =>
+      // Show newlines in the log in a pretty way
+      logger[req.originalUrl.startsWith(`/api${stockLogoEndpointPath}`) || req.ip === "::1" ? "trace" : "info"](line),
+    );
 
 export default logger;

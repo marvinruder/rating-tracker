@@ -12,7 +12,7 @@
   "types": "./src/index.ts",
   "scripts": {
     "dev:build": "yarn build --watch",
-    "build": "esbuild --color=true src/index.ts --bundle --minify --platform=node --format=esm --legal-comments=none --outfile=dist/index.js",
+    "build": "esbuild --color=true src/index.ts --bundle --minify --keep-names --platform=node --format=esm --legal-comments=none --outfile=dist/index.js",
     "test:watch": "vitest",
     "test": "vitest run --color",
     "lint": "eslint --cache --ext .ts src/",

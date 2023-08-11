@@ -13,7 +13,6 @@
   "scripts": {
     "dev:server": "conc --kill-others \"yarn workspace @rating-tracker/backend dev:run\" \"yarn workspace @rating-tracker/backend dev:watch\" \"yarn workspace @rating-tracker/frontend dev:vite\" \"yarn workspace @rating-tracker/commons dev:build\" -n \",,,ﯤ\" -p \"{name}\" -c #339933,#3178C6,#61DAFB,#3178C6 --timings",
     "dev:tools": "conc --kill-others \"yarn workspace @rating-tracker/backend dev:tools\" -n \"\" -p \"{name}\" -c grey --timings",
-    "dev:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --debug wasm",
     "prisma:migrate:dev": "yarn workspace @rating-tracker/backend prisma:migrate:dev",
     "prisma:studio": "yarn workspace @rating-tracker/backend prisma:studio",
     "test": "yarn workspaces foreach -pt run test",
@@ -21,7 +20,8 @@
     "test:prisma:migrate:init": "yarn workspace @rating-tracker/backend test:prisma:migrate:init",
     "build": "yarn workspaces foreach -pt run build",
     "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm && sed -E -i.bak 's/\"module\": \"([A-Za-z0-9\\-\\.]+)\",/\"main\": \"\\1\",\\\n  \"module\": \"\\1\",/g ; s/^}$/}\\\n/' packages/wasm/package.json && rm packages/wasm/package.json.bak",
-    "lint": "yarn workspaces foreach -pt run lint"
+    "lint": "yarn workspaces foreach -pt run lint",
+    "fix:swagger": "mkdir -p packages/backend/dist/public/api-docs && cp .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui{.css,-bundle.js,-standalone-preset.js} packages/backend/dist/public/api-docs/"
   },
   "packageManager": "yarn@3.6.1",
   "devDependencies": {
@@ -32,5 +32,10 @@
   },
   "resolutions": {
     "vite/esbuild": "0.19.1"
+  },
+  "dependenciesMeta": {
+    "swagger-ui-dist@5.3.1": {
+      "unplugged": true
+    }
   }
 }
