@@ -1313,7 +1313,7 @@ __metadata:
     react-router: 6.15.0
     react-router-dom: 6.15.0
     react-switch-selector: 2.2.1
-    react-tsparticles: 2.12.1
+    react-tsparticles: 2.12.2
     tsparticles-engine: 2.12.0
     tsparticles-slim: 2.12.0
     typescript: 5.1.6
@@ -7184,14 +7184,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tsparticles@npm:2.12.1":
-  version: 2.12.1
-  resolution: "react-tsparticles@npm:2.12.1"
+"react-tsparticles@npm:2.12.2":
+  version: 2.12.2
+  resolution: "react-tsparticles@npm:2.12.2"
   dependencies:
     tsparticles-engine: ^2.12.0
   peerDependencies:
     react: ">=16"
-  checksum: 3e4727e8289bb7562a9779a8298d03150276b6ed35dc211caea7338cb88ffcc5e242807d334632f9bd2fe1b53cf3b1d56f029cfa88a21178682181705adb3d49
+  checksum: 66339ed80dbb0aa7cede31635101bf84f90743b67b3becdf410a6d52bd41441a449d23722f10204b9641e28bcad51682b8468bbad2524505eef429eea3c2501d
   languageName: node
   linkType: hard
 
