@@ -17,7 +17,6 @@
     "prisma:studio": "yarn workspace @rating-tracker/backend prisma:studio",
     "test": "yarn workspaces foreach -pt run test",
     "test:tools": "conc --kill-others \"yarn workspace @rating-tracker/backend test:tools\" -n \"\" -p \"{name}\" -c grey --timings",
-    "test:prisma:migrate:init": "yarn workspace @rating-tracker/backend test:prisma:migrate:init",
     "build": "yarn workspaces foreach -pt run build",
     "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm && sed -E -i.bak 's/\"module\": \"([A-Za-z0-9\\-\\.]+)\",/\"main\": \"\\1\",\\\n  \"module\": \"\\1\",/g ; s/^}$/}\\\n/' packages/wasm/package.json && rm packages/wasm/package.json.bak",
     "lint": "yarn workspaces foreach -pt run lint",
