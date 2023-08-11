@@ -7,7 +7,7 @@ WORKDIR /workdir
 
 # Copy project files as well as Swagger UI files and WebAssembly package
 COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
-COPY .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js /workdir/app/packages/backend/dist/public/api-docs/
+COPY .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js /workdir/app/public/api-docs/
 COPY . .
 
 RUN \
