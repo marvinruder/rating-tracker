@@ -369,9 +369,8 @@ LOG_LEVEL=trace
 A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](/packages/backend/test) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
 -   Run `yarn build:wasm` to build the WebAssembly utilities and create the `wasm` package. This requires [Rust](https://www.rust-lang.org) and [wasm-pack](https://rustwasm.github.io/wasm-pack/) to be installed.
--   Manually create a `main` entry in the `package.json` of the `wasm` package pointing to the same file as the `module` entry.
 -   Run `yarn test:tools` to start PostgreSQL and Redis.
--   Run `yarn test:prisma:migrate:deploy` to initialize the PostgreSQL database.
+-   Run `yarn workspace @rating-tracker/backend prisma:migrate:generate` to generate the Prisma client.
 -   Run `yarn test` to run all tests from all packages. Additionally, the packages’ `package.json` configurations contain a `test:watch` script to run tests in watch mode.
 
 NB: The `test:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.

@@ -486,10 +486,7 @@ const applyPostgresSeeds = async (): Promise<void> => {
     throw new Error("Refusing to apply seed when not in a test environment");
   }
 
-  await client.$queryRaw`TRUNCATE TABLE "rating-tracker-test"."Stock" RESTART IDENTITY CASCADE`;
-  await client.$queryRaw`TRUNCATE TABLE "rating-tracker-test"."User" RESTART IDENTITY CASCADE`;
-  await client.$queryRaw`TRUNCATE TABLE "rating-tracker-test"."Watchlist" RESTART IDENTITY CASCADE`;
-  await client.$queryRaw`TRUNCATE TABLE "rating-tracker-test"."_StockToWatchlist" RESTART IDENTITY CASCADE`;
+  await client.$queryRaw`TRUNCATE TABLE "Stock", "User", "Watchlist", "_StockToWatchlist" RESTART IDENTITY CASCADE`;
 
   await applyStockSeed();
   await applyUserSeed();

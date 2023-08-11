@@ -18,14 +18,6 @@ node('rating-tracker-build') {
                             JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 8192))", returnStdout: true)
                             PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
                             REDISPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
-
-                            // Change config files for use in CI
-                            sh """
-                            echo \"globalFolder: /workdir/global\" >> .yarnrc.yml
-                            echo \"preferAggregateCacheInfo: true\" >> .yarnrc.yml
-                            echo \"enableGlobalCache: true\" >> .yarnrc.yml
-                            sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
-                            """
                         }
                     },
                     docker_env: {
@@ -42,7 +34,12 @@ node('rating-tracker-build') {
                 parallel(
                     testenv: {
                         stage('Start test environment') {
-                            sh("PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d")
+                            // Create migration script from all migrations and inject IP and ports into test environment
+                            sh """
+                            cat packages/backend/prisma/migrations/*/migration.sql > packages/backend/test/all_migrations.sql
+                            PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
+                            sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
+                            """
                         }
                     },
                     wasm: {
@@ -56,8 +53,12 @@ node('rating-tracker-build') {
                     },
                     dep: {
                         stage ('Install dependencies') {
-                            // Copy global cache to workspace
-                            sh("mkdir -p /home/jenkins/.cache/yarn/global && cp -arn /home/jenkins/.cache/yarn/global .")
+                            // Change config files for use in CI and copy global cache to workspace
+                            sh """
+                            echo \"globalFolder: /workdir/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
+                            mkdir -p /home/jenkins/.cache/yarn/global
+                            cp -arn /home/jenkins/.cache/yarn/global .
+                            """
 
                             // Install dependencies
                             docker.build("$imagename:job$JOB_ID-yarn", "-f docker/Dockerfile-yarn .")

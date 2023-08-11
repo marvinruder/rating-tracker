@@ -19,8 +19,4 @@ RUN yarn --immutable
 COPY packages/backend/prisma ./packages/backend/prisma
 RUN yarn workspace @rating-tracker/backend prisma:generate
 
-# Initialize Prisma for tests
-COPY packages/backend/test/.env ./packages/backend/test/
-RUN yarn workspace @rating-tracker/backend test:prisma:migrate:deploy
-
 ENTRYPOINT [ "/bin/sh" ]
