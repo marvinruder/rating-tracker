@@ -41,7 +41,7 @@ node('rating-tracker-build') {
                             PG_MIGRATIONS=\$(cat packages/backend/prisma/migrations/*/migration.sql | grep -v \"^--\")
                             cat packages/backend/test/docker-compose.yml | grep -v all_migrations | grep -v volumes > packages/backend/test/docker-compose-dind.yml
                             PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml up --force-recreate -V -d
-                            docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml exec postgres-test psql \$DATABASE_URL -c \"\$PG_MIGRATIONS\"
+                            while ! docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml exec postgres-test psql \$DATABASE_URL -c \"\$PG_MIGRATIONS\"; do sleep 1 ; done
                             """
                         }
                     },
