@@ -35,13 +35,15 @@ node('rating-tracker-build') {
                     testenv: {
                         stage('Start test environment') {
                             // Create migration script from all migrations and inject IP and ports into test environment
+                            // Since the Jenkins agent is running in a Docker container itself, we cannot mount the script directly
                             sh """
                             sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
                             eval \$(cat packages/backend/test/.env | grep DATABASE_URL)
                             PG_MIGRATIONS=\$(cat packages/backend/prisma/migrations/*/migration.sql | grep -v \"^--\")
                             cat packages/backend/test/docker-compose.yml | grep -v all_migrations | grep -v volumes > packages/backend/test/docker-compose-dind.yml
                             PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml up --force-recreate -V -d
-                            while ! docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml exec postgres-test psql \$DATABASE_URL -c \"\$PG_MIGRATIONS\"; do sleep 1 ; done
+                            docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml exec postgres-test echo \$PG_MIGRATIONS > /docker-entrypoint-initdb.d/all_migrations.sql
+                            # while ! docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml exec postgres-test psql \$DATABASE_URL -c \"\$PG_MIGRATIONS\"; do sleep 1 ; done
                             """
                         }
                     },
