@@ -1213,7 +1213,7 @@ __metadata:
     "@simplewebauthn/server": 7.4.0
     "@types/cron": 2.0.1
     "@types/express": 4.17.17
-    "@types/node": 18.17.4
+    "@types/node": 18.17.5
     "@types/selenium-webdriver": 4.1.15
     "@types/supertest": 2.0.12
     "@typescript-eslint/eslint-plugin": 6.3.0
@@ -1286,7 +1286,7 @@ __metadata:
     "@rating-tracker/commons": "workspace:*"
     "@rating-tracker/wasm": "workspace:*"
     "@simplewebauthn/browser": 7.4.0
-    "@types/node": 18.17.4
+    "@types/node": 18.17.5
     "@types/react": 18.2.20
     "@types/react-dom": 18.2.7
     "@typescript-eslint/eslint-plugin": 6.3.0
@@ -1797,10 +1797,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.17.4, @types/node@npm:^18.11.9":
-  version: 18.17.4
-  resolution: "@types/node@npm:18.17.4"
-  checksum: d4c458202d82c999f38d85ca9ae8a2d3e521645c7f1b908cd6a0303d0e13c7d5eb3f888c41f584ba029ecf802d0a0005b7816c149400371a3c035abc4bd9a4c5
+"@types/node@npm:18.17.5, @types/node@npm:^18.11.9":
+  version: 18.17.5
+  resolution: "@types/node@npm:18.17.5"
+  checksum: b8c658a99234b99425243c324b641ed7b9ceb6bee6b06421fdc9bb7c58f9a5552e353225cc549e6982462ac384abe1985022ed76e2e4728797f59b21f659ca2b
   languageName: node
   linkType: hard
 
