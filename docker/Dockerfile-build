@@ -5,15 +5,16 @@ ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Copy project files and WebAssembly package
-COPY . .
+# Copy project files as well as Swagger UI files and WebAssembly package
 COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
+COPY .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js /workdir/app/public/api-docs/
+COPY . .
 
-# Build Node.js bundle
-RUN yarn build
-
-# Create directories for target container and copy only necessary files
-RUN mkdir -p app/public app/prisma/client && \
+RUN \
+  # Build Node.js bundle
+  yarn build && \
+  # Create directories for target container and copy only necessary files
+  mkdir -p app/public app/prisma/client && \
   cp packages/backend/dist/server.mjs app && \
   cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* app/prisma/client && \
   cp -r packages/frontend/dist/* app/public

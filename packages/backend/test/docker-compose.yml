@@ -27,4 +27,6 @@ services:
       POSTGRES_DB: "rating-tracker-test"
       POSTGRES_USER: "rating-tracker-test"
       POSTGRES_PASSWORD: "rating-tracker-test"
+    volumes:
+      - ./all_migrations.sql:/docker-entrypoint-initdb.d/all_migrations.sql
     shm_size: '256mb'

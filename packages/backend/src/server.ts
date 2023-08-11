@@ -140,7 +140,19 @@ server.app.use((req, res, next) => {
 });
 
 // Host the OpenAPI UI
-server.app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(openapiDocument));
+server.app.use(
+  "/api-docs",
+  SwaggerUI.serve,
+  SwaggerUI.setup(
+    openapiDocument,
+    undefined,
+    undefined,
+    undefined,
+    "/assets/images/favicon-dev/favicon-192.png",
+    undefined,
+    "Rating Tracker API",
+  ),
+);
 
 // Host the OpenAPI JSON configuration
 server.app.get("/api-spec/v3", (_, res) => res.json(openapiDocument));

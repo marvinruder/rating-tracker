@@ -48,6 +48,6 @@ USER node
 COPY --from=assemble --chown=node:node /workdir/app .
 
 # Define health check
-HEALTHCHECK --interval=5m --start-period=15s CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
+HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
 CMD [ "dumb-init", "node", "server.mjs" ]

@@ -15,11 +15,8 @@ COPY packages/wasm/package.json ./packages/wasm/
 # Install dependencies
 RUN yarn --immutable
 
-# Copy files required for Prisma
+# Generate Prisma client
 COPY packages/backend/prisma ./packages/backend/prisma
-COPY packages/backend/test/.env ./packages/backend/test/
-
-# Initialize Prisma for tests and generate client
-RUN yarn workspace @rating-tracker/backend test:prisma:migrate:init
+RUN yarn workspace @rating-tracker/backend prisma:generate
 
 ENTRYPOINT [ "/bin/sh" ]
