@@ -6,5 +6,5 @@
     "jsx": "react-jsx",
     "rootDir": "."
   },
-  "include": ["src", "package.json"]
+  "include": ["src", "package.json", "vite.config.ts"]
 }
