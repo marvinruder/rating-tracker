@@ -1,4 +1,4 @@
-import { Country, countryArray } from "./Country.js";
+import { Country, countryArray } from "./Country";
 
 /**
  * An array of region identifiers.

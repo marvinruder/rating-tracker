@@ -10,9 +10,9 @@ import {
   fetchSustainalyticsEndpointPath,
 } from "@rating-tracker/commons";
 import chalk from "chalk";
-import logger, { PREFIX_CRON } from "./logger.js";
-import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal.js";
-import APIError from "./apiError.js";
+import logger, { PREFIX_CRON } from "./logger";
+import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal";
+import APIError from "./apiError";
 
 /**
  * Creates Cron jobs for regular fetching from data providers.

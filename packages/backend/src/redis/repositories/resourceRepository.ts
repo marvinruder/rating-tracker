@@ -1,8 +1,8 @@
 import chalk from "chalk";
-import APIError from "../../utils/apiError.js";
-import logger, { PREFIX_REDIS } from "../../utils/logger.js";
-import { isExistingResourceEntity, resourceSchema } from "../../models/resource.js";
-import redis from "../redis.js";
+import APIError from "../../utils/apiError";
+import logger, { PREFIX_REDIS } from "../../utils/logger";
+import { isExistingResourceEntity, resourceSchema } from "../../models/resource";
+import redis from "../redis";
 import { Entity, EntityId, Repository } from "redis-om";
 import { Resource } from "@rating-tracker/commons";
 

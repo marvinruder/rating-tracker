@@ -1,10 +1,10 @@
-import APIError from "../../utils/apiError.js";
-import { isExistingSessionEntity, sessionSchema } from "../../models/session.js";
+import APIError from "../../utils/apiError";
+import { isExistingSessionEntity, sessionSchema } from "../../models/session";
 import chalk from "chalk";
 import { Session, User } from "@rating-tracker/commons";
-import { readUser } from "../../db/tables/userTable.js";
-import logger, { PREFIX_REDIS } from "../../utils/logger.js";
-import redis from "../redis.js";
+import { readUser } from "../../db/tables/userTable";
+import logger, { PREFIX_REDIS } from "../../utils/logger";
+import redis from "../redis";
 import { Entity, EntityId, Repository } from "redis-om";
 
 /**

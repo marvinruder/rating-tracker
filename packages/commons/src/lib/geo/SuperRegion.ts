@@ -1,4 +1,4 @@
-import { Region, regionArray } from "./Region.js";
+import { Region, regionArray } from "./Region";
 
 /**
  * An array of super region identifiers.

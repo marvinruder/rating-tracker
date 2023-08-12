@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import { REGEX_PHONE_NUMBER } from "@rating-tracker/commons";
 
 /**

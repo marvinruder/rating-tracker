@@ -7,7 +7,7 @@ import {
   STOCK_UPDATE_MESSAGE,
 } from "@rating-tracker/commons";
 import client from "../../src/db/client";
-import { addDynamicAttributesToStockData } from "../../src/models/dynamicStockAttributes.js";
+import { addDynamicAttributesToStockData } from "../../src/models/dynamicStockAttributes";
 
 const stockData: Stock[] = [
   {

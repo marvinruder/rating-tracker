@@ -13,11 +13,11 @@ export default class APIError extends Error {
   constructor(httpStatus: number, message: string) {
     super(message);
     Error.captureStackTrace(this, this.constructor);
-    this.name = this.constructor.name;
     this.message = message;
     this.status = httpStatus;
 
     // Set the prototype explicitly.
+    APIError.prototype.name = "APIError";
     Object.setPrototypeOf(this, APIError.prototype);
   }
 }

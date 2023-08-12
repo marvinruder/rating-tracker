@@ -1,5 +1,5 @@
-import { MessageType } from "../MessageType.js";
-import { OmitFunctions } from "../OmitFunctions.js";
+import { MessageType } from "../MessageType";
+import { OmitFunctions } from "../OmitFunctions";
 
 /**
  * A regular expression that matches a phone number in E.164 format or an empty string.

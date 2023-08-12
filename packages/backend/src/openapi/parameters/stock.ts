@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 /**
  * The zero-based offset of a list. Used for pagination.

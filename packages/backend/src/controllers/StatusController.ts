@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { statusEndpointPath } from "@rating-tracker/commons";
-import Router from "../utils/router.js";
-import { redisIsReady } from "../redis/redis.js";
-import { prismaIsReady } from "../db/client.js";
-import { seleniumIsReady } from "../utils/webdriver.js";
-import { signalIsReadyOrUnused } from "../signal/signalBase.js";
+import { Service, serviceArray, statusEndpointPath } from "@rating-tracker/commons";
+import Router from "../utils/router";
+import { redisIsReady } from "../redis/redis";
+import { prismaIsReady } from "../db/client";
+import { seleniumIsReady } from "../utils/webdriver";
+import { signalIsReadyOrUnused } from "../signal/signalBase";
 
 /**
  * This class is responsible for providing a trivial status response whenever the backend API is up and running.
@@ -21,9 +21,26 @@ export class StatusController {
     method: "get",
     accessRights: 0,
   })
-  get(_: Request, res: Response) {
-    Promise.all([redisIsReady(), prismaIsReady(), seleniumIsReady(), signalIsReadyOrUnused()])
-      .then(() => res.status(200).json({ status: "healthy" }).end())
-      .catch((e) => res.status(500).json({ status: "unhealthy", details: e.message }).end());
+  async get(_: Request, res: Response) {
+    let healthy = true;
+    const details: Partial<Record<Service, string>> = {};
+    (
+      await Promise.allSettled([
+        // The order is important here and must match the order in `serviceArray`.
+        prismaIsReady(),
+        redisIsReady(),
+        seleniumIsReady(),
+        signalIsReadyOrUnused(),
+      ])
+    ).forEach((result, index) => {
+      if (result.status === "rejected") {
+        healthy = false;
+        details[serviceArray[index]] = result.reason.message;
+      } else if (result.value) details[serviceArray[index]] = result.value;
+    });
+    res
+      .status(healthy ? 200 : 500)
+      .json({ status: healthy ? "healthy" : "unhealthy", details })
+      .end();
   }
 }

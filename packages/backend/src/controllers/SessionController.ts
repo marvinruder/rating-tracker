@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { GENERAL_ACCESS, sessionEndpointPath } from "@rating-tracker/commons";
-import { deleteSession } from "../redis/repositories/sessionRepository.js";
-import Router from "../utils/router.js";
+import { deleteSession } from "../redis/repositories/sessionRepository";
+import Router from "../utils/router";
 
 /**
  * This class is responsible for handling session information.

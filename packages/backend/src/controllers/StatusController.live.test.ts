@@ -6,10 +6,18 @@ export const suiteName = "Status API";
 export const tests: LiveTestSuite = [];
 
 tests.push({
-  testName: "returns status “healthy”",
+  testName: "returns status “unhealthy”",
   testFunction: async () => {
     const res = await supertest.get(`/api${statusEndpointPath}`);
-    expect(res.status).toBe(200);
-    expect(res.body.status).toBe("healthy");
+    expect(res.status).toBe(500);
+    expect(res.body.status).toBe("unhealthy");
+
+    // Available during live tests:
+    expect(res.body.details).not.toHaveProperty("PostgreSQL");
+    expect(res.body.details).not.toHaveProperty("Redis");
+
+    // Not available during live tests:
+    expect(res.body.details).toHaveProperty("Selenium");
+    expect(res.body.details).toHaveProperty("Signal");
   },
 });

@@ -1,7 +1,7 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { unauthorized } from "../../responses/clientError.js";
-import { noContent, okUser } from "../../responses/success.js";
-import * as user from "../../parameters/user.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import { unauthorized } from "../../responses/clientError";
+import { noContent, okUser } from "../../responses/success";
+import * as user from "../../parameters/user";
 
 /**
  * Get information about the current user

@@ -1,4 +1,4 @@
-import { Industry, industryArray } from "./Industry.js";
+import { Industry, industryArray } from "./Industry";
 
 /**
  * An array of industry groups in the Morningstar Global Equity Classification Structure.

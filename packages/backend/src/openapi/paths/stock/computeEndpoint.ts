@@ -1,6 +1,6 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { unauthorized } from "../../responses/clientError.js";
-import { noContent } from "../../responses/success.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import { unauthorized } from "../../responses/clientError";
+import { noContent } from "../../responses/success";
 
 /**
  * (Re-)Compute dynamic attributes of all stocks.

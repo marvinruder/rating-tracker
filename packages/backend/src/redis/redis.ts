@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import dotenv from "dotenv";
 import { createClient } from "redis";
-import logger, { PREFIX_REDIS } from "../utils/logger.js";
+import logger, { PREFIX_REDIS } from "../utils/logger";
 
 dotenv.config();
 
@@ -20,7 +20,9 @@ redis.on(
   "error", // This error only occurs when Redis server is not available, which is difficult to reproduce.
   /* c8 ignore next */ (err) => logger.error(PREFIX_REDIS + chalk.redBright(`Redis Client: ${err}`)),
 );
-await redis.connect();
+
+// Start server even if Redis is not available at first
+void redis.connect();
 
 /**
  * Checks if the Redis server is reachable.
@@ -35,9 +37,9 @@ export const redisIsReady = (): Promise<void> =>
         .then((pong) =>
           pong === "PONG"
             ? Promise.resolve()
-            : /* c8 ignore next */ Promise.reject(new Error("Redis is not reachable: server responded with " + pong)),
+            : /* c8 ignore next */ Promise.reject(new Error("Redis is not ready: server responded with " + pong)),
         )
-    : /* c8 ignore next */ Promise.reject(new Error("Redis is not ready"));
+    : /* c8 ignore next */ Promise.reject(new Error("Redis is not reachable."));
 // The errors only occurs when Redis server is not available, which is difficult to reproduce.
 
 export default redis;

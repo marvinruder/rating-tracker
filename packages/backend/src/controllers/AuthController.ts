@@ -6,10 +6,10 @@ import SimpleWebAuthnServer, {
 import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
-import { createSession } from "../redis/repositories/sessionRepository.js";
-import APIError from "../utils/apiError.js";
-import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable.js";
-import { sessionTTLInSeconds } from "../redis/repositories/sessionRepository.js";
+import { createSession } from "../redis/repositories/sessionRepository";
+import APIError from "../utils/apiError";
+import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable";
+import { sessionTTLInSeconds } from "../redis/repositories/sessionRepository";
 import {
   ALREADY_REGISTERED_ERROR_MESSAGE,
   GENERAL_ACCESS,
@@ -18,7 +18,7 @@ import {
   signInEndpointPath,
   UserWithCredentials,
 } from "@rating-tracker/commons";
-import Router from "../utils/router.js";
+import Router from "../utils/router";
 
 dotenv.config();
 

@@ -1,7 +1,7 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
-import APIError from "../utils/apiError.js";
+import APIError from "../utils/apiError";
 import chalk from "chalk";
 import {
   fetchMarketScreenerEndpointPath,
@@ -15,19 +15,19 @@ import {
   Stock,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable.js";
-import * as signal from "../signal/signal.js";
-import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
-import { createResource, readResource } from "../redis/repositories/resourceRepository.js";
+import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable";
+import * as signal from "../signal/signal";
+import logger, { PREFIX_SELENIUM } from "../utils/logger";
+import { createResource, readResource } from "../redis/repositories/resourceRepository";
 import axios from "axios";
 import dotenv from "dotenv";
-import Router from "../utils/router.js";
-import { SIGNAL_PREFIX_ERROR } from "../signal/signal.js";
-import morningstarFetcher from "../fetchers/morningstarFetcher.js";
-import marketScreenerFetcher from "../fetchers/marketScreenerFetcher.js";
-import msciFetcher from "../fetchers/msciFetcher.js";
-import refinitivFetcher from "../fetchers/refinitivFetcher.js";
-import spFetcher from "../fetchers/spFetcher.js";
+import Router from "../utils/router";
+import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
+import morningstarFetcher from "../fetchers/morningstarFetcher";
+import marketScreenerFetcher from "../fetchers/marketScreenerFetcher";
+import msciFetcher from "../fetchers/msciFetcher";
+import refinitivFetcher from "../fetchers/refinitivFetcher";
+import spFetcher from "../fetchers/spFetcher";
 
 dotenv.config();
 

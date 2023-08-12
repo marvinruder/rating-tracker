@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import {
   countryArray,
   industryArray,
@@ -8,6 +8,7 @@ import {
   currencyArray,
   msciESGRatingArray,
   REGEX_PHONE_NUMBER,
+  serviceArray,
 } from "@rating-tracker/commons";
 
 export const components: OpenAPIV3.ComponentsObject = {
@@ -394,7 +395,8 @@ export const components: OpenAPIV3.ComponentsObject = {
           type: "string",
         },
         details: {
-          type: "string",
+          type: "object",
+          properties: serviceArray.reduce((object, [key]) => ({ ...object, [key]: { type: "string" } }), {}),
         },
       },
       required: ["status"],

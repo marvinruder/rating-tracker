@@ -1,16 +1,16 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { Request } from "express";
-import { FetcherWorkspace } from "../controllers/FetchController.js";
-// import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver.js";
-import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
+import { FetcherWorkspace } from "../controllers/FetchController";
+// import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver";
+import logger, { PREFIX_SELENIUM } from "../utils/logger";
 import { formatDistance } from "date-fns";
 import { Stock } from "@rating-tracker/commons";
 // import { By, until } from "selenium-webdriver";
 import chalk from "chalk";
-import * as signal from "../signal/signal.js";
-import { SIGNAL_PREFIX_ERROR } from "../signal/signal.js";
-import { readStock, updateStock } from "../db/tables/stockTable.js";
-import APIError from "../utils/apiError.js";
+import * as signal from "../signal/signal";
+import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
+import { readStock, updateStock } from "../db/tables/stockTable";
+import APIError from "../utils/apiError";
 import axios, { AxiosError } from "axios";
 
 /**

@@ -1,5 +1,5 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import * as stock from "./stock.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import * as stock from "./stock";
 
 /**
  * A unique identifier of the watchlist.

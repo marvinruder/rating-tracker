@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { IndustryGroup, industryGroupArray } from "./IndustryGroup.js";
+import { IndustryGroup, industryGroupArray } from "./IndustryGroup";
 
 /**
  * An array of sectors in the Morningstar Global Equity Classification Structure.

@@ -1,6 +1,6 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { forbidden, unauthorized } from "../../responses/clientError.js";
-import { okUserList } from "../../responses/success.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import { forbidden, unauthorized } from "../../responses/clientError";
+import { okUserList } from "../../responses/success";
 
 /**
  * Get a list of users.

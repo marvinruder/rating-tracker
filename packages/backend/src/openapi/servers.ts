@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 dotenv.config();
 

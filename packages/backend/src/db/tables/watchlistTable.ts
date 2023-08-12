@@ -1,8 +1,8 @@
-import APIError from "../../utils/apiError.js";
-import logger, { PREFIX_POSTGRES } from "../../utils/logger.js";
+import APIError from "../../utils/apiError";
+import logger, { PREFIX_POSTGRES } from "../../utils/logger";
 import { FAVORITES_NAME, Watchlist, WatchlistSummary } from "@rating-tracker/commons";
-import client from "../client.js";
-import { readStock } from "./stockTable.js";
+import client from "../client";
+import { readStock } from "./stockTable";
 
 /**
  * Check whether the given user is the owner of the specified watchlist.

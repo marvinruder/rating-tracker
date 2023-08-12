@@ -5,14 +5,14 @@ import {
   watchlistEndpointPath,
   watchlistSummaryEndpointPath,
 } from "@rating-tracker/commons";
-import Router from "../utils/router.js";
+import Router from "../utils/router";
 import {
   createWatchlist,
   deleteWatchlist,
   readAllWatchlists,
   readWatchlist,
   updateWatchlist,
-} from "../db/tables/watchlistTable.js";
+} from "../db/tables/watchlistTable";
 
 /**
  * This class is responsible for handling watchlist information.

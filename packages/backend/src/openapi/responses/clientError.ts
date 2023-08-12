@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 /**
  * A response with a 400 Bad Request status code and an Error object body.

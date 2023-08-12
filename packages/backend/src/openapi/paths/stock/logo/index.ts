@@ -1,8 +1,8 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import * as stock from "../../../parameters/stock.js";
-import { notFound, unauthorized } from "../../../responses/clientError.js";
-import { badGateway } from "../../../responses/serverError.js";
-import { okSVG } from "../../../responses/success.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import * as stock from "../../../parameters/stock";
+import { notFound, unauthorized } from "../../../responses/clientError";
+import { badGateway } from "../../../responses/serverError";
+import { okSVG } from "../../../responses/success";
 
 /**
  * Get the logo for the specified stock

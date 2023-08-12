@@ -1,9 +1,9 @@
-import APIError from "../../utils/apiError.js";
+import APIError from "../../utils/apiError";
 import { User, UserWithCredentials } from "@rating-tracker/commons";
 import chalk from "chalk";
-import * as signal from "../../signal/signal.js";
-import logger, { PREFIX_POSTGRES } from "../../utils/logger.js";
-import client from "../client.js";
+import * as signal from "../../signal/signal";
+import logger, { PREFIX_POSTGRES } from "../../utils/logger";
+import client from "../client";
 
 /**
  * Create a user with credentials.

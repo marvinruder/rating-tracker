@@ -5,8 +5,8 @@ import {
   userListEndpointPath,
   userManagementEndpointPath,
 } from "@rating-tracker/commons";
-import { deleteUser, readAllUsers, readUser, updateUserWithCredentials } from "../db/tables/userTable.js";
-import Router from "../utils/router.js";
+import { deleteUser, readAllUsers, readUser, updateUserWithCredentials } from "../db/tables/userTable";
+import Router from "../utils/router";
 
 /**
  * This class is responsible for handling information of other users.

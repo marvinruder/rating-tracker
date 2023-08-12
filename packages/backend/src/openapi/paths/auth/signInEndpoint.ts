@@ -1,7 +1,7 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { badRequest, forbidden, notFound, tooManyRequestsHTML } from "../../responses/clientError.js";
-import { internalServerError } from "../../responses/serverError.js";
-import { noContent, okObject } from "../../responses/success.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import { badRequest, forbidden, notFound, tooManyRequestsHTML } from "../../responses/clientError";
+import { internalServerError } from "../../responses/serverError";
+import { noContent, okObject } from "../../responses/success";
 
 /**
  * Get a challenge for authenticating as a registered user via WebAuthn standard

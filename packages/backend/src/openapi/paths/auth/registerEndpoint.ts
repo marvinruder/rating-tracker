@@ -1,8 +1,8 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import * as user from "../../parameters/user.js";
-import { badRequest, forbidden, tooManyRequestsHTML } from "../../responses/clientError.js";
-import { internalServerError } from "../../responses/serverError.js";
-import { created, okObject } from "../../responses/success.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import * as user from "../../parameters/user";
+import { badRequest, forbidden, tooManyRequestsHTML } from "../../responses/clientError";
+import { internalServerError } from "../../responses/serverError";
+import { created, okObject } from "../../responses/success";
 
 /**
  * Get a challenge for registering a new user via WebAuthn standard

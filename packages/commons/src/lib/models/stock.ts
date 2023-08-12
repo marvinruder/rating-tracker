@@ -1,10 +1,10 @@
-import { Currency } from "../Currency.js";
-import { Country } from "../geo/Country.js";
-import { Industry } from "../gecs/Industry.js";
-import { MSCIESGRating } from "../ratings/MSCI.js";
-import { Size } from "../stylebox/Size.js";
-import { Style } from "../stylebox/Style.js";
-import { OmitFunctions } from "../OmitFunctions.js";
+import { Currency } from "../Currency";
+import { Country } from "../geo/Country";
+import { Industry } from "../gecs/Industry";
+import { MSCIESGRating } from "../ratings/MSCI";
+import { Size } from "../stylebox/Size";
+import { Style } from "../stylebox/Style";
+import { OmitFunctions } from "../OmitFunctions";
 
 /**
  * A stock, with core information like its ticker, name, ISIN, country, industry, etc., financial information like its
