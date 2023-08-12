@@ -7,7 +7,7 @@ WORKDIR /workdir
 COPY . .
 
 # Run validations
-RUN yarn validate > validator.log
+RUN yarn validate | tee validator.log
 
 FROM node:20.5.1-alpine as build
 LABEL stage=build
