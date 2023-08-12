@@ -73,6 +73,8 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
       ) {
         // If the content is available for premium subscribers only, we throw an error.
         // Sadly, we are not a premium subscriber :(
+        // We will still count this as a successful fetch
+        await updateStock(stock.ticker, { spLastFetch: new Date() });
         throw new Error(SP_PREMIUM_STOCK_ERROR_MESSAGE);
       }
 

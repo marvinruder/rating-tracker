@@ -1,16 +1,17 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { Request } from "express";
 import { FetcherWorkspace } from "../controllers/FetchController.js";
-import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver.js";
+// import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver.js";
 import logger, { PREFIX_SELENIUM } from "../utils/logger.js";
 import { formatDistance } from "date-fns";
 import { Stock } from "@rating-tracker/commons";
-import { By, until } from "selenium-webdriver";
+// import { By, until } from "selenium-webdriver";
 import chalk from "chalk";
 import * as signal from "../signal/signal.js";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal.js";
 import { readStock, updateStock } from "../db/tables/stockTable.js";
 import APIError from "../utils/apiError.js";
+import axios, { AxiosError } from "axios";
 
 /**
  * Fetches data from Refinitiv.
@@ -21,9 +22,9 @@ import APIError from "../utils/apiError.js";
  * @throws an {@link APIError} in case of a severe error
  */
 const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise<void> => {
-  // Acquire a new session
-  const driver = await getDriver(true);
-  const sessionID = (await driver.getSession()).getId();
+  // // Acquire a new session
+  // const driver = await getDriver(true);
+  // const sessionID = (await driver.getSession()).getId();
 
   // Work while stocks are in the queue
   while (stocks.queued.length) {
@@ -54,27 +55,33 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
     let refinitivEmissions: number = req.query.clear ? null : undefined;
 
     try {
-      // Delete all cookies since Refinitiv allows only 100 requests per session.
-      await driver.manage().deleteAllCookies();
+      // // Delete all cookies since Refinitiv allows only 100 requests per session.
+      // await driver.manage().deleteAllCookies();
       const url = `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`;
-      const driverHealthy = await openPageAndWait(driver, url);
-      // When we were unable to open the page, we assume the driver is unhealthy and end.
-      if (!driverHealthy) {
-        // Have another driver attempt the fetch of the current stock
-        stocks.queued.push(stock);
-        break;
-      }
-      // Wait for the page to load for a maximum of 5 seconds.
-      await driver.wait(until.elementLocated(By.css("pre")), 5000);
+      // const driverHealthy = await openPageAndWait(driver, url);
+      // // When we were unable to open the page, we assume the driver is unhealthy and end.
+      // if (!driverHealthy) {
+      //   // Have another driver attempt the fetch of the current stock
+      //   stocks.queued.push(stock);
+      //   break;
+      // }
+      // // Wait for the page to load for a maximum of 5 seconds.
+      // await driver.wait(until.elementLocated(By.css("pre")), 5000);
 
-      // Extract the JSON content from the page.
-      const refinitivJSONText = await driver.findElement(By.css("pre")).getText();
+      // // Extract the JSON content from the page.
+      // const refinitivJSONText = await driver.findElement(By.css("pre")).getText();
 
-      if (refinitivJSONText === "{}") {
+      // if (refinitivJSONText === "{}") {
+      //   throw new APIError(502, "No Refinitiv information available.");
+      // }
+
+      const refinitivJSON = (await axios.get(url)).data;
+
+      if (Object.keys(refinitivJSON).length === 0 && refinitivJSON.constructor === Object) {
         throw new APIError(502, "No Refinitiv information available.");
       }
 
-      const refinitivJSON = JSON.parse(refinitivJSONText);
+      // const refinitivJSON = JSON.parse(refinitivJSONText);
 
       if (refinitivJSON.status && refinitivJSON.status.limitExceeded === true) {
         // If the limit has been exceeded, we stop fetching data and throw an error.
@@ -132,8 +139,9 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       });
       if (errorMessage.includes("\n")) {
         // An error occurred if and only if the error message contains a newline character.
-        // We take a screenshot and send a message.
-        errorMessage += `\n${await takeScreenshot(driver, stock, "refinitiv")}`;
+        // // We take a screenshot and send a message.
+        // errorMessage += `\n${await takeScreenshot(driver, stock, "refinitiv")}`;
+        errorMessage += `\nServer response: ${JSON.stringify(refinitivJSON)}`;
         await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
         stocks.failed.push(await readStock(stock.ticker));
       } else {
@@ -142,8 +150,8 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
     } catch (e) {
       stocks.failed.push(stock);
       if (req.query.ticker) {
-        // If this request was for a single stock, we shut down the driver and throw an error.
-        await quitDriver(driver, sessionID);
+        // // If this request was for a single stock, we shut down the driver and throw an error.
+        // await quitDriver(driver, sessionID);
         throw new APIError(
           (e as Error).message.includes("Limit exceeded") ? 429 : 502,
           `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${String(e.message).split(/[\n:{]/)[0]}`,
@@ -171,9 +179,13 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       );
       await signal.sendMessage(
         SIGNAL_PREFIX_ERROR +
-          `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${
-            String(e.message).split(/[\n:{]/)[0]
-          }\n${await takeScreenshot(driver, stock, "refinitiv")}`,
+          `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${String(e.message).split(/[\n:{]/)[0]}\n` +
+          (e instanceof AxiosError
+            ? `Server response: ${
+                e.response?.data ? JSON.stringify(e.response.data).substring(0, 1024) : e.response?.statusText
+              }`
+            : "Server response not available."),
+        // }\n${await takeScreenshot(driver, stock, "refinitiv")}`,
         "fetchError",
       );
     }
@@ -201,8 +213,8 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       break;
     }
   }
-  // The queue is now empty, we end the session.
-  await quitDriver(driver, sessionID);
+  // // The queue is now empty, we end the session.
+  // await quitDriver(driver, sessionID);
 };
 
 export default refinitivFetcher;
