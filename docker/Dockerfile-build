@@ -1,3 +1,14 @@
+FROM node:20.5.1-alpine as validator
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
+
+# Copy project files
+COPY . .
+
+# Run validations
+RUN yarn validate > validator.log
+
 FROM node:20.5.1-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
@@ -24,5 +35,8 @@ RUN \
   cp packages/backend/dist/server.mjs app && \
   cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* app/prisma/client && \
   cp -r packages/frontend/dist/* app/public
+
+# Add dummy file from validator stage to make sure the validation is run
+COPY --from=validator /workdir/validator.log /tmp/validator.log
 
 ENTRYPOINT [ "/bin/sh" ]

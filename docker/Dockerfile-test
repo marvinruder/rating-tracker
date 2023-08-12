@@ -8,8 +8,8 @@ ENV SIGNAL_SENDER +493012345678
 WORKDIR /workdir
 
 # Copy project files and WebAssembly package
-COPY . .
 COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
+COPY . .
 
 # Run tests
 RUN yarn test

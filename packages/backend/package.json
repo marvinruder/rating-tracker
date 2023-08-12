@@ -26,7 +26,7 @@
     "prisma:generate": "pnpify prisma generate",
     "prisma:migrate:dev": "pnpify prisma migrate dev",
     "build": "esbuild --color=true src/server.ts --bundle --platform=node --format=esm --legal-comments=none --banner:js=\"import __path from'path';import{createRequire}from'module';import{fileURLToPath}from'url';const require=createRequire(import.meta.url),__filename=fileURLToPath(import.meta.url),__dirname=__path.dirname(__filename);\" --outfile=dist/server.mjs",
-    "lint": "eslint --cache --ext .ts src/",
+    "validate": "tsc --noEmit && eslint --cache --max-warnings 0 --ext .ts src/",
     "lint:fix": "eslint --cache --ext .ts src/ --fix"
   },
   "dependencies": {
