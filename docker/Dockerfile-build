@@ -3,11 +3,14 @@ ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Copy project files
+# Copy project files and WebAssembly package
+COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
 COPY . .
 
 # Run validations
-RUN yarn validate | tee validator.log
+RUN \
+  set -o pipefail && \
+  yarn validate | tee validator.log
 
 FROM node:20.5.1-alpine as build
 LABEL stage=build
