@@ -17,6 +17,8 @@ COPY . .
 RUN \
   # Build Node.js bundle
   yarn build && \
+  # Parse Node.js bundle
+  /bin/sh -c 'cd packages/backend && cp test/.env . && (cat dist/server.mjs && echo "process.exit(0);") | node --input-type=module && rm .env' && \
   # Create directories for target container and copy only necessary files
   mkdir -p app/public app/prisma/client && \
   cp packages/backend/dist/server.mjs app && \

@@ -12,9 +12,7 @@ COPY . .
 COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
 
 # Run tests
-RUN \
-  yarn workspace @rating-tracker/commons build && \
-  yarn test
+RUN yarn test
 
 FROM eclipse-temurin:17.0.8_7-jre-jammy as codacy
 
