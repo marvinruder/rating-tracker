@@ -9,6 +9,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
+  "ignorePatterns": ["dist"],
   "plugins": ["@typescript-eslint", "prettier", "jsdoc"],
   "rules": {
     "prettier/prettier": ["warn"],
@@ -28,6 +29,5 @@
         "code": 120
       }
     ]
-  },
-  "ignorePatterns": ["vitest.config.ts"]
+  }
 }

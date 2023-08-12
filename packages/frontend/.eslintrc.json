@@ -37,6 +37,5 @@
         "code": 120
       }
     ]
-  },
-  "ignorePatterns": ["vite.config.ts"]
+  }
 }
