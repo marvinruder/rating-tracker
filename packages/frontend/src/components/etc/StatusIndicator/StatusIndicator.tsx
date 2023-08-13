@@ -26,7 +26,10 @@ export const StatusIndicator: FC<StatusIndicatorProps> = (props: StatusIndicator
           width: theme.typography.body1.fontSize,
           height: theme.typography.body1.fontSize,
           color,
-          filter: `drop-shadow(0 0 calc(${theme.typography.body1.fontSize}px * 0.2) ${color})`,
+          filter:
+            props.status === "N/A"
+              ? undefined
+              : `drop-shadow(0 0 calc(${theme.typography.body1.fontSize}px * 0.2) ${color})`,
         }}
       />
     </Box>
