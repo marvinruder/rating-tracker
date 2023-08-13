@@ -1,3 +1,15 @@
+FROM node:20.5.1-alpine as validator
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
+
+# Copy project files and WebAssembly package
+COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
+COPY . .
+
+# Run validations
+RUN yarn validate
+
 FROM node:20.5.1-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
@@ -24,5 +36,8 @@ RUN \
   cp packages/backend/dist/server.mjs app && \
   cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* app/prisma/client && \
   cp -r packages/frontend/dist/* app/public
+
+# Add eslint cache
+COPY --from=validator /workdir/.eslintcache .
 
 ENTRYPOINT [ "/bin/sh" ]

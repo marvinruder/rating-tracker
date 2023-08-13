@@ -1,4 +1,4 @@
-import { startup } from "./startup.js";
+import { startup } from "./startup";
 
 vi.hoisted(() => {
   // Hide console messages

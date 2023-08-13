@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 /**
  * A response with a 500 Internal Server Error status code and an Error object body.

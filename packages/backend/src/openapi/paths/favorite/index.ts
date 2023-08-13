@@ -1,7 +1,7 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { created, noContent } from "../../responses/success.js";
-import { notFound, unauthorized } from "../../responses/clientError.js";
-import * as stock from "../../parameters/stock.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import { created, noContent } from "../../responses/success";
+import { notFound, unauthorized } from "../../responses/clientError";
+import * as stock from "../../parameters/stock";
 
 /**
  * Add a favorite.

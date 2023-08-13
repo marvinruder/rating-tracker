@@ -1,7 +1,7 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { notFound, unauthorized } from "../../responses/clientError.js";
-import { notImplemented } from "../../responses/serverError.js";
-import { ok } from "../../responses/success.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import { notFound, unauthorized } from "../../responses/clientError";
+import { notImplemented } from "../../responses/serverError";
+import { ok } from "../../responses/success";
 
 /**
  * Get the specified resource

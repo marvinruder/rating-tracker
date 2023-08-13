@@ -1,8 +1,8 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import * as stock from "../../parameters/stock.js";
-import * as watchlist from "../../parameters/watchlist.js";
-import { forbidden, unauthorized } from "../../responses/clientError.js";
-import { okStockListWithCount } from "../../responses/success.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import * as stock from "../../parameters/stock";
+import * as watchlist from "../../parameters/watchlist";
+import { forbidden, unauthorized } from "../../responses/clientError";
+import { okStockListWithCount } from "../../responses/success";
 
 /**
  * Get a list of stocks. Supports pagination.

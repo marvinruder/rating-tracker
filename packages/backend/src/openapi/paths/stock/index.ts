@@ -1,7 +1,7 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { badRequest, conflict, forbidden, notFound, unauthorized } from "../../responses/clientError.js";
-import { created, noContent, okStock } from "../../responses/success.js";
-import * as stock from "../../parameters/stock.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import { badRequest, conflict, forbidden, notFound, unauthorized } from "../../responses/clientError";
+import { created, noContent, okStock } from "../../responses/success";
+import * as stock from "../../parameters/stock";
 
 /**
  * Get the specified stock

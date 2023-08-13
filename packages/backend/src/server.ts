@@ -1,34 +1,34 @@
-import "./utils/startup.js";
+import "./utils/startup";
 
 import { randomUUID } from "node:crypto";
 import cookieParser from "cookie-parser";
 import express from "express";
-import { router } from "./utils/router.js";
+import { router } from "./utils/router";
 import SwaggerUI from "swagger-ui-express";
-import openapiDocument from "./openapi/index.js";
+import openapiDocument from "./openapi/index";
 import * as OpenApiValidator from "express-openapi-validator";
 import chalk from "chalk";
 import responseTime from "response-time";
-import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository.js";
+import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository";
 import path from "path";
-import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger.js";
-import errorHandler from "./utils/errorHandler.js";
-import setupCronJobs from "./utils/cron.js";
+import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger";
+import errorHandler from "./utils/errorHandler";
+import setupCronJobs from "./utils/cron";
 import dotenv from "dotenv";
 dotenv.config();
 
 // Import all controllers
-import "./controllers/AuthController.js";
-import "./controllers/FavoriteController.js";
-import "./controllers/FetchController.js";
-import "./controllers/ResourceController.js";
-import "./controllers/SessionController.js";
-import "./controllers/SessionController.js";
-import "./controllers/StatusController.js";
-import "./controllers/StockController.js";
-import "./controllers/UserController.js";
-import "./controllers/UserManagementController.js";
-import "./controllers/WatchlistController.js";
+import "./controllers/AuthController";
+import "./controllers/FavoriteController";
+import "./controllers/FetchController";
+import "./controllers/ResourceController";
+import "./controllers/SessionController";
+import "./controllers/SessionController";
+import "./controllers/StatusController";
+import "./controllers/StockController";
+import "./controllers/UserController";
+import "./controllers/UserManagementController";
+import "./controllers/WatchlistController";
 
 /**
  * A token that is used to bypass authentication for requests sent by Cron jobs. It is generated randomly and changes on

@@ -5,7 +5,7 @@ import {
   STOCK_UPDATE_MESSAGE,
   FETCH_ERROR_MESSAGE,
   ADMINISTRATIVE_MESSAGE,
-} from "./models/user.js";
+} from "./models/user";
 
 /**
  * An array of types of messages that can be sent to a user.

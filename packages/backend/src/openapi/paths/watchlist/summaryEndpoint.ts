@@ -1,6 +1,6 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import { unauthorized } from "../../responses/clientError.js";
-import { okWatchlistSummary } from "../../responses/success.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import { unauthorized } from "../../responses/clientError";
+import { okWatchlistSummary } from "../../responses/success";
 
 /**
  * Get a list of watchlists.

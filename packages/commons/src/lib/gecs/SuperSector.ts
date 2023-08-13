@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { Sector, sectorArray } from "./Sector.js";
+import { Sector, sectorArray } from "./Sector";
 
 /**
  * An array of super sectors in the Morningstar Global Equity Classification Structure.

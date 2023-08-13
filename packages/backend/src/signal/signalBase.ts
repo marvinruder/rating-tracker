@@ -1,7 +1,6 @@
-// This file is not tested because tests must not depend on a running Signal Client instance
 import axios, { AxiosError } from "axios";
 import chalk from "chalk";
-import logger, { PREFIX_SIGNAL } from "../utils/logger.js";
+import logger, { PREFIX_SIGNAL } from "../utils/logger";
 
 /**
  * Checks if the Signal Client instance is reachable.
@@ -16,11 +15,13 @@ export const signalIsReadyOrUnused = (): Promise<string | void> =>
         .then((res) => (res.status === 204 ? Promise.resolve() : Promise.reject(new Error("Signal is not ready"))))
         .catch((e) =>
           e instanceof AxiosError
-            ? Promise.reject(new Error("Signal is not reachable: " + e.message))
-            : Promise.reject(e),
+            ? Promise.reject(new Error("Signal is not reachable: " + e.message)) // Only this occurs within test setup
+            : /* c8 ignore next */ Promise.reject(e),
         )
-    : Promise.resolve("No Signal URL provided, skipping health check");
+    : /* c8 ignore next */ Promise.resolve("Signal is not configured on this instance.");
 
+// This function is mocked because tests must not depend on a running Signal Client instance
+/* c8 ignore start */
 /**
  * Send a message to a list of recipients.
  *
@@ -45,3 +46,4 @@ export const send = (url: string, message: string, number: string, recipients: s
         .forEach((line) => logger.error(line));
     });
 };
+/* c8 ignore stop */

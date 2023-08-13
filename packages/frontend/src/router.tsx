@@ -20,14 +20,16 @@ export const baseUrl = `${document.location.protocol}//${document.location.hostn
  * @param {React.LazyExoticComponent<React.ComponentType<any>>} Component The component to wrap.
  * @returns {JSX.Element} The component.
  */
-const loader = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => {
+const loader = (
+  Component: React.LazyExoticComponent<React.ComponentType<any>>,
+): ((props: JSX.IntrinsicAttributes) => JSX.Element) => {
   /**
    * A wrapper for the suspense loader.
    *
    * @param {JSX.IntrinsicAttributes} props The properties to pass to the component.
    * @returns {JSX.Element} The component.
    */
-  const SuspenseWrapper = (props: JSX.IntrinsicAttributes) => {
+  const SuspenseWrapper = (props: JSX.IntrinsicAttributes): JSX.Element => {
     return (
       <Suspense fallback={<SuspenseLoader />}>
         <Component {...props} />

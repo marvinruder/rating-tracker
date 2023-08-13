@@ -1,7 +1,7 @@
 import { MessageType, REGEX_PHONE_NUMBER, Stock } from "@rating-tracker/commons";
-import { readAllUsers } from "../db/tables/userTable.js";
-import { readUsersWithStockOnSubscribedWatchlist } from "../db/tables/userTable.js";
-import { send } from "./signalBase.js";
+import { readAllUsers } from "../db/tables/userTable";
+import { readUsersWithStockOnSubscribedWatchlist } from "../db/tables/userTable";
+import { send } from "./signalBase";
 
 export const SIGNAL_PREFIX_ERROR = "⚠️ " as const;
 export const SIGNAL_PREFIX_INFO = "ℹ️ " as const;

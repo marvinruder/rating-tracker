@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { NextFunction, Request, Response } from "express";
-import logger, { PREFIX_NODEJS } from "./logger.js";
+import logger, { PREFIX_NODEJS } from "./logger";
 
 /**
  * An error handler. Logs an error and sends an error response to the client.

@@ -1,9 +1,9 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
-import * as fetch from "../../parameters/fetch.js";
-import * as stock from "../../parameters/stock.js";
-import { forbidden, notFound, unauthorized } from "../../responses/clientError.js";
-import { badGateway } from "../../responses/serverError.js";
-import { accepted, noContent, okStockList } from "../../responses/success.js";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import * as fetch from "../../parameters/fetch";
+import * as stock from "../../parameters/stock";
+import { forbidden, notFound, unauthorized } from "../../responses/clientError";
+import { badGateway } from "../../responses/serverError";
+import { accepted, noContent, okStockList } from "../../responses/success";
 
 /**
  * Fetch information from Market Screener

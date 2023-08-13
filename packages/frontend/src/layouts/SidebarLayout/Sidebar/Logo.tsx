@@ -1,4 +1,4 @@
-import { Badge, Box, useTheme } from "@mui/material";
+import { Badge, Box, Typography, useTheme } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import packageInfo from "../../../../package.json";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
@@ -14,13 +14,18 @@ export const Logo = (): JSX.Element => {
     <NavLink
       to="/"
       style={{
-        color: theme.sidebar.textColor,
+        color: theme.colors.alpha.trueWhite[70],
         display: "flex",
+        justifyContent: "space-between",
+        alignItems: "end",
         textDecoration: "none",
         fontWeight: "bold",
       }}
     >
-      <Box sx={{ height: 52, transform: "scale(0.8)", fontSize: 52 }}>
+      <Typography variant="h2" fontSize={18}>
+        Rating Tracker
+      </Typography>
+      <Box sx={{ height: 52, transform: "scale(0.83)", fontSize: 52, color: theme.colors.alpha.trueWhite[30] }}>
         <Badge
           badgeContent={packageInfo.version}
           color="success"
@@ -28,9 +33,6 @@ export const Logo = (): JSX.Element => {
         >
           <QueryStatsIcon fontSize="inherit" />
         </Badge>
-      </Box>
-      <Box display="flex" alignItems="flex-end" height={52} pl={2}>
-        <Box sx={{ fontSize: 15, fontWeight: "bold" }}>Rating Tracker</Box>
       </Box>
     </NavLink>
   );
