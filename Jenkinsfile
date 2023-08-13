@@ -91,7 +91,7 @@ node('rating-tracker-build') {
                     },
                     build: {
                         stage ('Build Docker Image') {
-                            docker.build("$imagename:job$JOB_ID-build", "-f docker/Dockerfile-build .")
+                            docker.build("$imagename:job$JOB_ID-build", "-f docker/Dockerfile-build --force-rm .")
 
                             // Copy build artifacts to workspace
                             sh """
