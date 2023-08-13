@@ -26,7 +26,7 @@ node('rating-tracker-build') {
                             sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
 
                             // Create builder instance
-                            sh "docker builder create --name rating-tracker --driver docker-container || true"
+                            sh "docker builder create --name rating-tracker --driver docker-container || :"
                         }
                     }
                 )
@@ -61,8 +61,8 @@ node('rating-tracker-build') {
                             sh """
                             echo \"globalFolder: /workdir/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
                             mkdir -p /home/jenkins/.cache/yarn/global
-                            cp -arn /home/jenkins/.cache/yarn/global .
-                            cp -a /home/jenkins/.cache/.eslintcache .
+                            cp -arn /home/jenkins/.cache/yarn/global . || :
+                            cp -a /home/jenkins/.cache/.eslintcache . || :
                             """
 
                             // Install dependencies
@@ -158,7 +158,7 @@ node('rating-tracker-build') {
                     sh """
                     docker logout
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml down -t 0            
-                    docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || true
+                    docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
                     docker builder prune -f --keep-storage 2G
                     docker builder prune --builder rating-tracker -f --keep-storage 2G
                     rm -rf global app
