@@ -8,9 +8,7 @@ COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
 COPY . .
 
 # Run validations
-RUN \
-  set -o pipefail && \
-  yarn validate | tee validator.log
+RUN yarn validate
 
 FROM node:20.5.1-alpine as build
 LABEL stage=build
@@ -39,7 +37,7 @@ RUN \
   cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* app/prisma/client && \
   cp -r packages/frontend/dist/* app/public
 
-# Add dummy file from validator stage to make sure the validation is run
-COPY --from=validator /workdir/validator.log /tmp/validator.log
+# Add eslint cache
+COPY --from=validator /workdir/.eslintcache .
 
 ENTRYPOINT [ "/bin/sh" ]

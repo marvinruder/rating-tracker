@@ -62,6 +62,7 @@ node('rating-tracker-build') {
                             echo \"globalFolder: /workdir/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
                             mkdir -p /home/jenkins/.cache/yarn/global
                             cp -arn /home/jenkins/.cache/yarn/global .
+                            cp -a /home/jenkins/.cache/.eslintcache .
                             """
 
                             // Install dependencies
@@ -96,8 +97,10 @@ node('rating-tracker-build') {
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
+                            docker cp \$id:/workdir/.eslintcache ./.eslintcache
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-build
+                            cp -a ./.eslintcache /home/jenkins/.cache/.eslintcache
                             """
                         }
                     }
