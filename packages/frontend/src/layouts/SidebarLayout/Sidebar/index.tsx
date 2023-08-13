@@ -1,10 +1,9 @@
 import { FC, useContext } from "react";
 import SidebarContext from "../../../contexts/SidebarContext";
 
-import { Box, Drawer, alpha, Divider, useTheme, lighten, darken, BoxProps } from "@mui/material";
+import { Box, Drawer, alpha, useTheme, lighten, darken, BoxProps } from "@mui/material";
 
-import { SidebarMenu } from "./SidebarMenu";
-import { Logo } from "./Logo";
+import { SidebarContent } from "./SidebarContent";
 
 /**
  * A wrapper for the sidebar component.
@@ -23,7 +22,6 @@ const SidebarWrapper: FC<BoxProps & { children: React.ReactNode }> = (
       position="relative"
       zIndex={7}
       height="100%"
-      pb="68px"
       {...props}
     >
       {props.children}
@@ -56,11 +54,7 @@ export const Sidebar = (): JSX.Element => {
           boxShadow: theme.palette.mode === "dark" ? theme.sidebar.boxShadow : "none",
         }}
       >
-        <Box mt={3} mx={2}>
-          <Logo />
-        </Box>
-        <Divider sx={{ mt: 3, mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
-        <SidebarMenu />
+        <SidebarContent />
       </SidebarWrapper>
       <Drawer
         sx={{ boxShadow: `${theme.sidebar.boxShadow}` }}
@@ -78,11 +72,7 @@ export const Sidebar = (): JSX.Element => {
                 : alpha(darken(theme.colors.alpha.black[100], 0.5), 0.85),
           }}
         >
-          <Box mt={3} mx={2}>
-            <Logo />
-          </Box>
-          <Divider sx={{ mt: 3, mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
-          <SidebarMenu />
+          <SidebarContent />
         </SidebarWrapper>
       </Drawer>
     </>

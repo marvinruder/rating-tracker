@@ -1,14 +1,33 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useState } from "react";
 
-import { alpha, Box, List, Button, ListItem, Divider, useTheme, BoxProps } from "@mui/material";
+import {
+  alpha,
+  Box,
+  List,
+  Button,
+  ListItem,
+  Divider,
+  useTheme,
+  BoxProps,
+  Card,
+  Typography,
+  Tooltip,
+  Grid,
+  Skeleton,
+} from "@mui/material";
 import { NavLink } from "react-router-dom";
 import SidebarContext from "../../../contexts/SidebarContext";
 
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import ListIcon from "@mui/icons-material/List";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { UserContext } from "../../../router";
 import { ADMINISTRATIVE_ACCESS } from "@rating-tracker/commons";
+import { Logo } from "./Logo";
+import { StatusIndicator } from "../../../components/etc/StatusIndicator";
+import React from "react";
+import { LoadingButton } from "@mui/lab";
 
 /**
  * A wrapper for the sidebar menu component.
@@ -127,8 +146,9 @@ const SubMenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
  *
  * @returns {JSX.Element} The component.
  */
-export const SidebarMenu = (): JSX.Element => {
-  const { closeSidebar } = useContext(SidebarContext);
+export const SidebarContent = (): JSX.Element => {
+  const { closeSidebar, systemStatus, systemStatusLoading, refreshSystemStatus } = useContext(SidebarContext);
+  const [statusTooltipOpen, setStatusTooltipOpen] = useState(false);
 
   const theme = useTheme();
 
@@ -136,6 +156,10 @@ export const SidebarMenu = (): JSX.Element => {
 
   return (
     <>
+      <Box mt={3} mx={2}>
+        <Logo />
+      </Box>
+      <Divider sx={{ mt: 3, mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
       <MenuWrapper>
         <List component="div">
           <SubMenuWrapper>
@@ -180,6 +204,88 @@ export const SidebarMenu = (): JSX.Element => {
           )}
         </List>
       </MenuWrapper>
+      <Box bottom={0} position="absolute" width="100%">
+        <Divider sx={{ background: theme.colors.alpha.trueWhite[10] }} />
+        <Tooltip
+          components={{ Tooltip: Card }}
+          componentsProps={{
+            tooltip: {
+              sx: {
+                width: `calc(${theme.sidebar.width} - ${theme.spacing(2)})`,
+                transformOrigin: "bottom",
+                mb: "14px",
+              },
+            },
+          }}
+          placement="top"
+          enterTouchDelay={0}
+          leaveTouchDelay={5000}
+          open={statusTooltipOpen}
+          onOpen={() => setStatusTooltipOpen(true)}
+          onClose={(e) =>
+            !(
+              !(e instanceof Event) &&
+              e.type === "mouseleave" &&
+              "relatedTarget" in e &&
+              e.relatedTarget instanceof Element &&
+              e.relatedTarget.id === "refresh-system-status-button"
+            ) && setStatusTooltipOpen(false)
+          }
+          title={
+            <Grid container p={1} alignItems="flex-start" rowSpacing={0.5}>
+              {Object.entries(systemStatus.services).map(([service, status]) => (
+                <React.Fragment key={service}>
+                  <Grid item xs={4.8} display="flex" columnGap={1}>
+                    <StatusIndicator status={systemStatusLoading ? "N/A" : status.status} />
+                    <Typography variant="body1" fontWeight="bold">
+                      {service}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={7.2}>
+                    <Typography variant="body2">
+                      {systemStatusLoading ? <Skeleton width="100%" /> : status.details}
+                    </Typography>
+                  </Grid>
+                </React.Fragment>
+              ))}
+              <Grid item xs={12} mt={1}>
+                <LoadingButton
+                  id="refresh-system-status-button"
+                  onClick={refreshSystemStatus}
+                  loading={systemStatusLoading}
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                  fullWidth
+                  startIcon={<RefreshIcon />}
+                >
+                  Refresh
+                </LoadingButton>
+              </Grid>
+            </Grid>
+          }
+        >
+          <Card
+            sx={{
+              m: 1,
+              p: 1,
+              width: `calc(100% - ${theme.spacing(2)})`,
+              boxShadow: "none",
+              background: "transparent",
+              border: `1px solid ${theme.colors.alpha.trueWhite[10]}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: theme.spacing(1),
+            }}
+          >
+            <StatusIndicator status={systemStatusLoading ? "N/A" : systemStatus.status.status} />
+            <Typography variant="body1" fontWeight="bold" textAlign="center" color={theme.colors.alpha.trueWhite[70]}>
+              {systemStatusLoading ? "Loading…" : systemStatus.status.details}
+            </Typography>
+          </Card>
+        </Tooltip>
+      </Box>
     </>
   );
 };

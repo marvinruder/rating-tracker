@@ -23,7 +23,7 @@ export class StatusController {
   })
   async get(_: Request, res: Response) {
     let healthy = true;
-    const details: Partial<Record<Service, string>> = {};
+    const services: Partial<Record<Service, string>> = {};
     (
       await Promise.allSettled([
         // The order is important here and must match the order in `serviceArray`.
@@ -35,12 +35,12 @@ export class StatusController {
     ).forEach((result, index) => {
       if (result.status === "rejected") {
         healthy = false;
-        details[serviceArray[index]] = result.reason.message;
-      } else if (result.value) details[serviceArray[index]] = result.value;
+        services[serviceArray[index]] = result.reason.message;
+      } else if (result.value) services[serviceArray[index]] = result.value;
     });
     res
       .status(healthy ? 200 : 500)
-      .json({ status: healthy ? "healthy" : "unhealthy", details })
+      .json({ status: healthy ? "healthy" : "unhealthy", services })
       .end();
   }
 }

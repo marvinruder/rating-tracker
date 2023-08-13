@@ -393,10 +393,11 @@ export const components: OpenAPIV3.ComponentsObject = {
       properties: {
         status: {
           type: "string",
+          enum: ["healthy", "unhealthy"],
         },
-        details: {
+        services: {
           type: "object",
-          properties: serviceArray.reduce((object, [key]) => ({ ...object, [key]: { type: "string" } }), {}),
+          properties: serviceArray.reduce((object, key) => ({ ...object, [key]: { type: "string" } }), {}),
         },
       },
       required: ["status"],
