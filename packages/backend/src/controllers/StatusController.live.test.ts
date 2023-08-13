@@ -13,11 +13,11 @@ tests.push({
     expect(res.body.status).toBe("unhealthy");
 
     // Available during live tests:
-    expect(res.body.details).not.toHaveProperty("PostgreSQL");
-    expect(res.body.details).not.toHaveProperty("Redis");
+    expect(res.body.services).not.toHaveProperty("PostgreSQL");
+    expect(res.body.services).not.toHaveProperty("Redis");
 
     // Not available during live tests:
-    expect(res.body.details).toHaveProperty("Selenium");
-    expect(res.body.details).toHaveProperty("Signal");
+    expect(res.body.services).toHaveProperty("Selenium");
+    expect(res.body.services).toHaveProperty("Signal");
   },
 });
