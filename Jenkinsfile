@@ -62,7 +62,7 @@ node('rating-tracker-build') {
                             echo \"globalFolder: /workdir/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
                             mkdir -p /home/jenkins/.cache/yarn/global
                             cp -arn /home/jenkins/.cache/yarn/global . || :
-                            cp -a /home/jenkins/.cache/.eslintcache . || :
+                            ([ ! -f ".eslintcache" ] && cp -a /home/jenkins/.cache/.eslintcache .) || :
                             """
 
                             // Install dependencies
