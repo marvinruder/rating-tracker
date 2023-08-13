@@ -159,8 +159,6 @@ node('rating-tracker-build') {
                     docker logout
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
-                    docker builder prune -f --keep-storage 2G
-                    docker builder prune --builder rating-tracker -f --keep-storage 2G
                     rm -rf global app
                     """
                 }
