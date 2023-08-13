@@ -156,7 +156,7 @@ export const SidebarContent = (): JSX.Element => {
 
   return (
     <>
-      <Box mt={3} mx={2}>
+      <Box mt={1} mx={2}>
         <Logo />
       </Box>
       <Divider sx={{ mt: 3, mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
