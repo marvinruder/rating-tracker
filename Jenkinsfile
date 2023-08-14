@@ -82,7 +82,7 @@ node('rating-tracker-build') {
                 parallel(
                     test: {
                         stage ('Run Tests') {
-                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm --add-host host.docker.internal:host-gateway .")
+                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm --add-host host.docker.internal:172.17.0.1 .") // Replace IP by `host.gateway` after running on 24.0.3 or newer, see https://github.com/docker/buildx/issues/1832
                         }
                     },
                     build: {
