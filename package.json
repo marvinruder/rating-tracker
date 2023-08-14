@@ -28,7 +28,7 @@
     "typescript": "5.1.6"
   },
   "resolutions": {
-    "vite/esbuild": "0.19.1"
+    "vite/esbuild": "0.19.2"
   },
   "dependenciesMeta": {
     "swagger-ui-dist@5.3.1": {
