@@ -35,14 +35,10 @@ node('rating-tracker-build') {
                     testenv: {
                         stage('Start test environment') {
                             // Create migration script from all migrations and inject IP and ports into test environment
-                            // Since the Jenkins agent is running in a Docker container itself, we cannot mount the script directly
                             sh """
-                            sed -i \"s/127.0.0.1/172.17.0.1/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
-                            eval \$(cat packages/backend/test/.env | grep DATABASE_URL)
-                            PG_MIGRATIONS=\$(cat packages/backend/prisma/migrations/*/migration.sql | grep -v \"^--\" | tr -d '\\\n')
-                            cat packages/backend/test/docker-compose.yml | grep -v all_migrations | grep -v volumes > packages/backend/test/docker-compose-dind.yml
-                            PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml up --force-recreate -V -d
-                            while ! docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml exec postgres-test psql \$DATABASE_URL -c \"\$PG_MIGRATIONS\"; do sleep 1 ; done
+                            cat packages/backend/prisma/migrations/*/migration.sql > packages/backend/test/all_migrations.sql
+                            sed -i \"s/127.0.0.1/host.docker.internal/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
+                            PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
                             """
                         }
                     },
@@ -86,7 +82,7 @@ node('rating-tracker-build') {
                 parallel(
                     test: {
                         stage ('Run Tests') {
-                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm .")
+                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm --add-host host.docker.internal:172.17.0.1 .") // Replace IP by `host.gateway` after running on 24.0.3 or newer, see https://github.com/docker/buildx/issues/1832
                         }
                     },
                     build: {
@@ -157,7 +153,7 @@ node('rating-tracker-build') {
                     // Remove credentials and build artifacts
                     sh """
                     docker logout
-                    docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose-dind.yml down -t 0            
+                    docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
                     rm -rf global app
                     """
