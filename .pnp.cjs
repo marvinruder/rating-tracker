@@ -1654,7 +1654,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["response-time", "npm:2.3.2"],\
             ["selenium-webdriver", "npm:4.11.1"],\
             ["supertest", "npm:6.3.3"],\
-            ["swagger-ui-dist", "npm:5.3.2"],\
+            ["swagger-ui-dist", "npm:5.4.1"],\
             ["swagger-ui-express", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.0.0"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"],\
             ["vite", "virtual:78dd1a5eea8bf2396bddc3a816a90d3a369324c8608d0bfb8ef0e0b8cb9934453fa35d2e2a1fac240937ba439b8e847bd01f931b92c0d25b8fb9b9e8cd43e18f#npm:4.4.9"],\
@@ -9841,10 +9841,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["swagger-ui-dist", [\
-        ["npm:5.3.2", {\
-          "packageLocation": "./.yarn/cache/swagger-ui-dist-npm-5.3.2-2acc4d23f5-f5395ca306.zip/node_modules/swagger-ui-dist/",\
+        ["npm:5.4.1", {\
+          "packageLocation": "./.yarn/cache/swagger-ui-dist-npm-5.4.1-f67cb9ad18-b455895c50.zip/node_modules/swagger-ui-dist/",\
           "packageDependencies": [\
-            ["swagger-ui-dist", "npm:5.3.2"]\
+            ["swagger-ui-dist", "npm:5.4.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9863,7 +9863,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["swagger-ui-express", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.0.0"],\
             ["@types/express", "npm:4.17.17"],\
             ["express", "npm:4.18.2"],\
-            ["swagger-ui-dist", "npm:5.3.2"]\
+            ["swagger-ui-dist", "npm:5.4.1"]\
           ],\
           "packagePeers": [\
             "@types/express",\
