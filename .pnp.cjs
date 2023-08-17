@@ -9842,7 +9842,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],\
       ["swagger-ui-dist", [\
         ["npm:5.4.1", {\
-          "packageLocation": "./.yarn/cache/swagger-ui-dist-npm-5.4.1-f67cb9ad18-b455895c50.zip/node_modules/swagger-ui-dist/",\
+          "packageLocation": "./.yarn/unplugged/swagger-ui-dist-npm-5.4.1-f67cb9ad18/node_modules/swagger-ui-dist/",\
           "packageDependencies": [\
             ["swagger-ui-dist", "npm:5.4.1"]\
           ],\

@@ -1328,7 +1328,7 @@ __metadata:
     prettier: 3.0.2
     typescript: 5.1.6
   dependenciesMeta:
-    swagger-ui-dist@5.3.1:
+    swagger-ui-dist:
       unplugged: true
   languageName: unknown
   linkType: soft
