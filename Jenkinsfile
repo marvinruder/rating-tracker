@@ -152,7 +152,7 @@ node('rating-tracker-build') {
                 stage ('Cleanup') {
                     // Push cache image to Docker registry and remove build artifacts
                     sh """
-                    /bin/sh -c '(cd /home/jenkins && docker build -t marvinruder/cache:jenkins . && docker push marvinruder/cache:jenkins 2>&1 > jenkins-cache-job$JOB_ID\.log) &'
+                    /bin/sh -c '(cd /home/jenkins && docker build -t marvinruder/cache:jenkins . && docker push marvinruder/cache:jenkins 2>&1 > jenkins-cache-job$JOB_ID.log) &'
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
                     rm -rf global app
