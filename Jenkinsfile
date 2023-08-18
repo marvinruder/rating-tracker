@@ -150,7 +150,7 @@ node('rating-tracker-build') {
                 )
             } finally {
                 stage ('Cleanup') {
-                    // Remove credentials and build artifacts
+                    // Push cache image to Docker registry, remove credentials and build artifacts
                     sh """
                     /bin/sh -c 'cd /home/jenkins && docker build -t marvinruder/cache:jenkins . && docker push marvinruder/cache:jenkins'
                     docker logout
