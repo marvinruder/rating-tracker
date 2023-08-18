@@ -26,7 +26,7 @@ node('rating-tracker-build') {
                             sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
 
                             // Create builder instance
-                            sh "docker builder create --name rating-tracker --driver docker-container || :"
+                            sh "docker builder create --name rating-tracker --driver docker-container --bootstrap || :"
                         }
                     }
                 )
@@ -152,6 +152,7 @@ node('rating-tracker-build') {
                 stage ('Cleanup') {
                     // Remove credentials and build artifacts
                     sh """
+                    /bin/sh -c 'cd /home/jenkins && docker build -t marvinruder/cache:jenkins . && docker push marvinruder/cache:jenkins'
                     docker logout
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
