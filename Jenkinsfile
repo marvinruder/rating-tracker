@@ -62,7 +62,6 @@ node('rating-tracker-build') {
                             mkdir -p /home/jenkins/.cache/yarn/global
                             cp -arn /home/jenkins/.cache/yarn/global . || :
                             ([ ! -f ".eslintcache" ] && cp -a /home/jenkins/.cache/.eslintcache .) || :
-                            docker buildx build --load 
                             """
 
                             // Install dependencies
