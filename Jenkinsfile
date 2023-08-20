@@ -27,6 +27,9 @@ node('rating-tracker-build') {
 
                             // Create builder instance
                             sh "docker builder create --name rating-tracker --driver docker-container --bootstrap || :"
+
+                            // Prefetch Docker base images
+                            sh "/bin/sh -c '(docker buildx build --builder rating-tracker -f docker/Dockerfile-prefetch --cache-from=marvinruder/cache:rating-tracker-wasm .) &'"
                         }
                     }
                 )
@@ -59,10 +62,11 @@ node('rating-tracker-build') {
                             mkdir -p /home/jenkins/.cache/yarn/global
                             cp -arn /home/jenkins/.cache/yarn/global . || :
                             ([ ! -f ".eslintcache" ] && cp -a /home/jenkins/.cache/.eslintcache .) || :
+                            docker buildx build --load 
                             """
 
                             // Install dependencies
-                            docker.build("$imagename:job$JOB_ID-yarn", "-f docker/Dockerfile-yarn .")
+                            sh("docker buildx build --builder rating-tracker --load -t $imagename:job$JOB_ID-yarn -f docker/Dockerfile-yarn .")
 
                             // Copy dependencies to workspace and cache
                             sh """
@@ -82,12 +86,12 @@ node('rating-tracker-build') {
                 parallel(
                     test: {
                         stage ('Run Tests') {
-                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm --add-host host.docker.internal:172.17.0.1 .") // Replace IP by `host.gateway` after running on 24.0.3 or newer, see https://github.com/docker/buildx/issues/1832
+                            sh("docker buildx build --builder rating-tracker --load -t $imagename:job$JOB_ID-test -f docker/Dockerfile-test --force-rm --add-host host.docker.internal:172.17.0.1 .") // Replace IP by `host.gateway` after running on 24.0.3 or newer, see https://github.com/docker/buildx/issues/1832
                         }
                     },
                     build: {
                         stage ('Build Docker Image') {
-                            docker.build("$imagename:job$JOB_ID-build", "-f docker/Dockerfile-build --force-rm .")
+                            sh("docker buildx build --builder rating-tracker --load -t $imagename:job$JOB_ID-build -f docker/Dockerfile-build --force-rm .")
 
                             // Copy build artifacts to workspace
                             sh """
