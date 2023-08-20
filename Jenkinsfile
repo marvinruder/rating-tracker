@@ -28,6 +28,8 @@ node('rating-tracker-build') {
                             // Create builder instance
                             sh "docker builder create --name rating-tracker --driver docker-container --bootstrap || :"
 
+                            sh('printenv')
+
                             // Prefetch Docker base images
                             sh """
                             JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(docker buildx build --builder rating-tracker -f docker/Dockerfile-prefetch-buildx --cache-from=marvinruder/cache:rating-tracker-wasm .) &'
@@ -121,7 +123,7 @@ node('rating-tracker-build') {
                         stage ('Assemble and publish Docker Image') {
                             // Identify image tags
                             def tags = ""
-                            if (env.TAG_NAME) {
+                            if (TAG_NAME) {
                                 // A version tag is present
                                 def VERSION = sh (script: "echo -n \$TAG_NAME | sed 's/^v//'", returnStdout: true)
                                 def MAJOR = sh (script: "#!/bin/bash\nif [[ \$TAG_NAME =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+\$ ]]; then echo -n \$TAG_NAME | sed -E 's/^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\$/\\1/'; fi", returnStdout: true)
@@ -135,14 +137,14 @@ node('rating-tracker-build') {
                                     // Use the major and minor version as additional tags
                                     tags += " -t $imagename:$MINOR -t $imagename:$MAJOR -t $imagename:latest"
                                 }
-                            } else if (env.BRANCH_NAME == 'main') {
+                            } else if (BRANCH_NAME == 'main') {
                                 // Images with tag `edge` are built from the main branch
                                 tags += " -t $imagename:edge"
 
                                 // Prepare update of README.md
                                 sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
                                 // sh("docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/job$JOB_ID $imagename")
-                            } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
+                            } else if (!(BRANCH_NAME).startsWith('renovate')) {
                                 // Images with tag `snapshot` are built from other branches, except when updating dependencies only
                                 tags += " -t $imagename:SNAPSHOT"
                             }
