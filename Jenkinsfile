@@ -28,8 +28,6 @@ node('rating-tracker-build') {
                             // Create builder instance
                             sh "docker builder create --name rating-tracker --driver docker-container --bootstrap || :"
 
-                            sh('printenv')
-
                             // Prefetch Docker base images
                             sh """
                             JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$imagename/\$BRANCH_NAME/docker/Dockerfile-prefetch-buildx | docker buildx build --builder rating-tracker --cache-from=marvinruder/cache:rating-tracker-wasm -) &'
