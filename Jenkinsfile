@@ -32,8 +32,8 @@ node('rating-tracker-build') {
 
                             // Prefetch Docker base images
                             sh """
-                            JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(docker buildx build --builder rating-tracker -f docker/Dockerfile-prefetch-buildx --cache-from=marvinruder/cache:rating-tracker-wasm .) &'
-                            JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(docker build -f docker/Dockerfile-prefetch .) &'
+                            JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$imagename/\$BRANCH_NAME/docker/Dockerfile-prefetch-buildx | docker buildx build --builder rating-tracker --cache-from=marvinruder/cache:rating-tracker-wasm -) &'
+                            JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$imagename/\$BRANCH_NAME/docker/Dockerfile-prefetch |docker build -) &'
                             """
                         }
                     }
