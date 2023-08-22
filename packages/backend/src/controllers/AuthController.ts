@@ -1,8 +1,5 @@
 import { randomUUID } from "node:crypto";
-import SimpleWebAuthnServer, {
-  VerifiedAuthenticationResponse,
-  VerifiedRegistrationResponse,
-} from "@simplewebauthn/server";
+import * as SimpleWebAuthnServer from "@simplewebauthn/server";
 import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
@@ -95,7 +92,7 @@ export class AuthController {
     if (typeof email === "string" && typeof name === "string") {
       // We verify the registration response against the challenge we stored earlier.
       const expectedChallenge: string = currentChallenges[email];
-      let verification: VerifiedRegistrationResponse;
+      let verification: SimpleWebAuthnServer.VerifiedRegistrationResponse;
       try {
         verification = await SimpleWebAuthnServer.verifyRegistrationResponse({
           response: req.body,
@@ -177,7 +174,7 @@ export class AuthController {
     const credentialID: string = req.body.id;
     const user = await readUserByCredentialID(credentialID);
 
-    let verification: VerifiedAuthenticationResponse;
+    let verification: SimpleWebAuthnServer.VerifiedAuthenticationResponse;
     try {
       verification = await SimpleWebAuthnServer.verifyAuthenticationResponse({
         response: req.body,
