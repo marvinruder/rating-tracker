@@ -35,7 +35,7 @@
     "@mui/material": "5.14.5",
     "@rating-tracker/commons": "workspace:*",
     "@rating-tracker/wasm": "workspace:*",
-    "@simplewebauthn/browser": "7.4.0",
+    "@simplewebauthn/browser": "8.0.0",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "@vitejs/plugin-react": "4.0.4",
