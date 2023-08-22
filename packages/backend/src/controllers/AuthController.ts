@@ -57,7 +57,7 @@ export class AuthController {
         throw new APIError(403, ALREADY_REGISTERED_ERROR_MESSAGE);
       }
       // We generate the registration options and store the challenge for later verification.
-      const options = SimpleWebAuthnServer.generateRegistrationOptions({
+      const options = await SimpleWebAuthnServer.generateRegistrationOptions({
         rpName,
         rpID,
         userID: email,
@@ -150,8 +150,8 @@ export class AuthController {
     accessRights: 0,
     rateLimited: true,
   })
-  getAuthenticationOptions(_: Request, res: Response) {
-    const options = SimpleWebAuthnServer.generateAuthenticationOptions({
+  async getAuthenticationOptions(_: Request, res: Response) {
+    const options = await SimpleWebAuthnServer.generateAuthenticationOptions({
       rpID: rpID,
       userVerification: "required", // Require the user to verify their identity with a PIN or biometric sensor.
     });

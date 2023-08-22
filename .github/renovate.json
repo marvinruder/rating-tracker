@@ -13,12 +13,16 @@
   "rangeStrategy": "pin",
   "packageRules": [
     {
-      "groupName": "linting-formatting",
+      "groupName": "Linting and Formatting Tools",
       "matchPackagePatterns": ["eslint", "prettier"]
     },
     {
-      "groupName": "tsparticles",
+      "groupName": "Particle Background",
       "matchPackagePatterns": ["tsparticles"]
+    },
+    {
+      "groupName": "WebAuthn",
+      "matchPackagePatterns": ["@simplewebauthn"]
     }
   ]
 }
