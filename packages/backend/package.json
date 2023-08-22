@@ -25,14 +25,14 @@
     "prisma:studio": "pnpify prisma studio",
     "prisma:generate": "pnpify prisma generate",
     "prisma:migrate:dev": "pnpify prisma migrate dev",
-    "build": "esbuild --color=true src/server.ts --bundle --platform=node --format=esm --legal-comments=none --banner:js=\"import __path from'path';import{createRequire}from'module';import{fileURLToPath}from'url';const require=createRequire(import.meta.url),__filename=fileURLToPath(import.meta.url),__dirname=__path.dirname(__filename);\" --outfile=dist/server.mjs",
+    "build": "esbuild --color=true src/server.ts --bundle --platform=node --format=esm --legal-comments=none --banner:js=\"import __path from'path';import{createRequire as __createRequire}from'module';import{fileURLToPath}from'url';const require=__createRequire(import.meta.url),__filename=fileURLToPath(import.meta.url),__dirname=__path.dirname(__filename);\" --outfile=dist/server.mjs",
     "typecheck": "tsc --noEmit",
     "lint:fix": "eslint --cache --ext .ts src/ --fix"
   },
   "dependencies": {
     "@prisma/client": "5.2.0",
     "@rating-tracker/commons": "workspace:*",
-    "@simplewebauthn/server": "7.4.0",
+    "@simplewebauthn/server": "8.0.0",
     "axios": "1.4.0",
     "chalk": "5.3.0",
     "cookie-parser": "1.4.6",

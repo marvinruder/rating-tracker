@@ -1616,7 +1616,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@rating-tracker/backend", "workspace:packages/backend"],\
             ["@prisma/client", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.2.0"],\
             ["@rating-tracker/commons", "workspace:packages/commons"],\
-            ["@simplewebauthn/server", "npm:7.4.0"],\
+            ["@simplewebauthn/server", "npm:8.0.0"],\
             ["@types/cookie-parser", "npm:1.4.3"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/node", "npm:20.5.2"],\
@@ -1934,47 +1934,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@simplewebauthn/iso-webcrypto", [\
-        ["npm:7.4.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-iso-webcrypto-npm-7.4.0-029674c095-dfc22eb81c.zip/node_modules/@simplewebauthn/iso-webcrypto/",\
-          "packageDependencies": [\
-            ["@simplewebauthn/iso-webcrypto", "npm:7.4.0"],\
-            ["@simplewebauthn/typescript-types", "npm:7.4.0"],\
-            ["@types/node", "npm:18.17.5"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@simplewebauthn/server", [\
-        ["npm:7.4.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-7.4.0-31e153d56a-0dd76c4d3c.zip/node_modules/@simplewebauthn/server/",\
+        ["npm:8.0.0", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-8.0.0-5b03244c38-5ae254867f.zip/node_modules/@simplewebauthn/server/",\
           "packageDependencies": [\
-            ["@simplewebauthn/server", "npm:7.4.0"],\
+            ["@simplewebauthn/server", "npm:8.0.0"],\
             ["@hexagon/base64", "npm:1.1.27"],\
             ["@peculiar/asn1-android", "npm:2.3.6"],\
             ["@peculiar/asn1-ecc", "npm:2.3.6"],\
             ["@peculiar/asn1-rsa", "npm:2.3.6"],\
             ["@peculiar/asn1-schema", "npm:2.3.6"],\
             ["@peculiar/asn1-x509", "npm:2.3.6"],\
-            ["@simplewebauthn/iso-webcrypto", "npm:7.4.0"],\
-            ["@simplewebauthn/typescript-types", "npm:7.4.0"],\
+            ["@simplewebauthn/typescript-types", "npm:8.0.0"],\
             ["@types/debug", "npm:4.1.8"],\
-            ["@types/node", "npm:18.17.5"],\
-            ["cbor-x", "npm:1.5.3"],\
-            ["cross-fetch", "npm:3.1.8"],\
+            ["cbor-x", "npm:1.5.4"],\
+            ["cross-fetch", "npm:4.0.0"],\
             ["debug", "virtual:feb0771c9f8eadaf509cfed41e14a8bebbea5442233275c1c87085111077a08ef71eb773b899665b154d8203a55a489610a54117ae059fce5f5b8b844493b1b1#npm:4.3.4"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@simplewebauthn/typescript-types", [\
-        ["npm:7.4.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-typescript-types-npm-7.4.0-873642d566-c53fd44eaf.zip/node_modules/@simplewebauthn/typescript-types/",\
-          "packageDependencies": [\
-            ["@simplewebauthn/typescript-types", "npm:7.4.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:8.0.0", {\
           "packageLocation": "./.yarn/cache/@simplewebauthn-typescript-types-npm-8.0.0-f3b313c27b-59b4ac9804.zip/node_modules/@simplewebauthn/typescript-types/",\
           "packageDependencies": [\
@@ -2345,13 +2325,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-13.13.52-95159539bb-8f1afff497.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:13.13.52"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:18.17.5", {\
-          "packageLocation": "./.yarn/cache/@types-node-npm-18.17.5-e736eb2acc-b8c658a992.zip/node_modules/@types/node/",\
-          "packageDependencies": [\
-            ["@types/node", "npm:18.17.5"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -3837,10 +3810,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["cbor-x", [\
-        ["npm:1.5.3", {\
-          "packageLocation": "./.yarn/cache/cbor-x-npm-1.5.3-1d452dd267-16f0da10e2.zip/node_modules/cbor-x/",\
+        ["npm:1.5.4", {\
+          "packageLocation": "./.yarn/cache/cbor-x-npm-1.5.4-2d5a649a4b-589513dcfa.zip/node_modules/cbor-x/",\
           "packageDependencies": [\
-            ["cbor-x", "npm:1.5.3"],\
+            ["cbor-x", "npm:1.5.4"],\
             ["cbor-extract", "npm:2.1.1"]\
           ],\
           "linkType": "HARD"\
@@ -4288,11 +4261,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["cross-fetch", [\
-        ["npm:3.1.8", {\
-          "packageLocation": "./.yarn/cache/cross-fetch-npm-3.1.8-71c3c05709-78f993fa09.zip/node_modules/cross-fetch/",\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/cross-fetch-npm-4.0.0-9c67668db4-ecca4f37ff.zip/node_modules/cross-fetch/",\
           "packageDependencies": [\
-            ["cross-fetch", "npm:3.1.8"],\
-            ["node-fetch", "virtual:71c3c0570974c795b79987bb85d4a29514e196f75c7ca2bb56e80f88177e71cbbb73c9a0f02e781c6ccd33e5e8542eb2d0a05fb7aad876eea2872ec6993aa554#npm:2.6.12"]\
+            ["cross-fetch", "npm:4.0.0"],\
+            ["node-fetch", "virtual:9c67668db478e95ba4d6a763bc55027eeff0d22eaf59478017ea07386fc33a3c7b7b625af78aa86a33991a9a500a7aa216e28632de568f02adefd662ef53a42d#npm:2.6.12"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -7646,10 +7619,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:71c3c0570974c795b79987bb85d4a29514e196f75c7ca2bb56e80f88177e71cbbb73c9a0f02e781c6ccd33e5e8542eb2d0a05fb7aad876eea2872ec6993aa554#npm:2.6.12", {\
-          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-a753917ca6/0/cache/node-fetch-npm-2.6.12-48619ce9d6-3bc1655203.zip/node_modules/node-fetch/",\
+        ["virtual:9c67668db478e95ba4d6a763bc55027eeff0d22eaf59478017ea07386fc33a3c7b7b625af78aa86a33991a9a500a7aa216e28632de568f02adefd662ef53a42d#npm:2.6.12", {\
+          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-80ad860ad7/0/cache/node-fetch-npm-2.6.12-48619ce9d6-3bc1655203.zip/node_modules/node-fetch/",\
           "packageDependencies": [\
-            ["node-fetch", "virtual:71c3c0570974c795b79987bb85d4a29514e196f75c7ca2bb56e80f88177e71cbbb73c9a0f02e781c6ccd33e5e8542eb2d0a05fb7aad876eea2872ec6993aa554#npm:2.6.12"],\
+            ["node-fetch", "virtual:9c67668db478e95ba4d6a763bc55027eeff0d22eaf59478017ea07386fc33a3c7b7b625af78aa86a33991a9a500a7aa216e28632de568f02adefd662ef53a42d#npm:2.6.12"],\
             ["@types/encoding", null],\
             ["encoding", null],\
             ["whatwg-url", "npm:5.0.0"]\

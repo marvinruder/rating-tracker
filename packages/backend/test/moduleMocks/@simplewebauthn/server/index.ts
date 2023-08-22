@@ -1,13 +1,12 @@
-import SimpleWebAuthnServer, {
-  VerifyAuthenticationResponseOpts,
-  VerifyRegistrationResponseOpts,
-} from "@simplewebauthn/server";
+import * as SimpleWebAuthnServer from "@simplewebauthn/server";
 import { randomUUID } from "crypto";
 
-const actual = await vi.importActual<typeof SimpleWebAuthnServer>("@simplewebauthn/server");
 const randomCredential = randomUUID();
 
-const verifyRegistrationResponse = (options: VerifyRegistrationResponseOpts) => {
+export const { generateRegistrationOptions, generateAuthenticationOptions } =
+  await vi.importActual<typeof SimpleWebAuthnServer>("@simplewebauthn/server");
+
+export const verifyRegistrationResponse = (options: SimpleWebAuthnServer.VerifyRegistrationResponseOpts) => {
   if (options.response.id !== options.response.rawId) {
     // One of the errors that can be thrown by the actual implementation.
     throw new Error("Credential ID was not base64url-encoded");
@@ -29,7 +28,7 @@ const verifyRegistrationResponse = (options: VerifyRegistrationResponseOpts) => 
   });
 };
 
-const verifyAuthenticationResponse = (options: VerifyAuthenticationResponseOpts) => {
+export const verifyAuthenticationResponse = (options: SimpleWebAuthnServer.VerifyAuthenticationResponseOpts) => {
   if (options.response.id !== options.response.rawId) {
     // One of the errors that can be thrown by the actual implementation.
     throw new Error("Credential ID was not base64url-encoded");
@@ -50,10 +49,4 @@ const verifyAuthenticationResponse = (options: VerifyAuthenticationResponseOpts)
       newCounter: options.authenticator.counter + 1,
     },
   });
-};
-
-export default {
-  ...actual,
-  verifyRegistrationResponse,
-  verifyAuthenticationResponse,
 };
