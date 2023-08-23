@@ -39,7 +39,7 @@
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "@vitejs/plugin-react": "4.0.4",
-    "@vitest/web-worker": "0.34.1",
+    "@vitest/web-worker": "0.34.2",
     "apexcharts": "3.41.1",
     "axios": "1.4.0",
     "clsx": "2.0.0",
@@ -65,7 +65,7 @@
     "@types/node": "20.5.4",
     "@typescript-eslint/eslint-plugin": "6.4.1",
     "@typescript-eslint/parser": "6.4.1",
-    "@vitest/coverage-v8": "0.34.1",
+    "@vitest/coverage-v8": "0.34.2",
     "eslint": "8.47.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "9.0.0",
@@ -74,6 +74,6 @@
     "eslint-plugin-react": "7.33.2",
     "prettier": "3.0.2",
     "typescript": "5.1.6",
-    "vitest": "0.34.1"
+    "vitest": "0.34.2"
   }
 }
