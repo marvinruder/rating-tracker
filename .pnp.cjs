@@ -1616,7 +1616,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@rating-tracker/backend", "workspace:packages/backend"],\
             ["@prisma/client", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.2.0"],\
             ["@rating-tracker/commons", "workspace:packages/commons"],\
-            ["@simplewebauthn/server", "npm:8.0.0"],\
+            ["@simplewebauthn/server", "npm:8.0.1"],\
             ["@types/cookie-parser", "npm:1.4.3"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/node", "npm:20.5.3"],\
@@ -1935,10 +1935,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/server", [\
-        ["npm:8.0.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-8.0.0-5b03244c38-5ae254867f.zip/node_modules/@simplewebauthn/server/",\
+        ["npm:8.0.1", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-8.0.1-3403a7f1ae-7283f2d66c.zip/node_modules/@simplewebauthn/server/",\
           "packageDependencies": [\
-            ["@simplewebauthn/server", "npm:8.0.0"],\
+            ["@simplewebauthn/server", "npm:8.0.1"],\
             ["@hexagon/base64", "npm:1.1.27"],\
             ["@peculiar/asn1-android", "npm:2.3.6"],\
             ["@peculiar/asn1-ecc", "npm:2.3.6"],\
