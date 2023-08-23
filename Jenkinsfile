@@ -41,7 +41,7 @@ node('rating-tracker-build') {
                                 sh """
                                 DEPENDENCY_DASHBOARD_ISSUE_NUMBER=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues | grep "Dependency Dashboard" -B 1 | head -n 1 | tr -dc '0-9') && \
                                 DEPENDENCY_DASHBOARD_BODY=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER | grep '"body":' | sed 's/- \\[ \\] <!-- manual job -->/- \\[x\\] <!-- manual job -->/ ; s/,\$//') && \
-                                curl -sL -X PATCH -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER -d "{\$DEPENDENCY_DASHBOARD_BODY}"
+                                curl -sLI -X PATCH -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER -d "{\$DEPENDENCY_DASHBOARD_BODY}"
                                 """
                             }
                         }
