@@ -1278,7 +1278,7 @@ __metadata:
     "@mui/material": 5.14.5
     "@rating-tracker/commons": "workspace:*"
     "@rating-tracker/wasm": "workspace:*"
-    "@simplewebauthn/browser": 8.0.0
+    "@simplewebauthn/browser": 8.0.2
     "@types/node": 20.5.3
     "@types/react": 18.2.21
     "@types/react-dom": 18.2.7
@@ -1424,12 +1424,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/browser@npm:8.0.0":
-  version: 8.0.0
-  resolution: "@simplewebauthn/browser@npm:8.0.0"
+"@simplewebauthn/browser@npm:8.0.2":
+  version: 8.0.2
+  resolution: "@simplewebauthn/browser@npm:8.0.2"
   dependencies:
     "@simplewebauthn/typescript-types": ^8.0.0
-  checksum: fd8eff0345a13dd8f2b1d8ef077cea3441440403139d59e96fe823b13691da56de9b92669c32d195e4d35dc1c05bad934ac0178fc026c22aa34fb1810d14d82a
+  checksum: 3837a8a80dad90e4eecc116ecf42c61c4e51d0948bea41240bd18665c753425f50df89b4f9c18f99d862b931cd2c24d7bde23a9d7626fbe7a4d8b308160afc56
   languageName: node
   linkType: hard
 
