@@ -20,7 +20,7 @@
     "validate": "yarn workspaces foreach -pv -j unlimited run typecheck && yarn eslint --color --cache --cache-strategy content --max-warnings 0 --ext .tsx,.ts packages/backend/src/ packages/commons/src/ packages/frontend/src/",
     "fix:swagger": "mkdir -p packages/backend/dist/public/api-docs && cp .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui{.css,-bundle.js,-standalone-preset.js} packages/backend/dist/public/api-docs/"
   },
-  "packageManager": "yarn@3.6.2",
+  "packageManager": "yarn@3.6.3",
   "devDependencies": {
     "concurrently": "8.2.1",
     "eslint": "8.47.0",
