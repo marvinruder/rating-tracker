@@ -4,20 +4,16 @@ node('rating-tracker-build') {
         'FORCE_COLOR=true'
     ]) {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'), string(credentialsId: 'github_pat', variable: 'GH_TOKEN')]) {
-            def JOB_ID
-            def PGPORT
-            def REDISPORT
+            // Use random job identifier and test port numbers to avoid collisions
+            def JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 8192))", returnStdout: true)
+            def PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
+            def REDISPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
 
             try {
                 parallel(
                     scm: {
                         stage('Clone repository') {
                             checkout scm
-
-                            // Use random job identifier and test port numbers to avoid collisions
-                            JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 8192))", returnStdout: true)
-                            PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
-                            REDISPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
                         }
                     },
                     docker_env: {
