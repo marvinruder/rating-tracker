@@ -39,9 +39,11 @@ node('rating-tracker-build') {
                         if (env.BRANCH_NAME == 'renovate-trigger') {
                             stage('Trigger Renovate Run') {
                                 sh """
+                                set +x
                                 DEPENDENCY_DASHBOARD_ISSUE_NUMBER=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues | grep "Dependency Dashboard" -B 1 | head -n 1 | tr -dc '0-9') && \
                                 DEPENDENCY_DASHBOARD_BODY=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER | grep '"body":' | sed 's/- \\[ \\] <!-- manual job -->/- \\[x\\] <!-- manual job -->/ ; s/,\$//') && \
                                 curl -fsSL -o /dev/null -w '%{response_code}\n' -X PATCH -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER -d "{\$DEPENDENCY_DASHBOARD_BODY}"
+                                set -x
                                 """
                             }
                         }
