@@ -3,7 +3,7 @@ node('rating-tracker-build') {
         'imagename=marvinruder/rating-tracker',
         'FORCE_COLOR=true'
     ]) {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'), [string(credentialsId: 'github_pat', variable: 'GH_TOKEN')]]) {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'), string(credentialsId: 'github_pat', variable: 'GH_TOKEN')]) {
             def JOB_ID
             def PGPORT
             def REDISPORT
