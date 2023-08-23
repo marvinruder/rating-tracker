@@ -39,8 +39,8 @@ node('rating-tracker-build') {
                         if (env.BRANCH_NAME == 'renovate-trigger') {
                             stage('Trigger Renovate Run') {
                                 sh """
-                                DEPENDENCY_DASHBOARD_ISSUE_NUMBER=`curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues | grep "Dependency Dashboard" -B 1 | head -n 1 | tr -dc '0-9'`
-                                DEPENDENCY_DASHBOARD_BODY=`curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER | grep '"body":' | sed 's/- \\[ \\] <!-- manual job -->/- \\[x\\] <!-- manual job -->/ ; s/,\$//'`
+                                DEPENDENCY_DASHBOARD_ISSUE_NUMBER=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues | grep "Dependency Dashboard" -B 1 | head -n 1 | tr -dc '0-9') && \
+                                DEPENDENCY_DASHBOARD_BODY=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER | grep '"body":' | sed 's/- \\[ \\] <!-- manual job -->/- \\[x\\] <!-- manual job -->/ ; s/,\$//') && \
                                 curl -fsSL -o /dev/null -w '%{response_code}\n' -X PATCH -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER -d "{\$DEPENDENCY_DASHBOARD_BODY}"
                                 """
                             }
@@ -83,7 +83,7 @@ node('rating-tracker-build') {
 
                             // Copy dependencies to workspace and cache
                             sh """
-                            id=`docker create $imagename:job$JOB_ID-yarn`
+                            id=\$(docker create $imagename:job$JOB_ID-yarn)
                             docker cp \$id:/workdir/.yarn/. ./.yarn
                             docker cp \$id:/workdir/global .
                             docker cp \$id:/workdir/.pnp.cjs .
@@ -108,7 +108,7 @@ node('rating-tracker-build') {
 
                             // Copy build artifacts to workspace
                             sh """
-                            id=`docker create $imagename:job$JOB_ID-build`
+                            id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
                             docker cp \$id:/workdir/.eslintcache ./.eslintcache
                             docker rm -v \$id
