@@ -36,8 +36,9 @@ node('rating-tracker-build') {
                         }
                     },
                     renovate_trigger: {
-                        if (env.BRANCH_NAME == 'renovate-trigger') {
+                        if (env.BRANCH_NAME == 'main') {
                             stage('Trigger Renovate Run') {
+                                // Trigger a request for Renovate to run on the repository to rebase open pull requests after new commits on the `main` branch
                                 sh """
                                 set +x
                                 DEPENDENCY_DASHBOARD_ISSUE_NUMBER=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues | grep "Dependency Dashboard" -B 1 | head -n 1 | tr -dc '0-9') && \
