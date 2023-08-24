@@ -1678,7 +1678,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cookie-parser", "npm:1.4.3"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/node", "npm:20.5.4"],\
-            ["@types/selenium-webdriver", "npm:4.1.15"],\
+            ["@types/selenium-webdriver", "npm:4.1.16"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/swagger-ui-express", "npm:4.1.3"],\
             ["@typescript-eslint/eslint-plugin", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:6.4.1"],\
@@ -2492,10 +2492,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/selenium-webdriver", [\
-        ["npm:4.1.15", {\
-          "packageLocation": "./.yarn/cache/@types-selenium-webdriver-npm-4.1.15-77976c9cd6-810ccb9155.zip/node_modules/@types/selenium-webdriver/",\
+        ["npm:4.1.16", {\
+          "packageLocation": "./.yarn/cache/@types-selenium-webdriver-npm-4.1.16-9fa71261b4-e704e81304.zip/node_modules/@types/selenium-webdriver/",\
           "packageDependencies": [\
-            ["@types/selenium-webdriver", "npm:4.1.15"],\
+            ["@types/selenium-webdriver", "npm:4.1.16"],\
             ["@types/ws", "npm:8.5.5"]\
           ],\
           "linkType": "HARD"\
