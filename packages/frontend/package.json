@@ -40,7 +40,7 @@
     "@types/react-dom": "18.2.7",
     "@vitejs/plugin-react": "4.0.4",
     "@vitest/web-worker": "0.34.1",
-    "apexcharts": "3.41.1",
+    "apexcharts": "3.42.0",
     "axios": "1.4.0",
     "clsx": "2.0.0",
     "date-fns": "2.30.0",
