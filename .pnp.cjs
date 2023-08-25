@@ -1763,7 +1763,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitejs/plugin-react", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:4.0.4"],\
             ["@vitest/coverage-v8", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:0.34.1"],\
             ["@vitest/web-worker", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:0.34.1"],\
-            ["apexcharts", "npm:3.41.1"],\
+            ["apexcharts", "npm:3.42.0"],\
             ["axios", "npm:1.4.0"],\
             ["clsx", "npm:2.0.0"],\
             ["date-fns", "npm:2.30.0"],\
@@ -3076,6 +3076,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@yr/monotone-cubic-spline", [\
+        ["npm:1.0.3", {\
+          "packageLocation": "./.yarn/cache/@yr-monotone-cubic-spline-npm-1.0.3-a6469f7958-ebc75e4d84.zip/node_modules/@yr/monotone-cubic-spline/",\
+          "packageDependencies": [\
+            ["@yr/monotone-cubic-spline", "npm:1.0.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["abbrev", [\
         ["npm:1.1.1", {\
           "packageLocation": "./.yarn/cache/abbrev-npm-1.1.1-3659247eab-a4a97ec07d.zip/node_modules/abbrev/",\
@@ -3303,10 +3312,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["apexcharts", [\
-        ["npm:3.41.1", {\
-          "packageLocation": "./.yarn/cache/apexcharts-npm-3.41.1-d8a6955fa5-096830c583.zip/node_modules/apexcharts/",\
+        ["npm:3.42.0", {\
+          "packageLocation": "./.yarn/cache/apexcharts-npm-3.42.0-8d9bf64a4f-e29ce35d9b.zip/node_modules/apexcharts/",\
           "packageDependencies": [\
-            ["apexcharts", "npm:3.41.1"],\
+            ["apexcharts", "npm:3.42.0"],\
+            ["@yr/monotone-cubic-spline", "npm:1.0.3"],\
             ["svg.draggable.js", "npm:2.2.2"],\
             ["svg.easing.js", "npm:2.0.0"],\
             ["svg.filter.js", "npm:2.0.2"],\
@@ -8655,7 +8665,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-apexcharts", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:1.4.1"],\
             ["@types/apexcharts", null],\
             ["@types/react", "npm:18.2.21"],\
-            ["apexcharts", "npm:3.41.1"],\
+            ["apexcharts", "npm:3.42.0"],\
             ["prop-types", "npm:15.8.1"],\
             ["react", "npm:18.2.0"]\
           ],\
