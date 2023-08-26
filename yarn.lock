@@ -1256,7 +1256,7 @@ __metadata:
     chalk: 5.3.0
     concurrently: 8.2.1
     cookie-parser: 1.4.6
-    cron: 2.4.1
+    cron: 2.4.2
     date-fns: 2.30.0
     dotenv: 16.3.1
     esbuild: 0.19.2
@@ -1779,6 +1779,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e009a2bfb50e90ca9b7c6e8f648f8464067271fd99116f881073fa6fa76dc8d0133181dd65e6614d5fb1220d671d67b0124aef7d97dc02d7e342ab143a47779d
+  languageName: node
+  linkType: hard
+
+"@types/luxon@npm:~3.3.0":
+  version: 3.3.1
+  resolution: "@types/luxon@npm:3.3.1"
+  checksum: da8f6158edacae1430f3eca5f4ab4891200ffb34aa521ef6bae407a3c50b3854907098bc4535fb2a66a2779738f3c6c48fdfd86f01117a6f4844b18536cdb7c0
   languageName: node
   linkType: hard
 
@@ -3430,12 +3437,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cron@npm:2.4.1":
-  version: 2.4.1
-  resolution: "cron@npm:2.4.1"
+"cron@npm:2.4.2":
+  version: 2.4.2
+  resolution: "cron@npm:2.4.2"
   dependencies:
-    luxon: ^3.2.1
-  checksum: a421a837f99cf18da2f51e3608610f71817c38e6f756b4c85a26f64521dac327ac79861ae3dcf991076f72f3be0daadfffd413b4be0c3b4b029509b89e86b6d4
+    "@types/luxon": ~3.3.0
+    luxon: ~3.3.0
+  checksum: 98bec3d3797b4d0909999ffc6b6b5676c3e9e447126d019f4b2678fef7a386b9d46fb5c2e05fff9e9cc4e59941ceea45d1b8edb6599b189ba5cef22f5bca82f0
   languageName: node
   linkType: hard
 
@@ -5999,10 +6007,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:^3.2.1":
-  version: 3.4.0
-  resolution: "luxon@npm:3.4.0"
-  checksum: ca9b6d0e0a8d156574b7e84014ac8e4b60d116d6d7a0fb65ef48eeb8e4415dad6350b76c5ee34f795cadf8b3f9a5fe7a6885733f561e554c50dffb0b704a840b
+"luxon@npm:~3.3.0":
+  version: 3.3.0
+  resolution: "luxon@npm:3.3.0"
+  checksum: 50cf17a0dc155c3dcacbeae8c0b7e80db425e0ba97b9cbdf12a7fc142d841ff1ab1560919f033af46240ed44e2f70c49f76e3422524c7fc8bb8d81ca47c66187
   languageName: node
   linkType: hard
 
