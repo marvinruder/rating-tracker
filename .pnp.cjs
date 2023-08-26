@@ -1689,7 +1689,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chalk", "npm:5.3.0"],\
             ["concurrently", "npm:8.2.1"],\
             ["cookie-parser", "npm:1.4.6"],\
-            ["cron", "npm:2.4.1"],\
+            ["cron", "npm:2.4.2"],\
             ["date-fns", "npm:2.30.0"],\
             ["dotenv", "npm:16.3.1"],\
             ["esbuild", "npm:0.19.2"],\
@@ -2339,6 +2339,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/keyv", "npm:3.1.4"],\
             ["@types/node", "npm:20.5.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/luxon", [\
+        ["npm:3.3.1", {\
+          "packageLocation": "./.yarn/cache/@types-luxon-npm-3.3.1-7a55f9bb5d-da8f6158ed.zip/node_modules/@types/luxon/",\
+          "packageDependencies": [\
+            ["@types/luxon", "npm:3.3.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4319,11 +4328,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["cron", [\
-        ["npm:2.4.1", {\
-          "packageLocation": "./.yarn/cache/cron-npm-2.4.1-6fc5a7a463-a421a837f9.zip/node_modules/cron/",\
+        ["npm:2.4.2", {\
+          "packageLocation": "./.yarn/cache/cron-npm-2.4.2-e773b1fd83-98bec3d379.zip/node_modules/cron/",\
           "packageDependencies": [\
-            ["cron", "npm:2.4.1"],\
-            ["luxon", "npm:3.4.0"]\
+            ["cron", "npm:2.4.2"],\
+            ["@types/luxon", "npm:3.3.1"],\
+            ["luxon", "npm:3.3.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -7268,10 +7278,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["luxon", [\
-        ["npm:3.4.0", {\
-          "packageLocation": "./.yarn/cache/luxon-npm-3.4.0-8e0b97226e-ca9b6d0e0a.zip/node_modules/luxon/",\
+        ["npm:3.3.0", {\
+          "packageLocation": "./.yarn/cache/luxon-npm-3.3.0-bdbae9bfd5-50cf17a0dc.zip/node_modules/luxon/",\
           "packageDependencies": [\
-            ["luxon", "npm:3.4.0"]\
+            ["luxon", "npm:3.3.0"]\
           ],\
           "linkType": "HARD"\
         }]\
