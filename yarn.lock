@@ -1241,7 +1241,7 @@ __metadata:
   dependencies:
     "@prisma/client": 5.2.0
     "@rating-tracker/commons": "workspace:*"
-    "@simplewebauthn/server": 8.0.1
+    "@simplewebauthn/server": 8.1.0
     "@types/cookie-parser": 1.4.3
     "@types/express": 4.17.17
     "@types/node": 20.5.7
@@ -1472,9 +1472,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/server@npm:8.0.1":
-  version: 8.0.1
-  resolution: "@simplewebauthn/server@npm:8.0.1"
+"@simplewebauthn/server@npm:8.1.0":
+  version: 8.1.0
+  resolution: "@simplewebauthn/server@npm:8.1.0"
   dependencies:
     "@hexagon/base64": ^1.1.27
     "@peculiar/asn1-android": ^2.3.6
@@ -1487,7 +1487,7 @@ __metadata:
     cbor-x: ^1.5.2
     cross-fetch: ^4.0.0
     debug: ^4.3.4
-  checksum: 7283f2d66c613ce2d9bdb053b9fc4d5391a821be739f805d0834ec059c32cd0320f275e34a9cfb0545c4a473745da3956ee1b820385085b91deede2e0381dac7
+  checksum: 49f71adb70a3916d7609398a9c1fdd71af0e64f6f5ac16d59d1f033366b977bb7c2ff8a68a3182f3087c8732bcf1a08597258cac4700d736ef90a6eff3ab8a86
   languageName: node
   linkType: hard
 
