@@ -1,5 +1,4 @@
 .pnp.*
 .yarn/*
 packages/backend/prisma
-packages/frontend/.vite/deps
-packages/frontend/.vite/deps_temp
+packages/frontend/.vite

@@ -1,24 +1,25 @@
-FROM rust:1.72.0-alpine as wasm
+FROM rust:1.71.1-alpine as wasm
 
 WORKDIR /workdir
 
 # Install required tools and libraries
-RUN --mount=type=cache,target=/var/cache/apk \
+RUN --mount=type=cache,target=/var/cache/apk --mount=type=cache,target=/usr/local/cargo/registry \
   apk add binaryen pkgconfig musl-dev openssl-dev && \
+  cargo install wasm-bindgen-cli && \
+  rustup target add wasm32-unknown-unknown && \
   wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
 
 # Get and build dependencies based on dummy `lib.rs`
 COPY wasm/Cargo.toml wasm/Cargo.lock wasm/config.toml ./
-
-RUN \
-  mkdir ./src && echo 'pub fn tmp() {}' > ./src/lib.rs && \
-  wasm-pack build --release && \
-  rm -r ./src/lib.rs ./target/wasm32-*/release/wasm.*
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+  mkdir ./src && \
+  echo 'pub fn tmp() {}' > ./src/lib.rs && \
+  cargo build --release --target wasm32-unknown-unknown && \
+  rm ./src/lib.rs
 
 # Build WebAssembly package
 COPY wasm/src/* ./src/
-
-RUN \
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
   touch ./src/* && \
   wasm-pack build -s rating-tracker --release && \
   # Fix `package.json`

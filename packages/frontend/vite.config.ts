@@ -1,4 +1,4 @@
-import { defineConfig as defineVitestConfig, configDefaults as vitestConfigDefaults } from "vitest/config";
+import { defineConfig as defineVitestConfig } from "vitest/config";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 import topLevelAwait from "vite-plugin-top-level-await";
@@ -64,5 +64,5 @@ export default mergeConfig(
         provider: "v8",
       },
     },
-  })
+  }),
 );
