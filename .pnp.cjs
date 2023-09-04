@@ -1674,7 +1674,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@rating-tracker/backend", "workspace:packages/backend"],\
             ["@prisma/client", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.2.0"],\
             ["@rating-tracker/commons", "workspace:packages/commons"],\
-            ["@simplewebauthn/server", "npm:8.1.0"],\
+            ["@simplewebauthn/server", "npm:8.1.1"],\
             ["@types/cookie-parser", "npm:1.4.3"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/node", "npm:20.5.9"],\
@@ -1993,10 +1993,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/server", [\
-        ["npm:8.1.0", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-8.1.0-0ad7198aac-49f71adb70.zip/node_modules/@simplewebauthn/server/",\
+        ["npm:8.1.1", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-server-npm-8.1.1-106d3bd108-9f3d1fdb70.zip/node_modules/@simplewebauthn/server/",\
           "packageDependencies": [\
-            ["@simplewebauthn/server", "npm:8.1.0"],\
+            ["@simplewebauthn/server", "npm:8.1.1"],\
             ["@hexagon/base64", "npm:1.1.27"],\
             ["@peculiar/asn1-android", "npm:2.3.6"],\
             ["@peculiar/asn1-ecc", "npm:2.3.6"],\
@@ -2004,10 +2004,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@peculiar/asn1-schema", "npm:2.3.6"],\
             ["@peculiar/asn1-x509", "npm:2.3.6"],\
             ["@simplewebauthn/typescript-types", "npm:8.0.0"],\
-            ["@types/debug", "npm:4.1.8"],\
             ["cbor-x", "npm:1.5.4"],\
-            ["cross-fetch", "npm:4.0.0"],\
-            ["debug", "virtual:feb0771c9f8eadaf509cfed41e14a8bebbea5442233275c1c87085111077a08ef71eb773b899665b154d8203a55a489610a54117ae059fce5f5b8b844493b1b1#npm:4.3.4"]\
+            ["cross-fetch", "npm:4.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2252,16 +2250,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@types/debug", [\
-        ["npm:4.1.8", {\
-          "packageLocation": "./.yarn/cache/@types-debug-npm-4.1.8-a04e2ca136-a9a9bb40a1.zip/node_modules/@types/debug/",\
-          "packageDependencies": [\
-            ["@types/debug", "npm:4.1.8"],\
-            ["@types/ms", "npm:0.7.31"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@types/emscripten", [\
         ["npm:1.39.7", {\
           "packageLocation": "./.yarn/cache/@types-emscripten-npm-1.39.7-b616932db8-9871e44953.zip/node_modules/@types/emscripten/",\
@@ -2364,15 +2352,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-mime-npm-3.0.1-dec03536dc-4040fac73f.zip/node_modules/@types/mime/",\
           "packageDependencies": [\
             ["@types/mime", "npm:3.0.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/ms", [\
-        ["npm:0.7.31", {\
-          "packageLocation": "./.yarn/cache/@types-ms-npm-0.7.31-ea3b89342b-daadd354ae.zip/node_modules/@types/ms/",\
-          "packageDependencies": [\
-            ["@types/ms", "npm:0.7.31"]\
           ],\
           "linkType": "HARD"\
         }]\
