@@ -1,11 +1,11 @@
-FROM rust:1.71.1-alpine as wasm
+FROM rust:1.72.0-alpine as wasm
 
 WORKDIR /workdir
 
 # Install required tools and libraries
 RUN --mount=type=cache,target=/var/cache/apk --mount=type=cache,target=/usr/local/cargo/registry \
   apk add binaryen pkgconfig musl-dev openssl-dev && \
-  cargo install wasm-bindgen-cli && \
+  RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
   rustup target add wasm32-unknown-unknown && \
   wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
 
