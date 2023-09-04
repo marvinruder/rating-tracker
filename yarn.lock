@@ -1241,7 +1241,7 @@ __metadata:
   dependencies:
     "@prisma/client": 5.2.0
     "@rating-tracker/commons": "workspace:*"
-    "@simplewebauthn/server": 8.1.0
+    "@simplewebauthn/server": 8.1.1
     "@types/cookie-parser": 1.4.3
     "@types/express": 4.17.17
     "@types/node": 20.5.9
@@ -1472,9 +1472,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/server@npm:8.1.0":
-  version: 8.1.0
-  resolution: "@simplewebauthn/server@npm:8.1.0"
+"@simplewebauthn/server@npm:8.1.1":
+  version: 8.1.1
+  resolution: "@simplewebauthn/server@npm:8.1.1"
   dependencies:
     "@hexagon/base64": ^1.1.27
     "@peculiar/asn1-android": ^2.3.6
@@ -1483,11 +1483,9 @@ __metadata:
     "@peculiar/asn1-schema": ^2.3.6
     "@peculiar/asn1-x509": ^2.3.6
     "@simplewebauthn/typescript-types": ^8.0.0
-    "@types/debug": ^4.1.8
     cbor-x: ^1.5.2
     cross-fetch: ^4.0.0
-    debug: ^4.3.4
-  checksum: 49f71adb70a3916d7609398a9c1fdd71af0e64f6f5ac16d59d1f033366b977bb7c2ff8a68a3182f3087c8732bcf1a08597258cac4700d736ef90a6eff3ab8a86
+  checksum: 9f3d1fdb70da81fe419a56c7454dbd1d599c960594a470a4a9a1c1c44a629f360090d1c1e5002ced785e2ba879d9cf463dee4c6ea13b9eb7944b066a5c432e71
   languageName: node
   linkType: hard
 
@@ -1705,15 +1703,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/debug@npm:^4.1.8":
-  version: 4.1.8
-  resolution: "@types/debug@npm:4.1.8"
-  dependencies:
-    "@types/ms": "*"
-  checksum: a9a9bb40a199e9724aa944e139a7659173a9b274798ea7efbc277cb084bc37d32fc4c00877c3496fac4fed70a23243d284adb75c00b5fdabb38a22154d18e5df
-  languageName: node
-  linkType: hard
-
 "@types/emscripten@npm:^1.39.6":
   version: 1.39.7
   resolution: "@types/emscripten@npm:1.39.7"
@@ -1800,13 +1789,6 @@ __metadata:
   version: 1.3.2
   resolution: "@types/mime@npm:1.3.2"
   checksum: 0493368244cced1a69cb791b485a260a422e6fcc857782e1178d1e6f219f1b161793e9f87f5fae1b219af0f50bee24fcbe733a18b4be8fdd07a38a8fb91146fd
-  languageName: node
-  linkType: hard
-
-"@types/ms@npm:*":
-  version: 0.7.31
-  resolution: "@types/ms@npm:0.7.31"
-  checksum: daadd354aedde024cce6f5aa873fefe7b71b22cd0e28632a69e8b677aeb48ae8caa1c60e5919bb781df040d116b01cb4316335167a3fc0ef6a63fa3614c0f6da
   languageName: node
   linkType: hard
 
