@@ -98,7 +98,7 @@ node('rating-tracker-build-arm64') {
                 parallel(
                     test: {
                         stage ('Run Tests') {
-                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm --add-host host.docker.internal:host.gateway .")
+                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm --add-host host.docker.internal:host-gateway .")
                         }
                     },
                     build: {
