@@ -29,7 +29,7 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
     await client.user.create({
       data: { ...user },
     });
-    logger.info(PREFIX_POSTGRES + `Created user “${user.name}” with email address ${user.email}}.`);
+    logger.info(PREFIX_POSTGRES + `Created user “${user.name}” with email address ${user.email}.`);
     // Inform the admin of the new user via Signal messenger
     await signal.sendMessage(`🆕👤 New user “${user.name}” (email ${user.email}) registered.`, "userManagement");
     return true;

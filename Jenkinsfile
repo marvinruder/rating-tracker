@@ -167,8 +167,9 @@ node('rating-tracker-build-arm64') {
             } finally {
                 stage ('Cleanup') {
                     // Push cache image to Docker registry and remove build artifacts
+                    // JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(rsync -a /home/jenkins/.cache storagebox:/home/cache) &'
                     sh """
-                    JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(cd /home/jenkins && docker build -t marvinruder/cache:jenkins . && docker push marvinruder/cache:jenkins) &'
+                    rsync -aP /home/jenkins/.cache storagebox:/home/cache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
                     rm -rf global app
