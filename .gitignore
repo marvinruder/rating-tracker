@@ -20,7 +20,6 @@ packages/*/.vite
 
 # local dev environment
 packages/backend/dev/nginx/certs
-packages/backend/dev/nginx/dhparam
 packages/backend/dev/postgresql
 packages/backend/dev/redis
 packages/backend/dev/signal-cli

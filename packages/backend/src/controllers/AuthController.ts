@@ -1,6 +1,5 @@
 import { randomUUID } from "node:crypto";
 import * as SimpleWebAuthnServer from "@simplewebauthn/server";
-import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import { createSession } from "../redis/repositories/sessionRepository";
@@ -16,8 +15,6 @@ import {
   UserWithCredentials,
 } from "@rating-tracker/commons";
 import Router from "../utils/router";
-
-dotenv.config();
 
 const rpName = "Rating Tracker";
 // Using only the domain name allows us to use the same code for several subdomains.

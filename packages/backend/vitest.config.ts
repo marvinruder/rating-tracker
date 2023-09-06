@@ -1,10 +1,5 @@
 import { defineConfig } from "vitest/config";
-
-import dotenv from "dotenv";
-
-dotenv.config({
-  path: "test/.env", // Load test environment variables before connecting to database
-});
+import "./test/env";
 
 export default defineConfig({
   test: {

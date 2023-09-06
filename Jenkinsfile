@@ -53,7 +53,7 @@ node('rating-tracker-build') {
                             // Create migration script from all migrations and inject IP and ports into test environment
                             sh """
                             cat packages/backend/prisma/migrations/*/migration.sql > packages/backend/test/all_migrations.sql
-                            sed -i \"s/127.0.0.1/host.docker.internal/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/.env
+                            sed -i \"s/127.0.0.1/host.docker.internal/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/env.ts
                             PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
                             """
                         }

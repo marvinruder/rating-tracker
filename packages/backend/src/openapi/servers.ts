@@ -1,7 +1,4 @@
-import dotenv from "dotenv";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
-
-dotenv.config();
 
 /**
  * The servers that the API is reachable at.

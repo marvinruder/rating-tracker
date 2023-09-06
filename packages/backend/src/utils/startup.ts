@@ -1,8 +1,5 @@
 import packageInfo from "../../package.json" assert { type: "json" };
 import chalk from "chalk";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 /**
  * The color to style the logo in.

@@ -1,9 +1,6 @@
 import chalk from "chalk";
-import dotenv from "dotenv";
 import { createClient } from "redis";
 import logger, { PREFIX_REDIS } from "../utils/logger";
-
-dotenv.config();
 
 // The URL of the Redis instance
 const url = process.env.REDIS_URL;
