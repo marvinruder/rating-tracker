@@ -1,7 +1,7 @@
 process.env = {
   ...process.env,
   DATABASE_URL:
-    "postgresql://rating-tracker-test:rating-tracker-test@localhost:54321/rating-tracker-test?sslmode=disable",
+    "postgresql://rating-tracker-test:rating-tracker-test@127.0.0.1:54321/rating-tracker-test?sslmode=disable",
   NODE_ENV: "test",
   DOMAIN: "example.com",
   SUBDOMAIN: "subdomain",
