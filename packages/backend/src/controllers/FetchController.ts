@@ -20,7 +20,6 @@ import * as signal from "../signal/signal";
 import logger, { PREFIX_SELENIUM } from "../utils/logger";
 import { createResource, readResource } from "../redis/repositories/resourceRepository";
 import axios from "axios";
-import dotenv from "dotenv";
 import Router from "../utils/router";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import morningstarFetcher from "../fetchers/morningstarFetcher";
@@ -28,8 +27,6 @@ import marketScreenerFetcher from "../fetchers/marketScreenerFetcher";
 import msciFetcher from "../fetchers/msciFetcher";
 import refinitivFetcher from "../fetchers/refinitivFetcher";
 import spFetcher from "../fetchers/spFetcher";
-
-dotenv.config();
 
 const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings" as const;
 

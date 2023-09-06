@@ -3,18 +3,18 @@ version: "3.8"
 services:
   redis-test:
     image: redis:alpine
-    user: "1000"
+    user: 1000:1000
     cap_drop:
       - all
     security_opt:
       - no-new-privileges
-    command: "redis-server --appendonly no --save \"\""
+    command: 'redis-server --appendonly no --save ""'
     ports:
       - ${REDISPORT}:6379
 
   postgres-test:
     image: postgres:alpine
-    user: "70"
+    user: 70:70
     cap_drop:
       - all
     cap_add:
@@ -29,4 +29,4 @@ services:
       POSTGRES_PASSWORD: "rating-tracker-test"
     volumes:
       - ./all_migrations.sql:/docker-entrypoint-initdb.d/all_migrations.sql
-    shm_size: '256mb'
+    shm_size: "256mb"

@@ -14,8 +14,6 @@ import path from "path";
 import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger";
 import errorHandler from "./utils/errorHandler";
 import setupCronJobs from "./utils/cron";
-import dotenv from "dotenv";
-dotenv.config();
 
 // Import all controllers
 import "./controllers/AuthController";
@@ -189,4 +187,5 @@ export const listener = server.app.listen(process.env.PORT, () => {
       " Listening…",
   );
   logger.info("");
+  process.env.EXIT_AFTER_READY && process.exit(0);
 });

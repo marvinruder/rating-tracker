@@ -4,12 +4,9 @@ import pretty from "pino-pretty";
 import fs from "node:fs";
 import chalk from "chalk";
 import cron from "cron";
-import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { STATUS_CODES } from "http";
 import { stockLogoEndpointPath } from "@rating-tracker/commons";
-
-dotenv.config();
 
 export const PREFIX_CRON = chalk.whiteBright.bgGrey(" \ufba7 ") + chalk.grey(" ");
 export const PREFIX_NODEJS = chalk.whiteBright.bgHex("#339933")(" \uf898 ") + chalk.hex("#339933")(" ");
