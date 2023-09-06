@@ -1279,7 +1279,7 @@ __metadata:
     response-time: 2.3.2
     selenium-webdriver: 4.12.0
     supertest: 6.3.3
-    swagger-ui-dist: 5.6.1
+    swagger-ui-dist: 5.6.2
     swagger-ui-express: 5.0.0
     typescript: 5.2.2
     vite: 4.4.9
@@ -8325,10 +8325,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:5.6.1, swagger-ui-dist@npm:>=5.0.0":
-  version: 5.6.1
-  resolution: "swagger-ui-dist@npm:5.6.1"
-  checksum: 05b9493090c51de4ee99f241cd48d112494bd23ccf77264d50559a0233564dcc0fa8ee9cf160efee0dbd5c5ff9dc557ef056614079e36ff08f91705f8c594aff
+"swagger-ui-dist@npm:5.6.2, swagger-ui-dist@npm:>=5.0.0":
+  version: 5.6.2
+  resolution: "swagger-ui-dist@npm:5.6.2"
+  checksum: 55ee56c205d576917014d8c4603475d4b707195877a2f8d257312f11de67e3b5a3163ce9120b55103506e26a76bfc3455e08bc074e7e71d7a3abd4066600897e
   languageName: node
   linkType: hard
 
