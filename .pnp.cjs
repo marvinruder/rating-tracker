@@ -1702,7 +1702,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-openapi-validator", "npm:5.0.6"],\
             ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:6.11.0"],\
             ["glob", "npm:10.3.4"],\
-            ["pino", "npm:8.15.0"],\
+            ["pino", "npm:8.15.1"],\
             ["pino-pretty", "npm:10.2.0"],\
             ["prettier", "npm:3.0.3"],\
             ["prisma", "npm:5.2.0"],\
@@ -8268,14 +8268,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pino", [\
-        ["npm:8.15.0", {\
-          "packageLocation": "./.yarn/cache/pino-npm-8.15.0-4faf01bb31-9a54d0757f.zip/node_modules/pino/",\
+        ["npm:8.15.1", {\
+          "packageLocation": "./.yarn/cache/pino-npm-8.15.1-d6d7d1593f-cbc6aa4e7f.zip/node_modules/pino/",\
           "packageDependencies": [\
-            ["pino", "npm:8.15.0"],\
+            ["pino", "npm:8.15.1"],\
             ["atomic-sleep", "npm:1.0.0"],\
             ["fast-redact", "npm:3.3.0"],\
             ["on-exit-leak-free", "npm:2.1.0"],\
-            ["pino-abstract-transport", "npm:1.0.0"],\
+            ["pino-abstract-transport", "npm:1.1.0"],\
             ["pino-std-serializers", "npm:6.2.2"],\
             ["process-warning", "npm:2.2.0"],\
             ["quick-format-unescaped", "npm:4.0.4"],\
@@ -8288,10 +8288,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pino-abstract-transport", [\
-        ["npm:1.0.0", {\
-          "packageLocation": "./.yarn/cache/pino-abstract-transport-npm-1.0.0-a566611547-05dd0eda52.zip/node_modules/pino-abstract-transport/",\
+        ["npm:1.1.0", {\
+          "packageLocation": "./.yarn/cache/pino-abstract-transport-npm-1.1.0-178ca571bf-cc84caabee.zip/node_modules/pino-abstract-transport/",\
           "packageDependencies": [\
-            ["pino-abstract-transport", "npm:1.0.0"],\
+            ["pino-abstract-transport", "npm:1.1.0"],\
             ["readable-stream", "npm:4.4.2"],\
             ["split2", "npm:4.2.0"]\
           ],\
@@ -8311,7 +8311,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["joycon", "npm:3.1.1"],\
             ["minimist", "npm:1.2.8"],\
             ["on-exit-leak-free", "npm:2.1.0"],\
-            ["pino-abstract-transport", "npm:1.0.0"],\
+            ["pino-abstract-transport", "npm:1.1.0"],\
             ["pump", "npm:3.0.0"],\
             ["readable-stream", "npm:4.4.2"],\
             ["secure-json-parse", "npm:2.7.0"],\
