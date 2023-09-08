@@ -23,7 +23,7 @@
   "packageManager": "yarn@3.6.3",
   "devDependencies": {
     "concurrently": "8.2.1",
-    "eslint": "8.48.0",
+    "eslint": "8.49.0",
     "prettier": "3.0.3",
     "typescript": "5.2.2"
   },
