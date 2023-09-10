@@ -1267,7 +1267,7 @@ __metadata:
     express: 4.18.2
     express-async-errors: 3.1.1
     express-openapi-validator: 5.0.6
-    express-rate-limit: 6.11.0
+    express-rate-limit: 6.11.1
     glob: 10.3.4
     pino: 8.15.1
     pino-pretty: 10.2.0
@@ -4354,12 +4354,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-rate-limit@npm:6.11.0":
-  version: 6.11.0
-  resolution: "express-rate-limit@npm:6.11.0"
+"express-rate-limit@npm:6.11.1":
+  version: 6.11.1
+  resolution: "express-rate-limit@npm:6.11.1"
   peerDependencies:
     express: ^4 || ^5
-  checksum: a2dc7ffa9eb6c43c7d2840bd481fb18f67d2541d705d4ea272fc6c1ddcce290cb80b21fea699808fd2e809da3e8e14e8e34f11a0006d6d5740a7b0057f92d144
+  checksum: 0f9ce8f0e1ba4963e4d33e710d45dc7dd1baa33e1ae23531f60a7d7df55f2c11b7b9dfa10a16f63c133e1fa4ea756c9843b8074e25b2595461054e7b14574079
   languageName: node
   linkType: hard
 
