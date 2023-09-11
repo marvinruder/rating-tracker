@@ -7,9 +7,18 @@ ENV SIGNAL_SENDER +493012345678
 
 WORKDIR /workdir
 
+COPY packages packages
+
 # Run tests
 RUN \
-  --mount=type=bind,target=. \
+  --mount=type=bind,target=.yarn \
+  --mount=type=bind,target=global \
+  --mount=type=bind,target=.pnp.cjs \
+  --mount=type=bind,target=.pnp.loader.mjs \
+  --mount=type=bind,target=.yarnrc.yml \
+  --mount=type=bind,target=package.json \
+  --mount=type=bind,target=tsconfig.json \
+  --mount=type=bind,target=yarn.lock \
   mkdir -p /coverage/{backend,commons,frontend} && \
   yarn test
 

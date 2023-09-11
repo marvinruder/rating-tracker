@@ -22,9 +22,18 @@ COPY \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /workdir/app/public/api-docs/
-COPY . .
+COPY packages packages
 
+# Run tests
 RUN \
+  --mount=type=bind,target=.yarn \
+  --mount=type=bind,target=global \
+  --mount=type=bind,target=.pnp.cjs \
+  --mount=type=bind,target=.pnp.loader.mjs \
+  --mount=type=bind,target=.yarnrc.yml \
+  --mount=type=bind,target=package.json \
+  --mount=type=bind,target=tsconfig.json \
+  --mount=type=bind,target=yarn.lock \
   # Build Node.js bundle
   yarn build && \
   # Parse Node.js bundle
@@ -36,6 +45,6 @@ RUN \
   cp -r packages/frontend/dist/* app/public
 
 # Add eslint cache
-COPY --from=validator /.eslintcache .
+COPY --from=validator /.eslintcache /
 
 ENTRYPOINT [ "/bin/sh" ]

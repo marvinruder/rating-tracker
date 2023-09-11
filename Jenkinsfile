@@ -63,17 +63,14 @@ node('rating-tracker-build-arm64') {
                     },
                     wasm: {
                         stage ('Compile WebAssembly utils') {
-                            // Acquire mutex to avoid collisions while working with the marvinruder/rating-tracker:wasm image
-                            lock('rating-tracker-wasm') {
-                                // Build the WebAssembly image while using registry cache
-                                sh """
-                                docker buildx build --builder rating-tracker --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:job$JOB_ID-wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=marvinruder/cache:rating-tracker-wasm .
-                                id=\$(docker create $imagename:job$JOB_ID-wasm)
-                                docker cp \$id:/workdir/pkg/. ./packages/wasm/.
-                                docker rm -v \$id
-                                docker rmi $imagename:job$JOB_ID-wasm
-                                """
-                            }
+                            // Build the WebAssembly image while using registry cache
+                            sh """
+                            docker buildx build --builder rating-tracker --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:job$JOB_ID-wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=marvinruder/cache:rating-tracker-wasm .
+                            id=\$(docker create $imagename:job$JOB_ID-wasm)
+                            docker cp \$id:/workdir/pkg/. ./packages/wasm/.
+                            docker rm -v \$id
+                            docker rmi $imagename:job$JOB_ID-wasm
+                            """
                         }
                     },
                     dep: {
@@ -118,10 +115,9 @@ node('rating-tracker-build-arm64') {
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
-                            docker cp \$id:/workdir/.eslintcache ./.eslintcache
+                            docker cp \$id:/.eslintcache /home/jenkins/.cache/.eslintcache
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-build
-                            cp -a ./.eslintcache /home/jenkins/.cache/.eslintcache
                             """
                         }
                     }
