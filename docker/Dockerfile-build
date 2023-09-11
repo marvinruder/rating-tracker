@@ -3,12 +3,11 @@ ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Copy project files and WebAssembly package
-COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
-COPY . .
-
 # Run validations
-RUN yarn validate
+RUN \
+  --mount=type=bind,target=. \
+  cp .eslintcache /.eslintcache && \
+  yarn validate:ci
 
 FROM node:20.6.1-alpine as build
 LABEL stage=build
@@ -18,7 +17,6 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 # Copy project files as well as Swagger UI files and WebAssembly package
-COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
 COPY \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
@@ -38,6 +36,6 @@ RUN \
   cp -r packages/frontend/dist/* app/public
 
 # Add eslint cache
-COPY --from=validator /workdir/.eslintcache .
+COPY --from=validator /.eslintcache .
 
 ENTRYPOINT [ "/bin/sh" ]

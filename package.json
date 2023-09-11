@@ -23,6 +23,7 @@
     "build": "yarn workspaces foreach -pv -j unlimited run build",
     "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm && sed -E -i.bak 's/\"module\": \"([A-Za-z0-9\\-\\.]+)\",/\"main\": \"\\1\",\\\n  \"module\": \"\\1\",/g ; s/^}$/}\\\n/' packages/wasm/package.json && rm packages/wasm/package.json.bak",
     "validate": "yarn workspaces foreach -pv -j unlimited run typecheck && yarn eslint --color --cache --cache-strategy content --max-warnings 0 --ext .tsx,.ts packages/backend/src/ packages/commons/src/ packages/frontend/src/",
+    "validate:ci": "yarn workspaces foreach -pv -j unlimited run typecheck && yarn eslint --color --cache --cache-location /.eslintcache --cache-strategy content --max-warnings 0 --ext .tsx,.ts packages/backend/src/ packages/commons/src/ packages/frontend/src/",
     "fix:swagger": "mkdir -p packages/backend/dist/public/api-docs && cp .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui{.css,-bundle.js,-standalone-preset.js} packages/backend/dist/public/api-docs/"
   },
   "packageManager": "yarn@3.6.3",
