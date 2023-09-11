@@ -55,9 +55,9 @@ node('rating-tracker-build-arm64') {
                             cat packages/backend/prisma/migrations/*/migration.sql > packages/backend/test/all_migrations.sql
                             sed -i \"s/127.0.0.1/host.docker.internal/ ; s/54321/$PGPORT/ ; s/63791/$REDISPORT/\" packages/backend/test/env.ts
                             PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
-                            ln -s /coverage/backend ./packages/backend/coverage
-                            ln -s /coverage/commons ./packages/commons/coverage
-                            ln -s /coverage/frontend ./packages/frontend/coverage
+                            ln -sf /coverage/backend ./packages/backend/coverage
+                            ln -sf /coverage/commons ./packages/commons/coverage
+                            ln -sf /coverage/frontend ./packages/frontend/coverage
                             """
                         }
                     },
