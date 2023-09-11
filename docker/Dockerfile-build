@@ -1,4 +1,4 @@
-FROM node:20.6.0-alpine as validator
+FROM node:20.6.1-alpine as validator
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -10,7 +10,7 @@ COPY . .
 # Run validations
 RUN yarn validate
 
-FROM node:20.6.0-alpine as build
+FROM node:20.6.1-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
