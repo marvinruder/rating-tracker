@@ -9,9 +9,9 @@ COPY .yarn ./.yarn
 
 # Install dependencies
 RUN \
-  --mount=type=bind,target=package.json \
-  --mount=type=bind,target=.yarnrc.yml \
-  --mount=type=bind,target=yarn.lock \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,source=packages/backend/package.json,target=packages/backend/package.json \
   --mount=type=bind,source=packages/commons/package.json,target=packages/commons/package.json \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
@@ -21,9 +21,9 @@ RUN \
 # Generate Prisma client
 COPY packages/backend/prisma ./packages/backend/prisma
 RUN \
-  --mount=type=bind,target=package.json \
-  --mount=type=bind,target=.yarnrc.yml \
-  --mount=type=bind,target=yarn.lock \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,source=packages/backend/package.json,target=packages/backend/package.json \
   --mount=type=bind,source=packages/commons/package.json,target=packages/commons/package.json \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
