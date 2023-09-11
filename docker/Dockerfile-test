@@ -19,8 +19,11 @@ RUN \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
-  mkdir -p /coverage/{backend,commons,frontend} && \
-  yarn test
+  yarn test && \
+  mkdir -p /coverage && \
+  mv packages/backend/coverage /coverage/backend && \
+  mv packages/commons/coverage /coverage/commons && \
+  mv packages/frontend/coverage /coverage/frontend
 
 FROM eclipse-temurin:17.0.8_7-jre as codacy
 
