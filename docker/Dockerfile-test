@@ -11,8 +11,8 @@ COPY packages packages
 
 # Run tests
 RUN \
-  --mount=type=bind,target=.yarn \
-  --mount=type=bind,target=global \
+  --mount=type=bind,source=.yarn,target=.yarn \
+  --mount=type=bind,source=global,target=global \
   --mount=type=bind,source=.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,source=.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
