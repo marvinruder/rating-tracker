@@ -1,4 +1,4 @@
-node('rating-tracker-build-arm64') {
+node('rating-tracker-build') {
     withEnv([
         'imagename=marvinruder/rating-tracker',
         'FORCE_COLOR=true'
