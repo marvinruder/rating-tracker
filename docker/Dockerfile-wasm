@@ -3,23 +3,32 @@ FROM rust:1.72.0-alpine as wasm
 WORKDIR /workdir
 
 # Install required tools and libraries
-RUN --mount=type=cache,target=/var/cache/apk \
+RUN \
+  --mount=type=cache,target=/var/cache/apk \
+  --mount=type=cache,target=/usr/local/cargo/registry \
   apk add binaryen pkgconfig musl-dev openssl-dev && \
+  RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
+  rustup target add wasm32-unknown-unknown && \
   wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
 
 # Get and build dependencies based on dummy `lib.rs`
-COPY wasm/Cargo.toml wasm/Cargo.lock wasm/config.toml ./
-
 RUN \
-  mkdir ./src && echo 'pub fn tmp() {}' > ./src/lib.rs && \
-  wasm-pack build --release && \
-  rm -r ./src/lib.rs ./target/wasm32-*/release/wasm.*
+  --mount=type=cache,target=/usr/local/cargo/registry \
+  --mount=type=bind,source=wasm/Cargo.toml,target=Cargo.toml \
+  --mount=type=bind,source=wasm/Cargo.lock,target=Cargo.lock \
+  --mount=type=bind,source=wasm/config.toml,target=config.toml \
+  mkdir ./src && \
+  echo 'pub fn tmp() {}' > ./src/lib.rs && \
+  cargo build --release --target wasm32-unknown-unknown && \
+  rm ./src/lib.rs ./target/wasm32-unknown-unknown/release/deps/wasm.wasm
 
 # Build WebAssembly package
-COPY wasm/src/* ./src/
-
 RUN \
-  touch ./src/* && \
+  --mount=type=cache,target=/usr/local/cargo/registry \
+  --mount=type=bind,source=wasm/Cargo.toml,target=Cargo.toml \
+  --mount=type=bind,source=wasm/Cargo.lock,target=Cargo.lock \
+  --mount=type=bind,source=wasm/config.toml,target=config.toml \
+  --mount=type=bind,source=wasm/src,target=src \
   wasm-pack build -s rating-tracker --release && \
   # Fix `package.json`
   sed -E -i.bak 's/"module": "([A-Za-z0-9\-\.]+)",/"main": "\1",\n  "module": "\1",/g ; s/^}$/}\n/' pkg/package.json && \

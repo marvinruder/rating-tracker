@@ -2,8 +2,11 @@
 
 # Files containing dependencies are maintained by Renovate and do not have a code owner
 package.json
-/.pnp.cjs
+/.yarn/
+/.pnp.*
 /yarn.lock
+/.yarnrc.yml
+/.nvmrc
 /docker/
 Dockerfile
 docker-compose.yml

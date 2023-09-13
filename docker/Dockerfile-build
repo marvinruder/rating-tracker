@@ -3,12 +3,11 @@ ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Copy project files and WebAssembly package
-COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
-COPY . .
-
 # Run validations
-RUN yarn validate
+RUN \
+  --mount=type=bind,target=. \
+  cp .eslintcache /.eslintcache && \
+  yarn validate:ci
 
 FROM node:20.6.1-alpine as build
 LABEL stage=build
@@ -18,15 +17,23 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 # Copy project files as well as Swagger UI files and WebAssembly package
-COPY --from=marvinruder/rating-tracker:wasm /workdir/pkg packages/wasm
 COPY \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /workdir/app/public/api-docs/
-COPY . .
+COPY packages packages
 
+# Run tests
 RUN \
+  --mount=type=bind,source=.yarn,target=.yarn \
+  --mount=type=bind,source=global,target=global \
+  --mount=type=bind,source=.pnp.cjs,target=.pnp.cjs \
+  --mount=type=bind,source=.pnp.loader.mjs,target=.pnp.loader.mjs \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
   # Build Node.js bundle
   yarn build && \
   # Parse Node.js bundle
@@ -38,6 +45,6 @@ RUN \
   cp -r packages/frontend/dist/* app/public
 
 # Add eslint cache
-COPY --from=validator /workdir/.eslintcache .
+COPY --from=validator /.eslintcache /
 
 ENTRYPOINT [ "/bin/sh" ]

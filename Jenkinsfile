@@ -37,9 +37,9 @@ node('rating-tracker-build') {
                                 // Trigger a request for Renovate to run on the repository to rebase open pull requests after new commits on the `main` branch
                                 sh """
                                 set +x
-                                DEPENDENCY_DASHBOARD_ISSUE_NUMBER=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues | grep "Dependency Dashboard" -B 1 | head -n 1 | tr -dc '0-9') && \
-                                DEPENDENCY_DASHBOARD_BODY=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER | grep '"body":' | sed 's/- \\[ \\] <!-- manual job -->/- \\[x\\] <!-- manual job -->/ ; s/,\$//') && \
-                                curl -fsSL -o /dev/null -w '%{response_code}\n' -X PATCH -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/marvinruder/rating-tracker/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER -d "{\$DEPENDENCY_DASHBOARD_BODY}"
+                                DEPENDENCY_DASHBOARD_ISSUE_NUMBER=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/$imagename/issues | grep "Dependency Dashboard" -B 1 | head -n 1 | tr -dc '0-9') && \
+                                DEPENDENCY_DASHBOARD_BODY=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/$imagename/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER | grep '"body":' | sed 's/- \\[ \\] <!-- manual job -->/- \\[x\\] <!-- manual job -->/ ; s/,\$//') && \
+                                curl -fsSL -o /dev/null -w '%{response_code}\n' -X PATCH -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/$imagename/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER -d "{\$DEPENDENCY_DASHBOARD_BODY}"
                                 set -x
                                 """
                             }
@@ -60,11 +60,14 @@ node('rating-tracker-build') {
                     },
                     wasm: {
                         stage ('Compile WebAssembly utils') {
-                            // Acquire mutex to avoid collisions while working with the marvinruder/rating-tracker:wasm image
-                            lock('rating-tracker-wasm') {
-                                // Build the WebAssembly image while using registry cache
-                                sh("docker buildx build --builder rating-tracker --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=marvinruder/cache:rating-tracker-wasm .")
-                            }
+                            // Build the WebAssembly image while using registry cache
+                            sh """
+                            docker buildx build --builder rating-tracker --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:job$JOB_ID-wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=marvinruder/cache:rating-tracker-wasm .
+                            id=\$(docker create $imagename:job$JOB_ID-wasm)
+                            docker cp \$id:/workdir/pkg/. ./packages/wasm/.
+                            docker rm -v \$id
+                            docker rmi $imagename:job$JOB_ID-wasm
+                            """
                         }
                     },
                     dep: {
@@ -98,7 +101,7 @@ node('rating-tracker-build') {
                 parallel(
                     test: {
                         stage ('Run Tests') {
-                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm --add-host host.docker.internal:172.17.0.1 .") // Replace IP by `host.gateway` after running on 24.0.3 or newer, see https://github.com/docker/buildx/issues/1832
+                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm --add-host host.docker.internal:host-gateway .")
                         }
                     },
                     build: {
@@ -109,10 +112,9 @@ node('rating-tracker-build') {
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
-                            docker cp \$id:/workdir/.eslintcache ./.eslintcache
+                            docker cp \$id:/.eslintcache /home/jenkins/.cache/.eslintcache
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-build
-                            cp -a ./.eslintcache /home/jenkins/.cache/.eslintcache
                             """
                         }
                     }
@@ -150,7 +152,7 @@ node('rating-tracker-build') {
                                 tags += " -t $imagename:edge"
 
                                 // Prepare update of README.md
-                                sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/marvinruder/rating-tracker/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
+                                sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/$imagename/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
                                 // sh("docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/job$JOB_ID $imagename")
                             } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
                                 // Images with tag `snapshot` are built from other branches, except when updating dependencies only
@@ -167,8 +169,9 @@ node('rating-tracker-build') {
             } finally {
                 stage ('Cleanup') {
                     // Push cache image to Docker registry and remove build artifacts
+                    // JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(rsync -a /home/jenkins/.cache storagebox:/home/cache) &'
                     sh """
-                    JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(cd /home/jenkins && docker build -t marvinruder/cache:jenkins . && docker push marvinruder/cache:jenkins) &'
+                    rsync -a --stats /home/jenkins/.cache storagebox:/home
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
                     rm -rf global app
