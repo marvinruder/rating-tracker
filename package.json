@@ -11,7 +11,7 @@
     "packages/*"
   ],
   "engines": {
-    "node": "18.16.0",
+    "node": "18.17.1",
     "yarn": ">=1.22.0 <2.0.0"
   },
   "engineStrict": true,
