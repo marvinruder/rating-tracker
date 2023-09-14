@@ -34,7 +34,7 @@
     "typescript": "5.2.2"
   },
   "resolutions": {
-    "vite/esbuild": "0.19.2"
+    "vite/esbuild": "0.19.3"
   },
   "dependenciesMeta": {
     "swagger-ui-dist": {
