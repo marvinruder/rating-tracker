@@ -26,7 +26,7 @@ node('rating-tracker-build') {
 
                             // Prefetch Docker base images
                             sh """
-                            JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$imagename/\$BRANCH_NAME/docker/Dockerfile-prefetch-buildx | docker buildx build --builder rating-tracker --cache-from=marvinruder/cache:rating-tracker-wasm -) &'
+                            JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$imagename/\$BRANCH_NAME/docker/Dockerfile-prefetch-buildx | docker buildx build --builder rating-tracker --cache-from=registry.internal/cache:rating-tracker-wasm -) &'
                             JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$imagename/\$BRANCH_NAME/docker/Dockerfile-prefetch | docker build -) &'
                             """
                         }
@@ -62,7 +62,7 @@ node('rating-tracker-build') {
                         stage ('Compile WebAssembly utils') {
                             // Build the WebAssembly image while using registry cache
                             sh """
-                            docker buildx build --builder rating-tracker --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:job$JOB_ID-wasm -f docker/Dockerfile-wasm --cache-from=marvinruder/cache:rating-tracker-wasm --cache-to=marvinruder/cache:rating-tracker-wasm .
+                            docker buildx build --builder rating-tracker --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:job$JOB_ID-wasm -f docker/Dockerfile-wasm --cache-from=registry.internal/cache:rating-tracker-wasm --cache-to=registry.internal/cache:rating-tracker-wasm .
                             id=\$(docker create $imagename:job$JOB_ID-wasm)
                             docker cp \$id:/workdir/pkg/. ./packages/wasm/.
                             docker rm -v \$id
