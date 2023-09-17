@@ -12,6 +12,6 @@ process.env = {
   POSTGRES_USER: "rating-tracker-test",
   POSTGRES_PASS: "rating-tracker-test",
   SELENIUM_URL: "unused",
-  SIGNAL_URL: "http://127.0.0.1:8080",
+  SIGNAL_URL: "unused",
   SIGNAL_SENDER: "+493012345678",
 };
