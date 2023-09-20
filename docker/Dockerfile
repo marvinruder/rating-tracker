@@ -37,9 +37,9 @@ WORKDIR /app
 RUN --mount=type=cache,id=apk-${TARGETARCH},target=/var/cache/apk apk add dumb-init
 
 # Copy Node.js binary and required C/C++ libraries
-COPY --from=node:20.6.1-alpine /etc/passwd /etc
-COPY --from=node:20.6.1-alpine /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
-COPY --from=node:20.6.1-alpine /usr/local/bin/node /usr/local/bin
+COPY --from=node:20.7.0-alpine /etc/passwd /etc
+COPY --from=node:20.7.0-alpine /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
+COPY --from=node:20.7.0-alpine /usr/local/bin/node /usr/local/bin
 
 # Switch to non-root user
 USER node
