@@ -78,7 +78,7 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
         throw new Error(SP_PREMIUM_STOCK_ERROR_MESSAGE);
       }
 
-      spESGScore = +(await driver.findElement(By.id("esg-score")).getText());
+      spESGScore = +(await driver.findElement(By.className("scoreModule__score")).getText());
 
       // Update the stock in the database.
       await updateStock(stock.ticker, { spLastFetch: new Date(), spESGScore });
