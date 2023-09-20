@@ -190,6 +190,7 @@ services:
   rating-tracker:
     image: marvinruder/rating-tracker
     tty: true # required for colored output to stdout
+    init: true # required for graceful shutdown
     environment:
       PORT: 21076
       DOMAIN: "example.com"

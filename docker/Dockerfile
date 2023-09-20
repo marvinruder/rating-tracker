@@ -33,9 +33,6 @@ ENV NODE_ENV production
 
 WORKDIR /app
 
-# Install dumb-init
-RUN --mount=type=cache,id=apk-${TARGETARCH},target=/var/cache/apk apk add dumb-init
-
 # Copy Node.js binary and required C/C++ libraries
 COPY --from=node:20.7.0-alpine /etc/passwd /etc
 COPY --from=node:20.7.0-alpine /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
@@ -50,4 +47,4 @@ COPY --from=assemble --chown=node:node /workdir/app .
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
-CMD [ "dumb-init", "node", "server.mjs" ]
+CMD [ "node", "server.mjs" ]
