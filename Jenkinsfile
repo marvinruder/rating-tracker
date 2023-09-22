@@ -77,7 +77,7 @@ node('rating-tracker-build') {
                             echo \"globalFolder: /workdir/cache/yarn/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
                             mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
                             cp -arn \$HOME/.cache/yarn/global ./cache/yarn || :
-                            cp \$HOME/.cache/rating-tracker ./cache || :
+                            cp -ar \$HOME/.cache/rating-tracker ./cache || :
                             """
 
                             // Install dependencies
