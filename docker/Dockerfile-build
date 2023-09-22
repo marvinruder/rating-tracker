@@ -6,7 +6,7 @@ WORKDIR /workdir
 # Run validations
 RUN \
   --mount=type=bind,target=. \
-  mkdir -p /root/.cache/rating-tracker && \
+  mkdir -p /root/.cache && \
   cp -arn ./cache/rating-tracker /root/.cache && \
   yarn validate
 
@@ -47,6 +47,5 @@ RUN \
 
 # Add eslint cache
 COPY --from=validator /root/.cache/rating-tracker /root/.cache/rating-tracker
-COPY --from=validator / /validate
 
 ENTRYPOINT [ "/bin/sh" ]
