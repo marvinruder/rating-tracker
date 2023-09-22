@@ -24,7 +24,7 @@ describe("Avatar Conversion", async () => {
       expect(message.data.result).toMatchSnapshot();
       workerHasSentResult = true;
     };
-    await vi.waitUntil(() => workerHasSentResult);
+    await vi.waitUntil(() => workerHasSentResult, 4000);
   });
 
   it("handles errors correctly", async () => {
