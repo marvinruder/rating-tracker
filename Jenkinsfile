@@ -75,7 +75,7 @@ node('rating-tracker-build') {
                             // Change config files for use in CI and copy global cache to workspace
                             sh """
                             echo \"globalFolder: /workdir/cache/yarn/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
-                            mkdir -p /home/jenkins/.cache/yarn/global /home/jenkins/.cache/rating-tracker ./cache
+                            mkdir -p /home/jenkins/.cache/yarn/global /home/jenkins/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
                             cp -arn /home/jenkins/.cache/yarn/global ./cache/yarn || :
                             cp -arn /home/jenkins/.cache/rating-tracker ./cache || :
                             """
