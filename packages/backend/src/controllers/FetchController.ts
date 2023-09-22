@@ -1,8 +1,4 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
-import { formatDistance } from "date-fns";
-import { Request, Response } from "express";
-import APIError from "../utils/apiError";
-import chalk from "chalk";
 import {
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
@@ -15,18 +11,23 @@ import {
   Stock,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable";
-import * as signal from "../signal/signal";
-import logger, { PREFIX_SELENIUM } from "../utils/logger";
-import { createResource, readResource } from "../redis/repositories/resourceRepository";
 import axios from "axios";
-import Router from "../utils/router";
-import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import morningstarFetcher from "../fetchers/morningstarFetcher";
+import chalk from "chalk";
+import { formatDistance } from "date-fns";
+import { Request, Response } from "express";
+
+import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable";
 import marketScreenerFetcher from "../fetchers/marketScreenerFetcher";
+import morningstarFetcher from "../fetchers/morningstarFetcher";
 import msciFetcher from "../fetchers/msciFetcher";
 import refinitivFetcher from "../fetchers/refinitivFetcher";
 import spFetcher from "../fetchers/spFetcher";
+import { createResource, readResource } from "../redis/repositories/resourceRepository";
+import * as signal from "../signal/signal";
+import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
+import APIError from "../utils/apiError";
+import logger, { PREFIX_SELENIUM } from "../utils/logger";
+import Router from "../utils/router";
 
 const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings" as const;
 

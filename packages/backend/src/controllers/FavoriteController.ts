@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
 import { GENERAL_ACCESS, favoriteEndpointPath, favoriteListEndpointPath } from "@rating-tracker/commons";
-import Router from "../utils/router";
+import { Request, Response } from "express";
+
 import { readFavorites, updateWatchlist } from "../db/tables/watchlistTable";
+import Router from "../utils/router";
 
 /**
  * This class is responsible for handling favorites.

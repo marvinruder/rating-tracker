@@ -6,8 +6,8 @@ WORKDIR /workdir
 # Run validations
 RUN \
   --mount=type=bind,target=. \
-  cp .eslintcache /.eslintcache && \
-  yarn validate:ci
+  cp -R ./cache/rating-tracker /root/.cache/rating-tracker && \
+  yarn validate
 
 FROM node:20.7.0-alpine as build
 LABEL stage=build
@@ -27,7 +27,7 @@ COPY packages packages
 # Run tests
 RUN \
   --mount=type=bind,source=.yarn,target=.yarn \
-  --mount=type=bind,source=global,target=global \
+  --mount=type=bind,source=cache/yarn,target=cache/yarn \
   --mount=type=bind,source=.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,source=.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
@@ -45,6 +45,6 @@ RUN \
   cp -r packages/frontend/dist/* app/public
 
 # Add eslint cache
-COPY --from=validator /.eslintcache /
+COPY --from=validator /root/.cache/rating-tracker /root/.cache/rating-tracker
 
 ENTRYPOINT [ "/bin/sh" ]

@@ -4,7 +4,7 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 # Copy files required for installing dependencies
-COPY global ./global
+COPY cache/yarn ./cache/yarn
 COPY .yarn ./.yarn
 
 # Install dependencies

@@ -1,3 +1,6 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Avatar,
   Box,
@@ -16,8 +19,6 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import {
   messageTypeArray,
   messageTypeName,
@@ -27,12 +28,12 @@ import {
   ADMINISTRATIVE_ACCESS,
   userManagementEndpointPath,
 } from "@rating-tracker/commons";
-import { useState } from "react";
-import { DeleteUser } from "../../../components/dialogs";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { baseUrl } from "../../../router";
 import axios from "axios";
+import { useState } from "react";
+
+import { DeleteUser } from "../../../components/dialogs";
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 
 /**
  * This component displays information about a user in a table row that is used in the user list.

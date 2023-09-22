@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import chalk from "chalk";
+
 import logger, { PREFIX_SIGNAL } from "../utils/logger";
 
 /**

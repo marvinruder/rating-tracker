@@ -1,4 +1,5 @@
-import { Slider, SliderProps, useTheme } from "@mui/material";
+import type { SliderProps } from "@mui/material";
+import { Slider, useTheme } from "@mui/material";
 import { FC } from "react";
 
 /**

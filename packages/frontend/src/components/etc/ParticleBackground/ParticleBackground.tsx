@@ -1,8 +1,8 @@
-import { useCallback } from "react";
-import type { Engine } from "tsparticles-engine";
-import Particles from "react-tsparticles";
-import { loadSlim } from "tsparticles-slim";
 import { useTheme } from "@mui/material";
+import { useCallback } from "react";
+import { Particles } from "react-tsparticles";
+import type { Engine } from "tsparticles-engine";
+import { loadSlim } from "tsparticles-slim";
 
 /**
  * The background of the page, showing particles.

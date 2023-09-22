@@ -1,9 +1,9 @@
-import { FC } from "react";
 import { Box, alpha, lighten, useTheme } from "@mui/material";
+import { FC } from "react";
 import { Outlet } from "react-router-dom";
 
-import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { Sidebar } from "./Sidebar";
 
 /**
  * A layout with a sidebar.

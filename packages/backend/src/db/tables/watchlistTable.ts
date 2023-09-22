@@ -1,7 +1,9 @@
+import { FAVORITES_NAME, Watchlist, WatchlistSummary } from "@rating-tracker/commons";
+
 import APIError from "../../utils/apiError";
 import logger, { PREFIX_POSTGRES } from "../../utils/logger";
-import { FAVORITES_NAME, Watchlist, WatchlistSummary } from "@rating-tracker/commons";
 import client from "../client";
+
 import { readStock } from "./stockTable";
 
 /**

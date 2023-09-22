@@ -1,10 +1,10 @@
 import { Currency } from "../Currency";
-import { Country } from "../geo/Country";
 import { Industry } from "../gecs/Industry";
+import { Country } from "../geo/Country";
+import { OmitFunctions } from "../OmitFunctions";
 import { MSCIESGRating } from "../ratings/MSCI";
 import { Size } from "../stylebox/Size";
 import { Style } from "../stylebox/Style";
-import { OmitFunctions } from "../OmitFunctions";
 
 /**
  * A stock, with core information like its ticker, name, ISIN, country, industry, etc., financial information like its

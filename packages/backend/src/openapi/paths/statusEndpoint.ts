@@ -1,6 +1,7 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
-import { okHealthy } from "../responses/success";
+
 import { internalServerErrorServerUnhealthy } from "../responses/serverError";
+import { okHealthy } from "../responses/success";
 
 /**
  * Returns a JSON object with the status “healthy” if online and able to connect to all services, or “unhealthy”

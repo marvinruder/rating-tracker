@@ -1,12 +1,14 @@
-import { WatchlistSummaryHeader } from "./WatchlistSummaryHeader";
 import { Container, Grid } from "@mui/material";
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { WatchlistSummary, watchlistSummaryEndpointPath } from "@rating-tracker/commons";
-import { useEffect, useState } from "react";
-import { baseUrl } from "../../../router";
 import axios from "axios";
+import { useEffect, useState } from "react";
+
+import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
+
 import WatchlistCard from "./WatchlistCard";
+import { WatchlistSummaryHeader } from "./WatchlistSummaryHeader";
 
 /**
  * A module that displays an overview of the user’s watchlists.

@@ -1,4 +1,5 @@
-import { ChipProps, Chip, useTheme } from "@mui/material";
+import type { ChipProps } from "@mui/material";
+import { Chip, useTheme } from "@mui/material";
 import { FC } from "react";
 
 /**

@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useState } from "react";
-import { Notification } from "../types/Notification";
-import { AxiosError } from "axios";
 import { UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
+import { AxiosError } from "axios";
+import React, { createContext, useContext, useState } from "react";
+
 import { UserContext } from "../router";
+import { Notification } from "../types/Notification";
 
 /**
  * An object provided by the notification context.

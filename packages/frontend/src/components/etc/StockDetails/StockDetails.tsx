@@ -1,3 +1,7 @@
+import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import ThermostatIcon from "@mui/icons-material/Thermostat";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import { Box, Grid, Typography, useTheme, Tooltip, Chip, useMediaQuery, Skeleton } from "@mui/material";
 import {
   countryNameWithFlag,
@@ -16,11 +20,8 @@ import {
   superSectorName,
   superSectorOfSector,
 } from "@rating-tracker/commons";
+
 import formatMarketCap from "../../../utils/formatters";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
-import PriceCheckIcon from "@mui/icons-material/PriceCheck";
-import ThermostatIcon from "@mui/icons-material/Thermostat";
 import {
   MorningstarNavigator,
   MarketScreenerNavigator,
@@ -29,8 +30,8 @@ import {
   SPNavigator,
   SustainalyticsNavigator,
 } from "../../../utils/navigators";
-import { Range52WSlider, SectorIcon, StarRating, StyleBox } from "../../stockProperties";
 import { BlueIconChip, YellowIconChip, GreenIconChip, TemperatureChip } from "../../chips";
+import { Range52WSlider, SectorIcon, StarRating, StyleBox } from "../../stockProperties";
 
 /**
  * This component displays detailed information about a stock in a grid.

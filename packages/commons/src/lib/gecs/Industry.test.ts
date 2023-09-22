@@ -1,5 +1,6 @@
-import { isIndustry } from "./Industry";
 import { describe, expect, it } from "vitest";
+
+import { isIndustry } from "./Industry";
 
 describe("Industry", () => {
   it("is an industry", () => {

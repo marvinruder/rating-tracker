@@ -1,4 +1,5 @@
 import { resourceEndpointPath } from "@rating-tracker/commons";
+
 import { LiveTestSuite, expectRouteToBePrivate, supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Resource API";

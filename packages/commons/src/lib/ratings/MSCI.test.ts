@@ -1,5 +1,6 @@
-import { isMSCIESGRating } from "./MSCI";
 import { describe, expect, it } from "vitest";
+
+import { isMSCIESGRating } from "./MSCI";
 
 describe("MSCI ESG Rating", () => {
   it("is a rating", () => {

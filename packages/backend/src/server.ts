@@ -1,19 +1,15 @@
+// eslint-disable-next-line import/order
 import "./utils/startup";
 
 import { randomUUID } from "node:crypto";
+import path from "path";
+
+import chalk from "chalk";
 import cookieParser from "cookie-parser";
 import express from "express";
-import { router } from "./utils/router";
-import SwaggerUI from "swagger-ui-express";
-import openapiDocument from "./openapi/index";
 import * as OpenApiValidator from "express-openapi-validator";
-import chalk from "chalk";
 import responseTime from "response-time";
-import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository";
-import path from "path";
-import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger";
-import errorHandler from "./utils/errorHandler";
-import setupCronJobs from "./utils/cron";
+import SwaggerUI from "swagger-ui-express";
 
 // Import all controllers
 import "./controllers/AuthController";
@@ -21,12 +17,17 @@ import "./controllers/FavoriteController";
 import "./controllers/FetchController";
 import "./controllers/ResourceController";
 import "./controllers/SessionController";
-import "./controllers/SessionController";
 import "./controllers/StatusController";
 import "./controllers/StockController";
 import "./controllers/UserController";
 import "./controllers/UserManagementController";
 import "./controllers/WatchlistController";
+import openapiDocument from "./openapi/index";
+import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository";
+import setupCronJobs from "./utils/cron";
+import errorHandler from "./utils/errorHandler";
+import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger";
+import { router } from "./utils/router";
 
 /**
  * A token that is used to bypass authentication for requests sent by Cron jobs. It is generated randomly and changes on

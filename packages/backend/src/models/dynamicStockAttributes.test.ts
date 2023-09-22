@@ -1,4 +1,5 @@
 import { optionalStockValuesNull } from "@rating-tracker/commons";
+
 import { addDynamicAttributesToStockData, dynamicStockAttributes } from "./dynamicStockAttributes";
 
 describe("Stock Scores", () => {

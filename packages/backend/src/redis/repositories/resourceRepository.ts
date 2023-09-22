@@ -1,10 +1,11 @@
+import { Resource } from "@rating-tracker/commons";
 import chalk from "chalk";
+import { Entity, EntityId, Repository } from "redis-om";
+
+import { isExistingResourceEntity, resourceSchema } from "../../models/resource";
 import APIError from "../../utils/apiError";
 import logger, { PREFIX_REDIS } from "../../utils/logger";
-import { isExistingResourceEntity, resourceSchema } from "../../models/resource";
 import redis from "../redis";
-import { Entity, EntityId, Repository } from "redis-om";
-import { Resource } from "@rating-tracker/commons";
 
 /**
  * The resource repository.

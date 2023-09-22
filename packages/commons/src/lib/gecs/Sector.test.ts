@@ -1,5 +1,6 @@
-import { getIndustryGroupsInSector, isSector } from "./Sector";
 import { describe, expect, it } from "vitest";
+
+import { getIndustryGroupsInSector, isSector } from "./Sector";
 
 describe("Sector", () => {
   it("is a sector", () => {

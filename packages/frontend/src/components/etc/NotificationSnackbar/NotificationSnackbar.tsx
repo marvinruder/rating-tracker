@@ -1,5 +1,7 @@
-import { Alert, AlertProps, AlertTitle, Snackbar, SnackbarCloseReason, SnackbarProps } from "@mui/material";
+import type { AlertProps, SnackbarCloseReason, SnackbarProps } from "@mui/material";
+import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
+
 import { useNotification } from "../../../contexts/NotificationContext";
 
 /**

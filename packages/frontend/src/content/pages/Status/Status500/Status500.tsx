@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Box, Typography, Container, Button } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { Box, Typography, Container, Button } from "@mui/material";
+import { useState } from "react";
 
 /**
  * Shows a 500 Internal Server Error page.

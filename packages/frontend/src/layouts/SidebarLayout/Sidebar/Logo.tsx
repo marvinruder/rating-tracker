@@ -1,7 +1,8 @@
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { Badge, Box, Typography, useTheme } from "@mui/material";
 import { NavLink } from "react-router-dom";
+
 import packageInfo from "../../../../package.json";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
 
 /**
  * The Logo component, shown at the top of the sidebar. Contains the app name and version.

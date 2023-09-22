@@ -1,3 +1,7 @@
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Avatar,
   Box,
@@ -15,14 +19,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SaveIcon from "@mui/icons-material/Save";
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { UserContext, baseUrl } from "../../../../router";
-import { useNotification } from "../../../../contexts/NotificationContext";
-import LoadingButton from "@mui/lab/LoadingButton";
 import {
   messageTypesAllowedWithGivenAccessRight,
   messageTypeDescription,
@@ -31,6 +27,11 @@ import {
   subscriptionOfMessageType,
   userEndpointPath,
 } from "@rating-tracker/commons";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+
+import { useNotification } from "../../../../contexts/NotificationContext";
+import { UserContext, baseUrl } from "../../../../router";
 import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
 
 /**

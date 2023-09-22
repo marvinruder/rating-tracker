@@ -1,6 +1,4 @@
 // We do not test Cron jobs
-import * as cron from "cron";
-import axios, { AxiosError } from "axios";
 import {
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
@@ -9,10 +7,14 @@ import {
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
 } from "@rating-tracker/commons";
+import axios, { AxiosError } from "axios";
 import chalk from "chalk";
-import logger, { PREFIX_CRON } from "./logger";
+import * as cron from "cron";
+
 import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal";
+
 import APIError from "./apiError";
+import logger, { PREFIX_CRON } from "./logger";
 
 /**
  * Creates Cron jobs for regular fetching from data providers.

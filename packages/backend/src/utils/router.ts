@@ -1,8 +1,9 @@
+import { FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
 import { NextFunction, Request, Response, Router as expressRouter } from "express";
+import rateLimit from "express-rate-limit";
+
 import APIError from "./apiError";
 export const router = expressRouter();
-import rateLimit from "express-rate-limit";
-import { FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
 
 /**
  * Rate limiter in use by authentication routes.

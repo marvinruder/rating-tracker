@@ -1,5 +1,9 @@
-import { FC, useContext, useState } from "react";
-
+import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
+import ListIcon from "@mui/icons-material/List";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import { LoadingButton } from "@mui/lab";
+import type { BoxProps } from "@mui/material";
 import {
   alpha,
   Box,
@@ -8,26 +12,21 @@ import {
   ListItem,
   Divider,
   useTheme,
-  BoxProps,
   Card,
   Typography,
   Tooltip,
   Grid,
   Skeleton,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
-import SidebarContext from "../../../contexts/SidebarContext";
-
-import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
-import ListIcon from "@mui/icons-material/List";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import { UserContext } from "../../../router";
 import { ADMINISTRATIVE_ACCESS } from "@rating-tracker/commons";
-import { Logo } from "./Logo";
+import React, { FC, useContext, useState } from "react";
+import { NavLink } from "react-router-dom";
+
 import { StatusIndicator } from "../../../components/etc/StatusIndicator";
-import React from "react";
-import { LoadingButton } from "@mui/lab";
+import SidebarContext from "../../../contexts/SidebarContext";
+import { UserContext } from "../../../router";
+
+import { Logo } from "./Logo";
 
 /**
  * A wrapper for the sidebar menu component.

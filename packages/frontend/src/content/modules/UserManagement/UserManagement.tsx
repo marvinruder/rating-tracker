@@ -1,7 +1,8 @@
-import UserManagementHeader from "./UserManagementHeader";
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { Card, Container } from "@mui/material";
 
+import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
+
+import UserManagementHeader from "./UserManagementHeader";
 import UserTable from "./UserTable";
 
 /**

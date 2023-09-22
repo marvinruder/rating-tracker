@@ -1,5 +1,6 @@
 import { OmitDynamicAttributesStock, optionalStockValuesNull } from "@rating-tracker/commons";
 import { describe, expect, it } from "vitest";
+
 import formatMarketCap from "./formatters";
 
 const stock: OmitDynamicAttributesStock = {

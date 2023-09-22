@@ -1,3 +1,8 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import StarsIcon from "@mui/icons-material/Stars";
 import {
   Box,
   Card,
@@ -12,18 +17,14 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import StarsIcon from "@mui/icons-material/Stars";
 import { FAVORITES_NAME, WatchlistSummary, watchlistEndpointPath } from "@rating-tracker/commons";
 import axios from "axios";
-import { baseUrl } from "../../../router";
-import { useNotification } from "../../../contexts/NotificationContext";
 import { useState } from "react";
-import { DeleteWatchlist, RenameWatchlist } from "../../../components/dialogs";
 import { NavLink } from "react-router-dom";
+
+import { DeleteWatchlist, RenameWatchlist } from "../../../components/dialogs";
+import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 
 /**
  * This component displays information about a watchlist in a card used in the watchlist summary module.

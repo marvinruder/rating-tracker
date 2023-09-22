@@ -1,5 +1,5 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import { REGEX_PHONE_NUMBER } from "@rating-tracker/commons";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 /**
  * The email address of a user, used as their ID

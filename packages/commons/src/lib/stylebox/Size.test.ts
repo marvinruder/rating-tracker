@@ -1,5 +1,6 @@
-import { isSize } from "./Size";
 import { describe, expect, it } from "vitest";
+
+import { isSize } from "./Size";
 
 describe("Size", () => {
   it("is a size", () => {

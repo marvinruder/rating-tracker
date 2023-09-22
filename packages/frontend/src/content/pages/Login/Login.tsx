@@ -1,13 +1,14 @@
-import { Box, Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import { useContext, useState } from "react";
+import { Box, Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
+import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import axios from "axios";
-import { UserContext, baseUrl } from "../../../router";
+import { useContext, useState } from "react";
+
 import { SwitchSelector } from "../../../components/etc/SwitchSelector";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/commons";
+import { UserContext, baseUrl } from "../../../router";
 
 /**
  * This component renders the login page.

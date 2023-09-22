@@ -1,11 +1,6 @@
-import { randomUUID } from "node:crypto";
-import * as SimpleWebAuthnServer from "@simplewebauthn/server";
-import { Request, Response } from "express";
 import { Buffer } from "node:buffer";
-import { createSession } from "../redis/repositories/sessionRepository";
-import APIError from "../utils/apiError";
-import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable";
-import { sessionTTLInSeconds } from "../redis/repositories/sessionRepository";
+import { randomUUID } from "node:crypto";
+
 import {
   ALREADY_REGISTERED_ERROR_MESSAGE,
   GENERAL_ACCESS,
@@ -14,6 +9,12 @@ import {
   signInEndpointPath,
   UserWithCredentials,
 } from "@rating-tracker/commons";
+import * as SimpleWebAuthnServer from "@simplewebauthn/server";
+import { Request, Response } from "express";
+
+import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable";
+import { createSession, sessionTTLInSeconds } from "../redis/repositories/sessionRepository";
+import APIError from "../utils/apiError";
 import Router from "../utils/router";
 
 const rpName = "Rating Tracker";

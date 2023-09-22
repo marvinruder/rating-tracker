@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { Size, Style } from "@rating-tracker/commons";
+import { FC } from "react";
 
 /**
  * A component that renders a Morningstar StyleBox.

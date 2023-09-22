@@ -11,6 +11,7 @@ import {
   styleArray,
   watchlistSummaryEndpointPath,
 } from "@rating-tracker/commons";
+
 import {
   LiveTestSuite,
   expectRouteToBePrivate,
@@ -18,8 +19,8 @@ import {
   expectStockListLengthToBe,
   supertest,
 } from "../../test/liveTestHelpers";
-import { sentMessages } from "../signal/__mocks__/signalBase";
 import client from "../db/client";
+import { sentMessages } from "../signal/__mocks__/signalBase";
 
 export const suiteName = "Stock API";
 

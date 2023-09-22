@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
 import {
   FAVORITES_NAME,
   GENERAL_ACCESS,
   watchlistEndpointPath,
   watchlistSummaryEndpointPath,
 } from "@rating-tracker/commons";
-import Router from "../utils/router";
+import { Request, Response } from "express";
+
 import {
   createWatchlist,
   deleteWatchlist,
@@ -13,6 +13,7 @@ import {
   readWatchlist,
   updateWatchlist,
 } from "../db/tables/watchlistTable";
+import Router from "../utils/router";
 
 /**
  * This class is responsible for handling watchlist information.

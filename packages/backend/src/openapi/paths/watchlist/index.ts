@@ -1,7 +1,8 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+
+import * as watchlist from "../../parameters/watchlist";
 import { badRequest, conflict, forbidden, notFound, unauthorized } from "../../responses/clientError";
 import { createdWatchlistID, noContent, okWatchlist } from "../../responses/success";
-import * as watchlist from "../../parameters/watchlist";
 
 /**
  * Get the specified watchlist

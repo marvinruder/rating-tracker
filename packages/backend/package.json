@@ -26,8 +26,9 @@
     "prisma:generate": "pnpify prisma generate",
     "prisma:migrate:dev": "pnpify prisma migrate dev",
     "build": "esbuild --color=true src/server.ts --bundle --platform=node --format=esm --legal-comments=none --banner:js=\"import __path from'path';import{createRequire as __createRequire}from'module';import{fileURLToPath}from'url';const require=__createRequire(import.meta.url),__filename=fileURLToPath(import.meta.url),__dirname=__path.dirname(__filename);\" --outfile=dist/server.mjs",
-    "typecheck": "tsc --noEmit",
-    "lint:fix": "eslint --cache --ext .ts src/ --fix"
+    "typecheck": "tsc --noEmit --tsBuildInfoFile $HOME/.cache/rating-tracker/backend.tsbuildinfo",
+    "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/backend.eslintcache --cache-strategy content --max-warnings 0 --ext .ts src/",
+    "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
     "@prisma/client": "5.3.1",
@@ -67,6 +68,7 @@
     "eslint": "8.49.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-import": "2.28.1",
     "eslint-plugin-jsdoc": "46.8.2",
     "eslint-plugin-prettier": "5.0.0",
     "glob": "10.3.5",

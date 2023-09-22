@@ -74,10 +74,10 @@ node('rating-tracker-build') {
                         stage ('Install dependencies') {
                             // Change config files for use in CI and copy global cache to workspace
                             sh """
-                            echo \"globalFolder: /workdir/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
-                            mkdir -p /home/jenkins/.cache/yarn/global
-                            cp -arn /home/jenkins/.cache/yarn/global . || :
-                            ([ ! -f ".eslintcache" ] && cp -a /home/jenkins/.cache/.eslintcache .) || :
+                            echo \"globalFolder: /workdir/cache/yarn/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
+                            mkdir -p /home/jenkins/.cache/yarn/global /home/jenkins/.cache/rating-tracker ./cache
+                            cp -arn /home/jenkins/.cache/yarn/global ./cache/yarn || :
+                            cp -arn /home/jenkins/.cache/rating-tracker ./cache || :
                             """
 
                             // Install dependencies
@@ -87,12 +87,12 @@ node('rating-tracker-build') {
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-yarn)
                             docker cp \$id:/workdir/.yarn/. ./.yarn
-                            docker cp \$id:/workdir/global .
+                            docker cp \$id:/workdir/cache .
                             docker cp \$id:/workdir/.pnp.cjs .
                             docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-yarn
-                            cp -arn ./global /home/jenkins/.cache/yarn
+                            cp -arn ./cache/yarn /home/jenkins/.cache
                             """
                         }
                     }
@@ -112,9 +112,10 @@ node('rating-tracker-build') {
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
-                            docker cp \$id:/.eslintcache /home/jenkins/.cache/.eslintcache
+                            docker cp \$id:/root/.cache/rating-tracker ./cache
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-build
+                            cp -arn ./cache/rating-tracker /home/jenkins/.cache
                             """
                         }
                     }
@@ -174,7 +175,7 @@ node('rating-tracker-build') {
                     rsync -a --stats /home/jenkins/.cache storagebox:/home
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
-                    rm -rf global app
+                    rm -rf app cache
                     """
                 }
             }

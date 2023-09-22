@@ -1,11 +1,12 @@
-import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import { watchlistEndpointPath } from "@rating-tracker/commons";
 import axios from "axios";
 import { useState } from "react";
-import { baseUrl } from "../../../router";
+
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 
 /**
  * A dialog to add a new watchlist in the backend.

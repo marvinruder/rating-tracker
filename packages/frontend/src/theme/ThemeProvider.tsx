@@ -1,9 +1,9 @@
-import { createContext, FC, useEffect, useState } from "react";
-import { Theme, ThemeProvider } from "@mui/material";
-import React from "react";
-import { Light, Dark } from "./scheme";
-
+import type { Theme } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { SuperSector } from "@rating-tracker/commons";
+import React, { createContext, FC, useEffect, useState } from "react";
+
+import { Light, Dark } from "./scheme";
 
 /**
  * An override to the styles of the MUI theme, allowing us to add our own custom properties.

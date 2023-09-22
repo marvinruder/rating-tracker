@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
-import APIError from "../utils/apiError";
-import { readResource } from "../redis/repositories/resourceRepository";
 import { GENERAL_ACCESS, resourceEndpointPath } from "@rating-tracker/commons";
+import { Request, Response } from "express";
+
+import { readResource } from "../redis/repositories/resourceRepository";
+import APIError from "../utils/apiError";
 import Router from "../utils/router";
 
 /**
