@@ -6,7 +6,8 @@ WORKDIR /workdir
 # Run validations
 RUN \
   --mount=type=bind,target=. \
-  cp -R ./cache/rating-tracker /root/.cache/rating-tracker && \
+  mkdir -p /root/.cache/rating-tracker && \
+  cp -arn ./cache/rating-tracker /root/.cache && \
   yarn validate
 
 FROM node:20.7.0-alpine as build
