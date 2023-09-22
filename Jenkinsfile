@@ -113,6 +113,7 @@ node('rating-tracker-build') {
                             id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
                             docker cp \$id:/root/.cache/rating-tracker/. ./cache/rating-tracker
+                            docker cp \$id:/validate/. ./validate
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-build
                             cp -arn ./cache/rating-tracker /home/jenkins/.cache

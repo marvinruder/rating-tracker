@@ -47,5 +47,6 @@ RUN \
 
 # Add eslint cache
 COPY --from=validator /root/.cache/rating-tracker /root/.cache/rating-tracker
+COPY --from=validator / /validate
 
 ENTRYPOINT [ "/bin/sh" ]
