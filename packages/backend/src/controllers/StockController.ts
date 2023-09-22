@@ -1,6 +1,3 @@
-import { Request, Response } from "express";
-import { createResource, readResource } from "../redis/repositories/resourceRepository";
-import { createStock, deleteStock, readAllStocks, updateStock, readStock } from "../db/tables/stockTable";
 import {
   Country,
   GENERAL_ACCESS,
@@ -20,11 +17,15 @@ import {
   stockLogoEndpointPath,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import APIError from "../utils/apiError";
 import axios from "axios";
-import Router from "../utils/router";
+import { Request, Response } from "express";
+
 import { Prisma } from "../../prisma/client/index";
+import { createStock, deleteStock, readAllStocks, updateStock, readStock } from "../db/tables/stockTable";
 import { readWatchlist } from "../db/tables/watchlistTable";
+import { createResource, readResource } from "../redis/repositories/resourceRepository";
+import APIError from "../utils/apiError";
+import Router from "../utils/router";
 
 /**
  * This class is responsible for handling stock data.

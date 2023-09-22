@@ -1,4 +1,5 @@
 import { WatchlistSummary, watchlistEndpointPath, watchlistSummaryEndpointPath } from "@rating-tracker/commons";
+
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Watchlist API";

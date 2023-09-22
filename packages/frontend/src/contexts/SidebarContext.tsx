@@ -1,8 +1,9 @@
-import { FC, useState, createContext, useEffect } from "react";
-import { DetailedStatus, SystemStatus } from "../types/Status";
 import { Service, serviceArray, statusEndpointPath } from "@rating-tracker/commons";
 import axios, { AxiosError } from "axios";
+import { FC, useState, createContext, useEffect } from "react";
+
 import { baseUrl } from "../router";
+import { DetailedStatus, SystemStatus } from "../types/Status";
 
 /**
  * An object provided by the sidebar context.

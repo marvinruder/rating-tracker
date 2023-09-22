@@ -1,15 +1,16 @@
-import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import { AddStockToWatchlist, DeleteStock, EditStock } from "../../../components/dialogs";
+import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
 import { favoriteEndpointPath, Stock, stockLogoEndpointPath, WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
-import { useContext, useState } from "react";
-import { baseUrl, UserContext } from "../../../router";
-import { useNotification } from "../../../contexts/NotificationContext";
 import axios from "axios";
+import { useContext, useState } from "react";
+
+import { AddStockToWatchlist, DeleteStock, EditStock } from "../../../components/dialogs";
+import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl, UserContext } from "../../../router";
 
 /**
  * A header for the stock details page.

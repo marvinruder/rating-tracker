@@ -1,12 +1,27 @@
-import { Suspense, lazy, useState, useEffect, createContext } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
-import { RouteObject, useLocation } from "react-router";
-import { SidebarLayout } from "./layouts";
-import { SuspenseLoader } from "./components/etc/SuspenseLoader";
-import axios from "axios";
 import { User, userEndpointPath } from "@rating-tracker/commons";
-import { NotificationProvider } from "./contexts/NotificationContext";
+import axios from "axios";
+import { Suspense, lazy, useState, useEffect, createContext } from "react";
+import type { RouteObject } from "react-router";
+import { useLocation } from "react-router";
+import { Navigate, useSearchParams } from "react-router-dom";
+
 import { NotificationSnackbar } from "./components/etc/NotificationSnackbar";
+import { SuspenseLoader } from "./components/etc/SuspenseLoader";
+//
+// Applications
+//
+/**
+ * The login application.
+ * Since it is displayed first, we load it right away and do not use a suspense loader.
+ */
+import LoginPage from "./content/pages";
+/**
+ * The 404 Not Found and 500 Internal Server Error error pages.
+ * Since those are fairly small components, we load them right away and do not use a suspense loader.
+ */
+import { Status404, Status500 } from "./content/pages/Status";
+import { NotificationProvider } from "./contexts/NotificationContext";
+import { SidebarLayout } from "./layouts";
 
 /**
  * The base URL of the backend API server.
@@ -39,14 +54,6 @@ const loader = (
 
   return SuspenseWrapper;
 };
-
-// Applications
-
-/**
- * The login application.
- * Since it is displayed first, we load it right away and do not use a suspense loader.
- */
-import LoginPage from "./content/pages";
 
 // Modules
 
@@ -89,12 +96,6 @@ const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSu
  * @returns {JSX.Element} The component.
  */
 const Watchlist = loader(lazy(() => import("./content/modules/Watchlist/Watchlist")));
-
-/**
- * The 404 Not Found and 500 Internal Server Error error pages.
- * Since those are fairly small components, we load them right away and do not use a suspense loader.
- */
-import { Status404, Status500 } from "./content/pages/Status";
 
 /**
  * An object provided by the user context.

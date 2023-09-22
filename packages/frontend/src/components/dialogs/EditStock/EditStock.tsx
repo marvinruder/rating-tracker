@@ -1,3 +1,5 @@
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   DialogTitle,
   Typography,
@@ -13,8 +15,6 @@ import {
   Checkbox,
   Divider,
 } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
-import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import {
   countryArray,
   countryNameWithFlag,
@@ -33,8 +33,9 @@ import {
 } from "@rating-tracker/commons";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
-import { baseUrl } from "../../../router";
+
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 
 /**
  * A dialog to edit a new stock in the backend.

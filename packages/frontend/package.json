@@ -12,8 +12,9 @@
     "build": "vite build",
     "test:watch": "vitest",
     "test": "vitest run --color",
-    "typecheck": "tsc --noEmit",
-    "lint:fix": "eslint --cache --ext .tsx,.ts src/ --fix"
+    "typecheck": "tsc --noEmit --tsBuildInfoFile $HOME/.cache/rating-tracker/frontend.tsbuildinfo",
+    "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/frontend.eslintcache --cache-strategy content --max-warnings 0 --ext .tsx,.ts src/",
+    "lint:fix": "yarn lint --fix"
   },
   "browserslist": {
     "production": [
@@ -69,6 +70,7 @@
     "eslint": "8.49.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-import": "2.28.1",
     "eslint-plugin-jsdoc": "46.8.2",
     "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-react": "7.33.2",

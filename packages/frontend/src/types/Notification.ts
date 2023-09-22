@@ -1,4 +1,4 @@
-import { AlertColor } from "@mui/material";
+import type { AlertColor } from "@mui/material";
 
 /**
  * A notification to be displayed to the user.

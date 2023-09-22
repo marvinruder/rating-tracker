@@ -1,11 +1,12 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { User, userManagementEndpointPath } from "@rating-tracker/commons";
-import { useState } from "react";
 import axios from "axios";
-import { baseUrl } from "../../../router";
+import { useState } from "react";
+
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 
 /**
  * A dialog to delete a user from the backend.

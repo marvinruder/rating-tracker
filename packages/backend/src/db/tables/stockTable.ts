@@ -1,11 +1,12 @@
-import APIError from "../../utils/apiError";
-import chalk from "chalk";
-import * as signal from "../../signal/signal";
-import logger, { PREFIX_POSTGRES } from "../../utils/logger";
 import { Stock, MSCIESGRating, msciESGRatingArray, OmitDynamicAttributesStock } from "@rating-tracker/commons";
-import client from "../client";
+import chalk from "chalk";
+
 import { Prisma } from "../../../prisma/client";
 import { addDynamicAttributesToStockData, dynamicStockAttributes } from "../../models/dynamicStockAttributes";
+import * as signal from "../../signal/signal";
+import APIError from "../../utils/apiError";
+import logger, { PREFIX_POSTGRES } from "../../utils/logger";
+import client from "../client";
 
 // Emojis showing whether a change is good or bad. Used in the Signal message.
 const SIGNAL_PREFIX_BETTER = "🟢 ";

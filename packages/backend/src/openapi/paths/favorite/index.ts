@@ -1,7 +1,8 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
-import { created, noContent } from "../../responses/success";
-import { notFound, unauthorized } from "../../responses/clientError";
+
 import * as stock from "../../parameters/stock";
+import { notFound, unauthorized } from "../../responses/clientError";
+import { created, noContent } from "../../responses/success";
 
 /**
  * Add a favorite.

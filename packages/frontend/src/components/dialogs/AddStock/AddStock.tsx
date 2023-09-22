@@ -1,6 +1,10 @@
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import AddLinkIcon from "@mui/icons-material/AddLink";
+import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+import LinkIcon from "@mui/icons-material/Link";
 import LoadingButton from "@mui/lab/LoadingButton";
+import type { AlertColor } from "@mui/material";
 import {
-  AlertColor,
   Autocomplete,
   Box,
   Button,
@@ -15,12 +19,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import AddLinkIcon from "@mui/icons-material/AddLink";
-import AutoGraphIcon from "@mui/icons-material/AutoGraph";
-import LinkIcon from "@mui/icons-material/Link";
-import axios, { AxiosError } from "axios";
-import { baseUrl } from "../../../router";
 import {
   countryArray,
   countryName,
@@ -38,8 +36,11 @@ import {
   Stock,
   stockEndpointPath,
 } from "@rating-tracker/commons";
+import axios, { AxiosError } from "axios";
 import { useState } from "react";
+
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 import { StockDetails } from "../../etc/StockDetails";
 
 /**

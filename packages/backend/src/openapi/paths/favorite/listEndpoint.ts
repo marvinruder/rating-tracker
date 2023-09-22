@@ -1,6 +1,7 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
-import { okWatchlist } from "../../responses/success";
+
 import { unauthorized } from "../../responses/clientError";
+import { okWatchlist } from "../../responses/success";
 
 /**
  * Get all favorites.

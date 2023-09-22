@@ -1,4 +1,3 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import {
   countryArray,
   industryArray,
@@ -10,6 +9,7 @@ import {
   REGEX_PHONE_NUMBER,
   serviceArray,
 } from "@rating-tracker/commons";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 export const components: OpenAPIV3.ComponentsObject = {
   schemas: {

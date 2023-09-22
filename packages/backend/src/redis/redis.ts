@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { createClient } from "redis";
+
 import logger, { PREFIX_REDIS } from "../utils/logger";
 
 // The URL of the Redis instance

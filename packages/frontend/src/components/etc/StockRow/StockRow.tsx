@@ -1,3 +1,18 @@
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import StarIcon from "@mui/icons-material/Star";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import StarsIcon from "@mui/icons-material/Stars";
+import ThermostatIcon from "@mui/icons-material/Thermostat";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import type { SlideProps } from "@mui/material";
 import {
   Avatar,
   Badge,
@@ -16,7 +31,6 @@ import {
   MenuItem,
   Skeleton,
   Slide,
-  SlideProps,
   TableCell,
   TableRow,
   Tooltip,
@@ -24,20 +38,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
-import PriceCheckIcon from "@mui/icons-material/PriceCheck";
-import StarIcon from "@mui/icons-material/Star";
-import StarsIcon from "@mui/icons-material/Stars";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import ThermostatIcon from "@mui/icons-material/Thermostat";
 import {
   countryNameWithFlag,
   currencyName,
@@ -60,10 +60,12 @@ import {
   WatchlistSummary,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import { baseUrl } from "../../../router";
+import axios from "axios";
 import { useContext, useState } from "react";
-import { AddStockToWatchlist, DeleteStock, EditStock, RemoveStockFromWatchlist } from "../../dialogs";
-import { StockDetails } from "../StockDetails";
+import { NavLink } from "react-router-dom";
+
+import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl, UserContext } from "../../../router";
 import formatMarketCap from "../../../utils/formatters";
 import {
   MorningstarNavigator,
@@ -73,12 +75,10 @@ import {
   SPNavigator,
   SustainalyticsNavigator,
 } from "../../../utils/navigators";
-import { Range52WSlider, SectorIcon, StarRating, StyleBox } from "../../stockProperties";
-import { NavLink } from "react-router-dom";
-import { UserContext } from "../../../router";
-import axios from "axios";
-import { useNotification } from "../../../contexts/NotificationContext";
 import { BlueIconChip, YellowIconChip, GreenIconChip, TemperatureChip } from "../../chips";
+import { AddStockToWatchlist, DeleteStock, EditStock, RemoveStockFromWatchlist } from "../../dialogs";
+import { Range52WSlider, SectorIcon, StarRating, StyleBox } from "../../stockProperties";
+import { StockDetails } from "../StockDetails";
 
 /**
  * This component displays information about a stock in a table row that is used in the stock list.

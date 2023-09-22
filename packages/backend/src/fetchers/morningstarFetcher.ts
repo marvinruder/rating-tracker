@@ -1,9 +1,4 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
-import { Request } from "express";
-import { FetcherWorkspace } from "../controllers/FetchController";
-import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver";
-import logger, { PREFIX_SELENIUM } from "../utils/logger";
-import { formatDistance } from "date-fns";
 import {
   Industry,
   Size,
@@ -15,12 +10,18 @@ import {
   isCurrency,
   Stock,
 } from "@rating-tracker/commons";
-import { By, until } from "selenium-webdriver";
 import chalk from "chalk";
+import { formatDistance } from "date-fns";
+import { Request } from "express";
+import { By, until } from "selenium-webdriver";
+
+import { FetcherWorkspace } from "../controllers/FetchController";
+import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import { readStock, updateStock } from "../db/tables/stockTable";
 import APIError from "../utils/apiError";
+import logger, { PREFIX_SELENIUM } from "../utils/logger";
+import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver";
 
 const XPATH_INDUSTRY = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.." as const;
 const XPATH_SIZE_STYLE = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Stock Style')]/.." as const;

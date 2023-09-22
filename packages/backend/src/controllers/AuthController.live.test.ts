@@ -5,6 +5,7 @@ import {
   userEndpointPath,
   userManagementEndpointPath,
 } from "@rating-tracker/commons";
+
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Authentication API";

@@ -1,12 +1,14 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
+import { Stock, resourceEndpointPath } from "@rating-tracker/commons";
+import axios, { AxiosError } from "axios";
+import chalk from "chalk";
 import { Builder, Capabilities, WebDriver, until } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome";
+
+import { createResource } from "../redis/repositories/resourceRepository";
+
 import APIError from "./apiError";
 import logger, { PREFIX_SELENIUM } from "./logger";
-import chalk from "chalk";
-import { Stock, resourceEndpointPath } from "@rating-tracker/commons";
-import { createResource } from "../redis/repositories/resourceRepository";
-import axios, { AxiosError } from "axios";
 
 /**
  * A page load strategy to use by the WebDriver.

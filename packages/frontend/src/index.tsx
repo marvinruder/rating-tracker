@@ -1,9 +1,9 @@
+import axios from "axios";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
 import { SidebarProvider } from "./contexts/SidebarContext";
-import axios from "axios";
 
 /**
  * The globalThis.regeneratorRuntime = undefined addresses a potentially unsafe-eval problem

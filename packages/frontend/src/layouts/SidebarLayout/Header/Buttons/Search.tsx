@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref, useState, ReactElement, ChangeEvent, useEffect } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 import {
   Avatar,
   Box,
@@ -18,15 +18,15 @@ import {
   Skeleton,
   useTheme,
 } from "@mui/material";
-import { TransitionProps } from "@mui/material/transitions";
-import SearchIcon from "@mui/icons-material/Search";
-
-import axios from "axios";
-import { baseUrl } from "../../../../router";
+import type { TransitionProps } from "@mui/material/transitions";
 import { emojiFlag, Stock, stockListEndpointPath, stockLogoEndpointPath } from "@rating-tracker/commons";
-import { useNotification } from "../../../../contexts/NotificationContext";
-import { SectorIcon } from "../../../../components/stockProperties";
+import axios from "axios";
+import React, { forwardRef, Ref, useState, ReactElement, ChangeEvent, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+
+import { SectorIcon } from "../../../../components/stockProperties";
+import { useNotification } from "../../../../contexts/NotificationContext";
+import { baseUrl } from "../../../../router";
 
 /**
  * A transition for sliding in the search bar.

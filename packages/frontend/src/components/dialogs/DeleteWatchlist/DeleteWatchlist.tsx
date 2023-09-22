@@ -1,12 +1,13 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { WatchlistSummary, watchlistEndpointPath } from "@rating-tracker/commons";
-import { useState } from "react";
 import axios from "axios";
-import { baseUrl } from "../../../router";
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+
+import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 
 /**
  * A dialog to delete a watchlist from the backend.

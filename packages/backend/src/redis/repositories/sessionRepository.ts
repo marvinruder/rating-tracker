@@ -1,11 +1,12 @@
-import APIError from "../../utils/apiError";
-import { isExistingSessionEntity, sessionSchema } from "../../models/session";
-import chalk from "chalk";
 import { Session, User } from "@rating-tracker/commons";
+import chalk from "chalk";
+import { Entity, EntityId, Repository } from "redis-om";
+
 import { readUser } from "../../db/tables/userTable";
+import { isExistingSessionEntity, sessionSchema } from "../../models/session";
+import APIError from "../../utils/apiError";
 import logger, { PREFIX_REDIS } from "../../utils/logger";
 import redis from "../redis";
-import { Entity, EntityId, Repository } from "redis-om";
 
 /**
  * The time in seconds after which a session should expire.

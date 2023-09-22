@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import {
   GENERAL_ACCESS,
   ADMINISTRATIVE_ACCESS,
@@ -8,7 +10,6 @@ import {
   optionalUserValuesNull,
   UserWithCredentials,
 } from "./user";
-import { describe, expect, it } from "vitest";
 
 const root = new User({
   ...optionalUserValuesNull,

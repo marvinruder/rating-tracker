@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
 import { GENERAL_ACCESS, User, userEndpointPath } from "@rating-tracker/commons";
+import { Request, Response } from "express";
+
 import { updateUserWithCredentials, deleteUser, readUser } from "../db/tables/userTable";
-import Router from "../utils/router";
 import { updateSession } from "../redis/repositories/sessionRepository";
+import Router from "../utils/router";
 
 /**
  * This class is responsible for handling user information.

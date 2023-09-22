@@ -43,13 +43,13 @@ beforeAll(async () => {
 });
 
 afterEach(async (context) => {
-  if (context.meta.name.toLowerCase().includes("unsafe")) {
+  if (context.task.name.toLowerCase().includes("unsafe")) {
     // Clears Signal message array
     sentMessages.length = 0;
     // Apply the seeds if an unsafe test modified the content
     await Promise.all([applyPostgresSeeds(), applyRedisSeeds()]);
     // Check if a safe test has been marked as unsafe
-    if (!context.meta.name.toLowerCase().includes("unsafe!")) {
+    if (!context.task.name.toLowerCase().includes("unsafe!")) {
       expect(unsafeSpies.some((spy) => spy.mock.calls.length)).toBeTruthy();
     }
   } else {

@@ -1,4 +1,5 @@
 import { sessionEndpointPath, userEndpointPath } from "@rating-tracker/commons";
+
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Session API";

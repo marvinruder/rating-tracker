@@ -1,5 +1,5 @@
-import { useContext, useState } from "react";
-
+import LogoutIcon from "@mui/icons-material/Logout";
+import type { SlideProps } from "@mui/material";
 import {
   Avatar,
   Box,
@@ -11,19 +11,19 @@ import {
   IconButton,
   Skeleton,
   Slide,
-  SlideProps,
   Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
-import NotificationContext from "../../../../contexts/NotificationContext";
-import { UserContext } from "../../../../router";
-import axios from "axios";
-import { baseUrl } from "../../../../router";
-import { useNavigate } from "react-router";
-import { ProfileSettings } from "./ProfileSettings";
 import { sessionEndpointPath } from "@rating-tracker/commons";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router";
+
+import NotificationContext from "../../../../contexts/NotificationContext";
+import { UserContext, baseUrl } from "../../../../router";
+
+import { ProfileSettings } from "./ProfileSettings";
 
 export const HeaderUserbox = (): JSX.Element => {
   const [open, setOpen] = useState(false);

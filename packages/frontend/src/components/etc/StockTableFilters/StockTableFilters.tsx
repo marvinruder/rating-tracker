@@ -1,3 +1,10 @@
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ClearIcon from "@mui/icons-material/Clear";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import TableRowsIcon from "@mui/icons-material/TableRows";
+import TuneIcon from "@mui/icons-material/Tune";
 import {
   Box,
   Typography,
@@ -20,14 +27,6 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ClearIcon from "@mui/icons-material/Clear";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import TuneIcon from "@mui/icons-material/Tune";
-import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
-import TableRowsIcon from "@mui/icons-material/TableRows";
-import { FC, useState } from "react";
 import {
   Country,
   countryNameWithFlag,
@@ -59,7 +58,8 @@ import {
   superSectorArray,
   superSectorName,
 } from "@rating-tracker/commons";
-import React from "react";
+import React, { FC, useState } from "react";
+
 import { NestedCheckboxList } from "../../../components/etc/NestedCheckboxList";
 import { StarRating } from "../../../components/stockProperties";
 import { StockFilter } from "../../../types/StockFilter";

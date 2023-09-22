@@ -1,6 +1,7 @@
-import { FC } from "react";
 import CircleIcon from "@mui/icons-material/Circle";
 import { Box, useTheme } from "@mui/material";
+import { FC } from "react";
+
 import { Status } from "../../../types/Status";
 
 /**

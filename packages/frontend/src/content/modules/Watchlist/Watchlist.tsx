@@ -1,14 +1,16 @@
-import { StockListColumn, Watchlist, stockListColumnArray, watchlistEndpointPath } from "@rating-tracker/commons";
-import { useEffect, useState } from "react";
-import { WatchlistHeader } from "./WatchlistHeader";
-import axios from "axios";
-import { baseUrl } from "../../../router";
-import { useNotification } from "../../../contexts/NotificationContext";
-import { useParams } from "react-router";
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { Card, Container } from "@mui/material";
+import { StockListColumn, Watchlist, stockListColumnArray, watchlistEndpointPath } from "@rating-tracker/commons";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+
+import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { StockTable } from "../../../components/etc/StockTable";
+import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 import { StockFilter } from "../../../types/StockFilter";
+
+import { WatchlistHeader } from "./WatchlistHeader";
 
 /**
  * A module that displays a watchlist.

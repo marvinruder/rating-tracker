@@ -1,8 +1,7 @@
-import { useContext } from "react";
-
-import { Box, alpha, lighten, IconButton, Tooltip, useTheme, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Box, alpha, lighten, IconButton, Tooltip, useTheme, Divider } from "@mui/material";
+import { useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 import SidebarContext from "../../../contexts/SidebarContext";

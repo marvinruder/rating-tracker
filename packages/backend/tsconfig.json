@@ -2,10 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "types": ["vitest/globals"],
-    "noEmit": false,
-    "outDir": "dist",
-    "rootDir": ".",
-    "sourceMap": true
+    "rootDir": "."
   },
   "include": ["src", "test", "vitest.config.ts"]
 }

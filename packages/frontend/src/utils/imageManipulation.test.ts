@@ -1,8 +1,11 @@
-import "@vitest/web-worker";
-import { describe, expect, it } from "vitest";
+/* eslint-disable import/no-nodejs-modules */
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+
+import "@vitest/web-worker";
+import { describe, expect, it, vi } from "vitest";
+
 import ConvertAvatarWorker from "./imageManipulation?worker";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,21 +21,21 @@ describe("Avatar Conversion", async () => {
     const worker = new ConvertAvatarWorker();
     worker.postMessage(favicon192);
     worker.onmessage = (message) => {
-      workerHasSentResult = true;
       expect(message.data.result).toMatchSnapshot();
+      workerHasSentResult = true;
     };
-    while (!workerHasSentResult) await new Promise((resolve) => setTimeout(resolve, 10));
-  }, 15000);
+    await vi.waitUntil(() => workerHasSentResult, 4000);
+  });
 
   it("handles errors correctly", async () => {
     let workerHasSentResult = false;
     const worker = new ConvertAvatarWorker();
     worker.postMessage("no file here");
     worker.onmessage = (message) => {
-      workerHasSentResult = true;
       expect(message.data.isError).toBeTruthy();
       expect(message.data.result).toBeUndefined();
+      workerHasSentResult = true;
     };
-    while (!workerHasSentResult) await new Promise((resolve) => setTimeout(resolve, 10));
-  }, 15000);
+    await vi.waitUntil(() => workerHasSentResult);
+  });
 });

@@ -1,4 +1,5 @@
 import { statusEndpointPath } from "@rating-tracker/commons";
+
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Status API";

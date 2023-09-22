@@ -1,12 +1,13 @@
 // We do not need to test the logger itself
-import pino from "pino";
-import pretty from "pino-pretty";
+import { STATUS_CODES } from "http";
 import fs from "node:fs";
+
+import { stockLogoEndpointPath } from "@rating-tracker/commons";
 import chalk from "chalk";
 import cron from "cron";
 import { Request, Response } from "express";
-import { STATUS_CODES } from "http";
-import { stockLogoEndpointPath } from "@rating-tracker/commons";
+import pino from "pino";
+import pretty from "pino-pretty";
 
 export const PREFIX_CRON = chalk.whiteBright.bgGrey(" \ufba7 ") + chalk.grey(" ");
 export const PREFIX_NODEJS = chalk.whiteBright.bgHex("#339933")(" \uf898 ") + chalk.hex("#339933")(" ");

@@ -1,3 +1,5 @@
+import AddIcon from "@mui/icons-material/Add";
+import StarsIcon from "@mui/icons-material/Stars";
 import {
   DialogTitle,
   Typography,
@@ -14,8 +16,6 @@ import {
   Skeleton,
   Dialog,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import StarsIcon from "@mui/icons-material/Stars";
 import {
   FAVORITES_NAME,
   Stock,
@@ -23,10 +23,11 @@ import {
   watchlistEndpointPath,
   watchlistSummaryEndpointPath,
 } from "@rating-tracker/commons";
-import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { baseUrl } from "../../../router";
+import React, { useEffect, useState } from "react";
+
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 import { AddWatchlist } from "../AddWatchlist/AddWatchlist";
 
 /**

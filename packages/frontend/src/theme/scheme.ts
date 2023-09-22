@@ -1,5 +1,6 @@
-import { alpha, lighten, darken, Theme, createTheme } from "@mui/material";
 import "@mui/lab/themeAugmentation";
+import type { Theme } from "@mui/material";
+import { alpha, lighten, darken, createTheme } from "@mui/material";
 
 /**
  * The main colors used in both themes.

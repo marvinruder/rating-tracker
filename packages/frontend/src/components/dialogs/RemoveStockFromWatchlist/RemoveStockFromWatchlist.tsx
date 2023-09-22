@@ -1,11 +1,12 @@
+import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import { Stock, WatchlistSummary, watchlistEndpointPath } from "@rating-tracker/commons";
-import { useState } from "react";
 import axios from "axios";
-import { baseUrl } from "../../../router";
+import { useState } from "react";
+
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 
 /**
  * A dialog to remove a stock from a watchlist.

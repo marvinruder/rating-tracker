@@ -1,7 +1,8 @@
-import APIError from "../../utils/apiError";
 import { User, UserWithCredentials } from "@rating-tracker/commons";
 import chalk from "chalk";
+
 import * as signal from "../../signal/signal";
+import APIError from "../../utils/apiError";
 import logger, { PREFIX_POSTGRES } from "../../utils/logger";
 import client from "../client";
 

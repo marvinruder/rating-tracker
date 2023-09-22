@@ -1,5 +1,3 @@
-import { FC, ChangeEvent, useState, useEffect } from "react";
-import axios from "axios";
 import {
   Table,
   TableBody,
@@ -21,10 +19,13 @@ import {
   favoriteListEndpointPath,
   stockListEndpointPath,
 } from "@rating-tracker/commons";
-import { baseUrl } from "../../../router";
-import { StockRow } from "../StockRow";
+import axios from "axios";
+import { FC, ChangeEvent, useState, useEffect } from "react";
+
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 import { StockFilter } from "../../../types/StockFilter";
+import { StockRow } from "../StockRow";
 
 /**
  * The stocks table component.

@@ -1,11 +1,12 @@
-import StockListHeader from "./StockListHeader";
 import { Card, Container } from "@mui/material";
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
+import { StockListColumn, stockListColumnArray } from "@rating-tracker/commons";
+import { useState } from "react";
 
+import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { StockTable } from "../../../components/etc/StockTable";
 import { StockFilter } from "../../../types/StockFilter";
-import { useState } from "react";
-import { StockListColumn, stockListColumnArray } from "@rating-tracker/commons";
+
+import StockListHeader from "./StockListHeader";
 
 /**
  * A module that displays a list of stocks.

@@ -1,13 +1,15 @@
 import { Card, Container } from "@mui/material";
-import axios from "axios";
-import { baseUrl } from "../../../router";
 import { Stock, favoriteListEndpointPath, stockEndpointPath } from "@rating-tracker/commons";
+import axios from "axios";
 import { useEffect, useState } from "react";
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
-import { StockHeader } from "./StockHeader";
-import { useNotification } from "../../../contexts/NotificationContext";
 import { useParams } from "react-router";
+
+import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { StockDetails } from "../../../components/etc/StockDetails";
+import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
+
+import { StockHeader } from "./StockHeader";
 
 /**
  * A module that displays the details of a stock.

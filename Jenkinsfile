@@ -74,10 +74,10 @@ node('rating-tracker-build') {
                         stage ('Install dependencies') {
                             // Change config files for use in CI and copy global cache to workspace
                             sh """
-                            echo \"globalFolder: /workdir/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
-                            mkdir -p /home/jenkins/.cache/yarn/global
-                            cp -arn /home/jenkins/.cache/yarn/global . || :
-                            ([ ! -f ".eslintcache" ] && cp -a /home/jenkins/.cache/.eslintcache .) || :
+                            echo \"globalFolder: /workdir/cache/yarn/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
+                            mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
+                            cp -arn \$HOME/.cache/yarn/global ./cache/yarn || :
+                            cp -arn \$HOME/.cache/rating-tracker ./cache || :
                             """
 
                             // Install dependencies
@@ -87,12 +87,12 @@ node('rating-tracker-build') {
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-yarn)
                             docker cp \$id:/workdir/.yarn/. ./.yarn
-                            docker cp \$id:/workdir/global .
+                            docker cp \$id:/workdir/cache/yarn/. ./cache/yarn
                             docker cp \$id:/workdir/.pnp.cjs .
                             docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-yarn
-                            cp -arn ./global /home/jenkins/.cache/yarn
+                            cp -arn ./cache/yarn \$HOME/.cache
                             """
                         }
                     }
@@ -112,9 +112,10 @@ node('rating-tracker-build') {
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
-                            docker cp \$id:/.eslintcache /home/jenkins/.cache/.eslintcache
+                            docker cp \$id:/root/.cache/rating-tracker/. ./cache/rating-tracker
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-build
+                            cp -arn ./cache/rating-tracker \$HOME/.cache
                             """
                         }
                     }
@@ -152,7 +153,7 @@ node('rating-tracker-build') {
                                 tags += " -t $imagename:edge"
 
                                 // Prepare update of README.md
-                                sh("mkdir -p /home/jenkins/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/$imagename/main/packages/frontend/public/assets|g' > /home/jenkins/.cache/README/job$JOB_ID")
+                                sh("mkdir -p \$HOME/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/$imagename/main/packages/frontend/public/assets|g' > \$HOME/.cache/README/job$JOB_ID")
                                 // sh("docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/job$JOB_ID $imagename")
                             } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
                                 // Images with tag `snapshot` are built from other branches, except when updating dependencies only
@@ -169,12 +170,12 @@ node('rating-tracker-build') {
             } finally {
                 stage ('Cleanup') {
                     // Push cache image to Docker registry and remove build artifacts
-                    // JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(rsync -a /home/jenkins/.cache storagebox:/home/cache) &'
+                    // JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(rsync -a \$HOME/.cache storagebox:/home/cache) &'
                     sh """
-                    rsync -a --stats /home/jenkins/.cache storagebox:/home
+                    rsync -a --stats \$HOME/.cache storagebox:/home
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
-                    rm -rf global app
+                    rm -rf app cache
                     """
                 }
             }

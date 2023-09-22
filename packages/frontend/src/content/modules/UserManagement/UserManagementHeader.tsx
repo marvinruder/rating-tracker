@@ -1,5 +1,4 @@
 import { Typography, Grid } from "@mui/material";
-
 import { FC } from "react";
 
 /**

@@ -1,5 +1,6 @@
-import { isCurrency } from "./Currency";
 import { describe, expect, it } from "vitest";
+
+import { isCurrency } from "./Currency";
 
 describe("Currency", () => {
   it("is a currency", () => {

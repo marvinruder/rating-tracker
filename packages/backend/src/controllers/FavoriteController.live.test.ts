@@ -1,4 +1,5 @@
 import { favoriteEndpointPath, favoriteListEndpointPath, watchlistSummaryEndpointPath } from "@rating-tracker/commons";
+
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Favorite API";

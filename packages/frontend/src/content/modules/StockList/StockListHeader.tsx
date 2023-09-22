@@ -1,10 +1,12 @@
-import { Box, Typography, Grid, Tooltip, Dialog, IconButton, useMediaQuery, Slide, SlideProps } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { FC, useContext, useState } from "react";
+import type { SlideProps } from "@mui/material";
+import { Box, Typography, Grid, Tooltip, Dialog, IconButton, useMediaQuery, Slide } from "@mui/material";
 import { WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
+import { FC, useContext, useState } from "react";
+
 import { AddStock } from "../../../components/dialogs";
-import { UserContext } from "../../../router";
 import { StockTableFilters, StockTableFiltersProps } from "../../../components/etc/StockTableFilters";
+import { UserContext } from "../../../router";
 
 /**
  * A header for the stock list page. It contains the stock list filters and column filter.

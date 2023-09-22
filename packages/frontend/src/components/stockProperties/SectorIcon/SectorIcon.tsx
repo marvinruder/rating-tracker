@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-import { FC } from "react";
-import { groupOfIndustry, Industry, sectorOfIndustryGroup, superSectorOfSector } from "@rating-tracker/commons";
 import { useTheme } from "@mui/material";
+import { groupOfIndustry, Industry, sectorOfIndustryGroup, superSectorOfSector } from "@rating-tracker/commons";
+import { FC } from "react";
 
 /**
  * A SVG icon representing a sector or super sector from the Morningstar Global Equity Classification Structure.

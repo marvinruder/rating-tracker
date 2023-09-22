@@ -1,28 +1,3 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
-import { components } from "./components";
-import * as stockListEndpoint from "./paths/stock/listEndpoint";
-import * as userListEndpoint from "./paths/userManagement/listEndpoint";
-import * as morningstarEndpoint from "./paths/fetch/morningstarEndpoint";
-import * as marketScreenerEndpoint from "./paths/fetch/marketScreenerEndpoint";
-import * as msciEndpoint from "./paths/fetch/msciEndpoint";
-import * as refinitivEndpoint from "./paths/fetch/refinitivEndpoint";
-import * as spEndpoint from "./paths/fetch/spEndpoint";
-import * as sustainalyticsEndpoint from "./paths/fetch/sustainalyticsEndpoint";
-import * as registerEndpoint from "./paths/auth/registerEndpoint";
-import * as sessionEndpoint from "./paths/sessionEndpoint";
-import * as statusEndpoint from "./paths/statusEndpoint";
-import * as stockLogoEndpoint from "./paths/stock/logo/index";
-import * as stockEndpoint from "./paths/stock/index";
-import * as stockComputeEndpoint from "./paths/stock/computeEndpoint";
-import * as signInEndpoint from "./paths/auth/signInEndpoint";
-import * as resourceEndpoint from "./paths/resource/index";
-import * as userManagementEndpoint from "./paths/userManagement/index";
-import * as userEndpoint from "./paths/user/index";
-import * as watchlistEndpoint from "./paths/watchlist/index";
-import * as watchlistSummaryEndpoint from "./paths/watchlist/summaryEndpoint";
-import * as favoriteEndpoint from "./paths/favorite/index";
-import * as favoriteListEndpoint from "./paths/favorite/listEndpoint";
-import { servers } from "./servers";
 import {
   favoriteEndpointPath,
   favoriteListEndpointPath,
@@ -47,6 +22,32 @@ import {
   watchlistEndpointPath,
   watchlistSummaryEndpointPath,
 } from "@rating-tracker/commons";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+
+import { components } from "./components";
+import * as registerEndpoint from "./paths/auth/registerEndpoint";
+import * as signInEndpoint from "./paths/auth/signInEndpoint";
+import * as favoriteEndpoint from "./paths/favorite/index";
+import * as favoriteListEndpoint from "./paths/favorite/listEndpoint";
+import * as marketScreenerEndpoint from "./paths/fetch/marketScreenerEndpoint";
+import * as morningstarEndpoint from "./paths/fetch/morningstarEndpoint";
+import * as msciEndpoint from "./paths/fetch/msciEndpoint";
+import * as refinitivEndpoint from "./paths/fetch/refinitivEndpoint";
+import * as spEndpoint from "./paths/fetch/spEndpoint";
+import * as sustainalyticsEndpoint from "./paths/fetch/sustainalyticsEndpoint";
+import * as resourceEndpoint from "./paths/resource/index";
+import * as sessionEndpoint from "./paths/sessionEndpoint";
+import * as statusEndpoint from "./paths/statusEndpoint";
+import * as stockComputeEndpoint from "./paths/stock/computeEndpoint";
+import * as stockEndpoint from "./paths/stock/index";
+import * as stockListEndpoint from "./paths/stock/listEndpoint";
+import * as stockLogoEndpoint from "./paths/stock/logo/index";
+import * as userEndpoint from "./paths/user/index";
+import * as userManagementEndpoint from "./paths/userManagement/index";
+import * as userListEndpoint from "./paths/userManagement/listEndpoint";
+import * as watchlistEndpoint from "./paths/watchlist/index";
+import * as watchlistSummaryEndpoint from "./paths/watchlist/summaryEndpoint";
+import { servers } from "./servers";
 
 /**
  * The OpenAPI document describing all API endpoints.

@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
 import { Service, serviceArray, statusEndpointPath } from "@rating-tracker/commons";
-import Router from "../utils/router";
-import { redisIsReady } from "../redis/redis";
+import { Request, Response } from "express";
+
 import { prismaIsReady } from "../db/client";
-import { seleniumIsReady } from "../utils/webdriver";
+import { redisIsReady } from "../redis/redis";
 import { signalIsReadyOrUnused } from "../signal/signalBase";
+import Router from "../utils/router";
+import { seleniumIsReady } from "../utils/webdriver";
 
 /**
  * This class is responsible for providing a trivial status response whenever the backend API is up and running.

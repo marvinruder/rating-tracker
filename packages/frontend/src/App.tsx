@@ -1,9 +1,9 @@
-import { useRoutes } from "react-router-dom";
-import router from "./router";
-
 import { CssBaseline } from "@mui/material";
-import ThemeProvider from "./theme/ThemeProvider";
+import { useRoutes } from "react-router-dom";
+
 import { ParticleBackground } from "./components/etc/ParticleBackground";
+import router from "./router";
+import ThemeProvider from "./theme/ThemeProvider";
 
 /**
  * The Rating Tracker Application.

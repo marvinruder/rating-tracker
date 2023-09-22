@@ -1,11 +1,12 @@
-import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import { watchlistEndpointPath, WatchlistSummary } from "@rating-tracker/commons";
 import axios from "axios";
 import { useState } from "react";
-import { baseUrl } from "../../../router";
+
 import { useNotification } from "../../../contexts/NotificationContext";
+import { baseUrl } from "../../../router";
 
 /**
  * A dialog to rename a watchlist in the backend.

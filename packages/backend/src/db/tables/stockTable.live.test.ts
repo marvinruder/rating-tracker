@@ -1,7 +1,9 @@
-import { createStock, readStock, updateStock } from "./stockTable";
-import { sentMessages } from "../../signal/__mocks__/signalBase";
 import { optionalStockValuesNull, Stock } from "@rating-tracker/commons";
+
 import { LiveTestSuite } from "../../../test/liveTestHelpers";
+import { sentMessages } from "../../signal/__mocks__/signalBase";
+
+import { createStock, readStock, updateStock } from "./stockTable";
 
 export const suiteName = "Stock Table";
 

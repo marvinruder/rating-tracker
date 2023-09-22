@@ -2,7 +2,7 @@
   "env": {
     "shared-node-browser": true
   },
-  "extends": ["plugin:jsdoc/recommended", "google", "prettier"],
+  "extends": ["plugin:jsdoc/recommended", "plugin:import/recommended", "google", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -10,7 +10,7 @@
     "project": "./tsconfig.json"
   },
   "ignorePatterns": ["dist"],
-  "plugins": ["@typescript-eslint", "prettier", "jsdoc"],
+  "plugins": ["@typescript-eslint", "prettier", "jsdoc", "import"],
   "rules": {
     "prettier/prettier": ["warn"],
     "require-await": ["warn"],
@@ -23,6 +23,21 @@
     "valid-jsdoc": 0,
     "jsdoc/no-undefined-types": 0,
     "jsdoc/tag-lines": ["warn", "never", { "startLines": 1 }],
+    "import/extensions": ["warn", "never", { "json": "always" }],
+    "import/first": ["warn"],
+    "import/no-unresolved": 0,
+    "import/no-deprecated": ["warn"],
+    "import/no-nodejs-modules": ["warn"],
+    "import/no-cycle": ["warn"],
+    "import/order": ["warn", {
+      "newlines-between": "always",
+      "alphabetize": {
+        "order": "asc",
+        "orderImportKind": "asc",
+        "caseInsensitive": true
+      },
+      "warnOnUnassignedImports": true
+    }],
     "max-len": [
       "warn",
       {

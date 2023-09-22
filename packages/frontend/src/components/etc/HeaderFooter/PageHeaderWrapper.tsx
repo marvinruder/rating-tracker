@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import { Box, Container } from "@mui/material";
+import { ReactNode } from "react";
 
 /**
  * The wrapper for a page title.

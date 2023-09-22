@@ -1,7 +1,8 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+
+import * as user from "../../parameters/user";
 import { forbidden, notFound, unauthorized } from "../../responses/clientError";
 import { noContent, okUser } from "../../responses/success";
-import * as user from "../../parameters/user";
 
 /**
  * Get information about a user

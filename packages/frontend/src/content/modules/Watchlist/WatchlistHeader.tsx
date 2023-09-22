@@ -1,15 +1,16 @@
-import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import { DeleteWatchlist, RenameWatchlist } from "../../../components/dialogs";
+import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import { FAVORITES_NAME, Watchlist, watchlistEndpointPath } from "@rating-tracker/commons";
-import { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
+
+import { DeleteWatchlist, RenameWatchlist } from "../../../components/dialogs";
+import { StockTableFilters, StockTableFiltersProps } from "../../../components/etc/StockTableFilters";
 import { useNotification } from "../../../contexts/NotificationContext";
 import { baseUrl } from "../../../router";
-import { StockTableFilters, StockTableFiltersProps } from "../../../components/etc/StockTableFilters";
 
 /**
  * A header for the watchlist details page.

@@ -41,4 +41,3 @@ node_modules/.cache
 packages/*/.env*
 stash
 .dccache
-.eslintcache
