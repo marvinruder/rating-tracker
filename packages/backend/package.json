@@ -44,7 +44,7 @@
     "express-rate-limit": "7.0.1",
     "pino": "8.15.1",
     "pino-pretty": "10.2.0",
-    "redis": "4.6.9",
+    "redis": "4.6.10",
     "redis-om": "0.4.2",
     "response-time": "2.3.2",
     "selenium-webdriver": "4.12.0",
