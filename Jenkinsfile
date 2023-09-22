@@ -87,7 +87,7 @@ node('rating-tracker-build') {
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-yarn)
                             docker cp \$id:/workdir/.yarn/. ./.yarn
-                            docker cp \$id:/workdir/cache .
+                            docker cp \$id:/workdir/cache/yarn/. ./cache/yarn
                             docker cp \$id:/workdir/.pnp.cjs .
                             docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                             docker rm -v \$id
@@ -112,7 +112,7 @@ node('rating-tracker-build') {
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-build)
                             docker cp \$id:/workdir/app/. ./app
-                            docker cp \$id:/root/.cache/rating-tracker ./cache
+                            docker cp \$id:/root/.cache/rating-tracker/. ./cache/rating-tracker
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-build
                             cp -arn ./cache/rating-tracker /home/jenkins/.cache
