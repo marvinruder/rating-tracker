@@ -65,7 +65,7 @@
     "@yarnpkg/pnpify": "3.1.6",
     "concurrently": "8.2.1",
     "esbuild": "0.19.3",
-    "eslint": "8.49.0",
+    "eslint": "8.50.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.28.1",
