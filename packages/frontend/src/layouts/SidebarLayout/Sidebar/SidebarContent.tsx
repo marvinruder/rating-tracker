@@ -164,13 +164,19 @@ export const SidebarContent = (): JSX.Element => {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <Button disableRipple component={NavLink} onClick={closeSidebar} to="/stock" startIcon={<ListIcon />}>
+                <Button
+                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
+                  component={NavLink}
+                  onClick={closeSidebar}
+                  to="/stock"
+                  startIcon={<ListIcon />}
+                >
                   All Stocks
                 </Button>
               </ListItem>
               <ListItem component="div">
                 <Button
-                  disableRipple
+                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
                   onClick={closeSidebar}
                   to="/watchlist"
@@ -188,7 +194,7 @@ export const SidebarContent = (): JSX.Element => {
                 <List component="div">
                   <ListItem component="div">
                     <Button
-                      disableRipple
+                      sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                       component={NavLink}
                       onClick={closeSidebar}
                       to="/usermanagement"

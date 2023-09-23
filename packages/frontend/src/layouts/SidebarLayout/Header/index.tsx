@@ -74,12 +74,7 @@ export const Header = (): JSX.Element => {
           }}
         >
           <Tooltip arrow title="Go back">
-            <IconButton
-              color="primary"
-              disableRipple
-              component={NavLink}
-              to={pathname.split("/").slice(0, -1).join("/")}
-            >
+            <IconButton color="primary" component={NavLink} to={pathname.split("/").slice(0, -1).join("/")}>
               <ArrowBackIcon />
             </IconButton>
           </Tooltip>

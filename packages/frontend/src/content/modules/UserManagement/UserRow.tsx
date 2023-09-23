@@ -99,7 +99,6 @@ const UserRow = (props: UserRowProps): JSX.Element => {
                 `Access rights for the user ${props.user.name} ` +
                 `(${props.user.email}) have been updated successfully`,
             })
-            // TODO close select
           ),
         ) // Update the user in the table, show a notification, and close the dialog on success.
         .catch((e) => setErrorNotification(e, "updating user"))

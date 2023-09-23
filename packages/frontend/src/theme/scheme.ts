@@ -19,6 +19,7 @@ const generateThemeColors = (light: boolean) => ({
   white: light ? "#ffffff" : "#212121",
   primaryAlt: light ? "#2B2B2B" : "#212121",
   trueWhite: "#ffffff",
+  trueBlack: "#000000",
 });
 
 /**
@@ -108,6 +109,14 @@ const generateColors = (light: boolean, themeColors) => ({
       50: alpha(themeColors.black, 0.5),
       70: alpha(themeColors.black, 0.7),
       100: themeColors.black,
+    },
+    trueBlack: {
+      5: alpha(themeColors.trueBlack, 0.02),
+      10: alpha(themeColors.trueBlack, 0.1),
+      30: alpha(themeColors.trueBlack, 0.3),
+      50: alpha(themeColors.trueBlack, 0.5),
+      70: alpha(themeColors.trueBlack, 0.7),
+      100: themeColors.trueBlack,
     },
   },
   secondary: {
@@ -647,9 +656,6 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
       },
     },
     MuiButton: {
-      defaultProps: {
-        disableRipple: true,
-      },
       styleOverrides: {
         root: {
           fontWeight: "bold",
@@ -661,21 +667,16 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
             transition: "all .2s",
           },
         },
+        containedPrimary: {
+          "&:hover:not(:disabled)": {
+            background: darken(colors.primary.main, 0.1),
+            ".MuiTouchRipple-child": {
+              background: colors.alpha.trueBlack[70],
+            },
+          },
+        },
         endIcon: {
           marginRight: -8,
-        },
-        containedSecondary: {
-          backgroundColor: colors.secondary.main,
-          color: colors.alpha.white[100],
-          border: "1px solid " + colors.alpha.black[30],
-        },
-        outlinedSecondary: {
-          backgroundColor: colors.alpha.white[100],
-
-          "&:hover, &.MuiSelected": {
-            backgroundColor: colors.alpha.black[5],
-            color: colors.alpha.black[100],
-          },
         },
         sizeSmall: {
           padding: "6px 16px",

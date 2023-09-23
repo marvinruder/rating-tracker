@@ -40,7 +40,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
 
   return (
     <Card>
-      <CardActionArea disableRipple>
+      <CardActionArea>
         <Link to={`/watchlist/${props.watchlist?.id}`} component={NavLink} color="inherit" underline="none">
           <CardContent>
             <Grid container justifyContent="space-between">
