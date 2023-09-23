@@ -1725,7 +1725,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@rating-tracker/commons", "workspace:packages/commons"],\
             ["@simplewebauthn/server", "npm:8.1.1"],\
             ["@types/cookie-parser", "npm:1.4.4"],\
-            ["@types/express", "npm:4.17.17"],\
+            ["@types/express", "npm:4.17.18"],\
             ["@types/node", "npm:20.6.3"],\
             ["@types/selenium-webdriver", "npm:4.1.16"],\
             ["@types/supertest", "npm:2.0.12"],\
@@ -2287,7 +2287,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-cookie-parser-npm-1.4.4-17217c3bbc-5c81ac4b7d.zip/node_modules/@types/cookie-parser/",\
           "packageDependencies": [\
             ["@types/cookie-parser", "npm:1.4.4"],\
-            ["@types/express", "npm:4.17.17"]\
+            ["@types/express", "npm:4.17.18"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2311,10 +2311,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/express", [\
-        ["npm:4.17.17", {\
-          "packageLocation": "./.yarn/cache/@types-express-npm-4.17.17-46fe8173db-0196dacc27.zip/node_modules/@types/express/",\
+        ["npm:4.17.18", {\
+          "packageLocation": "./.yarn/cache/@types-express-npm-4.17.18-c095318854-8c178da4f0.zip/node_modules/@types/express/",\
           "packageDependencies": [\
-            ["@types/express", "npm:4.17.17"],\
+            ["@types/express", "npm:4.17.18"],\
             ["@types/body-parser", "npm:1.19.2"],\
             ["@types/express-serve-static-core", "npm:4.17.35"],\
             ["@types/qs", "npm:6.9.7"],\
@@ -2421,7 +2421,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-multer-npm-1.4.7-df3819be8e-680cb0710a.zip/node_modules/@types/multer/",\
           "packageDependencies": [\
             ["@types/multer", "npm:1.4.7"],\
-            ["@types/express", "npm:4.17.17"]\
+            ["@types/express", "npm:4.17.18"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2597,7 +2597,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-swagger-ui-express-npm-4.1.3-0c91a9cfb5-1c990fa8c1.zip/node_modules/@types/swagger-ui-express/",\
           "packageDependencies": [\
             ["@types/swagger-ui-express", "npm:4.1.3"],\
-            ["@types/express", "npm:4.17.17"],\
+            ["@types/express", "npm:4.17.18"],\
             ["@types/serve-static", "npm:1.15.2"]\
           ],\
           "linkType": "HARD"\
@@ -5589,7 +5589,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/express-async-errors-virtual-54e458743e/0/cache/express-async-errors-npm-3.1.1-c0a6b1e552-3a2a6df8ea.zip/node_modules/express-async-errors/",\
           "packageDependencies": [\
             ["express-async-errors", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:3.1.1"],\
-            ["@types/express", "npm:4.17.17"],\
+            ["@types/express", "npm:4.17.18"],\
             ["express", "npm:4.18.2"]\
           ],\
           "packagePeers": [\
@@ -5636,7 +5636,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/express-rate-limit-virtual-7022edb723/0/cache/express-rate-limit-npm-7.0.1-1df23804a3-fa1e43b7c0.zip/node_modules/express-rate-limit/",\
           "packageDependencies": [\
             ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.0.1"],\
-            ["@types/express", "npm:4.17.17"],\
+            ["@types/express", "npm:4.17.18"],\
             ["express", "npm:4.18.2"]\
           ],\
           "packagePeers": [\
@@ -10133,7 +10133,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/swagger-ui-express-virtual-3d8d100e25/0/cache/swagger-ui-express-npm-5.0.0-9e2b84aeec-565b897173.zip/node_modules/swagger-ui-express/",\
           "packageDependencies": [\
             ["swagger-ui-express", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.0.0"],\
-            ["@types/express", "npm:4.17.17"],\
+            ["@types/express", "npm:4.17.18"],\
             ["express", "npm:4.18.2"],\
             ["swagger-ui-dist", "npm:5.7.2"]\
           ],\
