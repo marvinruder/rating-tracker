@@ -205,7 +205,7 @@ export const industryName: Record<Industry, string> = {
   Leisure: "Leisure",
   Lodging: "Lodging",
   ResortsCasinos: "Resorts & Casinos",
-  TravelServices: "TravelServices",
+  TravelServices: "Travel Services",
   AssetManagement: "Asset Management",
   BanksDiversified: "Banks – Diversified",
   BanksRegional: "Banks – Regional",
