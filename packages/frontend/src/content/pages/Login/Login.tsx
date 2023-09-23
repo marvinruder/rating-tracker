@@ -1,6 +1,7 @@
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import { Box, Button, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Box, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
 import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import axios from "axios";
@@ -19,6 +20,7 @@ export const LoginPage = (): JSX.Element => {
   const [action, setAction] = useState<"signIn" | "register">("signIn");
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
+  const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
   const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
@@ -57,6 +59,7 @@ export const LoginPage = (): JSX.Element => {
    */
   const onButtonClick = () => {
     void (async (): Promise<void> => {
+      setRequestInProgress(true);
       switch (action) {
         case "register":
           // Validate input fields
@@ -88,6 +91,8 @@ export const LoginPage = (): JSX.Element => {
               }
             } catch (e) {
               setErrorNotification(e, "requesting registration challenge");
+            } finally {
+              setRequestInProgress(false);
             }
           }
           break;
@@ -116,6 +121,8 @@ export const LoginPage = (): JSX.Element => {
             }
           } catch (e) {
             setErrorNotification(e, "requesting authentication challenge");
+          } finally {
+            setRequestInProgress(false);
           }
           break;
       }
@@ -152,7 +159,7 @@ export const LoginPage = (): JSX.Element => {
               rightLabel="Register"
             />
           </Grid>
-          <Grid container item direction="column" spacing={1}>
+          <Grid container item direction="column">
             <Grid
               item
               maxHeight={action === "register" ? 60 : 0}
@@ -165,9 +172,10 @@ export const LoginPage = (): JSX.Element => {
               }}
             >
               <TextField
+                sx={{ mb: 1 }}
+                fullWidth
                 id="inputEmail"
                 type="email"
-                fullWidth
                 label="Email Address"
                 value={email}
                 error={emailError}
@@ -190,6 +198,7 @@ export const LoginPage = (): JSX.Element => {
               }}
             >
               <TextField
+                sx={{ mb: 1 }}
                 fullWidth
                 id="inputName"
                 label="Name"
@@ -203,7 +212,8 @@ export const LoginPage = (): JSX.Element => {
               />
             </Grid>
             <Grid item>
-              <Button
+              <LoadingButton
+                loading={requestInProgress}
                 startIcon={<FingerprintIcon />}
                 variant="contained"
                 disabled={action === "register" && (emailError || nameError)}
@@ -212,7 +222,7 @@ export const LoginPage = (): JSX.Element => {
                 onClick={onButtonClick}
               >
                 {action === "signIn" ? "Sign in" : "Register"}
-              </Button>
+              </LoadingButton>
             </Grid>
           </Grid>
         </Grid>

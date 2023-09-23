@@ -14,6 +14,7 @@ import {
   Tooltip,
   Typography,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { sessionEndpointPath } from "@rating-tracker/commons";
 import axios from "axios";
@@ -30,6 +31,7 @@ export const HeaderUserbox = (): JSX.Element => {
   const navigate = useNavigate();
   const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useContext(NotificationContext);
   const { user } = useContext(UserContext);
+  const theme = useTheme();
 
   const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
 
@@ -58,7 +60,12 @@ export const HeaderUserbox = (): JSX.Element => {
       <Tooltip arrow title="Open Profile Settings">
         <Box display="inline-block">
           {/* Box required for tooltip to work on disabled button */}
-          <Button color="secondary" sx={{ px: 1 }} onClick={() => setOpen(true)} disabled={!user}>
+          <Button
+            sx={{ px: 1, ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
+            color="secondary"
+            onClick={() => setOpen(true)}
+            disabled={!user}
+          >
             {user ? (
               <Avatar variant="rounded" alt={user.name} src={user.avatar} />
             ) : (
