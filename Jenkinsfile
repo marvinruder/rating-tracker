@@ -169,10 +169,9 @@ node('rating-tracker-build') {
                 )
             } finally {
                 stage ('Cleanup') {
-                    // Push cache image to Docker registry and remove build artifacts
-                    // JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(rsync -a \$HOME/.cache storagebox:/home/cache) &'
+                    // Upload cache to external storage and remove build artifacts
                     sh """
-                    rsync -a --stats \$HOME/.cache storagebox:/home
+                    putcache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
                     rm -rf app cache
