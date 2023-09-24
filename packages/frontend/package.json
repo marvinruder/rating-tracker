@@ -39,7 +39,7 @@
     "@simplewebauthn/browser": "8.0.2",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
-    "@vitejs/plugin-react": "4.0.4",
+    "@vitejs/plugin-react": "4.1.0",
     "@vitest/web-worker": "0.34.5",
     "apexcharts": "3.42.0",
     "axios": "1.5.0",
