@@ -21,13 +21,11 @@ node('rating-tracker-build') {
                             // Log in to Docker Hub
                             sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
 
-                            // Create builder instance
-                            sh "docker builder create --name rating-tracker --driver docker-container --driver-opt network=host --bootstrap || :"
-
-                            // Prefetch Docker base images
+                            // Create builder instance and prefetch Docker base images
                             sh """
-                            JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$imagename/\$BRANCH_NAME/docker/Dockerfile-prefetch-buildx | docker buildx build --builder rating-tracker --network=host --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm -) &'
                             JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$imagename/\$BRANCH_NAME/docker/Dockerfile-prefetch | docker build -) &'
+                            docker builder create --name rating-tracker --driver docker-container --driver-opt network=host --bootstrap || :
+                            JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$imagename/\$BRANCH_NAME/docker/Dockerfile-prefetch-buildx | docker buildx build --builder rating-tracker --network=host --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm -) &'
                             """
                         }
                     },
@@ -169,10 +167,9 @@ node('rating-tracker-build') {
                 )
             } finally {
                 stage ('Cleanup') {
-                    // Push cache image to Docker registry and remove build artifacts
-                    // JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(rsync -a \$HOME/.cache storagebox:/home/cache) &'
-                    sh """
-                    rsync -a --stats \$HOME/.cache storagebox:/home
+                    // Upload cache to external storage and remove build artifacts
+                    sh """#!/bin/bash
+                    putcache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
                     rm -rf app cache
