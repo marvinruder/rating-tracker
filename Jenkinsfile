@@ -170,7 +170,7 @@ node('rating-tracker-build') {
             } finally {
                 stage ('Cleanup') {
                     // Upload cache to external storage and remove build artifacts
-                    sh """
+                    sh """#!/bin/bash
                     putcache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
