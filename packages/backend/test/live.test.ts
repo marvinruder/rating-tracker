@@ -1,16 +1,18 @@
-import applyPostgresSeeds from "./seeds/postgres";
-import applyRedisSeeds from "./seeds/redis";
 import { glob } from "glob";
-import { LiveTestSuite } from "./liveTestHelpers";
+import type { SpyInstance } from "vitest";
+
 import * as stockTable from "../src/db/tables/stockTable";
 import * as userTable from "../src/db/tables/userTable";
 import * as watchlistTable from "../src/db/tables/watchlistTable";
 import * as resourceRepository from "../src/redis/repositories/resourceRepository";
 import * as sessionRepository from "../src/redis/repositories/sessionRepository";
-import { SpyInstance } from "vitest";
 import { listener } from "../src/server";
 import { sentMessages } from "../src/signal/__mocks__/signalBase";
 import * as signal from "../src/signal/signal";
+
+import { LiveTestSuite } from "./liveTestHelpers";
+import applyPostgresSeeds from "./seeds/postgres";
+import applyRedisSeeds from "./seeds/redis";
 
 vi.mock("../src/utils/logger");
 vi.mock("../src/signal/signalBase");

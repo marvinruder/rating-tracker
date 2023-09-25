@@ -6,6 +6,7 @@ import {
   Stock,
   STOCK_UPDATE_MESSAGE,
 } from "@rating-tracker/commons";
+
 import client from "../../src/db/client";
 import { addDynamicAttributesToStockData } from "../../src/models/dynamicStockAttributes";
 
