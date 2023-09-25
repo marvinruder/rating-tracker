@@ -1268,7 +1268,7 @@ __metadata:
     "@types/cookie-parser": 1.4.4
     "@types/express": 4.17.18
     "@types/node": 20.6.5
-    "@types/selenium-webdriver": 4.1.16
+    "@types/selenium-webdriver": 4.1.17
     "@types/supertest": 2.0.12
     "@types/swagger-ui-express": 4.1.3
     "@typescript-eslint/eslint-plugin": 6.7.2
@@ -1961,12 +1961,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/selenium-webdriver@npm:4.1.16":
-  version: 4.1.16
-  resolution: "@types/selenium-webdriver@npm:4.1.16"
+"@types/selenium-webdriver@npm:4.1.17":
+  version: 4.1.17
+  resolution: "@types/selenium-webdriver@npm:4.1.17"
   dependencies:
     "@types/ws": "*"
-  checksum: e704e81304247ad6d42d03bf10ab077842433637b01fee42f008964b1cf261c1974d0a5c32391a5d222b587636032d894d91d37e002d1ef262d22d3810beb2f8
+  checksum: 92b724ea73e07d3ec8d82ae9b782433619093b8430d4c794c527c6bd258a4acd8a42f0690341b54df19c923463ebe38d06c91f7dac0ccb7da9f3648897d2eca0
   languageName: node
   linkType: hard
 
