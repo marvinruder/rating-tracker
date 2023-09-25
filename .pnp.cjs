@@ -1738,7 +1738,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chalk", "npm:5.3.0"],\
             ["concurrently", "npm:8.2.1"],\
             ["cookie-parser", "npm:1.4.6"],\
-            ["cron", "npm:2.4.3"],\
+            ["cron", "npm:2.4.4"],\
             ["date-fns", "npm:2.30.0"],\
             ["esbuild", "npm:0.19.3"],\
             ["eslint", "npm:8.50.0"],\
@@ -4418,10 +4418,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["cron", [\
-        ["npm:2.4.3", {\
-          "packageLocation": "./.yarn/cache/cron-npm-2.4.3-69d6c50c0f-cb0ad49653.zip/node_modules/cron/",\
+        ["npm:2.4.4", {\
+          "packageLocation": "./.yarn/cache/cron-npm-2.4.4-f527016db7-e7dbc39c7c.zip/node_modules/cron/",\
           "packageDependencies": [\
-            ["cron", "npm:2.4.3"],\
+            ["cron", "npm:2.4.4"],\
             ["@types/luxon", "npm:3.3.1"],\
             ["luxon", "npm:3.3.0"]\
           ],\
