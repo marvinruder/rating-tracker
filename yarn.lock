@@ -1292,7 +1292,7 @@ __metadata:
     express-async-errors: 3.1.1
     express-openapi-validator: 5.0.6
     express-rate-limit: 7.0.1
-    glob: 10.3.7
+    glob: 10.3.9
     pino: 8.15.1
     pino-pretty: 10.2.0
     prettier: 3.0.3
@@ -4946,7 +4946,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:10.3.7, glob@npm:^10.2.2":
+"glob@npm:10.3.9":
+  version: 10.3.9
+  resolution: "glob@npm:10.3.9"
+  dependencies:
+    foreground-child: ^3.1.0
+    jackspeak: ^2.3.5
+    minimatch: ^9.0.1
+    minipass: ^5.0.0 || ^6.0.2 || ^7.0.0
+    path-scurry: ^1.10.1
+  bin:
+    glob: dist/esm/bin.mjs
+  checksum: 806a4ef5710beb15577cb0e27a103b39805e009e45e9e63455c385a5db7c4fb793d7399740f21bd133ca58ae6e4e5d56493f0a36bf2985e91eab51d12532f040
+  languageName: node
+  linkType: hard
+
+"glob@npm:^10.2.2":
   version: 10.3.7
   resolution: "glob@npm:10.3.7"
   dependencies:
@@ -5792,6 +5807,19 @@ __metadata:
     "@pkgjs/parseargs":
       optional: true
   checksum: 71bf716f4b5793226d4aeb9761ebf2605ee093b59f91a61451d57d998dd64bbf2b54323fb749b8b2ae8b6d8a463de4f6e3fedab50108671f247bbc80195a6306
+  languageName: node
+  linkType: hard
+
+"jackspeak@npm:^2.3.5":
+  version: 2.3.5
+  resolution: "jackspeak@npm:2.3.5"
+  dependencies:
+    "@isaacs/cliui": ^8.0.2
+    "@pkgjs/parseargs": ^0.11.0
+  dependenciesMeta:
+    "@pkgjs/parseargs":
+      optional: true
+  checksum: c2c211f13ceffa05f6c2a2fe82667303c81af6f9f53619b9e4fd403207ffe666428a017f61cd43b3478759188917eda14a81f8823b6dd40a8627e46d973a37df
   languageName: node
   linkType: hard
 
