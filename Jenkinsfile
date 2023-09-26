@@ -84,10 +84,7 @@ node('rating-tracker-build') {
                             // Copy dependencies to workspace and cache
                             sh """
                             id=\$(docker create $imagename:job$JOB_ID-yarn)
-                            docker cp \$id:/workdir/.yarn/. ./.yarn
                             docker cp \$id:/workdir/cache/yarn/. ./cache/yarn
-                            docker cp \$id:/workdir/.pnp.cjs .
-                            docker cp \$id:/workdir/packages/backend/prisma/client/. ./packages/backend/prisma/client
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-yarn
                             cp -arn ./cache/yarn \$HOME/.cache
