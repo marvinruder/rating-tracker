@@ -75,11 +75,10 @@ WORKDIR /coverage
 # Copy coverage reports from test stage
 COPY --from=test /coverage /coverage
 
-# Add eslint cache
-COPY --from=validator /root/.cache/rating-tracker /root/.cache/rating-tracker
+# Add eslint and TypeScript cache
+COPY --from=validator /root/.cache/rating-tracker /cache
 
 # Add build artifacts
 COPY --from=build /workdir/app /app
-COPY --from=build /root/.cache/rating-tracker /cache
 
 ENTRYPOINT [ "codacy-coverage" ]
