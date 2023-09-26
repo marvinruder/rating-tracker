@@ -96,35 +96,26 @@ node('rating-tracker-build') {
                     }
                 )
 
-                parallel(
-                    test: {
-                        stage ('Run Tests') {
-                            docker.build("$imagename:job$JOB_ID-test", "-f docker/Dockerfile-test --force-rm --add-host host.docker.internal:host-gateway .")
-                        }
-                    },
-                    build: {
-                        stage ('Build Docker Image') {
-                            docker.build("$imagename:job$JOB_ID-build", "-f docker/Dockerfile-build --force-rm .")
+                stage ('Run tests and build Docker Image') {
+                    docker.build("$imagename:job$JOB_ID-ci", "-f docker/Dockerfile-ci --force-rm --add-host host.docker.internal:host-gateway .")
 
-                            // Copy build artifacts to workspace
-                            sh """
-                            id=\$(docker create $imagename:job$JOB_ID-build)
-                            docker cp \$id:/workdir/app/. ./app
-                            docker cp \$id:/root/.cache/rating-tracker/. ./cache/rating-tracker
-                            docker rm -v \$id
-                            docker rmi $imagename:job$JOB_ID-build
-                            cp -ar ./cache/rating-tracker \$HOME/.cache
-                            """
-                        }
-                    }
-                )
+                    // Copy build artifacts and cache files to workspace
+                    sh """
+                    id=\$(docker create $imagename:job$JOB_ID-ci)
+                    docker cp \$id:/app/. ./app
+                    docker cp \$id:/cache/. ./cache/rating-tracker
+                    docker rm -v \$id
+                    docker rmi $imagename:job$JOB_ID-ci
+                    cp -ar ./cache/rating-tracker \$HOME/.cache
+                    """
+                }
 
                 parallel(
                     codacy: {
                         stage ('Publish coverage results to Codacy') {
                             withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
                                 // Publish coverage results by running a container from the test image
-                                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:job$JOB_ID-test report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $imagename:job$JOB_ID-test")
+                                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$imagename:job$JOB_ID-ci report \$(find . -name 'lcov.info' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $imagename:job$JOB_ID-ci")
                             }
                         }
                     },
@@ -171,7 +162,7 @@ node('rating-tracker-build') {
                     sh """#!/bin/bash
                     putcache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
-                    docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-build $imagename:job$JOB_ID-test $imagename:job$JOB_ID-yarn || :
+                    docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-ci $imagename:job$JOB_ID-yarn || :
                     rm -rf app cache
                     """
                 }
