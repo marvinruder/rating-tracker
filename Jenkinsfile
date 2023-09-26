@@ -79,6 +79,7 @@ node('rating-tracker-build') {
                             mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
                             cp -arn \$HOME/.cache/yarn/global ./cache/yarn || :
                             cp -ar \$HOME/.cache/rating-tracker ./cache || :
+                            cp packages/wasm/package.json packages/wasm-package.json
                             """
                             docker.build("$imagename:job$JOB_ID-ci", "-f docker/Dockerfile-ci --target=yarn --force-rm --add-host host.docker.internal:host-gateway .")
                         }

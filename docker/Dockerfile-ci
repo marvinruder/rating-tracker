@@ -15,7 +15,7 @@ RUN \
   --mount=type=bind,source=packages/backend/package.json,target=packages/backend/package.json \
   --mount=type=bind,source=packages/commons/package.json,target=packages/commons/package.json \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
-  --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
+  --mount=type=bind,source=packages/wasm-package.json,target=packages/wasm/package.json \
   yarn --immutable
 
 # Generate Prisma client
@@ -39,6 +39,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  diff packages/wasm/package.json packages/wasm-package.json && \
   mkdir -p /root/.cache && \
   cp -ar ./cache/rating-tracker /root/.cache && \
   yarn validate
