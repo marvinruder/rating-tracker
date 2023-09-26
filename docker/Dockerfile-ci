@@ -35,7 +35,7 @@ WORKDIR /workdir
 
 # Run validations
 RUN \
-  --mount=type=bind,target=. \
+  --mount=type=bind,target=.,rw \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
