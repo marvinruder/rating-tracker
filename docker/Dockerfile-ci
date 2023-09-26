@@ -39,14 +39,6 @@ ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Copy project files as well as Swagger UI files and WebAssembly package
-COPY \
-  .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css \
-  .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
-  .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
-  /workdir/app/public/api-docs/
-COPY packages packages
-
 # Build project
 RUN \
   --mount=type=bind,target=.,rw \
@@ -55,10 +47,16 @@ RUN \
   # Parse backend bundle for correctness and executability in Node.js
   /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 node -r ./test/env.ts dist/server.mjs' && \
   # Create directories for target container and copy only necessary files
-  mkdir -p app/public app/prisma/client && \
-  cp packages/backend/dist/server.mjs app && \
-  cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* app/prisma/client && \
-  cp -r packages/frontend/dist/* app/public
+  mkdir -p /app/public/api-docs /app/prisma/client && \
+  cp packages/backend/dist/server.mjs /app && \
+  cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* /app/prisma/client && \
+  cp -r packages/frontend/dist/* /app/public && \
+  # Copy project files as well as Swagger UI files and WebAssembly package
+  cp \
+  .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css \
+  .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
+  .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
+  /app/public/api-docs/
 
 
 FROM eclipse-temurin:17.0.8_7-jre as codacy
@@ -79,6 +77,6 @@ COPY --from=test /coverage /coverage
 COPY --from=validator /root/.cache/rating-tracker /cache
 
 # Add build artifacts
-COPY --from=build /workdir/app /app
+COPY --from=build /app /app
 
 ENTRYPOINT [ "codacy-coverage" ]
