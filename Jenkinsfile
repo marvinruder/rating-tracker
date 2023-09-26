@@ -105,7 +105,6 @@ node('rating-tracker-build') {
                     docker cp \$id:/app/. ./app
                     docker cp \$id:/cache/. ./cache/rating-tracker
                     docker rm -v \$id
-                    docker rmi $imagename:job$JOB_ID-ci
                     cp -ar ./cache/rating-tracker \$HOME/.cache
                     """
                 }
@@ -163,7 +162,7 @@ node('rating-tracker-build') {
                     putcache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-ci $imagename:job$JOB_ID-yarn || :
-                    rm -rf app cache
+                    # rm -rf app cache
                     """
                 }
             }
