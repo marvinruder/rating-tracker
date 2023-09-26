@@ -1,7 +1,8 @@
 process.env = {
   ...process.env,
+  // eslint-disable-next-line prettier/prettier
   DATABASE_URL:
-    "postgresql://rating-tracker-test:rating-tracker-test@127.0.0.1:54321/rating-tracker-test?sslmode=disable",
+    "postgresql://rating-tracker-test:rating-tracker-test@127.0.0.1:54321/rating-tracker-test",
   NODE_ENV: "test",
   DOMAIN: "example.com",
   SUBDOMAIN: "subdomain",
