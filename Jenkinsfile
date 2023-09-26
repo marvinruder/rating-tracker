@@ -70,16 +70,14 @@ node('rating-tracker-build') {
                     },
                     dep: {
                         stage ('Install dependencies') {
-                            // Change config files for use in CI and copy global cache to workspace
+                            // Change config files for use in CI, copy global cache to workspace and install dependencies
                             sh """
                             echo \"globalFolder: /workdir/cache/yarn/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
                             mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
                             cp -arn \$HOME/.cache/yarn/global ./cache/yarn || :
                             cp -ar \$HOME/.cache/rating-tracker ./cache || :
+                            docker build -f docker/Dockerfile-ci --target=yarn .
                             """
-
-                            // Install dependencies
-                            docker.build("$imagename:job$JOB_ID-ci", "-f docker/Dockerfile-yarn --target=yarn .")
                         }
                     }
                 )
@@ -150,7 +148,7 @@ node('rating-tracker-build') {
                     cp -arn ./cache/yarn \$HOME/.cache
                     putcache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
-                    docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-ci $imagename:job$JOB_ID-yarn || :
+                    docker rmi $imagename:job$JOB_ID-wasm $imagename:job$JOB_ID-ci || :
                     rm -rf app cache
                     """
                 }
