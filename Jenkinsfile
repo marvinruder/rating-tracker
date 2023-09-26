@@ -96,7 +96,7 @@ node('rating-tracker-build') {
                     }
                 )
 
-                stage ('Run tests and build Docker Image') {
+                stage ('Run tests and build bundles') {
                     docker.build("$imagename:job$JOB_ID-ci", "-f docker/Dockerfile-ci --force-rm --add-host host.docker.internal:host-gateway .")
 
                     // Copy build artifacts and cache files to workspace
@@ -162,7 +162,7 @@ node('rating-tracker-build') {
                     putcache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-ci $imagename:job$JOB_ID-yarn || :
-                    # rm -rf app cache
+                    rm -rf app cache
                     """
                 }
             }

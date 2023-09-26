@@ -20,8 +20,6 @@ ENV SIGNAL_SENDER +493012345678
 
 WORKDIR /workdir
 
-COPY packages packages
-
 # Run tests
 RUN \
   --mount=type=bind,target=.,rw \
