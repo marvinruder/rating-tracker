@@ -1,6 +1,6 @@
-import initSupertest, { CallbackHandler, Test } from "supertest";
 import { Stock, UNAUTHORIZED_ERROR_MESSAGE, stockListEndpointPath } from "@rating-tracker/commons";
-import { TestFunction } from "vitest";
+import initSupertest, { CallbackHandler, Test } from "supertest";
+import type { TestFunction } from "vitest";
 
 /**
  * A supertest instance. Used to direct requests to the server running on the port specified in the test environment.

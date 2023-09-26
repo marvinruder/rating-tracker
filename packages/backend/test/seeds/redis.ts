@@ -1,6 +1,6 @@
+import redis from "../../src/redis/redis";
 import { resourceRepository } from "../../src/redis/repositories/resourceRepository";
 import { sessionRepository } from "../../src/redis/repositories/sessionRepository";
-import redis from "../../src/redis/redis";
 
 /**
  * Writes example resource data into the resource repository in Redis. Must only be used in tests.
