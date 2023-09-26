@@ -77,7 +77,7 @@ node('rating-tracker-build') {
                             cp -arn \$HOME/.cache/yarn/global ./cache/yarn || :
                             cp -ar \$HOME/.cache/rating-tracker ./cache || :
                             cp packages/wasm/package.json packages/wasm-package.json
-                            docker build -f docker/Dockerfile-ci --target=yarn .
+                            docker build -f docker/Dockerfile-ci --target=yarn --add-host host.docker.internal:host-gateway .
                             """
                         }
                     }
