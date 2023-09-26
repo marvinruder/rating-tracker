@@ -79,16 +79,7 @@ node('rating-tracker-build') {
                             """
 
                             // Install dependencies
-                            docker.build("$imagename:job$JOB_ID-yarn", "-f docker/Dockerfile-yarn .")
-
-                            // Copy dependencies to workspace and cache
-                            sh """
-                            id=\$(docker create $imagename:job$JOB_ID-yarn)
-                            docker cp \$id:/workdir/cache/yarn/. ./cache/yarn
-                            docker rm -v \$id
-                            docker rmi $imagename:job$JOB_ID-yarn
-                            cp -arn ./cache/yarn \$HOME/.cache
-                            """
+                            docker.build("$imagename:job$JOB_ID-ci", "-f docker/Dockerfile-yarn --target=yarn .")
                         }
                     }
                 )
@@ -100,9 +91,8 @@ node('rating-tracker-build') {
                     sh """
                     id=\$(docker create $imagename:job$JOB_ID-ci)
                     docker cp \$id:/app/. ./app
-                    docker cp \$id:/cache/. ./cache/rating-tracker
+                    docker cp \$id:/cache/. ./cache
                     docker rm -v \$id
-                    cp -ar ./cache/rating-tracker \$HOME/.cache
                     """
                 }
 
@@ -156,6 +146,8 @@ node('rating-tracker-build') {
                 stage ('Cleanup') {
                     // Upload cache to external storage and remove build artifacts
                     sh """#!/bin/bash
+                    cp -ar ./cache/rating-tracker \$HOME/.cache
+                    cp -arn ./cache/yarn \$HOME/.cache
                     putcache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $imagename:job$JOB_ID $imagename:job$JOB_ID-ci $imagename:job$JOB_ID-yarn || :

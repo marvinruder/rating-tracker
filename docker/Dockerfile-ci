@@ -114,7 +114,10 @@ WORKDIR /coverage
 COPY --from=test /coverage /coverage
 
 # Add eslint and TypeScript cache
-COPY --from=validator /root/.cache/rating-tracker /cache
+COPY --from=validator /root/.cache/rating-tracker /cache/rating-tracker
+
+# Add yarn cache
+COPY --from=yarn /workdir/cache/yarn /cache/yarn
 
 # Add build artifacts
 COPY --from=build /app /app
