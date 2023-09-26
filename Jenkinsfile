@@ -62,7 +62,10 @@ node('rating-tracker-build') {
                             sh """
                             docker buildx build --builder rating-tracker --network=host --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:job$JOB_ID-wasm -f docker/Dockerfile-wasm --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm --cache-to=registry.internal.mruder.dev/cache:rating-tracker-wasm .
                             id=\$(docker create $imagename:job$JOB_ID-wasm)
+                            cp -a ./packages/wasm/package.json ./packages/wasm/package.json.bak
                             docker cp \$id:/workdir/pkg/. ./packages/wasm/.
+                            touch --reference ./packages/wasm/package.json.bak ./packages/wasm/package.json
+                            rm ./packages/wasm/package.json.bak
                             docker rm -v \$id
                             docker rmi $imagename:job$JOB_ID-wasm
                             """
