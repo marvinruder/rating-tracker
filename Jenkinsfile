@@ -76,7 +76,7 @@ node('rating-tracker-build') {
                             mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
                             cp -arn \$HOME/.cache/yarn/global ./cache/yarn || :
                             cp -ar \$HOME/.cache/rating-tracker ./cache || :
-                            docker build -f docker/Dockerfile-ci --target=yarn .
+                            docker build -f docker/Dockerfile-ci --target=yarn --force-rm --add-host host.docker.internal:host-gateway .
                             """
                         }
                     }
