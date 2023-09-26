@@ -1,4 +1,4 @@
-import { glob } from "glob";
+import { glob } from "fast-glob";
 import type { SpyInstance } from "vitest";
 
 import * as stockTable from "../src/db/tables/stockTable";

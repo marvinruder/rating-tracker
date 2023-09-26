@@ -1751,7 +1751,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-async-errors", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:3.1.1"],\
             ["express-openapi-validator", "npm:5.0.6"],\
             ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.0.1"],\
-            ["glob", "npm:10.3.9"],\
+            ["fast-glob", "npm:3.3.1"],\
             ["pino", "npm:8.15.1"],\
             ["pino-pretty", "npm:10.2.0"],\
             ["prettier", "npm:3.0.3"],\
@@ -6138,18 +6138,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:10.3.9", {\
-          "packageLocation": "./.yarn/cache/glob-npm-10.3.9-a41b2187b4-806a4ef571.zip/node_modules/glob/",\
-          "packageDependencies": [\
-            ["glob", "npm:10.3.9"],\
-            ["foreground-child", "npm:3.1.1"],\
-            ["jackspeak", "npm:2.3.5"],\
-            ["minimatch", "npm:9.0.3"],\
-            ["minipass", "npm:7.0.3"],\
-            ["path-scurry", "npm:1.10.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:7.2.3", {\
           "packageLocation": "./.yarn/cache/glob-npm-7.2.3-2d866d17a5-29452e97b3.zip/node_modules/glob/",\
           "packageDependencies": [\
@@ -7117,15 +7105,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/jackspeak-npm-2.3.0-d55fd5c42c-71bf716f4b.zip/node_modules/jackspeak/",\
           "packageDependencies": [\
             ["jackspeak", "npm:2.3.0"],\
-            ["@isaacs/cliui", "npm:8.0.2"],\
-            ["@pkgjs/parseargs", "npm:0.11.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:2.3.5", {\
-          "packageLocation": "./.yarn/cache/jackspeak-npm-2.3.5-c631837bc0-c2c211f13c.zip/node_modules/jackspeak/",\
-          "packageDependencies": [\
-            ["jackspeak", "npm:2.3.5"],\
             ["@isaacs/cliui", "npm:8.0.2"],\
             ["@pkgjs/parseargs", "npm:0.11.0"]\
           ],\
