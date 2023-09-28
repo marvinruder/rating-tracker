@@ -65,7 +65,7 @@
     "@vitest/coverage-v8": "0.34.5",
     "@yarnpkg/pnpify": "3.1.6",
     "concurrently": "8.2.1",
-    "esbuild": "0.19.3",
+    "esbuild": "0.19.4",
     "eslint": "8.50.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "9.0.0",
