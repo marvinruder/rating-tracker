@@ -1264,7 +1264,7 @@ __metadata:
   dependencies:
     "@prisma/client": 5.3.1
     "@rating-tracker/commons": "workspace:*"
-    "@simplewebauthn/server": 8.1.1
+    "@simplewebauthn/server": 8.2.0
     "@types/cookie-parser": 1.4.4
     "@types/express": 4.17.18
     "@types/node": 20.7.1
@@ -1341,7 +1341,7 @@ __metadata:
     "@mui/material": 5.14.11
     "@rating-tracker/commons": "workspace:*"
     "@rating-tracker/wasm": "workspace:*"
-    "@simplewebauthn/browser": 8.0.2
+    "@simplewebauthn/browser": 8.2.0
     "@types/node": 20.7.1
     "@types/react": 18.2.23
     "@types/react-dom": 18.2.8
@@ -1488,18 +1488,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/browser@npm:8.0.2":
-  version: 8.0.2
-  resolution: "@simplewebauthn/browser@npm:8.0.2"
+"@simplewebauthn/browser@npm:8.2.0":
+  version: 8.2.0
+  resolution: "@simplewebauthn/browser@npm:8.2.0"
   dependencies:
     "@simplewebauthn/typescript-types": ^8.0.0
-  checksum: 3837a8a80dad90e4eecc116ecf42c61c4e51d0948bea41240bd18665c753425f50df89b4f9c18f99d862b931cd2c24d7bde23a9d7626fbe7a4d8b308160afc56
+  checksum: 1bde1f2d2c1244eb5e42a41fddf2478216e68b9d5f4d5189309cf3e0bac41e1d7a88be43323203b06e97463e8687fa95aeaebb419ed2529afd13e4dde06a3170
   languageName: node
   linkType: hard
 
-"@simplewebauthn/server@npm:8.1.1":
-  version: 8.1.1
-  resolution: "@simplewebauthn/server@npm:8.1.1"
+"@simplewebauthn/server@npm:8.2.0":
+  version: 8.2.0
+  resolution: "@simplewebauthn/server@npm:8.2.0"
   dependencies:
     "@hexagon/base64": ^1.1.27
     "@peculiar/asn1-android": ^2.3.6
@@ -1510,7 +1510,7 @@ __metadata:
     "@simplewebauthn/typescript-types": ^8.0.0
     cbor-x: ^1.5.2
     cross-fetch: ^4.0.0
-  checksum: 9f3d1fdb70da81fe419a56c7454dbd1d599c960594a470a4a9a1c1c44a629f360090d1c1e5002ced785e2ba879d9cf463dee4c6ea13b9eb7944b066a5c432e71
+  checksum: 8e646f5594e043296bdcd48868dc8e075d15903afe37b345d651d67fd34fcce69efc9994bdbac35c8c7b1303f6605a5294f783d115f81acea1fe07659f478422
   languageName: node
   linkType: hard
 
