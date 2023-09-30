@@ -1,5 +1,5 @@
 FROM scratch
 COPY --from=postgres:alpine /etc/os-release /etc/os-release-postgres
 COPY --from=redis:alpine /etc/os-release /etc/os-release-redis
-COPY --from=node:20.7.0-alpine /etc/os-release /etc/os-release-node
+COPY --from=node:20.8.0-alpine /etc/os-release /etc/os-release-node
 COPY --from=eclipse-temurin:17.0.8_7-jre /etc/os-release /etc/os-release-java
