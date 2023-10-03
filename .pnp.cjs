@@ -1804,7 +1804,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mui/material", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:5.14.11"],\
             ["@rating-tracker/commons", "workspace:packages/commons"],\
             ["@rating-tracker/wasm", "workspace:packages/wasm"],\
-            ["@simplewebauthn/browser", "npm:8.2.1"],\
+            ["@simplewebauthn/browser", "npm:8.3.1"],\
             ["@types/node", "npm:20.8.2"],\
             ["@types/react", "npm:18.2.24"],\
             ["@types/react-dom", "npm:18.2.8"],\
@@ -2034,10 +2034,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@simplewebauthn/browser", [\
-        ["npm:8.2.1", {\
-          "packageLocation": "./.yarn/cache/@simplewebauthn-browser-npm-8.2.1-8c792979d7-9454f501a0.zip/node_modules/@simplewebauthn/browser/",\
+        ["npm:8.3.1", {\
+          "packageLocation": "./.yarn/cache/@simplewebauthn-browser-npm-8.3.1-80169dcb7c-1c3ce9e23b.zip/node_modules/@simplewebauthn/browser/",\
           "packageDependencies": [\
-            ["@simplewebauthn/browser", "npm:8.2.1"],\
+            ["@simplewebauthn/browser", "npm:8.3.1"],\
             ["@simplewebauthn/typescript-types", "npm:8.0.0"]\
           ],\
           "linkType": "HARD"\
