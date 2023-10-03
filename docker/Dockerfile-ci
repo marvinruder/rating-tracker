@@ -73,11 +73,10 @@ WORKDIR /workdir
 # Run validations
 RUN \
   --mount=type=bind,target=.,rw \
-  --mount=type=bind,from=wasm,source=/workdir/pkg,target=/wasm \
+  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  diff packages/wasm/package.json /wasm/package.json && \
   mkdir -p /root/.cache && \
   cp -ar ./cache/rating-tracker /root/.cache && \
   yarn validate
