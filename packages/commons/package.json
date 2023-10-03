@@ -29,7 +29,7 @@
     "eslint-plugin-prettier": "5.0.0",
     "prettier": "3.0.3",
     "typescript": "5.2.2",
-    "vite": "4.4.9",
+    "vite": "4.4.10",
     "vitest": "0.34.6"
   }
 }
