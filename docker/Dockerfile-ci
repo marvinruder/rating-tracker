@@ -122,7 +122,7 @@ RUN \
   # Bundle frontend and backend
   yarn build && \
   # Parse backend bundle for correctness and executability in Node.js
-  /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 node -r ./test/env.ts dist/server.mjs' && \
+  /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 PORT_OFFSET=4096 node -r ./test/env.ts dist/server.mjs' && \
   # Create directories for target container and copy only necessary files
   mkdir -p /app/public/api-docs /app/prisma/client && \
   cp packages/backend/dist/server.mjs /app && \
