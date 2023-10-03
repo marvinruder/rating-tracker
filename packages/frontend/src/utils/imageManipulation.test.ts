@@ -24,8 +24,8 @@ describe("Avatar Conversion", async () => {
       expect(message.data.result).toMatchSnapshot();
       workerHasSentResult = true;
     };
-    await vi.waitUntil(() => workerHasSentResult, 4000);
-  });
+    await vi.waitUntil(() => workerHasSentResult, 16000);
+  }, 16000);
 
   it("handles errors correctly", async () => {
     let workerHasSentResult = false;
@@ -36,6 +36,6 @@ describe("Avatar Conversion", async () => {
       expect(message.data.result).toBeUndefined();
       workerHasSentResult = true;
     };
-    await vi.waitUntil(() => workerHasSentResult, 4000);
-  });
+    await vi.waitUntil(() => workerHasSentResult, 8000);
+  }, 8000);
 });

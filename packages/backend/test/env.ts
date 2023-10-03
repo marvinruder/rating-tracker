@@ -1,12 +1,10 @@
 process.env = {
   ...process.env,
-  // eslint-disable-next-line prettier/prettier
-  DATABASE_URL:
-    "postgresql://rating-tracker-test:rating-tracker-test@127.0.0.1:54321/rating-tracker-test",
+  DATABASE_URL: "postgresql://rating-tracker-test:rating-tracker-test@127.0.0.1:54321/rating-tracker-test",
   NODE_ENV: "test",
   DOMAIN: "example.com",
   SUBDOMAIN: "subdomain",
-  PORT: "30001",
+  PORT: `${30001 + Number(process.env.PORT_OFFSET || 0)}`,
   REDIS_URL: "redis://127.0.0.1:63791",
   REDIS_USER: "",
   REDIS_PASS: "",

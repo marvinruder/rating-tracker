@@ -1,0 +1,162 @@
+FROM rust:1.72.1-alpine as wasm
+
+WORKDIR /workdir
+
+# Install required tools and libraries
+RUN \
+  --mount=type=cache,target=/var/cache/apk \
+  --mount=type=cache,target=/usr/local/cargo/registry \
+  apk add binaryen pkgconfig musl-dev openssl-dev && \
+  RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
+  rustup target add wasm32-unknown-unknown && \
+  wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
+
+# Get and build dependencies based on dummy `lib.rs`
+RUN \
+  --mount=type=cache,target=/usr/local/cargo/registry \
+  --mount=type=bind,source=wasm/Cargo.toml,target=Cargo.toml \
+  --mount=type=bind,source=wasm/Cargo.lock,target=Cargo.lock \
+  --mount=type=bind,source=wasm/config.toml,target=config.toml \
+  mkdir ./src && \
+  echo 'pub fn tmp() {}' > ./src/lib.rs && \
+  cargo build --release --target wasm32-unknown-unknown && \
+  rm ./src/lib.rs ./target/wasm32-unknown-unknown/release/deps/wasm.wasm
+
+# Build WebAssembly package
+RUN \
+  --mount=type=cache,target=/usr/local/cargo/registry \
+  --mount=type=bind,source=wasm/Cargo.toml,target=Cargo.toml \
+  --mount=type=bind,source=wasm/Cargo.lock,target=Cargo.lock \
+  --mount=type=bind,source=wasm/config.toml,target=config.toml \
+  --mount=type=bind,source=wasm/src,target=src \
+  wasm-pack build -s rating-tracker --release && \
+  # Fix `package.json`
+  sed -E -i.bak 's/"module": "([A-Za-z0-9\-\.]+)",/"main": "\1",\n  "module": "\1",/g ; s/^}$/}\n/' pkg/package.json && \
+  rm pkg/package.json.bak
+
+
+FROM node:20.8.0-alpine as yarn
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
+
+# Copy files required for installing dependencies
+COPY cache/yarn ./cache/yarn
+COPY .yarn ./.yarn
+
+# Install dependencies
+RUN \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
+  --mount=type=bind,source=packages/backend/package.json,target=packages/backend/package.json \
+  --mount=type=bind,source=packages/commons/package.json,target=packages/commons/package.json \
+  --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
+  --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
+  yarn --immutable
+
+# Generate Prisma client
+COPY packages/backend/prisma ./packages/backend/prisma
+RUN \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
+  --mount=type=bind,source=packages/backend/package.json,target=packages/backend/package.json \
+  yarn workspace @rating-tracker/backend prisma:generate
+
+
+FROM node:20.8.0-alpine as validator
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
+
+# Run validations
+RUN \
+  --mount=type=bind,target=.,rw \
+  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
+  --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
+  --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  mkdir -p /root/.cache && \
+  cp -ar ./cache/rating-tracker /root/.cache && \
+  yarn validate
+
+
+FROM node:20.8.0-alpine as test
+ENV FORCE_COLOR true
+ENV DOMAIN example.com
+ENV SUBDOMAIN subdomain
+ENV SIGNAL_URL http://127.0.0.1:8080
+ENV SIGNAL_SENDER +493012345678
+
+WORKDIR /workdir
+
+# Run tests
+RUN \
+  --mount=type=bind,target=.,rw \
+  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
+  --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
+  --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  yarn test && \
+  mkdir -p /coverage && \
+  mv packages/backend/coverage /coverage/backend && \
+  mv packages/commons/coverage /coverage/commons && \
+  mv packages/frontend/coverage /coverage/frontend
+
+
+FROM node:20.8.0-alpine as build
+LABEL stage=build
+ENV NODE_ENV production
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
+
+# Build project
+RUN \
+  --mount=type=bind,target=.,rw \
+  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
+  --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
+  --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  # Bundle frontend and backend
+  yarn build && \
+  # Parse backend bundle for correctness and executability in Node.js
+  /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 PORT_OFFSET=4096 node -r ./test/env.ts dist/server.mjs' && \
+  # Create directories for target container and copy only necessary files
+  mkdir -p /app/public/api-docs /app/prisma/client && \
+  cp packages/backend/dist/server.mjs /app && \
+  cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* /app/prisma/client && \
+  cp -r packages/frontend/dist/* /app/public && \
+  # Copy project files as well as Swagger UI files and WebAssembly package
+  cp \
+  .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css \
+  .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
+  .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
+  /app/public/api-docs/
+
+
+FROM eclipse-temurin:17.0.8_7-jre as codacy
+
+# Download and extract Codacy coverage reporter
+RUN \
+  curl -Ls https://coverage.codacy.com/get.sh | sed 's/os_name=\$(uname)/os_name=$(uname)\nos_name_arch=$(uname -sm)/;s/if \[ "\$os_name" = "Linux" \] || \[ "\$os_name" = "Darwin" \]/if [ "$os_name_arch" = "Linux x86_64" ] || [ "$os_name_arch" = "Darwin x86_64" ]/' > /usr/local/bin/codacy-coverage && \
+  chmod +x /usr/local/bin/codacy-coverage && \
+  codacy-coverage download && \
+  mkdir -p /coverage/{backend,commons,frontend}
+
+WORKDIR /coverage
+
+# Copy coverage reports from test stage
+COPY --from=test /coverage /coverage
+
+# Add eslint and TypeScript cache
+COPY --from=validator /root/.cache/rating-tracker /cache/rating-tracker
+
+# Add yarn cache
+COPY --from=yarn /workdir/cache/yarn /cache/yarn
+
+# Add build artifacts
+COPY --from=build /app /app
+
+ENTRYPOINT [ "codacy-coverage" ]
