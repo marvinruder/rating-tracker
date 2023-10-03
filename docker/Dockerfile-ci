@@ -75,6 +75,7 @@ RUN \
   --mount=type=bind,target=.,rw \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
+  --mount=type=bind,from=yarn,source=/workdir/cache/yarn,target=cache/yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
   mkdir -p /root/.cache && \
@@ -96,6 +97,7 @@ RUN \
   --mount=type=bind,target=.,rw \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
+  --mount=type=bind,from=yarn,source=/workdir/cache/yarn,target=cache/yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
   yarn test && \
@@ -117,6 +119,7 @@ RUN \
   --mount=type=bind,target=.,rw \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
+  --mount=type=bind,from=yarn,source=/workdir/cache/yarn,target=cache/yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
   # Bundle frontend and backend
