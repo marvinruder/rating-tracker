@@ -1,3 +1,40 @@
+FROM rust:1.72.1-alpine as wasm
+
+WORKDIR /workdir
+
+# Install required tools and libraries
+RUN \
+  --mount=type=cache,target=/var/cache/apk \
+  --mount=type=cache,target=/usr/local/cargo/registry \
+  apk add binaryen pkgconfig musl-dev openssl-dev && \
+  RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
+  rustup target add wasm32-unknown-unknown && \
+  wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
+
+# Get and build dependencies based on dummy `lib.rs`
+RUN \
+  --mount=type=cache,target=/usr/local/cargo/registry \
+  --mount=type=bind,source=wasm/Cargo.toml,target=Cargo.toml \
+  --mount=type=bind,source=wasm/Cargo.lock,target=Cargo.lock \
+  --mount=type=bind,source=wasm/config.toml,target=config.toml \
+  mkdir ./src && \
+  echo 'pub fn tmp() {}' > ./src/lib.rs && \
+  cargo build --release --target wasm32-unknown-unknown && \
+  rm ./src/lib.rs ./target/wasm32-unknown-unknown/release/deps/wasm.wasm
+
+# Build WebAssembly package
+RUN \
+  --mount=type=cache,target=/usr/local/cargo/registry \
+  --mount=type=bind,source=wasm/Cargo.toml,target=Cargo.toml \
+  --mount=type=bind,source=wasm/Cargo.lock,target=Cargo.lock \
+  --mount=type=bind,source=wasm/config.toml,target=config.toml \
+  --mount=type=bind,source=wasm/src,target=src \
+  wasm-pack build -s rating-tracker --release && \
+  # Fix `package.json`
+  sed -E -i.bak 's/"module": "([A-Za-z0-9\-\.]+)",/"main": "\1",\n  "module": "\1",/g ; s/^}$/}\n/' pkg/package.json && \
+  rm pkg/package.json.bak
+
+
 FROM node:20.8.0-alpine as yarn
 ENV FORCE_COLOR true
 
@@ -15,7 +52,7 @@ RUN \
   --mount=type=bind,source=packages/backend/package.json,target=packages/backend/package.json \
   --mount=type=bind,source=packages/commons/package.json,target=packages/commons/package.json \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
-  --mount=type=bind,source=packages/wasm-package.json,target=packages/wasm/package.json \
+  --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
   yarn --immutable
 
 # Generate Prisma client
@@ -28,7 +65,7 @@ RUN \
   yarn workspace @rating-tracker/backend prisma:generate
 
 
-FROM node:20.7.0-alpine as validator
+FROM node:20.8.0-alpine as validator
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -36,16 +73,17 @@ WORKDIR /workdir
 # Run validations
 RUN \
   --mount=type=bind,target=.,rw \
+  --mount=type=bind,from=wasm,source=/workdir/pkg,target=/wasm \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  diff packages/wasm/package.json packages/wasm-package.json && \
+  diff packages/wasm/package.json /wasm/package.json && \
   mkdir -p /root/.cache && \
   cp -ar ./cache/rating-tracker /root/.cache && \
   yarn validate
 
 
-FROM node:20.7.0-alpine as test
+FROM node:20.8.0-alpine as test
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
@@ -57,6 +95,7 @@ WORKDIR /workdir
 # Run tests
 RUN \
   --mount=type=bind,target=.,rw \
+  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
@@ -67,7 +106,7 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM node:20.7.0-alpine as build
+FROM node:20.8.0-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
@@ -77,6 +116,7 @@ WORKDIR /workdir
 # Build project
 RUN \
   --mount=type=bind,target=.,rw \
+  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \

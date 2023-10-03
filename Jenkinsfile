@@ -59,13 +59,7 @@ node('rating-tracker-build') {
                     wasm: {
                         stage ('Compile WebAssembly utils') {
                             // Build the WebAssembly image while using registry cache
-                            sh """
-                            docker buildx build --builder rating-tracker --network=host --build-arg BUILDKIT_INLINE_CACHE=1 --load -t $imagename:job$JOB_ID-wasm -f docker/Dockerfile-wasm --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm --cache-to=registry.internal.mruder.dev/cache:rating-tracker-wasm .
-                            id=\$(docker create $imagename:job$JOB_ID-wasm)
-                            docker cp \$id:/workdir/pkg/. ./packages/wasm/.
-                            docker rm -v \$id
-                            docker rmi $imagename:job$JOB_ID-wasm
-                            """
+                            sh("docker buildx build --builder rating-tracker --network=host --load -t $imagename:job$JOB_ID-wasm -f docker/Dockerfile-ci --target=wasm --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm --cache-to=registry.internal.mruder.dev/cache:rating-tracker-wasm .")
                         }
                     },
                     dep: {
@@ -76,7 +70,6 @@ node('rating-tracker-build') {
                             mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
                             cp -arn \$HOME/.cache/yarn/global ./cache/yarn || :
                             cp -ar \$HOME/.cache/rating-tracker ./cache || :
-                            cp packages/wasm/package.json packages/wasm-package.json
                             docker build -f docker/Dockerfile-ci --target=yarn --add-host host.docker.internal:host-gateway .
                             """
                         }
@@ -84,7 +77,7 @@ node('rating-tracker-build') {
                 )
 
                 stage ('Run tests and build bundles') {
-                    docker.build("$imagename:job$JOB_ID-ci", "-f docker/Dockerfile-ci --force-rm --add-host host.docker.internal:host-gateway .")
+                    docker.build("$imagename:job$JOB_ID-ci", "-f docker/Dockerfile-ci --force-rm --network=host --add-host host.docker.internal:host-gateway --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm .")
 
                     // Copy build artifacts and cache files to workspace
                     sh """
