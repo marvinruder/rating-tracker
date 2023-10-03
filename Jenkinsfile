@@ -60,7 +60,7 @@ node('rating-tracker-build') {
                     wasm: {
                         stage ('Compile WebAssembly utils') {
                             // Build the WebAssembly image while using registry cache
-                            sh("docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to=registry.internal.mruder.dev/cache:rating-tracker-wasm .")
+                            sh("docker buildx build --builder rating-tracker \$DOCKER_CI_FLAGS --target=wasm --cache-to=registry.internal.mruder.dev/cache:rating-tracker-wasm .")
                         }
                     },
                     dep: {
@@ -71,14 +71,14 @@ node('rating-tracker-build') {
                             mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
                             cp -arn \$HOME/.cache/yarn/global ./cache/yarn || :
                             cp -ar \$HOME/.cache/rating-tracker ./cache || :
-                            docker build $DOCKER_CI_FLAGS --target=yarn .
+                            docker build \$DOCKER_CI_FLAGS --target=yarn .
                             """
                         }
                     }
                 )
 
                 stage ('Run tests and build bundles') {
-                    docker.build("$IMAGE_NAME:job$JOB_ID-ci", "$DOCKER_CI_FLAGS --force-rm .")
+                    docker.build("$IMAGE_NAME:job$JOB_ID-ci", "\$DOCKER_CI_FLAGS --force-rm .")
 
                     // Copy build artifacts and cache files to workspace
                     sh """
