@@ -33,7 +33,7 @@
     "@emotion/styled": "11.11.0",
     "@mui/icons-material": "5.14.11",
     "@mui/lab": "5.0.0-alpha.146",
-    "@mui/material": "5.14.11",
+    "@mui/material": "5.14.12",
     "@rating-tracker/commons": "workspace:*",
     "@rating-tracker/wasm": "workspace:*",
     "@simplewebauthn/browser": "8.3.1",
