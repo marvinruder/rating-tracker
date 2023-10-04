@@ -1753,7 +1753,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.1.0"],\
             ["fast-glob", "npm:3.3.1"],\
             ["pino", "npm:8.15.4"],\
-            ["pino-pretty", "npm:10.2.0"],\
+            ["pino-pretty", "npm:10.2.3"],\
             ["prettier", "npm:3.0.3"],\
             ["prisma", "npm:5.3.1"],\
             ["redis", "npm:4.6.10"],\
@@ -8560,10 +8560,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pino-pretty", [\
-        ["npm:10.2.0", {\
-          "packageLocation": "./.yarn/cache/pino-pretty-npm-10.2.0-b4e92a6e70-8e8220ab64.zip/node_modules/pino-pretty/",\
+        ["npm:10.2.3", {\
+          "packageLocation": "./.yarn/cache/pino-pretty-npm-10.2.3-3de09a2950-9182886855.zip/node_modules/pino-pretty/",\
           "packageDependencies": [\
-            ["pino-pretty", "npm:10.2.0"],\
+            ["pino-pretty", "npm:10.2.3"],\
             ["colorette", "npm:2.0.20"],\
             ["dateformat", "npm:4.6.3"],\
             ["fast-copy", "npm:3.0.1"],\
