@@ -36,7 +36,7 @@ WORKDIR /app
 # Install standard libraries
 RUN \
   --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
-  apk add libgcc libstdc++
+  apk add libgcc libstdc++ lnav
 
 # Copy Node.js binary and user
 COPY --from=node:20.8.0-alpine /etc/passwd /etc
