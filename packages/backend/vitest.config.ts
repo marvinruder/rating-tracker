@@ -1,4 +1,5 @@
 import { defineConfig } from "vitest/config";
+
 import "./test/env";
 
 export default defineConfig({

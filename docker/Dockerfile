@@ -33,10 +33,14 @@ ENV NODE_ENV production
 
 WORKDIR /app
 
-# Copy Node.js binary and required C/C++ libraries
+# Copy Node.js binary and user
 COPY --from=node:20.8.0-alpine /etc/passwd /etc
-COPY --from=node:20.8.0-alpine /usr/lib/libstdc++* /usr/lib/libgcc* /usr/lib/
 COPY --from=node:20.8.0-alpine /usr/local/bin/node /usr/local/bin
+
+# Install standard libraries
+RUN \
+  --mount=type=cache,target=/var/cache/apk \
+  apk add libgcc libstdc++
 
 # Switch to non-root user
 USER node
