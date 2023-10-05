@@ -47,10 +47,5 @@ export type WatchlistSummary = {
   /**
    * The list of stocks on the watchlist. Includes only the tickers of the stocks
    */
-  stocks: {
-    /**
-     * The ticker symbol of a stock.
-     */
-    ticker: string;
-  }[];
+  stocks: Pick<Stock, "ticker">[];
 };
