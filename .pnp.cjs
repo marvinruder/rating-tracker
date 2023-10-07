@@ -1726,7 +1726,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@simplewebauthn/server", "npm:8.2.0"],\
             ["@types/cookie-parser", "npm:1.4.4"],\
             ["@types/express", "npm:4.17.18"],\
-            ["@types/node", "npm:20.8.2"],\
+            ["@types/node", "npm:20.8.3"],\
             ["@types/selenium-webdriver", "npm:4.1.17"],\
             ["@types/supertest", "npm:2.0.14"],\
             ["@types/swagger-ui-express", "npm:4.1.4"],\
@@ -1805,7 +1805,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@rating-tracker/commons", "workspace:packages/commons"],\
             ["@rating-tracker/wasm", "workspace:packages/wasm"],\
             ["@simplewebauthn/browser", "npm:8.3.1"],\
-            ["@types/node", "npm:20.8.2"],\
+            ["@types/node", "npm:20.8.3"],\
             ["@types/react", "npm:18.2.25"],\
             ["@types/react-dom", "npm:18.2.10"],\
             ["@typescript-eslint/eslint-plugin", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:6.7.4"],\
@@ -2280,7 +2280,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/body-parser", "npm:1.19.2"],\
             ["@types/connect", "npm:3.4.35"],\
-            ["@types/node", "npm:20.8.2"]\
+            ["@types/node", "npm:20.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2292,7 +2292,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cacheable-request", "npm:6.0.3"],\
             ["@types/http-cache-semantics", "npm:4.0.1"],\
             ["@types/keyv", "npm:3.1.4"],\
-            ["@types/node", "npm:20.8.2"],\
+            ["@types/node", "npm:20.8.3"],\
             ["@types/responselike", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
@@ -2322,7 +2322,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-connect-npm-3.4.35-7337eee0a3-fe81351470.zip/node_modules/@types/connect/",\
           "packageDependencies": [\
             ["@types/connect", "npm:3.4.35"],\
-            ["@types/node", "npm:20.8.2"]\
+            ["@types/node", "npm:20.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2373,7 +2373,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-express-serve-static-core-npm-4.17.35-c86e5f6e4a-cc8995d10c.zip/node_modules/@types/express-serve-static-core/",\
           "packageDependencies": [\
             ["@types/express-serve-static-core", "npm:4.17.35"],\
-            ["@types/node", "npm:20.8.2"],\
+            ["@types/node", "npm:20.8.3"],\
             ["@types/qs", "npm:6.9.7"],\
             ["@types/range-parser", "npm:1.2.4"],\
             ["@types/send", "npm:0.17.1"]\
@@ -2431,7 +2431,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-keyv-npm-3.1.4-a8082ea56b-e009a2bfb5.zip/node_modules/@types/keyv/",\
           "packageDependencies": [\
             ["@types/keyv", "npm:3.1.4"],\
-            ["@types/node", "npm:20.8.2"]\
+            ["@types/node", "npm:20.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2479,10 +2479,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:20.8.2", {\
-          "packageLocation": "./.yarn/cache/@types-node-npm-20.8.2-6691982ce3-3da73e25d8.zip/node_modules/@types/node/",\
+        ["npm:20.8.3", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-20.8.3-bab45f3f77-bfb88b341f.zip/node_modules/@types/node/",\
           "packageDependencies": [\
-            ["@types/node", "npm:20.8.2"]\
+            ["@types/node", "npm:20.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2560,7 +2560,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-responselike-npm-1.0.0-85dd08af42-e99fc7cc62.zip/node_modules/@types/responselike/",\
           "packageDependencies": [\
             ["@types/responselike", "npm:1.0.0"],\
-            ["@types/node", "npm:20.8.2"]\
+            ["@types/node", "npm:20.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2599,7 +2599,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/send", "npm:0.17.1"],\
             ["@types/mime", "npm:1.3.2"],\
-            ["@types/node", "npm:20.8.2"]\
+            ["@types/node", "npm:20.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2611,7 +2611,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/serve-static", "npm:1.15.2"],\
             ["@types/http-errors", "npm:2.0.1"],\
             ["@types/mime", "npm:3.0.1"],\
-            ["@types/node", "npm:20.8.2"]\
+            ["@types/node", "npm:20.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2622,7 +2622,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/superagent", "npm:4.1.18"],\
             ["@types/cookiejar", "npm:2.1.2"],\
-            ["@types/node", "npm:20.8.2"]\
+            ["@types/node", "npm:20.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2662,7 +2662,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-ws-npm-8.5.5-5f5e3bde2d-d00bf8070e.zip/node_modules/@types/ws/",\
           "packageDependencies": [\
             ["@types/ws", "npm:8.5.5"],\
-            ["@types/node", "npm:20.8.2"]\
+            ["@types/node", "npm:20.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11142,7 +11142,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["vite", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:4.4.11"],\
             ["@types/less", null],\
             ["@types/lightningcss", null],\
-            ["@types/node", "npm:20.8.2"],\
+            ["@types/node", "npm:20.8.3"],\
             ["@types/sass", null],\
             ["@types/stylus", null],\
             ["@types/sugarss", null],\
@@ -11181,7 +11181,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["vite", "virtual:21c407c80ecdf424e0a846726e6d3cfa595fa76d270d058361e4367cd34b01fb3967d01bcdbb9ab0600fbcb3b0d2987aaaf5270956198f148f8fedc23ebe1058#npm:5.0.0-beta.2"],\
             ["@types/less", null],\
             ["@types/lightningcss", null],\
-            ["@types/node", "npm:20.8.2"],\
+            ["@types/node", "npm:20.8.3"],\
             ["@types/sass", null],\
             ["@types/stylus", null],\
             ["@types/sugarss", null],\
@@ -11433,7 +11433,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/edge-runtime__vm", null],\
             ["@types/happy-dom", null],\
             ["@types/jsdom", null],\
-            ["@types/node", "npm:20.8.2"],\
+            ["@types/node", "npm:20.8.3"],\
             ["@types/playwright", null],\
             ["@types/safaridriver", null],\
             ["@types/vitest__browser", null],\
