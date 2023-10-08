@@ -48,7 +48,7 @@ export type FetcherWorkspace<T> = {
  */
 const countFetchResults = (stocks: FetcherWorkspace<unknown>): object =>
   Object.entries(stocks).reduce(
-    (obj, [key, value]) => (value.length ? obj : Object.assign(obj, { [key]: value.length })),
+    (obj, [key, value]) => (value.length ? Object.assign(obj, { [key]: value.length }) : obj),
     {},
   );
 
