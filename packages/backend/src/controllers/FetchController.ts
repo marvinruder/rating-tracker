@@ -41,6 +41,18 @@ export type FetcherWorkspace<T> = {
 };
 
 /**
+ * Creates an object containing the aggregated results of the fetch for logging.
+ *
+ * @param {FetcherWorkspace<unknown>} stocks The fetcher workspace.
+ * @returns {object} An object containing the aggregated results of the fetch.
+ */
+const countFetchResults = (stocks: FetcherWorkspace<unknown>): object =>
+  Object.entries(stocks).reduce(
+    (obj, [key, value]) => (value.length ? obj : Object.assign(obj, { [key]: value.length })),
+    {},
+  );
+
+/**
  * Determines the allowed number of fetchers that can work concurrently on fetching a list of stocks.
  *
  * @param {Request} req Request object
@@ -121,10 +133,10 @@ export class FetchController {
     }
 
     const stocks: FetcherWorkspace<Stock> = {
-      queued: [...stockList],
-      skipped: [],
       successful: [],
       failed: [],
+      skipped: [],
+      queued: [...stockList],
     };
 
     logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from Morningstar.`);
@@ -132,13 +144,7 @@ export class FetchController {
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => morningstarFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
     logger.info(
-      {
-        prefix: "selenium",
-        fetchCounts: Object.entries(stocks).reduce(
-          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
-          {},
-        ),
-      },
+      { prefix: "selenium", fetchCounts: countFetchResults(stocks) },
       "Done fetching stocks from Morningstar.",
     );
 
@@ -219,10 +225,10 @@ export class FetchController {
     }
 
     const stocks: FetcherWorkspace<Stock> = {
-      queued: [...stockList],
-      skipped: [],
       successful: [],
       failed: [],
+      skipped: [],
+      queued: [...stockList],
     };
 
     logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from MarketScreener.`);
@@ -230,13 +236,7 @@ export class FetchController {
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => marketScreenerFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
     logger.info(
-      {
-        prefix: "selenium",
-        fetchCounts: Object.entries(stocks).reduce(
-          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
-          {},
-        ),
-      },
+      { prefix: "selenium", fetchCounts: countFetchResults(stocks) },
       "Done fetching stocks from MarketScreener.",
     );
 
@@ -317,26 +317,17 @@ export class FetchController {
     }
 
     const stocks: FetcherWorkspace<Stock> = {
-      queued: [...stockList],
-      skipped: [],
       successful: [],
       failed: [],
+      skipped: [],
+      queued: [...stockList],
     };
 
     logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from MSCI.`);
     const rejectedResult = (
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => msciFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(
-      {
-        prefix: "selenium",
-        fetchCounts: Object.entries(stocks).reduce(
-          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
-          {},
-        ),
-      },
-      "Done fetching stocks from MSCI.",
-    );
+    logger.info({ prefix: "selenium", fetchCounts: countFetchResults(stocks) }, "Done fetching stocks from MSCI.");
 
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
@@ -413,26 +404,17 @@ export class FetchController {
     }
 
     const stocks: FetcherWorkspace<Stock> = {
-      queued: [...stockList],
-      skipped: [],
       successful: [],
       failed: [],
+      skipped: [],
+      queued: [...stockList],
     };
 
     logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from Refinitiv.`);
     const rejectedResult = (
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => refinitivFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(
-      {
-        prefix: "selenium",
-        fetchCounts: Object.entries(stocks).reduce(
-          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
-          {},
-        ),
-      },
-      "Done fetching stocks from Refinitiv.",
-    );
+    logger.info({ prefix: "selenium", fetchCounts: countFetchResults(stocks) }, "Done fetching stocks from Refinitiv.");
 
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
@@ -511,26 +493,17 @@ export class FetchController {
     }
 
     const stocks: FetcherWorkspace<Stock> = {
-      queued: [...stockList],
-      skipped: [],
       successful: [],
       failed: [],
+      skipped: [],
+      queued: [...stockList],
     };
 
     logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from S&P.`);
     const rejectedResult = (
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => spFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(
-      {
-        prefix: "selenium",
-        fetchCounts: Object.entries(stocks).reduce(
-          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
-          {},
-        ),
-      },
-      "Done fetching stocks from S&P.",
-    );
+    logger.info({ prefix: "selenium", fetchCounts: countFetchResults(stocks) }, "Done fetching stocks from S&P.");
 
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {

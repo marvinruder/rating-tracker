@@ -226,10 +226,9 @@ const prettifyPrefix = (prefix: Prefix, nextPrefix?: Prefix): string => {
  *
  * @param {Record<string, unknown>} record The record to prettify.
  * @param {Prefix} prefix The prefix to add in front of each line.
- * @param {ChalkInstance} valueColorFn The function to color the values of the record with.
  * @returns {string} The prettified record.
  */
-const prettifyRecord = (record: Record<string, unknown>, prefix?: Prefix, valueColorFn?: ChalkInstance): string =>
+const prettifyRecord = (record: Record<string, unknown>, prefix?: Prefix): string =>
   "\n\x1b[A" + // Removes all characters in the current line
   Object.entries(record)
     .map(
@@ -237,7 +236,7 @@ const prettifyRecord = (record: Record<string, unknown>, prefix?: Prefix, valueC
         ` ├─${prefix ? prettifyPrefix(prefix, { icon: key, color: "grey" }) : ""}${prettifyPrefix({
           icon: key,
           color: "grey",
-        })} ${(valueColorFn ?? chalk.grey)(value)}`,
+        })} ${chalk.white(value)}`,
     )
     .join("\n");
 
@@ -334,15 +333,11 @@ const prettyStream = pretty({
             ].map((rawPrefix) => ({ icon: rawPrefix, color: prefixColors[rawPrefix] ?? "grey" })),
             // Cookies
             Object.entries(req.cookies).length
-              ? prettifyRecord(
-                  req.cookies,
-                  { icon: prefixIcons.cookie, color: "grey", textColor: "yellow" },
-                  chalk.white,
-                )
+              ? prettifyRecord(req.cookies, { icon: prefixIcons.cookie, color: "grey", textColor: "yellow" })
               : "",
             // Query parameters
             Object.entries(req.query).length
-              ? prettifyRecord(req.query, { icon: prefixIcons.query, color: "grey", textColor: "cyan" }, chalk.white)
+              ? prettifyRecord(req.query, { icon: prefixIcons.query, color: "grey", textColor: "cyan" })
               : "",
             [
               // Response status code
