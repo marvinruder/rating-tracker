@@ -1,7 +1,6 @@
-import chalk from "chalk";
 import { createClient } from "redis";
 
-import logger, { PREFIX_REDIS } from "../utils/logger";
+import logger from "../utils/logger";
 
 // The URL of the Redis instance
 const url = process.env.REDIS_URL;
@@ -16,7 +15,7 @@ export const redis = createClient({
 });
 redis.on(
   "error", // This error only occurs when Redis server is not available, which is difficult to reproduce.
-  /* c8 ignore next */ (err) => logger.error(PREFIX_REDIS + chalk.redBright(`Redis Client: ${err}`)),
+  /* c8 ignore next */ (err) => logger.error({ prefix: "redis", err }),
 );
 
 // Start server even if Redis is not available at first

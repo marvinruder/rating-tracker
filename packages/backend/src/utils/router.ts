@@ -2,7 +2,7 @@ import { FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tra
 import { NextFunction, Request, Response, Router as expressRouter } from "express";
 import rateLimit from "express-rate-limit";
 
-import APIError from "./apiError";
+import APIError from "./APIError";
 export const router = expressRouter();
 
 /**

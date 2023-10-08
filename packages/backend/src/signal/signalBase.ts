@@ -1,7 +1,6 @@
 import axios, { AxiosError } from "axios";
-import chalk from "chalk";
 
-import logger, { PREFIX_SIGNAL } from "../utils/logger";
+import logger from "../utils/logger";
 
 /**
  * Checks if the Signal Client instance is reachable.
@@ -38,13 +37,16 @@ export const send = (url: string, message: string, number: string, recipients: s
       number: number,
       recipients: recipients,
     })
-    .catch((error) => {
-      (
-        PREFIX_SIGNAL +
-        chalk.redBright(`Failed to send the message below from ${number} to ${recipients}: ${error}\n${message}`)
-      )
-        .split("\n") // Show newlines in the log in a pretty way
-        .forEach((line) => logger.error(line));
+    .catch((e) => {
+      if (e.response?.data?.error) e.message = e.response.data.error;
+      logger.error(
+        {
+          prefix: "signal",
+          err: e,
+          signalMessage: { number, recipients, message },
+        },
+        "Failed to send Signal message",
+      );
     });
 };
 /* c8 ignore stop */

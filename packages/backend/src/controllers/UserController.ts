@@ -53,8 +53,10 @@ export class UserController {
         phone,
         subscriptions,
       });
-      res.locals.user = await readUser(email);
-      await updateSession(req.cookies.authToken, res.locals.user.email);
+      if (email) {
+        res.locals.user = await readUser(email);
+        await updateSession(req.cookies.authToken, res.locals.user.email);
+      }
       res.status(204).end();
     }
   }

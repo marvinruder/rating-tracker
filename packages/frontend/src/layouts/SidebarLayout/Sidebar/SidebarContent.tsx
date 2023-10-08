@@ -229,11 +229,12 @@ export const SidebarContent = (): JSX.Element => {
           onOpen={() => setStatusTooltipOpen(true)}
           onClose={(e) =>
             !(
-              !(e instanceof Event) &&
-              e.type === "mouseleave" &&
-              "relatedTarget" in e &&
-              e.relatedTarget instanceof Element &&
-              e.relatedTarget.id === "refresh-system-status-button"
+              (!(e instanceof Event) &&
+                e.type === "mouseleave" &&
+                "relatedTarget" in e &&
+                e.relatedTarget instanceof Element &&
+                e.relatedTarget.id === "refresh-system-status-button") ||
+              (e.type === "blur" && e.target instanceof Element && e.target.id === "refresh-system-status-button")
             ) && setStatusTooltipOpen(false)
           }
           title={

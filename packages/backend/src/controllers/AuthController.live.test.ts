@@ -203,7 +203,7 @@ tests.push({
     );
 
     // Since the requests were sent from different IP addresses, the rate limiter should not be active yet.
-    const res = await supertest.get(`/api${signInEndpointPath}`).set("X-Forwarded-For", `10.0.60.2`);
+    const res = await supertest.get(`/api${signInEndpointPath}`).set("X-Forwarded-For", "10.0.60.2");
     expect(res.status).toBe(200);
   },
 });
@@ -221,7 +221,7 @@ tests.push({
     );
 
     // Those were too many. The rate limiter should now refuse to provide more.
-    const res = await supertest.get(`/api${signInEndpointPath}`).set("X-Forwarded-For", `10.0.60.2, 10.0.0.254`);
+    const res = await supertest.get(`/api${signInEndpointPath}`).set("X-Forwarded-For", "10.0.60.2, 10.0.0.254");
     expect(res.status).toBe(429);
   },
 });

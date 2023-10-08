@@ -2,7 +2,7 @@ import { GENERAL_ACCESS, resourceEndpointPath } from "@rating-tracker/commons";
 import { Request, Response } from "express";
 
 import { readResource } from "../redis/repositories/resourceRepository";
-import APIError from "../utils/apiError";
+import APIError from "../utils/APIError";
 import Router from "../utils/router";
 
 /**
@@ -27,7 +27,7 @@ export class ResourceController {
     switch (resourceID.split(".").pop().toUpperCase()) {
       case "PNG":
         const resource = await readResource(resourceID);
-        res.setHeader("Content-Type", "image/png").status(200).send(Buffer.from(resource.content, "base64")).end();
+        res.setHeader("content-type", "image/png").status(200).send(Buffer.from(resource.content, "base64")).end();
         break;
       default:
         throw new APIError(501, "Resources of this type cannot be fetched using this API endpoint yet.");

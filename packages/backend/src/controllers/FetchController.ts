@@ -12,7 +12,6 @@ import {
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
 import axios from "axios";
-import chalk from "chalk";
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 
@@ -25,8 +24,8 @@ import spFetcher from "../fetchers/spFetcher";
 import { createResource, readResource } from "../redis/repositories/resourceRepository";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import APIError from "../utils/apiError";
-import logger, { PREFIX_SELENIUM } from "../utils/logger";
+import APIError from "../utils/APIError";
+import logger from "../utils/logger";
 import Router from "../utils/router";
 
 const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings" as const;
@@ -51,18 +50,16 @@ const determineConcurrency = (req: Request): number => {
   let concurrency: number = Number(req.query.concurrency ?? 1);
   if (Number.isNaN(concurrency) || !Number.isSafeInteger(concurrency) || concurrency < 1) {
     logger.warn(
-      PREFIX_SELENIUM +
-        chalk.yellowBright(`Invalid concurrency “${req.query.concurrency}” requested – using 1 fetcher only.`),
+      { prefix: "selenium" },
+      `Invalid concurrency “${req.query.concurrency}” requested – using 1 fetcher only.`,
     );
     concurrency = 1;
   }
   if (concurrency > Number(process.env.SELENIUM_MAX_CONCURRENCY)) {
     logger.warn(
-      PREFIX_SELENIUM +
-        chalk.yellowBright(
-          `Desired concurrency “${concurrency}” is larger than the server allows – ` +
-            `using maximum value ${Number(process.env.SELENIUM_MAX_CONCURRENCY)} instead.`,
-        ),
+      { prefix: "selenium" },
+      `Desired concurrency “${concurrency}” is larger than the server allows – ` +
+        `using maximum value ${Number(process.env.SELENIUM_MAX_CONCURRENCY)} instead.`,
     );
     concurrency = Number(process.env.SELENIUM_MAX_CONCURRENCY);
   }
@@ -130,15 +127,20 @@ export class FetchController {
       failed: [],
     };
 
-    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from Morningstar.`);
+    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from Morningstar.`);
     const rejectedResult = (
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => morningstarFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(PREFIX_SELENIUM + `Done fetching stocks from Morningstar.`);
-    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
-    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
-    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
-    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
+    logger.info(
+      {
+        prefix: "selenium",
+        fetchCounts: Object.entries(stocks).reduce(
+          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
+          {},
+        ),
+      },
+      "Done fetching stocks from Morningstar.",
+    );
 
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
@@ -223,15 +225,20 @@ export class FetchController {
       failed: [],
     };
 
-    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from MarketScreener.`);
+    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from MarketScreener.`);
     const rejectedResult = (
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => marketScreenerFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(PREFIX_SELENIUM + `Done fetching stocks from MarketScreener.`);
-    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
-    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
-    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
-    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
+    logger.info(
+      {
+        prefix: "selenium",
+        fetchCounts: Object.entries(stocks).reduce(
+          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
+          {},
+        ),
+      },
+      "Done fetching stocks from MarketScreener.",
+    );
 
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
@@ -316,15 +323,20 @@ export class FetchController {
       failed: [],
     };
 
-    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from MSCI.`);
+    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from MSCI.`);
     const rejectedResult = (
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => msciFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(PREFIX_SELENIUM + `Done fetching stocks from MSCI.`);
-    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
-    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
-    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
-    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
+    logger.info(
+      {
+        prefix: "selenium",
+        fetchCounts: Object.entries(stocks).reduce(
+          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
+          {},
+        ),
+      },
+      "Done fetching stocks from MSCI.",
+    );
 
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
@@ -407,15 +419,20 @@ export class FetchController {
       failed: [],
     };
 
-    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from Refinitiv.`);
+    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from Refinitiv.`);
     const rejectedResult = (
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => refinitivFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(PREFIX_SELENIUM + `Done fetching stocks from Refinitiv.`);
-    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
-    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
-    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
-    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
+    logger.info(
+      {
+        prefix: "selenium",
+        fetchCounts: Object.entries(stocks).reduce(
+          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
+          {},
+        ),
+      },
+      "Done fetching stocks from Refinitiv.",
+    );
 
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
@@ -500,15 +517,20 @@ export class FetchController {
       failed: [],
     };
 
-    logger.info(PREFIX_SELENIUM + `Fetching ${stocks.queued.length} stocks from S&P.`);
+    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from S&P.`);
     const rejectedResult = (
       await Promise.allSettled([...Array(determineConcurrency(req))].map(() => spFetcher(req, stocks)))
     ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(PREFIX_SELENIUM + `Done fetching stocks from S&P.`);
-    stocks.successful.length && logger.info(PREFIX_SELENIUM + `  Successful: ${stocks.successful.length}`);
-    stocks.failed.length && logger.info(PREFIX_SELENIUM + `  Failed: ${stocks.failed.length}`);
-    stocks.skipped.length && logger.info(PREFIX_SELENIUM + `  Skipped: ${stocks.skipped.length}`);
-    stocks.queued.length && logger.info(PREFIX_SELENIUM + `  Still queued: ${stocks.queued.length}`);
+    logger.info(
+      {
+        prefix: "selenium",
+        fetchCounts: Object.entries(stocks).reduce(
+          (obj, [key, value]) => Object.assign(obj, { [key]: value.length }),
+          {},
+        ),
+      },
+      "Done fetching stocks from S&P.",
+    );
 
     // If stocks are still queued, something went wrong and we send an error response.
     if (stocks.queued.length) {
@@ -589,12 +611,12 @@ export class FetchController {
         // We try to read the cached Sustainalytics data first.
         sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
         logger.info(
-          PREFIX_SELENIUM +
-            `Using cached Sustainalytics data because last fetch was ${formatDistance(
-              sustainalyticsXMLResource.fetchDate,
-              new Date().getTime(),
-              { addSuffix: true },
-            )}.`,
+          { prefix: "selenium" },
+          `Using cached Sustainalytics data because last fetch was ${formatDistance(
+            sustainalyticsXMLResource.fetchDate,
+            new Date().getTime(),
+            { addSuffix: true },
+          )}.`,
         );
       } catch (e) {
         // If the cached data is not available, we fetch it freshly from the web.
@@ -610,7 +632,7 @@ export class FetchController {
             const sustainalyticsXMLLines: string[] = [];
             response.data.split("\n").forEach((line: string) => {
               // We only keep the lines that contain the data we need.
-              if (line.includes(`<a data-href="`) || line.includes(`<div class="col-2">`)) {
+              if (line.includes('<a data-href="') || line.includes('<div class="col-2">')) {
                 sustainalyticsXMLLines.push(line.trim());
               }
             });
@@ -643,7 +665,7 @@ export class FetchController {
         const sustainalyticsIDIndex = sustainalyticsXMLLines.findIndex(
           (line, index) =>
             line.startsWith(`<a data-href="/${stock.sustainalyticsID}`) &&
-            sustainalyticsXMLLines[index + 1].startsWith(`<div class="col-2">`),
+            sustainalyticsXMLLines[index + 1].startsWith('<div class="col-2">'),
         );
         if (sustainalyticsIDIndex === -1) {
           // If the Sustainalytics ID is not found, we throw an error.
@@ -659,7 +681,7 @@ export class FetchController {
           sustainalyticsESGRiskMatches.length < 1 ||
           Number.isNaN(+sustainalyticsESGRiskMatches[0])
         ) {
-          throw new TypeError(`Extracted Sustainalytics ESG Risk is no valid number.`);
+          throw new TypeError("Extracted Sustainalytics ESG Risk is no valid number.");
         }
         sustainalyticsESGRisk = +sustainalyticsESGRiskMatches[0];
 
@@ -677,19 +699,14 @@ export class FetchController {
             `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${String(e.message).split(/[\n:{]/)[0]}`,
           );
         }
-        logger.warn(
-          PREFIX_SELENIUM +
-            chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`),
-        );
+        logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`);
         if (stock.sustainalyticsESGRisk !== null) {
           // If a Sustainalytics ESG Risk is already stored in the database, but we cannot extract it from the page, we
           // log this as an error and send a message.
           logger.error(
-            PREFIX_SELENIUM +
-              chalk.redBright(
-                `Stock ${stock.ticker}: Extraction of Sustainalytics ESG Risk failed unexpectedly. ` +
-                  `This incident will be reported.`,
-              ),
+            { prefix: "selenium", err: e },
+            `Stock ${stock.ticker}: Extraction of Sustainalytics ESG Risk failed unexpectedly. ` +
+              "This incident will be reported.",
           );
           await signal.sendMessage(
             SIGNAL_PREFIX_ERROR +
@@ -706,11 +723,9 @@ export class FetchController {
       if (errorCount >= 10) {
         // If we have 10 errors, we stop extracting data, since something is probably wrong.
         logger.error(
-          PREFIX_SELENIUM +
-            chalk.redBright(
-              `Aborting extracting information from Sustainalytics after ${successfulCount} successful extractions ` +
-                `and ${errorCount} failures. Will continue next time.`,
-            ),
+          { prefix: "selenium" },
+          `Aborting extracting information from Sustainalytics after ${successfulCount} successful extractions ` +
+            `and ${errorCount} failures. Will continue next time.`,
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +

@@ -43,6 +43,7 @@
         "capIsNewExceptions": ["Router"]
       }
     ],
+    "quotes": ["warn", "double", { "avoidEscape": true }],
     "max-len": [
       "warn",
       {

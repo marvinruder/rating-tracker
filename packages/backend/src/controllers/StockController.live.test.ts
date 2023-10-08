@@ -444,7 +444,7 @@ tests.push({
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
     expect(res.body.toString()).toMatch(
-      `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">`,
+      '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
     );
 
     // attempting to read the logo of a stock for which no logo exists returns an empty SVG file
@@ -452,7 +452,7 @@ tests.push({
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
     expect(res.body.toString()).toMatch(
-      `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>`,
+      '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>',
     );
 
     // attempting to read a non-existent stock’s logo results in an error

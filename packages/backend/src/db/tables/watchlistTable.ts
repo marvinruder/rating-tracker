@@ -1,7 +1,7 @@
 import { FAVORITES_NAME, Watchlist, WatchlistSummary } from "@rating-tracker/commons";
 
-import APIError from "../../utils/apiError";
-import logger, { PREFIX_POSTGRES } from "../../utils/logger";
+import APIError from "../../utils/APIError";
+import logger from "../../utils/logger";
 import client from "../client";
 
 import { readStock } from "./stockTable";
@@ -49,7 +49,7 @@ export const createWatchlist = async (name: string, email: string): Promise<Watc
       },
     },
   });
-  logger.info(PREFIX_POSTGRES + `Created watchlist “${watchlist.name}” with ID ${watchlist.id}.`);
+  logger.info({ prefix: "postgres" }, `Created watchlist “${watchlist.name}” with ID ${watchlist.id}.`);
   return watchlist;
 };
 
@@ -78,7 +78,7 @@ export const readFavorites = async (email: string): Promise<Watchlist> => {
       },
     });
   } catch (e) {
-    logger.info(PREFIX_POSTGRES + `Creating “${FAVORITES_NAME}” watchlist for user ${email}.`);
+    logger.info({ prefix: "postgres" }, `Creating “${FAVORITES_NAME}” watchlist for user ${email}.`);
     return await client.watchlist.create({
       data: {
         name: FAVORITES_NAME,
@@ -169,7 +169,6 @@ export const updateWatchlist = async (
 ) => {
   let k: keyof typeof newValues; // all keys of new values
   const watchlist = await readWatchlist(id, email); // Read the watchlist from the database
-  logger.info(PREFIX_POSTGRES + `Updating watchlist ${id}…`);
   let isNewData = false;
   // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
   for (k in newValues) {
@@ -190,8 +189,6 @@ export const updateWatchlist = async (
 
       // New data is different from old data
       isNewData = true;
-
-      logger.info(PREFIX_POSTGRES + `    Property ${k} updated from ${watchlist[k]} to ${newValues[k]}`);
     }
   }
 
@@ -221,11 +218,20 @@ export const updateWatchlist = async (
         },
       },
     });
-    stocksToAdd?.forEach((ticker) => logger.info(PREFIX_POSTGRES + `    Added stock ${ticker}.`));
-    stocksToRemove?.forEach((ticker) => logger.info(PREFIX_POSTGRES + `    Removed stock ${ticker}.`));
+    logger.info(
+      {
+        prefix: "postgres",
+        newValues: {
+          ...newValues,
+          ...(stocksToAdd.length ? { stocksToAdd } : {}),
+          ...(stocksToRemove.length ? { stocksToRemove } : {}),
+        },
+      },
+      `Updated watchlist ${id}`,
+    );
   } else {
     // No new data was provided
-    logger.info(PREFIX_POSTGRES + `No updates for watchlist ${id}.`);
+    logger.info({ prefix: "postgres" }, `No updates for watchlist ${id}.`);
   }
 };
 
@@ -244,5 +250,5 @@ export const deleteWatchlist = async (id: number, email: string) => {
   await client.watchlist.delete({
     where: { id },
   });
-  logger.info(PREFIX_POSTGRES + `Deleted watchlist “${existingWatchlist.name}” (ID ${id}).`);
+  logger.info({ prefix: "postgres" }, `Deleted watchlist “${existingWatchlist.name}” (ID ${id}).`);
 };

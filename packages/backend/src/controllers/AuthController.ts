@@ -14,7 +14,7 @@ import { Request, Response } from "express";
 
 import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable";
 import { createSession, sessionTTLInSeconds } from "../redis/repositories/sessionRepository";
-import APIError from "../utils/apiError";
+import APIError from "../utils/APIError";
 import Router from "../utils/router";
 
 const rpName = "Rating Tracker";

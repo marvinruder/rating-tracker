@@ -1,9 +1,8 @@
 import { User, UserWithCredentials } from "@rating-tracker/commons";
-import chalk from "chalk";
 
 import * as signal from "../../signal/signal";
-import APIError from "../../utils/apiError";
-import logger, { PREFIX_POSTGRES } from "../../utils/logger";
+import APIError from "../../utils/APIError";
+import logger from "../../utils/logger";
 import client from "../client";
 
 /**
@@ -22,15 +21,15 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
     });
     // If that worked, a user with the same email address already exists
     logger.warn(
-      PREFIX_POSTGRES +
-        chalk.yellowBright(`Skipping user “${user.name}” – existing already (email address ${existingUser.email}).`),
+      { prefix: "postgres" },
+      `Skipping user “${user.name}” – existing already (email address ${existingUser.email}).`,
     );
     return false;
   } catch {
     await client.user.create({
       data: { ...user },
     });
-    logger.info(PREFIX_POSTGRES + `Created user “${user.name}” with email address ${user.email}.`);
+    logger.info({ prefix: "postgres" }, `Created user “${user.name}” with email address ${user.email}.`);
     // Inform the admin of the new user via Signal messenger
     await signal.sendMessage(`🆕👤 New user “${user.name}” (email ${user.email}) registered.`, "userManagement");
     return true;
@@ -152,7 +151,6 @@ export const userExists = async (email: string): Promise<boolean> => {
 export const updateUserWithCredentials = async (email: string, newValues: Partial<UserWithCredentials>) => {
   let k: keyof typeof newValues; // all keys of new values
   const user = await readUserWithCredentials(email); // Read the user from the database
-  logger.info(PREFIX_POSTGRES + `Updating user ${email}…`);
   let isNewData = false;
   // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
   for (k in newValues) {
@@ -166,8 +164,6 @@ export const updateUserWithCredentials = async (email: string, newValues: Partia
 
       // New data is different from old data
       isNewData = true;
-
-      logger.info(PREFIX_POSTGRES + `    Property ${k} updated from ${user[k]} to ${newValues[k]}`);
     }
   }
 
@@ -178,9 +174,10 @@ export const updateUserWithCredentials = async (email: string, newValues: Partia
       },
       data: { ...newValues },
     });
+    logger.info({ prefix: "postgres", newValues }, `Updated user ${email}`);
   } else {
     // No new data was provided
-    logger.info(PREFIX_POSTGRES + `No updates for user ${email}.`);
+    logger.info({ prefix: "postgres" }, `No updates for user ${email}.`);
   }
 };
 
@@ -198,7 +195,7 @@ export const deleteUser = async (email: string) => {
     await client.user.delete({
       where: { email },
     });
-    logger.info(PREFIX_POSTGRES + `Deleted user “${existingUser.name}” (email address ${email}).`);
+    logger.info({ prefix: "postgres" }, `Deleted user “${existingUser.name}” (email address ${email}).`);
   } catch {
     throw new APIError(404, `User ${email} not found.`);
   }

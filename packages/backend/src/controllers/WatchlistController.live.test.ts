@@ -95,8 +95,8 @@ tests.push({
     res = await supertest
       .patch(
         `/api${watchlistEndpointPath}/${id}` +
-          `?stocksToAdd=exampleALV%2CexampleKGX&stocksToRemove=exampleNOVO%20B%2CexampleORSTED` +
-          `&name=Favoriten&subscribed=true`,
+          "?stocksToAdd=exampleALV%2CexampleKGX&stocksToRemove=exampleNOVO%20B%2CexampleORSTED" +
+          "&name=Favoriten&subscribed=true",
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
@@ -105,8 +105,8 @@ tests.push({
     res = await supertest
       .patch(
         `/api${watchlistEndpointPath}/${id}` +
-          `?stocksToAdd=exampleALV%2CexampleKGX&stocksToRemove=exampleNOVO%20B%2CexampleORSTED` +
-          `&name=Favoriten&subscribed=true`,
+          "?stocksToAdd=exampleALV%2CexampleKGX&stocksToRemove=exampleNOVO%20B%2CexampleORSTED" +
+          "&name=Favoriten&subscribed=true",
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);

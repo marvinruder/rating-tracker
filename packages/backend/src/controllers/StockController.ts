@@ -24,7 +24,7 @@ import { Prisma } from "../../prisma/client/index";
 import { createStock, deleteStock, readAllStocks, updateStock, readStock } from "../db/tables/stockTable";
 import { readWatchlist } from "../db/tables/watchlistTable";
 import { createResource, readResource } from "../redis/repositories/resourceRepository";
-import APIError from "../utils/apiError";
+import APIError from "../utils/APIError";
 import Router from "../utils/router";
 
 /**
@@ -589,8 +589,8 @@ export class StockController {
               url,
               fetchDate: new Date(),
               content:
-                `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">` +
-                `</svg>`,
+                '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+                "</svg>",
             },
             60 * 60 * 24,
           );

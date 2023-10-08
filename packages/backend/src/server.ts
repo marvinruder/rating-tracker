@@ -4,7 +4,6 @@ import "./utils/startup";
 import { randomUUID } from "node:crypto";
 import path from "path";
 
-import chalk from "chalk";
 import cookieParser from "cookie-parser";
 import express from "express";
 import * as OpenApiValidator from "express-openapi-validator";
@@ -26,7 +25,7 @@ import openapiDocument from "./openapi/index";
 import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository";
 import setupCronJobs from "./utils/cron";
 import errorHandler from "./utils/errorHandler";
-import logger, { PREFIX_NODEJS, requestLogger } from "./utils/logger";
+import logger, { logRequest } from "./utils/logger";
 import { router } from "./utils/router";
 
 /**
@@ -95,8 +94,7 @@ server.app.get(/^(?!\/api).+/, (_, res) => {
 });
 /* c8 ignore stop */
 
-logger.info(PREFIX_NODEJS + `Serving static content from ${staticContentPath}`);
-logger.info("");
+logger.info({ prefix: "nodejs" }, `Serving static content from ${staticContentPath}`);
 
 server.app.use((_, res, next) => {
   // Do not cache API responses
@@ -157,7 +155,7 @@ server.app.use(
 server.app.get("/api-spec/v3", (_, res) => res.json(openapiDocument));
 
 // Log all requests
-server.app.use(responseTime(requestLogger));
+server.app.use(responseTime(logRequest));
 
 // Validate requests and responses against the OpenAPI specification
 server.app.use(
@@ -180,13 +178,6 @@ process.env.AUTO_FETCH_SCHEDULE &&
   setupCronJobs(bypassAuthenticationForInternalRequestsToken, process.env.AUTO_FETCH_SCHEDULE);
 
 export const listener = server.app.listen(process.env.PORT, () => {
-  logger.info(
-    chalk.whiteBright.bgHex("#339933")(" \uf898 ") +
-      chalk.bgGrey.hex("#339933")("") +
-      chalk.whiteBright.bgGrey(` \uf6ff ${process.env.PORT} `) +
-      chalk.grey("") +
-      " Listening…",
-  );
-  logger.info("");
+  logger.info({ prefix: ["nodejs", { port: process.env.PORT }] }, "Listening…");
   process.env.EXIT_AFTER_READY && process.exit(0);
 });
