@@ -38,6 +38,9 @@ const getLogFilePath = (): string => {
  */
 const getNewFileStream = (): fs.WriteStream => fs.createWriteStream(getLogFilePath(), { flags: "a" });
 
+/**
+ * The stream used to log messages to the log file. The file is rotated every day.
+ */
 let fileStream = getNewFileStream();
 
 /**

@@ -50,7 +50,7 @@ const logo = chalk.bold(
 /**
  * Mandatory environment variables. If not set, Rating Tracker cannot run.
  */
-const mandatoryEnvVars: string[] = ["PORT", "DOMAIN", "DATABASE_URL", "SELENIUM_URL", "REDIS_URL"];
+const mandatoryEnvVars: readonly string[] = ["PORT", "DOMAIN", "DATABASE_URL", "SELENIUM_URL", "REDIS_URL"] as const;
 
 /**
  * The startup method prints a welcome message and checks whether all mandatory environment variables are set. If not,

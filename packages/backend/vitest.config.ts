@@ -18,6 +18,7 @@ export default defineConfig({
         "src/fetchers/*",
         "src/utils/cron.*",
         "src/utils/logger.*",
+        "src/utils/logFormatterConfig.*",
         "src/utils/webdriver.*",
       ],
     },

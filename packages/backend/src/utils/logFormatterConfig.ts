@@ -280,132 +280,138 @@ const getPrefixFromRawPrefix = (rawPrefix: string | object): Prefix => {
   };
 };
 
-export const pinoPrettyConfig: PrettyOptions = {
-  ignore: "time,prefix", // Those are added to the message, so we do not want to print it twice
-  customPrettifiers: {
-    // Indicate the log level with an icon and color, and print a ␇ character if the log level is error or higher.
-    level: (level) => (Number(level) >= 50 ? "\x07" : "") + levelColorFns[Number(level)](levelIcons[Number(level)]),
-    err: (err: Error) =>
-      // Do not print an ignored error
-      IGNORED_ERRORS.some((ignoredError) => err.message.includes(ignoredError))
-        ? "\x1b[2K\x1b[A"
-        : "\n\x1b[A  " + // Removes all characters in the current line
-          // Print only the stack trace of the error, any other information will be added to the message
-          levelColorFns[10](typeof err === "object" && "stack" in err ? err.stack : err),
-    req: (req: LoggedRequest) => {
-      return replaceLastJoiner(
-        "\n\x1b[A ├─" + // Removes all characters in the current line
-          [
-            [
-              // User
-              {
-                ...getPrefixFromRawPrefix(
-                  req.user
-                    ? req.user === "cron"
-                      ? { cron: "cron" }
-                      : { user: `${req.user.name} (${req.user.email})` }
-                    : { anonymous: "Unauthenticated user" },
-                ),
-                textColor: "yellow",
-              },
-              // IP address
-              { ...getPrefixFromRawPrefix({ ip: req.ip }), textColor: "magentaBright" },
-            ],
-            [
-              // HTTP method and URL path
-              req.method,
-              ...req.url.slice(1, req.url.indexOf("?") == -1 ? undefined : req.url.indexOf("?")).split("/"),
-            ].map((rawPrefix) => ({ icon: rawPrefix, color: prefixColors[rawPrefix] ?? "grey" })),
-            // Cookies
-            Object.entries(req.cookies).length
-              ? prettifyRecord(req.cookies, { icon: prefixIcons.cookie, color: "grey", textColor: "yellow" })
-              : "",
-            // Query parameters
-            Object.entries(req.query).length
-              ? prettifyRecord(req.query, { icon: prefixIcons.query, color: "grey", textColor: "cyan" })
-              : "",
-            [
-              // Response status code
-              { icon: req.statusCode.toString(), color: statusCodeColor[Math.floor(req.statusCode / 100)] },
-              { icon: STATUS_CODES[req.statusCode], color: statusCodeColor[Math.floor(req.statusCode / 100)] },
-              {
-                // Content type and length
-                ...(typeof req.headers["content-type"] === "string" && typeof req.headers["content-length"] === "string"
-                  ? {
-                      ...getPrefixFromRawPrefix({
-                        [req.headers["content-type"].split(";")[0]]: req.headers["content-length"] + " bytes",
-                      }),
-                      textColor: "yellowBright",
-                    }
-                  : undefined),
-              },
-              // Response time
-              { ...getPrefixFromRawPrefix({ responseTime: `${Math.round(req.time)} ms` }), textColor: "cyanBright" },
-            ],
-          ]
-            .map((prefixArrayOrLine) => {
-              if (typeof prefixArrayOrLine === "string") return prefixArrayOrLine;
-              const prefixArray = prefixArrayOrLine.filter((prefix) => Object.entries(prefix).length);
-              return prefixArray.map((prefix, index) => prettifyPrefix(prefix, prefixArray[index + 1])).join("");
-            })
-            .filter((line) => line)
-            .join("\n ├─"),
-      );
-    },
-    signalMessage: (signalMessage: { number: string; recipients: string[]; message: string }) =>
-      replaceLastJoiner(
-        prettifyRecord({
-          "\uf007 \uf1d8": signalMessage.number, // Sender
-          "\ufa2f\uf0c0": signalMessage.recipients.join(", "), // Recipients
-          "\uf0f6": signalMessage.message, // Message Text
-        }),
-      ),
-    fetchCounts: (fetchCounts: { successful: number; failed: number; skipped: number; queued: number }) =>
-      replaceLastJoiner(
-        "\n\x1b[A" + // Removes all characters in the current line
-          Object.entries(fetchCounts)
-            .map(
-              ([key, value]) =>
-                ` ├─${prettifyPrefix(getPrefixFromRawPrefix({ [key]: undefined }))} ${chalk[
-                  prefixColors[key] ?? "grey"
-                ](value + " " + key)}`,
-            )
-            .join("\n"),
-      ),
-    newValues: (newValues: Record<string, unknown>) => replaceLastJoiner(prettifyRecord(newValues)),
-  },
-  messageFormat: (log, messageKey) => {
-    let msg = "\x1b[2D "; // Remove the : character after the log level
-    // Read prefix information from the log message and create prefix objects from them
-    const prefixArray: Prefix[] = (
-      typeof log.prefix === "string" ? [log.prefix] : Array.isArray(log.prefix) ? log.prefix : []
-    ).map((rawPrefix) => getPrefixFromRawPrefix(rawPrefix));
-    msg +=
-      prettifyPrefix(
-        // Log the time as the first prefix
-        {
-          icon: prefixIcons["time"] + ` ${new Date(log.time as number).toISOString().split("T")[1]}`,
-          color: "grey",
-          textColor: "cyanBright",
+export const pinoPrettyConfig: PrettyOptions | undefined = process.env.PLAIN_LOG
+  ? undefined
+  : {
+      ignore: "time,prefix", // Those are added to the message, so we do not want to print it twice
+      customPrettifiers: {
+        // Indicate the log level with an icon and color, and print a ␇ character if the log level is error or higher.
+        level: (level) => (Number(level) >= 50 ? "\x07" : "") + levelColorFns[Number(level)](levelIcons[Number(level)]),
+        err: (err: Error) =>
+          // Do not print an ignored error
+          IGNORED_ERRORS.some((ignoredError) => err.message.includes(ignoredError))
+            ? "\x1b[2K\x1b[A"
+            : "\n\x1b[A  " + // Removes all characters in the current line
+              // Print only the stack trace of the error, any other information will be added to the message
+              levelColorFns[10](typeof err === "object" && "stack" in err ? err.stack : err),
+        req: (req: LoggedRequest) => {
+          return replaceLastJoiner(
+            "\n\x1b[A ├─" + // Removes all characters in the current line
+              [
+                [
+                  // User
+                  {
+                    ...getPrefixFromRawPrefix(
+                      req.user
+                        ? req.user === "cron"
+                          ? { cron: "cron" }
+                          : { user: `${req.user.name} (${req.user.email})` }
+                        : { anonymous: "Unauthenticated user" },
+                    ),
+                    textColor: "yellow",
+                  },
+                  // IP address
+                  { ...getPrefixFromRawPrefix({ ip: req.ip }), textColor: "magentaBright" },
+                ],
+                [
+                  // HTTP method and URL path
+                  req.method,
+                  ...req.url.slice(1, req.url.indexOf("?") == -1 ? undefined : req.url.indexOf("?")).split("/"),
+                ].map((rawPrefix) => ({ icon: rawPrefix, color: prefixColors[rawPrefix] ?? "grey" })),
+                // Cookies
+                Object.entries(req.cookies).length
+                  ? prettifyRecord(req.cookies, { icon: prefixIcons.cookie, color: "grey", textColor: "yellow" })
+                  : "",
+                // Query parameters
+                Object.entries(req.query).length
+                  ? prettifyRecord(req.query, { icon: prefixIcons.query, color: "grey", textColor: "cyan" })
+                  : "",
+                [
+                  // Response status code
+                  { icon: req.statusCode.toString(), color: statusCodeColor[Math.floor(req.statusCode / 100)] },
+                  { icon: STATUS_CODES[req.statusCode], color: statusCodeColor[Math.floor(req.statusCode / 100)] },
+                  {
+                    // Content type and length
+                    ...(typeof req.headers["content-type"] === "string" &&
+                    typeof req.headers["content-length"] === "string"
+                      ? {
+                          ...getPrefixFromRawPrefix({
+                            [req.headers["content-type"].split(";")[0]]: req.headers["content-length"] + " bytes",
+                          }),
+                          textColor: "yellowBright",
+                        }
+                      : undefined),
+                  },
+                  // Response time
+                  {
+                    ...getPrefixFromRawPrefix({ responseTime: `${Math.round(req.time)} ms` }),
+                    textColor: "cyanBright",
+                  },
+                ],
+              ]
+                .map((prefixArrayOrLine) => {
+                  if (typeof prefixArrayOrLine === "string") return prefixArrayOrLine;
+                  const prefixArray = prefixArrayOrLine.filter((prefix) => Object.entries(prefix).length);
+                  return prefixArray.map((prefix, index) => prettifyPrefix(prefix, prefixArray[index + 1])).join("");
+                })
+                .filter((line) => line)
+                .join("\n ├─"),
+          );
         },
-        prefixArray.length ? prefixArray[0] : undefined,
-      ) + prefixArray.map((prefix, index) => prettifyPrefix(prefix, prefixArray[index + 1])).join("");
-    // Include error title directly in the message
-    if (typeof log.err === "object") {
-      let errorTitle: string;
-      if ("name" in log.err && typeof log.err.name === "string") {
-        errorTitle = log.err.name;
-      } else if ("type" in log.err && typeof log.err.type === "string") {
-        errorTitle = log.err.type;
-      }
-      if (errorTitle)
-        // Enclose the error title in 🔥 FLAMES 🔥
-        msg += " " + chalk.red("\ue0c2") + chalk.bgRed.whiteBright(` ${errorTitle} `) + chalk.red("\ue0c0");
-    }
-    // Print the log message in the color of the log level
-    return msg + " " + levelColorFns[Number(log.level)](log[messageKey] ?? "");
-  },
-};
+        signalMessage: (signalMessage: { number: string; recipients: string[]; message: string }) =>
+          replaceLastJoiner(
+            prettifyRecord({
+              "\uf007 \uf1d8": signalMessage.number, // Sender
+              "\ufa2f\uf0c0": signalMessage.recipients.join(", "), // Recipients
+              "\uf0f6": signalMessage.message, // Message Text
+            }),
+          ),
+        fetchCounts: (fetchCounts: { successful: number; failed: number; skipped: number; queued: number }) =>
+          replaceLastJoiner(
+            "\n\x1b[A" + // Removes all characters in the current line
+              Object.entries(fetchCounts)
+                .map(
+                  ([key, value]) =>
+                    ` ├─${prettifyPrefix(getPrefixFromRawPrefix({ [key]: undefined }))} ${chalk[
+                      prefixColors[key] ?? "grey"
+                    ](value + " " + key)}`,
+                )
+                .join("\n"),
+          ),
+        newValues: (newValues: Record<string, unknown>) => replaceLastJoiner(prettifyRecord(newValues)),
+      },
+      messageFormat: (log, messageKey) => {
+        let msg = "\x1b[2D "; // Remove the : character after the log level
+        // Read prefix information from the log message and create prefix objects from them
+        const prefixArray: Prefix[] = (
+          typeof log.prefix === "string" ? [log.prefix] : Array.isArray(log.prefix) ? log.prefix : []
+        ).map((rawPrefix) => getPrefixFromRawPrefix(rawPrefix));
+        msg +=
+          prettifyPrefix(
+            // Log the time as the first prefix
+            {
+              icon: prefixIcons["time"] + ` ${new Date(log.time as number).toISOString().split("T")[1]}`,
+              color: "grey",
+              textColor: "cyanBright",
+            },
+            prefixArray.length ? prefixArray[0] : undefined,
+          ) + prefixArray.map((prefix, index) => prettifyPrefix(prefix, prefixArray[index + 1])).join("");
+        // Include error title directly in the message
+        if (typeof log.err === "object") {
+          let errorTitle: string;
+          if ("name" in log.err && typeof log.err.name === "string") {
+            errorTitle = log.err.name;
+          } else if ("type" in log.err && typeof log.err.type === "string") {
+            errorTitle = log.err.type;
+          }
+          if (errorTitle)
+            // Enclose the error title in 🔥 FLAMES 🔥
+            msg += " " + chalk.red("\ue0c2") + chalk.bgRed.whiteBright(` ${errorTitle} `) + chalk.red("\ue0c0");
+        }
+        // Print the log message in the color of the log level
+        return msg + " " + levelColorFns[Number(log.level)](log[messageKey] ?? "");
+      },
+    };
 
 try {
   // This works when importing the config directly into the pino-pretty CLI, since it requires CommonJS syntax
