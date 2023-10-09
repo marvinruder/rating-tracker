@@ -407,4 +407,9 @@ export const pinoPrettyConfig: PrettyOptions = {
   },
 };
 
-module.exports = pinoPrettyConfig;
+try {
+  // This works when importing the config directly into the pino-pretty CLI, since it requires CommonJS syntax
+  module.exports = pinoPrettyConfig;
+} catch (_) {
+  // The server does not understand CommonJS syntax, so we ignore the instruction above and use the ESM exports instead
+}
