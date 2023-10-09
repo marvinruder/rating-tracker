@@ -1343,7 +1343,7 @@ __metadata:
     "@rating-tracker/wasm": "workspace:*"
     "@simplewebauthn/browser": 8.3.1
     "@types/node": 20.8.4
-    "@types/react": 18.2.26
+    "@types/react": 18.2.27
     "@types/react-dom": 18.2.12
     "@typescript-eslint/eslint-plugin": 6.7.5
     "@typescript-eslint/parser": 6.7.5
@@ -1936,14 +1936,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:18.2.26":
-  version: 18.2.26
-  resolution: "@types/react@npm:18.2.26"
+"@types/react@npm:*, @types/react@npm:18.2.27":
+  version: 18.2.27
+  resolution: "@types/react@npm:18.2.27"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 5789256cd6238d34c1fa2c23cff90174f050531aff2bf3f7791adb80ec603d56c68492f86c824e96e69c6a9589bffd3569035f16866bf722e1bbc80080f0a2ce
+  checksum: bb29779d4e83e30886a4a939b02812a7ae2d49a26e19eb4be48a6d4e73e8b09ca1a639c97c0ba12a7fe46711355059db7f958cbc1754fe697690656cdb9eca07
   languageName: node
   linkType: hard
 
