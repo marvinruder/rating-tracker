@@ -1300,7 +1300,7 @@ __metadata:
     redis: 4.6.10
     redis-om: 0.4.2
     response-time: 2.3.2
-    selenium-webdriver: 4.13.0
+    selenium-webdriver: 4.14.0
     supertest: 6.3.3
     swagger-ui-dist: 5.9.0
     swagger-ui-express: 5.0.0
@@ -7900,14 +7900,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"selenium-webdriver@npm:4.13.0":
-  version: 4.13.0
-  resolution: "selenium-webdriver@npm:4.13.0"
+"selenium-webdriver@npm:4.14.0":
+  version: 4.14.0
+  resolution: "selenium-webdriver@npm:4.14.0"
   dependencies:
     jszip: ^3.10.1
     tmp: ^0.2.1
-    ws: ">=8.13.0"
-  checksum: 6bfbb2241864161cefaa4479bed7fd4df9f025faa3c01b2199e67b43d398ff63a1f1b34b8f001d0b0fa000a7d928e8bd6e098eba52fad9b6f7e144ea03af772a
+    ws: ">=8.14.2"
+  checksum: 9ffc4c9e0f04814d348cce8b2a864ac64993837e3d25ac64c715b7856776aecbb55618d344e35e190c52e2613d5c56b23da51ebcad1a0727534d1c2d0c84977f
   languageName: node
   linkType: hard
 
@@ -9696,9 +9696,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:>=8.13.0":
-  version: 8.13.0
-  resolution: "ws@npm:8.13.0"
+"ws@npm:>=8.14.2":
+  version: 8.14.2
+  resolution: "ws@npm:8.14.2"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -9707,7 +9707,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 53e991bbf928faf5dc6efac9b8eb9ab6497c69feeb94f963d648b7a3530a720b19ec2e0ec037344257e05a4f35bd9ad04d9de6f289615ffb133282031b18c61c
+  checksum: 3ca0dad26e8cc6515ff392b622a1467430814c463b3368b0258e33696b1d4bed7510bc7030f7b72838b9fdeb8dbd8839cbf808367d6aae2e1d668ce741d4308b
   languageName: node
   linkType: hard
 
