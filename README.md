@@ -100,10 +100,10 @@ Logs are printed to `stdout` as well as rotating log files with [`pino-pretty`](
 
 ```shell
 # ~/.zshrc
-alias pino-pretty="{ (echo -e \"FROM node:alpine\nRUN yarn global add pino-pretty\nENTRYPOINT [ \\\"pino-pretty\\\" ]\" | docker build -q - -t pino-pretty > /dev/null) && docker run -i --rm pino-pretty -c; }"
+alias pino-pretty="{ (echo -e \"FROM node:alpine\nWORKDIR /home/node\nRUN npm install -g pino-pretty\nUSER node\nCOPY --from=marvinruder/rating-tracker /app/pino-pretty-config.cjs pino-pretty-config.cjs\nENTRYPOINT [ \\\"pino-pretty\\\", \\\"--config\\\", \\\"/home/node/pino-pretty-config.cjs\\\" ]\" | docker build -q - -t pino-pretty > /dev/null) && docker run -i --rm -e FORCE_COLOR=1 pino-pretty -c; }"
 
-# To view a log file:
-cat logs/rating-tracker.log | pino-pretty | less
+# To view (and follow) a log file:
+tail -n +1 -f logs/rating-tracker.log | pino-pretty | less -r
 ```
 
 <picture>
@@ -111,6 +111,8 @@ cat logs/rating-tracker.log | pino-pretty | less
   <source media="(prefers-color-scheme: light)" srcset="/docs/images/log-light.png">
   <img alt="Rating Tracker Log Output" src="/docs/images/log-light.png">
 </picture>
+
+If you prefer a plain log viewer, you can use `pino-pretty` without the configuration file and set the `PLAIN_LOG` environment variable as documented below.
 
 #### …and more to come!
 
@@ -312,7 +314,8 @@ Variable | Example Value | Explanation
 **`REDIS_URL`** | `redis://127.0.0.1:6379` | The URL of the Redis instance. Can also use the Redis service name (e.g. `redis` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file.
 `REDIS_USER`, `REDIS_PASS`,  | `rating-tracker`, `********` | The username and password to connect to the Redis instance. Read more [here](#create-redis-user-and-password) on how to set up a password-protected Redis user. If unset, the Redis instance must grant write access to the default user.
 `LOG_FILE` | `/var/log/rating-tracker-(DATE).log` | A file path for storing Rating Tracker log files. The string `(DATE)` will be replaced by the current date. If unset, logs are stored in the `/tmp` directory.
-`LOG_LEVEL` | `debug` | The level for the log outputs to `stdout`. Can be one of `fatal`, `error`, `warn`, `info`, `debug`, `trace`. If unset, `info` will be used. 
+`LOG_LEVEL` | `debug` | The level for the log output to `stdout`. Can be one of `fatal`, `error`, `warn`, `info`, `debug`, `trace`. If unset, `info` will be used. 
+`PLAIN_LOG` | `1` | If set to a truthy value, the log output to `stdout` will not be rendered with colors and icons.
 `AUTO_FETCH_SCHEDULE` | `0 30 2 * * *` | A Cron-like specification of a schedule for when to fetch all stocks from all providers. The format in use includes seconds, so the example value resolves to “every day at 2:30:00 AM”. If unset, no automatic fetching will happen.
 `SELENIUM_MAX_CONCURRENCY` | `4` | The number of Selenium WebDrivers used concurrently when fetching information for multiple stocks. The Selenium instance should be set up to allow for the creation of at least that many sessions, as done in [this configuration](#minimal-example-setup-using-docker-compose) using the environment variable `SE_NODE_MAX_SESSIONS`. If unset, no concurrent fetches will be performed.
 `SIGNAL_URL` | `http://127.0.0.1:8080` | The URL of the Signal REST API. Can also use the Signal REST API service name (e.g. `signal` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file. If unset, no Signal notification messages will be sent.
