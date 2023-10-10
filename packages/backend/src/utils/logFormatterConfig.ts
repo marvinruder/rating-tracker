@@ -280,8 +280,8 @@ const getPrefixFromRawPrefix = (rawPrefix: string | object): Prefix => {
   };
 };
 
-export const pinoPrettyConfig: PrettyOptions | undefined = process.env.PLAIN_LOG
-  ? undefined
+export const pinoPrettyConfig: PrettyOptions = process.env.PLAIN_LOG
+  ? {}
   : {
       ignore: "time,prefix", // Those are added to the message, so we do not want to print it twice
       customPrettifiers: {
