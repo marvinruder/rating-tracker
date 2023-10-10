@@ -1,11 +1,10 @@
 import { Stock, MSCIESGRating, msciESGRatingArray, OmitDynamicAttributesStock } from "@rating-tracker/commons";
-import chalk from "chalk";
 
 import { Prisma } from "../../../prisma/client";
 import { addDynamicAttributesToStockData, dynamicStockAttributes } from "../../models/dynamicStockAttributes";
 import * as signal from "../../signal/signal";
-import APIError from "../../utils/apiError";
-import logger, { PREFIX_POSTGRES } from "../../utils/logger";
+import APIError from "../../utils/APIError";
+import logger from "../../utils/logger";
 import client from "../client";
 
 // Emojis showing whether a change is good or bad. Used in the Signal message.
@@ -40,15 +39,15 @@ export const createStock = async (stock: OmitDynamicAttributesStock): Promise<bo
     });
     // If that worked, a stock with the same ticker already exists
     logger.warn(
-      PREFIX_POSTGRES +
-        chalk.yellowBright(`Skipping stock “${stock.name}” – existing already (ticker ${existingStock.ticker}).`),
+      { prefix: "postgres" },
+      `Skipping stock “${stock.name}” – existing already (ticker ${existingStock.ticker}).`,
     );
     return false;
   } catch {
     await client.stock.create({
       data: addDynamicAttributesToStockData(stock),
     });
-    logger.info(PREFIX_POSTGRES + `Created stock “${stock.name}” with ticker ${stock.ticker}.`);
+    logger.info({ prefix: "postgres" }, `Created stock “${stock.name}” with ticker ${stock.ticker}.`);
     return true;
   }
 };
@@ -98,7 +97,6 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
   let k: keyof typeof newValues; // all keys of new values
   const stock = await readStock(ticker); // Read the stock from the database
   let signalMessage = `Updates for ${stock.name} (${ticker}):`;
-  logger.info(PREFIX_POSTGRES + `Updating stock ${ticker}…`);
   let isNewData = false;
   // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
   for (k in newValues) {
@@ -113,14 +111,6 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
 
       // New data is different from old data
       isNewData = true;
-
-      logger.info(
-        PREFIX_POSTGRES +
-          `    Property ${k} updated from ${
-            // Format dates as ISO strings
-            stock[k] instanceof Date ? (stock[k] as Date).toISOString() : stock[k]
-          } to ${newValues[k] instanceof Date ? (newValues[k] as Date).toISOString() : newValues[k]}`,
-      );
 
       switch (k) {
         case "starRating":
@@ -203,6 +193,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
       },
       data: { ...newValues, ...dynamicStockAttributes({ ...stock, ...newValues }) },
     });
+    logger.info({ prefix: "postgres", newValues }, `Updated stock ${ticker}`);
     // The message string contains a newline character if and only if a parameter changed for which we want to send a
     // message
     if (signalMessage.includes("\n")) {
@@ -210,7 +201,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
     }
   } else {
     // No new data was provided
-    logger.info(PREFIX_POSTGRES + `No updates for stock ${ticker}.`);
+    logger.info({ prefix: "postgres" }, `No updates for stock ${ticker}.`);
   }
 };
 
@@ -228,7 +219,7 @@ export const deleteStock = async (ticker: string) => {
     await client.stock.delete({
       where: { ticker },
     });
-    logger.info(PREFIX_POSTGRES + `Deleted stock “${existingStock.name}” (ticker ${ticker}).`);
+    logger.info({ prefix: "postgres" }, `Deleted stock “${existingStock.name}” (ticker ${ticker}).`);
   } catch {
     throw new APIError(404, `Stock ${ticker} not found.`);
   }

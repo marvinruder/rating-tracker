@@ -1,10 +1,9 @@
 import { Resource } from "@rating-tracker/commons";
-import chalk from "chalk";
 import { Entity, EntityId, Repository } from "redis-om";
 
 import { isExistingResourceEntity, resourceSchema } from "../../models/resource";
-import APIError from "../../utils/apiError";
-import logger, { PREFIX_REDIS } from "../../utils/logger";
+import APIError from "../../utils/APIError";
+import logger from "../../utils/logger";
 import redis from "../redis";
 
 /**
@@ -51,11 +50,11 @@ export const createResource = async (resource: Resource, ttlInSeconds?: number):
   /* c8 ignore start */
   if (isExistingResourceEntity(existingResource)) {
     // If that worked, a resource with the same URL already exists
-    logger.warn(PREFIX_REDIS + chalk.yellowBright(`Skipping resource ${existingResource.url} – existing already.`));
+    logger.warn({ prefix: "redis" }, `Skipping resource ${existingResource.url} – existing already.`);
     return false;
   }
   /* c8 ignore stop */
-  logger.info(PREFIX_REDIS + `Created resource with entity ID ${(await saveResource(resource))[EntityId]}.`);
+  logger.info({ prefix: "redis" }, `Created resource with entity ID ${(await saveResource(resource))[EntityId]}.`);
   // If set, let the resource expire after the given time
   ttlInSeconds && (await expireResource(resource.url, ttlInSeconds));
   return true;

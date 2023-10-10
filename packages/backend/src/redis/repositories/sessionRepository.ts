@@ -1,11 +1,10 @@
 import { Session, User } from "@rating-tracker/commons";
-import chalk from "chalk";
 import { Entity, EntityId, Repository } from "redis-om";
 
 import { readUser } from "../../db/tables/userTable";
 import { isExistingSessionEntity, sessionSchema } from "../../models/session";
-import APIError from "../../utils/apiError";
-import logger, { PREFIX_REDIS } from "../../utils/logger";
+import APIError from "../../utils/APIError";
+import logger from "../../utils/logger";
 import redis from "../redis";
 
 /**
@@ -63,12 +62,13 @@ export const createSession = async (session: Session): Promise<boolean> => {
   /* c8 ignore start */
   if (isExistingSessionEntity(existingSession)) {
     // If that worked, a session with the same ID already exists
-    logger.warn(PREFIX_REDIS + chalk.yellowBright(`Skipping session ${existingSession.entityId} – existing already.`));
+    logger.warn({ prefix: "redis" }, `Skipping session ${existingSession.entityId} – existing already.`);
     return false;
   }
   /* c8 ignore stop */
   logger.info(
-    PREFIX_REDIS + `Created session for “${session.email}” with entity ID ${(await saveSession(session))[EntityId]}.`,
+    { prefix: "redis" },
+    `Created session for “${session.email}” with entity ID ${(await saveSession(session))[EntityId]}.`,
   );
   await refreshSession(session.sessionID); // Let the session expire after 30 minutes
   return true;
@@ -100,7 +100,7 @@ export const updateSession = async (sessionID: string, email: string) => {
   const entity = await fetchSession(sessionID);
   if (isExistingSessionEntity(entity)) {
     await saveSession({ sessionID: entity[EntityId], email });
-    logger.info(PREFIX_REDIS + `Updated session ${sessionID} for user “${email}”.`);
+    logger.info({ prefix: "redis" }, `Updated session ${sessionID} for user “${email}”.`);
     /* c8 ignore next */ // Not reached in current tests since a user can only update their current session
   } else throw new APIError(404, `Session ${sessionID} not found.`);
 };
@@ -115,7 +115,7 @@ export const deleteSession = async (sessionID: string) => {
   if (isExistingSessionEntity(entity)) {
     const { email } = entity;
     await removeSession(entity[EntityId]);
-    logger.info(PREFIX_REDIS + `Deleted session ${sessionID} for user “${email}”.`);
+    logger.info({ prefix: "redis" }, `Deleted session ${sessionID} for user “${email}”.`);
     /* c8 ignore next */ // Not reached in current tests since a user can only delete their current session
   } else throw new APIError(404, `Session ${sessionID} not found.`);
 };

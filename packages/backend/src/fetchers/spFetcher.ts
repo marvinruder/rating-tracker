@@ -1,6 +1,5 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { SP_PREMIUM_STOCK_ERROR_MESSAGE, Stock } from "@rating-tracker/commons";
-import chalk from "chalk";
 import { formatDistance } from "date-fns";
 import { Request } from "express";
 import { By, until } from "selenium-webdriver";
@@ -9,8 +8,8 @@ import { FetcherWorkspace } from "../controllers/FetchController";
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import APIError from "../utils/apiError";
-import logger, { PREFIX_SELENIUM } from "../utils/logger";
+import APIError from "../utils/APIError";
+import logger from "../utils/logger";
 import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver";
 
 /**
@@ -41,12 +40,12 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
       new Date().getTime() - stock.spLastFetch.getTime() < 1000 * 60 * 60 * 24 * 7
     ) {
       logger.info(
-        PREFIX_SELENIUM +
-          `Stock ${stock.ticker}: Skipping S&P fetch because last fetch was ${formatDistance(
-            stock.spLastFetch.getTime(),
-            new Date().getTime(),
-            { addSuffix: true },
-          )}`,
+        { prefix: "selenium" },
+        `Stock ${stock.ticker}: Skipping S&P fetch because last fetch was ${formatDistance(
+          stock.spLastFetch.getTime(),
+          new Date().getTime(),
+          { addSuffix: true },
+        )}`,
       );
       stocks.skipped.push(stock);
       continue;
@@ -93,16 +92,14 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
           `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`,
         );
       }
-      logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`));
+      logger.warn({ prefix: "selenium", err: e }, `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`);
       if (stock.spESGScore !== null) {
         // If an S&P ESG Score is already stored in the database, but we cannot extract it from the page, we log this
         // as an error and send a message.
         logger.error(
-          PREFIX_SELENIUM +
-            chalk.redBright(
-              `Stock ${stock.ticker}: Extraction of S&P ESG Score failed unexpectedly. ` +
-                `This incident will be reported.`,
-            ),
+          { prefix: "selenium" },
+          `Stock ${stock.ticker}: Extraction of S&P ESG Score failed unexpectedly. ` +
+            "This incident will be reported.",
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
@@ -121,11 +118,9 @@ const spFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise
       if (stocks.queued.length) {
         // No other fetcher did this before
         logger.error(
-          PREFIX_SELENIUM +
-            chalk.redBright(
-              `Aborting fetching information from S&P after ${stocks.successful.length} ` +
-                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
-            ),
+          { prefix: "selenium" },
+          `Aborting fetching information from S&P after ${stocks.successful.length} ` +
+            `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +

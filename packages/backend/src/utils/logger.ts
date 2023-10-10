@@ -1,34 +1,23 @@
-// We do not need to test the logger itself
-import { STATUS_CODES } from "http";
 import fs from "node:fs";
 
 import { stockLogoEndpointPath } from "@rating-tracker/commons";
-import chalk from "chalk";
 import cron from "cron";
 import { Request, Response } from "express";
 import pino from "pino";
 import pretty from "pino-pretty";
 
-export const PREFIX_CRON = chalk.whiteBright.bgGrey(" \ufba7 ") + chalk.grey(" ");
-export const PREFIX_NODEJS = chalk.whiteBright.bgHex("#339933")(" \uf898 ") + chalk.hex("#339933")(" ");
-export const PREFIX_REDIS = chalk.whiteBright.bgHex("#D82C20")(" \ue76d ") + chalk.hex("#D82C20")(" ");
-export const PREFIX_POSTGRES = chalk.whiteBright.bgHex("#336791")(" \ue76e ") + chalk.hex("#336791")(" ");
-export const PREFIX_SELENIUM = chalk.whiteBright.bgHex("#43B02A")(" \ufc0d ") + chalk.hex("#43B02A")(" ");
-export const PREFIX_SIGNAL = chalk.whiteBright.bgHex("#4975E8")(" \uf868 ") + chalk.hex("#4975E8")(" ");
+import type { LoggedRequest } from "./logFormatterConfig";
+import { pinoPrettyConfig } from "./logFormatterConfig";
 
-const levelIcons = {
-  10: chalk.grey(" \uf002 "),
-  20: chalk.blue(" \uf188 "),
-  30: chalk.cyanBright(" \uf7fc "),
-  40: chalk.yellowBright(" \uf071 "),
-  50: "\x07" + chalk.red(" \uf658 "),
-  60: "\x07" + chalk.magentaBright(" \uf0e7 "),
-};
+/**
+ * The log level to use for printing log messages to the standard output.
+ */
+const LOG_LEVEL = (process.env.LOG_LEVEL as pino.Level) ?? "info";
 
 /**
  * The stream used to log messages to the standard output.
  */
-const prettyStream = pretty({ include: "level", customPrettifiers: { level: (level) => levelIcons[Number(level)] } });
+const prettyStream = pretty(pinoPrettyConfig);
 
 /**
  * Provides the path of the log file for the current day.
@@ -49,20 +38,30 @@ const getLogFilePath = (): string => {
  */
 const getNewFileStream = (): fs.WriteStream => fs.createWriteStream(getLogFilePath(), { flags: "a" });
 
+/**
+ * The stream used to log messages to the log file. The file is rotated every day.
+ */
 let fileStream = getNewFileStream();
 
 /**
  * A multistream which writes to both the standard output and the log file.
  */
 const multistream = pino.multistream([
-  { level: (process.env.LOG_LEVEL as pino.Level) ?? "info", stream: prettyStream },
-  { level: (process.env.LOG_LEVEL as pino.Level) ?? "info", stream: fileStream },
+  // { level: LOG_LEVEL, stream: uglyStream },
+  { level: LOG_LEVEL, stream: prettyStream },
+  { level: "trace", stream: fileStream },
 ]);
 
 /**
  * The logger used to log messages to both the standard output and the log file.
  */
-const logger = pino({ level: process.env.LOG_LEVEL ?? "info" }, multistream);
+const logger = pino(
+  {
+    level: LOG_LEVEL,
+    base: { pid: undefined, hostname: undefined },
+  },
+  multistream,
+);
 
 // Rotate the log file every day
 new cron.CronJob(
@@ -77,49 +76,6 @@ new cron.CronJob(
 );
 
 /**
- * Create a pretty prefix string from an HTTP method. The colors in use correspond to those used by the OpenAPI UI.
- *
- * @param {string} method The HTTP method.
- * @returns {string} A colored pretty prefix string.
- */
-const highlightMethod = (method: string): string => {
-  switch (method) {
-    case "GET":
-      return chalk.whiteBright.bgBlue(` ${method} `) + chalk.blue.bgGrey("");
-    case "HEAD":
-      return chalk.whiteBright.bgMagenta(` ${method} `) + chalk.magenta.bgGrey("");
-    case "POST":
-      return chalk.whiteBright.bgGreen(` ${method} `) + chalk.green.bgGrey("");
-    case "PUT":
-      return chalk.black.bgYellow(` ${method} `) + chalk.yellow.bgGrey("");
-    case "PATCH":
-      return chalk.black.bgCyanBright(` ${method} `) + chalk.cyanBright.bgGrey("");
-    case "DELETE":
-      return chalk.whiteBright.bgRed(` ${method} `) + chalk.red.bgGrey("");
-  }
-};
-
-/**
- * Create a pretty prefix string from an HTTP status code.
- *
- * @param {number} statusCode The HTTP status code.
- * @returns {string} A colored pretty prefix string.
- */
-const statusCodeDescription = (statusCode: number): string => {
-  const statusCodeString = ` ${statusCode}  ${STATUS_CODES[statusCode]} `;
-  switch (Math.floor(statusCode / 100)) {
-    case 2: // Successful responses
-      return chalk.whiteBright.bgGreen(statusCodeString) + chalk.green("");
-    case 1: // Informational responses
-    case 3: // Redirection messages
-      return chalk.black.bgYellow(statusCodeString) + chalk.yellow("");
-    case 4: // Client error responses
-    case 5: // Server error responses
-      return chalk.whiteBright.bgRed(statusCodeString) + chalk.red("");
-  }
-};
-
-/**
  * A function logging API requests.
  *
  * @param {Request} req Request object
@@ -127,64 +83,27 @@ const statusCodeDescription = (statusCode: number): string => {
  * @param {number} time The response time of the request.
  * @returns {void}
  */
-export const requestLogger = (req: Request, res: Response, time: number): void =>
-  chalk
-    .white(
-      chalk.whiteBright.bgHex("#339933")(" \uf898 ") +
-        chalk.bgGrey.hex("#339933")("") +
-        chalk.bgGrey(
-          chalk.cyanBright(" \uf5ef " + new Date().toISOString()) + // Timestamp
-            "  " +
-            chalk.yellow(
-              res.locals.user
-                ? `\uf007 ${res.locals.user.name} (${res.locals.user.email})` // Authenticated user
-                : /* c8 ignore next */ // We do not test Cron jobs
-                res.locals.userIsCron
-                ? "\ufba7 cron" // Cron job
-                : "\uf21b", // Unauthenticated user
-            ) +
-            "  " +
-            chalk.magentaBright("\uf98c" + req.ip) + // IP address
-            " ",
-        ) +
-        chalk.grey("") +
-        "\n ├─" +
-        highlightMethod(req.method) + // HTTP request method
-        chalk.bgGrey(
-          ` ${req.originalUrl // URL path
-            .slice(1, req.originalUrl.indexOf("?") == -1 ? undefined : req.originalUrl.indexOf("?"))
-            .replaceAll("/", "  ")} `,
-        ) +
-        chalk.grey("") +
-        Object.entries(req.cookies) // Cookies
-          .map(
-            ([key, value]) =>
-              "\n ├─" + chalk.bgGrey(chalk.yellow(" \uf697") + `  ${key} `) + chalk.grey("") + " " + value,
-          )
-          .join(" ") +
-        Object.entries(req.query) // Query parameters
-          .map(
-            ([key, value]) =>
-              "\n ├─" + chalk.bgGrey(chalk.cyan(" \uf002") + `  ${key} `) + chalk.grey("") + " " + value,
-          )
-          .join(" ") +
-        "\n ╰─" +
-        statusCodeDescription(res.statusCode) + // HTTP response status code
-        ` ${
-          res.hasHeader("Content-Length") && res.hasHeader("Content-Type")
-            ? `sent ${res.getHeader("Content-Length")} bytes of type “${
-                res.getHeader("Content-Type").toString().split(";")[0]
-              }” `
-            : ""
-        }after ${Math.round(time)} ms
-`, // Response time
-    )
-    .split("\n")
-    // Log internal requests or requests for resources such as logos as debug messages – those are far too many and
-    // typically only mildly interesting
-    .forEach((line) =>
-      // Show newlines in the log in a pretty way
-      logger[req.originalUrl.startsWith(`/api${stockLogoEndpointPath}`) || req.ip === "::1" ? "trace" : "info"](line),
-    );
+export const logRequest = (req: Request, res: Response, time: number): void =>
+  logger[req.originalUrl.startsWith(`/api${stockLogoEndpointPath}`) || req.ip === "::1" ? "trace" : "info"](
+    {
+      prefix: "nodejs",
+      req: {
+        ip: req.ip,
+        method: req.method,
+        url: req.originalUrl,
+        cookies: req.cookies,
+        query: req.query,
+        user: res.locals.user
+          ? { name: res.locals.user.name, email: res.locals.user.email }
+          : res.locals.userIsCron
+          ? "cron"
+          : undefined,
+        statusCode: res.statusCode,
+        headers: res.getHeaders(),
+        time,
+      },
+    } as { prefix: string | object; req: LoggedRequest },
+    "Processed request",
+  );
 
 export default logger;

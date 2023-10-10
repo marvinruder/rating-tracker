@@ -1,6 +1,4 @@
-// This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { Stock } from "@rating-tracker/commons";
-import chalk from "chalk";
 import { formatDistance } from "date-fns";
 import { Request } from "express";
 import { By, until } from "selenium-webdriver";
@@ -9,8 +7,8 @@ import { FetcherWorkspace } from "../controllers/FetchController";
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import APIError from "../utils/apiError";
-import logger, { PREFIX_SELENIUM } from "../utils/logger";
+import APIError from "../utils/APIError";
+import logger from "../utils/logger";
 import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver";
 
 const XPATH_ANALYST_COUNT =
@@ -47,12 +45,12 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
       new Date().getTime() - stock.marketScreenerLastFetch.getTime() < 1000 * 60 * 60 * 12
     ) {
       logger.info(
-        PREFIX_SELENIUM +
-          `Stock ${stock.ticker}: Skipping MarketScreener fetch because last fetch was ${formatDistance(
-            stock.marketScreenerLastFetch.getTime(),
-            new Date().getTime(),
-            { addSuffix: true },
-          )}`,
+        { prefix: "selenium" },
+        `Stock ${stock.ticker}: Skipping MarketScreener fetch because last fetch was ${formatDistance(
+          stock.marketScreenerLastFetch.getTime(),
+          new Date().getTime(),
+          { addSuffix: true },
+        )}`,
       );
       stocks.skipped.push(stock);
       continue;
@@ -90,22 +88,19 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
             analystConsensusMatches.length < 1 ||
             Number.isNaN(+analystConsensusMatches[0])
           ) {
-            throw new TypeError(`Extracted analyst consensus is no valid number.`);
+            throw new TypeError("Extracted analyst consensus is no valid number.");
           }
           analystConsensus = +analystConsensusMatches[0];
         } catch (e) {
-          logger.warn(
-            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`),
-          );
+          logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`);
           if (stock.analystConsensus !== null) {
             // If an analyst consensus is already stored in the database, but we cannot extract it from the page, we
             // log this as an error and send a message.
             logger.error(
-              PREFIX_SELENIUM +
-                chalk.redBright(
-                  `Stock ${stock.ticker}: Extraction of analyst consensus failed unexpectedly. ` +
-                    `This incident will be reported.`,
-                ),
+              { prefix: "selenium", err: e },
+
+              `Stock ${stock.ticker}: Extraction of analyst consensus failed unexpectedly. ` +
+                "This incident will be reported.",
             );
             errorMessage += `\n\tUnable to extract Analyst Consensus: ${String(e.message).split(/[\n:{]/)[0]}`;
           }
@@ -114,18 +109,15 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
         try {
           analystCount = +(await consensusTableDiv.findElement(By.xpath(XPATH_ANALYST_COUNT)).getText());
         } catch (e) {
-          logger.warn(
-            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`),
-          );
+          logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`);
           if (stock.analystCount !== null) {
             // If an analyst count is already stored in the database, but we cannot extract it from the page, we log
             // this as an error and send a message.
             logger.error(
-              PREFIX_SELENIUM +
-                chalk.redBright(
-                  `Stock ${stock.ticker}: Extraction of analyst count failed unexpectedly. ` +
-                    `This incident will be reported.`,
-                ),
+              { prefix: "selenium", err: e },
+
+              `Stock ${stock.ticker}: Extraction of analyst count failed unexpectedly. ` +
+                "This incident will be reported.",
             );
             errorMessage += `\n\tUnable to extract Analyst Count: ${String(e.message).split(/[\n:{]/)[0]}`;
           }
@@ -136,18 +128,6 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
           if (!stock.lastClose) {
             throw new Error("No Last Close price available to compare spread against.");
           }
-          // const analystTargetPriceMatches = (
-          //   await consensusTableDiv.findElement(By.xpath(XPATH_SPREAD_AVERAGE_TARGET)).getText()
-          // )
-          //   .replaceAll(",", ".")
-          //   .match(/(\-)?\d+(\.\d+)?/g);
-          // if (
-          //   analystTargetPriceMatches === null ||
-          //   analystTargetPriceMatches.length !== 1 ||
-          //   Number.isNaN(+analystTargetPriceMatches[0])
-          // ) {
-          //   throw new TypeError(`Extracted analyst target price is no valid number.`);
-          // }
           const analystTargetPriceText = await consensusTableDiv
             .findElement(By.xpath(XPATH_SPREAD_AVERAGE_TARGET))
             .getText();
@@ -169,36 +149,29 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
           }
           analystTargetPrice = stock.lastClose * (+analystTargetPriceMatches[0] / 100 + 1);
         } catch (e) {
-          logger.warn(
-            PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`),
-          );
+          logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`);
           if (stock.analystTargetPrice !== null) {
             // If an analyst target price is already stored in the database, but we cannot extract it from the page,
             // we log this as an error and send a message.
             logger.error(
-              PREFIX_SELENIUM +
-                chalk.redBright(
-                  `Stock ${stock.ticker}: Extraction of analyst target price failed unexpectedly. ` +
-                    `This incident will be reported.`,
-                ),
+              { prefix: "selenium", err: e },
+
+              `Stock ${stock.ticker}: Extraction of analyst target price failed unexpectedly. ` +
+                "This incident will be reported.",
             );
             errorMessage += `\n\tUnable to extract Analyst Target Price: ${String(e.message).split(/[\n:{]/)[0]}`;
           }
         }
       } catch (e) {
-        logger.warn(
-          PREFIX_SELENIUM +
-            chalk.yellowBright(`Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`),
-        );
+        logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`);
         if (stock.analystConsensus !== null || stock.analystCount !== null || stock.analystTargetPrice !== null) {
           // If any of the analyst-related information is already stored in the database, but we cannot extract it
           // from the page, we log this as an error and send a message.
           logger.error(
-            PREFIX_SELENIUM +
-              chalk.redBright(
-                `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. ` +
-                  `This incident will be reported.`,
-              ),
+            { prefix: "selenium", err: e },
+
+            `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. ` +
+              "This incident will be reported.",
           );
           errorMessage += `\n\tUnable to extract Analyst Information: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -230,9 +203,7 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
           `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${String(e.message).split(/[\n:{]/)[0]}`,
         );
       }
-      logger.error(
-        PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${e}`),
-      );
+      logger.error({ prefix: "selenium", err: e }, `Stock ${stock.ticker}: Unable to fetch MarketScreener data`);
       await signal.sendMessage(
         SIGNAL_PREFIX_ERROR +
           `Stock ${stock.ticker}: Unable to fetch MarketScreener data: ${
@@ -246,11 +217,9 @@ const marketScreenerFetcher = async (req: Request, stocks: FetcherWorkspace<Stoc
       if (stocks.queued.length) {
         // No other fetcher did this before
         logger.error(
-          PREFIX_SELENIUM +
-            chalk.redBright(
-              `Aborting fetching information from MarketScreener after ${stocks.successful.length} ` +
-                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
-            ),
+          { prefix: "selenium" },
+          `Aborting fetching information from MarketScreener after ${stocks.successful.length} ` +
+            `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +

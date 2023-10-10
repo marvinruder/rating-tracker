@@ -51,4 +51,4 @@ COPY --from=assemble --chown=node:node /workdir/app .
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
-CMD [ "node", "server.mjs" ]
+CMD [ "node", "--enable-source-maps", "server.mjs" ]

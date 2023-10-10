@@ -44,11 +44,11 @@ tests.push({
 });
 
 tests.push({
-  testName: "[unsafe] updates current user’s information",
+  testName: "[unsafe] updates current user’s email address",
   testFunction: async () => {
     await expectRouteToBePrivate(`/api${userEndpointPath}`, supertest.patch);
     let res = await supertest
-      .patch(`/api${userEndpointPath}?name=Jane%20Doe%20II%2E&phone=%2B987654321&email=jane.doe.2%40example%2Ecom`)
+      .patch(`/api${userEndpointPath}?email=jane.doe.2%40example%2Ecom`)
       .send({
         avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
       })
@@ -59,6 +59,25 @@ tests.push({
     res = await supertest.get(`/api${userEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("jane.doe.2@example.com");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] updates current user’s information without email address",
+  testFunction: async () => {
+    await expectRouteToBePrivate(`/api${userEndpointPath}`, supertest.patch);
+    let res = await supertest
+      .patch(`/api${userEndpointPath}?name=Jane%20Doe%20II%2E&phone=%2B987654321`)
+      .send({
+        avatar: "data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=",
+      })
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+
+    // Check that the changes were applied
+    res = await supertest.get(`/api${userEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.email).toBe("jane.doe@example.com");
     expect(res.body.name).toBe("Jane Doe II.");
     expect(res.body.avatar).toBe("data:image/jpeg;base64,QW5vdGhlciBmYW5jeSBhdmF0YXIgaW1hZ2U=");
     expect(res.body.phone).toBe("+987654321");

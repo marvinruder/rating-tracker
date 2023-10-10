@@ -1,6 +1,5 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { MSCIESGRating, Stock, isMSCIESGRating } from "@rating-tracker/commons";
-import chalk from "chalk";
 import { formatDistance } from "date-fns";
 import { Request } from "express";
 import { By, until } from "selenium-webdriver";
@@ -9,8 +8,8 @@ import { FetcherWorkspace } from "../controllers/FetchController";
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import APIError from "../utils/apiError";
-import logger, { PREFIX_SELENIUM } from "../utils/logger";
+import APIError from "../utils/APIError";
+import logger from "../utils/logger";
 import { getDriver, openPageAndWait, quitDriver, takeScreenshot } from "../utils/webdriver";
 
 /**
@@ -41,12 +40,12 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
       new Date().getTime() - stock.msciLastFetch.getTime() < 1000 * 60 * 60 * 24 * 7
     ) {
       logger.info(
-        PREFIX_SELENIUM +
-          `Stock ${stock.ticker}: Skipping MSCI fetch since last successful fetch was ${formatDistance(
-            stock.msciLastFetch.getTime(),
-            new Date().getTime(),
-            { addSuffix: true },
-          )}`,
+        { prefix: "selenium" },
+        `Stock ${stock.ticker}: Skipping MSCI fetch since last successful fetch was ${formatDistance(
+          stock.msciLastFetch.getTime(),
+          new Date().getTime(),
+          { addSuffix: true },
+        )}`,
       );
       stocks.skipped.push(stock);
       continue;
@@ -83,18 +82,14 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
           throw new TypeError(`Extracted MSCI ESG Rating “${msciESGRatingString}” is no valid MSCI ESG Rating.`);
         }
       } catch (e) {
-        logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`),
-        );
+        logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`);
         if (stock.msciESGRating !== null) {
           // If an MSCI ESG Rating is already stored in the database, but we cannot extract it from the page, we log
           // this as an error and send a message.
           logger.error(
-            PREFIX_SELENIUM +
-              chalk.redBright(
-                `Stock ${stock.ticker}: Extraction of MSCI ESG Rating failed unexpectedly. ` +
-                  `This incident will be reported.`,
-              ),
+            { prefix: "selenium", err: e },
+            `Stock ${stock.ticker}: Extraction of MSCI ESG Rating failed unexpectedly. ` +
+              "This incident will be reported.",
           );
           errorMessage += `\n\tUnable to extract MSCI ESG Rating: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -110,23 +105,21 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
           msciTemperatureMatches.length !== 1 ||
           Number.isNaN(+msciTemperatureMatches[0])
         ) {
-          throw new TypeError(`Extracted MSCI Implied Temperature Rise is no valid number.`);
+          throw new TypeError("Extracted MSCI Implied Temperature Rise is no valid number.");
         }
         msciTemperature = +msciTemperatureMatches[0];
       } catch (e) {
         logger.warn(
-          PREFIX_SELENIUM +
-            chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`),
+          { prefix: "selenium" },
+          `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`,
         );
         if (stock.msciTemperature !== null) {
           // If an MSCI Implied Temperature Rise is already stored in the database, but we cannot extract it from the
           // page, we log this as an error and send a message.
           logger.error(
-            PREFIX_SELENIUM +
-              chalk.redBright(
-                `Stock ${stock.ticker}: Extraction of MSCI Implied Temperature Rise failed unexpectedly. ` +
-                  `This incident will be reported.`,
-              ),
+            { prefix: "selenium", err: e },
+            `Stock ${stock.ticker}: Extraction of MSCI Implied Temperature Rise failed unexpectedly. ` +
+              "This incident will be reported.",
           );
           errorMessage += `\n\tUnable to extract MSCI Implied Temperature Rise: ${
             String(e.message).split(/[\n:{]/)[0]
@@ -159,7 +152,7 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
           `Stock ${stock.ticker}: Unable to fetch MSCI information: ${String(e.message).split(/[\n:{]/)[0]}`,
         );
       }
-      logger.error(PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch MSCI information: ${e}`));
+      logger.error({ prefix: "selenium", err: e }, `Stock ${stock.ticker}: Unable to fetch MSCI information: ${e}`);
       await signal.sendMessage(
         SIGNAL_PREFIX_ERROR +
           `Stock ${stock.ticker}: Unable to fetch MSCI information: ${
@@ -173,11 +166,9 @@ const msciFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promi
       if (stocks.queued.length) {
         // No other fetcher did this before
         logger.error(
-          PREFIX_SELENIUM +
-            chalk.redBright(
-              `Aborting fetching information from MSCI after ${stocks.successful.length} ` +
-                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
-            ),
+          { prefix: "selenium" },
+          `Aborting fetching information from MSCI after ${stocks.successful.length} ` +
+            `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +

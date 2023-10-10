@@ -1,14 +1,13 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { Stock, resourceEndpointPath } from "@rating-tracker/commons";
 import axios, { AxiosError } from "axios";
-import chalk from "chalk";
 import { Builder, Capabilities, WebDriver, until } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome";
 
 import { createResource } from "../redis/repositories/resourceRepository";
 
-import APIError from "./apiError";
-import logger, { PREFIX_SELENIUM } from "./logger";
+import APIError from "./APIError";
+import logger from "./logger";
 
 /**
  * A page load strategy to use by the WebDriver.
@@ -82,7 +81,7 @@ export const openPageAndWait = async (driver: WebDriver, url: string): Promise<b
     await driver.wait(until.urlIs(url), 5000);
     return true;
   } catch (e) {
-    logger.error(PREFIX_SELENIUM + chalk.redBright(`Unable to fetch from page ${url} (driver may be unhealthy): ${e}`));
+    logger.error({ prefix: "selenium", err: e }, `Unable to fetch from page ${url} (driver may be unhealthy)`);
     return false;
   }
 };
@@ -100,13 +99,13 @@ export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise
   try {
     await driver.quit();
   } catch (e) {
-    logger.error(PREFIX_SELENIUM + chalk.redBright(`Unable to shut down Selenium WebDriver gracefully: ${e}`));
+    logger.error({ prefix: "selenium", err: e }, "Unable to shut down Selenium WebDriver gracefully");
     if (sessionID) {
-      logger.info(PREFIX_SELENIUM + `Attempting forceful shutdown of stale session ${sessionID}.`);
+      logger.info({ prefix: "selenium" }, `Attempting forceful shutdown of stale session ${sessionID}.`);
       axios.delete(`${process.env.SELENIUM_URL}/session/${sessionID}`).catch((e) => {
         logger.error(
-          PREFIX_SELENIUM +
-            chalk.redBright(`An error occurred while forcefully terminating session ${sessionID}: ${e}`),
+          { prefix: "selenium", err: e },
+          `An error occurred while forcefully terminating session ${sessionID}`,
         );
       });
     }
@@ -138,7 +137,7 @@ export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvid
       // Ensure the user is logged in before accessing the resource API endpoint.
     }/login?redirect=${encodeURIComponent(`/api${resourceEndpointPath}/${screenshotID}`)}.`;
   } catch (e) {
-    logger.warn(PREFIX_SELENIUM + chalk.yellowBright(`Unable to take screenshot “${screenshotID}”: ${e}`));
+    logger.warn({ prefix: "selenium", err: e }, `Unable to take screenshot “${screenshotID}”`);
     return "";
   }
 };

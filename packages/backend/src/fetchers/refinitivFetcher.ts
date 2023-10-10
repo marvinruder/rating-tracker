@@ -1,7 +1,6 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { Stock } from "@rating-tracker/commons";
 import axios, { AxiosError } from "axios";
-import chalk from "chalk";
 import { formatDistance } from "date-fns";
 import { Request } from "express";
 
@@ -9,8 +8,8 @@ import { FetcherWorkspace } from "../controllers/FetchController";
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import APIError from "../utils/apiError";
-import logger, { PREFIX_SELENIUM } from "../utils/logger";
+import APIError from "../utils/APIError";
+import logger from "../utils/logger";
 
 /**
  * Fetches data from Refinitiv.
@@ -21,10 +20,6 @@ import logger, { PREFIX_SELENIUM } from "../utils/logger";
  * @throws an {@link APIError} in case of a severe error
  */
 const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): Promise<void> => {
-  // // Acquire a new session
-  // const driver = await getDriver(true);
-  // const sessionID = (await driver.getSession()).getId();
-
   // Work while stocks are in the queue
   while (stocks.queued.length) {
     // Get the first stock in the queue
@@ -40,12 +35,12 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       new Date().getTime() - stock.refinitivLastFetch.getTime() < 1000 * 60 * 60 * 24 * 7
     ) {
       logger.info(
-        PREFIX_SELENIUM +
-          `Stock ${stock.ticker}: Skipping Refinitiv fetch because last fetch was ${formatDistance(
-            stock.refinitivLastFetch.getTime(),
-            new Date().getTime(),
-            { addSuffix: true },
-          )}`,
+        { prefix: "selenium" },
+        `Stock ${stock.ticker}: Skipping Refinitiv fetch because last fetch was ${formatDistance(
+          stock.refinitivLastFetch.getTime(),
+          new Date().getTime(),
+          { addSuffix: true },
+        )}`,
       );
       stocks.skipped.push(stock);
       continue;
@@ -54,33 +49,13 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
     let refinitivEmissions: number = req.query.clear ? null : undefined;
 
     try {
-      // // Delete all cookies since Refinitiv allows only 100 requests per session.
-      // await driver.manage().deleteAllCookies();
       const url = `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`;
-      // const driverHealthy = await openPageAndWait(driver, url);
-      // // When we were unable to open the page, we assume the driver is unhealthy and end.
-      // if (!driverHealthy) {
-      //   // Have another driver attempt the fetch of the current stock
-      //   stocks.queued.push(stock);
-      //   break;
-      // }
-      // // Wait for the page to load for a maximum of 5 seconds.
-      // await driver.wait(until.elementLocated(By.css("pre")), 5000);
-
-      // // Extract the JSON content from the page.
-      // const refinitivJSONText = await driver.findElement(By.css("pre")).getText();
-
-      // if (refinitivJSONText === "{}") {
-      //   throw new APIError(502, "No Refinitiv information available.");
-      // }
 
       const refinitivJSON = (await axios.get(url)).data;
 
       if (Object.keys(refinitivJSON).length === 0 && refinitivJSON.constructor === Object) {
         throw new APIError(502, "No Refinitiv information available.");
       }
-
-      // const refinitivJSON = JSON.parse(refinitivJSONText);
 
       if (refinitivJSON.status && refinitivJSON.status.limitExceeded === true) {
         // If the limit has been exceeded, we stop fetching data and throw an error.
@@ -93,18 +68,14 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       try {
         refinitivESGScore = +refinitivJSON.esgScore["TR.TRESG"].score;
       } catch (e) {
-        logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`),
-        );
+        logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`);
         if (stock.refinitivESGScore !== null) {
           // If a Refinitiv ESG Score is already stored in the database, but we cannot extract it from the page, we
           // log this as an error and send a message.
           logger.error(
-            PREFIX_SELENIUM +
-              chalk.redBright(
-                `Stock ${stock.ticker}: Extraction of Refinitiv ESG Score failed unexpectedly. ` +
-                  `This incident will be reported.`,
-              ),
+            { prefix: "selenium", err: e },
+            `Stock ${stock.ticker}: Extraction of Refinitiv ESG Score failed unexpectedly. ` +
+              "This incident will be reported.",
           );
           errorMessage += `\n\tUnable to extract Refinitiv ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -113,18 +84,14 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       try {
         refinitivEmissions = +refinitivJSON.esgScore["TR.TRESGEmissions"].score;
       } catch (e) {
-        logger.warn(
-          PREFIX_SELENIUM + chalk.yellowBright(`Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`),
-        );
+        logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`);
         if (stock.refinitivEmissions !== null) {
           // If a Refinitiv Emissions Rating is already stored in the database, but we cannot extract it from the
           // page, we log this as an error and send a message.
           logger.error(
-            PREFIX_SELENIUM +
-              chalk.redBright(
-                `Stock ${stock.ticker}: Extraction of Refinitiv Emissions failed unexpectedly. ` +
-                  `This incident will be reported.`,
-              ),
+            { prefix: "selenium", err: e },
+            `Stock ${stock.ticker}: Extraction of Refinitiv Emissions failed unexpectedly. ` +
+              "This incident will be reported.",
           );
           errorMessage += `\n\tUnable to extract Refinitiv Emissions: ${String(e.message).split(/[\n:{]/)[0]}`;
         }
@@ -138,8 +105,6 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       });
       if (errorMessage.includes("\n")) {
         // An error occurred if and only if the error message contains a newline character.
-        // // We take a screenshot and send a message.
-        // errorMessage += `\n${await takeScreenshot(driver, stock, "refinitiv")}`;
         errorMessage += `\nServer response: ${JSON.stringify(refinitivJSON)}`;
         await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
         stocks.failed.push(await readStock(stock.ticker));
@@ -149,8 +114,7 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
     } catch (e) {
       stocks.failed.push(stock);
       if (req.query.ticker) {
-        // // If this request was for a single stock, we shut down the driver and throw an error.
-        // await quitDriver(driver, sessionID);
+        // If this request was for a single stock, we throw an error.
         throw new APIError(
           (e as Error).message.includes("Limit exceeded") ? 429 : 502,
           `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${String(e.message).split(/[\n:{]/)[0]}`,
@@ -159,23 +123,19 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       if ((e as Error).message.includes("Limit exceeded")) {
         // If the limit has been exceeded, we stop fetching data and log an error.
         logger.error(
-          PREFIX_SELENIUM +
-            chalk.redBright(
-              `Aborting fetching information from Refinitiv after exceeding limit ` +
-                `(${stocks.successful.length} successful fetches). Will continue next time.`,
-            ),
+          { prefix: "selenium", err: e },
+          "Aborting fetching information from Refinitiv after exceeding limit " +
+            `(${stocks.successful.length} successful fetches). Will continue next time.`,
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
-            `Aborting fetching information from Refinitiv after exceeding limit ` +
+            "Aborting fetching information from Refinitiv after exceeding limit " +
             `(${stocks.successful.length} successful fetches). Will continue next time.`,
           "fetchError",
         );
         break;
       }
-      logger.error(
-        PREFIX_SELENIUM + chalk.redBright(`Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${e}`),
-      );
+      logger.error({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to fetch Refinitiv information`);
       await signal.sendMessage(
         SIGNAL_PREFIX_ERROR +
           `Stock ${stock.ticker}: Unable to fetch Refinitiv information: ${String(e.message).split(/[\n:{]/)[0]}\n` +
@@ -184,7 +144,6 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
                 e.response?.data ? JSON.stringify(e.response.data).substring(0, 1024) : e.response?.statusText
               }`
             : "Server response not available."),
-        // }\n${await takeScreenshot(driver, stock, "refinitiv")}`,
         "fetchError",
       );
     }
@@ -193,11 +152,9 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       if (stocks.queued.length) {
         // No other fetcher did this before
         logger.error(
-          PREFIX_SELENIUM +
-            chalk.redBright(
-              `Aborting fetching information from Refinitiv after ${stocks.successful.length} ` +
-                `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
-            ),
+          { prefix: "selenium" },
+          `Aborting fetching information from Refinitiv after ${stocks.successful.length} ` +
+            `successful fetches and ${stocks.failed.length} failures. Will continue next time.`,
         );
         await signal.sendMessage(
           SIGNAL_PREFIX_ERROR +
@@ -212,8 +169,6 @@ const refinitivFetcher = async (req: Request, stocks: FetcherWorkspace<Stock>): 
       break;
     }
   }
-  // // The queue is now empty, we end the session.
-  // await quitDriver(driver, sessionID);
 };
 
 export default refinitivFetcher;

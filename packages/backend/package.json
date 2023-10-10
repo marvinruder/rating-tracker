@@ -9,8 +9,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev:run": "node --env-file=.env --watch dist/server.mjs",
-    "dev:watch": "yarn build --watch --sourcemap",
+    "dev:run": "node --env-file=.env --watch --enable-source-maps dist/server.mjs",
+    "dev:watch": "yarn build --watch",
     "dev:nginx": "docker compose -f dev/docker-compose.yml up nginx",
     "dev:postgres": "MY_UID=\"$(id -u)\" MY_GID=\"$(id -g)\" docker compose -f dev/docker-compose.yml up postgres",
     "dev:redis": "docker compose -f dev/docker-compose.yml up redis",
@@ -25,7 +25,8 @@
     "prisma:studio": "pnpify prisma studio",
     "prisma:generate": "pnpify prisma generate",
     "prisma:migrate:dev": "pnpify prisma migrate dev",
-    "build": "esbuild --color=true src/server.ts --bundle --platform=node --format=esm --legal-comments=none --banner:js=\"import __path from'path';import{createRequire as __createRequire}from'module';import{fileURLToPath}from'url';const require=__createRequire(import.meta.url),__filename=fileURLToPath(import.meta.url),__dirname=__path.dirname(__filename);\" --outfile=dist/server.mjs",
+    "build": "esbuild --color=true src/server.ts --bundle --platform=node --format=esm --legal-comments=none --sourcemap=linked --sources-content=false --banner:js=\"import __path from'path';import{createRequire as __createRequire}from'module';import{fileURLToPath}from'url';const require=__createRequire(import.meta.url),__filename=fileURLToPath(import.meta.url),__dirname=__path.dirname(__filename);\" --log-override:commonjs-variable-in-esm=silent --outfile=dist/server.mjs",
+    "build:logFormatterConfig": "esbuild src/utils/logFormatterConfig.ts --bundle --minify --platform=node --format=cjs --legal-comments=none --log-override:commonjs-variable-in-esm=silent --outfile=dist/pino-pretty-config.cjs",
     "typecheck": "tsc --noEmit --tsBuildInfoFile $HOME/.cache/rating-tracker/backend.tsbuildinfo",
     "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/backend.eslintcache --cache-strategy content --max-warnings 0 --ext .ts src/ test/",
     "lint:fix": "yarn lint --fix"
