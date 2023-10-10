@@ -1752,7 +1752,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-openapi-validator", "npm:5.0.6"],\
             ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.1.1"],\
             ["fast-glob", "npm:3.3.1"],\
-            ["pino", "npm:8.15.7"],\
+            ["pino", "npm:8.16.0"],\
             ["pino-pretty", "npm:10.2.3"],\
             ["prettier", "npm:3.0.3"],\
             ["prisma", "npm:5.4.2"],\
@@ -8530,10 +8530,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pino", [\
-        ["npm:8.15.7", {\
-          "packageLocation": "./.yarn/cache/pino-npm-8.15.7-cf6cd15506-f66a75be09.zip/node_modules/pino/",\
+        ["npm:8.16.0", {\
+          "packageLocation": "./.yarn/cache/pino-npm-8.16.0-dd7f1f7050-c3af0d1d80.zip/node_modules/pino/",\
           "packageDependencies": [\
-            ["pino", "npm:8.15.7"],\
+            ["pino", "npm:8.16.0"],\
             ["atomic-sleep", "npm:1.0.0"],\
             ["fast-redact", "npm:3.3.0"],\
             ["on-exit-leak-free", "npm:2.1.0"],\
@@ -8543,7 +8543,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["quick-format-unescaped", "npm:4.0.4"],\
             ["real-require", "npm:0.2.0"],\
             ["safe-stable-stringify", "npm:2.4.3"],\
-            ["sonic-boom", "npm:3.3.0"],\
+            ["sonic-boom", "npm:3.7.0"],\
             ["thread-stream", "npm:2.4.0"]\
           ],\
           "linkType": "HARD"\
@@ -8577,7 +8577,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pump", "npm:3.0.0"],\
             ["readable-stream", "npm:4.4.2"],\
             ["secure-json-parse", "npm:2.7.0"],\
-            ["sonic-boom", "npm:3.3.0"],\
+            ["sonic-boom", "npm:3.7.0"],\
             ["strip-json-comments", "npm:3.1.1"]\
           ],\
           "linkType": "HARD"\
@@ -9675,10 +9675,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["sonic-boom", [\
-        ["npm:3.3.0", {\
-          "packageLocation": "./.yarn/cache/sonic-boom-npm-3.3.0-6a662502aa-4a290dd0f3.zip/node_modules/sonic-boom/",\
+        ["npm:3.7.0", {\
+          "packageLocation": "./.yarn/cache/sonic-boom-npm-3.7.0-c220d2f290-528f0f7f7e.zip/node_modules/sonic-boom/",\
           "packageDependencies": [\
-            ["sonic-boom", "npm:3.3.0"],\
+            ["sonic-boom", "npm:3.7.0"],\
             ["atomic-sleep", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
