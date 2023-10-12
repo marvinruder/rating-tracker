@@ -339,7 +339,8 @@ An environment with services for development purposes can quickly be created usi
 -   Run `yarn workspace @rating-tracker/backend prisma:migrate:deploy` to initialize the PostgreSQL database.
 -   Run `yarn dev:server` to start the backend server as well as the Vite frontend development server.
 
-NB: The `dev:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
+> [!NOTE]
+> The `dev:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
 
 Environment variables in development can easily be defined in an `.env` file:
 
@@ -377,7 +378,8 @@ A test environment with separate PostgreSQL and Redis instances can be created u
 -   Run `yarn workspace @rating-tracker/backend prisma:generate` to generate the Prisma client.
 -   Run `yarn test` to run all tests from all packages. Additionally, the packages’ `package.json` configurations contain a `test:watch` script to run tests in watch mode.
 
-NB: The `test:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
+> [!NOTE]
+> The `test:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
 
 ### Contribute
 
@@ -385,7 +387,10 @@ Contributions are welcome!
 
 ## Disclaimer
 
-This software is provided under the conditions of the [MIT License](/LICENSE). Use this tool at your own risk. Excessive data fetching from providers, publishing or selling the information obtained by fetching is not recommended. Your actions may have consequences… 🦋
+This software is provided under the conditions of the [MIT License](/LICENSE). 
+
+> [!IMPORTANT]
+> Use this tool at your own risk. Excessive data fetching from providers, publishing or selling the information obtained by fetching is not recommended. Your actions may have consequences… 🦋
 
 ## Authors
 
