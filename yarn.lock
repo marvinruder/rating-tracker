@@ -1279,7 +1279,7 @@ __metadata:
     chalk: 5.3.0
     concurrently: 8.2.1
     cookie-parser: 1.4.6
-    cron: 3.1.0
+    cron: 3.1.1
     date-fns: 2.30.0
     esbuild: 0.19.4
     eslint: 8.51.0
@@ -3502,13 +3502,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cron@npm:3.1.0":
-  version: 3.1.0
-  resolution: "cron@npm:3.1.0"
+"cron@npm:3.1.1":
+  version: 3.1.1
+  resolution: "cron@npm:3.1.1"
   dependencies:
     "@types/luxon": ~3.3.0
     luxon: ~3.3.0
-  checksum: aa3ab93d0f1ade6d24c117e3ecafc4b6d84c7f34228c0e9f348d9165bae421fb830bea91823fb5cb0288859a6eaaf12815ec94d0d4e6ccdbf74f4e8367c54c7d
+  checksum: 9826fec5936bc341a37258f6bd3027dae595e82f220d9981100b13f61d96465b685a2e87b353951037bbecbc82cf06f8b4cbff55456e531e40056048f8b7e7f9
   languageName: node
   linkType: hard
 
