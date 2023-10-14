@@ -1,18 +1,37 @@
-import {
-  fetchMarketScreenerEndpointPath,
-  fetchMorningstarEndpointPath,
-  fetchMSCIEndpointPath,
-  fetchRefinitivEndpointPath,
-  fetchSPEndpointPath,
-  fetchSustainalyticsEndpointPath,
-} from "@rating-tracker/commons";
-import axios, { AxiosError } from "axios";
+import { DataProvider, dataProviderEndpoints, dataProviderName } from "@rating-tracker/commons";
+import type { AxiosError, AxiosRequestConfig } from "axios";
+import axios from "axios";
 import * as cron from "cron";
 
 import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal";
 
 import APIError from "./APIError";
 import logger from "./logger";
+
+/**
+ * A record of options for each data provider.
+ */
+const dataProviderParams: Record<DataProvider, AxiosRequestConfig> = {
+  morningstar: {
+    params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+  },
+  marketScreener: {
+    params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+  },
+  msci: {
+    // Fetch data from MSCI with only two WebDrivers to avoid being rate-limited
+    params: { detach: "false", concurrency: 2 },
+  },
+  refinitiv: {
+    params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+  },
+  sp: {
+    params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+  },
+  sustainalytics: {
+    params: { detach: "false" },
+  },
+};
 
 /**
  * Creates Cron jobs for regular fetching from data providers.
@@ -25,106 +44,39 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
     autoFetchSchedule,
     () => {
       void (async (): Promise<void> => {
-        // Fetch data from MSCI with only two WebDrivers to avoid being banned
-        await axios
-          .post(`http://localhost:${process.env.PORT}/api${fetchMSCIEndpointPath}`, undefined, {
-            params: { detach: "false", concurrency: 2 },
-            headers: {
-              Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-            },
-          })
-          .catch(async (e: AxiosError<APIError>) => {
-            if (e.response?.data?.message) e.message = e.response.data.message;
-            logger.error({ prefix: "cron", err: e }, "An error occurred during the MSCI Cron Job");
-            await sendMessage(
-              SIGNAL_PREFIX_ERROR +
-                `An error occurred during the MSCI Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
-              "fetchError",
-            );
-          });
-        await axios
-          .post(`http://localhost:${process.env.PORT}/api${fetchRefinitivEndpointPath}`, undefined, {
-            params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
-            headers: {
-              Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-            },
-          })
-          .catch(async (e: AxiosError<APIError>) => {
-            if (e.response?.data?.message) e.message = e.response.data.message;
-            logger.error({ prefix: "cron", err: e }, "An error occurred during the Refinitiv Cron Job");
-            await sendMessage(
-              SIGNAL_PREFIX_ERROR +
-                `An error occurred during the Refinitiv Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
-              "fetchError",
-            );
-          });
-        await axios
-          .post(`http://localhost:${process.env.PORT}/api${fetchSPEndpointPath}`, undefined, {
-            params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
-            headers: {
-              Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-            },
-          })
-          .catch(async (e: AxiosError<APIError>) => {
-            if (e.response?.data?.message) e.message = e.response.data.message;
-            logger.error({ prefix: "cron", err: e }, "An error occurred during the S&P Cron Job");
-            await sendMessage(
-              SIGNAL_PREFIX_ERROR +
-                `An error occurred during the S&P Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
-              "fetchError",
-            );
-          });
-        await axios
-          .post(`http://localhost:${process.env.PORT}/api${fetchSustainalyticsEndpointPath}`, undefined, {
-            params: { detach: "false" },
-            headers: {
-              Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-            },
-          })
-          .catch(async (e: AxiosError<APIError>) => {
-            if (e.response?.data?.message) e.message = e.response.data.message;
-            logger.error({ prefix: "cron", err: e }, "An error occurred during the Sustainalytics Cron Job");
-            await sendMessage(
-              SIGNAL_PREFIX_ERROR +
-                `An error occurred during the Sustainalytics Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
-              "fetchError",
-            );
-          });
-        // Fetch data from Morningstar first
-        await axios
-          .post(`http://localhost:${process.env.PORT}/api${fetchMorningstarEndpointPath}`, undefined, {
-            params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
-            headers: {
-              Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-            },
-          })
-          .catch(async (e: AxiosError<APIError>) => {
-            if (e.response?.data?.message) e.message = e.response.data.message;
-            logger.error({ prefix: "cron", err: e }, "An error occurred during the Morningstar Cron Job");
-            await sendMessage(
-              SIGNAL_PREFIX_ERROR +
-                `An error occurred during the Morningstar Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
-              "fetchError",
-            );
-          });
-        // Fetch data from Marketscreener after Morningstar, so Market Screener can use the up-to-date Last Close price
-        // to calculate the analyst target price properly
-        await axios
-          .post(`http://localhost:${process.env.PORT}/api${fetchMarketScreenerEndpointPath}`, undefined, {
-            params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
-            headers: {
-              Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-            },
-          })
-          .catch(async (e: AxiosError<APIError>) => {
-            if (e.response?.data?.message) e.message = e.response.data.message;
-            logger.error({ prefix: "cron", err: e }, "An error occurred during the MarketScreener Cron Job");
-            await sendMessage(
-              SIGNAL_PREFIX_ERROR +
-                `An error occurred during the MarketScreener Cron Job: ${String(e.message).split(/[\n:{]/)[0]}`,
-              "fetchError",
-            );
-          });
+        for await (const dataProvider of [
+          "msci",
+          "refinitiv",
+          "sp",
+          "sustainalytics",
+          // Fetch data from Morningstar first
+          "morningstar",
+          // Fetch data from Marketscreener after Morningstar, so Market Screener can use the up-to-date Last Close
+          // price to calculate the analyst target price properly
+          "marketScreener",
+        ]) {
+          await axios
+            .post(`http://localhost:${process.env.PORT}/api${dataProviderEndpoints[dataProvider]}`, undefined, {
+              ...dataProviderParams[dataProvider],
+              headers: {
+                Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+              },
+            })
+            .catch(async (e: AxiosError<APIError>) => {
+              if (e.response?.data?.message) e.message = e.response.data.message;
+              logger.error(
+                { prefix: "cron", err: e },
+                `An error occurred during the ${dataProviderName[dataProvider]} Cron Job`,
+              );
+              await sendMessage(
+                SIGNAL_PREFIX_ERROR +
+                  `An error occurred during the ${dataProviderName[dataProvider]} Cron Job: ${
+                    String(e.message).split(/[\n:{]/)[0]
+                  }`,
+                "fetchError",
+              );
+            });
+        }
       })();
     },
     null,

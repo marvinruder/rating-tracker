@@ -31,6 +31,8 @@ export * from "./lib/stylebox/Style";
 
 export * from "./lib/Currency";
 
+export * from "./lib/DataProvider";
+
 export * from "./lib/ErrorMessages";
 
 export * from "./lib/MessageType";
