@@ -1,5 +1,8 @@
-// This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import {
+  DataProvider,
+  dataProviderID,
+  dataProviderLastFetch,
+  dataProviderName,
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
   fetchMSCIEndpointPath,
@@ -41,12 +44,28 @@ export type FetcherWorkspace<T> = {
 };
 
 /**
+ * The function a single fetcher thread uses to fetch data from a data provider.
+ */
+export const fetcherFunction: Record<
+  Exclude<DataProvider, "sustainalytics">,
+  (req: Request, stocks: FetcherWorkspace<Stock>) => Promise<void>
+> = {
+  morningstar: morningstarFetcher,
+  marketScreener: marketScreenerFetcher,
+  msci: msciFetcher,
+  refinitiv: refinitivFetcher,
+  sp: spFetcher,
+};
+
+/**
  * Creates an object containing the aggregated results of the fetch for logging.
  *
  * @param {FetcherWorkspace<unknown>} stocks The fetcher workspace.
  * @returns {object} An object containing the aggregated results of the fetch.
  */
-const countFetchResults = (stocks: FetcherWorkspace<unknown>): object =>
+const countFetchResults = (
+  stocks: FetcherWorkspace<unknown>,
+): Partial<Record<keyof FetcherWorkspace<unknown>, number>> =>
   Object.entries(stocks).reduce(
     (obj, [key, value]) => (value.length ? Object.assign(obj, { [key]: value.length }) : obj),
     {},
@@ -79,6 +98,99 @@ const determineConcurrency = (req: Request): number => {
 };
 
 /**
+ * Fetches data from a data provider.
+ *
+ * @param {Request} req Request object
+ * @param {Response} res Response object
+ * @param {DataProvider} dataProvider The data provider to fetch from
+ * @throws an {@link APIError} in case of a severe error
+ */
+const fetchFromDataProvider = async (req: Request, res: Response, dataProvider: DataProvider): Promise<void> => {
+  let stockList: Stock[];
+
+  if (req.query.ticker) {
+    // A single stock is requested.
+    const ticker = req.query.ticker;
+    if (typeof ticker === "string") {
+      stockList = [await readStock(ticker)];
+      if (!stockList[0][dataProviderID[dataProvider]]) {
+        // If the only stock to use does not have an ID for the data provider, we throw an error.
+        throw new APIError(404, `Stock ${ticker} does not have a ${dataProviderID[dataProvider]}.`);
+      }
+    }
+  } else {
+    // When no specific stock is requested, we fetch all stocks from the database which have an ID for the data provider
+    [stockList] = await readAllStocks({
+      where: {
+        [dataProviderID[dataProvider]]: {
+          not: null,
+        },
+      },
+      orderBy: {
+        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+        [dataProviderLastFetch[dataProvider]]: "asc",
+      },
+    });
+  }
+
+  if (stockList.length === 0) {
+    // If no stocks are left, we return a 204 No Content response.
+    res.status(204).end();
+    return;
+  }
+  if (req.query.detach) {
+    // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
+    res.status(202).end();
+  }
+
+  const stocks: FetcherWorkspace<Stock> = {
+    successful: [],
+    failed: [],
+    skipped: [],
+    queued: [...stockList],
+  };
+
+  logger.info(
+    { prefix: "selenium" },
+    `Fetching ${stocks.queued.length} stocks from ${dataProviderName[dataProvider]}.`,
+  );
+  const rejectedResult = (
+    await Promise.allSettled(
+      [...Array(determineConcurrency(req))].map(() => fetcherFunction[dataProvider](req, stocks)),
+    )
+  ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
+  logger.info(
+    { prefix: "selenium", fetchCounts: countFetchResults(stocks) },
+    `Done fetching stocks from ${dataProviderName[dataProvider]}.`,
+  );
+
+  // If stocks are still queued, something went wrong and we send an error response.
+  if (stocks.queued.length) {
+    // If fetchers threw an error, we rethrow the first one
+    throw (
+      rejectedResult?.reason ??
+      new APIError(
+        500,
+        `${dataProviderName[dataProvider]} fetchers exited with stocks ${stocks.queued
+          .map((stock) => stock.ticker)
+          .join(", ")} still queued.`,
+      )
+    );
+  }
+
+  // If this request was for a single stock and an error occurred, we rethrow that error
+  if (req.query.ticker && rejectedResult) {
+    throw rejectedResult.reason;
+  }
+
+  if (!stocks.successful.length) {
+    res.status(204).end();
+  } else {
+    res.status(200).json(stocks.successful).end();
+  }
+};
+
+/**
  * This class is responsible for fetching data from external data providers.
  */
 export class FetchController {
@@ -95,83 +207,7 @@ export class FetchController {
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchMorningstarData(req: Request, res: Response) {
-    let stockList: Stock[];
-
-    if (req.query.ticker) {
-      // A single stock is requested.
-      const ticker = req.query.ticker;
-      if (typeof ticker === "string") {
-        stockList = [await readStock(ticker)];
-        if (!stockList[0].morningstarID) {
-          // If the only stock to use does not have a Morningstar ID, we throw an error.
-          throw new APIError(404, `Stock ${ticker} does not have a Morningstar ID.`);
-        }
-      }
-    } else {
-      // When no specific stock is requested, we fetch all stocks from the database which have a Morningstar ID.
-      [stockList] = await readAllStocks({
-        where: {
-          morningstarID: {
-            not: null,
-          },
-        },
-        orderBy: {
-          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-          morningstarLastFetch: "asc",
-        },
-      });
-    }
-
-    if (stockList.length === 0) {
-      // If no stocks are left, we return a 204 No Content response.
-      res.status(204).end();
-      return;
-    }
-    if (req.query.detach) {
-      // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.status(202).end();
-    }
-
-    const stocks: FetcherWorkspace<Stock> = {
-      successful: [],
-      failed: [],
-      skipped: [],
-      queued: [...stockList],
-    };
-
-    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from Morningstar.`);
-    const rejectedResult = (
-      await Promise.allSettled([...Array(determineConcurrency(req))].map(() => morningstarFetcher(req, stocks)))
-    ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(
-      { prefix: "selenium", fetchCounts: countFetchResults(stocks) },
-      "Done fetching stocks from Morningstar.",
-    );
-
-    // If stocks are still queued, something went wrong and we send an error response.
-    if (stocks.queued.length) {
-      // If fetchers threw an error, we rethrow the first one
-      throw (
-        rejectedResult?.reason ??
-        new APIError(
-          500,
-          `Morningstar fetchers exited with stocks ${stocks.queued
-            .map((stock) => stock.ticker)
-            .join(", ")} still queued.`,
-        )
-      );
-    }
-
-    // If this request was for a single stock and an error occurred, we rethrow that error
-    if (req.query.ticker && rejectedResult) {
-      throw rejectedResult.reason;
-    }
-
-    if (!stocks.successful.length) {
-      res.status(204).end();
-    } else {
-      res.status(200).json(stocks.successful).end();
-    }
+    await fetchFromDataProvider(req, res, "morningstar");
   }
 
   /**
@@ -187,83 +223,7 @@ export class FetchController {
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchMarketScreenerData(req: Request, res: Response) {
-    let stockList: Stock[];
-
-    if (req.query.ticker) {
-      // A single stock is requested.
-      const ticker = req.query.ticker;
-      if (typeof ticker === "string") {
-        stockList = [await readStock(ticker)];
-        if (!stockList[0].marketScreenerID) {
-          // If the only stock to use does not have a MarketScreener ID, we throw an error.
-          throw new APIError(404, `Stock ${ticker} does not have a MarketScreener ID.`);
-        }
-      }
-    } else {
-      // When no specific stock is requested, we fetch all stocks from the database which have a Market Screener ID.
-      [stockList] = await readAllStocks({
-        where: {
-          marketScreenerID: {
-            not: null,
-          },
-        },
-        orderBy: {
-          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-          marketScreenerLastFetch: "asc",
-        },
-      });
-    }
-
-    if (stockList.length === 0) {
-      // If no stocks are left, we return a 204 No Content response.
-      res.status(204).end();
-      return;
-    }
-    if (req.query.detach) {
-      // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.status(202).end();
-    }
-
-    const stocks: FetcherWorkspace<Stock> = {
-      successful: [],
-      failed: [],
-      skipped: [],
-      queued: [...stockList],
-    };
-
-    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from MarketScreener.`);
-    const rejectedResult = (
-      await Promise.allSettled([...Array(determineConcurrency(req))].map(() => marketScreenerFetcher(req, stocks)))
-    ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info(
-      { prefix: "selenium", fetchCounts: countFetchResults(stocks) },
-      "Done fetching stocks from MarketScreener.",
-    );
-
-    // If stocks are still queued, something went wrong and we send an error response.
-    if (stocks.queued.length) {
-      // If fetchers threw an error, we rethrow the first one
-      throw (
-        rejectedResult?.reason ??
-        new APIError(
-          500,
-          `MarketScreener fetchers exited with stocks ${stocks.queued
-            .map((stock) => stock.ticker)
-            .join(", ")} still queued.`,
-        )
-      );
-    }
-
-    // If this request was for a single stock and an error occurred, we rethrow that error
-    if (req.query.ticker && rejectedResult) {
-      throw rejectedResult.reason;
-    }
-
-    if (!stocks.successful.length) {
-      res.status(204).end();
-    } else {
-      res.status(200).json(stocks.successful).end();
-    }
+    await fetchFromDataProvider(req, res, "marketScreener");
   }
 
   /**
@@ -279,78 +239,7 @@ export class FetchController {
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchMSCIData(req: Request, res: Response) {
-    let stockList: Stock[];
-
-    if (req.query.ticker) {
-      // A single stock is requested.
-      const ticker = req.query.ticker;
-      if (typeof ticker === "string") {
-        stockList = [await readStock(ticker)];
-        if (!stockList[0].msciID) {
-          // If the only stock to use does not have an MSCI ID, we throw an error.
-          throw new APIError(404, `Stock ${ticker} does not have an MSCI ID.`);
-        }
-      }
-    } else {
-      // When no specific stock is requested, we fetch all stocks from the database which have an MSCI ID.
-      [stockList] = await readAllStocks({
-        where: {
-          msciID: {
-            not: null,
-          },
-        },
-        orderBy: {
-          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-          msciLastFetch: "asc",
-        },
-      });
-    }
-
-    if (stockList.length === 0) {
-      // If no stocks are left, we return a 204 No Content response.
-      res.status(204).end();
-      return;
-    }
-    if (req.query.detach) {
-      // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.status(202).end();
-    }
-
-    const stocks: FetcherWorkspace<Stock> = {
-      successful: [],
-      failed: [],
-      skipped: [],
-      queued: [...stockList],
-    };
-
-    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from MSCI.`);
-    const rejectedResult = (
-      await Promise.allSettled([...Array(determineConcurrency(req))].map(() => msciFetcher(req, stocks)))
-    ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info({ prefix: "selenium", fetchCounts: countFetchResults(stocks) }, "Done fetching stocks from MSCI.");
-
-    // If stocks are still queued, something went wrong and we send an error response.
-    if (stocks.queued.length) {
-      // If fetchers threw an error, we rethrow the first one
-      throw (
-        rejectedResult?.reason ??
-        new APIError(
-          500,
-          `MSCI fetchers exited with stocks ${stocks.queued.map((stock) => stock.ticker).join(", ")} still queued.`,
-        )
-      );
-    }
-
-    // If this request was for a single stock and an error occurred, we rethrow that error
-    if (req.query.ticker && rejectedResult) {
-      throw rejectedResult.reason;
-    }
-
-    if (!stocks.successful.length) {
-      res.status(204).end();
-    } else {
-      res.status(200).json(stocks.successful);
-    }
+    await fetchFromDataProvider(req, res, "msci");
   }
 
   /**
@@ -366,80 +255,7 @@ export class FetchController {
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchRefinitivData(req: Request, res: Response) {
-    let stockList: Stock[];
-
-    if (req.query.ticker) {
-      // A single stock is requested.
-      const ticker = req.query.ticker;
-      if (typeof ticker === "string") {
-        stockList = [await readStock(ticker)];
-        if (!stockList[0].ric) {
-          // If the only stock to use does not have a RIC, we throw an error.
-          throw new APIError(404, `Stock ${ticker} does not have a RIC.`);
-        }
-      }
-    } else {
-      // When no specific stock is requested, we fetch all stocks from the database which have a RIC.
-      [stockList] = await readAllStocks({
-        where: {
-          ric: {
-            not: null,
-          },
-        },
-        orderBy: {
-          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-          refinitivLastFetch: "asc",
-        },
-      });
-    }
-
-    if (stockList.length === 0) {
-      // If no stocks are left, we return a 204 No Content response.
-      res.status(204).end();
-      return;
-    }
-    if (req.query.detach) {
-      // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.status(202).end();
-    }
-
-    const stocks: FetcherWorkspace<Stock> = {
-      successful: [],
-      failed: [],
-      skipped: [],
-      queued: [...stockList],
-    };
-
-    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from Refinitiv.`);
-    const rejectedResult = (
-      await Promise.allSettled([...Array(determineConcurrency(req))].map(() => refinitivFetcher(req, stocks)))
-    ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info({ prefix: "selenium", fetchCounts: countFetchResults(stocks) }, "Done fetching stocks from Refinitiv.");
-
-    // If stocks are still queued, something went wrong and we send an error response.
-    if (stocks.queued.length) {
-      // If fetchers threw an error, we rethrow the first one
-      throw (
-        rejectedResult?.reason ??
-        new APIError(
-          500,
-          `Refinitiv fetchers exited with stocks ${stocks.queued
-            .map((stock) => stock.ticker)
-            .join(", ")} still queued.`,
-        )
-      );
-    }
-
-    // If this request was for a single stock and an error occurred, we rethrow that error
-    if (req.query.ticker && rejectedResult) {
-      throw rejectedResult.reason;
-    }
-
-    if (!stocks.successful.length) {
-      res.status(204).end();
-    } else {
-      res.status(200).json(stocks.successful).end();
-    }
+    await fetchFromDataProvider(req, res, "refinitiv");
   }
 
   /**
@@ -455,78 +271,7 @@ export class FetchController {
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async fetchSPData(req: Request, res: Response) {
-    let stockList: Stock[];
-
-    if (req.query.ticker) {
-      // A single stock is requested.
-      const ticker = req.query.ticker;
-      if (typeof ticker === "string") {
-        stockList = [await readStock(ticker)];
-        if (!stockList[0].spID) {
-          // If the only stock to use does not have an S&P ID, we throw an error.
-          throw new APIError(404, `Stock ${ticker} does not have an S&P ID.`);
-        }
-      }
-    } else {
-      // When no specific stock is requested, we fetch all stocks from the database which have a Standard & Poor’s ID.
-      [stockList] = await readAllStocks({
-        where: {
-          spID: {
-            not: null,
-          },
-        },
-        orderBy: {
-          // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-          spLastFetch: "asc",
-        },
-      });
-    }
-
-    if (stockList.length === 0) {
-      // If no stocks are left, we return a 204 No Content response.
-      res.status(204).end();
-      return;
-    }
-    if (req.query.detach) {
-      // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.status(202).end();
-    }
-
-    const stocks: FetcherWorkspace<Stock> = {
-      successful: [],
-      failed: [],
-      skipped: [],
-      queued: [...stockList],
-    };
-
-    logger.info({ prefix: "selenium" }, `Fetching ${stocks.queued.length} stocks from S&P.`);
-    const rejectedResult = (
-      await Promise.allSettled([...Array(determineConcurrency(req))].map(() => spFetcher(req, stocks)))
-    ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-    logger.info({ prefix: "selenium", fetchCounts: countFetchResults(stocks) }, "Done fetching stocks from S&P.");
-
-    // If stocks are still queued, something went wrong and we send an error response.
-    if (stocks.queued.length) {
-      // If fetchers threw an error, we rethrow the first one
-      throw (
-        rejectedResult?.reason ??
-        new APIError(
-          500,
-          `S&P fetchers exited with stocks ${stocks.queued.map((stock) => stock.ticker).join(", ")} still queued.`,
-        )
-      );
-    }
-
-    // If this request was for a single stock and an error occurred, we rethrow that error
-    if (req.query.ticker && rejectedResult) {
-      throw rejectedResult.reason;
-    }
-
-    if (!stocks.successful.length) {
-      res.status(204).end();
-    } else {
-      res.status(200).json(stocks.successful).end();
-    }
+    await fetchFromDataProvider(req, res, "sp");
   }
 
   /**

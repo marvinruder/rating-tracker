@@ -143,7 +143,7 @@ RUN \
   /app/public/api-docs/
 
 
-FROM eclipse-temurin:17.0.8_7-jre as codacy
+FROM eclipse-temurin:21-jre-alpine as codacy
 
 # Download and extract Codacy coverage reporter
 RUN \

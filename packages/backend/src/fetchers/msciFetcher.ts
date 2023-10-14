@@ -1,4 +1,3 @@
-// This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { MSCIESGRating, Stock, isMSCIESGRating } from "@rating-tracker/commons";
 import { formatDistance } from "date-fns";
 import { Request } from "express";

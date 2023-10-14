@@ -1,4 +1,3 @@
-// This class is not tested because it is not possible to use it without a running Selenium WebDriver.
 import { Stock } from "@rating-tracker/commons";
 import axios, { AxiosError } from "axios";
 import { formatDistance } from "date-fns";

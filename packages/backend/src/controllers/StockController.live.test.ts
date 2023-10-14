@@ -11,6 +11,7 @@ import {
   styleArray,
   watchlistSummaryEndpointPath,
 } from "@rating-tracker/commons";
+import type { Response } from "supertest";
 
 import {
   LiveTestSuite,
@@ -25,6 +26,21 @@ import { sentMessages } from "../signal/__mocks__/signalBase";
 export const suiteName = "Stock API";
 
 export const tests: LiveTestSuite = [];
+
+/**
+ * Checks a response for the presence of stocks of the given name in the specified order.
+ *
+ * @param {Response} res The response to check.
+ * @param {string[]} stockNames The names of the stocks to check for.
+ */
+const expectStocksToBePresent = (res: Response, stockNames: string[]) => {
+  expect(res.status).toBe(200);
+  expect(res.body.count).toBe(stockNames.length);
+  expect(res.body.stocks).toHaveLength(stockNames.length);
+  stockNames.forEach((stockName, index) => {
+    expect(res.body.stocks[index].name).toMatch(stockName);
+  });
+};
 
 tests.push({
   testName: "returns a list of stocks",
@@ -64,247 +80,194 @@ tests.push({
 tests.push({
   testName: "filters and sorts stock list – example 1",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?size=Large&style=Growth&sortBy=name&sortDesc=true`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(5);
-    expect(res.body.stocks).toHaveLength(5);
-    expect(res.body.stocks[0].name).toMatch("Ørsted A/S");
-    expect(res.body.stocks[1].name).toMatch("Taiwan Semiconductor Manufacturing Co Ltd");
-    expect(res.body.stocks[2].name).toMatch("Novo Nordisk");
-    expect(res.body.stocks[3].name).toMatch("MercadoLibre");
-    expect(res.body.stocks[4].name).toMatch("Apple");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?size=Large&style=Growth&sortBy=name&sortDesc=true`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Ørsted A/S", "Taiwan Semiconductor Manufacturing Co Ltd", "Novo Nordisk", "MercadoLibre", "Apple"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 2",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?country=US&sortBy=size`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(2);
-    expect(res.body.stocks).toHaveLength(2);
-    expect(res.body.stocks[0].name).toMatch("Newmont");
-    expect(res.body.stocks[1].name).toMatch("Apple");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?country=US&sortBy=size`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Newmont", "Apple"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 3",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?country=US&sortBy=style&sortDesc=true`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(2);
-    expect(res.body.stocks).toHaveLength(2);
-    expect(res.body.stocks[0].name).toMatch("Apple");
-    expect(res.body.stocks[1].name).toMatch("Newmont");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?country=US&sortBy=style&sortDesc=true`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Apple", "Newmont"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 4",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?industry=Semiconductors&name=Semiconductor`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(1);
-    expect(res.body.stocks).toHaveLength(1);
-    expect(res.body.stocks[0].ticker).toMatch("TSM");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?industry=Semiconductors&name=Semiconductor`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Taiwan Semiconductor Manufacturing Co Ltd"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 5",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?starRatingMin=3&starRatingMax=4&sortBy=name`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(4);
-    expect(res.body.stocks).toHaveLength(4);
-    expect(res.body.stocks[0].name).toMatch("Allianz");
-    expect(res.body.stocks[1].name).toMatch("Danone");
-    expect(res.body.stocks[2].name).toMatch("Iberdrola");
-    expect(res.body.stocks[3].name).toMatch("MercadoLibre");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?starRatingMin=3&starRatingMax=4&sortBy=name`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Allianz", "Danone", "Iberdrola", "MercadoLibre"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 6",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?dividendYieldPercentMin=1.5&dividendYieldPercentMax=5&sortBy=name`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(5);
-    expect(res.body.stocks).toHaveLength(5);
-    expect(res.body.stocks[0].name).toMatch("Danone");
-    expect(res.body.stocks[1].name).toMatch("Iberdrola");
-    expect(res.body.stocks[2].name).toMatch("Newmont");
-    expect(res.body.stocks[3].name).toMatch("Taiwan Semiconductor");
-    expect(res.body.stocks[4].name).toMatch("Ørsted");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?dividendYieldPercentMin=1.5&dividendYieldPercentMax=5&sortBy=name`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Danone", "Iberdrola", "Newmont", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 7",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?priceEarningRatioMin=10&priceEarningRatioMax=20&sortBy=name`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(4);
-    expect(res.body.stocks).toHaveLength(4);
-    expect(res.body.stocks[0].name).toMatch("Allianz");
-    expect(res.body.stocks[1].name).toMatch("Iberdrola");
-    expect(res.body.stocks[2].name).toMatch("Taiwan Semiconductor");
-    expect(res.body.stocks[3].name).toMatch("Ørsted");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?priceEarningRatioMin=10&priceEarningRatioMax=20&sortBy=name`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Allianz", "Iberdrola", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 8",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(7);
-    expect(res.body.stocks).toHaveLength(7);
-    expect(res.body.stocks[0].name).toMatch("Allianz");
-    expect(res.body.stocks[1].name).toMatch("Apple");
-    expect(res.body.stocks[2].name).toMatch("Danone");
-    expect(res.body.stocks[3].name).toMatch("Iberdrola");
-    expect(res.body.stocks[4].name).toMatch("MercadoLibre");
-    expect(res.body.stocks[5].name).toMatch("Newmont");
-    expect(res.body.stocks[6].name).toMatch("Ørsted");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Allianz", "Apple", "Danone", "Iberdrola", "MercadoLibre", "Newmont", "Ørsted A/S"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 9",
   testFunction: async () => {
-    const res = await supertest
-      .get(
-        `/api${stockListEndpointPath}?analystConsensusMin=7&analystConsensusMax=8.5` +
-          "&analystCountMin=20&analystCountMax=40&sortBy=name",
-      )
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(4);
-    expect(res.body.stocks).toHaveLength(4);
-    expect(res.body.stocks[0].name).toMatch("Iberdrola");
-    expect(res.body.stocks[1].name).toMatch("MercadoLibre");
-    expect(res.body.stocks[2].name).toMatch("Novo Nordisk");
-    expect(res.body.stocks[3].name).toMatch("Ørsted");
+    expectStocksToBePresent(
+      await supertest
+        .get(
+          `/api${stockListEndpointPath}?analystConsensusMin=7&analystConsensusMax=8.5` +
+            "&analystCountMin=20&analystCountMax=40&sortBy=name",
+        )
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Iberdrola", "MercadoLibre", "Novo Nordisk", "Ørsted A/S"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 10",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?analystTargetDiffMin=-20&analystTargetDiffMax=10&sortBy=name`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(5);
-    expect(res.body.stocks).toHaveLength(5);
-    expect(res.body.stocks[0].name).toMatch("Allianz");
-    expect(res.body.stocks[1].name).toMatch("Danone");
-    expect(res.body.stocks[2].name).toMatch("Iberdrola");
-    expect(res.body.stocks[3].name).toMatch("Newmont");
-    expect(res.body.stocks[4].name).toMatch("Novo Nordisk");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?analystTargetDiffMin=-20&analystTargetDiffMax=10&sortBy=name`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Allianz", "Danone", "Iberdrola", "Newmont", "Novo Nordisk"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 11",
   testFunction: async () => {
-    const res = await supertest
-      .get(`/api${stockListEndpointPath}?msciESGRatingMin=AA&msciESGRatingMax=A&sortBy=name`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(3);
-    expect(res.body.stocks).toHaveLength(3);
-    expect(res.body.stocks[0].name).toMatch("Allianz");
-    expect(res.body.stocks[1].name).toMatch("MercadoLibre");
-    expect(res.body.stocks[2].name).toMatch("Newmont");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?msciESGRatingMin=AA&msciESGRatingMax=A&sortBy=name`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Allianz", "MercadoLibre", "Newmont"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 12",
   testFunction: async () => {
-    const res = await supertest
-      .get(
-        `/api${stockListEndpointPath}?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name`,
-      )
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(3);
-    expect(res.body.stocks).toHaveLength(3);
-    expect(res.body.stocks[0].name).toMatch("Iberdrola");
-    expect(res.body.stocks[1].name).toMatch("Taiwan Semiconductor");
-    expect(res.body.stocks[2].name).toMatch("Ørsted");
+    expectStocksToBePresent(
+      await supertest
+        .get(
+          `/api${stockListEndpointPath}?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name`,
+        )
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Iberdrola", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 13",
   testFunction: async () => {
-    const res = await supertest
-      .get(
-        `/api${stockListEndpointPath}?refinitivESGScoreMin=70&refinitivESGScoreMax=80&` +
-          "refinitivEmissionsMin=80&refinitivEmissionsMax=90&sortBy=name",
-      )
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(1);
-    expect(res.body.stocks).toHaveLength(1);
-    expect(res.body.stocks[0].name).toMatch("Ørsted");
+    expectStocksToBePresent(
+      await supertest
+        .get(
+          `/api${stockListEndpointPath}?refinitivESGScoreMin=70&refinitivESGScoreMax=80&` +
+            "refinitivEmissionsMin=80&refinitivEmissionsMax=90&sortBy=name",
+        )
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Ørsted A/S"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 14",
   testFunction: async () => {
-    const res = await supertest
-      .get(
-        `/api${stockListEndpointPath}?spESGScoreMin=50&spESGScoreMax=85` +
-          "&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name",
-      )
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(2);
-    expect(res.body.stocks).toHaveLength(2);
-    expect(res.body.stocks[0].name).toMatch("Newmont");
-    expect(res.body.stocks[1].name).toMatch("Novo Nordisk");
+    expectStocksToBePresent(
+      await supertest
+        .get(
+          `/api${stockListEndpointPath}?spESGScoreMin=50&spESGScoreMax=85` +
+            "&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name",
+        )
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Newmont", "Novo Nordisk"],
+    );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 15",
   testFunction: async () => {
-    const res = await supertest
-      .get(
-        `/api${stockListEndpointPath}?financialScoreMin=0&financialScoreMax=50&esgScoreMin=40&esgScoreMax=60` +
-          "&sortBy=name",
-      )
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(2);
-    expect(res.body.stocks).toHaveLength(2);
-    expect(res.body.stocks[0].name).toMatch("Danone");
-    expect(res.body.stocks[1].name).toMatch("Newmont");
+    expectStocksToBePresent(
+      await supertest
+        .get(
+          `/api${stockListEndpointPath}?financialScoreMin=0&financialScoreMax=50&esgScoreMin=40&esgScoreMax=60` +
+            "&sortBy=name",
+        )
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Danone", "Newmont"],
+    );
   },
 });
 
@@ -332,14 +295,12 @@ tests.push({
     expect(res.status).toBe(200);
     const { id } = res.body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites");
 
-    res = await supertest
-      .get(`/api${stockListEndpointPath}?watchlist=${id}&sortBy=name`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.body.count).toBe(2);
-    expect(res.body.stocks.length).toBe(2);
-    expect(res.body.stocks[0].name).toBe("Novo Nordisk A/S");
-    expect(res.body.stocks[1].name).toBe("Ørsted A/S");
+    expectStocksToBePresent(
+      await supertest
+        .get(`/api${stockListEndpointPath}?watchlist=${id}&sortBy=name`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Novo Nordisk A/S", "Ørsted A/S"],
+    );
 
     // Attempting to read a list of a different user returns an error
     res = await supertest
