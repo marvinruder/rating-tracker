@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
+import { WebDriver } from "selenium-webdriver";
 
 import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable";
 import marketScreenerFetcher from "../fetchers/marketScreenerFetcher";
@@ -30,6 +31,7 @@ import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import APIError from "../utils/APIError";
 import logger from "../utils/logger";
 import Router from "../utils/router";
+import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver";
 
 const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings" as const;
 
@@ -43,13 +45,18 @@ export type FetcherWorkspace<T> = {
   failed: T[];
 };
 
+export type Fetcher = (req: Request, stocks: FetcherWorkspace<Stock>, stock: Stock) => Promise<boolean>;
+export type SeleniumFetcher = (
+  req: Request,
+  stocks: FetcherWorkspace<Stock>,
+  stock: Stock,
+  driver: WebDriver,
+) => Promise<boolean>;
+
 /**
- * The function a single fetcher thread uses to fetch data from a data provider.
+ * A record of functions that extract data from a data provider.
  */
-export const fetcherFunction: Record<
-  Exclude<DataProvider, "sustainalytics">,
-  (req: Request, stocks: FetcherWorkspace<Stock>) => Promise<void>
-> = {
+export const dataProviderFetchers: Partial<Record<DataProvider, Fetcher | SeleniumFetcher>> = {
   morningstar: morningstarFetcher,
   marketScreener: marketScreenerFetcher,
   msci: msciFetcher,
@@ -156,7 +163,96 @@ const fetchFromDataProvider = async (req: Request, res: Response, dataProvider: 
   );
   const rejectedResult = (
     await Promise.allSettled(
-      [...Array(determineConcurrency(req))].map(() => fetcherFunction[dataProvider](req, stocks)),
+      [...Array(determineConcurrency(req))].map(async () => {
+        // Acquire a new session
+        let driver: WebDriver;
+        let sessionID: string;
+        if (["morningstar", "marketScreener", "msci", "sp"].includes(dataProvider)) {
+          driver = await getDriver(true);
+          sessionID = (await driver.getSession()).getId();
+        }
+
+        // Work while stocks are in the queue
+        while (stocks.queued.length) {
+          // Get the first stock in the queue
+          const stock = stocks.queued.shift();
+          if (!stock) {
+            // If the queue got empty in the meantime, we end.
+            break;
+          }
+          if (
+            !req.query.noSkip &&
+            stock[dataProviderLastFetch[dataProvider]] &&
+            // We only fetch stocks that have not been fetched in the last 12 hours.
+            new Date().getTime() - stock[dataProviderLastFetch[dataProvider]].getTime() < 1000 * 60 * 60 * 12
+          ) {
+            logger.info(
+              { prefix: "selenium" },
+              `Stock ${stock.ticker}: Skipping ${
+                dataProviderName[dataProvider]
+              } fetch since last successful fetch was ${formatDistance(
+                stock[dataProviderLastFetch[dataProvider]].getTime(),
+                new Date().getTime(),
+                { addSuffix: true },
+              )}`,
+            );
+            stocks.skipped.push(stock);
+            continue;
+          }
+
+          try {
+            if (!(await dataProviderFetchers[dataProvider](req, stocks, stock, driver))) break;
+          } catch (e) {
+            stocks.failed.push(stock);
+            if (req.query.ticker) {
+              // If the request was for a single stock, we shut down the driver and throw an error.
+              driver && (await quitDriver(driver, sessionID));
+              throw new APIError(
+                502,
+                `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data: ${
+                  String(e.message).split(/[\n:{]/)[0]
+                }`,
+              );
+            }
+            logger.error(
+              { prefix: "selenium", err: e },
+              `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data`,
+            );
+            await signal.sendMessage(
+              SIGNAL_PREFIX_ERROR +
+                `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data: ${
+                  String(e.message).split(/[\n:{]/)[0]
+                }\n${await takeScreenshot(driver, stock, dataProvider)}`,
+              "fetchError",
+            );
+          }
+          if (stocks.failed.length >= 10) {
+            // If we have 10 errors, we stop fetching data, since something is probably wrong.
+            if (stocks.queued.length) {
+              // No other fetcher did this before
+              logger.error(
+                { prefix: "selenium" },
+                `Aborting fetching information from ${dataProviderName[dataProvider]} after ` +
+                  `${stocks.successful.length} successful fetches and ${stocks.failed.length} failures. ` +
+                  "Will continue next time.",
+              );
+              await signal.sendMessage(
+                SIGNAL_PREFIX_ERROR +
+                  `Aborting fetching information from ${dataProviderName[dataProvider]} after ` +
+                  `${stocks.successful.length} successful fetches and ${stocks.failed.length} failures. ` +
+                  "Will continue next time.",
+                "fetchError",
+              );
+              const skippedStocks = [...stocks.queued];
+              stocks.queued.length = 0;
+              skippedStocks.forEach((skippedStock) => stocks.skipped.push(skippedStock));
+            }
+            break;
+          }
+        }
+        // The queue is now empty, we end the session.
+        driver && (await quitDriver(driver, sessionID));
+      }),
     )
   ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
   logger.info(
