@@ -1,5 +1,5 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
-import { Stock, resourceEndpointPath } from "@rating-tracker/commons";
+import { DataProvider, Stock, resourceEndpointPath } from "@rating-tracker/commons";
 import axios, { AxiosError } from "axios";
 import { Builder, Capabilities, WebDriver, until } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome";
@@ -117,10 +117,10 @@ export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise
  *
  * @param {WebDriver} driver the WebDriver instance in use
  * @param {Stock} stock the affected stock
- * @param {string} dataProvider the name of the data provider
+ * @param {DataProvider} dataProvider the name of the data provider
  * @returns {Promise<string>} A string holding a general informational message and a URL to the screenshot
  */
-export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvider: string): Promise<string> => {
+export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvider: DataProvider): Promise<string> => {
   const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.png`;
   try {
     const screenshot = await driver.takeScreenshot();
