@@ -1813,7 +1813,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitejs/plugin-react", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:4.1.0"],\
             ["@vitest/coverage-v8", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:0.34.6"],\
             ["@vitest/web-worker", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:0.34.6"],\
-            ["apexcharts", "npm:3.43.0"],\
+            ["apexcharts", "npm:3.44.0"],\
             ["axios", "npm:1.5.1"],\
             ["clsx", "npm:2.0.0"],\
             ["date-fns", "npm:2.30.0"],\
@@ -3397,10 +3397,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["apexcharts", [\
-        ["npm:3.43.0", {\
-          "packageLocation": "./.yarn/cache/apexcharts-npm-3.43.0-210b94d9ec-cbe84fe494.zip/node_modules/apexcharts/",\
+        ["npm:3.44.0", {\
+          "packageLocation": "./.yarn/cache/apexcharts-npm-3.44.0-a30d1cbbdd-a41f310c17.zip/node_modules/apexcharts/",\
           "packageDependencies": [\
-            ["apexcharts", "npm:3.43.0"],\
+            ["apexcharts", "npm:3.44.0"],\
             ["@yr/monotone-cubic-spline", "npm:1.0.3"],\
             ["svg.draggable.js", "npm:2.2.2"],\
             ["svg.easing.js", "npm:2.0.0"],\
@@ -8915,7 +8915,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-apexcharts", "virtual:5918c49c8d06d8a25ffdeb8ca0f57443df156ae168d4e1b180c269ae093107415e86580100b8b5380a946a6a874c5bc2ea19e605316f3d049f68da213a57ed76#npm:1.4.1"],\
             ["@types/apexcharts", null],\
             ["@types/react", "npm:18.2.28"],\
-            ["apexcharts", "npm:3.43.0"],\
+            ["apexcharts", "npm:3.44.0"],\
             ["prop-types", "npm:15.8.1"],\
             ["react", "npm:18.2.0"]\
           ],\
