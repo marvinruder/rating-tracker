@@ -1728,7 +1728,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/express", "npm:4.17.20"],\
             ["@types/node", "npm:20.8.7"],\
             ["@types/selenium-webdriver", "npm:4.1.18"],\
-            ["@types/supertest", "npm:2.0.14"],\
+            ["@types/supertest", "npm:2.0.15"],\
             ["@types/swagger-ui-express", "npm:4.1.5"],\
             ["@typescript-eslint/eslint-plugin", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:6.8.0"],\
             ["@typescript-eslint/parser", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:6.8.0"],\
@@ -2629,10 +2629,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/supertest", [\
-        ["npm:2.0.14", {\
-          "packageLocation": "./.yarn/cache/@types-supertest-npm-2.0.14-c53201eddd-9f6850a22b.zip/node_modules/@types/supertest/",\
+        ["npm:2.0.15", {\
+          "packageLocation": "./.yarn/cache/@types-supertest-npm-2.0.15-3ef0b10014-89c1983662.zip/node_modules/@types/supertest/",\
           "packageDependencies": [\
-            ["@types/supertest", "npm:2.0.14"],\
+            ["@types/supertest", "npm:2.0.15"],\
             ["@types/superagent", "npm:4.1.18"]\
           ],\
           "linkType": "HARD"\
