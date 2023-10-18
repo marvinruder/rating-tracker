@@ -1724,7 +1724,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@prisma/client", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:5.4.2"],\
             ["@rating-tracker/commons", "workspace:packages/commons"],\
             ["@simplewebauthn/server", "npm:8.3.2"],\
-            ["@types/cookie-parser", "npm:1.4.4"],\
+            ["@types/cookie-parser", "npm:1.4.5"],\
             ["@types/express", "npm:4.17.20"],\
             ["@types/node", "npm:20.8.6"],\
             ["@types/selenium-webdriver", "npm:4.1.18"],\
@@ -2328,10 +2328,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/cookie-parser", [\
-        ["npm:1.4.4", {\
-          "packageLocation": "./.yarn/cache/@types-cookie-parser-npm-1.4.4-17217c3bbc-5c81ac4b7d.zip/node_modules/@types/cookie-parser/",\
+        ["npm:1.4.5", {\
+          "packageLocation": "./.yarn/cache/@types-cookie-parser-npm-1.4.5-f2ceab7219-4585572170.zip/node_modules/@types/cookie-parser/",\
           "packageDependencies": [\
-            ["@types/cookie-parser", "npm:1.4.4"],\
+            ["@types/cookie-parser", "npm:1.4.5"],\
             ["@types/express", "npm:4.17.20"]\
           ],\
           "linkType": "HARD"\
