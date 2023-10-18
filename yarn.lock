@@ -1270,7 +1270,7 @@ __metadata:
     "@types/node": 20.8.7
     "@types/selenium-webdriver": 4.1.18
     "@types/supertest": 2.0.14
-    "@types/swagger-ui-express": 4.1.4
+    "@types/swagger-ui-express": 4.1.5
     "@typescript-eslint/eslint-plugin": 6.8.0
     "@typescript-eslint/parser": 6.8.0
     "@vitest/coverage-v8": 0.34.6
@@ -2019,13 +2019,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/swagger-ui-express@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@types/swagger-ui-express@npm:4.1.4"
+"@types/swagger-ui-express@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@types/swagger-ui-express@npm:4.1.5"
   dependencies:
     "@types/express": "*"
     "@types/serve-static": "*"
-  checksum: b3fd981bf95514da2fa113f56d4f04a32ebcc208ec51ba49e1350c52c90fb7bd3d6651f889b1c12d0264f3ddd745e6fca29664c55882b3fb8740452c2c7ffbca
+  checksum: 80242b3e30fce44388a274304ea36fc8492fb031fc2721657b71a6d95cb6e2da79b26c9a47c8a39a29f74c208a2a1051047c9828246658809a70bb84acdbb23c
   languageName: node
   linkType: hard
 

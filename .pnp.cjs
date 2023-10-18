@@ -1729,7 +1729,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:20.8.7"],\
             ["@types/selenium-webdriver", "npm:4.1.18"],\
             ["@types/supertest", "npm:2.0.14"],\
-            ["@types/swagger-ui-express", "npm:4.1.4"],\
+            ["@types/swagger-ui-express", "npm:4.1.5"],\
             ["@typescript-eslint/eslint-plugin", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:6.8.0"],\
             ["@typescript-eslint/parser", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:6.8.0"],\
             ["@vitest/coverage-v8", "virtual:9e2d75c26d812ba07f2548643e31c2f0eb2cb6f6eca268f33f7e7f2f00bc9a60e5174f4187df59beb0c43929d43a06842c0155865f0f7f541c96499f2ed6aada#npm:0.34.6"],\
@@ -2639,10 +2639,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/swagger-ui-express", [\
-        ["npm:4.1.4", {\
-          "packageLocation": "./.yarn/cache/@types-swagger-ui-express-npm-4.1.4-35b9963eed-b3fd981bf9.zip/node_modules/@types/swagger-ui-express/",\
+        ["npm:4.1.5", {\
+          "packageLocation": "./.yarn/cache/@types-swagger-ui-express-npm-4.1.5-5f4a82478d-80242b3e30.zip/node_modules/@types/swagger-ui-express/",\
           "packageDependencies": [\
-            ["@types/swagger-ui-express", "npm:4.1.4"],\
+            ["@types/swagger-ui-express", "npm:4.1.5"],\
             ["@types/express", "npm:4.17.20"],\
             ["@types/serve-static", "npm:1.15.2"]\
           ],\
