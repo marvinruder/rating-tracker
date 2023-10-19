@@ -48,7 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["concurrently", "npm:8.2.1"],\
+            ["concurrently", "npm:8.2.2"],\
             ["eslint", "npm:8.51.0"],\
             ["prettier", "npm:3.0.3"],\
             ["typescript", "patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
@@ -1736,7 +1736,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "npm:3.1.6"],\
             ["axios", "npm:1.5.1"],\
             ["chalk", "npm:5.3.0"],\
-            ["concurrently", "npm:8.2.1"],\
+            ["concurrently", "npm:8.2.2"],\
             ["cookie-parser", "npm:1.4.6"],\
             ["cron", "npm:3.1.1"],\
             ["date-fns", "npm:2.30.0"],\
@@ -1852,7 +1852,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@rating-tracker/monorepo", "workspace:."],\
-            ["concurrently", "npm:8.2.1"],\
+            ["concurrently", "npm:8.2.2"],\
             ["eslint", "npm:8.51.0"],\
             ["prettier", "npm:3.0.3"],\
             ["typescript", "patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
@@ -4279,10 +4279,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["concurrently", [\
-        ["npm:8.2.1", {\
-          "packageLocation": "./.yarn/cache/concurrently-npm-8.2.1-2922c29e4d-216cb16d5b.zip/node_modules/concurrently/",\
+        ["npm:8.2.2", {\
+          "packageLocation": "./.yarn/cache/concurrently-npm-8.2.2-8ae42f052b-8ac774df06.zip/node_modules/concurrently/",\
           "packageDependencies": [\
-            ["concurrently", "npm:8.2.1"],\
+            ["concurrently", "npm:8.2.2"],\
             ["chalk", "npm:4.1.2"],\
             ["date-fns", "npm:2.30.0"],\
             ["lodash", "npm:4.17.21"],\
