@@ -1,4 +1,4 @@
 FROM scratch
 COPY --from=rust:1.73.0-alpine /etc/os-release /etc/os-release-rust
 COPY --from=alpine:3.18.4 /etc/os-release /etc/os-release-alpine
-COPY --from=node:20.8.1-alpine /etc/os-release /etc/os-release-node
+COPY --from=node:21.0.0-alpine /etc/os-release /etc/os-release-node
