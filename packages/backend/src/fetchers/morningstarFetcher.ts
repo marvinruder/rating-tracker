@@ -12,13 +12,13 @@ import {
 import { Request } from "express";
 import { By, WebDriver, until } from "selenium-webdriver";
 
-import type { SeleniumFetcher } from "../controllers/FetchController";
-import { FetcherWorkspace } from "../controllers/FetchController";
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import logger from "../utils/logger";
-import { openPageAndWait, takeScreenshot } from "../utils/webdriver";
+import { openPageAndWait } from "../utils/webdriver";
+
+import { type SeleniumFetcher, type FetcherWorkspace, captureFetchError } from "./fetchHelper";
 
 const XPATH_INDUSTRY = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.." as const;
 const XPATH_SIZE_STYLE = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Stock Style')]/.." as const;
@@ -392,8 +392,8 @@ const morningstarFetcher: SeleniumFetcher = async (
   });
   if (errorMessage.includes("\n")) {
     // An error occurred if and only if the error message contains a newline character.
-    // We take a screenshot and send a message.
-    errorMessage += `\n${await takeScreenshot(driver, stock, "morningstar")}`;
+    // We capture the resource and send a message.
+    errorMessage += `\n${await captureFetchError(stock, "morningstar", { driver })}`;
     await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
     stocks.failed.push(await readStock(stock.ticker));
   } else {

@@ -26,8 +26,19 @@ export class ResourceController {
     // Use the file extension to determine the type of the resource
     switch (resourceID.split(".").pop().toUpperCase()) {
       case "PNG":
-        const resource = await readResource(resourceID);
-        res.setHeader("content-type", "image/png").status(200).send(Buffer.from(resource.content, "base64")).end();
+        const pngResource = await readResource(resourceID);
+        // deepcode ignore XSS: parameter is sanitized by OpenAPI validator
+        res.setHeader("content-type", "image/png").status(200).send(Buffer.from(pngResource.content, "base64")).end();
+        break;
+      case "HTML":
+        const htmlResource = await readResource(resourceID);
+        // deepcode ignore XSS: parameter is sanitized by OpenAPI validator
+        res.setHeader("content-type", "text/html; charset=utf-8").status(200).send(htmlResource.content).end();
+        break;
+      case "JSON":
+        const jsonResource = await readResource(resourceID);
+        // deepcode ignore XSS: parameter is sanitized by OpenAPI validator
+        res.setHeader("content-type", "application/json; charset=utf-8").status(200).send(jsonResource.content).end();
         break;
       default:
         throw new APIError(501, "Resources of this type cannot be fetched using this API endpoint yet.");

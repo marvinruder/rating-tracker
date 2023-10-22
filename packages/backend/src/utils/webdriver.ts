@@ -1,5 +1,5 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
-import { DataProvider, Stock, resourceEndpointPath } from "@rating-tracker/commons";
+import { DataProvider, Stock } from "@rating-tracker/commons";
 import axios, { AxiosError } from "axios";
 import { Builder, Capabilities, WebDriver, until } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome";
@@ -118,7 +118,7 @@ export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise
  * @param {WebDriver} driver the WebDriver instance in use
  * @param {Stock} stock the affected stock
  * @param {DataProvider} dataProvider the name of the data provider
- * @returns {Promise<string>} A string holding a general informational message and a URL to the screenshot
+ * @returns {Promise<string>} A string holding the ID of the screenshot resource.
  */
 export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvider: DataProvider): Promise<string> => {
   const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.png`;
@@ -130,12 +130,9 @@ export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvid
         fetchDate: new Date(),
         content: screenshot, // base64-encoded PNG image
       },
-      60 * 60 * 24, // We only store the screenshot for 24 hours.
+      60 * 60 * 48, // We only store the screenshot for 48 hours.
     );
-    return `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
-      process.env.DOMAIN
-      // Ensure the user is logged in before accessing the resource API endpoint.
-    }/login?redirect=${encodeURIComponent(`/api${resourceEndpointPath}/${screenshotID}`)}.`;
+    return screenshotID;
   } catch (e) {
     logger.warn({ prefix: "selenium", err: e }, `Unable to take screenshot “${screenshotID}”`);
     return "";
