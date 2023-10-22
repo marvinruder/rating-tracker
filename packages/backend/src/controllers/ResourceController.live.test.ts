@@ -31,7 +31,7 @@ tests.push({
     expect(res.header["content-type"]).toMatch("text/html");
     expect(
       new DOMParser().parseFromString(res.text, res.header["content-type"]).getElementById("hello").textContent,
-    ).toMatch("Hello World!");
+    ).toBe("Hello World!");
   },
 });
 
@@ -44,7 +44,7 @@ tests.push({
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.header["content-type"]).toMatch("application/json");
-    expect(res.body.foo).toMatch("bar");
+    expect(res.body.foo).toBe("bar");
   },
 });
 
