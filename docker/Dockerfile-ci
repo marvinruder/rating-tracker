@@ -55,6 +55,7 @@ RUN \
   --mount=type=bind,source=packages/commons/package.json,target=packages/commons/package.json \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
   --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
+  corepack enable && \
   yarn --immutable
 
 # Generate Prisma client
@@ -76,10 +77,12 @@ WORKDIR /workdir
 RUN \
   --mount=type=bind,target=.,rw \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --mount=type=bind,from=yarn,source=/usr/local/lib/node_modules/corepack,target=/usr/local/lib/node_modules/corepack \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/cache/yarn,target=cache/yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  corepack enable && \
   mkdir -p /root/.cache && \
   cp -ar ./cache/rating-tracker /root/.cache && \
   yarn validate
@@ -98,10 +101,12 @@ WORKDIR /workdir
 RUN \
   --mount=type=bind,target=.,rw \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --mount=type=bind,from=yarn,source=/usr/local/lib/node_modules/corepack,target=/usr/local/lib/node_modules/corepack \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/cache/yarn,target=cache/yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  corepack enable && \
   yarn test && \
   mkdir -p /coverage && \
   mv packages/backend/coverage /coverage/backend && \
@@ -120,10 +125,12 @@ WORKDIR /workdir
 RUN \
   --mount=type=bind,target=.,rw \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --mount=type=bind,from=yarn,source=/usr/local/lib/node_modules/corepack,target=/usr/local/lib/node_modules/corepack \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/cache/yarn,target=cache/yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  corepack enable && \
   # Bundle frontend and backend
   yarn build && \
   # Create CommonJS module containing log formatter configuration
