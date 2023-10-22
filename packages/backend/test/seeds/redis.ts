@@ -10,6 +10,14 @@ const applyResourceSeed = async (): Promise<void> => {
     content: "U2FtcGxlIFBORyBpbWFnZQ==",
     fetchDate: new Date(),
   });
+  await resourceRepository.save("page.html", {
+    content: '<html><body><p id="hello">Hello World!</p></body></html>',
+    fetchDate: new Date(),
+  });
+  await resourceRepository.save("data.json", {
+    content: '{"foo": "bar"}',
+    fetchDate: new Date(),
+  });
 };
 
 /**
