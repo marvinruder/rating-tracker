@@ -29,8 +29,9 @@ tests.push({
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.header["content-type"]).toMatch("text/html");
-    const document = new DOMParser().parseFromString(res.text, res.header["content-type"]);
-    expect(document.getElementById("hello").textContent).toMatch("Hello World!");
+    expect(
+      new DOMParser().parseFromString(res.text, res.header["content-type"]).getElementById("hello").textContent,
+    ).toMatch("Hello World!");
   },
 });
 
