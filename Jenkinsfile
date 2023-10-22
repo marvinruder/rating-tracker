@@ -68,7 +68,7 @@ node('rating-tracker-build') {
                         stage ('Install dependencies') {
                             // Change config files for use in CI, copy global cache to workspace and install dependencies
                             sh """
-                            echo \"globalFolder: /workdir/cache/yarn/global\npreferAggregateCacheInfo: true\nenableGlobalCache: true\" >> .yarnrc.yml
+                            echo \"globalFolder: /workdir/cache/yarn/global\" >> .yarnrc.yml
                             mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
                             cp -arn \$HOME/.cache/yarn/global ./cache/yarn || :
                             cp -ar \$HOME/.cache/rating-tracker ./cache || :
