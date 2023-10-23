@@ -230,9 +230,11 @@ The port bindings are optional but helpful to connect to the services from the h
 
 Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. Although not officially recommended, a quick, easy and fairly safe way to initialize a new database with the required tables, constraints and indexes is to 
 
-1.  Clone the repository and run `yarn` from within the [`packages/backend`](/packages/backend) folder.
-2.  Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
-3.  Run `yarn pnpify prisma migrate deploy`.
+1.  Clone the repository.
+2.  Run `corepack enable` to have Corepack fetch and symlink the desired version of the `yarn` package manager.
+3.  Run `yarn` from within the [`packages/backend`](/packages/backend) folder.
+4.  Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
+5.  Run `yarn pnpify prisma migrate deploy`.
 
 <!-- <div id="create-redis-user-and-password"></div> -->
 
@@ -333,6 +335,7 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 
 An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](/packages/backend/dev) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
+-   Run `corepack enable` to have Corepack fetch and symlink the desired version of the `yarn` package manager.
 -   Run `yarn build:wasm` to build the WebAssembly utilities and create the `wasm` package. This requires [Rust](https://www.rust-lang.org) and [wasm-pack](https://rustwasm.github.io/wasm-pack/) to be installed.
 -   Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis, Selenium and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
 -   Run `yarn workspace @rating-tracker/backend prisma:generate` to generate the Prisma client.
@@ -373,6 +376,7 @@ LOG_LEVEL=trace
 
 A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](/packages/backend/test) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
+-   Run `corepack enable` to have Corepack fetch and symlink the desired version of the `yarn` package manager.
 -   Run `yarn build:wasm` to build the WebAssembly utilities and create the `wasm` package. This requires [Rust](https://www.rust-lang.org) and [wasm-pack](https://rustwasm.github.io/wasm-pack/) to be installed.
 -   Run `yarn test:tools` to start PostgreSQL and Redis.
 -   Run `yarn workspace @rating-tracker/backend prisma:generate` to generate the Prisma client.
