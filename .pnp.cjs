@@ -1730,7 +1730,7 @@ const RAW_RUNTIME_STATE =
           ["express", "npm:4.18.2"],\
           ["express-async-errors", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:3.1.1"],\
           ["express-openapi-validator", "npm:5.0.6"],\
-          ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.1.1"],\
+          ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.1.2"],\
           ["fast-glob", "npm:3.3.1"],\
           ["pino", "npm:8.16.0"],\
           ["pino-pretty", "npm:10.2.3"],\
@@ -5627,17 +5627,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["express-rate-limit", [\
-      ["npm:7.1.1", {\
-        "packageLocation": "../../../../cache/others/berry/cache/express-rate-limit-npm-7.1.1-9ca46aa4fe-10.zip/node_modules/express-rate-limit/",\
+      ["npm:7.1.2", {\
+        "packageLocation": "../../../../cache/others/berry/cache/express-rate-limit-npm-7.1.2-0b67ea658e-10.zip/node_modules/express-rate-limit/",\
         "packageDependencies": [\
-          ["express-rate-limit", "npm:7.1.1"]\
+          ["express-rate-limit", "npm:7.1.2"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.1.1", {\
-        "packageLocation": "./.yarn/__virtual__/express-rate-limit-virtual-7ca59ad063/5/cache/others/berry/cache/express-rate-limit-npm-7.1.1-9ca46aa4fe-10.zip/node_modules/express-rate-limit/",\
+      ["virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.1.2", {\
+        "packageLocation": "./.yarn/__virtual__/express-rate-limit-virtual-f920907314/5/cache/others/berry/cache/express-rate-limit-npm-7.1.2-0b67ea658e-10.zip/node_modules/express-rate-limit/",\
         "packageDependencies": [\
-          ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.1.1"],\
+          ["express-rate-limit", "virtual:143f48b3b02030f94479b3a5988283313dc9859fa4cb6844b22a91f8f01b9f50780f19a990f97707ad409e89183b3679a8db4d101263b8caf9410c781cd5e728#npm:7.1.2"],\
           ["@types/express", "npm:4.17.20"],\
           ["express", "npm:4.18.2"]\
         ],\
