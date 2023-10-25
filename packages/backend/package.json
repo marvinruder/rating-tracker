@@ -32,7 +32,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@prisma/client": "5.5.1",
+    "@prisma/client": "5.5.2",
     "@rating-tracker/commons": "workspace:*",
     "@simplewebauthn/server": "8.3.2",
     "axios": "1.5.1",
@@ -74,7 +74,7 @@
     "eslint-plugin-jsdoc": "46.8.2",
     "eslint-plugin-prettier": "5.0.1",
     "prettier": "3.0.3",
-    "prisma": "5.5.1",
+    "prisma": "5.5.2",
     "supertest": "6.3.3",
     "typescript": "5.2.2",
     "vite": "4.5.0",
