@@ -1216,9 +1216,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@prisma/client@npm:5.5.0"
+"@prisma/client@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@prisma/client@npm:5.5.1"
   dependencies:
     "@prisma/engines-version": "npm:5.5.0-19.475c616176945d72f4330c92801f0c5e6398dc0f"
   peerDependencies:
@@ -1226,7 +1226,7 @@ __metadata:
   peerDependenciesMeta:
     prisma:
       optional: true
-  checksum: 77f5e9df7250cfc4d6cf7378bbd18bff9c0e05960824d28cb7bff31546a32ad77458db4b0df8ee48d788d1cbb599f2ec4c67266e4508cc90f15aee5c0720141a
+  checksum: 6f0874f2d0ca682499a9b270975455a2c071ab515c83fef0ecbfeb6ad32d30b19777b75474505e3e2f3e20e7974f6bc3a17ad34b680b3db50b8dbceb2268df36
   languageName: node
   linkType: hard
 
@@ -1237,10 +1237,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/engines@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@prisma/engines@npm:5.5.0"
-  checksum: 2315e83f02e0c28c8d9e6ea4dde2e60bc78424773f578122e14e8a0999d8a9a221def023baf2b95702f8e5507cf16134f70931d69603345c50021bf7514e2f96
+"@prisma/engines@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@prisma/engines@npm:5.5.1"
+  checksum: 7e216cc6f5d951f527a6c72d92edf603c36a2bd5550eabf272b71e88eafac7a1043156d7b3f24d9c743dc48695d03daadb321d8fe1323dc198463dc1dd36c569
   languageName: node
   linkType: hard
 
@@ -1248,7 +1248,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@rating-tracker/backend@workspace:packages/backend"
   dependencies:
-    "@prisma/client": "npm:5.5.0"
+    "@prisma/client": "npm:5.5.1"
     "@rating-tracker/commons": "workspace:*"
     "@simplewebauthn/server": "npm:8.3.2"
     "@types/cookie-parser": "npm:1.4.5"
@@ -1282,7 +1282,7 @@ __metadata:
     pino: "npm:8.16.1"
     pino-pretty: "npm:10.2.3"
     prettier: "npm:3.0.3"
-    prisma: "npm:5.5.0"
+    prisma: "npm:5.5.1"
     redis: "npm:4.6.10"
     redis-om: "npm:0.4.2"
     response-time: "npm:2.3.2"
@@ -7116,14 +7116,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:5.5.0":
-  version: 5.5.0
-  resolution: "prisma@npm:5.5.0"
+"prisma@npm:5.5.1":
+  version: 5.5.1
+  resolution: "prisma@npm:5.5.1"
   dependencies:
-    "@prisma/engines": "npm:5.5.0"
+    "@prisma/engines": "npm:5.5.1"
   bin:
     prisma: build/index.js
-  checksum: 20a7cd15c0bf7ba222dc600792f18aa8bcf7b580bda3a3de0b6925613a88a9f87511314a37c42b229e90e69c26a4ffd47eda33028869ae0c3e02517263c34c2a
+  checksum: 5bd873596fef1393969063104655054928d0114456a18429a979f0f26902604747727feb5a8e8bc9416c17c537fdb34c39b7346caa76d2f2357960b77be5c2c3
   languageName: node
   linkType: hard
 
