@@ -1250,7 +1250,7 @@ __metadata:
   dependencies:
     "@prisma/client": "npm:5.5.2"
     "@rating-tracker/commons": "workspace:*"
-    "@simplewebauthn/server": "npm:8.3.3"
+    "@simplewebauthn/server": "npm:8.3.4"
     "@types/cookie-parser": "npm:1.4.5"
     "@types/express": "npm:4.17.20"
     "@types/node": "npm:20.8.9"
@@ -1329,7 +1329,7 @@ __metadata:
     "@mui/material": "npm:5.14.15"
     "@rating-tracker/commons": "workspace:*"
     "@rating-tracker/wasm": "workspace:*"
-    "@simplewebauthn/browser": "npm:8.3.3"
+    "@simplewebauthn/browser": "npm:8.3.4"
     "@types/node": "npm:20.8.9"
     "@types/react": "npm:18.2.33"
     "@types/react-dom": "npm:18.2.14"
@@ -1476,18 +1476,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/browser@npm:8.3.3":
-  version: 8.3.3
-  resolution: "@simplewebauthn/browser@npm:8.3.3"
+"@simplewebauthn/browser@npm:8.3.4":
+  version: 8.3.4
+  resolution: "@simplewebauthn/browser@npm:8.3.4"
   dependencies:
-    "@simplewebauthn/typescript-types": "npm:^8.3.3"
-  checksum: 1a5aab2a2fdd843388841280270955e4769a9ba587f83e1ddc0367d6b1062d55040d6dc154855b78f692016d7e5655a79c17d79de0e3402c7580fa4dc65b8d6a
+    "@simplewebauthn/typescript-types": "npm:^8.3.4"
+  checksum: f6e9751d6cd3b518ac801953b3c3aff3b6e1bb1eb5e75800af4815c62810829924313736eb949fc38d8f4388a6e05055a07164802dc7a7aa0e053e3db278ccb5
   languageName: node
   linkType: hard
 
-"@simplewebauthn/server@npm:8.3.3":
-  version: 8.3.3
-  resolution: "@simplewebauthn/server@npm:8.3.3"
+"@simplewebauthn/server@npm:8.3.4":
+  version: 8.3.4
+  resolution: "@simplewebauthn/server@npm:8.3.4"
   dependencies:
     "@hexagon/base64": "npm:^1.1.27"
     "@peculiar/asn1-android": "npm:^2.3.6"
@@ -1495,17 +1495,17 @@ __metadata:
     "@peculiar/asn1-rsa": "npm:^2.3.6"
     "@peculiar/asn1-schema": "npm:^2.3.6"
     "@peculiar/asn1-x509": "npm:^2.3.6"
-    "@simplewebauthn/typescript-types": "npm:^8.3.3"
+    "@simplewebauthn/typescript-types": "npm:^8.3.4"
     cbor-x: "npm:^1.5.2"
     cross-fetch: "npm:^4.0.0"
-  checksum: b5cc8b40a1dee022b597dc2ea3989d2a8e91e121d1514675627a35d16f1e271f6c458220df46337d6767c721029b692e24ed23bc081d8a33ad7f070571ade1b1
+  checksum: b53766b1d47509a544fabb441afce56e03eb49a861314372ea15ff6cbd6ac699e12809b68d3ca00c09635d790a5529b4f88834781a060c1701a2f7a41804f1d4
   languageName: node
   linkType: hard
 
-"@simplewebauthn/typescript-types@npm:^8.3.3":
-  version: 8.3.3
-  resolution: "@simplewebauthn/typescript-types@npm:8.3.3"
-  checksum: 61296093044724cd599b60e8f819be895427f1166bbe8ec531ed24eb49d2534a2e31ff065f372925b67633319510dfe5c0b63afea4a6ea7a5a184ec86f24ef84
+"@simplewebauthn/typescript-types@npm:^8.3.4":
+  version: 8.3.4
+  resolution: "@simplewebauthn/typescript-types@npm:8.3.4"
+  checksum: 2f225938126ba2575e77bbbba7af1ce620983160dfab1ab29b17087d3d2a72dbb83a05acc08b9f588d48bfa955ae1c34453cc3df71409ce29e6b8ab420f611a8
   languageName: node
   linkType: hard
 
