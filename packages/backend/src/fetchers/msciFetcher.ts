@@ -58,12 +58,12 @@ const msciFetcher: SeleniumFetcher = async (
       throw new TypeError(`Extracted MSCI ESG Rating “${msciESGRatingString}” is no valid MSCI ESG Rating.`);
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`);
     if (stock.msciESGRating !== null) {
       // If an MSCI ESG Rating is already stored in the database, but we cannot extract it from the page, we log
       // this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of MSCI ESG Rating failed unexpectedly. ` +
           "This incident will be reported.",
       );
@@ -85,12 +85,12 @@ const msciFetcher: SeleniumFetcher = async (
     }
     msciTemperature = +msciTemperatureMatches[0];
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`);
     if (stock.msciTemperature !== null) {
       // If an MSCI Implied Temperature Rise is already stored in the database, but we cannot extract it from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of MSCI Implied Temperature Rise failed unexpectedly. ` +
           "This incident will be reported.",
       );

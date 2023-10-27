@@ -165,7 +165,7 @@ export class FetchController {
         // We try to read the cached Sustainalytics data first.
         sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
         logger.info(
-          { prefix: "selenium" },
+          { prefix: "fetch" },
           `Using cached Sustainalytics data because last fetch was ${formatDistance(
             sustainalyticsXMLResource.fetchDate,
             new Date().getTime(),
@@ -254,12 +254,12 @@ export class FetchController {
             e,
           );
         }
-        logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`);
+        logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`);
         if (stock.sustainalyticsESGRisk !== null) {
           // If a Sustainalytics ESG Risk is already stored in the database, but we cannot extract it from the page, we
           // log this as an error and send a message.
           logger.error(
-            { prefix: "selenium", err: e },
+            { prefix: "fetch", err: e },
             `Stock ${stock.ticker}: Extraction of Sustainalytics ESG Risk failed unexpectedly. ` +
               "This incident will be reported.",
           );
@@ -278,7 +278,7 @@ export class FetchController {
       if (errorCount >= 10) {
         // If we have 10 errors, we stop extracting data, since something is probably wrong.
         logger.error(
-          { prefix: "selenium" },
+          { prefix: "fetch" },
           `Aborting extracting information from Sustainalytics after ${successfulCount} successful extractions ` +
             `and ${errorCount} failures. Will continue next time.`,
         );

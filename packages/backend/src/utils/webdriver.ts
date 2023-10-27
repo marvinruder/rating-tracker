@@ -81,7 +81,7 @@ export const openPageAndWait = async (driver: WebDriver, url: string): Promise<b
     await driver.wait(until.urlIs(url), 5000);
     return true;
   } catch (e) {
-    logger.error({ prefix: "selenium", err: e }, `Unable to fetch from page ${url} (driver may be unhealthy)`);
+    logger.error({ prefix: "fetch", err: e }, `Unable to fetch from page ${url} (driver may be unhealthy)`);
     return false;
   }
 };
@@ -99,12 +99,12 @@ export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise
   try {
     await driver.quit();
   } catch (e) {
-    logger.error({ prefix: "selenium", err: e }, "Unable to shut down Selenium WebDriver gracefully");
+    logger.error({ prefix: "fetch", err: e }, "Unable to shut down Selenium WebDriver gracefully");
     if (sessionID) {
-      logger.info({ prefix: "selenium" }, `Attempting forceful shutdown of stale session ${sessionID}.`);
+      logger.info({ prefix: "fetch" }, `Attempting forceful shutdown of stale session ${sessionID}.`);
       axios.delete(`${process.env.SELENIUM_URL}/session/${sessionID}`).catch((e) => {
         logger.error(
-          { prefix: "selenium", err: e },
+          { prefix: "fetch", err: e },
           `An error occurred while forcefully terminating session ${sessionID}`,
         );
       });
@@ -134,7 +134,7 @@ export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvid
     );
     return screenshotID;
   } catch (e) {
-    logger.warn({ prefix: "selenium", err: e }, `Unable to take screenshot “${screenshotID}”`);
+    logger.warn({ prefix: "fetch", err: e }, `Unable to take screenshot “${screenshotID}”`);
     return "";
   }
 };

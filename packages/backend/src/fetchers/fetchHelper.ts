@@ -176,18 +176,18 @@ const determineConcurrency = (req: Request): number => {
   let concurrency: number = Number(req.query.concurrency ?? 1);
   if (Number.isNaN(concurrency) || !Number.isSafeInteger(concurrency) || concurrency < 1) {
     logger.warn(
-      { prefix: "selenium" },
+      { prefix: "fetch" },
       `Invalid concurrency “${req.query.concurrency}” requested – using 1 fetcher only.`,
     );
     concurrency = 1;
   }
-  if (concurrency > Number(process.env.SELENIUM_MAX_CONCURRENCY)) {
+  if (concurrency > Number(process.env.MAX_FETCH_CONCURRENCY)) {
     logger.warn(
-      { prefix: "selenium" },
+      { prefix: "fetch" },
       `Desired concurrency “${concurrency}” is larger than the server allows – ` +
-        `using maximum value ${Number(process.env.SELENIUM_MAX_CONCURRENCY)} instead.`,
+        `using maximum value ${Number(process.env.MAX_FETCH_CONCURRENCY)} instead.`,
     );
-    concurrency = Number(process.env.SELENIUM_MAX_CONCURRENCY);
+    concurrency = Number(process.env.MAX_FETCH_CONCURRENCY);
   }
   return concurrency;
 };
@@ -245,10 +245,7 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
     queued: [...stockList],
   };
 
-  logger.info(
-    { prefix: "selenium" },
-    `Fetching ${stocks.queued.length} stocks from ${dataProviderName[dataProvider]}.`,
-  );
+  logger.info({ prefix: "fetch" }, `Fetching ${stocks.queued.length} stocks from ${dataProviderName[dataProvider]}.`);
   const rejectedResult = (
     await Promise.allSettled(
       [...Array(determineConcurrency(req))].map(async () => {
@@ -278,7 +275,7 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
               1000 * dataProviderTTL[dataProvider]
           ) {
             logger.info(
-              { prefix: "selenium" },
+              { prefix: "fetch" },
               `Stock ${stock.ticker}: Skipping ${
                 dataProviderName[dataProvider]
               } fetch since last successful fetch was ${formatDistance(
@@ -311,7 +308,7 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
               );
             }
             logger.error(
-              { prefix: "selenium", err: e },
+              { prefix: "fetch", err: e },
               `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data`,
             );
             await signal.sendMessage(
@@ -327,7 +324,7 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
             if (stocks.queued.length) {
               // No other fetcher did this before
               logger.error(
-                { prefix: "selenium" },
+                { prefix: "fetch" },
                 `Aborting fetching information from ${dataProviderName[dataProvider]} after ` +
                   `${stocks.successful.length} successful fetches and ${stocks.failed.length} failures. ` +
                   "Will continue next time.",
@@ -352,7 +349,7 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
     )
   ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
   logger.info(
-    { prefix: "selenium", fetchCounts: countFetchResults(stocks) },
+    { prefix: "fetch", fetchCounts: countFetchResults(stocks) },
     `Done fetching stocks from ${dataProviderName[dataProvider]}.`,
   );
 
@@ -397,7 +394,7 @@ export const getAndParseHTML = async (url: string, stock: Stock, dataProvider: D
       error: () => undefined,
       fatalError: (e) => {
         logger.warn(
-          { prefix: "selenium", err: e instanceof Error ? e : new FetchError(e) },
+          { prefix: "fetch", err: e instanceof Error ? e : new FetchError(e) },
           `Stock ${stock.ticker}: Error while parsing ${dataProviderName[dataProvider]} information: ${e}`,
         );
       },

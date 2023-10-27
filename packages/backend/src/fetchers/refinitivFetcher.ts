@@ -65,12 +65,12 @@ const refinitivFetcher: JSONFetcher = async (
     );
     refinitivESGScore = +json.esgScore["TR.TRESG"].score;
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`);
     if (stock.refinitivESGScore !== null) {
       // If a Refinitiv ESG Score is already stored in the database, but we cannot extract it from the page, we
       // log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of Refinitiv ESG Score failed unexpectedly. ` +
           "This incident will be reported.",
       );
@@ -89,12 +89,12 @@ const refinitivFetcher: JSONFetcher = async (
     );
     refinitivEmissions = +json.esgScore["TR.TRESGEmissions"].score;
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`);
     if (stock.refinitivEmissions !== null) {
       // If a Refinitiv Emissions Rating is already stored in the database, but we cannot extract it from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of Refinitiv Emissions failed unexpectedly. ` +
           "This incident will be reported.",
       );

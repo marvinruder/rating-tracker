@@ -82,7 +82,7 @@ const morningstarFetcher: HTMLFetcher = async (
         throw e; // Too many attempts failed, we throw the last error.
       }
       logger.warn(
-        { prefix: "selenium" },
+        { prefix: "fetch" },
         `Unable to load Morningstar page for ${stock.name} (${stock.ticker}). ` +
           `Will retry (attempt ${attempts} of ${MAX_RETRIES})`,
       );
@@ -107,12 +107,12 @@ const morningstarFetcher: HTMLFetcher = async (
       throw new TypeError(`Extracted industry “${industryString}” is no valid industry.`);
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract industry: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract industry: ${e}`);
     if (stock.industry !== null) {
       // If an industry for the stock is already stored in the database, but we cannot extract it now from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of industry failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract industry: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -140,12 +140,12 @@ const morningstarFetcher: HTMLFetcher = async (
       throw new TypeError(`Extracted style “${sizeAndStyle[1]}” is no valid style.`);
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract size and style: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract size and style: ${e}`);
     if (stock.size !== null || stock.style !== null) {
       // If size or style for the stock are already stored in the database, but we cannot extract them now from
       // the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of size and style failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract size and style: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -160,12 +160,12 @@ const morningstarFetcher: HTMLFetcher = async (
     }
     starRating = +starRatingString;
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract star rating: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract star rating: ${e}`);
     if (stock.starRating !== null) {
       // If a star rating for the stock is already stored in the database, but we cannot extract it now from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of star rating failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract star rating: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -184,12 +184,12 @@ const morningstarFetcher: HTMLFetcher = async (
       dividendYieldPercent = +dividendYieldPercentString;
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`);
     if (stock.dividendYieldPercent !== null) {
       // If a dividend yield for the stock is already stored in the database, but we cannot extract it now from
       // the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of dividend yield failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract dividend yield: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -208,12 +208,12 @@ const morningstarFetcher: HTMLFetcher = async (
       priceEarningRatio = +priceEarningRatioString;
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`);
     if (stock.priceEarningRatio !== null) {
       // If a price earning ratio for the stock is already stored in the database, but we cannot extract it now
       // from the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of price earning ratio failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract price earning ratio: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -230,12 +230,12 @@ const morningstarFetcher: HTMLFetcher = async (
       throw new TypeError(`Extracted currency code “${currencyString}” is no valid currency code.`);
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract currency: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract currency: ${e}`);
     if (stock.currency !== null) {
       // If a currency for the stock is already stored in the database, but we cannot extract it now from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of currency failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract currency: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -254,12 +254,12 @@ const morningstarFetcher: HTMLFetcher = async (
       lastClose = +lastCloseString;
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract last close: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract last close: ${e}`);
     if (stock.lastClose !== null) {
       // If a last close for the stock is already stored in the database, but we cannot extract it now from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of last close failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract last close: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -282,12 +282,12 @@ const morningstarFetcher: HTMLFetcher = async (
       morningstarFairValue = +morningstarFairValueString;
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`);
     if (stock.morningstarFairValue !== null) {
       // If a Morningstar Fair Value for the stock is already stored in the database, but we cannot extract it
       // now from the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of Morningstar Fair Value failed unexpectedly. ` +
           "This incident will be reported.",
       );
@@ -316,12 +316,12 @@ const morningstarFetcher: HTMLFetcher = async (
       }
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`);
     if (stock.marketCap !== null) {
       // If a market capitalization for the stock is already stored in the database, but we cannot extract it now
       // from the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of Market Capitalization failed unexpectedly. ` +
           "This incident will be reported.",
       );
@@ -352,12 +352,12 @@ const morningstarFetcher: HTMLFetcher = async (
       high52w = +range52wStrings[1];
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`);
     if (stock.low52w !== null || stock.high52w !== null) {
       // If a 52 week price range for the stock is already stored in the database, but we cannot extract it now
       // from the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of 52 week price range failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract 52 week price range: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -369,12 +369,12 @@ const morningstarFetcher: HTMLFetcher = async (
     assert(descriptionNode, "Unable to find Description node.");
     description = descriptionNode.textContent;
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract description: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract description: ${e}`);
     if (stock.description !== null) {
       // If a description for the stock is already stored in the database, but we cannot extract it now from
       // the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of description failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract description: ${String(e.message).split(/[\n:{]/)[0]}`;

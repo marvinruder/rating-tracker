@@ -13,23 +13,23 @@ import logger from "./logger";
  */
 const dataProviderParams: Record<DataProvider, AxiosRequestConfig> = {
   morningstar: {
-    params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+    params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   },
   marketScreener: {
-    params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+    params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   },
   msci: {
     // Fetch data from MSCI with only two WebDrivers to avoid being rate-limited
-    params: { detach: "false", concurrency: 2 },
+    params: { concurrency: 2 },
   },
   refinitiv: {
-    params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+    params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   },
   sp: {
-    params: { detach: "false", concurrency: process.env.SELENIUM_MAX_CONCURRENCY },
+    params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   },
   sustainalytics: {
-    params: { detach: "false" },
+    params: {},
   },
 };
 

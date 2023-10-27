@@ -29,7 +29,7 @@ Stocks and their information are presented in a paginated table which offers com
 
 #### Automatic and scheduled data fetching from several providers
 
-By providing identifiers for stocks from [Morningstar](https://www.morningstar.it/it/), [MarketScreener](https://www.marketscreener.com), [MSCI](https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool), [Refinitiv](https://www.refinitiv.com/en/sustainable-finance/esg-scores), [Standard & Poor’s](https://www.spglobal.com/esg/solutions/data-intelligence-esg-scores) and [Sustainalytics](https://www.sustainalytics.com/esg-ratings) in the “Add Stock” dialog, Rating Tracker can automatically fetch financial data as well as financial and ESG ratings. Information is fetched by a [Selenium](https://www.selenium.dev)-automated Chrome browser. The identifiers to use can be found in the provider’s URL for the stock as shown in the following examples:
+By providing identifiers for stocks from [Morningstar](https://www.morningstar.it/it/), [MarketScreener](https://www.marketscreener.com), [MSCI](https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool), [Refinitiv](https://www.refinitiv.com/en/sustainable-finance/esg-scores), [Standard & Poor’s](https://www.spglobal.com/esg/solutions/data-intelligence-esg-scores) and [Sustainalytics](https://www.sustainalytics.com/esg-ratings) in the “Add Stock” dialog, Rating Tracker can automatically fetch financial data as well as financial and ESG ratings. Information is fetched by a [Selenium](https://www.selenium.dev)-automated Chrome browser or using direct HTTP requests. The identifiers to use can be found in the provider’s URL for the stock as shown in the following examples:
 
 -   Morningstar: `https://tools.morningstar.it/it/stockreport/default.aspx?Site=it&id=`**`0P000000GY`**`&LanguageId=it-IT&SecurityToken=`**`0P000000GY`**`]3]0]E0WWE$$ALL`
 -   MarketScreener: `https://www.marketscreener.com/quote/stock/`**`APPLE-INC-4849`**
@@ -203,7 +203,7 @@ services:
       REDIS_USER: "rating-tracker"
       REDIS_PASS: "********"
       SELENIUM_URL: "http://selenium:4444"
-      SELENIUM_MAX_CONCURRENCY: 4 # must be ≤ SE_NODE_MAX_SESSIONS of Selenium container
+      MAX_FETCH_CONCURRENCY: 4 # must be ≤ SE_NODE_MAX_SESSIONS of Selenium container
       AUTO_FETCH_SCHEDULE: "0 0 0 * * *" # this format includes seconds
       SIGNAL_URL: "http://signal:8080"
       SIGNAL_SENDER: "+12345678900"
@@ -319,7 +319,7 @@ Variable | Example Value | Explanation
 `LOG_LEVEL` | `debug` | The level for the log output to `stdout`. Can be one of `fatal`, `error`, `warn`, `info`, `debug`, `trace`. If unset, `info` will be used. 
 `PLAIN_LOG` | `1` | If set to a truthy value, the log output to `stdout` will not be rendered with colors and icons.
 `AUTO_FETCH_SCHEDULE` | `0 30 2 * * *` | A Cron-like specification of a schedule for when to fetch all stocks from all providers. The format in use includes seconds, so the example value resolves to “every day at 2:30:00 AM”. If unset, no automatic fetching will happen.
-`SELENIUM_MAX_CONCURRENCY` | `4` | The number of Selenium WebDrivers used concurrently when fetching information for multiple stocks. The Selenium instance should be set up to allow for the creation of at least that many sessions, as done in [this configuration](#minimal-example-setup-using-docker-compose) using the environment variable `SE_NODE_MAX_SESSIONS`. If unset, no concurrent fetches will be performed.
+`MAX_FETCH_CONCURRENCY` | `4` | The number of fetcher instances used concurrently when fetching information for multiple stocks. When fetching from a data provider using Selenium, the Selenium instance should be set up to allow for the creation of at least that many sessions, as done in [this configuration](#minimal-example-setup-using-docker-compose) using the environment variable `SE_NODE_MAX_SESSIONS`. If unset, no concurrent fetches will be performed.
 `SIGNAL_URL` | `http://127.0.0.1:8080` | The URL of the Signal REST API. Can also use the Signal REST API service name (e.g. `signal` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file. If unset, no Signal notification messages will be sent.
 `SIGNAL_SENDER` | `+12345678900` | The phone number of the Signal account registered with the Signal CLI service, which will be used to send notification messages. Read more [here](#create-signal-account) on how to register a Signal account. If unset, no Signal notification messages will be sent.
 
@@ -355,7 +355,7 @@ Environment variables in development can easily be defined in an `.env` file:
 DATABASE_URL="postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker"
 REDIS_URL=redis://127.0.0.1:6379
 SELENIUM_URL=http://127.0.0.1:4444
-SELENIUM_MAX_CONCURRENCY=2
+MAX_FETCH_CONCURRENCY=2
 SIGNAL_URL=http://127.0.0.1:8080
 
 NODE_ENV=development

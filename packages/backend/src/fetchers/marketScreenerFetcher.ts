@@ -70,12 +70,12 @@ const marketScreenerFetcher: HTMLFetcher = async (
       }
       analystConsensus = +analystConsensusMatches[0];
     } catch (e) {
-      logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`);
+      logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Analyst Consensus: ${e}`);
       if (stock.analystConsensus !== null) {
         // If an analyst consensus is already stored in the database, but we cannot extract it from the page, we
         // log this as an error and send a message.
         logger.error(
-          { prefix: "selenium", err: e },
+          { prefix: "fetch", err: e },
 
           `Stock ${stock.ticker}: Extraction of analyst consensus failed unexpectedly. ` +
             "This incident will be reported.",
@@ -89,12 +89,12 @@ const marketScreenerFetcher: HTMLFetcher = async (
       assert(analystCountNode, "Unable to find Analyst Count node.");
       analystCount = +analystCountNode.textContent;
     } catch (e) {
-      logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`);
+      logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`);
       if (stock.analystCount !== null) {
         // If an analyst count is already stored in the database, but we cannot extract it from the page, we log
         // this as an error and send a message.
         logger.error(
-          { prefix: "selenium", err: e },
+          { prefix: "fetch", err: e },
 
           `Stock ${stock.ticker}: Extraction of analyst count failed unexpectedly. ` +
             "This incident will be reported.",
@@ -131,12 +131,12 @@ const marketScreenerFetcher: HTMLFetcher = async (
       }
       analystTargetPrice = stock.lastClose * (+analystTargetPriceMatches[0] / 100 + 1);
     } catch (e) {
-      logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`);
+      logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`);
       if (stock.analystTargetPrice !== null) {
         // If an analyst target price is already stored in the database, but we cannot extract it from the page,
         // we log this as an error and send a message.
         logger.error(
-          { prefix: "selenium", err: e },
+          { prefix: "fetch", err: e },
 
           `Stock ${stock.ticker}: Extraction of analyst target price failed unexpectedly. ` +
             "This incident will be reported.",
@@ -145,12 +145,12 @@ const marketScreenerFetcher: HTMLFetcher = async (
       }
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`);
     if (stock.analystConsensus !== null || stock.analystCount !== null || stock.analystTargetPrice !== null) {
       // If any of the analyst-related information is already stored in the database, but we cannot extract it
       // from the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. ` +
           "This incident will be reported.",
       );

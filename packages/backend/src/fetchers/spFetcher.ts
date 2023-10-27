@@ -49,14 +49,14 @@ const spFetcher: HTMLFetcher = async (
     }
     spESGScore = +document.getElementsByClassName("scoreModule__score")[0].textContent;
   } catch (e) {
-    logger.warn({ prefix: "selenium", err: e }, `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`);
+    logger.warn({ prefix: "fetch", err: e }, `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`);
     if (stock.spESGScore !== null || (req.query.ticker && e.message.includes(SP_PREMIUM_STOCK_ERROR_MESSAGE))) {
       // If an S&P ESG Score is already stored in the database, but we cannot extract it from the page, we log this
       // as an error and send a message.
       // To show the designated premium stock error message, we check if the request was for a single stock and the
       // error message contains the premium stock error message, and handle the error in the same way.
       logger.error(
-        { prefix: "selenium" },
+        { prefix: "fetch" },
         `Stock ${stock.ticker}: Extraction of S&P ESG Score failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract S&P ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`;
