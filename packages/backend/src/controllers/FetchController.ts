@@ -1,4 +1,5 @@
 import {
+  dataProviderTTL,
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
   fetchMSCIEndpointPath,
@@ -196,7 +197,7 @@ export class FetchController {
                 fetchDate: new Date(response.headers["date"]),
                 content: sustainalyticsXMLLines.join("\n"),
               },
-              60 * 60 * 24 * 7,
+              dataProviderTTL["sustainalytics"],
             );
             sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
           })
@@ -205,7 +206,7 @@ export class FetchController {
           });
       }
     } catch (e) {
-      throw new APIError(502, `Unable to fetch Sustainalytics information: ${String(e.message).split(/[\n:{]/)[0]}`);
+      throw new APIError(502, "Unable to fetch Sustainalytics information", e);
     }
 
     const sustainalyticsXMLLines = sustainalyticsXMLResource.content.split("\n");
@@ -249,7 +250,8 @@ export class FetchController {
           // If this request was for a single stock, we shut down the driver and throw an error.
           throw new APIError(
             (e as APIError).status ?? 500,
-            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${String(e.message).split(/[\n:{]/)[0]}`,
+            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk`,
+            e,
           );
         }
         logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`);

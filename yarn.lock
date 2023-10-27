@@ -1294,7 +1294,7 @@ __metadata:
     typescript: "npm:5.2.2"
     vite: "npm:4.5.0"
     vitest: "npm:0.34.6"
-    xpath: "npm:0.0.33"
+    xpath-ts2: "npm:1.4.2"
   languageName: unknown
   linkType: soft
 
@@ -9556,10 +9556,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"xpath@npm:0.0.33":
-  version: 0.0.33
-  resolution: "xpath@npm:0.0.33"
-  checksum: 09c539661cafc0d75bb48d13fee7ce6e7593d88f4387c401a3b15d46d543e81f46680be5c6ecf868c11f6090ee67ea78e0c327c4e0ffceb2969308a2d1e238bb
+"xpath-ts2@npm:1.4.2":
+  version: 1.4.2
+  resolution: "xpath-ts2@npm:1.4.2"
+  checksum: e1c9d1b151ca265485cd471bec8a14c0fb6ded4b5c0539e0a641b8e544d2510e594b5754f77a959b84ec2e81a5e5c5a9e6452228d7d3f46977b46b61b0cb4b16
   languageName: node
   linkType: hard
 

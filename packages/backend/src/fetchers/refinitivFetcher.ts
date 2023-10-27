@@ -8,6 +8,7 @@ import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import APIError from "../utils/APIError";
+import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
 
 import { type JSONFetcher, type FetcherWorkspace, captureFetchError } from "./fetchHelper";
@@ -110,6 +111,11 @@ const refinitivFetcher: JSONFetcher = async (
   if (errorMessage.includes("\n")) {
     // An error occurred if and only if the error message contains a newline character.
     errorMessage += `\n${await captureFetchError(stock, "refinitiv", { json })}`;
+    if (req.query.ticker) {
+      // If this request was for a single stock, we throw an error instead of sending a message, so that the error
+      // message will be part of the response.
+      throw new FetchError(errorMessage);
+    }
     await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
     stocks.failed.push(await readStock(stock.ticker));
   } else {

@@ -4,8 +4,11 @@ import {
   dataProviderID,
   dataProviderLastFetch,
   dataProviderName,
+  dataProviderTTL,
   resourceEndpointPath,
 } from "@rating-tracker/commons";
+import { DOMParser } from "@xmldom/xmldom";
+import axios from "axios";
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 import { WebDriver } from "selenium-webdriver";
@@ -57,9 +60,9 @@ export type SeleniumFetcher = (
   driver: WebDriver,
 ) => Promise<boolean>;
 
-const htmlDataProviders: readonly DataProvider[] = ["sp"] as const;
+const htmlDataProviders: readonly DataProvider[] = ["marketScreener", "sp"] as const;
 const jsonDataProviders: readonly DataProvider[] = ["refinitiv"] as const;
-const seleniumDataProviders: readonly DataProvider[] = ["morningstar", "marketScreener", "msci"] as const;
+const seleniumDataProviders: readonly DataProvider[] = ["morningstar", "msci"] as const;
 
 /**
  * An object holding the source of a fetcher. Only one of the properties is set.
@@ -248,12 +251,12 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
   const rejectedResult = (
     await Promise.allSettled(
       [...Array(determineConcurrency(req))].map(async () => {
-        // Acquire a new session
         let driver: WebDriver;
         let sessionID: string;
         let document: Document;
         let json: Object;
         if (seleniumDataProviders.includes(dataProvider)) {
+          // Acquire a new session
           driver = await getDriver(true);
           sessionID = (await driver.getSession()).getId();
         }
@@ -269,8 +272,9 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
           if (
             !req.query.noSkip &&
             stock[dataProviderLastFetch[dataProvider]] &&
-            // We only fetch stocks that have not been fetched in the last 12 hours.
-            new Date().getTime() - stock[dataProviderLastFetch[dataProvider]].getTime() < 1000 * 60 * 60 * 12
+            // We only fetch stocks that have not been fetched within the TTL of the data provider.
+            new Date().getTime() - stock[dataProviderLastFetch[dataProvider]].getTime() <
+              1000 * dataProviderTTL[dataProvider]
           ) {
             logger.info(
               { prefix: "selenium" },
@@ -301,9 +305,8 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
               driver && (await quitDriver(driver, sessionID));
               throw new APIError(
                 502,
-                `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data: ${
-                  String(e.message).split(/[\n:{]/)[0]
-                }`,
+                `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data`,
+                e,
               );
             }
             logger.error(
@@ -377,3 +380,33 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
     res.status(200).json(stocks.successful).end();
   }
 };
+
+/**
+ * Fetches an HTML document from a URL and parses it.
+ *
+ * @param {string} url The URL to fetch from
+ * @param {Stock} stock The affected stock
+ * @param {DataProvider} dataProvider The name of the data provider to fetch from
+ * @returns {Document} The parsed HTML document
+ */
+export const getAndParseHTML = async (url: string, stock: Stock, dataProvider: DataProvider): Promise<Document> =>
+  new DOMParser({
+    errorHandler: {
+      warning: () => undefined,
+      error: () => undefined,
+      fatalError: (e) => {
+        logger.error(
+          { prefix: "selenium", err: e },
+          `Stock ${stock.ticker}: Error while parsing ${dataProviderName[dataProvider]} information: ${e}`,
+        );
+      },
+    },
+  }).parseFromString(
+    await axios
+      .get(url)
+      .then((res) => res.data)
+      .catch((e) => {
+        throw e;
+      }),
+    "text/html",
+  );

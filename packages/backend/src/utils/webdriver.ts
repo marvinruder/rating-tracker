@@ -64,7 +64,7 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
       return driver;
     })
     .catch((e) => {
-      throw new APIError(502, `Unable to connect to Selenium WebDriver: ${e.message}`);
+      throw new APIError(502, "Unable to connect to Selenium WebDriver", e);
     });
 };
 

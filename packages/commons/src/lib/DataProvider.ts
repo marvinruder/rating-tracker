@@ -81,3 +81,15 @@ export const dataProviderEndpoints: Record<DataProvider, string> = {
   sp: fetchSPEndpointPath,
   sustainalytics: fetchSustainalyticsEndpointPath,
 };
+
+/**
+ * The Time-To-Live (TTL) of the information fetched from the data providers, in seconds.
+ */
+export const dataProviderTTL: Record<DataProvider, number> = {
+  morningstar: 60 * 60 * 12, // 12 hours
+  marketScreener: 60 * 60 * 12, // 12 hours
+  msci: 60 * 60 * 24 * 7, // 7 days
+  refinitiv: 60 * 60 * 24 * 7, // 7 days
+  sp: 60 * 60 * 24 * 7, // 7 days
+  sustainalytics: 60 * 60 * 24 * 7, // 7 days
+};

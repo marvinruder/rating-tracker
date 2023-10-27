@@ -5,6 +5,7 @@ import { By, WebDriver, until } from "selenium-webdriver";
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
+import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
 import { openPageAndWait } from "../utils/webdriver";
 
@@ -107,6 +108,11 @@ const msciFetcher: SeleniumFetcher = async (
     // An error occurred if and only if the error message contains a newline character.
     // We capture the resource and send a message.
     errorMessage += `\n${await captureFetchError(stock, "msci", { driver })}`;
+    if (req.query.ticker) {
+      // If this request was for a single stock, we throw an error instead of sending a message, so that the error
+      // message will be part of the response.
+      throw new FetchError(errorMessage);
+    }
     await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
     stocks.failed.push(await readStock(stock.ticker));
   } else {

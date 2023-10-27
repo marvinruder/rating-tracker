@@ -1,20 +1,24 @@
+import assert from "node:assert";
+
 import { Stock } from "@rating-tracker/commons";
 import { Request } from "express";
-import { By, WebDriver, until } from "selenium-webdriver";
+import xpath from "xpath-ts2";
 
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
+import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
-import { openPageAndWait } from "../utils/webdriver";
 
-import { type SeleniumFetcher, type FetcherWorkspace, captureFetchError } from "./fetchHelper";
+import { type FetcherWorkspace, captureFetchError, HTMLFetcher, getAndParseHTML } from "./fetchHelper";
 
-const XPATH_ANALYST_COUNT =
-  "//div[@class='card-content']/div/div/div[contains(text(), 'Number of Analysts')]/following-sibling::div" as const;
-const XPATH_SPREAD_AVERAGE_TARGET =
-  // eslint-disable-next-line max-len
-  "//div[@class='card-content']/div/div/div[contains(text(), 'Spread / Average Target')]/following-sibling::div" as const;
+const XPATH_ANALYST_CONSENSUS = xpath.parse("//div[starts-with(@title, 'Rate : ')]");
+const XPATH_ANALYST_COUNT = xpath.parse(
+  "//div[@class='card-content']/div/div/div[contains(text(), 'Number of Analysts')]/following-sibling::div",
+);
+const XPATH_SPREAD_AVERAGE_TARGET = xpath.parse(
+  "//div[@class='card-content']/div/div/div[contains(text(), 'Spread / Average Target')]/following-sibling::div",
+);
 
 /**
  * Fetches data from MarketScreener using a Selenium WebDriver.
@@ -23,42 +27,39 @@ const XPATH_SPREAD_AVERAGE_TARGET =
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
  * with errors)
  * @param {Stock} stock The stock to extract data for
- * @param {WebDriver} driver The WebDriver instance to use
+ * @param {Document} document The fetched and parsed HTML document
  * @returns {boolean} Whether the driver is still healthy
  * @throws an {@link APIError} in case of a severe error
  */
-const marketScreenerFetcher: SeleniumFetcher = async (
+const marketScreenerFetcher: HTMLFetcher = async (
   req: Request,
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
-  driver: WebDriver,
+  document: Document,
 ): Promise<boolean> => {
   let analystConsensus: number = req.query.clear ? null : undefined;
   let analystCount: number = req.query.clear ? null : undefined;
   let analystTargetPrice: number = req.query.clear ? null : undefined;
 
-  const url = `https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/`;
-  const driverHealthy = await openPageAndWait(driver, url);
-  // When we were unable to open the page, we assume the driver is unhealthy and end.
-  if (!driverHealthy) {
-    // Have another driver attempt the fetch of the current stock
-    stocks.queued.push(stock);
-    return false;
-  }
-  // Wait for most of the page to load for a maximum of 20 seconds.
-  await driver.wait(until.elementLocated(By.className("pcontent")), 20000);
+  document = await getAndParseHTML(
+    `https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/`,
+    stock,
+    "marketScreener",
+  );
 
   // Prepare an error message header containing the stock name and ticker.
   let errorMessage = `Error while fetching MarketScreener data for stock ${stock.ticker}:`;
 
   try {
-    // Wait for the div containing all relevant analyst-related information for a maximum of 10 seconds.
-    const consensusTableDiv = await driver.wait(until.elementLocated(By.id("consensusDetail")), 10000);
+    // Check for the presence of the div containing all relevant analyst-related information.
+    const consensusTableDiv = document.getElementById("consensusDetail");
+    assert(typeof consensusTableDiv === "object", "Unable to find Analyst Consensus div.");
 
     try {
-      const analystConsensusMatches = (
-        await consensusTableDiv.findElement(By.css('div[title^="Rate : "')).getAttribute("title")
-      ) // Example: " Rate : 9.1 / 10"
+      const analystConsensusNode = XPATH_ANALYST_CONSENSUS.select1({ node: consensusTableDiv, isHtml: true });
+      assert(analystConsensusNode, "Unable to find Analyst Consensus node.");
+      const analystConsensusMatches = (analystConsensusNode as Element)
+        .getAttribute("title") // Example: " Rate : 9.1 / 10"
         .match(/(\d+(\.\d+)?)/g); // Extract the first decimal number from the title.
       if (
         analystConsensusMatches === null ||
@@ -84,7 +85,9 @@ const marketScreenerFetcher: SeleniumFetcher = async (
     }
 
     try {
-      analystCount = +(await consensusTableDiv.findElement(By.xpath(XPATH_ANALYST_COUNT)).getText());
+      const analystCountNode = XPATH_ANALYST_COUNT.select1({ node: consensusTableDiv, isHtml: true });
+      assert(analystCountNode, "Unable to find Analyst Count node.");
+      analystCount = +analystCountNode.textContent;
     } catch (e) {
       logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`);
       if (stock.analystCount !== null) {
@@ -103,25 +106,27 @@ const marketScreenerFetcher: SeleniumFetcher = async (
     try {
       // We need the last close price to calculate the analyst target price.
       if (!stock.lastClose) {
-        throw new Error("No Last Close price available to compare spread against.");
+        throw new FetchError("No Last Close price available to compare spread against.");
       }
-      const analystTargetPriceText = await consensusTableDiv
-        .findElement(By.xpath(XPATH_SPREAD_AVERAGE_TARGET))
-        .getText();
-      const analystTargetPriceMatches = analystTargetPriceText.replaceAll(",", ".").match(/(\-)?\d+(\.\d+)?/g);
+      const analystTargetPriceNode = XPATH_SPREAD_AVERAGE_TARGET.select1({ node: consensusTableDiv, isHtml: true });
+      assert(analystTargetPriceNode, "Unable to find Analyst Target Price node.");
+      const analystTargetPriceMatches = analystTargetPriceNode.textContent
+        .replaceAll(",", ".")
+        .match(/(\-)?\d+(\.\d+)?/g);
       if (analystTargetPriceMatches === null) {
         throw new TypeError(
-          `Extracted analyst target price is no valid number (no matches in “${analystTargetPriceText}”).`,
+          `Extracted analyst target price is no valid number (no matches in “${analystTargetPriceNode.textContent}”).`,
         );
       }
       if (analystTargetPriceMatches.length !== 1) {
         throw new TypeError(
-          `Extracted analyst target price is no valid number (multiple matches in “${analystTargetPriceText}”).`,
+          "Extracted analyst target price is no valid number " +
+            `(multiple matches in “${analystTargetPriceNode.textContent}”).`,
         );
       }
       if (Number.isNaN(+analystTargetPriceMatches[0])) {
         throw new TypeError(
-          `Extracted analyst target price is no valid number (not a number: “${analystTargetPriceText}”).`,
+          `Extracted analyst target price is no valid number (not a number: “${analystTargetPriceNode.textContent}”).`,
         );
       }
       analystTargetPrice = stock.lastClose * (+analystTargetPriceMatches[0] / 100 + 1);
@@ -146,7 +151,6 @@ const marketScreenerFetcher: SeleniumFetcher = async (
       // from the page, we log this as an error and send a message.
       logger.error(
         { prefix: "selenium", err: e },
-
         `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. ` +
           "This incident will be reported.",
       );
@@ -164,12 +168,18 @@ const marketScreenerFetcher: SeleniumFetcher = async (
   if (errorMessage.includes("\n")) {
     // An error occurred if and only if the error message contains a newline character.
     // We capture the resource and send a message.
-    errorMessage += `\n${await captureFetchError(stock, "marketScreener", { driver })}`;
+    errorMessage += `\n${await captureFetchError(stock, "marketScreener", { document })}`;
+    if (req.query.ticker) {
+      // If this request was for a single stock, we throw an error instead of sending a message, so that the error
+      // message will be part of the response.
+      throw new FetchError(errorMessage);
+    }
     await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
     stocks.failed.push(await readStock(stock.ticker));
   } else {
     stocks.successful.push(await readStock(stock.ticker));
   }
+  document = undefined;
   return true;
 };
 
