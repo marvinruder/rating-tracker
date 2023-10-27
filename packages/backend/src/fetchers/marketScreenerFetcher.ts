@@ -21,7 +21,7 @@ const XPATH_SPREAD_AVERAGE_TARGET = xpath.parse(
 );
 
 /**
- * Fetches data from MarketScreener using a Selenium WebDriver.
+ * Fetches data from MarketScreener.
  *
  * @param {Request} req Request object
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
@@ -53,7 +53,7 @@ const marketScreenerFetcher: HTMLFetcher = async (
   try {
     // Check for the presence of the div containing all relevant analyst-related information.
     const consensusTableDiv = document.getElementById("consensusDetail");
-    assert(typeof consensusTableDiv === "object", "Unable to find Analyst Consensus div.");
+    assert(consensusTableDiv, "Unable to find Analyst Consensus div.");
 
     try {
       const analystConsensusNode = XPATH_ANALYST_CONSENSUS.select1({ node: consensusTableDiv, isHtml: true });

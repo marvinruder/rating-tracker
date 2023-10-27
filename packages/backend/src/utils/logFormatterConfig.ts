@@ -287,9 +287,15 @@ export const pinoPrettyConfig: PrettyOptions = process.env.PLAIN_LOG
       customPrettifiers: {
         // Indicate the log level with an icon and color, and print a ␇ character if the log level is error or higher.
         level: (level) => (Number(level) >= 50 ? "\x07" : "") + levelColorFns[Number(level)](levelIcons[Number(level)]),
-        err: (err: Error) =>
+        err: (err: unknown) =>
           // Do not print an ignored error
-          IGNORED_ERRORS.some((ignoredError) => err.message.includes(ignoredError))
+          IGNORED_ERRORS.some(
+            (ignoredError) =>
+              typeof err === "object" &&
+              "message" in err &&
+              typeof err.message === "string" &&
+              err.message?.includes(ignoredError),
+          )
             ? "\x1b[2K\x1b[A"
             : "\n\x1b[A  " + // Removes all characters in the current line
               // Print only the stack trace of the error, any other information will be added to the message

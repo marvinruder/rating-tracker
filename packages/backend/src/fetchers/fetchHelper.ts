@@ -18,6 +18,7 @@ import { createResource } from "../redis/repositories/resourceRepository";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import * as signal from "../signal/signal";
 import APIError from "../utils/APIError";
+import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
 import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver";
 
@@ -60,9 +61,9 @@ export type SeleniumFetcher = (
   driver: WebDriver,
 ) => Promise<boolean>;
 
-const htmlDataProviders: readonly DataProvider[] = ["marketScreener", "sp"] as const;
+const htmlDataProviders: readonly DataProvider[] = ["morningstar", "marketScreener", "sp"] as const;
 const jsonDataProviders: readonly DataProvider[] = ["refinitiv"] as const;
-const seleniumDataProviders: readonly DataProvider[] = ["morningstar", "msci"] as const;
+const seleniumDataProviders: readonly DataProvider[] = ["msci"] as const;
 
 /**
  * An object holding the source of a fetcher. Only one of the properties is set.
@@ -395,8 +396,8 @@ export const getAndParseHTML = async (url: string, stock: Stock, dataProvider: D
       warning: () => undefined,
       error: () => undefined,
       fatalError: (e) => {
-        logger.error(
-          { prefix: "selenium", err: e },
+        logger.warn(
+          { prefix: "selenium", err: e instanceof Error ? e : new FetchError(e) },
           `Stock ${stock.ticker}: Error while parsing ${dataProviderName[dataProvider]} information: ${e}`,
         );
       },
@@ -404,7 +405,7 @@ export const getAndParseHTML = async (url: string, stock: Stock, dataProvider: D
   }).parseFromString(
     await axios
       .get(url)
-      .then((res) => res.data)
+      .then((res) => res.data.replaceAll("</P>", "</p>")) // This patch is required for malformatted Morningstar pages
       .catch((e) => {
         throw e;
       }),
