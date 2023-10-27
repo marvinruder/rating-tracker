@@ -1,8 +1,5 @@
 import {
-  DataProvider,
-  dataProviderID,
-  dataProviderLastFetch,
-  dataProviderName,
+  dataProviderTTL,
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
   fetchMSCIEndpointPath,
@@ -17,274 +14,17 @@ import {
 import axios from "axios";
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
-import { WebDriver } from "selenium-webdriver";
 
 import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable";
-import marketScreenerFetcher from "../fetchers/marketScreenerFetcher";
-import morningstarFetcher from "../fetchers/morningstarFetcher";
-import msciFetcher from "../fetchers/msciFetcher";
-import refinitivFetcher from "../fetchers/refinitivFetcher";
-import spFetcher from "../fetchers/spFetcher";
+import { fetchFromDataProvider } from "../fetchers/fetchHelper";
 import { createResource, readResource } from "../redis/repositories/resourceRepository";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import APIError from "../utils/APIError";
 import logger from "../utils/logger";
 import Router from "../utils/router";
-import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver";
 
 const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings" as const;
-
-/**
- * A shared object holding lists of stocks that multiple fetchers work on.
- */
-export type FetcherWorkspace<T> = {
-  queued: T[];
-  skipped: T[];
-  successful: T[];
-  failed: T[];
-};
-
-export type Fetcher = (req: Request, stocks: FetcherWorkspace<Stock>, stock: Stock) => Promise<boolean>;
-export type SeleniumFetcher = (
-  req: Request,
-  stocks: FetcherWorkspace<Stock>,
-  stock: Stock,
-  driver: WebDriver,
-) => Promise<boolean>;
-
-/**
- * A record of functions that extract data from a data provider.
- */
-export const dataProviderFetchers: Partial<Record<DataProvider, Fetcher | SeleniumFetcher>> = {
-  morningstar: morningstarFetcher,
-  marketScreener: marketScreenerFetcher,
-  msci: msciFetcher,
-  refinitiv: refinitivFetcher,
-  sp: spFetcher,
-};
-
-/**
- * Creates an object containing the aggregated results of the fetch for logging.
- *
- * @param {FetcherWorkspace<unknown>} stocks The fetcher workspace.
- * @returns {object} An object containing the aggregated results of the fetch.
- */
-const countFetchResults = (
-  stocks: FetcherWorkspace<unknown>,
-): Partial<Record<keyof FetcherWorkspace<unknown>, number>> =>
-  Object.entries(stocks).reduce(
-    (obj, [key, value]) => (value.length ? Object.assign(obj, { [key]: value.length }) : obj),
-    {},
-  );
-
-/**
- * Determines the allowed number of fetchers that can work concurrently on fetching a list of stocks.
- *
- * @param {Request} req Request object
- * @returns {number} The number of fetchers to use.
- */
-const determineConcurrency = (req: Request): number => {
-  let concurrency: number = Number(req.query.concurrency ?? 1);
-  if (Number.isNaN(concurrency) || !Number.isSafeInteger(concurrency) || concurrency < 1) {
-    logger.warn(
-      { prefix: "selenium" },
-      `Invalid concurrency “${req.query.concurrency}” requested – using 1 fetcher only.`,
-    );
-    concurrency = 1;
-  }
-  if (concurrency > Number(process.env.SELENIUM_MAX_CONCURRENCY)) {
-    logger.warn(
-      { prefix: "selenium" },
-      `Desired concurrency “${concurrency}” is larger than the server allows – ` +
-        `using maximum value ${Number(process.env.SELENIUM_MAX_CONCURRENCY)} instead.`,
-    );
-    concurrency = Number(process.env.SELENIUM_MAX_CONCURRENCY);
-  }
-  return concurrency;
-};
-
-/**
- * Fetches data from a data provider.
- *
- * @param {Request} req Request object
- * @param {Response} res Response object
- * @param {DataProvider} dataProvider The data provider to fetch from
- * @throws an {@link APIError} in case of a severe error
- */
-const fetchFromDataProvider = async (req: Request, res: Response, dataProvider: DataProvider): Promise<void> => {
-  let stockList: Stock[];
-
-  if (req.query.ticker) {
-    // A single stock is requested.
-    const ticker = req.query.ticker;
-    if (typeof ticker === "string") {
-      stockList = [await readStock(ticker)];
-      if (!stockList[0][dataProviderID[dataProvider]]) {
-        // If the only stock to use does not have an ID for the data provider, we throw an error.
-        throw new APIError(404, `Stock ${ticker} does not have a ${dataProviderID[dataProvider]}.`);
-      }
-    }
-  } else {
-    // When no specific stock is requested, we fetch all stocks from the database which have an ID for the data provider
-    [stockList] = await readAllStocks({
-      where: {
-        [dataProviderID[dataProvider]]: {
-          not: null,
-        },
-      },
-      orderBy: {
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        [dataProviderLastFetch[dataProvider]]: "asc",
-      },
-    });
-  }
-
-  if (stockList.length === 0) {
-    // If no stocks are left, we return a 204 No Content response.
-    res.status(204).end();
-    return;
-  }
-  if (req.query.detach) {
-    // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-    res.status(202).end();
-  }
-
-  const stocks: FetcherWorkspace<Stock> = {
-    successful: [],
-    failed: [],
-    skipped: [],
-    queued: [...stockList],
-  };
-
-  logger.info(
-    { prefix: "selenium" },
-    `Fetching ${stocks.queued.length} stocks from ${dataProviderName[dataProvider]}.`,
-  );
-  const rejectedResult = (
-    await Promise.allSettled(
-      [...Array(determineConcurrency(req))].map(async () => {
-        // Acquire a new session
-        let driver: WebDriver;
-        let sessionID: string;
-        if (["morningstar", "marketScreener", "msci", "sp"].includes(dataProvider)) {
-          driver = await getDriver(true);
-          sessionID = (await driver.getSession()).getId();
-        }
-
-        // Work while stocks are in the queue
-        while (stocks.queued.length) {
-          // Get the first stock in the queue
-          const stock = stocks.queued.shift();
-          if (!stock) {
-            // If the queue got empty in the meantime, we end.
-            break;
-          }
-          if (
-            !req.query.noSkip &&
-            stock[dataProviderLastFetch[dataProvider]] &&
-            // We only fetch stocks that have not been fetched in the last 12 hours.
-            new Date().getTime() - stock[dataProviderLastFetch[dataProvider]].getTime() < 1000 * 60 * 60 * 12
-          ) {
-            logger.info(
-              { prefix: "selenium" },
-              `Stock ${stock.ticker}: Skipping ${
-                dataProviderName[dataProvider]
-              } fetch since last successful fetch was ${formatDistance(
-                stock[dataProviderLastFetch[dataProvider]].getTime(),
-                new Date().getTime(),
-                { addSuffix: true },
-              )}`,
-            );
-            stocks.skipped.push(stock);
-            continue;
-          }
-
-          try {
-            if (!(await dataProviderFetchers[dataProvider](req, stocks, stock, driver))) break;
-          } catch (e) {
-            stocks.failed.push(stock);
-            if (req.query.ticker) {
-              // If the request was for a single stock, we shut down the driver and throw an error.
-              driver && (await quitDriver(driver, sessionID));
-              throw new APIError(
-                502,
-                `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data: ${
-                  String(e.message).split(/[\n:{]/)[0]
-                }`,
-              );
-            }
-            logger.error(
-              { prefix: "selenium", err: e },
-              `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data`,
-            );
-            await signal.sendMessage(
-              SIGNAL_PREFIX_ERROR +
-                `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data: ${
-                  String(e.message).split(/[\n:{]/)[0]
-                }\n${await takeScreenshot(driver, stock, dataProvider)}`,
-              "fetchError",
-            );
-          }
-          if (stocks.failed.length >= 10) {
-            // If we have 10 errors, we stop fetching data, since something is probably wrong.
-            if (stocks.queued.length) {
-              // No other fetcher did this before
-              logger.error(
-                { prefix: "selenium" },
-                `Aborting fetching information from ${dataProviderName[dataProvider]} after ` +
-                  `${stocks.successful.length} successful fetches and ${stocks.failed.length} failures. ` +
-                  "Will continue next time.",
-              );
-              await signal.sendMessage(
-                SIGNAL_PREFIX_ERROR +
-                  `Aborting fetching information from ${dataProviderName[dataProvider]} after ` +
-                  `${stocks.successful.length} successful fetches and ${stocks.failed.length} failures. ` +
-                  "Will continue next time.",
-                "fetchError",
-              );
-              const skippedStocks = [...stocks.queued];
-              stocks.queued.length = 0;
-              skippedStocks.forEach((skippedStock) => stocks.skipped.push(skippedStock));
-            }
-            break;
-          }
-        }
-        // The queue is now empty, we end the session.
-        driver && (await quitDriver(driver, sessionID));
-      }),
-    )
-  ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
-  logger.info(
-    { prefix: "selenium", fetchCounts: countFetchResults(stocks) },
-    `Done fetching stocks from ${dataProviderName[dataProvider]}.`,
-  );
-
-  // If stocks are still queued, something went wrong and we send an error response.
-  if (stocks.queued.length) {
-    // If fetchers threw an error, we rethrow the first one
-    throw (
-      rejectedResult?.reason ??
-      new APIError(
-        500,
-        `${dataProviderName[dataProvider]} fetchers exited with stocks ${stocks.queued
-          .map((stock) => stock.ticker)
-          .join(", ")} still queued.`,
-      )
-    );
-  }
-
-  // If this request was for a single stock and an error occurred, we rethrow that error
-  if (req.query.ticker && rejectedResult) {
-    throw rejectedResult.reason;
-  }
-
-  if (!stocks.successful.length) {
-    res.status(204).end();
-  } else {
-    res.status(200).json(stocks.successful).end();
-  }
-};
 
 /**
  * This class is responsible for fetching data from external data providers.
@@ -425,7 +165,7 @@ export class FetchController {
         // We try to read the cached Sustainalytics data first.
         sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
         logger.info(
-          { prefix: "selenium" },
+          { prefix: "fetch" },
           `Using cached Sustainalytics data because last fetch was ${formatDistance(
             sustainalyticsXMLResource.fetchDate,
             new Date().getTime(),
@@ -457,7 +197,7 @@ export class FetchController {
                 fetchDate: new Date(response.headers["date"]),
                 content: sustainalyticsXMLLines.join("\n"),
               },
-              60 * 60 * 24 * 7,
+              dataProviderTTL["sustainalytics"],
             );
             sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
           })
@@ -466,7 +206,7 @@ export class FetchController {
           });
       }
     } catch (e) {
-      throw new APIError(502, `Unable to fetch Sustainalytics information: ${String(e.message).split(/[\n:{]/)[0]}`);
+      throw new APIError(502, "Unable to fetch Sustainalytics information", e);
     }
 
     const sustainalyticsXMLLines = sustainalyticsXMLResource.content.split("\n");
@@ -510,15 +250,16 @@ export class FetchController {
           // If this request was for a single stock, we shut down the driver and throw an error.
           throw new APIError(
             (e as APIError).status ?? 500,
-            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${String(e.message).split(/[\n:{]/)[0]}`,
+            `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk`,
+            e,
           );
         }
-        logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`);
+        logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`);
         if (stock.sustainalyticsESGRisk !== null) {
           // If a Sustainalytics ESG Risk is already stored in the database, but we cannot extract it from the page, we
           // log this as an error and send a message.
           logger.error(
-            { prefix: "selenium", err: e },
+            { prefix: "fetch", err: e },
             `Stock ${stock.ticker}: Extraction of Sustainalytics ESG Risk failed unexpectedly. ` +
               "This incident will be reported.",
           );
@@ -537,7 +278,7 @@ export class FetchController {
       if (errorCount >= 10) {
         // If we have 10 errors, we stop extracting data, since something is probably wrong.
         logger.error(
-          { prefix: "selenium" },
+          { prefix: "fetch" },
           `Aborting extracting information from Sustainalytics after ${successfulCount} successful extractions ` +
             `and ${errorCount} failures. Will continue next time.`,
         );

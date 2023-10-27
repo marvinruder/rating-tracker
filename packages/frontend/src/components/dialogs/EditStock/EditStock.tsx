@@ -254,7 +254,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                   setNotification({
                     severity: "warning",
                     title: `Unable to fetch S&P Information for stock “${props.stock.name}” (${props.stock.ticker})`,
-                    message: e.response?.data?.message,
+                    message: SP_PREMIUM_STOCK_ERROR_MESSAGE,
                   });
                 } else {
                   setErrorNotification(e, "fetching information from S&P");

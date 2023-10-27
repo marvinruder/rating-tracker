@@ -79,7 +79,7 @@ const prefixIcons: Record<string, string> = {
   nodejs: "\uf898",
   redis: "\ue76d",
   postgres: "\ue76e",
-  selenium: "\ufc0d",
+  fetch: "\ufc0d",
   signal: "\uf868",
   time: "\uf64f",
   port: "\uf6ff",
@@ -105,7 +105,7 @@ const prefixColors: Record<string, string | number> = {
   nodejs: 0x339933,
   redis: 0xd82c20,
   postgres: 0x336791,
-  selenium: 0x43b02a,
+  fetch: 0x43b02a,
   signal: 0x4975e8,
   GET: "blue",
   HEAD: "magenta",
@@ -287,9 +287,15 @@ export const pinoPrettyConfig: PrettyOptions = process.env.PLAIN_LOG
       customPrettifiers: {
         // Indicate the log level with an icon and color, and print a ␇ character if the log level is error or higher.
         level: (level) => (Number(level) >= 50 ? "\x07" : "") + levelColorFns[Number(level)](levelIcons[Number(level)]),
-        err: (err: Error) =>
+        err: (err: unknown) =>
           // Do not print an ignored error
-          IGNORED_ERRORS.some((ignoredError) => err.message.includes(ignoredError))
+          IGNORED_ERRORS.some(
+            (ignoredError) =>
+              typeof err === "object" &&
+              "message" in err &&
+              typeof err.message === "string" &&
+              err.message?.includes(ignoredError),
+          )
             ? "\x1b[2K\x1b[A"
             : "\n\x1b[A  " + // Removes all characters in the current line
               // Print only the stack trace of the error, any other information will be added to the message

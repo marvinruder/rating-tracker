@@ -1,5 +1,5 @@
 // This class is not tested because it is not possible to use it without a running Selenium WebDriver.
-import { DataProvider, Stock, resourceEndpointPath } from "@rating-tracker/commons";
+import { DataProvider, Stock } from "@rating-tracker/commons";
 import axios, { AxiosError } from "axios";
 import { Builder, Capabilities, WebDriver, until } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome";
@@ -64,7 +64,7 @@ export const getDriver = async (headless?: boolean, pageLoadStrategy?: PageLoadS
       return driver;
     })
     .catch((e) => {
-      throw new APIError(502, `Unable to connect to Selenium WebDriver: ${e.message}`);
+      throw new APIError(502, "Unable to connect to Selenium WebDriver", e);
     });
 };
 
@@ -81,7 +81,7 @@ export const openPageAndWait = async (driver: WebDriver, url: string): Promise<b
     await driver.wait(until.urlIs(url), 5000);
     return true;
   } catch (e) {
-    logger.error({ prefix: "selenium", err: e }, `Unable to fetch from page ${url} (driver may be unhealthy)`);
+    logger.error({ prefix: "fetch", err: e }, `Unable to fetch from page ${url} (driver may be unhealthy)`);
     return false;
   }
 };
@@ -99,12 +99,12 @@ export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise
   try {
     await driver.quit();
   } catch (e) {
-    logger.error({ prefix: "selenium", err: e }, "Unable to shut down Selenium WebDriver gracefully");
+    logger.error({ prefix: "fetch", err: e }, "Unable to shut down Selenium WebDriver gracefully");
     if (sessionID) {
-      logger.info({ prefix: "selenium" }, `Attempting forceful shutdown of stale session ${sessionID}.`);
+      logger.info({ prefix: "fetch" }, `Attempting forceful shutdown of stale session ${sessionID}.`);
       axios.delete(`${process.env.SELENIUM_URL}/session/${sessionID}`).catch((e) => {
         logger.error(
-          { prefix: "selenium", err: e },
+          { prefix: "fetch", err: e },
           `An error occurred while forcefully terminating session ${sessionID}`,
         );
       });
@@ -118,7 +118,7 @@ export const quitDriver = async (driver: WebDriver, sessionID?: string): Promise
  * @param {WebDriver} driver the WebDriver instance in use
  * @param {Stock} stock the affected stock
  * @param {DataProvider} dataProvider the name of the data provider
- * @returns {Promise<string>} A string holding a general informational message and a URL to the screenshot
+ * @returns {Promise<string>} A string holding the ID of the screenshot resource.
  */
 export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvider: DataProvider): Promise<string> => {
   const screenshotID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.png`;
@@ -130,14 +130,11 @@ export const takeScreenshot = async (driver: WebDriver, stock: Stock, dataProvid
         fetchDate: new Date(),
         content: screenshot, // base64-encoded PNG image
       },
-      60 * 60 * 24, // We only store the screenshot for 24 hours.
+      60 * 60 * 48, // We only store the screenshot for 48 hours.
     );
-    return `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
-      process.env.DOMAIN
-      // Ensure the user is logged in before accessing the resource API endpoint.
-    }/login?redirect=${encodeURIComponent(`/api${resourceEndpointPath}/${screenshotID}`)}.`;
+    return screenshotID;
   } catch (e) {
-    logger.warn({ prefix: "selenium", err: e }, `Unable to take screenshot “${screenshotID}”`);
+    logger.warn({ prefix: "fetch", err: e }, `Unable to take screenshot “${screenshotID}”`);
     return "";
   }
 };

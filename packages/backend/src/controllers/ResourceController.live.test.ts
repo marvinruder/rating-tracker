@@ -1,4 +1,5 @@
 import { resourceEndpointPath } from "@rating-tracker/commons";
+import { DOMParser } from "@xmldom/xmldom";
 
 import { LiveTestSuite, expectRouteToBePrivate, supertest } from "../../test/liveTestHelpers";
 
@@ -7,14 +8,43 @@ export const suiteName = "Resource API";
 export const tests: LiveTestSuite = [];
 
 tests.push({
-  testName: "provides a resource",
+  testName: "provides a PNG resource",
   testFunction: async () => {
     await expectRouteToBePrivate(`/api${resourceEndpointPath}/image.png`);
     const res = await supertest
       .get(`/api${resourceEndpointPath}/image.png`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
+    expect(res.header["content-type"]).toMatch("image/png");
     expect(res.body.toString()).toMatch("Sample PNG image");
+  },
+});
+
+tests.push({
+  testName: "provides an HTML resource",
+  testFunction: async () => {
+    await expectRouteToBePrivate(`/api${resourceEndpointPath}/page.html`);
+    const res = await supertest
+      .get(`/api${resourceEndpointPath}/page.html`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.header["content-type"]).toMatch("text/html");
+    expect(
+      new DOMParser().parseFromString(res.text, res.header["content-type"]).getElementById("hello").textContent,
+    ).toBe("Hello World!");
+  },
+});
+
+tests.push({
+  testName: "provides a JSON resource",
+  testFunction: async () => {
+    await expectRouteToBePrivate(`/api${resourceEndpointPath}/data.json`);
+    const res = await supertest
+      .get(`/api${resourceEndpointPath}/data.json`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.header["content-type"]).toMatch("application/json");
+    expect(res.body.foo).toBe("bar");
   },
 });
 

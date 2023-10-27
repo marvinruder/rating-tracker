@@ -1260,6 +1260,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:6.9.0"
     "@typescript-eslint/parser": "npm:6.9.0"
     "@vitest/coverage-v8": "npm:0.34.6"
+    "@xmldom/xmldom": "npm:0.8.10"
     "@yarnpkg/pnpify": "npm:4.0.0"
     axios: "npm:1.6.0"
     chalk: "npm:5.3.0"
@@ -1293,6 +1294,7 @@ __metadata:
     typescript: "npm:5.2.2"
     vite: "npm:4.5.0"
     vitest: "npm:0.34.6"
+    xpath-ts2: "npm:1.4.2"
   languageName: unknown
   linkType: soft
 
@@ -2257,6 +2259,13 @@ __metadata:
   peerDependencies:
     vitest: ">=0.34.0"
   checksum: 2a15d30687e374e9cdd6007200df83dde01c603e9456869b876140e11661fe5005db1749c5932e9d498ed53511c41bfe82966879e7b29e508afa120add4cb923
+  languageName: node
+  linkType: hard
+
+"@xmldom/xmldom@npm:0.8.10":
+  version: 0.8.10
+  resolution: "@xmldom/xmldom@npm:0.8.10"
+  checksum: 62400bc5e0e75b90650e33a5ceeb8d94829dd11f9b260962b71a784cd014ddccec3e603fe788af9c1e839fa4648d8c521ebd80d8b752878d3a40edabc9ce7ccf
   languageName: node
   linkType: hard
 
@@ -9544,6 +9553,13 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 815ff01d9bc20a249b2228825d9739268a03a4408c2e0b14d49b0e2ae89d7f10847e813b587ba26992bdc33e9d03bed131e4cae73ff996baf789d53e99c31186
+  languageName: node
+  linkType: hard
+
+"xpath-ts2@npm:1.4.2":
+  version: 1.4.2
+  resolution: "xpath-ts2@npm:1.4.2"
+  checksum: e1c9d1b151ca265485cd471bec8a14c0fb6ded4b5c0539e0a641b8e544d2510e594b5754f77a959b84ec2e81a5e5c5a9e6452228d7d3f46977b46b61b0cb4b16
   languageName: node
   linkType: hard
 

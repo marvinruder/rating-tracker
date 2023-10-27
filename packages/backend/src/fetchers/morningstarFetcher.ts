@@ -1,3 +1,5 @@
+import assert from "node:assert";
+
 import {
   Industry,
   Size,
@@ -10,38 +12,42 @@ import {
   Stock,
 } from "@rating-tracker/commons";
 import { Request } from "express";
-import { By, WebDriver, until } from "selenium-webdriver";
+import xpath from "xpath-ts2";
 
-import type { SeleniumFetcher } from "../controllers/FetchController";
-import { FetcherWorkspace } from "../controllers/FetchController";
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
+import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
-import { openPageAndWait, takeScreenshot } from "../utils/webdriver";
 
-const XPATH_INDUSTRY = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/.." as const;
-const XPATH_SIZE_STYLE = "//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Stock Style')]/.." as const;
-const XPATH_DESCRIPTION = "//*/div[@id='CompanyProfile']/div[1][not(.//h3)]" as const;
+import { type FetcherWorkspace, captureFetchError, HTMLFetcher, getAndParseHTML } from "./fetchHelper";
+
+const XPATH_CONTENT = xpath.parse(
+  "//*[@id='SnapshotBodyContent'][count(.//*[@id='IntradayPriceSummary']) > 0][count(.//*[@id='CompanyProfile']) > 0]",
+);
+const XPATH_INDUSTRY = xpath.parse("//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Industry')]/..");
+const XPATH_SIZE_STYLE = xpath.parse("//*/div[@id='CompanyProfile']/div/h3[contains(text(), 'Stock Style')]/..");
+const XPATH_DESCRIPTION = xpath.parse("//*/div[@id='CompanyProfile']/div[1][not(.//h3)]");
+const XPATH_FAIR_VALUE = xpath.parse("//*/div[@id='FairValueEstimate']/span/datapoint");
 
 const MAX_RETRIES = 10;
 
 /**
- * Fetches data from Morningstar Italy using a Selenium WebDriver.
+ * Fetches data from Morningstar Italy.
  *
  * @param {Request} req Request object
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
  * with errors)
  * @param {Stock} stock The stock to extract data for
- * @param {WebDriver} driver The WebDriver instance to use
+ * @param {Document} document The fetched and parsed HTML document
  * @returns {boolean} Whether the driver is still healthy
  * @throws an {@link APIError} in case of a severe error
  */
-const morningstarFetcher: SeleniumFetcher = async (
+const morningstarFetcher: HTMLFetcher = async (
   req: Request,
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
-  driver: WebDriver,
+  document: Document,
 ): Promise<boolean> => {
   let industry: Industry = req.query.clear ? null : undefined;
   let size: Size = req.query.clear ? null : undefined;
@@ -60,21 +66,14 @@ const morningstarFetcher: SeleniumFetcher = async (
   const url =
     `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarID}` +
     `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`;
-  const driverHealthy = await openPageAndWait(driver, url);
-  // When we were unable to open the page, we assume the driver is unhealthy and end.
-  if (!driverHealthy) {
-    // Have another driver attempt the fetch of the current stock
-    stocks.queued.push(stock);
-    return false;
-  }
+  document = await getAndParseHTML(url, stock, "morningstar");
 
   let attempts = 1;
   while (attempts > 0) {
     try {
-      await driver.wait(
-        until.elementLocated(By.css("#SnapshotBodyContent:has(#IntradayPriceSummary):has(#CompanyProfile)")),
-        30000, // Wait for the page to load for a maximum of 30 seconds.
-      );
+      // Check for the presence of the div containing all relevant information.
+      const contentDiv = XPATH_CONTENT.select1({ node: document, isHtml: true });
+      assert(contentDiv, "Unable to find content div.");
       attempts = 0; // Page load succeeded.
     } catch (e) {
       // We probably stumbled upon a temporary 502 Bad Gateway or 429 Too Many Requests error, which persists for a
@@ -83,11 +82,12 @@ const morningstarFetcher: SeleniumFetcher = async (
         throw e; // Too many attempts failed, we throw the last error.
       }
       logger.warn(
-        { prefix: "selenium" },
+        { prefix: "fetch" },
         `Unable to load Morningstar page for ${stock.name} (${stock.ticker}). ` +
           `Will retry (attempt ${attempts} of ${MAX_RETRIES})`,
       );
-      await openPageAndWait(driver, url); // Load the page once again
+      // Load the page once again
+      document = await getAndParseHTML(url, stock, "morningstar");
     }
   }
 
@@ -95,9 +95,11 @@ const morningstarFetcher: SeleniumFetcher = async (
   let errorMessage = `Error while fetching Morningstar data for ${stock.name} (${stock.ticker}):`;
 
   try {
-    const industryString = (await driver.findElement(By.xpath(XPATH_INDUSTRY)).getText())
-      // Example: "Industry\nLumber & Wood Production"
-      .replace("Industry\n", "") // Remove headline
+    const industryNode = XPATH_INDUSTRY.select1({ node: document, isHtml: true });
+    assert(industryNode, "Unable to find Industry node.");
+    const industryString = industryNode.textContent
+      // Example: "Industry\nLumber & Wood Production" (the parser may remove the newline character though)
+      .replace(/Industry\n?/, "") // Remove headline
       .replaceAll(/[^a-zA-Z0-9]/g, ""); // Remove all non-alphanumeric characters
     if (isIndustry(industryString)) {
       industry = industryString;
@@ -105,12 +107,12 @@ const morningstarFetcher: SeleniumFetcher = async (
       throw new TypeError(`Extracted industry “${industryString}” is no valid industry.`);
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract industry: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract industry: ${e}`);
     if (stock.industry !== null) {
       // If an industry for the stock is already stored in the database, but we cannot extract it now from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of industry failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract industry: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -118,9 +120,11 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    const sizeAndStyle = (await driver.findElement(By.xpath(XPATH_SIZE_STYLE)).getText())
-      // Example: "Stock Style\nLarge-Blend"
-      .replace("Stock Style\n", "") // Remove headline
+    const sizeAndStyleNode = XPATH_SIZE_STYLE.select1({ node: document, isHtml: true });
+    assert(sizeAndStyleNode, "Unable to find Stock Style node.");
+    const sizeAndStyle = sizeAndStyleNode.textContent
+      // Example: "Stock Style\nLarge-Blend" (the parser may remove the newline character though)
+      .replace(/Stock Style\n?/, "") // Remove headline
       .split("-");
     if (sizeAndStyle.length !== 2) {
       throw new TypeError("No valid size and style available.");
@@ -136,12 +140,12 @@ const morningstarFetcher: SeleniumFetcher = async (
       throw new TypeError(`Extracted style “${sizeAndStyle[1]}” is no valid style.`);
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract size and style: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract size and style: ${e}`);
     if (stock.size !== null || stock.style !== null) {
       // If size or style for the stock are already stored in the database, but we cannot extract them now from
       // the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of size and style failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract size and style: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -149,21 +153,19 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    const starRatingString = (await driver.findElement(By.className("starsImg")).getAttribute("alt")).replaceAll(
-      /\D/g,
-      "",
-    ); // Remove all non-digit characters
+    // Remove all non-digit characters
+    const starRatingString = document.getElementsByClassName("starsImg")[0].getAttribute("alt").replaceAll(/\D/g, "");
     if (starRatingString.length === 0 || Number.isNaN(+starRatingString)) {
       throw new TypeError("Extracted star rating is no valid number.");
     }
     starRating = +starRatingString;
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract star rating: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract star rating: ${e}`);
     if (stock.starRating !== null) {
       // If a star rating for the stock is already stored in the database, but we cannot extract it now from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of star rating failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract star rating: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -171,7 +173,7 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    const dividendYieldPercentString = await driver.findElement(By.id("Col0Yield")).getText();
+    const dividendYieldPercentString = document.getElementById("Col0Yield").textContent;
     // Example: "2.1", or "-" if there is no dividend yield.
     if (dividendYieldPercentString === "-") {
       dividendYieldPercent = null;
@@ -182,12 +184,12 @@ const morningstarFetcher: SeleniumFetcher = async (
       dividendYieldPercent = +dividendYieldPercentString;
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`);
     if (stock.dividendYieldPercent !== null) {
       // If a dividend yield for the stock is already stored in the database, but we cannot extract it now from
       // the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of dividend yield failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract dividend yield: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -195,7 +197,7 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    const priceEarningRatioString = (await driver.findElement(By.id("Col0PE")).getText()).replaceAll(",", "");
+    const priceEarningRatioString = document.getElementById("Col0PE").textContent.replaceAll(",", "");
     // Example: "20.5", "1,000" for larger numbers, or "-" if there is no P/E.
     if (priceEarningRatioString === "-") {
       priceEarningRatio = null;
@@ -206,12 +208,12 @@ const morningstarFetcher: SeleniumFetcher = async (
       priceEarningRatio = +priceEarningRatioString;
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`);
     if (stock.priceEarningRatio !== null) {
       // If a price earning ratio for the stock is already stored in the database, but we cannot extract it now
       // from the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of price earning ratio failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract price earning ratio: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -219,7 +221,7 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    let currencyString = await driver.findElement(By.id("Col0PriceTime")).getText();
+    let currencyString = document.getElementById("Col0PriceTime").textContent;
     // Example: "17:35:38 CET | EUR  Minimum 15 Minutes Delay."
     currencyString = currencyString.match(/\s+\|\s+([A-Z]{3})\s+/)[1];
     if (isCurrency(currencyString)) {
@@ -228,12 +230,12 @@ const morningstarFetcher: SeleniumFetcher = async (
       throw new TypeError(`Extracted currency code “${currencyString}” is no valid currency code.`);
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract currency: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract currency: ${e}`);
     if (stock.currency !== null) {
       // If a currency for the stock is already stored in the database, but we cannot extract it now from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of currency failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract currency: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -241,7 +243,7 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    const lastCloseString = (await driver.findElement(By.id("Col0LastClose")).getText()).replaceAll(",", "");
+    const lastCloseString = document.getElementById("Col0LastClose").textContent.replaceAll(",", "");
     // Example: "1,000.00", or "-" if there is no last close.
     if (lastCloseString === "-") {
       lastClose = null;
@@ -252,12 +254,12 @@ const morningstarFetcher: SeleniumFetcher = async (
       lastClose = +lastCloseString;
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract last close: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract last close: ${e}`);
     if (stock.lastClose !== null) {
       // If a last close for the stock is already stored in the database, but we cannot extract it now from the
       // page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of last close failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract last close: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -265,8 +267,10 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    // Example: "1,000.00 USD", or "-" if there is no Morningstar Fair Value.
-    const morningstarFairValueString = (await driver.findElement(By.css("#FairValueEstimate>span>datapoint")).getText())
+    const morningstarFairValueNode = XPATH_FAIR_VALUE.select1({ node: document, isHtml: true });
+    assert(morningstarFairValueNode, "Unable to find Morningstar Fair Value node.");
+    const morningstarFairValueString = morningstarFairValueNode.textContent
+      // Example: "1,000.00 USD", or "-" if there is no Morningstar Fair Value.
       .split(/\s+/)[0]
       .replaceAll(",", "");
     if (morningstarFairValueString === "-") {
@@ -278,12 +282,12 @@ const morningstarFetcher: SeleniumFetcher = async (
       morningstarFairValue = +morningstarFairValueString;
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`);
     if (stock.morningstarFairValue !== null) {
       // If a Morningstar Fair Value for the stock is already stored in the database, but we cannot extract it
       // now from the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of Morningstar Fair Value failed unexpectedly. ` +
           "This incident will be reported.",
       );
@@ -292,8 +296,9 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    const marketCapText = (await driver.findElement(By.id("Col0MCap")).getText())
-      // Example: "2,235.00Bil", or "-" if there is no market capitalization.
+    const marketCapText = document
+      .getElementById("Col0MCap")
+      .textContent // Example: "2,235.00Bil", or "-" if there is no market capitalization.
       .replaceAll(",", "");
     if (marketCapText === "-") {
       marketCap = null;
@@ -311,12 +316,12 @@ const morningstarFetcher: SeleniumFetcher = async (
       }
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`);
     if (stock.marketCap !== null) {
       // If a market capitalization for the stock is already stored in the database, but we cannot extract it now
       // from the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of Market Capitalization failed unexpectedly. ` +
           "This incident will be reported.",
       );
@@ -325,8 +330,9 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    const range52wStrings = (await driver.findElement(By.id("Col0WeekRange")).getText())
-      // Example: "1,000.00 - 2,000.00", or "-" if there is no 52 week price range.
+    const range52wStrings = document
+      .getElementById("Col0WeekRange")
+      .textContent // Example: "1,000.00 - 2,000.00", or "-" if there is no 52 week price range.
       .replaceAll(",", "")
       .split(" - ");
     if (range52wStrings[0] === "-") {
@@ -346,12 +352,12 @@ const morningstarFetcher: SeleniumFetcher = async (
       high52w = +range52wStrings[1];
     }
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`);
     if (stock.low52w !== null || stock.high52w !== null) {
       // If a 52 week price range for the stock is already stored in the database, but we cannot extract it now
       // from the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of 52 week price range failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract 52 week price range: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -359,14 +365,16 @@ const morningstarFetcher: SeleniumFetcher = async (
   }
 
   try {
-    description = await driver.findElement(By.xpath(XPATH_DESCRIPTION)).getText();
+    const descriptionNode = XPATH_DESCRIPTION.select1({ node: document, isHtml: true });
+    assert(descriptionNode, "Unable to find Description node.");
+    description = descriptionNode.textContent;
   } catch (e) {
-    logger.warn({ prefix: "selenium" }, `Stock ${stock.ticker}: Unable to extract description: ${e}`);
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract description: ${e}`);
     if (stock.description !== null) {
       // If a description for the stock is already stored in the database, but we cannot extract it now from
       // the page, we log this as an error and send a message.
       logger.error(
-        { prefix: "selenium", err: e },
+        { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of description failed unexpectedly. This incident will be reported.`,
       );
       errorMessage += `\n\tUnable to extract description: ${String(e.message).split(/[\n:{]/)[0]}`;
@@ -392,13 +400,19 @@ const morningstarFetcher: SeleniumFetcher = async (
   });
   if (errorMessage.includes("\n")) {
     // An error occurred if and only if the error message contains a newline character.
-    // We take a screenshot and send a message.
-    errorMessage += `\n${await takeScreenshot(driver, stock, "morningstar")}`;
+    // We capture the resource and send a message.
+    errorMessage += `\n${await captureFetchError(stock, "morningstar", { document })}`;
+    if (req.query.ticker) {
+      // If this request was for a single stock, we throw an error instead of sending a message, so that the error
+      // message will be part of the response.
+      throw new FetchError(errorMessage);
+    }
     await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
     stocks.failed.push(await readStock(stock.ticker));
   } else {
     stocks.successful.push(await readStock(stock.ticker));
   }
+  document = undefined;
   return true;
 };
 

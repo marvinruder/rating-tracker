@@ -40,12 +40,12 @@ export const clear: OpenAPIV3.ParameterObject = {
 };
 
 /**
- * How many WebDrivers to use in parallel
+ * How many fetcher instances to use in parallel
  */
 export const concurrency: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "concurrency",
-  description: "How many WebDrivers to use in parallel",
+  description: "How many fetcher instances to use in parallel",
   schema: {
     type: "integer",
     example: "2",
