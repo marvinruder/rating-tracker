@@ -1,11 +1,13 @@
-import { defineConfig as defineVitestConfig } from "vitest/config";
+/* eslint-disable import/no-nodejs-modules */
+import fs from "fs";
+
+import react from "@vitejs/plugin-react";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 import topLevelAwait from "vite-plugin-top-level-await";
 import wasm from "vite-plugin-wasm";
-import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
-import fs from "fs";
+import { defineConfig as defineVitestConfig } from "vitest/config";
 
 const chunkList: string[] = ["@mui"];
 
@@ -26,6 +28,7 @@ export default mergeConfig(
           manualChunks,
         },
       },
+      sourcemap: true,
     },
     cacheDir: ".vite",
     plugins: [
