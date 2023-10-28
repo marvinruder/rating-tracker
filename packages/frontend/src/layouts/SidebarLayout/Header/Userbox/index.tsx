@@ -17,12 +17,12 @@ import {
   useTheme,
 } from "@mui/material";
 import { sessionEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 
 import NotificationContext from "../../../../contexts/NotificationContext";
-import { UserContext, baseUrl } from "../../../../router";
+import { UserContext } from "../../../../router";
+import api from "../../../../utils/api";
 
 import { ProfileSettings } from "./ProfileSettings";
 
@@ -40,8 +40,8 @@ export const HeaderUserbox = (): JSX.Element => {
    */
   const signOut = () => {
     // Delete the session
-    axios
-      .delete(baseUrl + sessionEndpointPath)
+    api
+      .delete(sessionEndpointPath)
       .then(() => {
         setNotification({
           severity: "success",

@@ -1,5 +1,4 @@
 import { User, userEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { Suspense, lazy, useState, useEffect, createContext } from "react";
 import type { RouteObject } from "react-router";
 import { useLocation } from "react-router";
@@ -22,11 +21,7 @@ import LoginPage from "./content/pages";
 import { Status404, Status500 } from "./content/pages/Status";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { SidebarLayout } from "./layouts";
-
-/**
- * The base URL of the backend API server.
- */
-export const baseUrl = `${document.location.protocol}//${document.location.hostname}/api`;
+import api from "./utils/api";
 
 /**
  * A wrapper for lazy-loaded components that adds a suspense loader. While the component is loading, the suspense
@@ -148,8 +143,8 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
 
   useEffect(() => {
     // Check if the user is authenticated
-    axios
-      .get(baseUrl + userEndpointPath)
+    api
+      .get(userEndpointPath)
       .then((response) => {
         setUser(new User(response.data));
       })

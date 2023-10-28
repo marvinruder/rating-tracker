@@ -19,14 +19,13 @@ import {
   useTheme,
 } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
-import { emojiFlag, Stock, stockListEndpointPath, stockLogoEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
+import { baseURL, emojiFlag, Stock, stockListEndpointPath, stockLogoEndpointPath } from "@rating-tracker/commons";
 import React, { forwardRef, Ref, useState, ReactElement, ChangeEvent, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { SectorIcon } from "../../../../components/stockProperties";
 import { useNotification } from "../../../../contexts/NotificationContext";
-import { baseUrl } from "../../../../router";
+import api from "../../../../utils/api";
 
 /**
  * A transition for sliding in the search bar.
@@ -169,8 +168,8 @@ export const HeaderSearch = (): JSX.Element => {
    * @param {string} currentSearchValue The current search value.
    */
   const getStocks = (currentSearchValue: string) => {
-    axios
-      .get(baseUrl + stockListEndpointPath, {
+    api
+      .get(stockListEndpointPath, {
         params: { name: currentSearchValue.trim(), sortBy: "ticker" },
       })
       .then((res) => {
@@ -286,7 +285,7 @@ export const HeaderSearch = (): JSX.Element => {
                               background: "none",
                             }}
                             src={
-                              baseUrl + stockLogoEndpointPath + `/${stock.ticker}?dark=${theme.palette.mode === "dark"}`
+                              baseURL + stockLogoEndpointPath + `/${stock.ticker}?dark=${theme.palette.mode === "dark"}`
                             }
                             alt=" "
                           />

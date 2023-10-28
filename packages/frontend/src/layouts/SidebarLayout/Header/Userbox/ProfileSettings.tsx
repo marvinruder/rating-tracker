@@ -27,11 +27,11 @@ import {
   subscriptionOfMessageType,
   userEndpointPath,
 } from "@rating-tracker/commons";
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 
 import { useNotification } from "../../../../contexts/NotificationContext";
-import { UserContext, baseUrl } from "../../../../router";
+import { UserContext } from "../../../../router";
+import api from "../../../../utils/api";
 import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
 
 /**
@@ -119,9 +119,9 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
     validate();
     if (validateEmail() && validateName() && validatePhone()) {
       setRequestInProgress(true);
-      axios
+      api
         .patch(
-          baseUrl + userEndpointPath,
+          userEndpointPath,
           avatar !== user.avatar ? { avatar } : undefined, // Include payload with avatar only if it has changed.
           {
             params: {

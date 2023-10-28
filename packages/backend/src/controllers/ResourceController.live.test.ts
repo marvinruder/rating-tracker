@@ -1,4 +1,4 @@
-import { resourceEndpointPath } from "@rating-tracker/commons";
+import { baseURL, resourceEndpointPath } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
 
 import { LiveTestSuite, expectRouteToBePrivate, supertest } from "../../test/liveTestHelpers";
@@ -10,9 +10,9 @@ export const tests: LiveTestSuite = [];
 tests.push({
   testName: "provides a PNG resource",
   testFunction: async () => {
-    await expectRouteToBePrivate(`/api${resourceEndpointPath}/image.png`);
+    await expectRouteToBePrivate(`${baseURL}${resourceEndpointPath}/image.png`);
     const res = await supertest
-      .get(`/api${resourceEndpointPath}/image.png`)
+      .get(`${baseURL}${resourceEndpointPath}/image.png`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.header["content-type"]).toMatch("image/png");
@@ -23,9 +23,9 @@ tests.push({
 tests.push({
   testName: "provides an HTML resource",
   testFunction: async () => {
-    await expectRouteToBePrivate(`/api${resourceEndpointPath}/page.html`);
+    await expectRouteToBePrivate(`${baseURL}${resourceEndpointPath}/page.html`);
     const res = await supertest
-      .get(`/api${resourceEndpointPath}/page.html`)
+      .get(`${baseURL}${resourceEndpointPath}/page.html`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.header["content-type"]).toMatch("text/html");
@@ -38,9 +38,9 @@ tests.push({
 tests.push({
   testName: "provides a JSON resource",
   testFunction: async () => {
-    await expectRouteToBePrivate(`/api${resourceEndpointPath}/data.json`);
+    await expectRouteToBePrivate(`${baseURL}${resourceEndpointPath}/data.json`);
     const res = await supertest
-      .get(`/api${resourceEndpointPath}/data.json`)
+      .get(`${baseURL}${resourceEndpointPath}/data.json`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.header["content-type"]).toMatch("application/json");
@@ -51,9 +51,9 @@ tests.push({
 tests.push({
   testName: "does not provide resources of unknown type",
   testFunction: async () => {
-    await expectRouteToBePrivate(`/api${resourceEndpointPath}/odd.exe`);
+    await expectRouteToBePrivate(`${baseURL}${resourceEndpointPath}/odd.exe`);
     const res = await supertest
-      .get(`/api${resourceEndpointPath}/odd.exe`)
+      .get(`${baseURL}${resourceEndpointPath}/odd.exe`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(501);
     expect(res.body.message).toMatch("Resources of this type cannot be fetched using this API endpoint");
@@ -63,9 +63,9 @@ tests.push({
 tests.push({
   testName: "fails to provide not-existent resource",
   testFunction: async () => {
-    await expectRouteToBePrivate(`/api${resourceEndpointPath}/doesNotExist.png`);
+    await expectRouteToBePrivate(`${baseURL}${resourceEndpointPath}/doesNotExist.png`);
     const res = await supertest
-      .get(`/api${resourceEndpointPath}/doesNotExist.png`)
+      .get(`${baseURL}${resourceEndpointPath}/doesNotExist.png`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("not found");

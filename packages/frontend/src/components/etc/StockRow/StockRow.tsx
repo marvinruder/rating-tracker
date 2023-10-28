@@ -39,6 +39,7 @@ import {
   useTheme,
 } from "@mui/material";
 import {
+  baseURL,
   countryNameWithFlag,
   currencyName,
   favoriteEndpointPath,
@@ -60,12 +61,12 @@ import {
   WatchlistSummary,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import axios from "axios";
 import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl, UserContext } from "../../../router";
+import { UserContext } from "../../../router";
+import api from "../../../utils/api";
 import formatMarketCap from "../../../utils/formatters";
 import {
   MorningstarNavigator,
@@ -193,9 +194,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             {!props.watchlist && (
               <MenuItem
                 onClick={() => {
-                  (props.isFavorite ? axios.delete : axios.put)(
-                    baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`,
-                  )
+                  (props.isFavorite ? api.delete : api.put)(favoriteEndpointPath + `/${props.stock.ticker}`)
                     .then(() => props.getStocks && props.getStocks())
                     .catch((e) => {
                       setNotification({
@@ -307,7 +306,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           >
             <Avatar
               sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
-              src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+              src={baseURL + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
               alt=" "
             />
           </Badge>
@@ -817,7 +816,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                   mr: "-8px",
                   background: "none",
                 }}
-                src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+                src={baseURL + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
                 alt=" "
               />
               <Box sx={{ my: 1 }}>

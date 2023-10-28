@@ -31,11 +31,11 @@ import {
   fetchMorningstarEndpointPath,
   SP_PREMIUM_STOCK_ERROR_MESSAGE,
 } from "@rating-tracker/commons";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * A dialog to edit a new stock in the backend.
@@ -86,8 +86,8 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
     props.stock &&
       props.getStocks &&
       (setRequestInProgress(true),
-      axios
-        .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+      api
+        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: {
             // Only send the parameters that have changed.
             name: name !== props.stock.name ? name.trim() : undefined,
@@ -113,15 +113,15 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
     props.stock &&
       props.getStocks &&
       (setMorningstarIDRequestInProgress(true),
-      axios
-        .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+      api
+        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { morningstarID: morningstarID.trim() },
         })
         .then(() => {
           if (morningstarID) {
             // If a Morningstar ID was set, we fetch data from Morningstar using the new ID.
-            axios
-              .post(baseUrl + fetchMorningstarEndpointPath, undefined, {
+            api
+              .post(fetchMorningstarEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
@@ -144,15 +144,15 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
     props.stock &&
       props.getStocks &&
       (setMarketScreenerIDRequestInProgress(true),
-      axios
-        .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+      api
+        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { marketScreenerID: marketScreenerID.trim() },
         })
         .then(() => {
           if (marketScreenerID) {
             // If a Market Screener ID was set, we fetch data from Market Screener using the new ID.
-            axios
-              .post(baseUrl + fetchMarketScreenerEndpointPath, undefined, {
+            api
+              .post(fetchMarketScreenerEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
@@ -175,15 +175,15 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
     props.stock &&
       props.getStocks &&
       (setMSCIIDRequestInProgress(true),
-      axios
-        .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+      api
+        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { msciID: msciID.trim() },
         })
         .then(() => {
           if (msciID) {
             // If an MSCI ID was set, we fetch data from MSCI using the new ID.
-            axios
-              .post(baseUrl + fetchMSCIEndpointPath, undefined, {
+            api
+              .post(fetchMSCIEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
@@ -206,15 +206,15 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
     props.stock &&
       props.getStocks &&
       (setRICRequestInProgress(true),
-      axios
-        .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+      api
+        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { ric: ric.trim() },
         })
         .then(() => {
           if (ric) {
             // If a RIC was set, we fetch data from Refinitiv using the new RIC.
-            axios
-              .post(baseUrl + fetchRefinitivEndpointPath, undefined, {
+            api
+              .post(fetchRefinitivEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
@@ -237,15 +237,15 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
     props.stock &&
       props.getStocks &&
       (setSPIDRequestInProgress(true),
-      axios
-        .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+      api
+        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { spID: spID === null ? "" : spID },
         })
         .then(() => {
           if (spID !== null) {
             // If an S&P ID was set, we fetch data from S&P using the new ID.
-            axios
-              .post(baseUrl + fetchSPEndpointPath, undefined, {
+            api
+              .post(fetchSPEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, noSkip: true, clear },
               })
               .then(() => {})
@@ -278,15 +278,15 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
     props.stock &&
       props.getStocks &&
       (setSustainalyticsIDRequestInProgress(true),
-      axios
-        .patch(baseUrl + stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+      api
+        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { sustainalyticsID: sustainalyticsID.trim() },
         })
         .then(() => {
           if (sustainalyticsID) {
             // If a Sustainalytics ID was set, we fetch data from Sustainalytics using the new ID.
-            axios
-              .post(baseUrl + fetchSustainalyticsEndpointPath, undefined, {
+            api
+              .post(fetchSustainalyticsEndpointPath, undefined, {
                 params: { ticker: props.stock.ticker, clear },
               })
               .then(() => {})

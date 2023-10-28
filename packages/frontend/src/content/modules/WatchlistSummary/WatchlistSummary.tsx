@@ -1,11 +1,10 @@
 import { Container, Grid } from "@mui/material";
 import { WatchlistSummary, watchlistSummaryEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 import WatchlistCard from "./WatchlistCard";
 import { WatchlistSummaryHeader } from "./WatchlistSummaryHeader";
@@ -26,8 +25,8 @@ const WatchlistSummaryModule = (): JSX.Element => {
    * Get the watchlists from the backend.
    */
   const getWatchlists = () => {
-    axios
-      .get(baseUrl + watchlistSummaryEndpointPath)
+    api
+      .get(watchlistSummaryEndpointPath)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotification(e, "fetching watchlists");

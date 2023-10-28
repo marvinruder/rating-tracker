@@ -4,13 +4,14 @@ import "./utils/startup";
 import { randomUUID } from "node:crypto";
 import path from "path";
 
+// Import all controllers
+import { baseURL } from "@rating-tracker/commons";
 import cookieParser from "cookie-parser";
 import express from "express";
 import * as OpenApiValidator from "express-openapi-validator";
 import responseTime from "response-time";
 import SwaggerUI from "swagger-ui-express";
 
-// Import all controllers
 import "./controllers/AuthController";
 import "./controllers/FavoriteController";
 import "./controllers/FetchController";
@@ -167,7 +168,7 @@ server.app.use(
 );
 
 // Route requests to controllers
-server.app.use("/api", server.router);
+server.app.use(baseURL, server.router);
 
 // Handle errors
 server.app.use(errorHandler);

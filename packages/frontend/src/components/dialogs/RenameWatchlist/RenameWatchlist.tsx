@@ -2,11 +2,10 @@ import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import { watchlistEndpointPath, WatchlistSummary } from "@rating-tracker/commons";
-import axios from "axios";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * A dialog to rename a watchlist in the backend.
@@ -35,8 +34,8 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
     props.watchlist &&
       props.getWatchlists &&
       (setRequestInProgress(true),
-      axios
-        .patch(baseUrl + watchlistEndpointPath + `/${props.watchlist.id}`, undefined, {
+      api
+        .patch(watchlistEndpointPath + `/${props.watchlist.id}`, undefined, {
           params: {
             // Only send the parameters that have changed.
             name: name !== props.watchlist.name ? name.trim() : undefined,

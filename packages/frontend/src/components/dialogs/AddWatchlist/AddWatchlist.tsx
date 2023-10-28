@@ -2,11 +2,10 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import { watchlistEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * A dialog to add a new watchlist in the backend.
@@ -33,8 +32,8 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
    */
   const putWatchlist = () => {
     setRequestInProgress(true);
-    axios
-      .put(baseUrl + watchlistEndpointPath + `/new`, undefined, {
+    api
+      .put(watchlistEndpointPath + `/new`, undefined, {
         params: { name: name.trim() },
       })
       .then(() => {

@@ -1,4 +1,9 @@
-import { favoriteEndpointPath, favoriteListEndpointPath, watchlistSummaryEndpointPath } from "@rating-tracker/commons";
+import {
+  baseURL,
+  favoriteEndpointPath,
+  favoriteListEndpointPath,
+  watchlistSummaryEndpointPath,
+} from "@rating-tracker/commons";
 
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
 
@@ -9,7 +14,9 @@ export const tests: LiveTestSuite = [];
 tests.push({
   testName: "[unsafe] returns all favorites",
   testFunction: async () => {
-    const res = await supertest.get(`/api${favoriteListEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    const res = await supertest
+      .get(`${baseURL}${favoriteListEndpointPath}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Favorites");
     expect(res.body.stocks.length).toBe(2);
@@ -23,20 +30,22 @@ tests.push({
   testFunction: async () => {
     // Check that there are no watchlists for the user
     let res = await supertest
-      .get(`/api${watchlistSummaryEndpointPath}`)
+      .get(`${baseURL}${watchlistSummaryEndpointPath}`)
       .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.length).toBe(0);
 
     // Read the Favorites list (since there is one, a new and empty one will be created)
-    res = await supertest.get(`/api${favoriteListEndpointPath}`).set("Cookie", ["authToken=anotherExampleSessionID"]);
+    res = await supertest
+      .get(`${baseURL}${favoriteListEndpointPath}`)
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Favorites");
     expect(res.body.stocks.length).toBe(0);
 
     // Check that the Favorites list is still around
     res = await supertest
-      .get(`/api${watchlistSummaryEndpointPath}`)
+      .get(`${baseURL}${watchlistSummaryEndpointPath}`)
       .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.length).toBe(1);
@@ -48,11 +57,13 @@ tests.push({
   testName: "[unsafe] adds a stock to the Favorites list",
   testFunction: async () => {
     let res = await supertest
-      .put(`/api${favoriteEndpointPath}/exampleMELI`)
+      .put(`${baseURL}${favoriteEndpointPath}/exampleMELI`)
       .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(201);
 
-    res = await supertest.get(`/api${favoriteListEndpointPath}`).set("Cookie", ["authToken=anotherExampleSessionID"]);
+    res = await supertest
+      .get(`${baseURL}${favoriteListEndpointPath}`)
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Favorites");
     expect(res.body.stocks.length).toBe(1);
@@ -60,11 +71,13 @@ tests.push({
 
     // attempting to add a stock to the list that has already been added does not return an error
     res = await supertest
-      .put(`/api${favoriteEndpointPath}/exampleMELI`)
+      .put(`${baseURL}${favoriteEndpointPath}/exampleMELI`)
       .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(201);
 
-    res = await supertest.get(`/api${favoriteListEndpointPath}`).set("Cookie", ["authToken=anotherExampleSessionID"]);
+    res = await supertest
+      .get(`${baseURL}${favoriteListEndpointPath}`)
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Favorites");
     expect(res.body.stocks.length).toBe(1);
@@ -72,7 +85,7 @@ tests.push({
 
     // attempting to add a non-existent stock to the list returns an error
     res = await supertest
-      .put(`/api${favoriteEndpointPath}/doesNotExist`)
+      .put(`${baseURL}${favoriteEndpointPath}/doesNotExist`)
       .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(404);
   },
@@ -82,11 +95,11 @@ tests.push({
   testName: "[unsafe] removes a stock from the Favorites list",
   testFunction: async () => {
     let res = await supertest
-      .delete(`/api${favoriteEndpointPath}/exampleAAPL`)
+      .delete(`${baseURL}${favoriteEndpointPath}/exampleAAPL`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
-    res = await supertest.get(`/api${favoriteListEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${favoriteListEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Favorites");
     expect(res.body.stocks.length).toBe(1);
@@ -94,11 +107,11 @@ tests.push({
 
     // attempting to delete a stock from the list that has already been removed does not return an error
     res = await supertest
-      .delete(`/api${favoriteEndpointPath}/exampleAAPL`)
+      .delete(`${baseURL}${favoriteEndpointPath}/exampleAAPL`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
-    res = await supertest.get(`/api${favoriteListEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${favoriteListEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Favorites");
     expect(res.body.stocks.length).toBe(1);
@@ -106,7 +119,7 @@ tests.push({
 
     // attempting to delete a non-existent stock from the list returns an error
     res = await supertest
-      .delete(`/api${favoriteEndpointPath}/doesNotExist`)
+      .delete(`${baseURL}${favoriteEndpointPath}/doesNotExist`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
   },
