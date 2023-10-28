@@ -14,6 +14,7 @@ export * from "./lib/models/user";
 export * from "./lib/models/watchlist";
 
 export * from "./lib/paths/auth";
+export * from "./lib/paths/base";
 export * from "./lib/paths/favorite";
 export * from "./lib/paths/fetch";
 export * from "./lib/paths/resource";

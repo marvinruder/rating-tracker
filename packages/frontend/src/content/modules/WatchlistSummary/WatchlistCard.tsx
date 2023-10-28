@@ -18,13 +18,12 @@ import {
   Typography,
 } from "@mui/material";
 import { FAVORITES_NAME, WatchlistSummary, watchlistEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { DeleteWatchlist, RenameWatchlist } from "../../../components/dialogs";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * This component displays information about a watchlist in a card used in the watchlist summary module.
@@ -78,9 +77,9 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
               <IconButton
                 color={props.watchlist.subscribed ? "primary" : undefined}
                 onClick={() => {
-                  axios
+                  api
                     .patch(
-                      baseUrl + watchlistEndpointPath + `/${props.watchlist.id}`,
+                      watchlistEndpointPath + `/${props.watchlist.id}`,
                       {},
                       { params: { subscribed: !props.watchlist.subscribed } },
                     )

@@ -1,14 +1,13 @@
 import { Card, Container } from "@mui/material";
 import { StockListColumn, Watchlist, stockListColumnArray, watchlistEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { StockTable } from "../../../components/etc/StockTable";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
 import { StockFilter } from "../../../types/StockFilter";
+import api from "../../../utils/api";
 
 import { WatchlistHeader } from "./WatchlistHeader";
 
@@ -35,8 +34,8 @@ const WatchlistModule = (): JSX.Element => {
    * @param {number} id The ID of the watchlist to fetch.
    */
   const getWatchlist = (id: number) => {
-    axios
-      .get(baseUrl + watchlistEndpointPath + `/${id}`)
+    api
+      .get(watchlistEndpointPath + `/${id}`)
       .then((res) => setWatchlist(res.data))
       .catch((e) => setErrorNotification(e, "fetching watchlist"));
   };

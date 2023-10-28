@@ -23,11 +23,10 @@ import {
   watchlistEndpointPath,
   watchlistSummaryEndpointPath,
 } from "@rating-tracker/commons";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 import { AddWatchlist } from "../AddWatchlist/AddWatchlist";
 
 /**
@@ -49,8 +48,8 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    * Get the watchlists from the backend.
    */
   const getWatchlists = () => {
-    axios
-      .get(baseUrl + watchlistSummaryEndpointPath)
+    api
+      .get(watchlistSummaryEndpointPath)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotification(e, "fetching watchlists");
@@ -73,8 +72,8 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    * @param {number} id The ID of the watchlist.
    */
   const addStockToWatchlist = (id: number) => {
-    axios
-      .patch(baseUrl + watchlistEndpointPath + `/${id}`, {}, { params: { stocksToAdd: [props.stock.ticker] } })
+    api
+      .patch(watchlistEndpointPath + `/${id}`, {}, { params: { stocksToAdd: [props.stock.ticker] } })
       .then(() => props.onClose())
       .catch((e) => setErrorNotification(e, "adding stock to watchlist"));
   };

@@ -1,4 +1,9 @@
-import { WatchlistSummary, watchlistEndpointPath, watchlistSummaryEndpointPath } from "@rating-tracker/commons";
+import {
+  WatchlistSummary,
+  baseURL,
+  watchlistEndpointPath,
+  watchlistSummaryEndpointPath,
+} from "@rating-tracker/commons";
 
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
 
@@ -8,7 +13,9 @@ export const tests: LiveTestSuite = [];
 
 const getWatchlistID = async (name: string): Promise<number> => {
   // Get the ID of the watchlist from the summary
-  const res = await supertest.get(`/api${watchlistSummaryEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+  const res = await supertest
+    .get(`${baseURL}${watchlistSummaryEndpointPath}`)
+    .set("Cookie", ["authToken=exampleSessionID"]);
   expect(res.status).toBe(200);
   const { id } = res.body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === name);
   return id;
@@ -18,7 +25,7 @@ tests.push({
   testName: "reads a summary of all watchlists",
   testFunction: async () => {
     const res = await supertest
-      .get(`/api${watchlistSummaryEndpointPath}`)
+      .get(`${baseURL}${watchlistSummaryEndpointPath}`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.length).toBe(2);
@@ -39,7 +46,9 @@ tests.push({
     // Get the ID of the watchlist from the summary
     const id = await getWatchlistID("Fævørites");
 
-    let res = await supertest.get(`/api${watchlistEndpointPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest
+      .get(`${baseURL}${watchlistEndpointPath}/${id}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Fævørites");
     expect(res.body.stocks.length).toBe(2);
@@ -48,7 +57,7 @@ tests.push({
 
     // Attempting to read a list of a different user returns an error
     res = await supertest
-      .get(`/api${watchlistEndpointPath}/${id}`)
+      .get(`${baseURL}${watchlistEndpointPath}/${id}`)
       .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("does not belong to user with email address john.doe");
@@ -60,24 +69,24 @@ tests.push({
   testFunction: async () => {
     // Attempting to create another Favorites list returns an error
     let res = await supertest
-      .put(`/api${watchlistEndpointPath}/new?name=Favorites`)
+      .put(`${baseURL}${watchlistEndpointPath}/new?name=Favorites`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch("The name “Favorites” is reserved.");
 
     // Attempting to use a custom ID returns an error
     res = await supertest
-      .put(`/api${watchlistEndpointPath}/fancy?name=Fancy`)
+      .put(`${baseURL}${watchlistEndpointPath}/fancy?name=Fancy`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
 
     res = await supertest
-      .put(`/api${watchlistEndpointPath}/new?name=${encodeURIComponent("Favȏrïtès")}`)
+      .put(`${baseURL}${watchlistEndpointPath}/new?name=${encodeURIComponent("Favȏrïtès")}`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(201);
     const { id } = res.body;
 
-    res = await supertest.get(`/api${watchlistEndpointPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${watchlistEndpointPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Favȏrïtès");
     expect(res.body.subscribed).toBeFalsy();
@@ -89,7 +98,9 @@ tests.push({
   testName: "[unsafe] updates a watchlist",
   testFunction: async () => {
     // Get the ID of the watchlist from the summary
-    let res = await supertest.get(`/api${watchlistSummaryEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest
+      .get(`${baseURL}${watchlistSummaryEndpointPath}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     const { id, subscribed } = res.body.find(
       (watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites",
@@ -100,7 +111,7 @@ tests.push({
     // Update the watchlist
     res = await supertest
       .patch(
-        `/api${watchlistEndpointPath}/${id}?stocksToAdd=exampleALV%2CexampleKGX` +
+        `${baseURL}${watchlistEndpointPath}/${id}?stocksToAdd=exampleALV%2CexampleKGX` +
           "&stocksToRemove=exampleNOVO%20B%2CexampleORSTED&name=Favoriten&subscribed=true",
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
@@ -109,18 +120,20 @@ tests.push({
     // Updating the watchlist again does not return an error
     res = await supertest
       .patch(
-        `/api${watchlistEndpointPath}/${id}?stocksToAdd=exampleALV%2CexampleKGX` +
+        `${baseURL}${watchlistEndpointPath}/${id}?stocksToAdd=exampleALV%2CexampleKGX` +
           "&stocksToRemove=exampleNOVO%20B%2CexampleORSTED&name=Favoriten&subscribed=true",
       )
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Not sending any update information is meaningless but does not return an error
-    res = await supertest.patch(`/api${watchlistEndpointPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest
+      .patch(`${baseURL}${watchlistEndpointPath}/${id}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Check that the watchlist has been updated
-    res = await supertest.get(`/api${watchlistEndpointPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${watchlistEndpointPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.stocks.length).toBe(2);
     expect(res.body.stocks[0].name).toBe("Allianz SE");
@@ -130,28 +143,28 @@ tests.push({
 
     // Attempting to update a list of a different user returns an error
     res = await supertest
-      .patch(`/api${watchlistEndpointPath}/${id}?name=This%20should%20not%20work`)
+      .patch(`${baseURL}${watchlistEndpointPath}/${id}?name=This%20should%20not%20work`)
       .set("Cookie", ["authToken=anotherExampleSessionID"]);
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("does not belong to user with email address john.doe");
 
     // Attempting to update a non-existent list returns an error
     res = await supertest
-      .patch(`/api${watchlistEndpointPath}/-1?name=This%20should%20not%20work`)
+      .patch(`${baseURL}${watchlistEndpointPath}/-1?name=This%20should%20not%20work`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Watchlist -1 not found.");
 
     // Attempting to use the reserved name “Favorites” returns an error
     res = await supertest
-      .patch(`/api${watchlistEndpointPath}/${id}?name=Favorites`)
+      .patch(`${baseURL}${watchlistEndpointPath}/${id}?name=Favorites`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch("The name “Favorites” is reserved.");
 
     // Attempting to rename the “Favorites” list returns an error
     res = await supertest
-      .patch(`/api${watchlistEndpointPath}/${favoritesID}?name=This%20should%20not%20work`)
+      .patch(`${baseURL}${watchlistEndpointPath}/${favoritesID}?name=This%20should%20not%20work`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch("The name “Favorites” must not be changed.");
@@ -166,16 +179,18 @@ tests.push({
 
     // Delete the watchlist
     let res = await supertest
-      .delete(`/api${watchlistEndpointPath}/${id}`)
+      .delete(`${baseURL}${watchlistEndpointPath}/${id}`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Attempting to read the deleted watchlist returns an error
-    res = await supertest.get(`/api${watchlistEndpointPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${watchlistEndpointPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
 
     // A watchlist witht that name is no longer in the summary
-    res = await supertest.get(`/api${watchlistSummaryEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest
+      .get(`${baseURL}${watchlistSummaryEndpointPath}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(
       res.body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites"),

@@ -2,11 +2,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import { User, userManagementEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * A dialog to delete a user from the backend.
@@ -25,8 +24,8 @@ export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
   const deleteUser = () => {
     props.user &&
       (setRequestInProgress(true),
-      axios
-        .delete(baseUrl + userManagementEndpointPath + `/${props.user.email}`)
+      api
+        .delete(userManagementEndpointPath + `/${props.user.email}`)
         // Update the user list after the user was deleted.
         .then(() => props.getUsers && props.getUsers())
         .catch((e) => setErrorNotification(e, "deleting user"))

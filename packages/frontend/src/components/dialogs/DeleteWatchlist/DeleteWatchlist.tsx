@@ -2,12 +2,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import { WatchlistSummary, watchlistEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * A dialog to delete a watchlist from the backend.
@@ -27,8 +26,8 @@ export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
   const deleteWatchlist = () => {
     props.watchlist &&
       (setRequestInProgress(true),
-      axios
-        .delete(baseUrl + watchlistEndpointPath + `/${props.watchlist.id}`)
+      api
+        .delete(watchlistEndpointPath + `/${props.watchlist.id}`)
         // If the dialog is shown from the watchlist list, the list should be updated.
         .then(() => props.getWatchlists && props.getWatchlists())
         .catch((e) => setErrorNotification(e, "deleting watchlist"))

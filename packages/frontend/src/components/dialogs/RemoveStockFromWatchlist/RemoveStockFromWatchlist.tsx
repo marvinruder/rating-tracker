@@ -2,11 +2,10 @@ import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import { Stock, WatchlistSummary, watchlistEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * A dialog to remove a stock from a watchlist.
@@ -24,9 +23,9 @@ export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): 
    */
   const removeStockFromWatchlist = () => {
     setRequestInProgress(true),
-      axios
+      api
         .patch(
-          baseUrl + watchlistEndpointPath + `/${props.watchlist.id}`,
+          watchlistEndpointPath + `/${props.watchlist.id}`,
           {},
           { params: { stocksToRemove: [props.stock.ticker] } },
         )

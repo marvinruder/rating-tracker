@@ -4,13 +4,12 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import { FAVORITES_NAME, Watchlist, watchlistEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useState } from "react";
 
 import { DeleteWatchlist, RenameWatchlist } from "../../../components/dialogs";
 import { StockTableFilters, StockTableFiltersProps } from "../../../components/etc/StockTableFilters";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * A header for the watchlist details page.
@@ -42,9 +41,9 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
                 <IconButton
                   color={props.watchlist.subscribed ? "primary" : undefined}
                   onClick={() => {
-                    axios
+                    api
                       .patch(
-                        baseUrl + watchlistEndpointPath + `/${props.watchlist.id}`,
+                        watchlistEndpointPath + `/${props.watchlist.id}`,
                         {},
                         { params: { subscribed: !props.watchlist.subscribed } },
                       )

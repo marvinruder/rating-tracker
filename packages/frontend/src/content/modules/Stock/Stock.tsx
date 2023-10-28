@@ -1,13 +1,12 @@
 import { Card, Container } from "@mui/material";
 import { Stock, favoriteListEndpointPath, stockEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
 import { StockDetails } from "../../../components/etc/StockDetails";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 import { StockHeader } from "./StockHeader";
 
@@ -28,12 +27,12 @@ const StockModule = (): JSX.Element => {
    * @param {string} ticker The ticker of the stock to fetch.
    */
   const getStock = (ticker: string) => {
-    axios
-      .get(baseUrl + stockEndpointPath + `/${ticker}`)
+    api
+      .get(stockEndpointPath + `/${ticker}`)
       .then((res) => setStock(res.data))
       .catch((e) => setErrorNotification(e, "fetching stock"));
-    axios
-      .get(baseUrl + favoriteListEndpointPath)
+    api
+      .get(favoriteListEndpointPath)
       .then((res) => setIsFavorite((res.data.stocks as Stock[]).find((stock) => ticker === stock.ticker) !== undefined))
       .catch((e) => setErrorNotification(e, "fetching favorites"));
   };

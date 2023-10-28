@@ -19,12 +19,11 @@ import {
   favoriteListEndpointPath,
   stockListEndpointPath,
 } from "@rating-tracker/commons";
-import axios from "axios";
 import { FC, ChangeEvent, useState, useEffect } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
 import { StockFilter } from "../../../types/StockFilter";
+import api from "../../../utils/api";
 import { StockRow } from "../StockRow";
 
 /**
@@ -55,8 +54,8 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
   const getStocks = () => {
     setStocksFinal(false);
     void Promise.allSettled([
-      axios
-        .get(baseUrl + stockListEndpointPath, {
+      api
+        .get(stockListEndpointPath, {
           params: {
             // Pagination
             offset: page * rowsPerPage,
@@ -83,8 +82,8 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
           setStocks([]);
           setCount(0);
         }),
-      axios
-        .get(baseUrl + favoriteListEndpointPath)
+      api
+        .get(favoriteListEndpointPath)
         .then((res) => setFavorites((res.data.stocks as Stock[]).map((stock) => stock.ticker)))
         .catch((e) => {
           setErrorNotification(e, "fetching favorites");

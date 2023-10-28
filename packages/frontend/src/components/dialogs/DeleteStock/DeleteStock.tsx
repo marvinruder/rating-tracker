@@ -2,12 +2,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import { Stock, stockEndpointPath } from "@rating-tracker/commons";
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * A dialog to delete a stock from the backend.
@@ -27,8 +26,8 @@ export const DeleteStock = (props: DeleteStockProps): JSX.Element => {
   const deleteStock = () => {
     props.stock &&
       (setRequestInProgress(true),
-      axios
-        .delete(baseUrl + stockEndpointPath + `/${props.stock.ticker}`)
+      api
+        .delete(stockEndpointPath + `/${props.stock.ticker}`)
         // If the dialog is shown from the stock list, the list should be updated.
         .then(() => props.getStocks && props.getStocks())
         .catch((e) => setErrorNotification(e, "deleting stock"))

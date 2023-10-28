@@ -1,9 +1,9 @@
 import { Service, serviceArray, statusEndpointPath } from "@rating-tracker/commons";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { FC, useState, createContext, useEffect } from "react";
 
-import { baseUrl } from "../router";
 import { DetailedStatus, SystemStatus } from "../types/Status";
+import api from "../utils/api";
 
 /**
  * An object provided by the sidebar context.
@@ -100,8 +100,8 @@ export const SidebarProvider: FC<SidebarProviderProps> = (props: SidebarProvider
 
   const refreshSystemStatus = () => (
     setSystemStatusLoading(true),
-    void axios
-      .get(baseUrl + statusEndpointPath)
+    void api
+      .get(statusEndpointPath)
       .then(({ data }) => setSystemStatus(getSystemStatusFromResponseData(data)))
       .catch((e) =>
         e instanceof AxiosError && "status" in e.response.data && "services" in e.response.data

@@ -4,13 +4,19 @@ import EditIcon from "@mui/icons-material/Edit";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
-import { favoriteEndpointPath, Stock, stockLogoEndpointPath, WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
-import axios from "axios";
+import {
+  baseURL,
+  favoriteEndpointPath,
+  Stock,
+  stockLogoEndpointPath,
+  WRITE_STOCKS_ACCESS,
+} from "@rating-tracker/commons";
 import { useContext, useState } from "react";
 
 import { AddStockToWatchlist, DeleteStock, EditStock } from "../../../components/dialogs";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl, UserContext } from "../../../router";
+import { UserContext } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * A header for the stock details page.
@@ -41,7 +47,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                   mr: "-8px",
                   background: "none",
                 }}
-                src={baseUrl + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+                src={baseURL + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
                 alt=" "
               />
               <Box>
@@ -83,9 +89,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                 <IconButton
                   color={props.isFavorite ? "warning" : undefined}
                   onClick={() => {
-                    (props.isFavorite ? axios.delete : axios.put)(
-                      baseUrl + favoriteEndpointPath + `/${props.stock.ticker}`,
-                    )
+                    (props.isFavorite ? api.delete : api.put)(favoriteEndpointPath + `/${props.stock.ticker}`)
                       .then(() => props.getStock && props.getStock())
                       .catch((e) => {
                         setNotification({

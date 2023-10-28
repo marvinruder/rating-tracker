@@ -1,4 +1,4 @@
-import { DataProvider, dataProviderEndpoints, dataProviderName } from "@rating-tracker/commons";
+import { baseURL, DataProvider, dataProviderEndpoints, dataProviderName } from "@rating-tracker/commons";
 import type { AxiosError, AxiosRequestConfig } from "axios";
 import axios from "axios";
 import * as cron from "cron";
@@ -56,7 +56,7 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
           "marketScreener",
         ]) {
           await axios
-            .post(`http://localhost:${process.env.PORT}/api${dataProviderEndpoints[dataProvider]}`, undefined, {
+            .post(`http://localhost:${process.env.PORT}${baseURL}${dataProviderEndpoints[dataProvider]}`, undefined, {
               ...dataProviderParams[dataProvider],
               headers: {
                 Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,

@@ -28,12 +28,11 @@ import {
   ADMINISTRATIVE_ACCESS,
   userManagementEndpointPath,
 } from "@rating-tracker/commons";
-import axios from "axios";
 import { useState } from "react";
 
 import { DeleteUser } from "../../../components/dialogs";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { baseUrl } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * This component displays information about a user in a table row that is used in the user list.
@@ -82,8 +81,8 @@ const UserRow = (props: UserRowProps): JSX.Element => {
      */
     const patchAccessRights = () => {
       setRequestInProgress(true);
-      axios
-        .patch(baseUrl + userManagementEndpointPath + `/${props.user.email}`, undefined, {
+      api
+        .patch(userManagementEndpointPath + `/${props.user.email}`, undefined, {
           params: {
             // Only send the parameters that have changed.
             accessRights: accessRights !== props.user.accessRights ? accessRights : undefined,

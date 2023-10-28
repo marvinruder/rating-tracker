@@ -4,12 +4,12 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
 import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
-import axios from "axios";
 import { useContext, useState } from "react";
 
 import { SwitchSelector } from "../../../components/etc/SwitchSelector";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { UserContext, baseUrl } from "../../../router";
+import { UserContext } from "../../../router";
+import api from "../../../utils/api";
 
 /**
  * This component renders the login page.
@@ -67,14 +67,14 @@ export const LoginPage = (): JSX.Element => {
           if (validateEmail() && validateName()) {
             try {
               // Request registration challenge
-              const res = await axios.get(baseUrl + registerEndpointPath, {
+              const res = await api.get(registerEndpointPath, {
                 params: { email: email.trim(), name: name.trim() },
               });
               // Ask the browser to perform the WebAuthn registration and store a corresponding credential
               const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
               try {
                 // Send the registration challenge response to the server
-                await axios.post(baseUrl + registerEndpointPath, authRes, {
+                await api.post(registerEndpointPath, authRes, {
                   params: { email: email.trim(), name: name.trim() },
                   headers: { "Content-Type": "application/json" },
                 });
@@ -99,13 +99,13 @@ export const LoginPage = (): JSX.Element => {
         case "signIn":
           try {
             // Request authentication challenge
-            const res = await axios.get(baseUrl + signInEndpointPath);
+            const res = await api.get(signInEndpointPath);
             // Ask the browser to perform the WebAuthn authentication
             const authRes = await SimpleWebAuthnBrowser.startAuthentication(res.data);
             try {
               // Send the authentication challenge response to the server
-              await axios.post(
-                baseUrl + signInEndpointPath,
+              await api.post(
+                signInEndpointPath,
                 { ...authRes, challenge: res.data.challenge },
                 { headers: { "Content-Type": "application/json" } },
               );
