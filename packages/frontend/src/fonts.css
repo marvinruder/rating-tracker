@@ -4,8 +4,7 @@
   font-weight: 400;
   src:
     local(""),
-    url("/assets/fonts/inter-v12-all-ext-regular.woff2") format("woff2"),
-    url("/assets/fonts/inter-v12-all-ext-regular.woff") format("woff");
+    url("/assets/fonts/inter-v12-400.woff2") format("woff2");
   font-display: swap;
 }
 
@@ -15,7 +14,6 @@
   font-weight: 700;
   src:
     local(""),
-    url("/assets/fonts/inter-v12-all-ext-700.woff2") format("woff2"),
-    url("/assets/fonts/inter-v12-all-ext-700.woff") format("woff");
+    url("/assets/fonts/inter-v12-700.woff2") format("woff2");
   font-display: swap;
 }
