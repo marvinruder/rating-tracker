@@ -1,7 +1,7 @@
 import { CssBaseline } from "@mui/material";
 import { useRoutes } from "react-router-dom";
 
-// import { ParticleBackground } from "./components/etc/ParticleBackground";
+import { ParticleBackground } from "./components/etc/ParticleBackground";
 import router from "./router";
 import ThemeProvider from "./theme/ThemeProvider";
 
@@ -20,7 +20,7 @@ const App = (): JSX.Element => {
     <ThemeProvider>
       <CssBaseline />
       {content}
-      {/* <ParticleBackground /> */}
+      <ParticleBackground />
     </ThemeProvider>
   );
 };
