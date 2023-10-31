@@ -9,6 +9,7 @@ services:
       - no-new-privileges
     ports:
       - "443:443"
+      - "443:443/udp"
     volumes:
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/dhparam:/etc/nginx/dhparam
