@@ -145,7 +145,7 @@ export const LoginPage = (): JSX.Element => {
             </Box>
           </Grid>
           <Grid item>
-            <Typography variant="h3" fontSize={24} textAlign="center">
+            <Typography variant="h3" fontSize={24} lineHeight={1.6} textAlign="center">
               Rating Tracker
             </Typography>
           </Grid>
