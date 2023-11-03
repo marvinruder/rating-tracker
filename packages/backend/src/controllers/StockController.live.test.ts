@@ -8,6 +8,7 @@ import {
   stockComputeEndpointPath,
   stockEndpointPath,
   stockListEndpointPath,
+  stockLogoBackgroundEndpointPath,
   stockLogoEndpointPath,
   styleArray,
   watchlistSummaryEndpointPath,
@@ -415,6 +416,9 @@ tests.push({
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
+    // Check max-age header, should be smaller than 1 day
+    expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
+    expect(Number(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1"))).toBeLessThanOrEqual(86400);
     expect(res.body.toString()).toMatch(
       '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
     );
@@ -425,6 +429,9 @@ tests.push({
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
+    // Check max-age header, should be close to 1 hour
+    expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
+    expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(3600, -1);
     expect(res.body.toString()).toMatch(
       '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>',
     );
@@ -434,6 +441,27 @@ tests.push({
       .get(`${baseURL}${stockLogoEndpointPath}/doesNotExist`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(404);
+  },
+});
+
+tests.push({
+  testName: "[unsafe] provides stock logos for background",
+  testFunction: async () => {
+    const res = await supertest
+      .get(`${baseURL}${stockLogoBackgroundEndpointPath}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    // Check max-age header, should be close to 1 day
+    expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
+    expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(86400, -1);
+    // 60 logos are returned
+    expect(res.body).toHaveLength(60);
+    res.body.forEach((logo: string) => {
+      expect(logo).toMatch(
+        // Each logo is an SVG file
+        '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
+      );
+    });
   },
 });
 

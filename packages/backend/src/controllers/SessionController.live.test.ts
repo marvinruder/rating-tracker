@@ -34,6 +34,7 @@ tests.push({
 
     // Check whether we can still access the current user
     res = await supertest.get(`${baseURL}${userEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(200);
+    expect(Object.keys(res.body)).toHaveLength(0);
   },
 });

@@ -11,6 +11,8 @@ import {
 } from "@rating-tracker/commons";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
+import { DUMMY_SVG } from "../controllers/StockController";
+
 export const components: OpenAPIV3.ComponentsObject = {
   schemas: {
     Country: {
@@ -374,6 +376,15 @@ export const components: OpenAPIV3.ComponentsObject = {
             },
           },
         },
+      },
+    },
+    LogoBackground: {
+      type: "array",
+      description: "The logos of the highest rated stocks.",
+      items: {
+        type: "string",
+        description: "The SVG logo of a stock.",
+        example: DUMMY_SVG,
       },
     },
     Error: {

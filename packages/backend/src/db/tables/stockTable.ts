@@ -75,7 +75,7 @@ export const readStock = async (ticker: string): Promise<Stock> => {
  * @param {Prisma.StockFindManyArgs} args An object with filtering, sorting and pagination options.
  * @returns {Promise<Stock[]>} A list of all stocks.
  */
-export const readAllStocks = async (args?: Prisma.StockFindManyArgs): Promise<[Stock[], number]> => {
+export const readStocks = async (args?: Prisma.StockFindManyArgs): Promise<[Stock[], number]> => {
   return await client.$transaction([
     client.stock.findMany(args),
     client.stock.count({

@@ -13,7 +13,7 @@ import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 import { WebDriver } from "selenium-webdriver";
 
-import { readAllStocks, readStock } from "../db/tables/stockTable";
+import { readStocks, readStock } from "../db/tables/stockTable";
 import { createResource } from "../redis/repositories/resourceRepository";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import * as signal from "../signal/signal";
@@ -215,7 +215,7 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
     }
   } else {
     // When no specific stock is requested, we fetch all stocks from the database which have an ID for the data provider
-    [stockList] = await readAllStocks({
+    [stockList] = await readStocks({
       where: {
         [dataProviderID[dataProvider]]: {
           not: null,

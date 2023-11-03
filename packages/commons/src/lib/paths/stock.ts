@@ -11,6 +11,10 @@ export const stockComputeEndpointPath = `${stockEndpointPath}/compute`;
  */
 export const stockListEndpointPath = `${stockEndpointPath}/list`;
 /**
+ * The stock logo background endpoint path.
+ */
+export const stockLogoBackgroundEndpointPath = `${stockEndpointPath}/logobackground`;
+/**
  * The stock logo endpoint path.
  */
 export const stockLogoEndpointPath = `${stockEndpointPath}/logo`;

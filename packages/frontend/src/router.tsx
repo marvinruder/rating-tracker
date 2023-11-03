@@ -146,7 +146,11 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
     api
       .get(userEndpointPath)
       .then((response) => {
-        setUser(new User(response.data));
+        if (Object.keys(response.data).length) {
+          setUser(new User(response.data));
+        } else {
+          clearUser();
+        }
       })
       // If unsuccessful, delete the user information so that the user is redirected to the login page
       .catch(clearUser)

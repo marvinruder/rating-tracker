@@ -10,7 +10,7 @@ import Router from "../utils/router";
  */
 export class UserController {
   /**
-   * Returns the current user fetched during session validation.
+   * Returns the current user fetched during session validation. If no user is logged in, an empty object is returned.
    *
    * @param {Request} _ The request.
    * @param {Response} res The response.
@@ -18,10 +18,13 @@ export class UserController {
   @Router({
     path: userEndpointPath,
     method: "get",
-    accessRights: GENERAL_ACCESS,
+    accessRights: 0,
   })
   get(_: Request, res: Response) {
-    res.status(200).json(res.locals.user).end();
+    res
+      .status(200)
+      .json(res.locals.user ?? {})
+      .end();
   }
 
   /**
