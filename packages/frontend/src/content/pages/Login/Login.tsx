@@ -1,7 +1,7 @@
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { LoadingButton } from "@mui/lab";
-import { Box, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
+import { Box, Card, CardContent, Grid, TextField, Typography, useTheme } from "@mui/material";
 import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import { useContext, useState } from "react";
@@ -25,6 +25,8 @@ export const LoginPage = (): JSX.Element => {
   const [nameError, setNameError] = useState<boolean>(false);
   const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
   const { refetchUser } = useContext(UserContext);
+
+  const theme = useTheme();
 
   /**
    * Validates the email input field.
@@ -130,7 +132,7 @@ export const LoginPage = (): JSX.Element => {
   };
 
   return (
-    <Card sx={{ margin: "auto", minWidth: 275 }}>
+    <Card sx={{ margin: "auto", minWidth: 275, background: theme.colors.alpha.white[30], backdropFilter: "blur(3px)" }}>
       <CardContent>
         <Grid container direction="column" spacing={2} padding={1}>
           <Grid item>
