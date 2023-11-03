@@ -136,13 +136,7 @@ export const LoginPage = (): JSX.Element => {
       <CardContent>
         <Grid container direction="column" spacing={2} padding={1}>
           <Grid item>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                fontSize: 96,
-              }}
-            >
+            <Box sx={{ display: "flex", justifyContent: "center", fontSize: 96 }}>
               <QueryStatsIcon fontSize="inherit" />
             </Box>
           </Grid>
