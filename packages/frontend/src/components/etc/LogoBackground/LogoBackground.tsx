@@ -61,8 +61,8 @@ export const LogoBackground = (): JSX.Element => {
           style={{
             ...(i > count ? { display: "none" } : {}),
             position: "absolute",
-            height: `${72 - (36 * i) / count}px`,
-            width: `${72 - (36 * i) / count}px`,
+            height: `${80 - (30 * i) / count}px`,
+            width: `${80 - (30 * i) / count}px`,
             maxHeight: "12.5vmin",
             maxWidth: "12.5vmin",
             backgroundSize: "contain",
