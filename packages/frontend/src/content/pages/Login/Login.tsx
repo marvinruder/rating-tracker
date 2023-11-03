@@ -132,7 +132,7 @@ export const LoginPage = (): JSX.Element => {
   };
 
   return (
-    <Card sx={{ margin: "auto", minWidth: 275, background: theme.colors.alpha.white[30], backdropFilter: "blur(3px)" }}>
+    <Card sx={{ margin: "auto", minWidth: 275, background: theme.colors.alpha.white[50], backdropFilter: "blur(3px)" }}>
       <CardContent>
         <Grid container direction="column" spacing={2} padding={1}>
           <Grid item>
