@@ -1,6 +1,6 @@
 import { useMediaQuery, useTheme } from "@mui/material";
 import { stockLogoBackgroundEndpointPath } from "@rating-tracker/commons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import api from "../../../utils/api";
 
@@ -15,7 +15,6 @@ const MAX_COUNT = 60;
  * @returns {JSX.Element} The component.
  */
 export const ParticleBackground = (): JSX.Element => {
-  const [logos, setLogos] = useState<string[]>(new Array(MAX_COUNT).fill(""));
   const theme = useTheme();
 
   const count = 30 + 30 * +useMediaQuery(theme.breakpoints.up("md"));
@@ -23,20 +22,25 @@ export const ParticleBackground = (): JSX.Element => {
   useEffect(() => {
     api
       .get(`${stockLogoBackgroundEndpointPath}`, { params: { dark: theme.palette.mode === "dark" } })
-      .then((res) => setLogos(res.data))
+      .then((res) => {
+        const logos = res.data as string[];
+        Array.from(document.getElementsByClassName("backgroundlogo")).forEach((logoDiv, i) => {
+          if (logoDiv instanceof HTMLElement && logos[i]) {
+            logoDiv.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa(logos[i])}')`;
+            logoDiv.animate(
+              {
+                transform: [
+                  `translate(${Math.random() * 100}vw, ${Math.random() * 100}dvh)`,
+                  `translate(${Math.random() * 100}vw, ${Math.random() * 100}dvh)`,
+                ],
+                opacity: [0, 0.4, 0.4, 0.4, 0],
+              },
+              { delay: Math.random() * -60000, duration: 60000, easing: "ease-in-out", iterations: Infinity },
+            );
+          }
+        });
+      })
       .catch(() => undefined); // Ignore errors since the background is not that important
-    Array.from(document.getElementsByClassName("backgroundlogo")).forEach((logo) => {
-      logo.animate(
-        {
-          transform: [
-            `translate(${Math.random() * 100}vw, ${Math.random() * 100}dvh)`,
-            `translate(${Math.random() * 100}vw, ${Math.random() * 100}dvh)`,
-          ],
-          opacity: [0, 0.4, 0.4, 0.4, 0],
-        },
-        { delay: Math.random() * -60000, duration: 60000, easing: "ease-in-out", iterations: Infinity },
-      );
-    });
   }, []);
 
   return (
@@ -61,8 +65,8 @@ export const ParticleBackground = (): JSX.Element => {
             width: `${80 - (40 * i) / count}px`,
             maxHeight: "12.5vmin",
             maxWidth: "12.5vmin",
+            backgroundSize: "contain",
           }}
-          dangerouslySetInnerHTML={{ __html: logos[i] }}
         />
       ))}
     </div>
