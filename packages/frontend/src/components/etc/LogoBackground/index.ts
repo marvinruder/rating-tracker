@@ -1,0 +1,1 @@
+export { LogoBackground } from "./LogoBackground";

@@ -10,11 +10,11 @@ import api from "../../../utils/api";
 const MAX_COUNT = 60;
 
 /**
- * The background of the page, showing particles.
+ * The background of the page, showing stock logos.
  *
  * @returns {JSX.Element} The component.
  */
-export const ParticleBackground = (): JSX.Element => {
+export const LogoBackground = (): JSX.Element => {
   const theme = useTheme();
 
   const count = 30 + 30 * +useMediaQuery(theme.breakpoints.up("md"));
@@ -61,8 +61,8 @@ export const ParticleBackground = (): JSX.Element => {
           style={{
             ...(i > count ? { display: "none" } : {}),
             position: "absolute",
-            height: `${80 - (40 * i) / count}px`,
-            width: `${80 - (40 * i) / count}px`,
+            height: `${72 - (36 * i) / count}px`,
+            width: `${72 - (36 * i) / count}px`,
             maxHeight: "12.5vmin",
             maxWidth: "12.5vmin",
             backgroundSize: "contain",

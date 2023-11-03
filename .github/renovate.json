@@ -17,10 +17,6 @@
       "matchPackagePatterns": ["eslint", "prettier"]
     },
     {
-      "groupName": "Particle Background",
-      "matchPackagePatterns": ["tsparticles"]
-    },
-    {
       "groupName": "WebAuthn",
       "matchPackagePatterns": ["@simplewebauthn"]
     }
