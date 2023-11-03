@@ -138,14 +138,14 @@ export const LoginPage = (): JSX.Element => {
               sx={{
                 display: "flex",
                 justifyContent: "center",
-                fontSize: 80,
+                fontSize: 96,
               }}
             >
               <QueryStatsIcon fontSize="inherit" />
             </Box>
           </Grid>
           <Grid item>
-            <Typography variant="h3" textAlign="center">
+            <Typography variant="h3" fontSize={24} textAlign="center">
               Rating Tracker
             </Typography>
           </Grid>
