@@ -51,7 +51,7 @@ export const LogoBackground = (): JSX.Element => {
         height: "100dvh",
         overflow: "hidden",
         zIndex: -1,
-        filter: "blur(1.5px)",
+        filter: "blur(1px)",
       }}
     >
       {[...Array(MAX_COUNT)].map((_, i) => (
