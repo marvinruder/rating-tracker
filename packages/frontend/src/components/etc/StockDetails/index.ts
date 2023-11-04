@@ -1,1 +1,0 @@
-export { StockDetails } from "./StockDetails";

@@ -13,8 +13,8 @@ const chunkList: string[] = ["@mui"];
 const manualChunks = (id: string) => chunkList.find((chunk) => id.match(new RegExp(chunk)));
 
 const fontCSS = fs.readFileSync("src/fonts.css", "utf8");
-const logoBackgroundCSS = fs.readFileSync("src/components/etc/LogoBackground/LogoBackground.css", "utf8");
-const switchSelectorCSS = fs.readFileSync("src/components/etc/SwitchSelector/switchSelector.css", "utf8");
+const logoBackgroundCSS = fs.readFileSync("src/components/etc/LogoBackground.css", "utf8");
+const switchSelectorCSS = fs.readFileSync("src/components/etc/switchSelector.css", "utf8");
 const nprogressCSSPath = require.resolve("nprogress/nprogress.css");
 const nprogressCSS = fs.readFileSync(nprogressCSSPath, "utf8");
 

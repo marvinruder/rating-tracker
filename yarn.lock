@@ -1332,6 +1332,7 @@ __metadata:
     "@rating-tracker/wasm": "workspace:*"
     "@simplewebauthn/browser": "npm:8.3.4"
     "@types/node": "npm:20.8.10"
+    "@types/nprogress": "npm:0.2.2"
     "@types/react": "npm:18.2.34"
     "@types/react-dom": "npm:18.2.14"
     "@typescript-eslint/eslint-plugin": "npm:6.9.1"
@@ -1744,6 +1745,13 @@ __metadata:
   version: 18.18.6
   resolution: "@types/node@npm:18.18.6"
   checksum: ba8b71c724c4c9b1908faf09be1aa062790ef4194f956f6c7ae9791f8d2c1d123635695e41c3c8326223d2262bae2b3b5c8774c7a6c5885a98437b6fb04a2f0c
+  languageName: node
+  linkType: hard
+
+"@types/nprogress@npm:0.2.2":
+  version: 0.2.2
+  resolution: "@types/nprogress@npm:0.2.2"
+  checksum: 441eff4b29c3596b85c125950da3fd3408167a0baf9415905c7a74a294a1dff95dcc03c990e852292055c882d15e1d2687668ccbf77a74cdaec38f57387ec4d1
   languageName: node
   linkType: hard
 

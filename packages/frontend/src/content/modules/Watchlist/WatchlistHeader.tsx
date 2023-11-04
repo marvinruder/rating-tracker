@@ -6,8 +6,9 @@ import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider }
 import { FAVORITES_NAME, Watchlist, watchlistEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { DeleteWatchlist, RenameWatchlist } from "../../../components/dialogs";
-import { StockTableFilters, StockTableFiltersProps } from "../../../components/etc/StockTableFilters";
+import { DeleteWatchlist } from "../../../components/dialogs/DeleteWatchlist";
+import { RenameWatchlist } from "../../../components/dialogs/RenameWatchlist";
+import { StockTableFilters, StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
 import { useNotification } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 

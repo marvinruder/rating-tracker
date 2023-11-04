@@ -2,8 +2,9 @@ import { Card, Container } from "@mui/material";
 import { StockListColumn, stockListColumnArray } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
-import { StockTable } from "../../../components/etc/StockTable";
+import { Footer } from "../../../components/etc/Footer";
+import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
+import { StockTable } from "../../../components/stock/layouts/StockTable";
 import { StockFilter } from "../../../types/StockFilter";
 
 import StockListHeader from "./StockListHeader";
@@ -25,7 +26,7 @@ const StockListModule = (): JSX.Element => {
 
   return (
     <>
-      <PageHeaderWrapper maxWidth={false}>
+      <HeaderWrapper maxWidth={false}>
         <StockListHeader
           stockTableFiltersProps={{
             setFilter,
@@ -44,7 +45,7 @@ const StockListModule = (): JSX.Element => {
           }}
           triggerRefetch={triggerRefetch}
         />
-      </PageHeaderWrapper>
+      </HeaderWrapper>
       <Container maxWidth={false}>
         <Card>
           <StockTable filter={filter} triggerRefetch={refetchTrigger} columns={columnFilter} />

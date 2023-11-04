@@ -1,6 +1,7 @@
 import { Card, Container } from "@mui/material";
 
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
+import { Footer } from "../../../components/etc/Footer";
+import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 
 import UserManagementHeader from "./UserManagementHeader";
 import UserTable from "./UserTable";
@@ -13,9 +14,9 @@ import UserTable from "./UserTable";
 const UserManagementModule = (): JSX.Element => {
   return (
     <>
-      <PageHeaderWrapper maxWidth={false}>
+      <HeaderWrapper maxWidth={false}>
         <UserManagementHeader />
-      </PageHeaderWrapper>
+      </HeaderWrapper>
       <Container maxWidth={false}>
         <Card>
           <UserTable />

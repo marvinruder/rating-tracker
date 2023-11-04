@@ -28,9 +28,9 @@ import {
   ADMINISTRATIVE_ACCESS,
   userManagementEndpointPath,
 } from "@rating-tracker/commons";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
-import { DeleteUser } from "../../../components/dialogs";
+import { DeleteUser } from "../../../components/dialogs/DeleteUser";
 import { useNotification } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
@@ -187,7 +187,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
                 <Chip key={messageType} label={messageTypeName[messageType]} size="small" />
               </li>
             ) : (
-              <></>
+              <Fragment key={messageType} />
             ),
           )}
         </Box>

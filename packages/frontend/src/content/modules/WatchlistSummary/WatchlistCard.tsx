@@ -21,7 +21,8 @@ import { FAVORITES_NAME, WatchlistSummary, watchlistEndpointPath } from "@rating
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import { DeleteWatchlist, RenameWatchlist } from "../../../components/dialogs";
+import { DeleteWatchlist } from "../../../components/dialogs/DeleteWatchlist";
+import { RenameWatchlist } from "../../../components/dialogs/RenameWatchlist";
 import { useNotification } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
