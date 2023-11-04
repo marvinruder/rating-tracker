@@ -41,7 +41,7 @@ export default mergeConfig(
       tsconfigPaths(),
       createHtmlPlugin({
         minify: true,
-        entry: process.env.NODE_ENV === "development" ? "/src/index.tsx" : "index.tsx",
+        entry: "/src/index.tsx",
         template: "src/index.html",
         inject: {
           data: {

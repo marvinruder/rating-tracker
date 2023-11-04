@@ -33,7 +33,6 @@ import api from "./utils/api";
 export const SuspenseLoader = (): JSX.Element => {
   useEffect(() => {
     NProgress.start();
-
     return () => {
       NProgress.done();
     };
