@@ -14,7 +14,6 @@ const get: OpenAPIV3.OperationObject = {
   description: "Get information about the current user",
   responses: {
     "200": okUser,
-    "401": unauthorized,
   },
 };
 

@@ -1,1 +1,0 @@
-export { ParticleBackground } from "./ParticleBackground";

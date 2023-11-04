@@ -3,8 +3,9 @@ import { StockListColumn, Watchlist, stockListColumnArray, watchlistEndpointPath
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
-import { StockTable } from "../../../components/etc/StockTable";
+import { Footer } from "../../../components/etc/Footer";
+import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
+import { StockTable } from "../../../components/stock/layouts/StockTable";
 import { useNotification } from "../../../contexts/NotificationContext";
 import { StockFilter } from "../../../types/StockFilter";
 import api from "../../../utils/api";
@@ -47,7 +48,7 @@ const WatchlistModule = (): JSX.Element => {
 
   return (
     <>
-      <PageHeaderWrapper maxWidth={false}>
+      <HeaderWrapper maxWidth={false}>
         <WatchlistHeader
           watchlist={watchlist}
           getWatchlist={() => getWatchlist(Number(id))}
@@ -68,7 +69,7 @@ const WatchlistModule = (): JSX.Element => {
             disableTopMargin: true,
           }}
         />
-      </PageHeaderWrapper>
+      </HeaderWrapper>
       <Container maxWidth={false}>
         <Card>
           <StockTable

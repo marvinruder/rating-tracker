@@ -15,7 +15,7 @@ import axios from "axios";
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 
-import { readAllStocks, readStock, updateStock } from "../db/tables/stockTable";
+import { readStocks, readStock, updateStock } from "../db/tables/stockTable";
 import { fetchFromDataProvider } from "../fetchers/fetchHelper";
 import { createResource, readResource } from "../redis/repositories/resourceRepository";
 import * as signal from "../signal/signal";
@@ -137,7 +137,7 @@ export class FetchController {
       }
     } else {
       // When no specific stock is requested, we fetch all stocks from the database which have a Sustainalytics ID.
-      [stockList] = await readAllStocks({
+      [stockList] = await readStocks({
         where: {
           sustainalyticsID: {
             not: null,

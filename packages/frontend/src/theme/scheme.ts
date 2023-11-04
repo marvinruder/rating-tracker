@@ -62,6 +62,7 @@ const generateColors = (light: boolean, themeColors) => ({
     cardSm: light
       ? "0px 2px 3px rgba(176, 176, 176, .18), 0px 1px 1px rgba(176, 176, 176, 0.32)"
       : "0px 0px 2px #828282",
+    cardMd: light ? "0 5rem 14rem 0 rgb(255 255 255 / 30%), 0 0.2rem 0.4rem rgb(0 0 0 / 35%)" : "0px 0px 2px #828282",
     cardLg: light
       ? "0 5rem 14rem 0 rgb(255 255 255 / 30%), 0 0.8rem 2.3rem rgb(0 0 0 / 60%), 0 0.2rem 0.3rem rgb(0 0 0 / 45%)"
       : "0 0rem 14rem 0 rgb(255 255 255 / 10%), " +
@@ -808,7 +809,7 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
           boxShadow: colors.shadows.cardSm,
         },
         elevation16: {
-          boxShadow: colors.shadows.cardLg,
+          boxShadow: colors.shadows.cardMd,
         },
         elevation24: {
           boxShadow: colors.shadows.cardLg,

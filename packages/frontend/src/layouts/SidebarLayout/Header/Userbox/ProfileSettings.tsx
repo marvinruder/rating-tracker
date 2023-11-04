@@ -259,9 +259,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                 <TextField
                   id="inputPhone"
                   type="tel"
-                  inputProps={{
-                    pattern: REGEX_PHONE_NUMBER,
-                  }}
+                  inputProps={{ pattern: REGEX_PHONE_NUMBER }}
                   onChange={(event) => {
                     setPhone(event.target.value.replaceAll(/[^0-9+]+/g, "").substring(0, 16));
                     setPhoneError(false);

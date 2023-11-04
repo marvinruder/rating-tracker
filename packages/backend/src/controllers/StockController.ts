@@ -11,6 +11,7 @@ import {
   msciESGRatingArray,
   optionalStockValuesNull,
   Resource,
+  stockLogoBackgroundEndpointPath,
   stockComputeEndpointPath,
   stockEndpointPath,
   stockListEndpointPath,
@@ -20,12 +21,64 @@ import {
 import axios from "axios";
 import { Request, Response } from "express";
 
-import { Prisma } from "../../prisma/client/index";
-import { createStock, deleteStock, readAllStocks, updateStock, readStock } from "../db/tables/stockTable";
+import { Prisma } from "../../prisma/client";
+import { createStock, deleteStock, readStocks, updateStock, readStock } from "../db/tables/stockTable";
 import { readWatchlist } from "../db/tables/watchlistTable";
-import { createResource, readResource } from "../redis/repositories/resourceRepository";
+import { createResource, readResource, readResourceTTL } from "../redis/repositories/resourceRepository";
 import APIError from "../utils/APIError";
 import Router from "../utils/router";
+
+/**
+ * An empty SVG string, which is used as a placeholder for stock logos that could not be fetched from TradeRepublic.
+ */
+export const DUMMY_SVG: string =
+  '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>' as const;
+
+/**
+ * Retrieves the logo of a stock from Redis cache or TradeRepublic.
+ *
+ * @param {string} ticker the ticker of the stock
+ * @param {boolean} dark whether to use the dark or light version of the logo
+ * @returns {Promise<Resource>} the logo as a Resource object
+ */
+const getLogoOfStock = async (ticker: string, dark: boolean): Promise<Resource> => {
+  const stock = await readStock(ticker);
+  let logoResource: Resource;
+  const url = `https://assets.traderepublic.com/img/logos/${stock.isin}/${dark ? "dark" : "light"}.svg`;
+  try {
+    // Try to read the logo from Redis cache first.
+    logoResource = await readResource(url);
+  } catch (e) {
+    // If the logo is not in the cache, fetch it from TradeRepublic and store it in the cache.
+    await axios
+      .get(url)
+      .then(async (response) => {
+        let maxAge: number;
+        try {
+          // Cache as long as TradeRepublic says using the max-age cache control directive
+          maxAge = +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
+          if (Number.isNaN(maxAge)) throw new TypeError();
+          /* c8 ignore start */ // Difficult to test, since valid max-age is always returned
+        } catch (e) {
+          maxAge = 60 * 60 * 24;
+        }
+        /* c8 ignore stop */
+        // Store the logo in the cache
+        await createResource({ url, fetchDate: new Date(response.headers["date"]), content: response.data }, maxAge);
+        // Read the logo as a Resource object
+        logoResource = await readResource(url);
+      })
+      .catch(async () => {
+        // If the logo could not be fetched from TradeRepublic, use an empty SVG as a placeholder.
+        await createResource(
+          { url, fetchDate: new Date(), content: DUMMY_SVG },
+          60 * 60, // Let’s try again after one hour
+        );
+        logoResource = await readResource(url);
+      });
+  }
+  return logoResource;
+};
 
 /**
  * This class is responsible for handling stock data.
@@ -512,7 +565,7 @@ export class StockController {
     stockFindManyArgs.take = Number.isNaN(take) ? undefined : take;
 
     // Read all stocks from the database
-    const [stocks, count] = await readAllStocks(stockFindManyArgs);
+    const [stocks, count] = await readStocks(stockFindManyArgs);
 
     // Respond with the list of stocks and the total count after filtering and before pagination
     res.status(200).json({ stocks, count }).end();
@@ -530,7 +583,7 @@ export class StockController {
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async compute(_: Request, res: Response) {
-    const [stocks] = await readAllStocks();
+    const [stocks] = await readStocks();
     for await (const stock of stocks) {
       await updateStock(stock.ticker, {}, true);
     }
@@ -549,63 +602,60 @@ export class StockController {
     accessRights: GENERAL_ACCESS,
   })
   async getLogo(req: Request, res: Response) {
-    const stock = await readStock(req.params[0]);
-    let logoResource: Resource;
-    const url = `https://assets.traderepublic.com/img/logos/${stock.isin}/${req.query.dark ? "dark" : "light"}.svg`;
-    try {
-      // Try to read the logo from Redis cache first.
-      logoResource = await readResource(url);
-    } catch (e) {
-      // If the logo is not in the cache, fetch it from TradeRepublic and store it in the cache.
-      await axios
-        .get(url)
-        .then(async (response) => {
-          let maxAge: number;
-          try {
-            // Cache as long as TradeRepublic says using the max-age cache control directive
-            maxAge = +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
-            if (Number.isNaN(maxAge)) throw new TypeError();
-            /* c8 ignore start */ // Difficult to test, since valid max-age is always returned
-          } catch (e) {
-            maxAge = 60 * 60 * 24;
-          }
-          /* c8 ignore stop */
-          // Store the logo in the cache
-          await createResource(
-            {
-              url,
-              fetchDate: new Date(response.headers["date"]),
-              content: response.data,
-            },
-            maxAge,
-          );
-          // Read the logo as a Resource object
-          logoResource = await readResource(url);
-        })
-        .catch(async () => {
-          // If the logo could not be fetched from TradeRepublic, use an empty SVG as a placeholder.
-          await createResource(
-            {
-              url,
-              fetchDate: new Date(),
-              content:
-                '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-                "</svg>",
-            },
-            60 * 60 * 24,
-          );
-          logoResource = await readResource(url);
-        });
-    }
+    const logoResource = await getLogoOfStock(req.params[0], String(req.query.dark) === "true");
     res.set("Content-Type", "image/svg+xml");
     res.set(
       "Cache-Control",
       `max-age=${
         // Allow client-side caching as long as the logo is valid in the cache
-        (60 * 60 * 24 - (new Date().getTime() - logoResource.fetchDate.getTime()) / 1000) | 0
+        await readResourceTTL(logoResource.url)
       }`,
     );
     res.status(200).send(logoResource.content).end();
+  }
+
+  /**
+   * Fetches the logos of the highest rated stocks.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   */
+  @Router({
+    path: stockLogoBackgroundEndpointPath,
+    method: "get",
+    accessRights: 0,
+  })
+  async getLogoBackground(req: Request, res: Response) {
+    const COUNT = 60;
+    let logoBundleResource: Resource;
+    const url = stockLogoBackgroundEndpointPath + (req.query.dark ? "_dark" : "_light");
+    try {
+      // Try to read the logos from Redis cache first.
+      logoBundleResource = await readResource(url);
+    } catch (e) {
+      // If the logos are not in the cache, fetch them one by one and store them in the cache as one bundled resource.
+      const [stocks] = await readStocks({ orderBy: { totalScore: "desc" }, take: COUNT });
+      const logos: string[] = new Array(COUNT).fill(DUMMY_SVG);
+      await Promise.allSettled(
+        stocks.map(
+          async (stock, index) =>
+            (logos[index] = (await getLogoOfStock(stock.ticker, String(req.query.dark) === "true")).content),
+        ),
+      );
+      await createResource(
+        { url, fetchDate: new Date(), content: JSON.stringify(logos) },
+        60 * 60 * 24, // Cache for one day
+      );
+      logoBundleResource = await readResource(url);
+    }
+    res.set(
+      "Cache-Control",
+      `max-age=${
+        // Allow client-side caching as long as the logo bundle is valid in the cache
+        await readResourceTTL(url)
+      }`,
+    );
+    res.status(200).send(JSON.parse(logoBundleResource.content)).end();
   }
 
   /**

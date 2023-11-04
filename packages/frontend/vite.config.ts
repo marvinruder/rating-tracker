@@ -4,7 +4,6 @@ import fs from "fs";
 import react from "@vitejs/plugin-react";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
-import topLevelAwait from "vite-plugin-top-level-await";
 import wasm from "vite-plugin-wasm";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig as defineVitestConfig } from "vitest/config";
@@ -14,7 +13,8 @@ const chunkList: string[] = ["@mui"];
 const manualChunks = (id: string) => chunkList.find((chunk) => id.match(new RegExp(chunk)));
 
 const fontCSS = fs.readFileSync("src/fonts.css", "utf8");
-const switchSelectorCSS = fs.readFileSync("src/components/etc/SwitchSelector/switchSelector.css", "utf8");
+const logoBackgroundCSS = fs.readFileSync("src/components/etc/LogoBackground.css", "utf8");
+const switchSelectorCSS = fs.readFileSync("src/components/etc/switchSelector.css", "utf8");
 const nprogressCSSPath = require.resolve("nprogress/nprogress.css");
 const nprogressCSS = fs.readFileSync(nprogressCSSPath, "utf8");
 
@@ -31,12 +31,17 @@ export default mergeConfig(
       sourcemap: true,
     },
     cacheDir: ".vite",
+    esbuild: {
+      supported: {
+        "top-level-await": true,
+      },
+    },
     plugins: [
       react(),
       tsconfigPaths(),
       createHtmlPlugin({
         minify: true,
-        entry: process.env.NODE_ENV === "development" ? "/src/index.tsx" : "index.tsx",
+        entry: "/src/index.tsx",
         template: "src/index.html",
         inject: {
           data: {
@@ -44,19 +49,17 @@ export default mergeConfig(
             faviconPath: process.env.NODE_ENV === "development" ? "favicon-dev" : "favicon",
             reactDevTools:
               process.env.NODE_ENV === "development" ? '<script src="http://localhost:8097"></script>' : "",
-            fontsCSS: `<style type="text/css">${fontCSS}</style>`,
-            switchSelectorCSS: `<style type="text/css">${switchSelectorCSS}</style>`,
-            nprogressCSS: `<style type="text/css">${nprogressCSS}</style>`,
+            inlineCSS:
+              '<style type="text/css">' + fontCSS + logoBackgroundCSS + switchSelectorCSS + nprogressCSS + "</style>",
           },
         },
         verbose: process.env.NODE_ENV === "development",
       }),
-      topLevelAwait(),
       wasm(),
     ],
     worker: {
       format: "es",
-      plugins: [wasm(), topLevelAwait()],
+      plugins: [wasm()],
     },
   }),
   defineVitestConfig({

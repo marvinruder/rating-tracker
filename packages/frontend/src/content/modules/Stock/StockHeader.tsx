@@ -13,7 +13,9 @@ import {
 } from "@rating-tracker/commons";
 import { useContext, useState } from "react";
 
-import { AddStockToWatchlist, DeleteStock, EditStock } from "../../../components/dialogs";
+import { AddStockToWatchlist } from "../../../components/dialogs/AddStockToWatchlist";
+import { DeleteStock } from "../../../components/dialogs/DeleteStock";
+import { EditStock } from "../../../components/dialogs/EditStock";
 import { useNotification } from "../../../contexts/NotificationContext";
 import { UserContext } from "../../../router";
 import api from "../../../utils/api";

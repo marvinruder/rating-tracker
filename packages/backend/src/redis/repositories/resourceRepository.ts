@@ -77,3 +77,17 @@ export const readResource = async (url: string): Promise<Resource> => {
     };
   } else throw new APIError(404, `Resource ${url} not found.`);
 };
+
+/**
+ * Read a resource’s TTL (time-to-live). Returns -1 if the resource exists but has no associated expire.
+ *
+ * @param {string} url The URL of the resource to read.
+ * @returns {Promise<number>} The TTL, in seconds.
+ * @throws an {@link APIError} if the resource does not exist.
+ */
+export const readResourceTTL = async (url: string): Promise<number> => {
+  // eslint-disable-next-line new-cap
+  const ttl = await redis.TTL(resourceSchema.schemaName + ":" + url);
+  if (ttl === -2) throw new APIError(404, `Resource ${url} not found.`);
+  return ttl;
+};

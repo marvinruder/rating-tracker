@@ -1,11 +1,12 @@
+import { Box, CircularProgress } from "@mui/material";
 import { User, userEndpointPath } from "@rating-tracker/commons";
+import NProgress from "nprogress";
 import { Suspense, lazy, useState, useEffect, createContext } from "react";
 import type { RouteObject } from "react-router";
 import { useLocation } from "react-router";
 import { Navigate, useSearchParams } from "react-router-dom";
 
 import { NotificationSnackbar } from "./components/etc/NotificationSnackbar";
-import { SuspenseLoader } from "./components/etc/SuspenseLoader";
 //
 // Applications
 //
@@ -13,15 +14,46 @@ import { SuspenseLoader } from "./components/etc/SuspenseLoader";
  * The login application.
  * Since it is displayed first, we load it right away and do not use a suspense loader.
  */
-import LoginPage from "./content/pages";
+import { LoginPage } from "./content/pages/Login";
 /**
  * The 404 Not Found and 500 Internal Server Error error pages.
  * Since those are fairly small components, we load them right away and do not use a suspense loader.
  */
-import { Status404, Status500 } from "./content/pages/Status";
+import { Status404 } from "./content/pages/Status/Status404";
+import { Status500 } from "./content/pages/Status/Status500";
 import { NotificationProvider } from "./contexts/NotificationContext";
-import { SidebarLayout } from "./layouts";
+import { SidebarLayout } from "./layouts/SidebarLayout/SidebarLayout";
 import api from "./utils/api";
+
+/**
+ * A component that renders a loading indicator.
+ *
+ * @returns {JSX.Element} The component.
+ */
+export const SuspenseLoader = (): JSX.Element => {
+  useEffect(() => {
+    NProgress.start();
+    return () => {
+      NProgress.done();
+    };
+  }, []);
+
+  return (
+    <Box
+      position="fixed"
+      left={0}
+      top={0}
+      width="100%"
+      height="100%"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
+      {/* Loading modules typically blocks the main thread, so we need to use disableShrink */}
+      <CircularProgress size={64} thickness={3} disableShrink />
+    </Box>
+  );
+};
 
 /**
  * A wrapper for lazy-loaded components that adds a suspense loader. While the component is loading, the suspense
@@ -146,7 +178,11 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
     api
       .get(userEndpointPath)
       .then((response) => {
-        setUser(new User(response.data));
+        if (Object.keys(response.data).length) {
+          setUser(new User(response.data));
+        } else {
+          clearUser();
+        }
       })
       // If unsuccessful, delete the user information so that the user is redirected to the login page
       .catch(clearUser)

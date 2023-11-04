@@ -129,6 +129,20 @@ export const okWatchlistSummary: OpenAPIV3.ResponseObject = {
 };
 
 /**
+ * A response with a 200 OK status code and an array of SVG logo strings.
+ */
+export const okLogoBackground: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "application/json": {
+      schema: {
+        $ref: "#/components/schemas/LogoBackground",
+      },
+    },
+  },
+};
+
+/**
  * A response with a 200 OK status code and a Status object body.
  */
 export const okHealthy: OpenAPIV3.ResponseObject = {
@@ -151,6 +165,7 @@ export const okUser: OpenAPIV3.ResponseObject = {
     "application/json": {
       schema: {
         $ref: "#/components/schemas/User",
+        nullable: true,
       },
     },
   },

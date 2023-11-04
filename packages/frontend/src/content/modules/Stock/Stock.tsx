@@ -3,8 +3,9 @@ import { Stock, favoriteListEndpointPath, stockEndpointPath } from "@rating-trac
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
-import { StockDetails } from "../../../components/etc/StockDetails";
+import { Footer } from "../../../components/etc/Footer";
+import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
+import { StockDetails } from "../../../components/stock/layouts/StockDetails";
 import { useNotification } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
@@ -45,9 +46,9 @@ const StockModule = (): JSX.Element => {
 
   return (
     <>
-      <PageHeaderWrapper maxWidth={false}>
+      <HeaderWrapper maxWidth={false}>
         <StockHeader stock={stock} getStock={() => getStock(ticker)} isFavorite={isFavorite} />
-      </PageHeaderWrapper>
+      </HeaderWrapper>
       <Container maxWidth={false}>
         <Card sx={{ m: "auto", maxWidth: "lg" }}>
           <StockDetails stock={stock} />

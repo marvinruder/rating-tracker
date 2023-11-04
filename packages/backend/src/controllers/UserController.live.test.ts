@@ -7,11 +7,20 @@ export const suiteName = "User API";
 export const tests: LiveTestSuite = [];
 
 tests.push({
+  testName: "returns empty object when no user is logged in",
+  testFunction: async () => {
+    const res = await supertest.get(`${baseURL}${userEndpointPath}`);
+    expect(res.status).toBe(200);
+    expect(Object.keys(res.body)).toHaveLength(0);
+  },
+});
+
+tests.push({
   testName: "provides current user’s information",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${userEndpointPath}`);
     const res = await supertest.get(`${baseURL}${userEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
+    expect(Object.keys(res.body).length).toBeGreaterThan(0);
     expect(res.body.email).toBe("jane.doe@example.com");
     expect(res.body.name).toBe("Jane Doe");
     expect(res.body.avatar).toBe("data:image/jpeg;base64,U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U=");

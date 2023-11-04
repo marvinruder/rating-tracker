@@ -22,7 +22,7 @@ const get: OpenAPIV3.OperationObject = {
     {
       in: "query",
       name: "dark",
-      description: "Whether to return a dark logo",
+      description: "Whether to return a logo for a dark background",
       schema: {
         type: "boolean",
         example: true,

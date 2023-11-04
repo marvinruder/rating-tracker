@@ -2,7 +2,8 @@ import { Container, Grid } from "@mui/material";
 import { WatchlistSummary, watchlistSummaryEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 
-import { Footer, PageHeaderWrapper } from "../../../components/etc/HeaderFooter";
+import { Footer } from "../../../components/etc/Footer";
+import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { useNotification } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
@@ -37,9 +38,9 @@ const WatchlistSummaryModule = (): JSX.Element => {
 
   return (
     <>
-      <PageHeaderWrapper maxWidth={false}>
+      <HeaderWrapper maxWidth={false}>
         <WatchlistSummaryHeader getWatchlists={getWatchlists} />
-      </PageHeaderWrapper>
+      </HeaderWrapper>
       <Container maxWidth={false}>
         <Grid container spacing={2}>
           {watchlistSummariesFinal

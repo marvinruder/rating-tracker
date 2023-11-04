@@ -19,7 +19,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import { ADMINISTRATIVE_ACCESS } from "@rating-tracker/commons";
-import React, { FC, useContext, useState } from "react";
+import React, { FC, Fragment, useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { StatusIndicator } from "../../../components/etc/StatusIndicator";
@@ -240,7 +240,7 @@ export const SidebarContent = (): JSX.Element => {
           title={
             <Grid container p={1} alignItems="flex-start" rowSpacing={0.5}>
               {Object.entries(systemStatus.services).map(([service, status]) => (
-                <React.Fragment key={service}>
+                <Fragment key={service}>
                   <Grid item xs={4.8} display="flex" columnGap={1}>
                     <StatusIndicator status={systemStatusLoading ? "N/A" : status.status} />
                     <Typography variant="body1" fontWeight="bold">
@@ -252,7 +252,7 @@ export const SidebarContent = (): JSX.Element => {
                       {systemStatusLoading ? <Skeleton width="100%" /> : status.details}
                     </Typography>
                   </Grid>
-                </React.Fragment>
+                </Fragment>
               ))}
               <Grid item xs={12} mt={1}>
                 <LoadingButton

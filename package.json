@@ -28,7 +28,11 @@
     "typescript": "5.2.2"
   },
   "resolutions": {
-    "vite/esbuild": "0.19.5"
+    "react-switch-selector/react": "18.2.0",
+    "react-switch-selector/react-dom": "18.2.0",
+    "vite/esbuild": "0.19.5",
+    "vite-node/vite": "4.5.0",
+    "vitest/vite": "4.5.0"
   },
   "dependenciesMeta": {
     "swagger-ui-dist": {
