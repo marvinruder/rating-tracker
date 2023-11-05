@@ -32,7 +32,8 @@
     "react-switch-selector/react-dom": "18.2.0",
     "vite/esbuild": "0.19.5",
     "vite-node/vite": "4.5.0",
-    "vitest/vite": "4.5.0"
+    "vitest/vite": "4.5.0",
+    "whatwg-url": "14.0.0"
   },
   "dependenciesMeta": {
     "swagger-ui-dist": {
