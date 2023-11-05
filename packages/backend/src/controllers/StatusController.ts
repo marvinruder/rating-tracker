@@ -5,7 +5,7 @@ import { prismaIsReady } from "../db/client";
 import { redisIsReady } from "../redis/redis";
 import { signalIsReadyOrUnused } from "../signal/signalBase";
 import Router from "../utils/router";
-import { seleniumIsReady } from "../utils/webdriver";
+// import { seleniumIsReady } from "../utils/webdriver";
 
 /**
  * This class is responsible for providing a trivial status response whenever the backend API is up and running.
@@ -30,7 +30,7 @@ export class StatusController {
         // The order is important here and must match the order in `serviceArray`.
         prismaIsReady(),
         redisIsReady(),
-        seleniumIsReady(),
+        // seleniumIsReady(),
         signalIsReadyOrUnused(),
       ])
     ).forEach((result, index) => {

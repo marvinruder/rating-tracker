@@ -40,7 +40,7 @@ const MAX_RETRIES = 10;
  * with errors)
  * @param {Stock} stock The stock to extract data for
  * @param {Document} document The fetched and parsed HTML document
- * @returns {boolean} Whether the driver is still healthy
+ * @returns {boolean} always true, since no WebDriver status needs to be reported by this Fetcher.
  * @throws an {@link APIError} in case of a severe error
  */
 const morningstarFetcher: HTMLFetcher = async (
@@ -66,7 +66,7 @@ const morningstarFetcher: HTMLFetcher = async (
   const url =
     `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarID}` +
     `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`;
-  document = await getAndParseHTML(url, stock, "morningstar");
+  document = await getAndParseHTML(url, undefined, stock, "morningstar");
 
   let attempts = 1;
   while (attempts > 0) {
@@ -87,7 +87,7 @@ const morningstarFetcher: HTMLFetcher = async (
           `Will retry (attempt ${attempts} of ${MAX_RETRIES})`,
       );
       // Load the page once again
-      document = await getAndParseHTML(url, stock, "morningstar");
+      document = await getAndParseHTML(url, undefined, stock, "morningstar");
     }
   }
 

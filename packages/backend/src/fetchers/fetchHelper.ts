@@ -8,10 +8,10 @@ import {
   resourceEndpointPath,
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
-import axios from "axios";
+import axios, { type AxiosRequestConfig } from "axios";
 import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
-import { WebDriver } from "selenium-webdriver";
+// import { WebDriver } from "selenium-webdriver";
 
 import { readStocks, readStock } from "../db/tables/stockTable";
 import { createResource } from "../redis/repositories/resourceRepository";
@@ -20,7 +20,7 @@ import * as signal from "../signal/signal";
 import APIError from "../utils/APIError";
 import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
-import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver";
+// import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver";
 
 import marketScreenerFetcher from "./marketScreenerFetcher";
 import morningstarFetcher from "./morningstarFetcher";
@@ -38,7 +38,7 @@ export type FetcherWorkspace<T> = {
   failed: T[];
 };
 
-type Fetcher = HTMLFetcher | JSONFetcher | SeleniumFetcher;
+type Fetcher = HTMLFetcher | JSONFetcher; // | SeleniumFetcher;
 
 export type JSONFetcher = (
   req: Request,
@@ -54,16 +54,16 @@ export type HTMLFetcher = (
   document: Document,
 ) => Promise<boolean>;
 
-export type SeleniumFetcher = (
-  req: Request,
-  stocks: FetcherWorkspace<Stock>,
-  stock: Stock,
-  driver: WebDriver,
-) => Promise<boolean>;
+// export type SeleniumFetcher = (
+//   req: Request,
+//   stocks: FetcherWorkspace<Stock>,
+//   stock: Stock,
+//   driver: WebDriver,
+// ) => Promise<boolean>;
 
-const htmlDataProviders: readonly DataProvider[] = ["morningstar", "marketScreener", "sp"] as const;
+const htmlDataProviders: readonly DataProvider[] = ["morningstar", "marketScreener", "msci", "sp"] as const;
 const jsonDataProviders: readonly DataProvider[] = ["refinitiv"] as const;
-const seleniumDataProviders: readonly DataProvider[] = ["msci"] as const;
+// const seleniumDataProviders: readonly DataProvider[] = [] as const;
 
 /**
  * An object holding the source of a fetcher. Only one of the properties is set.
@@ -77,10 +77,10 @@ type FetcherSource = {
    * The HTML document fetched by a {@link HTMLFetcher}.
    */
   document?: Document;
-  /**
-   * The WebDriver instance used by a {@link SeleniumFetcher}.
-   */
-  driver?: WebDriver;
+  // /**
+  //  * The WebDriver instance used by a {@link SeleniumFetcher}.
+  //  */
+  // driver?: WebDriver;
 };
 
 /**
@@ -129,9 +129,9 @@ export const captureFetchError = async (
       )
         resourceID = ""; // If unsuccessful, clear the resource ID
       break;
-    case seleniumDataProviders.includes(dataProvider):
-      resourceID = await takeScreenshot(source.driver, stock, dataProvider);
-      break;
+    // case seleniumDataProviders.includes(dataProvider):
+    //   resourceID = await takeScreenshot(source.driver, stock, dataProvider);
+    //   break;
   }
   return resourceID
     ? `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
@@ -249,15 +249,16 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
   const rejectedResult = (
     await Promise.allSettled(
       [...Array(determineConcurrency(req))].map(async () => {
-        let driver: WebDriver;
-        let sessionID: string;
         let document: Document;
         let json: Object;
-        if (seleniumDataProviders.includes(dataProvider)) {
-          // Acquire a new session
-          driver = await getDriver(true);
-          sessionID = (await driver.getSession()).getId();
-        }
+
+        // let driver: WebDriver;
+        // let sessionID: string;
+        // if (seleniumDataProviders.includes(dataProvider)) {
+        //   // Acquire a new session
+        //   driver = await getDriver(true);
+        //   sessionID = (await driver.getSession()).getId();
+        // }
 
         // Work while stocks are in the queue
         while (stocks.queued.length) {
@@ -293,14 +294,15 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
               if (!(await (dataProviderFetchers[dataProvider] as HTMLFetcher)(req, stocks, stock, document))) break;
             } else if (jsonDataProviders.includes(dataProvider)) {
               if (!(await (dataProviderFetchers[dataProvider] as JSONFetcher)(req, stocks, stock, json))) break;
-            } else if (seleniumDataProviders.includes(dataProvider)) {
-              if (!(await (dataProviderFetchers[dataProvider] as SeleniumFetcher)(req, stocks, stock, driver))) break;
+              // } else if (seleniumDataProviders.includes(dataProvider)) {
+              //   if (!(await (dataProviderFetchers[dataProvider] as SeleniumFetcher)(req, stocks, stock, driver)))
+              //     break;
             }
           } catch (e) {
             stocks.failed.push(stock);
             if (req.query.ticker) {
-              // If the request was for a single stock, we shut down the driver and throw an error.
-              driver && (await quitDriver(driver, sessionID));
+              // // If the request was for a single stock, we shut down the driver and throw an error.
+              // driver && (await quitDriver(driver, sessionID));
               throw new APIError(
                 502,
                 `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data`,
@@ -315,7 +317,7 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
               SIGNAL_PREFIX_ERROR +
                 `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data: ${
                   String(e.message).split(/[\n:{]/)[0]
-                }\n${await captureFetchError(stock, dataProvider, { json, document, driver })}`,
+                }\n${await captureFetchError(stock, dataProvider, { json, document /* driver */ })}`,
               "fetchError",
             );
           }
@@ -343,8 +345,8 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
             break;
           }
         }
-        // The queue is now empty, we end the session.
-        driver && (await quitDriver(driver, sessionID));
+        // // The queue is now empty, we end the session.
+        // driver && (await quitDriver(driver, sessionID));
       }),
     )
   ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
@@ -383,11 +385,17 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
  * Fetches an HTML document from a URL and parses it.
  *
  * @param {string} url The URL to fetch from
+ * @param {AxiosRequestConfig} config The Axios request configuration
  * @param {Stock} stock The affected stock
  * @param {DataProvider} dataProvider The name of the data provider to fetch from
  * @returns {Document} The parsed HTML document
  */
-export const getAndParseHTML = async (url: string, stock: Stock, dataProvider: DataProvider): Promise<Document> =>
+export const getAndParseHTML = async (
+  url: string,
+  config: AxiosRequestConfig,
+  stock: Stock,
+  dataProvider: DataProvider,
+): Promise<Document> =>
   new DOMParser({
     errorHandler: {
       warning: () => undefined,
@@ -401,8 +409,15 @@ export const getAndParseHTML = async (url: string, stock: Stock, dataProvider: D
     },
   }).parseFromString(
     await axios
-      .get(url)
-      .then((res) => res.data.replaceAll("</P>", "</p>")) // This patch is required for malformatted Morningstar pages
+      .get(url, config)
+      .then((res) => {
+        // This patch is required for malformatted Morningstar pages
+        const data = (res.data as string).replaceAll("</P>", "</p>");
+        return data.trim().startsWith("<div")
+          ? // This patch is required as the MSCI response does not contain a complete HTML page
+            `<html><body>${data}</body></html>`
+          : data;
+      })
       .catch((e) => {
         throw e;
       }),

@@ -21,7 +21,7 @@ import { type JSONFetcher, type FetcherWorkspace, captureFetchError } from "./fe
  * with errors)
  * @param {Stock} stock The stock to extract data for
  * @param {string} json The fetched and parsed JSON
- * @returns {boolean} Whether the driver is still healthy
+ * @returns {boolean} always true, since no WebDriver status needs to be reported by this Fetcher.
  * @throws an {@link APIError} in case of a severe error
  */
 const refinitivFetcher: JSONFetcher = async (

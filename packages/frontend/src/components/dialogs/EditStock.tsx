@@ -445,7 +445,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 }}
                 label="MSCI ID"
                 value={msciID}
-                placeholder="e.g. apple-inc/IID000000002157615"
+                placeholder="e.g. IID000000002157615"
                 fullWidth
               />
             </Grid>

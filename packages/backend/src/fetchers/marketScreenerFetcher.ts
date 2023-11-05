@@ -28,7 +28,7 @@ const XPATH_SPREAD_AVERAGE_TARGET = xpath.parse(
  * with errors)
  * @param {Stock} stock The stock to extract data for
  * @param {Document} document The fetched and parsed HTML document
- * @returns {boolean} Whether the driver is still healthy
+ * @returns {boolean} always true, since no WebDriver status needs to be reported by this Fetcher.
  * @throws an {@link APIError} in case of a severe error
  */
 const marketScreenerFetcher: HTMLFetcher = async (
@@ -43,6 +43,7 @@ const marketScreenerFetcher: HTMLFetcher = async (
 
   document = await getAndParseHTML(
     `https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/`,
+    undefined,
     stock,
     "marketScreener",
   );
