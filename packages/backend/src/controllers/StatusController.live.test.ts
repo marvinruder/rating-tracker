@@ -18,7 +18,7 @@ tests.push({
     expect(res.body.services).not.toHaveProperty("Redis");
 
     // Not available during live tests:
-    expect(res.body.services).toHaveProperty("Selenium");
+    // expect(res.body.services).toHaveProperty("Selenium");
     expect(res.body.services).toHaveProperty("Signal");
   },
 });

@@ -17,7 +17,7 @@ import { captureFetchError, getAndParseHTML, type FetcherWorkspace, type HTMLFet
  * with errors)
  * @param {Stock} stock The stock to extract data for
  * @param {Document} document The fetched and parsed HTML document
- * @returns {boolean} Whether the driver is still healthy
+ * @returns {Promise<void>} A promise that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
 const spFetcher: HTMLFetcher = async (
@@ -25,10 +25,15 @@ const spFetcher: HTMLFetcher = async (
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
   document: Document,
-): Promise<boolean> => {
+): Promise<void> => {
   let spESGScore: number = req.query.clear ? null : undefined;
 
-  document = await getAndParseHTML(`https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`, stock, "sp");
+  document = await getAndParseHTML(
+    `https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`,
+    undefined,
+    stock,
+    "sp",
+  );
 
   // Prepare an error message header containing the stock name and ticker.
   let errorMessage = `Error while fetching S&P information for ${stock.name} (${stock.ticker}):`;
@@ -80,7 +85,6 @@ const spFetcher: HTMLFetcher = async (
     stocks.successful.push(await readStock(stock.ticker));
   }
   document = undefined;
-  return true;
 };
 
 export default spFetcher;

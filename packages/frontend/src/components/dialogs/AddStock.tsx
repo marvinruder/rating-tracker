@@ -569,7 +569,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 }}
                 label="MSCI ID"
                 value={stock.msciID}
-                placeholder="e.g. apple-inc/IID000000002157615"
+                placeholder="e.g. IID000000002157615"
                 fullWidth
               />
             </Grid>

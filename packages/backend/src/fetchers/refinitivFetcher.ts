@@ -21,7 +21,7 @@ import { type JSONFetcher, type FetcherWorkspace, captureFetchError } from "./fe
  * with errors)
  * @param {Stock} stock The stock to extract data for
  * @param {string} json The fetched and parsed JSON
- * @returns {boolean} Whether the driver is still healthy
+ * @returns {Promise<void>} A promise that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
 const refinitivFetcher: JSONFetcher = async (
@@ -29,7 +29,7 @@ const refinitivFetcher: JSONFetcher = async (
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
   json: Object,
-): Promise<boolean> => {
+): Promise<void> => {
   let refinitivESGScore: number = req.query.clear ? null : undefined;
   let refinitivEmissions: number = req.query.clear ? null : undefined;
 
@@ -122,7 +122,6 @@ const refinitivFetcher: JSONFetcher = async (
     stocks.successful.push(await readStock(stock.ticker));
   }
   json = undefined;
-  return true;
 };
 
 export default refinitivFetcher;

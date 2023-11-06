@@ -43,7 +43,7 @@ tests.push({
       analystConsensus: 2.5,
       analystCount: 5,
       analystTargetPrice: 150,
-      msciID: "new-stock/IID000001238712974",
+      msciID: "IID000001238712974",
       msciLastFetch: new Date(),
       msciESGRating: "B",
       msciTemperature: 2.1,

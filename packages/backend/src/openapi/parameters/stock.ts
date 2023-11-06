@@ -184,7 +184,7 @@ export const msciID: OpenAPIV3.ParameterObject = {
   description: "The identifier of a stock used by MSCI",
   schema: {
     type: "string",
-    example: "apple-inc/IID000000002157615",
+    example: "IID000000002157615",
   },
 };
 

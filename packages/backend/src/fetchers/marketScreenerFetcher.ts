@@ -28,7 +28,7 @@ const XPATH_SPREAD_AVERAGE_TARGET = xpath.parse(
  * with errors)
  * @param {Stock} stock The stock to extract data for
  * @param {Document} document The fetched and parsed HTML document
- * @returns {boolean} Whether the driver is still healthy
+ * @returns {Promise<void>} A promise that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
 const marketScreenerFetcher: HTMLFetcher = async (
@@ -36,13 +36,14 @@ const marketScreenerFetcher: HTMLFetcher = async (
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
   document: Document,
-): Promise<boolean> => {
+): Promise<void> => {
   let analystConsensus: number = req.query.clear ? null : undefined;
   let analystCount: number = req.query.clear ? null : undefined;
   let analystTargetPrice: number = req.query.clear ? null : undefined;
 
   document = await getAndParseHTML(
     `https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/`,
+    undefined,
     stock,
     "marketScreener",
   );
@@ -180,7 +181,6 @@ const marketScreenerFetcher: HTMLFetcher = async (
     stocks.successful.push(await readStock(stock.ticker));
   }
   document = undefined;
-  return true;
 };
 
 export default marketScreenerFetcher;

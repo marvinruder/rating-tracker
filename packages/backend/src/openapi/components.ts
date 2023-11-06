@@ -168,7 +168,7 @@ export const components: OpenAPIV3.ComponentsObject = {
         msciID: {
           type: "string",
           nullable: true,
-          example: "apple-inc/IID000000002157615",
+          example: "IID000000002157615",
         },
         msciLastFetch: {
           type: "string",

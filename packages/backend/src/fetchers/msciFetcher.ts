@@ -1,48 +1,50 @@
 import { MSCIESGRating, Stock, isMSCIESGRating } from "@rating-tracker/commons";
 import { Request } from "express";
-import { By, WebDriver, until } from "selenium-webdriver";
 
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
-import { openPageAndWait } from "../utils/webdriver";
 
-import { type SeleniumFetcher, type FetcherWorkspace, captureFetchError } from "./fetchHelper";
+import { type FetcherWorkspace, captureFetchError, type HTMLFetcher, getAndParseHTML } from "./fetchHelper";
 
 /**
- * Fetches data from MSCI using a Selenium WebDriver.
+ * Fetches data from MSCI.
  *
  * @param {Request} req Request object
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
  * with errors)
  * @param {Stock} stock The stock to extract data for
- * @param {WebDriver} driver The WebDriver instance to use
- * @returns {boolean} Whether the driver is still healthy
+ * @param {Document} document The fetched and parsed HTML document
+ * @returns {Promise<void>} A promise that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
-const msciFetcher: SeleniumFetcher = async (
+const msciFetcher: HTMLFetcher = async (
   req: Request,
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
-  driver: WebDriver,
-): Promise<boolean> => {
+  document: Document,
+): Promise<void> => {
   let msciESGRating: MSCIESGRating = req.query.clear ? null : undefined;
   let msciTemperature: number = req.query.clear ? null : undefined;
 
-  await driver.manage().deleteAllCookies(); // Delete all cookies since MSCI allows only 4 requests per session.
-  const url = "https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/" + stock.msciID;
-  const driverHealthy = await openPageAndWait(driver, url);
-  // When we were unable to open the page, we assume the driver is unhealthy and end.
-  if (!driverHealthy) {
-    // Have another driver attempt the fetch of the current stock
-    stocks.queued.push(stock);
-    return false;
-  }
-  await driver.wait(
-    until.elementsLocated(By.className("esg-expandable")),
-    15000, // Wait for the page to load for a maximum of 15 seconds.
+  document = await getAndParseHTML(
+    "https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool",
+    {
+      params: {
+        p_p_id: "esgratingsprofile",
+        p_p_lifecycle: 2,
+        p_p_resource_id: "showEsgRatingsProfile",
+        _esgratingsprofile_issuerId: stock.msciID,
+      },
+      headers: {
+        referer:
+          "https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/" + stock.msciID,
+      },
+    },
+    stock,
+    "msci",
   );
 
   // Prepare an error message header containing the stock name and ticker.
@@ -50,7 +52,7 @@ const msciFetcher: SeleniumFetcher = async (
 
   try {
     // Example: "esg-rating-circle-bbb"
-    const esgClassName = await driver.findElement(By.className("ratingdata-company-rating")).getAttribute("class");
+    const esgClassName = document.getElementsByClassName("ratingdata-company-rating")[0].getAttribute("class");
     const msciESGRatingString = esgClassName.substring(esgClassName.lastIndexOf("-") + 1).toUpperCase();
     if (isMSCIESGRating(msciESGRatingString)) {
       msciESGRating = msciESGRatingString;
@@ -72,9 +74,9 @@ const msciFetcher: SeleniumFetcher = async (
   }
 
   try {
-    const msciTemperatureMatches = (
-      await driver.findElement(By.className("implied-temp-rise-value")).getAttribute("outerText")
-    ) // Example: "2.5°C"
+    const msciTemperatureMatches = document
+      .getElementsByClassName("implied-temp-rise-value")[0]
+      .textContent // Example: "2.5°C"
       .match(/(\d+(\.\d+)?)/g);
     if (
       msciTemperatureMatches === null ||
@@ -107,7 +109,7 @@ const msciFetcher: SeleniumFetcher = async (
   if (errorMessage.includes("\n")) {
     // An error occurred if and only if the error message contains a newline character.
     // We capture the resource and send a message.
-    errorMessage += `\n${await captureFetchError(stock, "msci", { driver })}`;
+    errorMessage += `\n${await captureFetchError(stock, "msci", { document })}`;
     if (req.query.ticker) {
       // If this request was for a single stock, we throw an error instead of sending a message, so that the error
       // message will be part of the response.
@@ -118,7 +120,7 @@ const msciFetcher: SeleniumFetcher = async (
   } else {
     stocks.successful.push(await readStock(stock.ticker));
   }
-  return true;
+  document = undefined;
 };
 
 export default msciFetcher;
