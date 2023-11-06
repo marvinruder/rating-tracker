@@ -40,19 +40,14 @@ export type FetcherWorkspace<T> = {
 
 type Fetcher = HTMLFetcher | JSONFetcher; // | SeleniumFetcher;
 
-export type JSONFetcher = (
-  req: Request,
-  stocks: FetcherWorkspace<Stock>,
-  stock: Stock,
-  json: Object,
-) => Promise<boolean>;
+export type JSONFetcher = (req: Request, stocks: FetcherWorkspace<Stock>, stock: Stock, json: Object) => Promise<void>;
 
 export type HTMLFetcher = (
   req: Request,
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
   document: Document,
-) => Promise<boolean>;
+) => Promise<void>;
 
 // export type SeleniumFetcher = (
 //   req: Request,
@@ -85,7 +80,7 @@ type FetcherSource = {
 
 /**
  * Captures the fetched resource of a fetcher and stores it in Redis. Based on the fetcher type, the resource can either
- * be a {@link Document}, a {@link Object} or a screenshot of the Selenium browser window.
+ * be a {@link Document} or a {@link Object}.
  *
  * @param {Stock} stock the affected stock
  * @param {DataProvider} dataProvider the name of the data provider
@@ -291,9 +286,9 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
 
           try {
             if (htmlDataProviders.includes(dataProvider)) {
-              if (!(await (dataProviderFetchers[dataProvider] as HTMLFetcher)(req, stocks, stock, document))) break;
+              await (dataProviderFetchers[dataProvider] as HTMLFetcher)(req, stocks, stock, document);
             } else if (jsonDataProviders.includes(dataProvider)) {
-              if (!(await (dataProviderFetchers[dataProvider] as JSONFetcher)(req, stocks, stock, json))) break;
+              await (dataProviderFetchers[dataProvider] as JSONFetcher)(req, stocks, stock, json);
               // } else if (seleniumDataProviders.includes(dataProvider)) {
               //   if (!(await (dataProviderFetchers[dataProvider] as SeleniumFetcher)(req, stocks, stock, driver)))
               //     break;

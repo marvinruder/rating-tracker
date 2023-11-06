@@ -19,7 +19,7 @@ const dataProviderParams: Record<DataProvider, AxiosRequestConfig> = {
     params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   },
   msci: {
-    // Fetch data from MSCI with only two WebDrivers to avoid being rate-limited
+    // Fetch data from MSCI with only two instances to avoid being rate-limited
     params: { concurrency: 2 },
   },
   refinitiv: {

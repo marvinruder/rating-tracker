@@ -40,7 +40,7 @@ const MAX_RETRIES = 10;
  * with errors)
  * @param {Stock} stock The stock to extract data for
  * @param {Document} document The fetched and parsed HTML document
- * @returns {boolean} always true, since no WebDriver status needs to be reported by this Fetcher.
+ * @returns {Promise<void>} A promise that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
 const morningstarFetcher: HTMLFetcher = async (
@@ -48,7 +48,7 @@ const morningstarFetcher: HTMLFetcher = async (
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
   document: Document,
-): Promise<boolean> => {
+): Promise<void> => {
   let industry: Industry = req.query.clear ? null : undefined;
   let size: Size = req.query.clear ? null : undefined;
   let style: Style = req.query.clear ? null : undefined;
@@ -413,7 +413,6 @@ const morningstarFetcher: HTMLFetcher = async (
     stocks.successful.push(await readStock(stock.ticker));
   }
   document = undefined;
-  return true;
 };
 
 export default morningstarFetcher;

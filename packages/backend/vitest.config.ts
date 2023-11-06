@@ -20,7 +20,7 @@ export default defineConfig({
         "src/utils/FetchError.*",
         "src/utils/logger.*",
         "src/utils/logFormatterConfig.*",
-        "src/utils/webdriver.*",
+        // "src/utils/webdriver.*",
       ],
     },
     exclude: ["**/*.live.test.ts"],
