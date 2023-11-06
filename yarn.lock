@@ -1333,7 +1333,7 @@ __metadata:
     "@simplewebauthn/browser": "npm:8.3.4"
     "@types/node": "npm:20.8.10"
     "@types/nprogress": "npm:0.2.2"
-    "@types/react": "npm:18.2.35"
+    "@types/react": "npm:18.2.36"
     "@types/react-dom": "npm:18.2.14"
     "@typescript-eslint/eslint-plugin": "npm:6.9.1"
     "@typescript-eslint/parser": "npm:6.9.1"
@@ -1801,14 +1801,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:18.2.35":
-  version: 18.2.35
-  resolution: "@types/react@npm:18.2.35"
+"@types/react@npm:*, @types/react@npm:18.2.36":
+  version: 18.2.36
+  resolution: "@types/react@npm:18.2.36"
   dependencies:
     "@types/prop-types": "npm:*"
     "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 3c8c752d21856f74ddb96b9dd13cdd70c0ce1522808f20511f0220f392ea727fae9388db4da3ebe317d9bac98a0d930566d4277b22e92c1cad414429739e1d76
+  checksum: 4dac0a9f808b0da01029146efe7eeed454da68d01f0f73d417c95d691460f210b9baeb5fa756015f5a048825a1145a7dcb6c6d9c3e4e7876c683edf9892c383b
   languageName: node
   linkType: hard
 
@@ -7077,14 +7077,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"punycode@npm:^2.1.0":
-  version: 2.3.0
-  resolution: "punycode@npm:2.3.0"
-  checksum: d4e7fbb96f570c57d64b09a35a1182c879ac32833de7c6926a2c10619632c1377865af3dab5479f59d51da18bcd5035a20a5ef6ceb74020082a3e78025d9a9ca
-  languageName: node
-  linkType: hard
-
-"punycode@npm:^2.3.1":
+"punycode@npm:^2.1.0, punycode@npm:^2.3.1":
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
   checksum: febdc4362bead22f9e2608ff0171713230b57aff9dddc1c273aa2a651fbd366f94b7d6a71d78342a7c0819906750351ca7f2edd26ea41b626d87d6a13d1bd059
