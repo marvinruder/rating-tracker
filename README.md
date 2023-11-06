@@ -307,7 +307,7 @@ Variable | Example Value | Explanation
 `LOG_LEVEL` | `debug` | The level for the log output to `stdout`. Can be one of `fatal`, `error`, `warn`, `info`, `debug`, `trace`. If unset, `info` will be used. 
 `PLAIN_LOG` | `1` | If set to a truthy value, the log output to `stdout` will not be rendered with colors and icons.
 `AUTO_FETCH_SCHEDULE` | `0 30 2 * * *` | A Cron-like specification of a schedule for when to fetch all stocks from all providers. The format in use includes seconds, so the example value resolves to “every day at 2:30:00 AM”. If unset, no automatic fetching will happen.
-`MAX_FETCH_CONCURRENCY` | `4` | The number of fetcher instances used concurrently when fetching information for multiple stocks.
+`MAX_FETCH_CONCURRENCY` | `4` | The number of fetcher instances used concurrently when fetching information for multiple stocks. If unset, no concurrent fetches will be performed.
 `SIGNAL_URL` | `http://127.0.0.1:8080` | The URL of the Signal REST API. Can also use the Signal REST API service name (e.g. `signal` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file. If unset, no Signal notification messages will be sent.
 `SIGNAL_SENDER` | `+12345678900` | The phone number of the Signal account registered with the Signal CLI service, which will be used to send notification messages. Read more [here](#create-signal-account) on how to register a Signal account. If unset, no Signal notification messages will be sent.
 
