@@ -1233,7 +1233,7 @@ __metadata:
     "@types/node": "npm:20.8.10"
     "@types/response-time": "npm:2.3.8"
     "@types/supertest": "npm:2.0.15"
-    "@types/swagger-ui-express": "npm:4.1.5"
+    "@types/swagger-ui-express": "npm:4.1.6"
     "@typescript-eslint/eslint-plugin": "npm:6.10.0"
     "@typescript-eslint/parser": "npm:6.10.0"
     "@vitest/coverage-v8": "npm:0.34.6"
@@ -1860,13 +1860,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/swagger-ui-express@npm:4.1.5":
-  version: 4.1.5
-  resolution: "@types/swagger-ui-express@npm:4.1.5"
+"@types/swagger-ui-express@npm:4.1.6":
+  version: 4.1.6
+  resolution: "@types/swagger-ui-express@npm:4.1.6"
   dependencies:
     "@types/express": "npm:*"
     "@types/serve-static": "npm:*"
-  checksum: 80242b3e30fce44388a274304ea36fc8492fb031fc2721657b71a6d95cb6e2da79b26c9a47c8a39a29f74c208a2a1051047c9828246658809a70bb84acdbb23c
+  checksum: c1c4b58b12f9261af70b6a7e6420649b4f0a0343071ae8b98483c5885cd596f4c25015991f91f3f7c7a0baa461e2d76029d64de79108a89d03f3f83abbe6bc58
   languageName: node
   linkType: hard
 
