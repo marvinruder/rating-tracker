@@ -1231,7 +1231,7 @@ __metadata:
     "@types/cookie-parser": "npm:1.4.6"
     "@types/express": "npm:4.17.21"
     "@types/node": "npm:20.8.10"
-    "@types/response-time": "npm:2.3.7"
+    "@types/response-time": "npm:2.3.8"
     "@types/supertest": "npm:2.0.15"
     "@types/swagger-ui-express": "npm:4.1.5"
     "@typescript-eslint/eslint-plugin": "npm:6.10.0"
@@ -1787,13 +1787,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/response-time@npm:2.3.7":
-  version: 2.3.7
-  resolution: "@types/response-time@npm:2.3.7"
+"@types/response-time@npm:2.3.8":
+  version: 2.3.8
+  resolution: "@types/response-time@npm:2.3.8"
   dependencies:
     "@types/express": "npm:*"
     "@types/node": "npm:*"
-  checksum: e3e5a05b8c5c0bc6b0990fc41b9d3033405d0afa2d70673385e0ddfc860a29e18e75395fef3ec76b2ad759b427c924a36c88369c846d0c03296868febff84a33
+  checksum: 79b3a92e7eb3decf8901c5f346d254df688d48a4901eb7d741e7ff0222e9b5c7d4e38c93a85af8dd0aa4627eed2ed3f7511d71b50c2b6f36b70f43571639efb5
   languageName: node
   linkType: hard
 
