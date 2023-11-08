@@ -1239,7 +1239,7 @@ __metadata:
     "@vitest/coverage-v8": "npm:0.34.6"
     "@xmldom/xmldom": "npm:0.8.10"
     "@yarnpkg/pnpify": "npm:4.0.0"
-    axios: "npm:1.6.0"
+    axios: "npm:1.6.1"
     chalk: "npm:5.3.0"
     concurrently: "npm:8.2.2"
     cookie-parser: "npm:1.4.6"
@@ -1315,7 +1315,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:4.1.1"
     "@vitest/coverage-v8": "npm:0.34.6"
     "@vitest/web-worker": "npm:0.34.6"
-    axios: "npm:1.6.0"
+    axios: "npm:1.6.1"
     clsx: "npm:2.0.0"
     date-fns: "npm:2.30.0"
     eslint: "npm:8.53.0"
@@ -2619,14 +2619,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.6.0":
-  version: 1.6.0
-  resolution: "axios@npm:1.6.0"
+"axios@npm:1.6.1":
+  version: 1.6.1
+  resolution: "axios@npm:1.6.1"
   dependencies:
     follow-redirects: "npm:^1.15.0"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: f069d938a05d2293e27c7cd6f0c08a1cb764f7cc43a1e637572f8d5928837ecd735890ad67a867d696094ee4b8b4dfdb3727a57aae600845e4c295581cb32f9a
+  checksum: fb091af3ad47d70fdcba5e71654b9e3c56947d93d8b2375dd0b4db63de9982adab6235aebc514488aa289c7faf103b09e8911280e6f6b1112d1604fe5f111f71
   languageName: node
   linkType: hard
 
