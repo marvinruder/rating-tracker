@@ -29,7 +29,7 @@
     "@types/react-dom": "18.2.15",
     "@vitejs/plugin-react": "4.1.1",
     "@vitest/web-worker": "0.34.6",
-    "axios": "1.6.0",
+    "axios": "1.6.1",
     "clsx": "2.0.0",
     "date-fns": "2.30.0",
     "nprogress": "0.2.0",
