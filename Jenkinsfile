@@ -70,8 +70,8 @@ node('rating-tracker-build') {
                             sh """
                             echo \"globalFolder: /workdir/cache/yarn/global\" >> .yarnrc.yml
                             mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
-                            cp -arnl \$HOME/.cache/yarn/global ./cache/yarn || :
-                            cp -arl \$HOME/.cache/rating-tracker ./cache || :
+                            cp -arln \$HOME/.cache/yarn/global ./cache/yarn || :
+                            cp -arlf \$HOME/.cache/rating-tracker ./cache || :
                             docker build $DOCKER_CI_FLAGS --target=yarn .
                             """
                         }
@@ -140,8 +140,8 @@ node('rating-tracker-build') {
                 stage ('Cleanup') {
                     // Upload cache to external storage and remove build artifacts
                     sh """#!/bin/bash
-                    cp -arl ./cache/rating-tracker \$HOME/.cache
-                    cp -arnl ./cache/yarn \$HOME/.cache
+                    cp -arlf ./cache/rating-tracker \$HOME/.cache
+                    cp -arln ./cache/yarn \$HOME/.cache
                     putcache
                     docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $IMAGE_NAME:job$JOB_ID-wasm $IMAGE_NAME:job$JOB_ID-ci || :
