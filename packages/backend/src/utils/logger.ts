@@ -85,7 +85,7 @@ new cron.CronJob(
  */
 export const logRequest = (req: Request, res: Response, time: number): void =>
   logger[
-    (req.originalUrl.startsWith(baseURL + stocksEndpointPath) && req.originalUrl.startsWith(stockLogoEndpointSuffix)) ||
+    (req.originalUrl.startsWith(baseURL + stocksEndpointPath) && req.path.endsWith(stockLogoEndpointSuffix)) ||
     req.ip === "::1"
       ? "trace"
       : "info"
