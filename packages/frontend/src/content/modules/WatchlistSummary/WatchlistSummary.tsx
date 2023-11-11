@@ -1,5 +1,5 @@
 import { Container, Grid } from "@mui/material";
-import { WatchlistSummary, watchlistSummaryEndpointPath } from "@rating-tracker/commons";
+import { WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 
 import { Footer } from "../../../components/etc/Footer";
@@ -27,7 +27,7 @@ const WatchlistSummaryModule = (): JSX.Element => {
    */
   const getWatchlists = () => {
     api
-      .get(watchlistSummaryEndpointPath)
+      .get(watchlistsEndpointPath)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotification(e, "fetching watchlists");

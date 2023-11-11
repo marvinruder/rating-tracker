@@ -1,5 +1,5 @@
 import { Card, Container } from "@mui/material";
-import { StockListColumn, Watchlist, stockListColumnArray, watchlistEndpointPath } from "@rating-tracker/commons";
+import { StockListColumn, Watchlist, stockListColumnArray, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -36,7 +36,7 @@ const WatchlistModule = (): JSX.Element => {
    */
   const getWatchlist = (id: number) => {
     api
-      .get(watchlistEndpointPath + `/${id}`)
+      .get(watchlistsEndpointPath + `/${id}`)
       .then((res) => setWatchlist(res.data))
       .catch((e) => setErrorNotification(e, "fetching watchlist"));
   };

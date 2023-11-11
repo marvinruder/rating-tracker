@@ -6,9 +6,10 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
 import {
   baseURL,
-  favoriteEndpointPath,
+  favoritesEndpointPath,
   Stock,
-  stockLogoEndpointPath,
+  stockLogoEndpointSuffix,
+  stocksEndpointPath,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
 import { useContext, useState } from "react";
@@ -49,7 +50,9 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                   mr: "-8px",
                   background: "none",
                 }}
-                src={baseURL + stockLogoEndpointPath + `/${props.stock.ticker}?dark=${theme.palette.mode === "dark"}`}
+                src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
+                  theme.palette.mode === "dark"
+                }`}
                 alt=" "
               />
               <Box>
@@ -91,7 +94,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                 <IconButton
                   color={props.isFavorite ? "warning" : undefined}
                   onClick={() => {
-                    (props.isFavorite ? api.delete : api.put)(favoriteEndpointPath + `/${props.stock.ticker}`)
+                    (props.isFavorite ? api.delete : api.put)(favoritesEndpointPath + `/${props.stock.ticker}`)
                       .then(() => props.getStock && props.getStock())
                       .catch((e) => {
                         setNotification({

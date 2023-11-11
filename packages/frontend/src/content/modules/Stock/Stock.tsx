@@ -1,5 +1,5 @@
 import { Card, Container } from "@mui/material";
-import { Stock, favoriteListEndpointPath, stockEndpointPath } from "@rating-tracker/commons";
+import { Stock, favoritesEndpointPath, stocksEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -29,11 +29,11 @@ const StockModule = (): JSX.Element => {
    */
   const getStock = (ticker: string) => {
     api
-      .get(stockEndpointPath + `/${ticker}`)
+      .get(stocksEndpointPath + `/${ticker}`)
       .then((res) => setStock(res.data))
       .catch((e) => setErrorNotification(e, "fetching stock"));
     api
-      .get(favoriteListEndpointPath)
+      .get(favoritesEndpointPath)
       .then((res) => setIsFavorite((res.data.stocks as Stock[]).find((stock) => ticker === stock.ticker) !== undefined))
       .catch((e) => setErrorNotification(e, "fetching favorites"));
   };

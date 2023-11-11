@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import { baseURL, stockLogoEndpointPath } from "@rating-tracker/commons";
+import { baseURL, stockLogoEndpointSuffix } from "@rating-tracker/commons";
 import cron from "cron";
 import { Request, Response } from "express";
 import pino from "pino";
@@ -84,7 +84,7 @@ new cron.CronJob(
  * @returns {void}
  */
 export const logRequest = (req: Request, res: Response, time: number): void =>
-  logger[req.originalUrl.startsWith(`${baseURL}${stockLogoEndpointPath}`) || req.ip === "::1" ? "trace" : "info"](
+  logger[req.originalUrl.startsWith(`${baseURL}${stockLogoEndpointSuffix}`) || req.ip === "::1" ? "trace" : "info"](
     {
       prefix: "nodejs",
       req: {

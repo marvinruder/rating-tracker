@@ -9,7 +9,7 @@ import { noContent } from "../responses/success";
 const head: OpenAPIV3.OperationObject = {
   tags: ["Session API"],
   operationId: "session",
-  summary: "Session API",
+  summary: "Read Session API endpoint",
   description:
     "Returns a 2XX response code if the authentication token cookie is still valid, and a 4XX response code otherwise.",
   responses: {
@@ -24,7 +24,7 @@ const head: OpenAPIV3.OperationObject = {
 const deleteResponse: OpenAPIV3.OperationObject = {
   tags: ["Session API"],
   operationId: "session",
-  summary: "Session API",
+  summary: "Delete Session API endpoint",
   description: "Deletes the authentication token related to the session cookie.",
   responses: {
     "204": noContent,

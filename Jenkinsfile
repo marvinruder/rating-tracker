@@ -143,7 +143,7 @@ node('rating-tracker-build') {
                     cp -arlf ./cache/rating-tracker \$HOME/.cache
                     cp -arln ./cache/yarn \$HOME/.cache
                     putcache
-                    docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
+                    PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $IMAGE_NAME:job$JOB_ID-wasm $IMAGE_NAME:job$JOB_ID-ci || :
                     rm -rf app cache
                     """

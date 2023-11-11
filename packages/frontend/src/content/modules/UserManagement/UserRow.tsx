@@ -26,7 +26,7 @@ import {
   GENERAL_ACCESS,
   WRITE_STOCKS_ACCESS,
   ADMINISTRATIVE_ACCESS,
-  userManagementEndpointPath,
+  usersEndpointPath,
 } from "@rating-tracker/commons";
 import { Fragment, useState } from "react";
 
@@ -82,7 +82,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
     const patchAccessRights = () => {
       setRequestInProgress(true);
       api
-        .patch(userManagementEndpointPath + `/${props.user.email}`, undefined, {
+        .patch(usersEndpointPath + `/${props.user.email}`, undefined, {
           params: {
             // Only send the parameters that have changed.
             accessRights: accessRights !== props.user.accessRights ? accessRights : undefined,

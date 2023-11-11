@@ -12,7 +12,7 @@ import { accepted, noContent, okStockList } from "../../responses/success";
 const post: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchMarketScreenerData",
-  summary: "Market Screener Fetch API",
+  summary: "Market Screener Fetch API endpoint",
   description: "Fetch information from Market Screener",
   parameters: [
     {

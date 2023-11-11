@@ -17,7 +17,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { FAVORITES_NAME, WatchlistSummary, watchlistEndpointPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -80,7 +80,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
                 onClick={() => {
                   api
                     .patch(
-                      watchlistEndpointPath + `/${props.watchlist.id}`,
+                      watchlistsEndpointPath + `/${props.watchlist.id}`,
                       {},
                       { params: { subscribed: !props.watchlist.subscribed } },
                     )

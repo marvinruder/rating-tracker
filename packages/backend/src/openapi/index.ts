@@ -1,7 +1,6 @@
 import {
   baseURL,
-  favoriteEndpointPath,
-  favoriteListEndpointPath,
+  favoritesEndpointPath,
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
   fetchMSCIEndpointPath,
@@ -9,47 +8,42 @@ import {
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
   registerEndpointPath,
-  resourceEndpointPath,
+  resourcesEndpointPath,
   sessionEndpointPath,
   signInEndpointPath,
   statusEndpointPath,
-  stockLogoBackgroundEndpointPath,
-  stockComputeEndpointPath,
-  stockEndpointPath,
-  stockListEndpointPath,
-  stockLogoEndpointPath,
-  userEndpointPath,
-  userListEndpointPath,
-  userManagementEndpointPath,
-  watchlistEndpointPath,
-  watchlistSummaryEndpointPath,
+  stocksEndpointPath,
+  stockLogoEndpointSuffix,
+  accountEndpointPath,
+  watchlistsEndpointPath,
+  usersEndpointPath,
+  logoBackgroundEndpointPath,
 } from "@rating-tracker/commons";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 import { components } from "./components";
-import * as registerEndpoint from "./paths/auth/registerEndpoint";
-import * as signInEndpoint from "./paths/auth/signInEndpoint";
-import * as favoriteEndpoint from "./paths/favorite";
-import * as favoriteListEndpoint from "./paths/favorite/listEndpoint";
+import * as accountEndpoint from "./paths/account";
+import * as registerEndpoint from "./paths/auth/register";
+import * as signInEndpoint from "./paths/auth/signIn";
+import * as favoritesEndpoint from "./paths/favorites";
+import * as favoriteEndpoint from "./paths/favorites/favorite";
 import * as marketScreenerEndpoint from "./paths/fetch/marketScreenerEndpoint";
 import * as morningstarEndpoint from "./paths/fetch/morningstarEndpoint";
 import * as msciEndpoint from "./paths/fetch/msciEndpoint";
 import * as refinitivEndpoint from "./paths/fetch/refinitivEndpoint";
 import * as spEndpoint from "./paths/fetch/spEndpoint";
 import * as sustainalyticsEndpoint from "./paths/fetch/sustainalyticsEndpoint";
-import * as resourceEndpoint from "./paths/resource";
+import * as logoBackgroundEndpoint from "./paths/logobackground";
+import * as resourceEndpoint from "./paths/resources/resource";
 import * as sessionEndpoint from "./paths/sessionEndpoint";
 import * as statusEndpoint from "./paths/statusEndpoint";
-import * as stockEndpoint from "./paths/stock";
-import * as stockComputeEndpoint from "./paths/stock/computeEndpoint";
-import * as stockListEndpoint from "./paths/stock/listEndpoint";
-import * as stockLogoEndpoint from "./paths/stock/logo";
-import * as stockLogoBackgroundEndpoint from "./paths/stock/logobackground";
-import * as userEndpoint from "./paths/user";
-import * as userManagementEndpoint from "./paths/userManagement";
-import * as userListEndpoint from "./paths/userManagement/listEndpoint";
-import * as watchlistEndpoint from "./paths/watchlist";
-import * as watchlistSummaryEndpoint from "./paths/watchlist/summaryEndpoint";
+import * as stocksEndpoint from "./paths/stocks";
+import * as stockEndpoint from "./paths/stocks/stock";
+import * as stockLogoEndpoint from "./paths/stocks/stock/logo";
+import * as usersEndpoint from "./paths/users";
+import * as userEndpoint from "./paths/users/user";
+import * as watchlistsEndpoint from "./paths/watchlists";
+import * as watchlistEndpoint from "./paths/watchlists/watchlist";
 import { servers } from "./servers";
 
 /**
@@ -72,29 +66,28 @@ export const openapiDocument: OpenAPIV3.Document = {
   },
   servers: servers,
   paths: {
+    [`${baseURL}${accountEndpointPath}`]: accountEndpoint,
     [`${baseURL}${registerEndpointPath}`]: registerEndpoint,
     [`${baseURL}${signInEndpointPath}`]: signInEndpoint,
-    [`${baseURL}${stockListEndpointPath}`]: stockListEndpoint,
-    [`${baseURL}${stockLogoBackgroundEndpointPath}`]: stockLogoBackgroundEndpoint,
-    [`${baseURL}${stockComputeEndpointPath}`]: stockComputeEndpoint,
-    [`${baseURL}${stockEndpointPath}/{ticker}`]: stockEndpoint,
-    [`${baseURL}${stockLogoEndpointPath}/{ticker}`]: stockLogoEndpoint,
+    [`${baseURL}${logoBackgroundEndpointPath}`]: logoBackgroundEndpoint,
+    [`${baseURL}${stocksEndpointPath}`]: stocksEndpoint,
+    [`${baseURL}${stocksEndpointPath}/{ticker}`]: stockEndpoint,
+    [`${baseURL}${stocksEndpointPath}/{ticker}${stockLogoEndpointSuffix}`]: stockLogoEndpoint,
     [`${baseURL}${fetchMorningstarEndpointPath}`]: morningstarEndpoint,
     [`${baseURL}${fetchMarketScreenerEndpointPath}`]: marketScreenerEndpoint,
     [`${baseURL}${fetchMSCIEndpointPath}`]: msciEndpoint,
     [`${baseURL}${fetchRefinitivEndpointPath}`]: refinitivEndpoint,
     [`${baseURL}${fetchSPEndpointPath}`]: spEndpoint,
     [`${baseURL}${fetchSustainalyticsEndpointPath}`]: sustainalyticsEndpoint,
-    [`${baseURL}${resourceEndpointPath}/{id}`]: resourceEndpoint,
+    [`${baseURL}${resourcesEndpointPath}/{id}`]: resourceEndpoint,
     [`${baseURL}${statusEndpointPath}`]: statusEndpoint,
     [`${baseURL}${sessionEndpointPath}`]: sessionEndpoint,
-    [`${baseURL}${userManagementEndpointPath}/{email}`]: userManagementEndpoint,
-    [`${baseURL}${userListEndpointPath}`]: userListEndpoint,
-    [`${baseURL}${userEndpointPath}`]: userEndpoint,
-    [`${baseURL}${watchlistEndpointPath}/{id}`]: watchlistEndpoint,
-    [`${baseURL}${watchlistSummaryEndpointPath}`]: watchlistSummaryEndpoint,
-    [`${baseURL}${favoriteEndpointPath}/{ticker}`]: favoriteEndpoint,
-    [`${baseURL}${favoriteListEndpointPath}`]: favoriteListEndpoint,
+    [`${baseURL}${usersEndpointPath}`]: usersEndpoint,
+    [`${baseURL}${usersEndpointPath}/{email}`]: userEndpoint,
+    [`${baseURL}${watchlistsEndpointPath}`]: watchlistsEndpoint,
+    [`${baseURL}${watchlistsEndpointPath}/{id}`]: watchlistEndpoint,
+    [`${baseURL}${favoritesEndpointPath}`]: favoritesEndpoint,
+    [`${baseURL}${favoritesEndpointPath}/{ticker}`]: favoriteEndpoint,
   },
   tags: [],
   components: components,
