@@ -16,14 +16,8 @@ import {
   Skeleton,
   Dialog,
 } from "@mui/material";
-import {
-  FAVORITES_NAME,
-  Stock,
-  WatchlistSummary,
-  watchlistEndpointPath,
-  watchlistSummaryEndpointPath,
-} from "@rating-tracker/commons";
-import React, { Fragment, useEffect, useState } from "react";
+import { FAVORITES_NAME, Stock, WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
+import { Fragment, useEffect, useState } from "react";
 
 import { useNotification } from "../../contexts/NotificationContext";
 import api from "../../utils/api";
@@ -50,7 +44,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    */
   const getWatchlists = () => {
     api
-      .get(watchlistSummaryEndpointPath)
+      .get(watchlistsEndpointPath)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotification(e, "fetching watchlists");
@@ -74,7 +68,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    */
   const addStockToWatchlist = (id: number) => {
     api
-      .patch(watchlistEndpointPath + `/${id}`, {}, { params: { stocksToAdd: [props.stock.ticker] } })
+      .patch(watchlistsEndpointPath + `/${id}`, {}, { params: { stocksToAdd: [props.stock.ticker] } })
       .then(() => props.onClose())
       .catch((e) => setErrorNotification(e, "adding stock to watchlist"));
   };

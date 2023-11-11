@@ -12,7 +12,7 @@ import { accepted, noContent, okStockList } from "../../responses/success";
 const post: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchSPData",
-  summary: "S&P Fetch API",
+  summary: "S&P Fetch API endpoint",
   description: "Fetch information from S&P Global Sustainable1 ESG Scores",
   parameters: [
     {

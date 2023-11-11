@@ -3,8 +3,8 @@ import {
   baseURL,
   registerEndpointPath,
   signInEndpointPath,
-  userEndpointPath,
-  userManagementEndpointPath,
+  accountEndpointPath,
+  usersEndpointPath,
 } from "@rating-tracker/commons";
 
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
@@ -146,7 +146,7 @@ tests.push({
 
     // Activate user account
     await supertest
-      .patch(`${baseURL}${userManagementEndpointPath}/jim.doe%40example.com?accessRights=1`)
+      .patch(`${baseURL}${usersEndpointPath}/jim.doe%40example.com?accessRights=1`)
       .set("Cookie", ["authToken=exampleSessionID"]);
 
     res = await supertest.post(`${baseURL}${signInEndpointPath}`).send({
@@ -159,7 +159,7 @@ tests.push({
 
     // Check that session cookie works
     const authTokenCookieHeader = res.headers["set-cookie"][0].split(";")[0];
-    res = await supertest.get(`${baseURL}${userEndpointPath}`).set("Cookie", [authTokenCookieHeader]);
+    res = await supertest.get(`${baseURL}${accountEndpointPath}`).set("Cookie", [authTokenCookieHeader]);
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("jim.doe@example.com");
     expect(res.body.name).toBe("Jim Doe");

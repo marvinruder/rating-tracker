@@ -12,7 +12,7 @@ import { accepted, noContent, okStockList } from "../../responses/success";
 const post: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchMSCIData",
-  summary: "MSCI Fetch API",
+  summary: "MSCI Fetch API endpoint",
   description: "Fetch information from MSCI ESG Ratings & Climate Search Tool",
   parameters: [
     {

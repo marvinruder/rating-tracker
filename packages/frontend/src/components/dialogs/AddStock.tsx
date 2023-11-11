@@ -34,7 +34,7 @@ import {
   optionalStockValuesNull,
   SP_PREMIUM_STOCK_ERROR_MESSAGE,
   Stock,
-  stockEndpointPath,
+  stocksEndpointPath,
 } from "@rating-tracker/commons";
 import { AxiosError } from "axios";
 import { useState } from "react";
@@ -119,7 +119,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
     setRequestInProgress(true);
     const { name, isin, country } = stock;
     api
-      .put(stockEndpointPath + `/${stock.ticker.trim()}`, undefined, {
+      .put(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
         params: { name: name.trim(), isin: isin.trim(), country },
       })
       .then(() => {
@@ -135,7 +135,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockMorningstarID = () => {
     setMorningstarIDRequestInProgress(true);
     api
-      .patch(stockEndpointPath + `/${stock.ticker.trim()}`, undefined, {
+      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
         params: { morningstarID: stock.morningstarID.trim() },
       })
       .then(() => {
@@ -165,7 +165,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockMarketScreenerID = () => {
     setMarketScreenerIDRequestInProgress(true);
     api
-      .patch(stockEndpointPath + `/${stock.ticker.trim()}`, undefined, {
+      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
         params: { marketScreenerID: stock.marketScreenerID.trim() },
       })
       .then(() => {
@@ -195,7 +195,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockMSCIID = () => {
     setMSCIIDRequestInProgress(true);
     api
-      .patch(stockEndpointPath + `/${stock.ticker.trim()}`, undefined, {
+      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
         params: { msciID: stock.msciID.trim() },
       })
       .then(() => {
@@ -225,7 +225,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockRIC = () => {
     setRICRequestInProgress(true);
     api
-      .patch(stockEndpointPath + `/${stock.ticker.trim()}`, undefined, {
+      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
         params: { ric: stock.ric.trim() },
       })
       .then(() => {
@@ -255,7 +255,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockSPID = () => {
     setSPIDRequestInProgress(true);
     api
-      .patch(stockEndpointPath + `/${stock.ticker.trim()}`, undefined, {
+      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
         params: { spID: stock.spID === null ? "" : stock.spID },
       })
       .then(() => {
@@ -295,7 +295,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockSustainalyticsID = () => {
     setSustainalyticsIDRequestInProgress(true);
     api
-      .patch(stockEndpointPath + `/${stock.ticker.trim()}`, undefined, {
+      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
         params: { sustainalyticsID: stock.sustainalyticsID.trim() },
       })
       .then(() => {
@@ -325,7 +325,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const getAndShowStock = () => {
     setRequestInProgress(true);
     api
-      .get(stockEndpointPath + `/${stock.ticker.trim()}`)
+      .get(stocksEndpointPath + `/${stock.ticker.trim()}`)
       .then((res) => {
         setStock(res.data);
         setFinalStock(res.data);

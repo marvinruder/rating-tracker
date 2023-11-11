@@ -19,7 +19,7 @@ import {
   useTheme,
 } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
-import { baseURL, emojiFlag, Stock, stockListEndpointPath, stockLogoEndpointPath } from "@rating-tracker/commons";
+import { baseURL, emojiFlag, Stock, stocksEndpointPath, stockLogoEndpointSuffix } from "@rating-tracker/commons";
 import React, { forwardRef, Ref, useState, ReactElement, ChangeEvent, useEffect, Fragment } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -169,7 +169,7 @@ export const HeaderSearchButton = (): JSX.Element => {
    */
   const getStocks = (currentSearchValue: string) => {
     api
-      .get(stockListEndpointPath, {
+      .get(stocksEndpointPath, {
         params: { name: currentSearchValue.trim(), sortBy: "ticker" },
       })
       .then((res) => {
@@ -285,9 +285,9 @@ export const HeaderSearchButton = (): JSX.Element => {
                               m: "-20px",
                               background: "none",
                             }}
-                            src={
-                              baseURL + stockLogoEndpointPath + `/${stock.ticker}?dark=${theme.palette.mode === "dark"}`
-                            }
+                            src={`${baseURL}${stocksEndpointPath}/${stock.ticker}${stockLogoEndpointSuffix}?dark=${
+                              theme.palette.mode === "dark"
+                            }`}
                             alt=" "
                           />
                         </ListItemAvatar>

@@ -10,7 +10,7 @@ import { okHealthy } from "../responses/success";
 const get: OpenAPIV3.OperationObject = {
   tags: ["Status API"],
   operationId: "status",
-  summary: "Status API",
+  summary: "Read Status API endpoint",
   description:
     "Returns a JSON object with the status “healthy” if online and able to connect to all services, or " +
     "“unhealthy” otherwise.",

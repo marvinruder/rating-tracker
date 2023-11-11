@@ -1,5 +1,5 @@
 import { Box, CircularProgress } from "@mui/material";
-import { User, userEndpointPath } from "@rating-tracker/commons";
+import { User, accountEndpointPath } from "@rating-tracker/commons";
 import NProgress from "nprogress";
 import { Suspense, lazy, useState, useEffect, createContext } from "react";
 import type { RouteObject } from "react-router";
@@ -176,7 +176,7 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
   useEffect(() => {
     // Check if the user is authenticated
     api
-      .get(userEndpointPath)
+      .get(accountEndpointPath)
       .then((response) => {
         if (Object.keys(response.data).length) {
           setUser(new User(response.data));

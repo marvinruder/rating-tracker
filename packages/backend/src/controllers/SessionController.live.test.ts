@@ -1,4 +1,4 @@
-import { baseURL, sessionEndpointPath, userEndpointPath } from "@rating-tracker/commons";
+import { baseURL, sessionEndpointPath, accountEndpointPath } from "@rating-tracker/commons";
 
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
 
@@ -33,7 +33,7 @@ tests.push({
     expect(res.header["set-cookie"][1]).toMatch("authToken=;");
 
     // Check whether we can still access the current user
-    res = await supertest.get(`${baseURL}${userEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${accountEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(Object.keys(res.body)).toHaveLength(0);
   },

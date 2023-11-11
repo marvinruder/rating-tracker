@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
-import { FAVORITES_NAME, Watchlist, watchlistEndpointPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, Watchlist, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { DeleteWatchlist } from "../../../components/dialogs/DeleteWatchlist";
@@ -44,7 +44,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
                   onClick={() => {
                     api
                       .patch(
-                        watchlistEndpointPath + `/${props.watchlist.id}`,
+                        watchlistsEndpointPath + `/${props.watchlist.id}`,
                         {},
                         { params: { subscribed: !props.watchlist.subscribed } },
                       )

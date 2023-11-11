@@ -1,5 +1,5 @@
 import { useMediaQuery, useTheme } from "@mui/material";
-import { stockLogoBackgroundEndpointPath } from "@rating-tracker/commons";
+import { logoBackgroundEndpointPath } from "@rating-tracker/commons";
 import { useEffect } from "react";
 
 import api from "../../utils/api";
@@ -21,7 +21,7 @@ export const LogoBackground = (): JSX.Element => {
 
   useEffect(() => {
     api
-      .get(`${stockLogoBackgroundEndpointPath}`, { params: { dark: theme.palette.mode === "dark" } })
+      .get(logoBackgroundEndpointPath, { params: { dark: theme.palette.mode === "dark" } })
       .then((res) => {
         const logos = res.data as string[];
         Array.from(document.getElementsByClassName("backgroundlogo")).forEach((logoDiv, i) => {

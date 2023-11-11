@@ -12,7 +12,7 @@ import { accepted, noContent, okStockList } from "../../responses/success";
 const post: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchRefinitivData",
-  summary: "Refinitiv Fetch API",
+  summary: "Refinitiv Fetch API endpoint",
   description: "Fetch information from Refinitiv ESG company scores",
   parameters: [
     {

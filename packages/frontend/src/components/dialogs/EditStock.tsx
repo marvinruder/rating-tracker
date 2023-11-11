@@ -22,7 +22,7 @@ import {
   countryName,
   Country,
   Stock,
-  stockEndpointPath,
+  stocksEndpointPath,
   fetchMarketScreenerEndpointPath,
   fetchMSCIEndpointPath,
   fetchRefinitivEndpointPath,
@@ -87,7 +87,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
       props.getStocks &&
       (setRequestInProgress(true),
       api
-        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+        .patch(stocksEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: {
             // Only send the parameters that have changed.
             name: name !== props.stock.name ? name.trim() : undefined,
@@ -114,7 +114,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
       props.getStocks &&
       (setMorningstarIDRequestInProgress(true),
       api
-        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+        .patch(stocksEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { morningstarID: morningstarID.trim() },
         })
         .then(() => {
@@ -145,7 +145,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
       props.getStocks &&
       (setMarketScreenerIDRequestInProgress(true),
       api
-        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+        .patch(stocksEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { marketScreenerID: marketScreenerID.trim() },
         })
         .then(() => {
@@ -176,7 +176,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
       props.getStocks &&
       (setMSCIIDRequestInProgress(true),
       api
-        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+        .patch(stocksEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { msciID: msciID.trim() },
         })
         .then(() => {
@@ -207,7 +207,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
       props.getStocks &&
       (setRICRequestInProgress(true),
       api
-        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+        .patch(stocksEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { ric: ric.trim() },
         })
         .then(() => {
@@ -238,7 +238,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
       props.getStocks &&
       (setSPIDRequestInProgress(true),
       api
-        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+        .patch(stocksEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { spID: spID === null ? "" : spID },
         })
         .then(() => {
@@ -279,7 +279,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
       props.getStocks &&
       (setSustainalyticsIDRequestInProgress(true),
       api
-        .patch(stockEndpointPath + `/${props.stock.ticker}`, undefined, {
+        .patch(stocksEndpointPath + `/${props.stock.ticker}`, undefined, {
           params: { sustainalyticsID: sustainalyticsID.trim() },
         })
         .then(() => {

@@ -12,7 +12,7 @@ import { accepted, noContent, okStockList } from "../../responses/success";
 const post: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
   operationId: "fetchMorningstarData",
-  summary: "Morningstar Fetch API",
+  summary: "Morningstar Fetch API endpoint",
   description: "Fetch information from Morningstar Italy web page",
   parameters: [
     {

@@ -16,8 +16,8 @@ import {
   Stock,
   StockListColumn,
   Watchlist,
-  favoriteListEndpointPath,
-  stockListEndpointPath,
+  favoritesEndpointPath,
+  stocksEndpointPath,
 } from "@rating-tracker/commons";
 import { FC, ChangeEvent, useState, useEffect } from "react";
 
@@ -56,7 +56,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
     setStocksFinal(false);
     void Promise.allSettled([
       api
-        .get(stockListEndpointPath, {
+        .get(stocksEndpointPath, {
           params: {
             // Pagination
             offset: page * rowsPerPage,
@@ -84,7 +84,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
           setCount(0);
         }),
       api
-        .get(favoriteListEndpointPath)
+        .get(favoritesEndpointPath)
         .then((res) => setFavorites((res.data.stocks as Stock[]).map((stock) => stock.ticker)))
         .catch((e) => {
           setErrorNotification(e, "fetching favorites");

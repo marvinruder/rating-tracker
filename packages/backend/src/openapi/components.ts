@@ -11,7 +11,7 @@ import {
 } from "@rating-tracker/commons";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
-import { DUMMY_SVG } from "../controllers/StockController";
+import { DUMMY_SVG } from "../controllers/StocksController";
 
 export const components: OpenAPIV3.ComponentsObject = {
   schemas: {

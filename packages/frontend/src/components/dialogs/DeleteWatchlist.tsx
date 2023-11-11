@@ -1,7 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import { WatchlistSummary, watchlistEndpointPath } from "@rating-tracker/commons";
+import { WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -27,7 +27,7 @@ export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
     props.watchlist &&
       (setRequestInProgress(true),
       api
-        .delete(watchlistEndpointPath + `/${props.watchlist.id}`)
+        .delete(watchlistsEndpointPath + `/${props.watchlist.id}`)
         // If the dialog is shown from the watchlist list, the list should be updated.
         .then(() => props.getWatchlists && props.getWatchlists())
         .catch((e) => setErrorNotification(e, "deleting watchlist"))

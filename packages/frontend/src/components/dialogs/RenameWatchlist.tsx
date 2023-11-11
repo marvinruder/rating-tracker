@@ -1,7 +1,7 @@
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
-import { watchlistEndpointPath, WatchlistSummary } from "@rating-tracker/commons";
+import { watchlistsEndpointPath, WatchlistSummary } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotification } from "../../contexts/NotificationContext";
@@ -35,7 +35,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
       props.getWatchlists &&
       (setRequestInProgress(true),
       api
-        .patch(watchlistEndpointPath + `/${props.watchlist.id}`, undefined, {
+        .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, undefined, {
           params: {
             // Only send the parameters that have changed.
             name: name !== props.watchlist.name ? name.trim() : undefined,

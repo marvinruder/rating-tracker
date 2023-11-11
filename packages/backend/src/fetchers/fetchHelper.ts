@@ -5,7 +5,7 @@ import {
   dataProviderLastFetch,
   dataProviderName,
   dataProviderTTL,
-  resourceEndpointPath,
+  resourcesEndpointPath,
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
 import axios, { type AxiosRequestConfig } from "axios";
@@ -132,7 +132,7 @@ export const captureFetchError = async (
     ? `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
         process.env.DOMAIN
         // Ensure the user is logged in before accessing the resource API endpoint.
-      }/login?redirect=${encodeURIComponent(`/api${resourceEndpointPath}/${resourceID}`)}.`
+      }/login?redirect=${encodeURIComponent(`/api${resourcesEndpointPath}/${resourceID}`)}.`
     : "No additional information available.";
 };
 

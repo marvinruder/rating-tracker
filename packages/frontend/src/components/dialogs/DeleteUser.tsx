@@ -1,7 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import { User, userManagementEndpointPath } from "@rating-tracker/commons";
+import { User, usersEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotification } from "../../contexts/NotificationContext";
@@ -25,7 +25,7 @@ export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
     props.user &&
       (setRequestInProgress(true),
       api
-        .delete(userManagementEndpointPath + `/${props.user.email}`)
+        .delete(usersEndpointPath + `/${props.user.email}`)
         // Update the user list after the user was deleted.
         .then(() => props.getUsers && props.getUsers())
         .catch((e) => setErrorNotification(e, "deleting user"))

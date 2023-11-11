@@ -25,7 +25,7 @@ import {
   messageTypeName,
   REGEX_PHONE_NUMBER,
   subscriptionOfMessageType,
-  userEndpointPath,
+  accountEndpointPath,
 } from "@rating-tracker/commons";
 import { useContext, useEffect, useState } from "react";
 
@@ -121,7 +121,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
       setRequestInProgress(true);
       api
         .patch(
-          userEndpointPath,
+          accountEndpointPath,
           avatar !== user.avatar ? { avatar } : undefined, // Include payload with avatar only if it has changed.
           {
             params: {
