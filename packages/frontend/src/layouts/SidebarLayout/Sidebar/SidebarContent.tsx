@@ -18,7 +18,12 @@ import {
   Grid,
   Skeleton,
 } from "@mui/material";
-import { ADMINISTRATIVE_ACCESS } from "@rating-tracker/commons";
+import {
+  ADMINISTRATIVE_ACCESS,
+  stocksEndpointPath,
+  usersEndpointPath,
+  watchlistsEndpointPath,
+} from "@rating-tracker/commons";
 import React, { FC, Fragment, useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -168,7 +173,7 @@ export const SidebarContent = (): JSX.Element => {
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
                   onClick={closeSidebar}
-                  to="/stock"
+                  to={stocksEndpointPath}
                   startIcon={<ListIcon />}
                 >
                   All Stocks
@@ -179,7 +184,7 @@ export const SidebarContent = (): JSX.Element => {
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
                   onClick={closeSidebar}
-                  to="/watchlist"
+                  to={watchlistsEndpointPath}
                   startIcon={<CollectionsBookmarkIcon />}
                 >
                   Watchlists
@@ -197,7 +202,7 @@ export const SidebarContent = (): JSX.Element => {
                       sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                       component={NavLink}
                       onClick={closeSidebar}
-                      to="/usermanagement"
+                      to={usersEndpointPath}
                       startIcon={<ManageAccountsIcon />}
                     >
                       User Management

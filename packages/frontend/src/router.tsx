@@ -1,5 +1,11 @@
 import { Box, CircularProgress } from "@mui/material";
-import { User, accountEndpointPath } from "@rating-tracker/commons";
+import {
+  User,
+  accountEndpointPath,
+  stocksEndpointPath,
+  usersEndpointPath,
+  watchlistsEndpointPath,
+} from "@rating-tracker/commons";
 import NProgress from "nprogress";
 import { Suspense, lazy, useState, useEffect, createContext } from "react";
 import type { RouteObject } from "react-router";
@@ -212,7 +218,7 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
       props.isLoginPage ? (
         // If an authenticated user tries to access the login page, redirect them to their desired page
         // If no redirect was specified, redirect to the stock page
-        <Navigate to={searchParams.get("redirect") || "/stock"} replace />
+        <Navigate to={searchParams.get("redirect") || stocksEndpointPath} replace />
       ) : (
         <Page /> // If any other page was requested, show it
       )
@@ -276,23 +282,23 @@ const routes: RouteObject[] = [
     ),
     children: [
       {
-        path: "stock",
+        path: stocksEndpointPath,
         element: <StockList />,
       },
       {
-        path: "stock/:ticker",
+        path: stocksEndpointPath + "/:ticker",
         element: <Stock />,
       },
       {
-        path: "usermanagement",
+        path: usersEndpointPath,
         element: <UserManagement />,
       },
       {
-        path: "watchlist",
+        path: watchlistsEndpointPath,
         element: <WatchlistSummary />,
       },
       {
-        path: "watchlist/:id",
+        path: watchlistsEndpointPath + "/:id",
         element: <Watchlist />,
       },
     ],

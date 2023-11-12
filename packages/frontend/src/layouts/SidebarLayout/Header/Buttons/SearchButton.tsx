@@ -83,7 +83,7 @@ export const HeaderSearchButton = (): JSX.Element => {
       if (e.key === "Enter") {
         if (stocks.length) {
           handleClose();
-          navigate(`/stock/${stocks[0].ticker}`);
+          navigate(`${stocksEndpointPath}/${stocks[0].ticker}`);
         }
       }
     };
@@ -267,7 +267,7 @@ export const HeaderSearchButton = (): JSX.Element => {
                     <Fragment key={stock.ticker}>
                       <ListItem
                         component={NavLink}
-                        to={`/stock/${stock.ticker}`}
+                        to={`${stocksEndpointPath}/${stock.ticker}`}
                         onClick={handleClose}
                         sx={{
                           py: 1.5,

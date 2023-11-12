@@ -41,7 +41,12 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
   return (
     <Card>
       <CardActionArea>
-        <Link to={`/watchlist/${props.watchlist?.id}`} component={NavLink} color="inherit" underline="none">
+        <Link
+          to={`${watchlistsEndpointPath}/${props.watchlist?.id}`}
+          component={NavLink}
+          color="inherit"
+          underline="none"
+        >
           <CardContent>
             <Grid container justifyContent="space-between">
               <Grid item display="flex" alignItems="center" maxWidth={isFavorites ? "calc(100% - 36px)" : undefined}>

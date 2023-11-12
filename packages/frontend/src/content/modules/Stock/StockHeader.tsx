@@ -181,7 +181,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
         <EditStock stock={props.stock} getStocks={props.getStock} onClose={() => setEditDialogOpen(false)} />
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DeleteStock stock={props.stock} onClose={() => setDeleteDialogOpen(false)} navigateTo="/stock" />
+        <DeleteStock stock={props.stock} onClose={() => setDeleteDialogOpen(false)} navigateTo={stocksEndpointPath} />
       </Dialog>
     </>
   );
