@@ -190,7 +190,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             <MenuItem
               onClick={() => setOptionsMenuOpen(false)}
               component={NavLink}
-              to={`/stock/${props.stock.ticker}`}
+              to={`${stocksEndpointPath}/${props.stock.ticker}`}
               target="_blank"
             >
               <ListItemIcon>

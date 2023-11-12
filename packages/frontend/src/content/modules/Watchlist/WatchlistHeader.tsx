@@ -112,7 +112,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
             <DeleteWatchlist
               watchlist={props.watchlist}
               onClose={() => setDeleteDialogOpen(false)}
-              navigateTo="/watchlist"
+              navigateTo={watchlistsEndpointPath}
             />
           </Dialog>
         </>
