@@ -22,10 +22,10 @@ export const TemperatureChip: FC<ChipProps & { stock: Stock }> = (props: ChipPro
             props.stock.msciTemperature <= 1.5
               ? theme.colors.msci.Aligned1
               : props.stock.msciTemperature <= 2.0
-              ? theme.colors.msci.Aligned2
-              : props.stock.msciTemperature <= 3.2
-              ? theme.colors.msci.Misaligned
-              : theme.colors.msci.StronglyMisaligned,
+                ? theme.colors.msci.Aligned2
+                : props.stock.msciTemperature <= 3.2
+                  ? theme.colors.msci.Misaligned
+                  : theme.colors.msci.StronglyMisaligned,
         },
       }}
     />
