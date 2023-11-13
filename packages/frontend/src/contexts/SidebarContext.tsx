@@ -83,8 +83,8 @@ export const SidebarProvider: FC<SidebarProviderProps> = (props: SidebarProvider
               ? data.services[key] === undefined
                 ? "success"
                 : (data.services[key] as string).includes("not configured")
-                ? "N/A"
-                : "error"
+                  ? "N/A"
+                  : "error"
               : "N/A",
           details:
             "services" in data

@@ -532,24 +532,24 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                   props.stock.analystConsensus <= 0.5
                     ? theme.colors.consensus[0]
                     : props.stock.analystConsensus <= 1.5
-                    ? theme.colors.consensus[1]
-                    : props.stock.analystConsensus <= 2.5
-                    ? theme.colors.consensus[2]
-                    : props.stock.analystConsensus <= 3.5
-                    ? theme.colors.consensus[3]
-                    : props.stock.analystConsensus <= 4.5
-                    ? theme.colors.consensus[4]
-                    : props.stock.analystConsensus <= 5.5
-                    ? theme.colors.consensus[5]
-                    : props.stock.analystConsensus <= 6.5
-                    ? theme.colors.consensus[6]
-                    : props.stock.analystConsensus <= 7.5
-                    ? theme.colors.consensus[7]
-                    : props.stock.analystConsensus <= 8.5
-                    ? theme.colors.consensus[8]
-                    : props.stock.analystConsensus <= 9.5
-                    ? theme.colors.consensus[9]
-                    : theme.colors.consensus[10],
+                      ? theme.colors.consensus[1]
+                      : props.stock.analystConsensus <= 2.5
+                        ? theme.colors.consensus[2]
+                        : props.stock.analystConsensus <= 3.5
+                          ? theme.colors.consensus[3]
+                          : props.stock.analystConsensus <= 4.5
+                            ? theme.colors.consensus[4]
+                            : props.stock.analystConsensus <= 5.5
+                              ? theme.colors.consensus[5]
+                              : props.stock.analystConsensus <= 6.5
+                                ? theme.colors.consensus[6]
+                                : props.stock.analystConsensus <= 7.5
+                                  ? theme.colors.consensus[7]
+                                  : props.stock.analystConsensus <= 8.5
+                                    ? theme.colors.consensus[8]
+                                    : props.stock.analystConsensus <= 9.5
+                                      ? theme.colors.consensus[9]
+                                      : theme.colors.consensus[10],
                 opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
                 width: 60,
               }}
@@ -624,8 +624,8 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 backgroundColor: ["AAA", "AA"].includes(props.stock.msciESGRating)
                   ? theme.colors.msci.Leader
                   : ["B", "CCC"].includes(props.stock.msciESGRating)
-                  ? theme.colors.msci.Laggard
-                  : theme.colors.msci.Average,
+                    ? theme.colors.msci.Laggard
+                    : theme.colors.msci.Average,
                 color: theme.colors.alpha.trueWhite[100],
                 width: 48,
               }}
@@ -727,12 +727,12 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                   props.stock.sustainalyticsESGRisk < 10
                     ? theme.colors.sustainalytics.negligible
                     : props.stock.sustainalyticsESGRisk < 20
-                    ? theme.colors.sustainalytics.low
-                    : props.stock.sustainalyticsESGRisk < 30
-                    ? theme.colors.sustainalytics.medium
-                    : props.stock.sustainalyticsESGRisk < 40
-                    ? theme.colors.sustainalytics.high
-                    : theme.colors.sustainalytics.severe,
+                      ? theme.colors.sustainalytics.low
+                      : props.stock.sustainalyticsESGRisk < 30
+                        ? theme.colors.sustainalytics.medium
+                        : props.stock.sustainalyticsESGRisk < 40
+                          ? theme.colors.sustainalytics.high
+                          : theme.colors.sustainalytics.severe,
                 width: 64,
               }}
               size="small"

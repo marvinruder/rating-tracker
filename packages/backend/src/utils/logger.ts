@@ -101,8 +101,8 @@ export const logRequest = (req: Request, res: Response, time: number): void =>
         user: res.locals.user
           ? { name: res.locals.user.name, email: res.locals.user.email }
           : res.locals.userIsCron
-          ? "cron"
-          : undefined,
+            ? "cron"
+            : undefined,
         statusCode: res.statusCode,
         headers: res.getHeaders(),
         time,
