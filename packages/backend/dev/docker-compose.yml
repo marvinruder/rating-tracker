@@ -2,6 +2,8 @@ version: "3.8"
 
 services:
   nginx:
+    container_name: nginx
+    hostname: nginx
     image: nginx:alpine-slim
     cap_add:
       - NET_ADMIN
@@ -17,6 +19,8 @@ services:
     restart: unless-stopped
 
   redis:
+    container_name: redis
+    hostname: redis
     image: redis:alpine
     restart: unless-stopped
     user: 1000:1000
@@ -32,6 +36,8 @@ services:
       - ./redis/config:/etc/redis
 
   postgres:
+    container_name: postgres
+    hostname: postgres
     image: postgres:alpine
     restart: unless-stopped
     user: 70:70
@@ -54,6 +60,8 @@ services:
     shm_size: "256mb"
 
   # selenium:
+  #   container_name: selenium
+  #   hostname: selenium
   #   image: seleniarm/standalone-chromium
   #   restart: unless-stopped
   #   environment:
@@ -67,6 +75,8 @@ services:
   #   shm_size: "2gb"
 
   signal:
+    container_name: signal
+    hostname: signal
     image: bbernhard/signal-cli-rest-api
     environment:
       - MODE=native

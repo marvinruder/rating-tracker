@@ -1,0 +1,62 @@
+{
+  "name": "Rating Tracker",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "rating-tracker-dev",
+  "workspaceFolder": "/rating-tracker",
+  "mounts": ["source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"],
+  "privileged": false,
+  "containerEnv": {
+    "ENV": "/etc/profile"
+  },
+  "postCreateCommand": "/rating-tracker/.devcontainer/postCreate.sh",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "typescript.tsdk": ".yarn/sdks/typescript/lib",
+        "editor.tabSize": 2,
+        "editor.formatOnSave": true,
+        "search.exclude": {
+          "**/.yarn": true,
+          "**/.pnp.*": true
+        },
+        "eslint.nodePath": ".yarn/sdks",
+        "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
+        "eslint.workingDirectories": [
+          "packages/backend",
+          "packages/commons",
+          "packages/frontend"
+        ],
+        "rust-analyzer.server.path": "/usr/local/cargo/bin/rust-analyzer",
+        "rust-analyzer.linkedProjects": [
+          "./wasm/Cargo.toml"
+        ],
+        "terminal.integrated.profiles.linux": {
+          "ash": {
+            "path": "ash"
+          },
+          "zsh": {
+            "path": "zsh",
+            "args": ["-l"]
+          },
+          "Install rust-analyzer extension": {
+            "path": "sh",
+            "args": ["-c", "code --install-extension /tmp/rust-analyzer-no-server.vsix"]
+          }
+        },
+        "terminal.integrated.shellIntegration.enabled": false,
+        "typescript.enablePromptUseWorkspaceTsdk": true
+      },
+      "extensions": [
+        "arcanis.vscode-zipfs",
+        "codacy-app.codacy",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "github.vscode-pull-request-github",
+        "ms-azuretools.vscode-docker",
+        "prisma.prisma",
+        "redhat.vscode-yaml",
+        "snyk-security.snyk-vulnerability-scanner"
+      ]
+    }
+  }
+}

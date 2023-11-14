@@ -173,8 +173,7 @@ services:
   signal:
     image: bbernhard/signal-cli-rest-api
     environment:
-      - MODE=native
-      - AUTO_RECEIVE_SCHEDULE=0 * * * *
+      MODE: json-rpc
     ports:
       - "127.0.0.1:8080:8080"
     volumes:
@@ -219,11 +218,9 @@ The port bindings are optional but helpful to connect to the services from the h
 
 Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. Although not officially recommended, a quick, easy and fairly safe way to initialize a new database with the required tables, constraints and indexes is to 
 
-1.  Clone the repository.
-2.  Run `corepack enable` to have Corepack fetch and symlink the desired version of the `yarn` package manager.
-3.  Run `yarn` from within the [`packages/backend`](/packages/backend) folder.
-4.  Store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
-5.  Run `yarn pnpify prisma migrate deploy`.
+1.  Clone the repository and open it in a VS Code development container.
+2.  Using your preferred shell, navigate to the [`packages/backend`](/packages/backend) directory and store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
+3.  Run `yarn pnpify prisma migrate deploy`.
 
 <!-- <div id="create-redis-user-and-password"></div> -->
 
@@ -321,56 +318,43 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 
 ### Create an environment for developing
 
-An environment with services for development purposes can quickly be created using the Docker Compose file in the [`dev`](/packages/backend/dev) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
+An environment with all tools required for developing Rating Tracker and the services it depends on can quickly be created using the VS Code development container configuration included in this repository. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
--   Run `corepack enable` to have Corepack fetch and symlink the desired version of the `yarn` package manager.
--   Run `yarn build:wasm` to build the WebAssembly utilities and create the `wasm` package. This requires [Rust](https://www.rust-lang.org) and [wasm-pack](https://rustwasm.github.io/wasm-pack/) to be installed.
--   Run `yarn dev:tools` to start NGINX, PostgreSQL, Redis and the Signal REST API. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
--   Run `yarn workspace @rating-tracker/backend prisma:generate` to generate the Prisma client.
+-   Clone the repository and open it in Visual Studio Code. When prompted, select “Reopen in Container”. This will create a Docker container with all required tools, recommended extensions and dependencies installed.
+-   Check your environment. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
 -   Run `yarn workspace @rating-tracker/backend prisma:migrate:deploy` to initialize the PostgreSQL database.
--   Run `yarn dev:server` to start the backend server as well as the Vite frontend development server.
+-   Run `yarn dev` to start the backend server as well as the Vite frontend development server.
 
-> [!NOTE]
-> The `dev:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
-
-Environment variables in development can easily be defined in an `.env` file:
+Environment variables not included in the development container configuration can easily be defined in an `.env` file:
 
 <details>
 <summary>See recommended development environment variables</summary>
 
 ```shell
 # .env
-DATABASE_URL="postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker"
-REDIS_URL=redis://127.0.0.1:6379
-MAX_FETCH_CONCURRENCY=2
-SIGNAL_URL=http://127.0.0.1:8080
+# # Those variables are already defined in the development container configuration. You only need to define them here if you want to override them.
+# DATABASE_URL="postgresql://rating-tracker:rating-tracker@postgres:5432/rating-tracker?schema=rating-tracker"
+# REDIS_URL="redis://redis:6379"
+# SIGNAL_URL="http://signal:8080"
+# NODE_ENV="development"
+# PORT="3001"
+# MAX_FETCH_CONCURRENCY="4"
+# REDIS_USER="rating-tracker"
+# REDIS_PASS="rating-tracker"
+# POSTGRES_USER="rating-tracker"
+# POSTGRES_PASS="rating-tracker"
+# LOG_LEVEL="trace"
 
-NODE_ENV=development
 DOMAIN=example.com
 SUBDOMAIN=ratingtracker
-PORT=3001
-REDIS_USER="rating-tracker"
-REDIS_PASS="********"
-POSTGRES_USER="rating-tracker"
-POSTGRES_PASS="********"
 SIGNAL_SENDER="+12345678900"
-# AUTO_FETCH_SCHEDULE=" 0 * * * * *" # runs every minute, activate for debugging only
-LOG_LEVEL=trace
+# AUTO_FETCH_SCHEDULE=" 0 * * * * *" # This would run every minute, activate for debugging only.
 ```
 </details>
 
 ### Run tests
 
-A test environment with separate PostgreSQL and Redis instances can be created using the Docker Compose file in the [`test`](/packages/backend/test) folder. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
-
--   Run `corepack enable` to have Corepack fetch and symlink the desired version of the `yarn` package manager.
--   Run `yarn build:wasm` to build the WebAssembly utilities and create the `wasm` package. This requires [Rust](https://www.rust-lang.org) and [wasm-pack](https://rustwasm.github.io/wasm-pack/) to be installed.
--   Run `yarn test:tools` to start PostgreSQL and Redis.
--   Run `yarn workspace @rating-tracker/backend prisma:generate` to generate the Prisma client.
--   Run `yarn test` to run all tests from all packages. Additionally, the packages’ `package.json` configurations contain a `test:watch` script to run tests in watch mode.
-
-> [!NOTE]
-> The `test:tools` command sometimes fails because multiple Docker networks with the same name are created concurrently. In that case, manually delete all but one using `docker network ls` and `docker network rm …` and try again.
+The VS Code development container configuration includes additional PostgreSQL and Redis instances for running tests. To use them, configure your development environment as described above and run `yarn test` to run all tests from all packages. Additionally, the packages’ `package.json` configurations contain a `test:watch` script to run tests in watch mode.
 
 ### Contribute
 

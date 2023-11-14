@@ -36,6 +36,7 @@ unsafeSpies.push(vi.spyOn(watchlistTable, "deleteWatchlist"));
 unsafeSpies.push(vi.spyOn(watchlistTable, "readFavorites"));
 unsafeSpies.push(vi.spyOn(resourceRepository, "createResource"));
 unsafeSpies.push(vi.spyOn(sessionRepository, "createSession"));
+unsafeSpies.push(vi.spyOn(sessionRepository, "updateSession"));
 unsafeSpies.push(vi.spyOn(sessionRepository, "deleteSession"));
 unsafeSpies.push(vi.spyOn(signal, "sendMessage"));
 
