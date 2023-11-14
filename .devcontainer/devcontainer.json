@@ -8,7 +8,7 @@
   "containerEnv": {
     "ENV": "/etc/profile"
   },
-  "postCreateCommand": "/rating-tracker/.devcontainer/init.sh",
+  "postCreateCommand": "/rating-tracker/.devcontainer/postCreate.sh",
   "customizations": {
     "vscode": {
       "settings": {
