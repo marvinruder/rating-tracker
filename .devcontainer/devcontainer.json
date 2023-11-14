@@ -50,7 +50,7 @@
         "ms-azuretools.vscode-docker",
         "prisma.prisma",
         "redhat.vscode-yaml",
-        "rust-lang.rust-analyzer",
+        // "rust-lang.rust-analyzer",
         "snyk-security.snyk-vulnerability-scanner"
       ]
     }
