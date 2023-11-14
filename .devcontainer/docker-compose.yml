@@ -1,0 +1,29 @@
+version: "3.9"
+
+include:
+  - path: ../packages/backend/dev/docker-compose.yml
+  - path: ../packages/backend/test/docker-compose.yml
+
+services:
+  rating-tracker-dev:
+    container_name: rating-tracker-dev
+    hostname: rating-tracker-dev
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://rating-tracker:rating-tracker@postgres:5432/rating-tracker?schema=rating-tracker
+      REDIS_URL: redis://redis:6379
+      # SELENIUM_URL: http://selenium:4444
+      SIGNAL_URL: http://signal:8080
+      NODE_ENV: development
+      PORT: 3001
+      MAX_FETCH_CONCURRENCY: 4
+      REDIS_USER: rating-tracker
+      REDIS_PASS: rating-tracker
+      POSTGRES_USER: rating-tracker
+      POSTGRES_PASS: rating-tracker
+      LOG_LEVEL: trace
+    volumes:
+      - ..:/rating-tracker
+    command: sleep infinity
