@@ -20,7 +20,7 @@
     "validate": "conc \"yarn workspaces foreach -Apv -j unlimited run typecheck\" \"yarn workspaces foreach -Apv -j unlimited run lint\" -n \"ﯤ,\" -p \"{name}\" -c #3178C6,#4B32C3",
     "fix:swagger": "mkdir -p packages/backend/dist/public/api-docs && cp .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui{.css,-bundle.js,-standalone-preset.js} packages/backend/dist/public/api-docs/"
   },
-  "packageManager": "yarn@4.0.1",
+  "packageManager": "yarn@4.0.2",
   "devDependencies": {
     "concurrently": "8.2.2",
     "eslint": "8.53.0",
