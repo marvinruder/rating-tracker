@@ -29,6 +29,7 @@ RUN \
   apk add binaryen pkgconfig musl-dev openssl-dev && \
   RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
   rustup target add wasm32-unknown-unknown && \
+  rustup component add rust-analyzer && \
   wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
 
 # Setup shell
@@ -45,4 +46,5 @@ RUN \
   sed 's/# os_icon/os_icon  /;s/❯/➜/' /usr/share/zsh/plugins/powerlevel10k/config/p10k-lean.zsh > /root/.p10k.zsh && \
   echo '[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"' >> /root/.zshrc && \
   echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc && \
-  find /usr/share/zsh/plugins/zsh-*/zsh-*.zsh | grep -v .plugin.zsh | sed 's/^/source /' >> /root/.zshrc
+  find /usr/share/zsh/plugins/zsh-*/zsh-*.zsh | grep -v .plugin.zsh | sed 's/^/source /' >> /root/.zshrc && \
+  wget -O /tmp/rust-analyzer-no-server.vsix https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-no-server.vsix

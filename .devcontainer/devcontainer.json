@@ -26,6 +26,7 @@
           "packages/commons",
           "packages/frontend"
         ],
+        "rust-analyzer.server.path": "/usr/local/cargo/bin/rust-analyzer",
         "rust-analyzer.linkedProjects": [
           "./wasm/Cargo.toml"
         ],
@@ -36,6 +37,10 @@
           "zsh": {
             "path": "zsh",
             "args": ["-l"]
+          },
+          "Install rust-analyzer extension": {
+            "path": "sh",
+            "args": ["-c", "code --install-extension /tmp/rust-analyzer-no-server.vsix"]
           }
         },
         "terminal.integrated.shellIntegration.enabled": false,
@@ -50,7 +55,6 @@
         "ms-azuretools.vscode-docker",
         "prisma.prisma",
         "redhat.vscode-yaml",
-        // "rust-lang.rust-analyzer",
         "snyk-security.snyk-vulnerability-scanner"
       ]
     }
