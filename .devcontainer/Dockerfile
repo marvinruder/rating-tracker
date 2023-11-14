@@ -38,6 +38,7 @@ RUN \
   echo "alias ll='ls -alF'" >> /etc/profile && \
   echo "alias la='ls -A'" >> /etc/profile && \
   echo "alias l='ls -CF'" >> /etc/profile && \
+  echo "cat /etc/motd" >> /etc/profile && \
   echo 'autoload -Uz compinit && compinit' >> /etc/zsh/zshrc && \
   mkdir -p /root/.local/share/zsh/plugins && \
   ln -s /usr/share/zsh/plugins/powerlevel10k /root/.local/share/zsh/plugins/ && \

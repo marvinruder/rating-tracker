@@ -26,4 +26,5 @@ services:
       LOG_LEVEL: trace
     volumes:
       - ..:/rating-tracker
+      - ./motd:/etc/motd
     command: sleep infinity
