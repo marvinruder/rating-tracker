@@ -1257,7 +1257,7 @@ __metadata:
     express-openapi-validator: "npm:5.1.0"
     express-rate-limit: "npm:7.1.4"
     fast-glob: "npm:3.3.2"
-    pino: "npm:8.16.1"
+    pino: "npm:8.16.2"
     pino-pretty: "npm:10.2.3"
     prettier: "npm:3.1.0"
     prisma: "npm:5.6.0"
@@ -6840,9 +6840,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:8.16.1":
-  version: 8.16.1
-  resolution: "pino@npm:8.16.1"
+"pino@npm:8.16.2":
+  version: 8.16.2
+  resolution: "pino@npm:8.16.2"
   dependencies:
     atomic-sleep: "npm:^1.0.0"
     fast-redact: "npm:^3.1.1"
@@ -6857,7 +6857,7 @@ __metadata:
     thread-stream: "npm:^2.0.0"
   bin:
     pino: bin.js
-  checksum: 06ea391095e895f1f94adda231fb51565e2935a9cad87e6559b7e074a6dadc8bd279367dbe119b1649774480a53c97214f32daa4c14b21a853d50c60a4c28976
+  checksum: ea1b2f426985a442b65566a75e3f20eed47c1f51f3aea9a10fc16a452feb339cde4d5439d724c822408fce6a8bfcf6d24f61421547f4cc718f44a6eb47921293
   languageName: node
   linkType: hard
 
