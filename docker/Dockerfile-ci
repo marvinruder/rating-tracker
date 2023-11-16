@@ -37,7 +37,7 @@ RUN \
   rm pkg/package.json.bak
 
 
-FROM node:21.1.0-alpine as yarn
+FROM node:21.2.0-alpine as yarn
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -68,7 +68,7 @@ RUN \
   yarn workspace @rating-tracker/backend prisma:generate
 
 
-FROM node:21.1.0-alpine as validator
+FROM node:21.2.0-alpine as validator
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -89,7 +89,7 @@ RUN \
   yarn validate
 
 
-FROM node:21.1.0-alpine as test
+FROM node:21.2.0-alpine as test
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
@@ -116,7 +116,7 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM node:21.1.0-alpine as build
+FROM node:21.2.0-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
