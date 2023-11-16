@@ -13,10 +13,6 @@ const chunkList: string[] = ["@mui"];
 const manualChunks = (id: string) => chunkList.find((chunk) => id.match(new RegExp(chunk)));
 
 const fontCSS = fs.readFileSync("src/fonts.css", "utf8");
-const logoBackgroundCSS = fs.readFileSync("src/components/etc/LogoBackground.css", "utf8");
-const switchSelectorCSS = fs.readFileSync("src/components/etc/switchSelector.css", "utf8");
-const nprogressCSSPath = require.resolve("nprogress/nprogress.css");
-const nprogressCSS = fs.readFileSync(nprogressCSSPath, "utf8");
 
 export default mergeConfig(
   defineViteConfig({
@@ -49,8 +45,7 @@ export default mergeConfig(
             faviconPath: process.env.NODE_ENV === "development" ? "favicon-dev" : "favicon",
             reactDevTools:
               process.env.NODE_ENV === "development" ? '<script src="http://localhost:8097"></script>' : "",
-            inlineCSS:
-              '<style type="text/css">' + fontCSS + logoBackgroundCSS + switchSelectorCSS + nprogressCSS + "</style>",
+            inlineCSS: '<style type="text/css">' + fontCSS + "</style>",
           },
         },
         verbose: process.env.NODE_ENV === "development",
@@ -59,7 +54,7 @@ export default mergeConfig(
     ],
     worker: {
       format: "es",
-      plugins: [wasm()],
+      plugins: () => [wasm()],
     },
   }),
   defineVitestConfig({
