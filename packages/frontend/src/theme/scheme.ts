@@ -466,14 +466,33 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
         },
         "#nprogress .bar": {
           background: colors.primary.lighter,
-        },
-        "#nprogress .spinner-icon": {
-          display: "none",
-          // borderTopColor: colors.primary.lighter,
-          // borderLeftColor: colors.primary.lighter,
+          position: "fixed",
+          zIndex: 1031,
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: 2,
         },
         "#nprogress .peg": {
-          boxShadow: "0 0 15px " + colors.primary.lighter + ", 0 0 8px" + colors.primary.light,
+          display: "block",
+          position: "absolute",
+          right: 0,
+          width: 100,
+          height: "100%",
+          boxShadow: `0 0 15px ${colors.primary.lighter}, 0 0 8px ${colors.primary.light}`,
+          opacity: 1,
+          transform: "rotate(3deg) translate(0px, -4px)",
+        },
+        ".nprogress-custom-parent": {
+          overflow: "hidden",
+          position: "relative",
+        },
+        ".nprogress-custom-parent #nprogress .bar": {
+          position: "absolute",
+        },
+        "@keyframes nprogress-spinner": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
         },
         ":root": {
           "--swiper-theme-color": colors.primary.main,
@@ -502,6 +521,14 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
           "100%": {
             transform: "translate(3%, 3%)",
           },
+        },
+        ".backgroundlogo > svg": {
+          width: "100%",
+          height: "100%",
+        },
+        "div.react-switch-selector-wrapper::before, .react-switch-selector-option-label > .MuiTypography-button": {
+          transitionDuration: "0.2s",
+          transitionTimingFunction: "ease",
         },
       },
     },

@@ -27,7 +27,7 @@
     "@simplewebauthn/browser": "8.3.4",
     "@types/react": "18.2.37",
     "@types/react-dom": "18.2.15",
-    "@vitejs/plugin-react": "4.1.1",
+    "@vitejs/plugin-react": "4.2.0",
     "@vitest/web-worker": "0.34.6",
     "axios": "1.6.2",
     "clsx": "2.0.0",
@@ -39,7 +39,7 @@
     "react-router": "6.18.0",
     "react-router-dom": "6.18.0",
     "react-switch-selector": "2.2.1",
-    "vite": "4.5.0",
+    "vite": "5.0.0",
     "vite-plugin-html": "3.2.0",
     "vite-plugin-wasm": "3.2.2",
     "vite-tsconfig-paths": "4.2.1"
