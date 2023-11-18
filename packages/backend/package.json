@@ -1,9 +1,10 @@
 {
   "name": "@rating-tracker/backend",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "title": "Rating Tracker Backend",
   "author": {
     "name": "Marvin A. Ruder",
+    "email": "ratingtracker@mruder.dev",
     "url": "https://mruder.dev"
   },
   "license": "MIT",
