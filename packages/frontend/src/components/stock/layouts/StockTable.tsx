@@ -10,6 +10,7 @@ import {
   Typography,
   Tooltip,
   Box,
+  useTheme,
 } from "@mui/material";
 import {
   SortableAttribute,
@@ -43,6 +44,8 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
   const [sortBy, setSortBy] = useState<SortableAttribute>("totalScore");
   const [sortDesc, setSortDesc] = useState<boolean>(true);
   const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+
+  const theme = useTheme();
 
   useEffect(() => {
     // Get stocks whenever pagination, sorting or filtering changes, or when explicitly requested.
@@ -176,11 +179,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Country and Region */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Country"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Country") }}>
                 <Tooltip
                   title={
                     <Typography variant="body1">The Country of the company’s operational headquarters.</Typography>
@@ -191,11 +190,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </Tooltip>
               </TableCell>
               {/* StyleBox */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Size and Style"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Size and Style") }}>
                 <TableSortLabel
                   active={sortBy === "size"}
                   direction={sortBy !== "size" || sortDesc ? "desc" : "asc"}
@@ -240,11 +235,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Sector */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Sector"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Sector") }}>
                 <Tooltip
                   title={<Typography variant="body1">The general sphere in which a company does business.</Typography>}
                   arrow
@@ -253,11 +244,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </Tooltip>
               </TableCell>
               {/* Industry */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Industry"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Industry") }}>
                 <Tooltip
                   title={
                     <Typography variant="body1">A more fine-grained categorization of a company’s business.</Typography>
@@ -268,11 +255,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </Tooltip>
               </TableCell>
               {/* Total Score */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Total Score"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Total Score") }}>
                 <TableSortLabel
                   active={sortBy === "totalScore"}
                   direction={sortBy !== "totalScore" || sortDesc ? "desc" : "asc"}
@@ -299,11 +282,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Financial Score */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Financial Score"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Financial Score") }}>
                 <TableSortLabel
                   active={sortBy === "financialScore"}
                   direction={sortBy !== "financialScore" || sortDesc ? "desc" : "asc"}
@@ -328,11 +307,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* ESG Score */}
-              <TableCell
-                sx={{
-                  display: displayColumn("ESG Score"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("ESG Score") }}>
                 <TableSortLabel
                   active={sortBy === "esgScore"}
                   direction={sortBy !== "esgScore" || sortDesc ? "desc" : "asc"}
@@ -357,11 +332,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Morningstar Star Rating */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Star Rating"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Star Rating") }}>
                 <TableSortLabel
                   active={sortBy === "starRating"}
                   direction={sortBy !== "starRating" || sortDesc ? "desc" : "asc"}
@@ -389,11 +360,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Morningstar Fair Value */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Morningstar Fair Value"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Morningstar Fair Value") }}>
                 <TableSortLabel
                   active={sortBy === "morningstarFairValuePercentageToLastClose"}
                   direction={sortBy === "morningstarFairValuePercentageToLastClose" && sortDesc ? "desc" : "asc"}
@@ -422,11 +389,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Analyst Consensus */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Analyst Consensus"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Analyst Consensus") }}>
                 <TableSortLabel
                   active={sortBy === "analystConsensus"}
                   direction={sortBy !== "analystConsensus" || sortDesc ? "desc" : "asc"}
@@ -453,11 +416,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Analyst Target Price */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Analyst Target Price"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Analyst Target Price") }}>
                 <TableSortLabel
                   active={sortBy === "analystTargetPricePercentageToLastClose"}
                   direction={sortBy === "analystTargetPricePercentageToLastClose" && sortDesc ? "desc" : "asc"}
@@ -486,11 +445,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* MSCI ESG Rating */}
-              <TableCell
-                sx={{
-                  display: displayColumn("MSCI ESG Rating"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("MSCI ESG Rating") }}>
                 <TableSortLabel
                   active={sortBy === "msciESGRating"}
                   direction={sortBy === "msciESGRating" && sortDesc ? "desc" : "asc"}
@@ -517,11 +472,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* MSCI Implied Temperature Rise */}
-              <TableCell
-                sx={{
-                  display: displayColumn("MSCI Implied Temperature Rise"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("MSCI Implied Temperature Rise") }}>
                 <TableSortLabel
                   active={sortBy === "msciTemperature"}
                   direction={sortBy === "msciTemperature" && sortDesc ? "desc" : "asc"}
@@ -541,11 +492,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Refinitiv */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Refinitiv ESG Information"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Refinitiv ESG Information") }}>
                 <TableSortLabel
                   active={sortBy === "refinitivESGScore"}
                   direction={sortBy !== "refinitivESGScore" || sortDesc ? "desc" : "asc"}
@@ -598,11 +545,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* S&P ESG Score */}
-              <TableCell
-                sx={{
-                  display: displayColumn("S&P ESG Score"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("S&P ESG Score") }}>
                 <TableSortLabel
                   active={sortBy === "spESGScore"}
                   direction={sortBy !== "spESGScore" || sortDesc ? "desc" : "asc"}
@@ -629,11 +572,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Sustainalytics ESG Risk */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Sustainalytics ESG Risk"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Sustainalytics ESG Risk") }}>
                 <TableSortLabel
                   active={sortBy === "sustainalyticsESGRisk"}
                   direction={sortBy === "sustainalyticsESGRisk" && sortDesc ? "desc" : "asc"}
@@ -659,11 +598,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* 52 Week Range */}
-              <TableCell
-                sx={{
-                  display: displayColumn("52 Week Range"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("52 Week Range") }}>
                 <TableSortLabel
                   active={sortBy === "positionIn52w"}
                   direction={sortBy === "positionIn52w" && sortDesc ? "desc" : "asc"}
@@ -683,11 +618,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Dividend Yield */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Dividend Yield (%)"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Dividend Yield (%)") }}>
                 <TableSortLabel
                   active={sortBy === "dividendYieldPercent"}
                   direction={sortBy !== "dividendYieldPercent" || sortDesc ? "desc" : "asc"}
@@ -706,11 +637,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* P/E Ratio */}
-              <TableCell
-                sx={{
-                  display: displayColumn("P / E Ratio"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("P / E Ratio") }}>
                 <TableSortLabel
                   active={sortBy === "priceEarningRatio"}
                   direction={sortBy === "priceEarningRatio" && sortDesc ? "desc" : "asc"}
@@ -729,11 +656,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 </TableSortLabel>
               </TableCell>
               {/* Market Cap */}
-              <TableCell
-                sx={{
-                  display: displayColumn("Market Capitalization"),
-                }}
-              >
+              <TableCell sx={{ display: displayColumn("Market Capitalization") }}>
                 <Tooltip
                   title={
                     <Typography variant="body1">
@@ -749,25 +672,20 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
           </TableHead>
           <TableBody>
             {stocksFinal && !props.loading
-              ? stocks.map(
-                  (
-                    stock, // Render stock rows
-                  ) => (
-                    <StockRow
-                      stock={stock}
-                      isFavorite={favorites.includes(stock.ticker)}
-                      getStocks={getStocks}
-                      key={stock.ticker}
-                      columns={props.columns}
-                      watchlist={props.watchlist}
-                    />
-                  ),
-                )
+              ? stocks.map((stock) => (
+                  // Render stock rows
+                  <StockRow
+                    stock={stock}
+                    isFavorite={favorites.includes(stock.ticker)}
+                    getStocks={getStocks}
+                    key={stock.ticker}
+                    columns={props.columns}
+                    watchlist={props.watchlist}
+                  />
+                ))
               : [...Array(rowsPerPage > 0 ? rowsPerPage : 100)].map(
-                  (
-                    _,
-                    key, // Render skeleton rows
-                  ) => <StockRow key={key} getStocks={getStocks} columns={props.columns} />,
+                  // Render skeleton rows,
+                  (_, key) => <StockRow key={key} getStocks={getStocks} columns={props.columns} />,
                 )}
           </TableBody>
         </Table>
@@ -782,11 +700,22 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
         rowsPerPageOptions={[5, 10, 25, 50, 100, { label: "All", value: -1 }]}
         showFirstButton
         showLastButton
+        sx={{
+          ".MuiTablePagination-actions": {
+            ml: { xs: `${theme.spacing(1)} !important`, sm: `${theme.spacing(2)} !important` },
+          },
+        }}
         labelRowsPerPage={
-          <Typography variant="caption" sx={{ ml: "8px" }}>
-            <strong>Rows per page</strong>
-          </Typography>
+          <>
+            <Typography variant="caption" sx={{ display: { xs: "none", sm: "block" } }}>
+              <strong>Rows per page</strong>
+            </Typography>
+            <Typography variant="caption" sx={{ ml: "8px", display: { xs: "block", sm: "none" } }}>
+              <strong>Show</strong>
+            </Typography>
+          </>
         }
+        slotProps={{ select: { sx: { mr: { xs: 0, sm: 2 } } } }}
         labelDisplayedRows={({ from, to, count }) => (
           <Typography variant="caption" sx={{ ml: "8px" }}>
             <strong>
