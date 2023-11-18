@@ -1230,6 +1230,7 @@ __metadata:
     "@simplewebauthn/server": "npm:8.3.5"
     "@types/cookie-parser": "npm:1.4.6"
     "@types/express": "npm:4.17.21"
+    "@types/luxon": "npm:3.3.4"
     "@types/node": "npm:20.9.2"
     "@types/response-time": "npm:2.3.8"
     "@types/supertest": "npm:2.0.16"
@@ -1244,7 +1245,6 @@ __metadata:
     concurrently: "npm:8.2.2"
     cookie-parser: "npm:1.4.6"
     cron: "npm:3.1.6"
-    date-fns: "npm:2.30.0"
     esbuild: "npm:0.19.5"
     eslint: "npm:8.54.0"
     eslint-config-google: "npm:0.14.0"
@@ -1257,6 +1257,7 @@ __metadata:
     express-openapi-validator: "npm:5.1.0"
     express-rate-limit: "npm:7.1.4"
     fast-glob: "npm:3.3.2"
+    luxon: "npm:3.4.4"
     pino: "npm:8.16.2"
     pino-pretty: "npm:10.2.3"
     prettier: "npm:3.1.0"
@@ -1316,8 +1317,6 @@ __metadata:
     "@vitest/coverage-v8": "npm:0.34.6"
     "@vitest/web-worker": "npm:0.34.6"
     axios: "npm:1.6.2"
-    clsx: "npm:2.0.0"
-    date-fns: "npm:2.30.0"
     eslint: "npm:8.54.0"
     eslint-config-google: "npm:0.14.0"
     eslint-config-prettier: "npm:9.0.0"
@@ -1326,7 +1325,6 @@ __metadata:
     eslint-plugin-prettier: "npm:5.0.1"
     eslint-plugin-react: "npm:7.33.2"
     nprogress: "npm:0.2.0"
-    numeral: "npm:2.0.6"
     prettier: "npm:3.1.0"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
@@ -1760,10 +1758,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:~3.3.0":
-  version: 3.3.1
-  resolution: "@types/luxon@npm:3.3.1"
-  checksum: eac87a3d8ee7a1ccf8e0261d5edefce03716a9ca9b9a35dbd064e6682398b277571775b88229b7475d8bacf48fc8b42e6376026b5a2a4cb51f6fe6423f1bd7c9
+"@types/luxon@npm:3.3.4, @types/luxon@npm:~3.3.0":
+  version: 3.3.4
+  resolution: "@types/luxon@npm:3.3.4"
+  checksum: d9ef0bdfa97cce2951107083ed0461ce92f0a12343d8853c44ae976ff153317fcfe76b3ada33abd820f1a124b6ce99e190183ba0267b239e18e5bcaf237e5bf9
   languageName: node
   linkType: hard
 
@@ -3135,7 +3133,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:2.0.0, clsx@npm:^2.0.0":
+"clsx@npm:^2.0.0":
   version: 2.0.0
   resolution: "clsx@npm:2.0.0"
   checksum: c09f43b3144a0b7826b6b11b6a111b2c7440831004eecc02d333533c5e58ef0aa5f2dce071d3b25fbb8c8ea97b45df96c74bcc1d51c8c2027eb981931107b0cd
@@ -3439,7 +3437,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:2.30.0, date-fns@npm:^2.30.0":
+"date-fns@npm:^2.30.0":
   version: 2.30.0
   resolution: "date-fns@npm:2.30.0"
   dependencies:
@@ -5979,10 +5977,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:~3.4.0":
-  version: 3.4.3
-  resolution: "luxon@npm:3.4.3"
-  checksum: 65ad727684d367af9c8fcbde05ad7989ef2436a4496b62d993059baaa641e90a5fa74e98f34ee2ff29f7af7f2b27238ca78b87834f9068624e4133d786f87bc7
+"luxon@npm:3.4.4, luxon@npm:~3.4.0":
+  version: 3.4.4
+  resolution: "luxon@npm:3.4.4"
+  checksum: 02e26a0b039c11fd5b75e1d734c8f0332c95510f6a514a9a0991023e43fb233884da02d7f966823ffb230632a733fc86d4a4b1e63c3fbe00058b8ee0f8c728af
   languageName: node
   linkType: hard
 
@@ -6484,13 +6482,6 @@ __metadata:
   dependencies:
     boolbase: "npm:^1.0.0"
   checksum: 5fee7ff309727763689cfad844d979aedd2204a817fbaaf0e1603794a7c20db28548d7b024692f953557df6ce4a0ee4ae46cd8ebd9b36cfb300b9226b567c479
-  languageName: node
-  linkType: hard
-
-"numeral@npm:2.0.6":
-  version: 2.0.6
-  resolution: "numeral@npm:2.0.6"
-  checksum: 5ed008d3fae05cfa4986b77a85ca10bff29ae6e1fa41a04cce05ea21f08a8a104226f88868930e2a94e3239708d6985d111b5d1291e8b9a3049ffc5365c332d4
   languageName: node
   linkType: hard
 
