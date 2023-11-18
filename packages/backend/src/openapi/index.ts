@@ -21,6 +21,8 @@ import {
 } from "@rating-tracker/commons";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
+import packageInfo from "../../package.json" assert { type: "json" };
+
 import { components } from "./components";
 import * as accountEndpoint from "./paths/account";
 import * as registerEndpoint from "./paths/auth/register";
@@ -52,14 +54,11 @@ import { servers } from "./servers";
 export const openapiDocument: OpenAPIV3.Document = {
   openapi: "3.0.0",
   info: {
-    title: "Rating Tracker Backend",
-    version: "2.5.0",
-    contact: {
-      name: "Marvin A. Ruder",
-      email: "ratingtracker@mruder.dev",
-    },
+    title: packageInfo.title,
+    version: packageInfo.version,
+    contact: packageInfo.author,
     license: {
-      name: "MIT",
+      name: packageInfo.license,
       url: "https://opensource.org/licenses/MIT",
     },
     description: "Specification JSONs: [v3](/api-spec/v3).",
