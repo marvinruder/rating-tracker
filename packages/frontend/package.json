@@ -45,7 +45,7 @@
     "vite-plugin-wasm": "3.2.2"
   },
   "devDependencies": {
-    "@types/node": "20.9.1",
+    "@types/node": "20.9.2",
     "@types/nprogress": "0.2.3",
     "@typescript-eslint/eslint-plugin": "6.11.0",
     "@typescript-eslint/parser": "6.11.0",
