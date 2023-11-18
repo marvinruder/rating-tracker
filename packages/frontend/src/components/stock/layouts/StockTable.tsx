@@ -715,7 +715,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
             </Typography>
           </>
         }
-        slotProps={{ select: { sx: { mr: { xs: 0, sm: 2 } } } }}
+        slotProps={{ select: { sx: { mr: { xs: 0, sm: 4 } } } }}
         labelDisplayedRows={({ from, to, count }) => (
           <Typography variant="caption" sx={{ ml: "8px" }}>
             <strong>
