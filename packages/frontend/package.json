@@ -41,8 +41,7 @@
     "react-switch-selector": "2.2.1",
     "vite": "5.0.0",
     "vite-plugin-html": "3.2.0",
-    "vite-plugin-wasm": "3.2.2",
-    "vite-tsconfig-paths": "4.2.1"
+    "vite-plugin-wasm": "3.2.2"
   },
   "devDependencies": {
     "@types/node": "20.9.1",
