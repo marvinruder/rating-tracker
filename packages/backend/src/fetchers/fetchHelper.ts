@@ -9,9 +9,9 @@ import {
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
 import axios, { type AxiosRequestConfig } from "axios";
-import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
 // import { WebDriver } from "selenium-webdriver";
+import { DateTime } from "luxon";
 
 import { readStocks, readStock } from "../db/tables/stockTable";
 import { createResource } from "../redis/repositories/resourceRepository";
@@ -274,11 +274,9 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
               { prefix: "fetch" },
               `Stock ${stock.ticker}: Skipping ${
                 dataProviderName[dataProvider]
-              } fetch since last successful fetch was ${formatDistance(
+              } fetch since last successful fetch was ${DateTime.fromJSDate(
                 stock[dataProviderLastFetch[dataProvider]].getTime(),
-                new Date().getTime(),
-                { addSuffix: true },
-              )}`,
+              ).toRelative()}`,
             );
             stocks.skipped.push(stock);
             continue;

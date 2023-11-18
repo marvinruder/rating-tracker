@@ -12,8 +12,8 @@ import {
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
 import axios from "axios";
-import { formatDistance } from "date-fns";
 import { Request, Response } from "express";
+import { DateTime } from "luxon";
 
 import { readStocks, readStock, updateStock } from "../db/tables/stockTable";
 import { fetchFromDataProvider } from "../fetchers/fetchHelper";
@@ -166,11 +166,9 @@ export class FetchController {
         sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
         logger.info(
           { prefix: "fetch" },
-          `Using cached Sustainalytics data because last fetch was ${formatDistance(
+          `Using cached Sustainalytics data because last fetch was ${DateTime.fromJSDate(
             sustainalyticsXMLResource.fetchDate,
-            new Date().getTime(),
-            { addSuffix: true },
-          )}.`,
+          ).toRelative()}.`,
         );
       } catch (e) {
         // If the cached data is not available, we fetch it freshly from the web.
