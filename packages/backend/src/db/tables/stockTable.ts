@@ -119,8 +119,8 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
             (newValues[k] ?? 0) > (stock[k] ?? 0) ? SIGNAL_PREFIX_BETTER : SIGNAL_PREFIX_WORSE
           }Star Rating changed from ${
             // Use cute tiny star characters to show the star rating
-            "★".repeat(stock[k] ?? 0) + "☆".repeat(5 - stock[k] ?? 0)
-          } to ${"★".repeat(newValues[k] ?? 0) + "☆".repeat(5 - newValues[k] ?? 0)}`;
+            "★".repeat(stock[k]) + "☆".repeat(5 - stock[k])
+          } to ${"★".repeat(newValues[k]) + "☆".repeat(5 - newValues[k])}`;
           break;
         case "morningstarFairValue":
           const currency = newValues.currency ?? stock.currency ?? "";
