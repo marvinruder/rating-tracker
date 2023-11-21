@@ -112,10 +112,10 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
   corepack enable && \
-  # Create CommonJS module containing log formatter configuration
-  yarn build:logFormatterConfig & \
   # Bundle frontend and backend
   yarn build && \
+  # Create CommonJS module containing log formatter configuration
+  yarn build:logFormatterConfig && \
   # Parse backend bundle for correctness and executability in Node.js
   /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 PORT_OFFSET=4096 node -r ./test/env.ts dist/server.mjs' && \
   # Create directories for target container and copy only necessary files
