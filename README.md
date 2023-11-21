@@ -322,7 +322,7 @@ An environment with all tools required for developing Rating Tracker and the ser
 
 -   Clone the repository and open it in Visual Studio Code. When prompted, select “Reopen in Container”. This will create a Docker container with all required tools, recommended extensions and dependencies installed.
 -   Check your environment. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
--   Run `yarn workspace @rating-tracker/backend prisma:migrate:deploy` to initialize the PostgreSQL database.
+-   Run `yarn prisma:migrate:deploy` to initialize the PostgreSQL database.
 -   Run `yarn dev` to start the backend server as well as the Vite frontend development server.
 
 Environment variables not included in the development container configuration can easily be defined in an `.env` file:

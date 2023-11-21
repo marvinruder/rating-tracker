@@ -10,6 +10,8 @@ ENV RUSTUP_HOME="/usr/local/rustup"
 RUN \
   --mount=type=cache,target=/var/cache/apk \
   apk add \
+  bash \
+  curl \
   docker-cli \
   docker-zsh-completion \
   git \
@@ -22,7 +24,7 @@ RUN \
   zsh-syntax-highlighting \
   zsh-theme-powerlevel10k
 
-# Install required tools and libraries for Rust
+# Install required tools and libraries for Rust and setup shell and more tools
 RUN \
   --mount=type=cache,target=/var/cache/apk \
   --mount=type=cache,target=/usr/local/cargo/registry \
@@ -30,10 +32,7 @@ RUN \
   RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
   rustup target add wasm32-unknown-unknown && \
   rustup component add rust-analyzer && \
-  wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
-
-# Setup shell
-RUN \
+  wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh && \
   echo "PS1='\[\e[33m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\] \$([[ \$? == 0 ]] && echo -e \"\\[\\e[32m\\]\" || echo -e \"\\[\\e[31m\\]\")➜\[\e[0m\] '" >> /etc/profile && \
   echo "alias ls='ls --color=auto'" >> /etc/profile && \
   echo "alias ll='ls -alF'" >> /etc/profile && \
@@ -47,4 +46,5 @@ RUN \
   echo '[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"' >> /root/.zshrc && \
   echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc && \
   find /usr/share/zsh/plugins/zsh-*/zsh-*.zsh | grep -v .plugin.zsh | sed 's/^/source /' >> /root/.zshrc && \
-  wget -O /tmp/rust-analyzer-no-server.vsix https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-no-server.vsix
+  wget -O /tmp/rust-analyzer-no-server.vsix https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-no-server.vsix && \
+  curl -s https://raw.githubusercontent.com/nektos/act/master/install.sh | bash

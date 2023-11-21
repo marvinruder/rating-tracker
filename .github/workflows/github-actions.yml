@@ -1,0 +1,57 @@
+name: "GitHub Actions"
+
+on: [push]
+
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Read Node.js version
+        run: echo ::set-output name=nodeVersion::$(cat ./docker/Dockerfile-ci | grep "FROM node" | head -n 1 | grep -o "[0-9]*\.[0-9]*\.[0-9]*")
+        id: nodeVersion
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.nodeVersion.outputs.nodeVersion }}
+      - name: Setup yarn
+        run: |
+          corepack enable
+          yarn --immutable --mode=skip-build
+          yarn prisma:generate
+      - name: Run ESLint
+        run: yarn workspaces foreach -Apv -j unlimited run lint
+  typecheck:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Read Node.js version
+        run: echo ::set-output name=nodeVersion::$(cat ./docker/Dockerfile-ci | grep "FROM node" | head -n 1 | grep -o "[0-9]*\.[0-9]*\.[0-9]*")
+        id: nodeVersion
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.nodeVersion.outputs.nodeVersion }}
+      - name: Setup yarn
+        run: |
+          corepack enable
+          yarn --immutable --mode=skip-build
+          yarn prisma:generate
+      - name: Run TypeScript
+        run: yarn workspaces foreach -Apv -j unlimited run typecheck
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2

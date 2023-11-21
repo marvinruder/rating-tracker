@@ -69,9 +69,8 @@ node('rating-tracker-build') {
                             // Change config files for use in CI, copy global cache to workspace and install dependencies
                             sh """
                             echo \"globalFolder: /workdir/cache/yarn/global\" >> .yarnrc.yml
-                            mkdir -p \$HOME/.cache/yarn/global \$HOME/.cache/rating-tracker ./cache/yarn/global ./cache/rating-tracker
+                            mkdir -p \$HOME/.cache/yarn/global ./cache/yarn/global
                             cp -arln \$HOME/.cache/yarn/global ./cache/yarn || :
-                            cp -arlf \$HOME/.cache/rating-tracker ./cache || :
                             docker build $DOCKER_CI_FLAGS --target=yarn .
                             """
                         }
@@ -140,7 +139,6 @@ node('rating-tracker-build') {
                 stage ('Cleanup') {
                     // Upload cache to external storage and remove build artifacts
                     sh """#!/bin/bash
-                    cp -arlf ./cache/rating-tracker \$HOME/.cache
                     cp -arln ./cache/yarn \$HOME/.cache
                     putcache
                     PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
