@@ -44,7 +44,6 @@ WORKDIR /workdir
 
 # Copy files required for installing dependencies
 COPY cache/yarn ./cache/yarn
-COPY .yarn ./.yarn
 
 # Install dependencies
 RUN \
