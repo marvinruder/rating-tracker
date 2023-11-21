@@ -44,6 +44,7 @@ WORKDIR /workdir
 
 # Copy files required for installing dependencies
 COPY cache/yarn ./cache/yarn
+COPY packages/backend/prisma ./packages/backend/prisma
 
 # Install dependencies
 RUN \
@@ -56,15 +57,6 @@ RUN \
   --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
   corepack enable && \
   yarn workspaces focus -A --production
-
-# Generate Prisma client
-COPY packages/backend/prisma ./packages/backend/prisma
-RUN \
-  --mount=type=bind,source=package.json,target=package.json \
-  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
-  --mount=type=bind,source=yarn.lock,target=yarn.lock \
-  --mount=type=bind,source=packages/backend/package.json,target=packages/backend/package.json \
-  yarn prisma:generate
 
 
 FROM node:21.2.0-alpine as test
