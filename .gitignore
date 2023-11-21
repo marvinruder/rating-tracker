@@ -29,6 +29,7 @@ packages/backend/test/*.sql
 # Rust
 packages/wasm/*
 !packages/wasm/package.json
+!packages/wasm/wasm.d.ts
 wasm/target
 
 # misc

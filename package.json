@@ -12,7 +12,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "conc --kill-others \"yarn workspace @rating-tracker/backend dev:run\" \"yarn workspace @rating-tracker/backend dev:watch\" \"yarn workspace @rating-tracker/frontend dev:vite\" -n \",≫,\" -p \"{name}\" -c #339933,#FFCF00,#61DAFB --timings",
+    "dev": "conc --kill-others \"yarn dev:run\" \"yarn dev:watch\" \"yarn dev:vite\" -n \",≫,\" -p \"{name}\" -c #339933,#FFCF00,#61DAFB --timings",
     "test": "yarn workspaces foreach -Apv -j unlimited run test",
     "build": "yarn workspaces foreach -Apv -j unlimited run build",
     "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm && sed -E -i.bak 's/\"module\": \"([A-Za-z0-9\\-\\.]+)\",/\"main\": \"\\1\",\\\n  \"module\": \"\\1\",/g ; s/^}$/}\\\n/' packages/wasm/package.json && rm packages/wasm/package.json.bak",
@@ -20,9 +20,11 @@
     "fix:swagger": "mkdir -p packages/backend/dist/public/api-docs && cp .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui{.css,-bundle.js,-standalone-preset.js} packages/backend/dist/public/api-docs/"
   },
   "packageManager": "yarn@4.0.2",
+  "dependencies": {
+    "concurrently": "8.2.2"
+  },
   "devDependencies": {
     "@yarnpkg/sdks": "3.1.0",
-    "concurrently": "8.2.2",
     "eslint": "8.54.0",
     "prettier": "3.1.0",
     "typescript": "5.3.2"
@@ -36,6 +38,12 @@
     "whatwg-url": "14.0.0"
   },
   "dependenciesMeta": {
+    "@prisma/engines": {
+      "built": true
+    },
+    "prisma": {
+      "built": true
+    },
     "swagger-ui-dist": {
       "unplugged": true
     }

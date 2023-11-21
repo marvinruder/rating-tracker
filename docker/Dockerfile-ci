@@ -55,7 +55,7 @@ RUN \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
   --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
   corepack enable && \
-  yarn --immutable
+  yarn workspaces focus -A --production
 
 # Generate Prisma client
 COPY packages/backend/prisma ./packages/backend/prisma
@@ -64,28 +64,7 @@ RUN \
   --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,source=packages/backend/package.json,target=packages/backend/package.json \
-  yarn workspace @rating-tracker/backend prisma:generate
-
-
-FROM node:21.2.0-alpine as validator
-ENV FORCE_COLOR true
-
-WORKDIR /workdir
-
-# Run validations
-RUN \
-  --mount=type=bind,target=.,rw \
-  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
-  --mount=type=bind,from=yarn,source=/usr/local/lib/node_modules/corepack,target=/usr/local/lib/node_modules/corepack \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
-  --mount=type=bind,from=yarn,source=/workdir/cache/yarn,target=cache/yarn \
-  --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
-  --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
-  --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  corepack enable && \
-  mkdir -p /root/.cache && \
-  cp -ar ./cache/rating-tracker /root/.cache && \
-  yarn validate
+  yarn prisma:generate
 
 
 FROM node:21.2.0-alpine as test
@@ -136,7 +115,7 @@ RUN \
   # Bundle frontend and backend
   yarn build && \
   # Create CommonJS module containing log formatter configuration
-  yarn workspace @rating-tracker/backend build:logFormatterConfig && \
+  yarn build:logFormatterConfig && \
   # Parse backend bundle for correctness and executability in Node.js
   /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 PORT_OFFSET=4096 node -r ./test/env.ts dist/server.mjs' && \
   # Create directories for target container and copy only necessary files
@@ -165,9 +144,6 @@ WORKDIR /coverage
 
 # Copy coverage reports from test stage
 COPY --from=test /coverage /coverage
-
-# Add eslint and TypeScript cache
-COPY --from=validator /root/.cache/rating-tracker /cache/rating-tracker
 
 # Add yarn cache
 COPY --from=yarn /workdir/cache/yarn /cache/yarn

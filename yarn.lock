@@ -1349,6 +1349,10 @@ __metadata:
     prettier: "npm:3.1.0"
     typescript: "npm:5.3.2"
   dependenciesMeta:
+    "@prisma/engines":
+      built: true
+    prisma:
+      built: true
     swagger-ui-dist:
       unplugged: true
   languageName: unknown
