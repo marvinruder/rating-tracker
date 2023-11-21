@@ -1,9 +1,8 @@
-* @marvinruder
+- @marvinruder
 
 # Files containing dependencies are maintained by Renovate and do not have a code owner
+
 package.json
-/.yarn/
-/.pnp.*
 /yarn.lock
 /.yarnrc.yml
 /.nvmrc
