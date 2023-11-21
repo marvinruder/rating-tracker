@@ -21,7 +21,8 @@
     "build:logFormatterConfig": "esbuild src/utils/logFormatterConfig.ts --bundle --minify --platform=node --format=cjs --legal-comments=none --log-override:commonjs-variable-in-esm=silent --outfile=dist/pino-pretty-config.cjs",
     "typecheck": "tsc --noEmit --tsBuildInfoFile $HOME/.cache/rating-tracker/backend.tsbuildinfo",
     "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/backend.eslintcache --cache-strategy content --max-warnings 0 --ext .ts src/ test/",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "postinstall": "yarn prisma:generate"
   },
   "dependencies": {
     "@prisma/client": "5.6.0",

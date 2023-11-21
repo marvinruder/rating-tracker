@@ -19,8 +19,7 @@ jobs:
       - name: Setup yarn
         run: |
           corepack enable
-          yarn --immutable --mode=skip-build
-          yarn prisma:generate
+          yarn --immutable
       - name: Run ESLint
         run: yarn workspaces foreach -Apv -j unlimited run lint
   typecheck:
@@ -39,7 +38,6 @@ jobs:
       - name: Setup yarn
         run: |
           corepack enable
-          yarn --immutable --mode=skip-build
-          yarn prisma:generate
+          yarn --immutable
       - name: Run TypeScript
         run: yarn workspaces foreach -Apv -j unlimited run typecheck
