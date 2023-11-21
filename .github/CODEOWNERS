@@ -5,7 +5,6 @@
 package.json
 /yarn.lock
 /.yarnrc.yml
-/.nvmrc
 /docker/
 Dockerfile
 docker-compose.yml
