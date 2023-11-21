@@ -38,6 +38,12 @@
     "whatwg-url": "14.0.0"
   },
   "dependenciesMeta": {
+    "@prisma/engines": {
+      "built": true
+    },
+    "prisma": {
+      "built": true
+    },
     "swagger-ui-dist": {
       "unplugged": true
     }
