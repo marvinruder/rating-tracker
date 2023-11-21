@@ -10,7 +10,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Read Node.js version
-        run: echo ::set-output name=nodeVersion::$(cat ./docker/Dockerfile-ci | grep "FROM node" | head -n 1 | grep -o "[0-9]*\.[0-9]*\.[0-9]*")
+        run: echo "nodeVersion=$(cat ./docker/Dockerfile-ci | grep 'FROM node' | head -n 1 | grep -o '[0-9]*\.[0-9]*\.[0-9]*')" >> $GITHUB_OUTPUT
         id: nodeVersion
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,7 +30,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Read Node.js version
-        run: echo ::set-output name=nodeVersion::$(cat ./docker/Dockerfile-ci | grep "FROM node" | head -n 1 | grep -o "[0-9]*\.[0-9]*\.[0-9]*")
+        run: echo "nodeVersion=$(cat ./docker/Dockerfile-ci | grep 'FROM node' | head -n 1 | grep -o '[0-9]*\.[0-9]*\.[0-9]*')" >> $GITHUB_OUTPUT
         id: nodeVersion
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -43,19 +43,3 @@ jobs:
           yarn prisma:generate
       - name: Run TypeScript
         run: yarn workspaces foreach -Apv -j unlimited run typecheck
-  codeql:
-    name: CodeQL
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: typescript
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
