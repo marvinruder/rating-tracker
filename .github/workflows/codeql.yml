@@ -3,8 +3,8 @@ name: "CodeQL"
 on: [push]
 
 jobs:
-  codeql:
-    name: CodeQL
+  analyze:
+    name: Analyze
     runs-on: ubuntu-latest
     permissions:
       actions: read
