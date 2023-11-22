@@ -6,6 +6,8 @@ jobs:
   codacy-analysis-cli:
     name: Codacy Analysis CLI
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -17,6 +19,6 @@ jobs:
           gh-code-scanning-compat: true
           max-allowed-issues: 2147483647
       - name: Upload SARIF results file
-        uses: github/codeql-action/upload-sarif@main
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: results.sarif
