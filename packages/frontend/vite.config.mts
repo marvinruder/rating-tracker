@@ -1,6 +1,3 @@
-/* eslint-disable import/no-nodejs-modules */
-import fs from "fs";
-
 import react from "@vitejs/plugin-react";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
@@ -10,8 +7,6 @@ import { defineConfig as defineVitestConfig } from "vitest/config";
 const chunkList: string[] = ["@mui"];
 
 const manualChunks = (id: string) => chunkList.find((chunk) => id.match(new RegExp(chunk)));
-
-const fontCSS = fs.readFileSync("src/fonts.css", "utf8");
 
 export default mergeConfig(
   defineViteConfig({
@@ -51,9 +46,6 @@ export default mergeConfig(
           data: {
             title: process.env.NODE_ENV === "development" ? "Development Preview – Rating Tracker" : "Rating Tracker",
             faviconPath: process.env.NODE_ENV === "development" ? "favicon-dev" : "favicon",
-            reactDevTools:
-              process.env.NODE_ENV === "development" ? '<script src="http://localhost:8097"></script>' : "",
-            inlineCSS: '<style type="text/css">' + fontCSS + "</style>",
           },
         },
         verbose: process.env.NODE_ENV === "development",

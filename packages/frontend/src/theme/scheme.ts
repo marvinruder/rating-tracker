@@ -442,6 +442,7 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
           minHeight: "100%",
           width: "100%",
           flex: 1,
+          fontFeatureSettings: '"dlig", "tnum", "ss01", "ss02", "ss03"',
         },
         "#root": {
           width: "100%",
@@ -1268,7 +1269,7 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
   },
   typography: {
     fontFamily:
-      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, ' +
+      '"InterVariable", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, ' +
       '"Apple Color Emoji", "Segoe UI Emoji"',
     h1: {
       fontWeight: 700,
