@@ -335,11 +335,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Box>
       </TableCell>
       {/* Country and Region */}
-      <TableCell
-        sx={{
-          display: displayColumn("Country"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Country") }}>
         <Typography variant="body1" fontWeight="bold" color="text.primary" width={125} noWrap>
           {props.stock.country && countryNameWithFlag[props.stock.country]}
         </Typography>
@@ -348,11 +344,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Typography>
       </TableCell>
       {/* StyleBox */}
-      <TableCell
-        sx={{
-          display: displayColumn("Size and Style"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Size and Style") }}>
         <Tooltip
           title={props.stock.size && props.stock.style ? `${props.stock.size}-${props.stock.style}` : undefined}
           arrow
@@ -373,11 +365,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Tooltip>
       </TableCell>
       {/* Sector */}
-      <TableCell
-        sx={{
-          display: displayColumn("Sector"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Sector") }}>
         <Box display="flex" alignItems="center" width={132}>
           {props.stock.industry && (
             <SectorIcon
@@ -424,11 +412,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Box>
       </TableCell>
       {/* Industry */}
-      <TableCell
-        sx={{
-          display: displayColumn("Industry"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Industry") }}>
         <Box width={150}>
           <Tooltip title={props.stock.industry && industryDescription[props.stock.industry]} arrow placement="right">
             <Typography
@@ -448,11 +432,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Typography>
       </TableCell>
       {/* Total Score */}
-      <TableCell
-        sx={{
-          display: displayColumn("Total Score"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Total Score") }}>
         <BlueIconChip
           icon={<VerifiedIcon />}
           label={<strong>{Math.round(Math.max(0, 100 * props.stock.totalScore))}</strong>}
@@ -460,11 +440,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         />
       </TableCell>
       {/* Financial Score */}
-      <TableCell
-        sx={{
-          display: displayColumn("Financial Score"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Financial Score") }}>
         <YellowIconChip
           icon={<PriceCheckIcon />}
           label={<strong>{Math.round(Math.max(0, 100 * props.stock.financialScore))}</strong>}
@@ -472,11 +448,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         />
       </TableCell>
       {/* ESG Score */}
-      <TableCell
-        sx={{
-          display: displayColumn("ESG Score"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("ESG Score") }}>
         <GreenIconChip
           icon={<NaturePeopleIcon />}
           label={<strong>{Math.round(Math.max(0, 100 * props.stock.esgScore))}</strong>}
@@ -484,21 +456,13 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         />
       </TableCell>
       {/* Morningstar Star Rating */}
-      <TableCell
-        sx={{
-          display: displayColumn("Star Rating"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Star Rating") }}>
         <MorningstarNavigator stock={props.stock}>
           <StarRating value={props.stock.starRating} />
         </MorningstarNavigator>
       </TableCell>
       {/* Morningstar Fair Value */}
-      <TableCell
-        sx={{
-          display: displayColumn("Morningstar Fair Value"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Morningstar Fair Value") }}>
         <MorningstarNavigator stock={props.stock}>
           <Typography variant="body1" fontWeight="bold" color="text.primary" width={90} noWrap>
             <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
@@ -517,11 +481,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </MorningstarNavigator>
       </TableCell>
       {/* Analyst Consensus */}
-      <TableCell
-        sx={{
-          display: displayColumn("Analyst Consensus"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Analyst Consensus") }}>
         {props.stock.analystConsensus !== null && (
           <MarketScreenerNavigator stock={props.stock}>
             <Chip
@@ -559,19 +519,13 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         )}
       </TableCell>
       {/* Analyst Target Price */}
-      <TableCell
-        sx={{
-          display: displayColumn("Analyst Target Price"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Analyst Target Price") }}>
         <MarketScreenerNavigator stock={props.stock}>
           <Typography
             variant="body1"
             fontWeight="bold"
             color="text.primary"
-            sx={{
-              opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
-            }}
+            sx={{ opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1 }}
             width={90}
             noWrap
           >
@@ -610,11 +564,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </MarketScreenerNavigator>
       </TableCell>
       {/* MSCI ESG Rating */}
-      <TableCell
-        sx={{
-          display: displayColumn("MSCI ESG Rating"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("MSCI ESG Rating") }}>
         {props.stock.msciESGRating && (
           <MSCINavigator stock={props.stock}>
             <Chip
@@ -635,11 +585,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         )}
       </TableCell>
       {/* MSCI Implied Temperature Rise */}
-      <TableCell
-        sx={{
-          display: displayColumn("MSCI Implied Temperature Rise"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("MSCI Implied Temperature Rise") }}>
         {props.stock.msciTemperature !== null && (
           <MSCINavigator stock={props.stock}>
             <TemperatureChip
@@ -654,19 +600,9 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         )}
       </TableCell>
       {/* Refinitiv */}
-      <TableCell
-        sx={{
-          display: displayColumn("Refinitiv ESG Information"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Refinitiv ESG Information") }}>
         <RefinitivNavigator stock={props.stock}>
-          <Box
-            sx={{
-              minWidth: 90,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
+          <Box sx={{ minWidth: 90, display: "flex", alignItems: "center" }}>
             <Typography
               variant="body1"
               fontWeight="bold"
@@ -692,11 +628,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </RefinitivNavigator>
       </TableCell>
       {/* S&P ESG Score */}
-      <TableCell
-        sx={{
-          display: displayColumn("S&P ESG Score"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("S&P ESG Score") }}>
         <SPNavigator stock={props.stock}>
           <Typography
             variant="body1"
@@ -712,11 +644,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </SPNavigator>
       </TableCell>
       {/* Sustainalytics ESG Risk */}
-      <TableCell
-        sx={{
-          display: displayColumn("Sustainalytics ESG Risk"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Sustainalytics ESG Risk") }}>
         {props.stock.sustainalyticsESGRisk !== null && (
           <SustainalyticsNavigator stock={props.stock}>
             <Chip
@@ -741,11 +669,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         )}
       </TableCell>
       {/* 52 Week Range */}
-      <TableCell
-        sx={{
-          display: displayColumn("52 Week Range"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("52 Week Range") }}>
         {props.stock.lastClose !== null && props.stock.low52w !== null && props.stock.high52w !== null && (
           <Range52WSlider
             size="small"
@@ -774,32 +698,20 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         )}
       </TableCell>
       {/* Dividend Yield */}
-      <TableCell
-        sx={{
-          display: displayColumn("Dividend Yield (%)"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Dividend Yield (%)") }}>
         <Typography variant="body1" color="text.primary" width={45} sx={{ textAlign: "right" }} noWrap>
-          {props.stock.dividendYieldPercent ?? "–"}
+          {props.stock.dividendYieldPercent ? Number(props.stock.dividendYieldPercent.toPrecision(3)) : "–"}
           {"\u2009%"}
         </Typography>
       </TableCell>
       {/* P/E Ratio */}
-      <TableCell
-        sx={{
-          display: displayColumn("P / E Ratio"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("P / E Ratio") }}>
         <Typography variant="body1" color="text.primary" width={45} sx={{ textAlign: "right" }} noWrap>
-          {props.stock.priceEarningRatio ?? "–"}
+          {props.stock.priceEarningRatio ? Number(props.stock.priceEarningRatio.toPrecision(3)) : "–"}
         </Typography>
       </TableCell>
       {/* Market Cap */}
-      <TableCell
-        sx={{
-          display: displayColumn("Market Capitalization"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Market Capitalization") }}>
         <Typography variant="body1" color="text.primary" width={75} noWrap>
           <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
             <Box sx={{ float: "left" }} display="inline-block">
@@ -914,11 +826,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Box>
       </TableCell>
       {/* Country */}
-      <TableCell
-        sx={{
-          display: displayColumn("Country"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Country") }}>
         <Typography variant="body1">
           <Skeleton width={125} />
         </Typography>
@@ -927,11 +835,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Typography>
       </TableCell>
       {/* Size|Style */}
-      <TableCell
-        sx={{
-          display: displayColumn("Size and Style"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Size and Style") }}>
         <Skeleton
           variant="rectangular"
           width={2.75 * (theme.typography.body1.fontSize as number)}
@@ -939,11 +843,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         />
       </TableCell>
       {/* Sector */}
-      <TableCell
-        sx={{
-          display: displayColumn("Sector"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Sector") }}>
         <Typography variant="body1" display="flex">
           <Skeleton
             variant="rectangular"
@@ -961,20 +861,14 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             variant="rectangular"
             width={1.55 * (theme.typography.body1.fontSize as number)}
             height={1.55 * (theme.typography.body1.fontSize as number)}
-            sx={{
-              m: `${0.1 * (theme.typography.body1.fontSize as number)}px`,
-            }}
+            sx={{ m: `${0.1 * (theme.typography.body1.fontSize as number)}px` }}
           />
           <Box width={6} />
           <Skeleton width={105} />
         </Typography>
       </TableCell>
       {/* Industry */}
-      <TableCell
-        sx={{
-          display: displayColumn("Industry"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Industry") }}>
         <Typography variant="body1">
           <Skeleton width={150} />
         </Typography>
@@ -983,43 +877,23 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Typography>
       </TableCell>
       {/* Scores */}
-      <TableCell
-        sx={{
-          display: displayColumn("Total Score"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Total Score") }}>
         <Skeleton variant="rounded" width={84} height={32} />
       </TableCell>
-      <TableCell
-        sx={{
-          display: displayColumn("Financial Score"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Financial Score") }}>
         <Skeleton variant="rounded" width={84} height={32} />
       </TableCell>
-      <TableCell
-        sx={{
-          display: displayColumn("ESG Score"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("ESG Score") }}>
         <Skeleton variant="rounded" width={84} height={32} />
       </TableCell>
       {/* Star Rating */}
-      <TableCell
-        sx={{
-          display: displayColumn("Star Rating"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Star Rating") }}>
         <Box sx={{ whiteSpace: "nowrap" }}>
           {[...Array(5).keys()].map((index) => {
             return (
               <Skeleton
                 key={index}
-                sx={{
-                  m: "2px",
-                  display: "inline-block",
-                  verticalAlign: "middle",
-                }}
+                sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
                 variant="circular"
                 width={20}
                 height={20}
@@ -1029,11 +903,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Box>
       </TableCell>
       {/* Fair Value */}
-      <TableCell
-        sx={{
-          display: displayColumn("Morningstar Fair Value"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Morningstar Fair Value") }}>
         <Typography variant="body1">
           <Skeleton width={90} />
         </Typography>
@@ -1042,19 +912,11 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Typography>
       </TableCell>
       {/* Analyst Consensus */}
-      <TableCell
-        sx={{
-          display: displayColumn("Analyst Consensus"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Analyst Consensus") }}>
         <Skeleton variant="rounded" width={60} height={24} />
       </TableCell>
       {/* Analyst Target */}
-      <TableCell
-        sx={{
-          display: displayColumn("Analyst Target Price"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Analyst Target Price") }}>
         <Typography variant="body1">
           <Skeleton width={90} />
         </Typography>
@@ -1063,27 +925,15 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Typography>
       </TableCell>
       {/* MSCI ESG */}
-      <TableCell
-        sx={{
-          display: displayColumn("MSCI ESG Rating"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("MSCI ESG Rating") }}>
         <Skeleton variant="rounded" width={48} height={24} />
       </TableCell>
       {/* MSCI Temp */}
-      <TableCell
-        sx={{
-          display: displayColumn("MSCI Implied Temperature Rise"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("MSCI Implied Temperature Rise") }}>
         <Skeleton variant="rounded" width={75} height={24} />
       </TableCell>
       {/* Refinitiv + Emissions */}
-      <TableCell
-        sx={{
-          display: displayColumn("Refinitiv ESG Information"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Refinitiv ESG Information") }}>
         <Box sx={{ minWidth: 90, display: "flex", alignItems: "center" }}>
           <Typography variant="body1" fontSize={18}>
             <Skeleton width={30} />
@@ -1095,57 +945,33 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </Box>
       </TableCell>
       {/* S&P */}
-      <TableCell
-        sx={{
-          display: displayColumn("S&P ESG Score"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("S&P ESG Score") }}>
         <Typography variant="body1" fontSize={18}>
           <Skeleton width={48} />
         </Typography>
       </TableCell>
       {/* Sustainalytics ESG Risk */}
-      <TableCell
-        sx={{
-          display: displayColumn("Sustainalytics ESG Risk"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Sustainalytics ESG Risk") }}>
         <Skeleton variant="rounded" width={64} height={24} />
       </TableCell>
       {/* 52W Range */}
-      <TableCell
-        sx={{
-          display: displayColumn("52 Week Range"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("52 Week Range") }}>
         <Skeleton variant="rectangular" width={150} height={42} />
       </TableCell>
       {/* Div Yield */}
-      <TableCell
-        sx={{
-          display: displayColumn("Dividend Yield (%)"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Dividend Yield (%)") }}>
         <Typography variant="body1">
           <Skeleton width={45} />
         </Typography>
       </TableCell>
       {/* P/E */}
-      <TableCell
-        sx={{
-          display: displayColumn("P / E Ratio"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("P / E Ratio") }}>
         <Typography variant="body1">
           <Skeleton width={45} />
         </Typography>
       </TableCell>
       {/* Market Cap */}
-      <TableCell
-        sx={{
-          display: displayColumn("Market Capitalization"),
-        }}
-      >
+      <TableCell sx={{ display: displayColumn("Market Capitalization") }}>
         <Typography variant="body1">
           <Skeleton width={75} />
         </Typography>
