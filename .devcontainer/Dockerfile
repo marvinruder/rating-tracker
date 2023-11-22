@@ -47,4 +47,4 @@ RUN \
   echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc && \
   find /usr/share/zsh/plugins/zsh-*/zsh-*.zsh | grep -v .plugin.zsh | sed 's/^/source /' >> /root/.zshrc && \
   wget -O /tmp/rust-analyzer-no-server.vsix https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-no-server.vsix && \
-  curl -s https://raw.githubusercontent.com/nektos/act/master/install.sh | bash
+  wget -O - https://raw.githubusercontent.com/nektos/act/master/install.sh | bash
