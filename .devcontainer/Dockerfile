@@ -19,6 +19,7 @@ RUN \
   gpgsm \
   htop \
   openssh \
+  postgresql-client \
   zsh \
   zsh-autosuggestions \
   zsh-syntax-highlighting \
@@ -46,5 +47,7 @@ RUN \
   echo '[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"' >> /root/.zshrc && \
   echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc && \
   find /usr/share/zsh/plugins/zsh-*/zsh-*.zsh | grep -v .plugin.zsh | sed 's/^/source /' >> /root/.zshrc && \
+  echo 'alias rtpsql="psql -h postgres -U rating-tracker"' >> /root/.zshrc && \
+  echo -e "\o /dev/null\nSET search_path TO \"rating-tracker\";\n\o" > /root/.psqlrc && \
   wget -O /tmp/rust-analyzer-no-server.vsix https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-no-server.vsix && \
   wget -O - https://raw.githubusercontent.com/nektos/act/master/install.sh | bash

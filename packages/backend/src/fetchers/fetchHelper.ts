@@ -1,5 +1,5 @@
 import {
-  DataProvider,
+  IndividualDataProvider,
   Stock,
   dataProviderID,
   dataProviderLastFetch,
@@ -56,9 +56,9 @@ export type HTMLFetcher = (
 //   driver: WebDriver,
 // ) => Promise<boolean>;
 
-const htmlDataProviders: readonly DataProvider[] = ["morningstar", "marketScreener", "msci", "sp"] as const;
-const jsonDataProviders: readonly DataProvider[] = ["refinitiv"] as const;
-// const seleniumDataProviders: readonly DataProvider[] = [] as const;
+const htmlDataProviders: readonly IndividualDataProvider[] = ["morningstar", "marketScreener", "msci", "sp"] as const;
+const jsonDataProviders: readonly IndividualDataProvider[] = ["refinitiv"] as const;
+// const seleniumDataProviders: readonly IndividualDataProvider[] = [] as const;
 
 /**
  * An object holding the source of a fetcher. Only one of the properties is set.
@@ -83,13 +83,13 @@ type FetcherSource = {
  * be a {@link Document} or a {@link Object}.
  *
  * @param {Stock} stock the affected stock
- * @param {DataProvider} dataProvider the name of the data provider
+ * @param {IndividualDataProvider} dataProvider the name of the data provider
  * @param {FetcherSource} source the source of the fetcher
  * @returns {Promise<string>} A string holding a general informational message and a URL to the screenshot
  */
 export const captureFetchError = async (
   stock: Stock,
-  dataProvider: DataProvider,
+  dataProvider: IndividualDataProvider,
   source: FetcherSource,
 ): Promise<string> => {
   let resourceID: string = "";
@@ -97,6 +97,8 @@ export const captureFetchError = async (
     case jsonDataProviders.includes(dataProvider):
       resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.json`;
       if (
+        // Only create the resource if we actually have a JSON object
+        !source?.json ||
         // Create the JSON resource in Redis
         !(await createResource(
           {
@@ -112,6 +114,8 @@ export const captureFetchError = async (
     case htmlDataProviders.includes(dataProvider):
       resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.html`;
       if (
+        // Only create the resource if we actually have a valid HTML document
+        !source?.document?.documentElement?.toString() ||
         // Create the HTML resource in Redis
         !(await createResource(
           {
@@ -139,7 +143,7 @@ export const captureFetchError = async (
 /**
  * A record of functions that extract data from a data provider.
  */
-const dataProviderFetchers: Partial<Record<DataProvider, Fetcher>> = {
+const dataProviderFetchers: Record<IndividualDataProvider, Fetcher> = {
   morningstar: morningstarFetcher,
   marketScreener: marketScreenerFetcher,
   msci: msciFetcher,
@@ -192,10 +196,14 @@ const determineConcurrency = (req: Request): number => {
  *
  * @param {Request} req Request object
  * @param {Response} res Response object
- * @param {DataProvider} dataProvider The data provider to fetch from
+ * @param {IndividualDataProvider} dataProvider The data provider to fetch from
  * @throws an {@link APIError} in case of a severe error
  */
-export const fetchFromDataProvider = async (req: Request, res: Response, dataProvider: DataProvider): Promise<void> => {
+export const fetchFromDataProvider = async (
+  req: Request,
+  res: Response,
+  dataProvider: IndividualDataProvider,
+): Promise<void> => {
   let stockList: Stock[];
 
   if (req.query.ticker) {
@@ -275,7 +283,7 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
               `Stock ${stock.ticker}: Skipping ${
                 dataProviderName[dataProvider]
               } fetch since last successful fetch was ${DateTime.fromJSDate(
-                stock[dataProviderLastFetch[dataProvider]].getTime(),
+                stock[dataProviderLastFetch[dataProvider]],
               ).toRelative()}`,
             );
             stocks.skipped.push(stock);
@@ -380,14 +388,14 @@ export const fetchFromDataProvider = async (req: Request, res: Response, dataPro
  * @param {string} url The URL to fetch from
  * @param {AxiosRequestConfig} config The Axios request configuration
  * @param {Stock} stock The affected stock
- * @param {DataProvider} dataProvider The name of the data provider to fetch from
+ * @param {IndividualDataProvider} dataProvider The name of the data provider to fetch from
  * @returns {Document} The parsed HTML document
  */
 export const getAndParseHTML = async (
   url: string,
   config: AxiosRequestConfig,
   stock: Stock,
-  dataProvider: DataProvider,
+  dataProvider: IndividualDataProvider,
 ): Promise<Document> =>
   new DOMParser({
     errorHandler: {

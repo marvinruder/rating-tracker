@@ -320,10 +320,14 @@ export const pinoPrettyConfig: PrettyOptions = process.env.PLAIN_LOG
                   { ...getPrefixFromRawPrefix({ ip: req.ip }), textColor: "magentaBright" },
                 ],
                 [
-                  // HTTP method and URL path
-                  req.method,
-                  ...req.url.slice(1, req.url.indexOf("?") == -1 ? undefined : req.url.indexOf("?")).split("/"),
-                ].map((rawPrefix) => ({ icon: rawPrefix, color: prefixColors[rawPrefix] ?? "grey" })),
+                  // HTTP method
+                  { icon: req.method, color: prefixColors[req.method] ?? "grey" },
+                  // URL path
+                  ...req.url
+                    .slice(1, req.url.indexOf("?") == -1 ? undefined : req.url.indexOf("?"))
+                    .split("/")
+                    .map((rawPrefix) => ({ icon: rawPrefix, color: "grey" })),
+                ],
                 // Cookies
                 Object.entries(req.cookies).length
                   ? prettifyRecord(req.cookies, { icon: prefixIcons.cookie, color: "grey", textColor: "yellow" })

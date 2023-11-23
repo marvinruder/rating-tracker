@@ -26,6 +26,16 @@ export const dataProviderArray = [
 export type DataProvider = (typeof dataProviderArray)[number];
 
 /**
+ * A data provider from which stocks are fetched individually.
+ */
+export type IndividualDataProvider = Exclude<DataProvider, "sustainalytics">;
+
+/**
+ * A data provider from which stocks are fetched in bulk.
+ */
+export type BulkDataProvider = "sustainalytics";
+
+/**
  * Checks if a string is a valid data provider.
  *
  * @param {string} dataProvider The data provider to check.
@@ -60,9 +70,12 @@ export const dataProviderID: Record<DataProvider, keyof Stock> = {
 };
 
 /**
- * The stock last fetch dates related to the data providers.
+ * The stock last fetch date properties related to the data providers.
  */
-export const dataProviderLastFetch: Record<Exclude<DataProvider, "sustainalytics">, keyof Stock> = {
+export const dataProviderLastFetch: Record<
+  IndividualDataProvider,
+  "morningstarLastFetch" | "marketScreenerLastFetch" | "msciLastFetch" | "refinitivLastFetch" | "spLastFetch"
+> = {
   morningstar: "morningstarLastFetch",
   marketScreener: "marketScreenerLastFetch",
   msci: "msciLastFetch",
