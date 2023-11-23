@@ -24,6 +24,10 @@ services:
       POSTGRES_USER: rating-tracker
       POSTGRES_PASS: rating-tracker
       LOG_LEVEL: trace
+      # for `psql` / `rtpsql` commands:
+      PGHOST: postgres
+      PGUSER: rating-tracker
+      PGPASSWORD: rating-tracker
     volumes:
       - ..:/rating-tracker
       - ./motd:/etc/motd
