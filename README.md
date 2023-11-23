@@ -258,7 +258,7 @@ After setting up NGINX as a webserver with SSL, the following virtual host confi
 <summary>View NGINX configuration</summary>
 
 ```nginx
-add_header "Content-Security-Policy" "default-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; img-src 'self' data:; style-src-elem 'self' 'unsafe-inline' rsms.me; style-src rsms.me; font-src rsms.me; frame-ancestors 'none'; form-action 'self'; base-uri 'none';";add_header "Strict-Transport-Security" "max-age=31536000; includeSubDomains" always;
+add_header "Content-Security-Policy" "default-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; img-src 'self' data:; style-src-elem 'self' 'unsafe-inline' rsms.me; style-src 'self' 'unsafe-inline' rsms.me; font-src rsms.me; frame-ancestors 'none'; form-action 'self'; base-uri 'none';";add_header "Strict-Transport-Security" "max-age=31536000; includeSubDomains" always;
 add_header "X-Frame-Options" "DENY";
 add_header "X-Content-Type-Options" "nosniff";
 add_header "Referrer-Policy" "same-origin";
