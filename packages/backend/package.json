@@ -52,7 +52,7 @@
     "supertest": "6.3.3",
     "swagger-ui-dist": "5.10.3",
     "swagger-ui-express": "5.0.0",
-    "vite": "5.0.2",
+    "vite": "5.0.3",
     "vitest": "0.34.6",
     "xpath-ts2": "1.4.2"
   },
