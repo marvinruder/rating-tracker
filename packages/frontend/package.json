@@ -36,7 +36,7 @@
     "react-router": "6.20.0",
     "react-router-dom": "6.20.0",
     "react-switch-selector": "2.2.1",
-    "vite": "5.0.3",
+    "vite": "5.0.4",
     "vite-plugin-html": "3.2.0",
     "vite-plugin-wasm": "3.2.2",
     "vitest": "0.34.6"
