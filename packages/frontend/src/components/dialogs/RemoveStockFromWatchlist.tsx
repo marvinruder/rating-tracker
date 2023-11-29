@@ -1,7 +1,7 @@
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import { Stock, WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
+import { Stock, WatchlistSummary, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotification } from "../../contexts/NotificationContext";
@@ -24,11 +24,7 @@ export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): 
   const removeStockFromWatchlist = () => {
     setRequestInProgress(true),
       api
-        .patch(
-          watchlistsEndpointPath + `/${props.watchlist.id}`,
-          {},
-          { params: { stocksToRemove: [props.stock.ticker] } },
-        )
+        .delete(watchlistsEndpointPath + `/${props.watchlist.id}` + stocksEndpointPath + `/${props.stock.ticker}`)
         .then(() => props.getWatchlist())
         .catch((e) => setErrorNotification(e, "removing stock from watchlist"))
         .finally(() => setRequestInProgress(false));

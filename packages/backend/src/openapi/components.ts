@@ -247,6 +247,24 @@ export const components: OpenAPIV3.ComponentsObject = {
       },
       required: ["ticker", "name", "country", "isin"],
     },
+    WeightedStock: {
+      allOf: [
+        {
+          $ref: "#/components/schemas/Stock",
+        },
+        {
+          type: "object",
+          properties: {
+            amount: {
+              type: "number",
+              description: "The amount of currency associated with the stock.",
+              example: 1000,
+            },
+          },
+          required: ["amount"],
+        },
+      ],
+    },
     SortableAttribute: {
       type: "string",
       description: "The name of an attribute whose values can be sorted.",
@@ -314,7 +332,7 @@ export const components: OpenAPIV3.ComponentsObject = {
     },
     Watchlist: {
       type: "object",
-      description: "A named list of stocks of a certain interest to a user.",
+      description: "A named collection of stocks of a certain interest to a user.",
       properties: {
         id: {
           type: "integer",
@@ -324,7 +342,7 @@ export const components: OpenAPIV3.ComponentsObject = {
         name: {
           type: "string",
           description: "The name of the watchlist.",
-          example: "Favorites",
+          example: "My Watchlist",
         },
         subscribed: {
           type: "boolean",
@@ -343,8 +361,8 @@ export const components: OpenAPIV3.ComponentsObject = {
     WatchlistSummary: {
       type: "object",
       description:
-        "A named list of stocks of a certain interest to a user. Includes only the tickers of the stocks, but not " +
-        "the full stock objects themselves.",
+        "A named collection of stocks of a certain interest to a user. Includes only the tickers of the stocks, but " +
+        "not the full stock objects themselves.",
       properties: {
         id: {
           type: "integer",
@@ -354,7 +372,7 @@ export const components: OpenAPIV3.ComponentsObject = {
         name: {
           type: "string",
           description: "The name of the watchlist.",
-          example: "Favorites",
+          example: "My Watchlist",
         },
         subscribed: {
           type: "boolean",
@@ -372,6 +390,79 @@ export const components: OpenAPIV3.ComponentsObject = {
                 type: "string",
                 description: "The ticker symbol of a stock.",
                 example: "AAPL",
+              },
+            },
+          },
+        },
+      },
+    },
+    Portfolio: {
+      type: "object",
+      description: "A named collection of stocks, each associated with an amount of a specified currency.",
+      properties: {
+        id: {
+          type: "integer",
+          description: "A unique identifier of the portfolio.",
+          example: 0,
+        },
+        name: {
+          type: "string",
+          description: "The name of the portfolop.",
+          example: "My Portfolio",
+        },
+        currency: {
+          $ref: "#/components/schemas/Currency",
+          description: "The currency associated with the portfolio.",
+          example: "USD",
+        },
+        stocks: {
+          type: "array",
+          description: "The list of weighted stocks composing the portfolio.",
+          items: {
+            $ref: "#/components/schemas/WeightedStock",
+          },
+        },
+      },
+    },
+    PortfolioSummary: {
+      type: "object",
+      description:
+        "A named collection of stocks, each associated with an amount of a specified currency. Includes only the " +
+        "tickers and amounts of the stocks, but not the full stock objects themselves.",
+      properties: {
+        id: {
+          type: "integer",
+          description: "A unique identifier of the portfolio.",
+          example: 0,
+        },
+        name: {
+          type: "string",
+          description: "The name of the portfolop.",
+          example: "My Portfolio",
+        },
+        currency: {
+          $ref: "#/components/schemas/Currency",
+          description: "The currency associated with the portfolio.",
+          example: "USD",
+        },
+        stocks: {
+          type: "array",
+          description:
+            "The list of stocks on the portfolio. Includes only the tickers of the stocks with their associated " +
+            "amounts.",
+          items: {
+            type: "object",
+            description: "An object containing only the ticker symbol of a stock with its associated amount.",
+            properties: {
+              ticker: {
+                type: "string",
+                description: "The ticker symbol of a stock.",
+                example: "AAPL",
+              },
+              amount: {
+                type: "number",
+                description: "The amount of currency associated with a stock.",
+                example: 1000,
               },
             },
           },

@@ -1,11 +1,13 @@
-import { FAVORITES_NAME, GENERAL_ACCESS, pathParameterSuffix, watchlistsEndpointPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, GENERAL_ACCESS, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { Request, Response } from "express";
 
 import {
+  addStockToWatchlist,
   createWatchlist,
   deleteWatchlist,
   readAllWatchlists,
   readWatchlist,
+  removeStockFromWatchlist,
   updateWatchlist,
 } from "../db/tables/watchlistTable";
 import Router from "../utils/router";
@@ -44,14 +46,14 @@ export class WatchlistsController {
    * @param {Response} res Response object
    */
   @Router({
-    path: watchlistsEndpointPath + pathParameterSuffix,
+    path: watchlistsEndpointPath + "/:id",
     method: "get",
     accessRights: GENERAL_ACCESS,
   })
   async get(req: Request, res: Response) {
     res
       .status(200)
-      .json(await readWatchlist(Number(req.params[0]), res.locals.user.email))
+      .json(await readWatchlist(Number(req.params.id), res.locals.user.email))
       .end();
   }
 
@@ -63,12 +65,12 @@ export class WatchlistsController {
    * @throws an {@link APIError} if a watchlist with the same ID already exists
    */
   @Router({
-    path: watchlistsEndpointPath + pathParameterSuffix,
+    path: watchlistsEndpointPath + "/:id",
     method: "put",
     accessRights: GENERAL_ACCESS,
   })
   async put(req: Request, res: Response) {
-    const id = req.params[0];
+    const { id } = req.params;
     const { name } = req.query;
     if (id === "new" && typeof name === "string") {
       const watchlist = await createWatchlist(name, res.locals.user.email);
@@ -83,28 +85,51 @@ export class WatchlistsController {
    * @param {Response} res Response object
    */
   @Router({
-    path: watchlistsEndpointPath + pathParameterSuffix,
+    path: watchlistsEndpointPath + "/:id",
     method: "patch",
     accessRights: GENERAL_ACCESS,
   })
   async patch(req: Request, res: Response) {
-    const id = Number(req.params[0]);
-    const { name, subscribed, stocksToAdd, stocksToRemove } = req.query;
+    const { name, subscribed } = req.query;
     if (
       (typeof name === "string" || typeof name === "undefined") &&
-      (typeof subscribed === "undefined" || typeof subscribed === "boolean") &&
-      (typeof stocksToAdd === "undefined" || Array.isArray(stocksToAdd)) &&
-      (typeof stocksToRemove === "undefined" || Array.isArray(stocksToRemove))
+      (typeof subscribed === "undefined" || typeof subscribed === "boolean")
     ) {
-      await updateWatchlist(
-        id,
-        res.locals.user.email,
-        { name, subscribed },
-        (stocksToAdd as string[] | undefined) ?? [],
-        (stocksToRemove as string[] | undefined) ?? [],
-      );
+      await updateWatchlist(Number(req.params.id), res.locals.user.email, { name, subscribed });
       res.status(204).end();
     }
+  }
+
+  /**
+   * Adds a stock to a watchlist in the database.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   */
+  @Router({
+    path: watchlistsEndpointPath + "/:id" + stocksEndpointPath + "/:ticker",
+    method: "put",
+    accessRights: GENERAL_ACCESS,
+  })
+  async addStock(req: Request, res: Response) {
+    await addStockToWatchlist(Number(req.params.id), res.locals.user.email, req.params.ticker);
+    res.status(204).end();
+  }
+
+  /**
+   * Removes a stock from a watchlist in the database.
+   *
+   * @param {Request} req Request object
+   * @param {Response} res Response object
+   */
+  @Router({
+    path: watchlistsEndpointPath + "/:id" + stocksEndpointPath + "/:ticker",
+    method: "delete",
+    accessRights: GENERAL_ACCESS,
+  })
+  async removeStock(req: Request, res: Response) {
+    await removeStockFromWatchlist(Number(req.params.id), res.locals.user.email, req.params.ticker);
+    res.status(204).end();
   }
 
   /**
@@ -114,12 +139,12 @@ export class WatchlistsController {
    * @param {Response} res Response object
    */
   @Router({
-    path: watchlistsEndpointPath + pathParameterSuffix,
+    path: watchlistsEndpointPath + "/:id",
     method: "delete",
     accessRights: GENERAL_ACCESS,
   })
   async delete(req: Request, res: Response) {
-    await deleteWatchlist(Number(req.params[0]), res.locals.user.email);
+    await deleteWatchlist(Number(req.params.id), res.locals.user.email);
     res.status(204).end();
   }
 }

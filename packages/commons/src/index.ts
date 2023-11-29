@@ -7,6 +7,7 @@ export * from "./lib/gecs/IndustryGroup";
 export * from "./lib/gecs/Sector";
 export * from "./lib/gecs/SuperSector";
 
+export * from "./lib/models/portfolio";
 export * from "./lib/models/resource";
 export * from "./lib/models/session";
 export * from "./lib/models/stock";
@@ -18,6 +19,7 @@ export * from "./lib/paths/base";
 export * from "./lib/paths/favorites";
 export * from "./lib/paths/fetch";
 export * from "./lib/paths/logobackground";
+export * from "./lib/paths/portfolios";
 export * from "./lib/paths/resources";
 export * from "./lib/paths/session";
 export * from "./lib/paths/status";

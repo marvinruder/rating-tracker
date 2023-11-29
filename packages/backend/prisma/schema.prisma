@@ -10,19 +10,19 @@ datasource db {
 }
 
 model Stock {
-  ticker                                    String         @id @db.VarChar(20)
-  name                                      String         @unique @db.VarChar(255)
+  ticker                                    String               @id @db.VarChar(20)
+  name                                      String               @unique @db.VarChar(255)
   country                                   Country
-  isin                                      String         @unique @db.Char(12)
+  isin                                      String               @unique @db.Char(12)
   industry                                  Industry?
   size                                      Size?
   style                                     Style?
-  financialScore                            Float          @default(0)
-  esgScore                                  Float          @default(0)
-  totalScore                                Float          @default(0)
-  morningstarID                             String?        @unique @db.VarChar(255)
-  morningstarLastFetch                      DateTime?      @db.Timestamp(6)
-  starRating                                Int?           @db.SmallInt
+  financialScore                            Float                @default(0)
+  esgScore                                  Float                @default(0)
+  totalScore                                Float                @default(0)
+  morningstarID                             String?              @unique @db.VarChar(255)
+  morningstarLastFetch                      DateTime?            @db.Timestamp(6)
+  starRating                                Int?                 @db.SmallInt
   dividendYieldPercent                      Float?
   priceEarningRatio                         Float?
   currency                                  Currency?
@@ -32,28 +32,29 @@ model Stock {
   low52w                                    Float?
   high52w                                   Float?
   positionIn52w                             Float?
-  marketScreenerID                          String?        @unique @db.VarChar(255)
-  marketScreenerLastFetch                   DateTime?      @db.Timestamp(6)
+  marketScreenerID                          String?              @unique @db.VarChar(255)
+  marketScreenerLastFetch                   DateTime?            @db.Timestamp(6)
   analystConsensus                          Float?
-  analystCount                              Int?           @db.SmallInt
+  analystCount                              Int?                 @db.SmallInt
   analystTargetPrice                        Float?
   analystTargetPricePercentageToLastClose   Float?
-  msciID                                    String?        @unique @db.VarChar(255)
-  msciLastFetch                             DateTime?      @db.Timestamp(6)
+  msciID                                    String?              @unique @db.VarChar(255)
+  msciLastFetch                             DateTime?            @db.Timestamp(6)
   msciESGRating                             MSCIESGRating?
   msciTemperature                           Float?
-  ric                                       String?        @unique @db.VarChar(25)
-  refinitivLastFetch                        DateTime?      @db.Timestamp(6)
-  refinitivESGScore                         Int?           @db.SmallInt
-  refinitivEmissions                        Int?           @db.SmallInt
-  spID                                      Float?         @unique
-  spLastFetch                               DateTime?      @db.Timestamp(6)
-  spESGScore                                Int?           @db.SmallInt
-  sustainalyticsID                          String?        @unique @db.VarChar(255)
+  ric                                       String?              @unique @db.VarChar(25)
+  refinitivLastFetch                        DateTime?            @db.Timestamp(6)
+  refinitivESGScore                         Int?                 @db.SmallInt
+  refinitivEmissions                        Int?                 @db.SmallInt
+  spID                                      Float?               @unique
+  spLastFetch                               DateTime?            @db.Timestamp(6)
+  spESGScore                                Int?                 @db.SmallInt
+  sustainalyticsID                          String?              @unique @db.VarChar(255)
   sustainalyticsESGRisk                     Float?
   description                               String?
   marketCap                                 Float?
   watchlists                                Watchlist[]
+  portfolios                                StocksInPortfolios[]
 }
 
 model User {
@@ -67,6 +68,7 @@ model User {
   credentialPublicKey String      @db.VarChar(8192)
   counter             Int         @default(0)
   watchlists          Watchlist[]
+  portfolios          Portfolio[]
 }
 
 model Watchlist {
@@ -76,6 +78,25 @@ model Watchlist {
   stocks     Stock[]
   user       User    @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
   email      String  @db.VarChar(255)
+}
+
+model Portfolio {
+  id       Int                  @id @default(autoincrement())
+  name     String
+  currency Currency
+  stocks   StocksInPortfolios[]
+  user     User                 @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
+  email    String               @db.VarChar(255)
+}
+
+model StocksInPortfolios {
+  portfolio   Portfolio @relation(fields: [portfolioID], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  portfolioID Int
+  stock       Stock     @relation(fields: [ticker], references: [ticker], onUpdate: Cascade, onDelete: Cascade)
+  ticker      String    @db.VarChar(20)
+  amount      Float
+
+  @@id([portfolioID, ticker])
 }
 
 enum Country {

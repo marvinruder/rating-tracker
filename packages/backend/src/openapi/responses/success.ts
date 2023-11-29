@@ -129,6 +129,37 @@ export const okWatchlistSummary: OpenAPIV3.ResponseObject = {
 };
 
 /**
+ * A response with a 200 OK status code and a Portfolio object body.
+ */
+export const okPortfolio: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "application/json": {
+      schema: {
+        $ref: "#/components/schemas/Portfolio",
+      },
+    },
+  },
+};
+
+/**
+ * A response with a 200 OK status code and an array of Portfolio Summary objects.
+ */
+export const okPortfolioSummary: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "application/json": {
+      schema: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/PortfolioSummary",
+        },
+      },
+    },
+  },
+};
+
+/**
  * A response with a 200 OK status code and an array of SVG logo strings.
  */
 export const okLogoBackground: OpenAPIV3.ResponseObject = {
@@ -190,6 +221,26 @@ export const createdWatchlistID: OpenAPIV3.ResponseObject = {
           id: {
             type: "integer",
             description: "A unique identifier of the watchlist.",
+            example: 0,
+          },
+        },
+      },
+    },
+  },
+};
+
+/**
+ * A response with a 201 Created status code containing the ID of the newly created portfolio.
+ */
+export const createdPortfolioID: OpenAPIV3.ResponseObject = {
+  description: "Created with ID of new portfolio",
+  content: {
+    "application/json": {
+      schema: {
+        properties: {
+          id: {
+            type: "integer",
+            description: "A unique identifier of the portfolio.",
             example: 0,
           },
         },

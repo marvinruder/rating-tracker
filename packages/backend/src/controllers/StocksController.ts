@@ -15,7 +15,6 @@ import {
   stocksEndpointPath,
   stockLogoEndpointSuffix,
   WRITE_STOCKS_ACCESS,
-  pathParameterSuffix,
 } from "@rating-tracker/commons";
 import axios from "axios";
 import { Request, Response } from "express";
@@ -596,12 +595,12 @@ export class StocksController {
    * @param {Response} res Response object
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix + stockLogoEndpointSuffix,
+    path: stocksEndpointPath + "/:ticker" + stockLogoEndpointSuffix,
     method: "get",
     accessRights: GENERAL_ACCESS,
   })
   async getLogo(req: Request, res: Response) {
-    const logoResource = await getLogoOfStock(req.params[0], String(req.query.dark) === "true");
+    const logoResource = await getLogoOfStock(req.params.ticker, String(req.query.dark) === "true");
     res.set("Content-Type", "image/svg+xml");
     res.set(
       "Cache-Control",
@@ -664,14 +663,14 @@ export class StocksController {
    * @param {Response} res Response object
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix,
+    path: stocksEndpointPath + "/:ticker",
     method: "get",
     accessRights: GENERAL_ACCESS,
   })
   async get(req: Request, res: Response) {
     res
       .status(200)
-      .json(await readStock(req.params[0]))
+      .json(await readStock(req.params.ticker))
       .end();
   }
 
@@ -683,20 +682,14 @@ export class StocksController {
    * @throws an {@link APIError} if a stock with the same ticker already exists
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix,
+    path: stocksEndpointPath + "/:ticker",
     method: "put",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async put(req: Request, res: Response) {
-    const ticker = req.params[0];
+    const { ticker } = req.params;
     const { name, country, isin } = req.query;
-    if (
-      typeof ticker === "string" &&
-      typeof name === "string" &&
-      typeof country === "string" &&
-      isCountry(country) &&
-      typeof isin === "string"
-    ) {
+    if (typeof name === "string" && typeof country === "string" && isCountry(country) && typeof isin === "string") {
       if (await createStock({ ...optionalStockValuesNull, ticker, name, country, isin })) {
         res.status(201).end();
       } else {
@@ -712,16 +705,15 @@ export class StocksController {
    * @param {Response} res Response object
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix,
+    path: stocksEndpointPath + "/:ticker",
     method: "patch",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async patch(req: Request, res: Response) {
-    const ticker = req.params[0];
+    const { ticker } = req.params;
     const { name, isin, country, morningstarID, marketScreenerID, msciID, ric, sustainalyticsID } = req.query;
-    const spID = req.query.spID === null ? "" : req.query.spID ? +req.query.spID : undefined;
+    const spID = req.query.spID === null ? "" : req.query.spID ? Number(req.query.spID) : undefined;
     if (
-      typeof ticker === "string" &&
       (typeof name === "string" || typeof name === "undefined") &&
       (typeof isin === "string" || typeof isin === "undefined") &&
       ((typeof country === "string" && isCountry(country)) || typeof country === "undefined") &&
@@ -729,7 +721,9 @@ export class StocksController {
       (typeof marketScreenerID === "string" || typeof marketScreenerID === "undefined") &&
       (typeof msciID === "string" || typeof msciID === "undefined") &&
       (typeof ric === "string" || typeof ric === "undefined") &&
-      ((typeof spID === "string" && spID === "") || typeof spID === "number" || typeof spID === "undefined") &&
+      ((typeof spID === "string" && spID === "") ||
+        (typeof spID === "number" && !Number.isNaN(spID)) ||
+        typeof spID === "undefined") &&
       (typeof sustainalyticsID === "string" || typeof sustainalyticsID === "undefined")
     ) {
       // If a data provider ID is removed (i.e., set to an empty string), we remove all information available from that
@@ -778,12 +772,12 @@ export class StocksController {
    * @param {Response} res Response object
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix,
+    path: stocksEndpointPath + "/:ticker",
     method: "delete",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async delete(req: Request, res: Response) {
-    await deleteStock(req.params[0]);
+    await deleteStock(req.params.ticker);
     res.status(204).end();
   }
 }

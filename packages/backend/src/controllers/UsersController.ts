@@ -1,4 +1,4 @@
-import { ADMINISTRATIVE_ACCESS, GENERAL_ACCESS, pathParameterSuffix, usersEndpointPath } from "@rating-tracker/commons";
+import { ADMINISTRATIVE_ACCESS, GENERAL_ACCESS, usersEndpointPath } from "@rating-tracker/commons";
 import { Request, Response } from "express";
 
 import { deleteUser, readAllUsers, readUser, updateUserWithCredentials } from "../db/tables/userTable";
@@ -33,14 +33,14 @@ export class UsersController {
    * @param {Response} res The response.
    */
   @Router({
-    path: usersEndpointPath + pathParameterSuffix,
+    path: usersEndpointPath + "/:email",
     method: "get",
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   async get(req: Request, res: Response) {
     res
       .status(200)
-      .json(await readUser(req.params[0]))
+      .json(await readUser(req.params.email))
       .end();
   }
 
@@ -51,12 +51,12 @@ export class UsersController {
    * @param {Response} res The response.
    */
   @Router({
-    path: usersEndpointPath + pathParameterSuffix,
+    path: usersEndpointPath + "/:email",
     method: "patch",
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   async patch(req: Request, res: Response) {
-    const email = req.params[0];
+    const { email } = req.params;
     const { name, phone, accessRights, subscriptions } = req.query;
     const newEmail = req.query.email;
     const { avatar } = req.body;
@@ -87,12 +87,12 @@ export class UsersController {
    * @param {Response} res The response.
    */
   @Router({
-    path: usersEndpointPath + pathParameterSuffix,
+    path: usersEndpointPath + "/:email",
     method: "delete",
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   async delete(req: Request, res: Response) {
-    await deleteUser(req.params[0]);
+    await deleteUser(req.params.email);
     res.status(204).end();
   }
 }

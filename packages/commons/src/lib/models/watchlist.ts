@@ -6,7 +6,7 @@ import { Stock } from "./stock";
 export const FAVORITES_NAME = "Favorites";
 
 /**
- * A named list of stocks of a certain interest to a user.
+ * A named collection of stocks of a certain interest to a user.
  */
 export type Watchlist = {
   /**
@@ -28,22 +28,10 @@ export type Watchlist = {
 };
 
 /**
- * A named list of stocks of a certain interest to a user. Includes only the tickers of the stocks, but not the full
- * stock objects themselves.
+ * A named collection of stocks of a certain interest to a user. Includes only the tickers of the stocks, but not the
+ * full stock objects themselves.
  */
-export type WatchlistSummary = {
-  /**
-   * A unique identifier of the watchlist.
-   */
-  id: number;
-  /**
-   * The name of the watchlist.
-   */
-  name: string;
-  /**
-   * Whether the user subscribed to updates for the watchlist’s stocks.
-   */
-  subscribed: boolean;
+export type WatchlistSummary = Omit<Watchlist, "stocks"> & {
   /**
    * The list of stocks on the watchlist. Includes only the tickers of the stocks
    */
