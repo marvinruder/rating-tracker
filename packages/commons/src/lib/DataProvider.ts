@@ -26,14 +26,39 @@ export const dataProviderArray = [
 export type DataProvider = (typeof dataProviderArray)[number];
 
 /**
+ * An array of data providers which provide information in the form of HTML pages.
+ */
+export const htmlDataProviderArray = ["morningstar", "marketScreener", "msci", "sp"] as const satisfies DataProvider[];
+
+/**
+ * An array of data providers which provide information in the form of JSON objects.
+ */
+export const jsonDataProviderArray = ["refinitiv"] as const satisfies DataProvider[];
+
+/**
+ * An array of data providers which provide information for many stocks in one response.
+ */
+export const bulkDataProviderArray = ["sustainalytics"] as const satisfies DataProvider[];
+
+/**
+ * A data provider which provides information in the form of HTML pages.
+ */
+export type HTMLDataProvider = (typeof htmlDataProviderArray)[number];
+
+/**
+ * A data provider which provides information in the form of JSON objects.
+ */
+export type JSONDataProvider = (typeof jsonDataProviderArray)[number];
+
+/**
  * A data provider from which stocks are fetched individually.
  */
-export type IndividualDataProvider = Exclude<DataProvider, "sustainalytics">;
+export type IndividualDataProvider = HTMLDataProvider | JSONDataProvider;
 
 /**
  * A data provider from which stocks are fetched in bulk.
  */
-export type BulkDataProvider = "sustainalytics";
+export type BulkDataProvider = (typeof bulkDataProviderArray)[number];
 
 /**
  * Checks if a string is a valid data provider.
@@ -43,6 +68,36 @@ export type BulkDataProvider = "sustainalytics";
  */
 export function isDataProvider(dataProvider: string): dataProvider is DataProvider {
   return dataProviderArray.includes(dataProvider as DataProvider);
+}
+
+/**
+ * Checks if a data provider is a valid HTML data provider.
+ *
+ * @param {DataProvider} dataProvider The data provider to check.
+ * @returns {boolean} True if the data provider is a valid HTML data provider.
+ */
+export function isHTMLDataProvider(dataProvider: DataProvider): dataProvider is HTMLDataProvider {
+  return htmlDataProviderArray.includes(dataProvider as HTMLDataProvider);
+}
+
+/**
+ * Checks if a data provider is a valid JSON data provider.
+ *
+ * @param {DataProvider} dataProvider The data provider to check.
+ * @returns {boolean} True if the data provider is a valid JSON data provider.
+ */
+export function isJSONDataProvider(dataProvider: DataProvider): dataProvider is JSONDataProvider {
+  return jsonDataProviderArray.includes(dataProvider as JSONDataProvider);
+}
+
+/**
+ * Checks if a data provider is a valid bulk data provider.
+ *
+ * @param {DataProvider} dataProvider The data provider to check.
+ * @returns {boolean} True if the data provider is a valid bulk data provider.
+ */
+export function isBulkDataProvider(dataProvider: DataProvider): dataProvider is BulkDataProvider {
+  return bulkDataProviderArray.includes(dataProvider as BulkDataProvider);
 }
 
 /**
@@ -74,7 +129,7 @@ export const dataProviderID: Record<DataProvider, keyof Stock> = {
  */
 export const dataProviderLastFetch: Record<
   IndividualDataProvider,
-  "morningstarLastFetch" | "marketScreenerLastFetch" | "msciLastFetch" | "refinitivLastFetch" | "spLastFetch"
+  { [K in keyof Stock]: Stock[K] extends Date ? K : never }[keyof Stock]
 > = {
   morningstar: "morningstarLastFetch",
   marketScreener: "marketScreenerLastFetch",

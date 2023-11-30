@@ -16,8 +16,7 @@
     "test": "yarn workspaces foreach -Apv -j unlimited run test",
     "build": "yarn workspaces foreach -Apv -j unlimited run build",
     "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm && sed -E -i.bak 's/\"module\": \"([A-Za-z0-9\\-\\.]+)\",/\"main\": \"\\1\",\\\n  \"module\": \"\\1\",/g ; s/^}$/}\\\n/' packages/wasm/package.json && rm packages/wasm/package.json.bak",
-    "validate": "conc \"yarn workspaces foreach -Apv -j unlimited run typecheck\" \"yarn workspaces foreach -Apv -j unlimited run lint\" -n \"ﯤ,\" -p \"{name}\" -c #3178C6,#4B32C3",
-    "fix:swagger": "mkdir -p packages/backend/dist/public/api-docs && cp .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui{.css,-bundle.js,-standalone-preset.js} packages/backend/dist/public/api-docs/"
+    "validate": "conc \"yarn workspaces foreach -Apv -j unlimited run typecheck\" \"yarn workspaces foreach -Apv -j unlimited run lint\" -n \"ﯤ,\" -p \"{name}\" -c #3178C6,#4B32C3"
   },
   "packageManager": "yarn@4.0.2",
   "dependencies": {
