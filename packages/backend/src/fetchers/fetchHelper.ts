@@ -1,10 +1,14 @@
 import {
+  HTMLDataProvider,
   IndividualDataProvider,
+  JSONDataProvider,
   Stock,
   dataProviderID,
   dataProviderLastFetch,
   dataProviderName,
   dataProviderTTL,
+  isHTMLDataProvider,
+  isJSONDataProvider,
   resourcesEndpointPath,
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
@@ -38,7 +42,7 @@ export type FetcherWorkspace<T> = {
   failed: T[];
 };
 
-type Fetcher = HTMLFetcher | JSONFetcher; // | SeleniumFetcher;
+// type Fetcher = HTMLFetcher | JSONFetcher; // | SeleniumFetcher;
 
 export type JSONFetcher = (req: Request, stocks: FetcherWorkspace<Stock>, stock: Stock, json: Object) => Promise<void>;
 
@@ -55,10 +59,6 @@ export type HTMLFetcher = (
 //   stock: Stock,
 //   driver: WebDriver,
 // ) => Promise<boolean>;
-
-const htmlDataProviders: readonly IndividualDataProvider[] = ["morningstar", "marketScreener", "msci", "sp"] as const;
-const jsonDataProviders: readonly IndividualDataProvider[] = ["refinitiv"] as const;
-// const seleniumDataProviders: readonly IndividualDataProvider[] = [] as const;
 
 /**
  * An object holding the source of a fetcher. Only one of the properties is set.
@@ -94,7 +94,7 @@ export const captureFetchError = async (
 ): Promise<string> => {
   let resourceID: string = "";
   switch (true) {
-    case jsonDataProviders.includes(dataProvider):
+    case isJSONDataProvider(dataProvider):
       resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.json`;
       if (
         // Only create the resource if we actually have a JSON object
@@ -111,7 +111,7 @@ export const captureFetchError = async (
       )
         resourceID = ""; // If unsuccessful, clear the resource ID
       break;
-    case htmlDataProviders.includes(dataProvider):
+    case isHTMLDataProvider(dataProvider):
       resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.html`;
       if (
         // Only create the resource if we actually have a valid HTML document
@@ -128,7 +128,7 @@ export const captureFetchError = async (
       )
         resourceID = ""; // If unsuccessful, clear the resource ID
       break;
-    // case seleniumDataProviders.includes(dataProvider):
+    // case isSeleniumDataProvider(dataProvider):
     //   resourceID = await takeScreenshot(source.driver, stock, dataProvider);
     //   break;
   }
@@ -143,7 +143,7 @@ export const captureFetchError = async (
 /**
  * A record of functions that extract data from a data provider.
  */
-const dataProviderFetchers: Record<IndividualDataProvider, Fetcher> = {
+const dataProviderFetchers: Record<HTMLDataProvider, HTMLFetcher> & Record<JSONDataProvider, JSONFetcher> = {
   morningstar: morningstarFetcher,
   marketScreener: marketScreenerFetcher,
   msci: msciFetcher,
@@ -291,11 +291,11 @@ export const fetchFromDataProvider = async (
           }
 
           try {
-            if (htmlDataProviders.includes(dataProvider)) {
-              await (dataProviderFetchers[dataProvider] as HTMLFetcher)(req, stocks, stock, document);
-            } else if (jsonDataProviders.includes(dataProvider)) {
-              await (dataProviderFetchers[dataProvider] as JSONFetcher)(req, stocks, stock, json);
-              // } else if (seleniumDataProviders.includes(dataProvider)) {
+            if (isHTMLDataProvider(dataProvider)) {
+              await dataProviderFetchers[dataProvider](req, stocks, stock, document);
+            } else if (isJSONDataProvider(dataProvider)) {
+              await dataProviderFetchers[dataProvider](req, stocks, stock, json);
+              // } else if (isSeleniumDataProvider(dataProvider)) {
               //   if (!(await (dataProviderFetchers[dataProvider] as SeleniumFetcher)(req, stocks, stock, driver)))
               //     break;
             }
