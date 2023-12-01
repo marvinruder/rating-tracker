@@ -43,7 +43,7 @@ const UserTable: FC = (): JSX.Element => {
 
   return (
     <>
-      <TableContainer>
+      <TableContainer sx={{ overscrollBehaviorX: "none" }}>
         <Table>
           <TableHead>
             <TableRow>

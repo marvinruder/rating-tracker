@@ -162,7 +162,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
 
   return (
     <>
-      <TableContainer>
+      <TableContainer sx={{ overscrollBehaviorX: "none" }}>
         <Table size="small">
           <TableHead>
             <TableRow sx={{ height: 52.5 }}>
