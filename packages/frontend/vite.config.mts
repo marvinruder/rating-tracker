@@ -24,18 +24,12 @@ export default mergeConfig(
             return;
           handler(level, log);
         },
-        output: {
-          manualChunks,
-        },
+        output: { manualChunks },
       },
       sourcemap: true,
     },
     cacheDir: ".vite",
-    esbuild: {
-      supported: {
-        "top-level-await": true,
-      },
-    },
+    esbuild: { supported: { "top-level-await": true } },
     plugins: [
       react(),
       createHtmlPlugin({
@@ -52,18 +46,12 @@ export default mergeConfig(
       }),
       wasm(),
     ],
-    worker: {
-      format: "es",
-      plugins: () => [wasm()],
-    },
+    worker: { format: "es", plugins: () => [wasm()] },
   }),
   defineVitestConfig({
     test: {
       cache: { dir: ".vite/vitest" },
-      coverage: {
-        enabled: true,
-        provider: "v8",
-      },
+      coverage: { all: false, enabled: true, provider: "v8" },
     },
   }),
 );
