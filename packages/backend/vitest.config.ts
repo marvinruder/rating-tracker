@@ -4,9 +4,7 @@ import "./test/env";
 
 export default defineConfig({
   test: {
-    cache: {
-      dir: ".vitest",
-    },
+    cache: { dir: ".vitest" },
     coverage: {
       enabled: true,
       provider: "v8",
@@ -20,12 +18,12 @@ export default defineConfig({
         "src/utils/FetchError.*",
         "src/utils/logger.*",
         "src/utils/logFormatterConfig.*",
-        // "src/utils/webdriver.*",
+        "src/utils/webdriver.*",
       ],
     },
     exclude: ["**/*.live.test.ts"],
     forceRerunTriggers: ["**/*.live.test.ts"],
-    useAtomics: true,
+    poolOptions: { threads: { useAtomics: true } },
     globals: true,
     clearMocks: true,
   },
