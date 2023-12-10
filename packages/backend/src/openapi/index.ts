@@ -21,7 +21,7 @@ import {
 } from "@rating-tracker/commons";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
-import packageInfo from "../../package.json" assert { type: "json" };
+import packageInfo from "../../package.json" with { type: "json" };
 
 import { components } from "./components";
 import * as accountEndpoint from "./paths/account";
