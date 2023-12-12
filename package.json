@@ -32,8 +32,8 @@
     "react-switch-selector/react": "18.2.0",
     "react-switch-selector/react-dom": "18.2.0",
     "vite/esbuild": "0.19.9",
-    "vite-node/vite": "5.0.7",
-    "vitest/vite": "5.0.7",
+    "vite-node/vite": "5.0.8",
+    "vitest/vite": "5.0.8",
     "whatwg-url": "14.0.0"
   },
   "dependenciesMeta": {
