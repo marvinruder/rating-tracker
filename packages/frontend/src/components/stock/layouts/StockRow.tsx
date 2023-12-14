@@ -1,3 +1,4 @@
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
@@ -7,6 +8,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
+import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import StarsIcon from "@mui/icons-material/Stars";
@@ -25,6 +28,7 @@ import {
   Divider,
   Grid,
   IconButton,
+  InputAdornment,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -33,6 +37,7 @@ import {
   Slide,
   TableCell,
   TableRow,
+  TextField,
   Tooltip,
   Typography,
   useMediaQuery,
@@ -41,12 +46,15 @@ import {
 import {
   baseURL,
   countryNameWithFlag,
+  currencyMinorUnits,
   currencyName,
   favoritesEndpointPath,
   groupOfIndustry,
   industryDescription,
   industryGroupName,
   industryName,
+  portfoliosEndpointPath,
+  PortfolioSummary,
   regionName,
   regionOfCountry,
   sectorDescription,
@@ -60,6 +68,7 @@ import {
   superSectorName,
   superSectorOfSector,
   WatchlistSummary,
+  WeightedStock,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
 import { useContext, useState } from "react";
@@ -81,10 +90,12 @@ import { BlueIconChip } from "../../chips/BlueIconChip";
 import { GreenIconChip } from "../../chips/GreenIconChip";
 import { TemperatureChip } from "../../chips/TemperatureChip";
 import { YellowIconChip } from "../../chips/YellowIconChip";
-import { AddStockToWatchlist } from "../../dialogs/AddStockToWatchlist";
-import { DeleteStock } from "../../dialogs/DeleteStock";
-import { EditStock } from "../../dialogs/EditStock";
-import { RemoveStockFromWatchlist } from "../../dialogs/RemoveStockFromWatchlist";
+import { AddStockToPortfolio } from "../../dialogs/portfolio/AddStockToPortfolio";
+import { RemoveStockFromPortfolio } from "../../dialogs/portfolio/RemoveStockFromPortfolio";
+import { DeleteStock } from "../../dialogs/stock/DeleteStock";
+import { EditStock } from "../../dialogs/stock/EditStock";
+import { AddStockToWatchlist } from "../../dialogs/watchlist/AddStockToWatchlist";
+import { RemoveStockFromWatchlist } from "../../dialogs/watchlist/RemoveStockFromWatchlist";
 import { Range52WSlider } from "../properties/Range52WSlider";
 import { SectorIcon } from "../properties/SectorIcon";
 import { StarRating } from "../properties/StarRating";
@@ -101,7 +112,7 @@ import { StockDetails } from "./StockDetails";
 export const StockRow = (props: StockRowProps): JSX.Element => {
   const { user } = useContext(UserContext);
   const theme = useTheme();
-  const { setNotification } = useNotification();
+  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
   const [optionsMenuOpen, setOptionsMenuOpen] = useState<boolean>(false);
   const [optionsMenuPositionEvent, setOptionsMenuPositionEvent] = useState<React.MouseEvent<HTMLElement, MouseEvent>>();
@@ -110,6 +121,40 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [addToWatchlistDialogOpen, setAddToWatchlistDialogOpen] = useState<boolean>(false);
   const [removeFromWatchlistDialogOpen, setRemoveFromWatchlistDialogOpen] = useState<boolean>(false);
+  const [addToPortfolioDialogOpen, setAddToPortfolioDialogOpen] = useState<boolean>(false);
+  const [removeFromPortfolioDialogOpen, setRemoveFromPortfolioDialogOpen] = useState<boolean>(false);
+
+  const [amountInput, setAmountInput] = useState<string>(
+    props.portfolio &&
+      props.stock &&
+      "amount" in props.stock &&
+      props.stock.amount.toFixed(currencyMinorUnits[props.portfolio.currency]),
+  );
+  const [amountError, setAmountError] = useState<boolean>(false);
+
+  /**
+   * Checks for errors in the input fields.
+   *
+   * @returns {boolean} Whether the input fields are valid.
+   */
+  const validate = (): boolean => {
+    // The following fields are required.
+    setAmountError(!amountInput || Number.isNaN(+amountInput) || +amountInput <= 0);
+    return !!amountInput && !Number.isNaN(+amountInput) && +amountInput > 0;
+  };
+
+  /**
+   * Edits the stock in the portfolio.
+   */
+  const updateStockInPortfolio = () => {
+    if (!validate()) return;
+    api
+      .patch(`${portfoliosEndpointPath}/${props.portfolio.id}${stocksEndpointPath}/${props.stock.ticker}`, undefined, {
+        params: { amount: +amountInput },
+      })
+      .then(() => props.getStocks && props.getStocks())
+      .catch((e) => setErrorNotification(e, "editing stock in portfolio"));
+  };
 
   const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
 
@@ -144,6 +189,8 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         if (
           !addToWatchlistDialogOpen &&
           !removeFromWatchlistDialogOpen &&
+          !addToPortfolioDialogOpen &&
+          !removeFromPortfolioDialogOpen &&
           !editDialogOpen &&
           !deleteDialogOpen &&
           !detailsDialogOpen
@@ -202,7 +249,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 </Typography>
               </ListItemText>
             </MenuItem>
-            {!props.watchlist && (
+            {!props.watchlist && !props.portfolio && (
               <MenuItem
                 onClick={() => {
                   (props.isFavorite ? api.delete : api.put)(favoritesEndpointPath + `/${props.stock.ticker}`)
@@ -237,7 +284,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 </ListItemText>
               </MenuItem>
             )}
-            {!props.watchlist && (
+            {!props.watchlist && !props.portfolio && (
               <MenuItem onClick={() => setAddToWatchlistDialogOpen(true)}>
                 <ListItemIcon>
                   <BookmarkAddIcon color="success" fontSize="small" />
@@ -249,7 +296,19 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 </ListItemText>
               </MenuItem>
             )}
-            {!props.watchlist && (
+            {!props.watchlist && !props.portfolio && (
+              <MenuItem onClick={() => setAddToPortfolioDialogOpen(true)}>
+                <ListItemIcon>
+                  <AddShoppingCartIcon color="success" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>
+                  <Typography textOverflow="ellipsis" noWrap>
+                    Add “{props.stock.ticker}” to portfolio…
+                  </Typography>
+                </ListItemText>
+              </MenuItem>
+            )}
+            {!props.watchlist && !props.portfolio && (
               <MenuItem
                 onClick={() => setEditDialogOpen(true)}
                 sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
@@ -264,7 +323,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 </ListItemText>
               </MenuItem>
             )}
-            {!props.watchlist && (
+            {!props.watchlist && !props.portfolio && (
               <MenuItem
                 onClick={() => setDeleteDialogOpen(true)}
                 sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
@@ -291,7 +350,80 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 </ListItemText>
               </MenuItem>
             )}
+            {props.portfolio && (
+              <MenuItem onClick={() => setRemoveFromPortfolioDialogOpen(true)}>
+                <ListItemIcon>
+                  <RemoveShoppingCartIcon color="error" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>
+                  <Typography textOverflow="ellipsis" noWrap>
+                    Remove “{props.stock.ticker}” from “{props.portfolio.name}”
+                  </Typography>
+                </ListItemText>
+              </MenuItem>
+            )}
           </Menu>
+        </TableCell>
+      )}
+      {/* Amount in Portfolio */}
+      {props.portfolio && "amount" in props.stock && (
+        <TableCell>
+          <Tooltip
+            title={
+              props.stock.amount === +amountInput
+                ? Number(
+                    (
+                      (100 * props.stock.amount) /
+                      props.portfolio.stocks.reduce((sum, stock) => sum + stock.amount, 0)
+                    ).toPrecision(3),
+                  ) + "\u2009%"
+                : undefined
+            }
+            arrow
+          >
+            <TextField
+              sx={{ width: 150 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
+                    {props.portfolio.currency}
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end" sx={{ ml: 0.5 }}>
+                    <IconButton
+                      id={`update-stock-${props.stock.ticker}-in-portfolio`}
+                      size="small"
+                      onClick={updateStockInPortfolio}
+                      onMouseOver={validate}
+                      disabled={amountError || props.stock.amount === +amountInput}
+                    >
+                      <PublishedWithChangesIcon fontSize="small" />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                style: { paddingRight: 0 },
+              }}
+              inputProps={{
+                inputMode: "decimal",
+                pattern: "\\d+(\\.\\d+)?",
+                step: Math.pow(10, -1 * currencyMinorUnits[props.portfolio.currency]),
+                sx: { textAlign: "right" },
+              }}
+              onChange={(event) => {
+                setAmountInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
+                setAmountError(false);
+              }}
+              onBlur={(event) =>
+                "amount" in props.stock &&
+                event.relatedTarget?.id !== `update-stock-${props.stock.ticker}-in-portfolio` &&
+                setAmountInput(props.stock.amount.toFixed(currencyMinorUnits[props.portfolio.currency]))
+              }
+              error={amountError}
+              label="Amount"
+              value={amountInput}
+            />
+          </Tooltip>
         </TableCell>
       )}
       {/* Name and Logo */}
@@ -470,7 +602,9 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 {props.stock.currency ?? ""}
               </Box>
             </Tooltip>
-            <Box sx={{ float: "right" }}>{props.stock.morningstarFairValue?.toFixed(2) ?? "–"}</Box>
+            <Box sx={{ float: "right" }}>
+              {props.stock.morningstarFairValue?.toFixed(currencyMinorUnits[props.stock.currency]) ?? "–"}
+            </Box>
           </Typography>
           <Typography variant="body2" color="text.secondary" width={90} sx={{ textAlign: "right" }} noWrap>
             {props.stock.morningstarFairValuePercentageToLastClose !== null &&
@@ -534,7 +668,9 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 {props.stock.currency ?? ""}
               </Box>
             </Tooltip>
-            <Box style={{ float: "right" }}>{props.stock.analystTargetPrice?.toFixed(2) ?? "–"}</Box>
+            <Box style={{ float: "right" }}>
+              {props.stock.analystTargetPrice?.toFixed(currencyMinorUnits[props.stock.currency]) ?? "–"}
+            </Box>
           </Typography>
           <Typography
             variant="body2"
@@ -684,15 +820,15 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             marks={[
               {
                 value: props.stock.low52w,
-                label: props.stock.low52w?.toFixed(2),
+                label: props.stock.low52w?.toFixed(currencyMinorUnits[props.stock.currency]),
               },
               {
                 value: props.stock.high52w,
-                label: props.stock.high52w?.toFixed(2),
+                label: props.stock.high52w?.toFixed(currencyMinorUnits[props.stock.currency]),
               },
             ]}
             valueLabelDisplay="on"
-            valueLabelFormat={(value) => value.toFixed(2)}
+            valueLabelFormat={(value) => value.toFixed(currencyMinorUnits[props.stock.currency])}
             disabled
           />
         )}
@@ -778,6 +914,17 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           onClose={() => (setAddToWatchlistDialogOpen(false), setOptionsMenuOpen(false), props.getStocks())}
         />
       </Dialog>
+      {/* Add to Portfolio Dialog */}
+      <Dialog
+        maxWidth="xs"
+        open={addToPortfolioDialogOpen}
+        onClose={() => (setAddToPortfolioDialogOpen(false), setOptionsMenuOpen(false))}
+      >
+        <AddStockToPortfolio
+          stock={props.stock}
+          onClose={() => (setAddToPortfolioDialogOpen(false), setOptionsMenuOpen(false), props.getStocks())}
+        />
+      </Dialog>
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onClose={() => (setEditDialogOpen(false), props.getStocks && props.getStocks())}>
         <EditStock stock={props.stock} getStocks={props.getStocks} onClose={() => setEditDialogOpen(false)} />
@@ -795,6 +942,15 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           onClose={() => setRemoveFromWatchlistDialogOpen(false)}
         />
       </Dialog>
+      {/* Remove from Portfolio Dialog */}
+      <Dialog open={removeFromPortfolioDialogOpen} onClose={() => setRemoveFromPortfolioDialogOpen(false)}>
+        <RemoveStockFromPortfolio
+          stock={props.stock}
+          portfolio={props.portfolio}
+          getPortfolio={props.getStocks}
+          onClose={() => setRemoveFromPortfolioDialogOpen(false)}
+        />
+      </Dialog>
     </TableRow>
   ) : (
     // Skeleton of a stock row
@@ -808,6 +964,11 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             width={2 * (theme.typography.body1.fontSize as number) - 4}
             height={2 * (theme.typography.body1.fontSize as number) - 4}
           />
+        </TableCell>
+      )}
+      {props.portfolio !== undefined && (
+        <TableCell>
+          <Skeleton variant="rounded" width={150} height={32} />
         </TableCell>
       )}
       {/* Stock */}
@@ -987,7 +1148,7 @@ interface StockRowProps {
   /**
    * The stock to display
    */
-  stock?: Stock;
+  stock?: Stock | WeightedStock;
   /**
    * Whether the stock is a favorite stock of the user.
    */
@@ -996,6 +1157,10 @@ interface StockRowProps {
    * A watchlist the stock is in. If set, the stock row is shown as part of that watchlist’s stocks.
    */
   watchlist?: WatchlistSummary;
+  /**
+   * A portfolio the stock is in. If set, the stock row is shown as part of that portfolio’s stocks.
+   */
+  portfolio?: PortfolioSummary;
   /**
    * A method to update the stock list, e.g. after a stock was modified or deleted.
    */

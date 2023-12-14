@@ -4,8 +4,8 @@ import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions,
 import { watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../contexts/NotificationContext";
-import api from "../../utils/api";
+import { useNotification } from "../../../contexts/NotificationContext";
+import api from "../../../utils/api";
 
 /**
  * A dialog to add a new watchlist in the backend.
@@ -21,16 +21,20 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
 
   /**
    * Checks for errors in the input fields.
+   *
+   * @returns {boolean} Whether the input fields are valid.
    */
-  const validate = () => {
+  const validate = (): boolean => {
     // The following fields are required.
     setNameError(!name);
+    return !!name;
   };
 
   /**
    * Transmits the watchlist to the server.
    */
   const putWatchlist = () => {
+    if (!validate()) return;
     setRequestInProgress(true);
     api
       .put(watchlistsEndpointPath + `/new`, undefined, {

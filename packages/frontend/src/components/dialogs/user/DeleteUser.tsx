@@ -4,8 +4,8 @@ import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@
 import { User, usersEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../contexts/NotificationContext";
-import api from "../../utils/api";
+import { useNotification } from "../../../contexts/NotificationContext";
+import api from "../../../utils/api";
 
 /**
  * A dialog to delete a user from the backend.

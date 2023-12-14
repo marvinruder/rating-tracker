@@ -539,9 +539,7 @@ enum Currency {
   BZD
   CAD
   CDF
-  CHE
   CHF
-  CHW
   CLF
   CLP
   CNY
@@ -672,22 +670,9 @@ enum Currency {
   VUV
   WST
   XAF
-  XAG
-  XAU
-  XBA
-  XBB
-  XBC
-  XBD
   XCD
-  XDR
   XOF
-  XPD
   XPF
-  XPT
-  XSU
-  XTS
-  XUA
-  XXX
   YER
   ZAR
   ZMW

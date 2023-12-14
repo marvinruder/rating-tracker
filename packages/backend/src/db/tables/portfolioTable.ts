@@ -1,6 +1,11 @@
 import { Currency, Portfolio, PortfolioSummary, Stock, WeightedStock } from "@rating-tracker/commons";
 
-import type { Portfolio as PrismaPortfolio, Stock as PrismaStock, StocksInPortfolios } from "../../../prisma/client";
+import type {
+  Prisma,
+  Portfolio as PrismaPortfolio,
+  Stock as PrismaStock,
+  StocksInPortfolios,
+} from "../../../prisma/client";
 import APIError from "../../utils/APIError";
 import logger from "../../utils/logger";
 import client from "../client";
@@ -84,6 +89,45 @@ export const readPortfolio = async (id: number, email: string): Promise<Portfoli
       where: { id },
     }),
   );
+};
+
+/**
+ * Query multiple stocks in a portfolio as well as their count after filtering.
+ *
+ * @param {number} id The ID of the portfolio.
+ * @param {string} email The email of the current user.
+ * @param {Prisma.StockFindManyArgs} args An object with filtering, sorting and pagination options.
+ * @param {Prisma.SortOrder | undefined} sortByAmount If set, the direction in which to sort the stocks by their amount.
+ * @returns {Promise<(Stock | WeightedStock)[]>} A list of all stocks.
+ */
+export const readStocksInPortfolio = async (
+  id: number,
+  email: string,
+  args: Prisma.StockFindManyArgs,
+  sortByAmount: Prisma.SortOrder | undefined,
+): Promise<[WeightedStock[], number]> => {
+  await checkPortfolioExistenceAndOwner(id, email);
+  const [portfolio, count] = await client.$transaction([
+    client.portfolio.findUniqueOrThrow({
+      select: {
+        id: true,
+        name: true,
+        currency: true,
+        stocks: {
+          where: { stock: args.where },
+          orderBy: { stock: Array.isArray(args.orderBy) ? undefined : args.orderBy, amount: sortByAmount },
+          skip: args.skip,
+          take: args.take,
+          include: { stock: true },
+        },
+      },
+      where: { id },
+    }),
+    client.stock.count({
+      where: { ...args.where, portfolios: { some: { portfolioID: id, portfolio: { user: { email } } } } },
+    }),
+  ]);
+  return [mapPortfolioFromPrisma(portfolio).stocks, count];
 };
 
 /**

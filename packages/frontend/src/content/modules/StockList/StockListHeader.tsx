@@ -4,7 +4,7 @@ import { Box, Typography, Grid, Tooltip, Dialog, IconButton, useMediaQuery, Slid
 import { WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
 import { FC, useContext, useState } from "react";
 
-import { AddStock } from "../../../components/dialogs/AddStock";
+import { AddStock } from "../../../components/dialogs/stock/AddStock";
 import { StockTableFilters, StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
 import { UserContext } from "../../../router";
 

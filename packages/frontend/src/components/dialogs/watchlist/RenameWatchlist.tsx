@@ -4,8 +4,8 @@ import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions,
 import { watchlistsEndpointPath, WatchlistSummary } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../contexts/NotificationContext";
-import api from "../../utils/api";
+import { useNotification } from "../../../contexts/NotificationContext";
+import api from "../../../utils/api";
 
 /**
  * A dialog to rename a watchlist in the backend.
@@ -21,10 +21,13 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
 
   /**
    * Checks for errors in the input fields.
+   *
+   * @returns {boolean} Whether the input fields are valid.
    */
-  const validate = () => {
+  const validate = (): boolean => {
     // The following fields are required.
     setNameError(!name);
+    return !!name;
   };
 
   /**
@@ -33,6 +36,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
   const updateWatchlist = () => {
     props.watchlist &&
       props.getWatchlists &&
+      validate() &&
       (setRequestInProgress(true),
       api
         .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, undefined, {

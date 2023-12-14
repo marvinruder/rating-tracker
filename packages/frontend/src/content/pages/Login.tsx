@@ -48,12 +48,16 @@ export const LoginPage = (): JSX.Element => {
 
   /**
    * Validates the input fields.
+   *
+   * @returns {boolean} Whether the input fields are valid.
    */
-  const validate = () => {
+  const validate = (): boolean => {
     if (action === "register") {
       setEmailError(!validateEmail());
       setNameError(!validateName());
+      return validateEmail() && validateName();
     }
+    return true;
   };
 
   /**
@@ -65,37 +69,35 @@ export const LoginPage = (): JSX.Element => {
       switch (action) {
         case "register":
           // Validate input fields
-          validate();
-          if (validateEmail() && validateName()) {
+          if (!validate()) return;
+          try {
+            // Request registration challenge
+            const res = await api.get(registerEndpointPath, {
+              params: { email: email.trim(), name: name.trim() },
+            });
+            // Ask the browser to perform the WebAuthn registration and store a corresponding credential
+            const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
             try {
-              // Request registration challenge
-              const res = await api.get(registerEndpointPath, {
+              // Send the registration challenge response to the server
+              await api.post(registerEndpointPath, authRes, {
                 params: { email: email.trim(), name: name.trim() },
+                headers: { "Content-Type": "application/json" },
               });
-              // Ask the browser to perform the WebAuthn registration and store a corresponding credential
-              const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
-              try {
-                // Send the registration challenge response to the server
-                await api.post(registerEndpointPath, authRes, {
-                  params: { email: email.trim(), name: name.trim() },
-                  headers: { "Content-Type": "application/json" },
-                });
-                // This is only reached if the registration was successful
-                setNotification({
-                  severity: "success",
-                  title: "Welcome!",
-                  message:
-                    "Your registration was successful. Please note that a manual activation of your account may " +
-                    "still be necessary before you can access the page.",
-                });
-              } catch (e) {
-                setErrorNotification(e, "processing registration response");
-              }
+              // This is only reached if the registration was successful
+              setNotification({
+                severity: "success",
+                title: "Welcome!",
+                message:
+                  "Your registration was successful. Please note that a manual activation of your account may " +
+                  "still be necessary before you can access the page.",
+              });
             } catch (e) {
-              setErrorNotification(e, "requesting registration challenge");
-            } finally {
-              setRequestInProgress(false);
+              setErrorNotification(e, "processing registration response");
             }
+          } catch (e) {
+            setErrorNotification(e, "requesting registration challenge");
+          } finally {
+            setRequestInProgress(false);
           }
           break;
         case "signIn":
@@ -198,6 +200,7 @@ export const LoginPage = (): JSX.Element => {
                 fullWidth
                 id="inputName"
                 label="Name"
+                autoComplete="name"
                 value={name}
                 error={nameError}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

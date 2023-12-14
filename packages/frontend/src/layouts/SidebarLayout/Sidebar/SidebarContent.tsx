@@ -2,6 +2,7 @@ import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ListIcon from "@mui/icons-material/List";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { LoadingButton } from "@mui/lab";
 import type { BoxProps } from "@mui/material";
 import {
@@ -20,6 +21,7 @@ import {
 } from "@mui/material";
 import {
   ADMINISTRATIVE_ACCESS,
+  portfoliosEndpointPath,
   stocksEndpointPath,
   usersEndpointPath,
   watchlistsEndpointPath,
@@ -188,6 +190,17 @@ export const SidebarContent = (): JSX.Element => {
                   startIcon={<CollectionsBookmarkIcon />}
                 >
                   Watchlists
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
+                  component={NavLink}
+                  onClick={closeSidebar}
+                  to={portfoliosEndpointPath}
+                  startIcon={<ShoppingCartIcon />}
+                >
+                  Portfolios
                 </Button>
               </ListItem>
             </List>

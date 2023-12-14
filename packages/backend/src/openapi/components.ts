@@ -279,7 +279,14 @@ export const components: OpenAPIV3.ComponentsObject = {
           type: "array",
           description: "The list of requested stocks.",
           items: {
-            $ref: "#/components/schemas/Stock",
+            anyOf: [
+              {
+                $ref: "#/components/schemas/Stock",
+              },
+              {
+                $ref: "#/components/schemas/WeightedStock",
+              },
+            ],
           },
         },
         count: {

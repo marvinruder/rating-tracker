@@ -30,7 +30,7 @@ import {
 } from "@rating-tracker/commons";
 import { Fragment, useState } from "react";
 
-import { DeleteUser } from "../../../components/dialogs/DeleteUser";
+import { DeleteUser } from "../../../components/dialogs/user/DeleteUser";
 import { useNotification } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 

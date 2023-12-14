@@ -4,8 +4,8 @@ import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@
 import { Stock, WatchlistSummary, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../contexts/NotificationContext";
-import api from "../../utils/api";
+import { useNotification } from "../../../contexts/NotificationContext";
+import api from "../../../utils/api";
 
 /**
  * A dialog to remove a stock from a watchlist.

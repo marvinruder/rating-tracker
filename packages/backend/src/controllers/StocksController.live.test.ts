@@ -10,6 +10,8 @@ import {
   stockLogoEndpointSuffix,
   styleArray,
   watchlistsEndpointPath,
+  portfoliosEndpointPath,
+  PortfolioSummary,
 } from "@rating-tracker/commons";
 import type { Response } from "supertest";
 
@@ -296,7 +298,7 @@ tests.push({
 });
 
 tests.push({
-  testName: "filters and sorts stock list – example 17",
+  testName: "filters and sorts stock list – stocks in watchlist",
   testFunction: async () => {
     // Get the ID of the watchlist from the summary
     let res = await supertest.get(`${baseURL}${watchlistsEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
@@ -310,7 +312,7 @@ tests.push({
       ["Novo Nordisk A/S", "Ørsted A/S"],
     );
 
-    // Attempting to read a list of a different user returns an error
+    // Attempting to read a watchlist of a different user returns an error
     res = await supertest
       .get(`${baseURL}${stocksEndpointPath}?watchlist=${id}`)
       .set("Cookie", ["authToken=anotherExampleSessionID"]);
@@ -319,69 +321,102 @@ tests.push({
   },
 });
 
+tests.push({
+  testName: "filters and sorts stock list – stocks in portfolio",
+  testFunction: async () => {
+    // Get the ID of the portfolio from the summary
+    let res = await supertest.get(`${baseURL}${portfoliosEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    const { id } = res.body.find((portfolioSummary: PortfolioSummary) => portfolioSummary.name === "My Portfolio");
+
+    expectStocksToBePresent(
+      await supertest
+        .get(`${baseURL}${stocksEndpointPath}?portfolio=${id}&sortBy=amount&sortDesc=true`)
+        .set("Cookie", ["authToken=exampleSessionID"]),
+      ["Apple Inc", "Taiwan Semiconductor Manufacturing Co Ltd"],
+    );
+
+    // Attempting to sort by amount without specifying a portfolio returns an error
+    res = await supertest
+      .get(`${baseURL}${stocksEndpointPath}?sortBy=amount`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toMatch("Cannot sort by amount without specifying a portfolio");
+
+    // Attempting to read a portfolio of a different user returns an error
+    res = await supertest
+      .get(`${baseURL}${stocksEndpointPath}?portfolio=${id}`)
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+    expect(res.status).toBe(403);
+    expect(res.body.message).toMatch("does not belong to user with email address john.doe");
+  },
+});
+
 [false, true].forEach((sortDesc) =>
-  sortableAttributeArray.forEach((sortCriterion) =>
-    tests.push({
-      testName: `filters and sorts stock list by ${sortCriterion} ${sortDesc ? "descending" : "ascending"}`,
-      testFunction: async () => {
-        const res = await supertest
-          .get(`${baseURL}${stocksEndpointPath}?sortBy=${sortCriterion}&sortDesc=${sortDesc}`)
-          .set("Cookie", ["authToken=exampleSessionID"]);
-        expect(res.status).toBe(200);
-        let sortCriterionArray: readonly string[];
-        switch (sortCriterion) {
-          case "size":
-            sortCriterionArray = sizeArray;
-            break;
-          case "style":
-            sortCriterionArray = styleArray;
-            break;
-          case "msciESGRating":
-            sortCriterionArray = msciESGRatingArray;
-            break;
-          default:
-            break;
-        }
-        const toBeSortedInTheCorrectOrder = sortDesc ? "toBeGreaterThanOrEqual" : "toBeLessThanOrEqual";
-        for (let i = 0; i < res.body.count - 1; i++) {
-          // We do not test the sorting order of null values
-          if (res.body.stocks[i][sortCriterion] && res.body.stocks[i + 1][sortCriterion]) {
-            if (
-              typeof res.body.stocks[i][sortCriterion] === "number" &&
-              typeof res.body.stocks[i + 1][sortCriterion] === "number"
-            ) {
-              // Stocks should be ordered by the numeric value of the sort criterion
-              expect(res.body.stocks[i][sortCriterion])[toBeSortedInTheCorrectOrder](
-                res.body.stocks[i + 1][sortCriterion],
-              );
-            } else if (
-              typeof res.body.stocks[i][sortCriterion] === "string" &&
-              typeof res.body.stocks[i + 1][sortCriterion] === "string" &&
-              sortCriterionArray
-            ) {
-              // Stocks should be ordered by the index of the enum value of the sort criterion
-              expect(sortCriterionArray.indexOf(res.body.stocks[i][sortCriterion]))[toBeSortedInTheCorrectOrder](
-                sortCriterionArray.indexOf(res.body.stocks[i + 1][sortCriterion]),
-              );
-            } else {
+  sortableAttributeArray.forEach(
+    (sortCriterion) =>
+      sortCriterion !== "amount" &&
+      tests.push({
+        testName: `filters and sorts stock list by ${sortCriterion} ${sortDesc ? "descending" : "ascending"}`,
+        testFunction: async () => {
+          const res = await supertest
+            .get(`${baseURL}${stocksEndpointPath}?sortBy=${sortCriterion}&sortDesc=${sortDesc}`)
+            .set("Cookie", ["authToken=exampleSessionID"]);
+          expect(res.status).toBe(200);
+          let sortCriterionArray: readonly string[];
+          switch (sortCriterion) {
+            case "size":
+              sortCriterionArray = sizeArray;
+              break;
+            case "style":
+              sortCriterionArray = styleArray;
+              break;
+            case "msciESGRating":
+              sortCriterionArray = msciESGRatingArray;
+              break;
+            default:
+              break;
+          }
+          const toBeSortedInTheCorrectOrder = sortDesc ? "toBeGreaterThanOrEqual" : "toBeLessThanOrEqual";
+          for (let i = 0; i < res.body.count - 1; i++) {
+            // We do not test the sorting order of null values
+            if (res.body.stocks[i][sortCriterion] && res.body.stocks[i + 1][sortCriterion]) {
               if (
-                String.prototype
-                  .concat(res.body.stocks[i][sortCriterion], res.body.stocks[i + 1][sortCriterion])
-                  .split("")
-                  .some((c) => c.charCodeAt(0) > 127)
+                typeof res.body.stocks[i][sortCriterion] === "number" &&
+                typeof res.body.stocks[i + 1][sortCriterion] === "number"
               ) {
-                // If one value contains a special character, we skip sorting validation
-                continue;
+                // Stocks should be ordered by the numeric value of the sort criterion
+                expect(res.body.stocks[i][sortCriterion])[toBeSortedInTheCorrectOrder](
+                  res.body.stocks[i + 1][sortCriterion],
+                );
+              } else if (
+                typeof res.body.stocks[i][sortCriterion] === "string" &&
+                typeof res.body.stocks[i + 1][sortCriterion] === "string" &&
+                sortCriterionArray
+              ) {
+                // Stocks should be ordered by the index of the enum value of the sort criterion
+                expect(sortCriterionArray.indexOf(res.body.stocks[i][sortCriterion]))[toBeSortedInTheCorrectOrder](
+                  sortCriterionArray.indexOf(res.body.stocks[i + 1][sortCriterion]),
+                );
+              } else {
+                if (
+                  String.prototype
+                    .concat(res.body.stocks[i][sortCriterion], res.body.stocks[i + 1][sortCriterion])
+                    .split("")
+                    .some((c) => c.charCodeAt(0) > 127)
+                ) {
+                  // If one value contains a special character, we skip sorting validation
+                  continue;
+                }
+                // Stocks should be ordered alphabetically
+                expect(res.body.stocks[i][sortCriterion].localeCompare(res.body.stocks[i + 1][sortCriterion]))[
+                  toBeSortedInTheCorrectOrder
+                ](0);
               }
-              // Stocks should be ordered alphabetically
-              expect(res.body.stocks[i][sortCriterion].localeCompare(res.body.stocks[i + 1][sortCriterion]))[
-                toBeSortedInTheCorrectOrder
-              ](0);
             }
           }
-        }
-      },
-    }),
+        },
+      }),
   ),
 );
 

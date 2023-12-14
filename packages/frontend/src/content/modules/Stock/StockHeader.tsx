@@ -1,3 +1,4 @@
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -14,9 +15,10 @@ import {
 } from "@rating-tracker/commons";
 import { useContext, useState } from "react";
 
-import { AddStockToWatchlist } from "../../../components/dialogs/AddStockToWatchlist";
-import { DeleteStock } from "../../../components/dialogs/DeleteStock";
-import { EditStock } from "../../../components/dialogs/EditStock";
+import { AddStockToPortfolio } from "../../../components/dialogs/portfolio/AddStockToPortfolio";
+import { DeleteStock } from "../../../components/dialogs/stock/DeleteStock";
+import { EditStock } from "../../../components/dialogs/stock/EditStock";
+import { AddStockToWatchlist } from "../../../components/dialogs/watchlist/AddStockToWatchlist";
 import { useNotification } from "../../../contexts/NotificationContext";
 import { UserContext } from "../../../router";
 import api from "../../../utils/api";
@@ -29,6 +31,7 @@ import api from "../../../utils/api";
  */
 export const StockHeader = (props: StockHeaderProps): JSX.Element => {
   const [addToWatchlistDialogOpen, setAddToWatchlistDialogOpen] = useState<boolean>(false);
+  const [addToPortfolioDialogOpen, setAddToPortfolioDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 
@@ -129,6 +132,17 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
             <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
           )}
           {props.stock ? (
+            <Tooltip arrow title="Add to portfolio">
+              <Box display="inline-block" ml={1}>
+                <IconButton color="success" onClick={() => setAddToPortfolioDialogOpen(true)}>
+                  <AddShoppingCartIcon />
+                </IconButton>
+              </Box>
+            </Tooltip>
+          ) : (
+            <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
+          )}
+          {props.stock ? (
             <Tooltip
               arrow
               title={
@@ -176,6 +190,9 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
       </Grid>
       <Dialog maxWidth="xs" open={addToWatchlistDialogOpen} onClose={() => setAddToWatchlistDialogOpen(false)}>
         <AddStockToWatchlist stock={props.stock} onClose={() => setAddToWatchlistDialogOpen(false)} />
+      </Dialog>
+      <Dialog maxWidth="xs" open={addToPortfolioDialogOpen} onClose={() => setAddToPortfolioDialogOpen(false)}>
+        <AddStockToPortfolio stock={props.stock} onClose={() => setAddToPortfolioDialogOpen(false)} />
       </Dialog>
       <Dialog open={editDialogOpen} onClose={() => (setEditDialogOpen(false), props.getStock && props.getStock())}>
         <EditStock stock={props.stock} getStocks={props.getStock} onClose={() => setEditDialogOpen(false)} />
