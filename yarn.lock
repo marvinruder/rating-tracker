@@ -1296,7 +1296,7 @@ __metadata:
     express-rate-limit: "npm:7.1.5"
     fast-glob: "npm:3.3.2"
     luxon: "npm:3.4.4"
-    pino: "npm:8.17.0"
+    pino: "npm:8.17.1"
     pino-pretty: "npm:10.2.3"
     prettier: "npm:3.1.1"
     prisma: "npm:5.7.0"
@@ -7050,9 +7050,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:8.17.0":
-  version: 8.17.0
-  resolution: "pino@npm:8.17.0"
+"pino@npm:8.17.1":
+  version: 8.17.1
+  resolution: "pino@npm:8.17.1"
   dependencies:
     atomic-sleep: "npm:^1.0.0"
     fast-redact: "npm:^3.1.1"
@@ -7067,7 +7067,7 @@ __metadata:
     thread-stream: "npm:^2.0.0"
   bin:
     pino: bin.js
-  checksum: 88460847d1a0319896acbe083de8b81a0af44219a6f7336e3263b6987f97073d6c9c03923fefff01cb9bfc72f9fb6b1bf99356bfdd04223b6a6b60d36dab9fda
+  checksum: eab640886ae13b92466ebe3d255faf4c3d8012d8b7609dee3cafd8c8d403241ab336ef15283319fc2078f21ad944e1ee8f9cf154bc695c61a583302c40d2045a
   languageName: node
   linkType: hard
 
