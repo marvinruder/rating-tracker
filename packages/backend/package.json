@@ -45,7 +45,7 @@
     "fast-glob": "3.3.2",
     "luxon": "3.4.4",
     "pino": "8.17.1",
-    "pino-pretty": "10.2.3",
+    "pino-pretty": "10.3.0",
     "prisma": "5.7.0",
     "redis": "4.6.11",
     "redis-om": "0.4.3",
