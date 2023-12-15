@@ -30,6 +30,7 @@
         "rust-analyzer.linkedProjects": [
           "./wasm/Cargo.toml"
         ],
+        "snyk.features.openSourceSecurity": false,
         "terminal.integrated.profiles.linux": {
           "ash": {
             "path": "ash"
