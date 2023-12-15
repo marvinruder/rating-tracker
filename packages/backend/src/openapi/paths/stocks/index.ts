@@ -1,8 +1,9 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
+import * as portfolio from "../../parameters/portfolio";
 import * as stock from "../../parameters/stock";
 import * as watchlist from "../../parameters/watchlist";
-import { forbidden, unauthorized } from "../../responses/clientError";
+import { badRequest, forbidden, unauthorized } from "../../responses/clientError";
 import { noContent, okStockListWithCount } from "../../responses/success";
 
 /**
@@ -59,9 +60,14 @@ const get: OpenAPIV3.OperationObject = {
       ...watchlist.id,
       name: "watchlist",
     },
+    {
+      ...portfolio.id,
+      name: "portfolio",
+    },
   ],
   responses: {
     "200": okStockListWithCount,
+    "400": badRequest,
     "401": unauthorized,
     "403": forbidden,
   },

@@ -2,7 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Box, Dialog, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { FC, useState } from "react";
 
-import { AddWatchlist } from "../../../components/dialogs/AddWatchlist";
+import { AddWatchlist } from "../../../components/dialogs/watchlist/AddWatchlist";
 
 /**
  * A header for the watchlist summaries page.

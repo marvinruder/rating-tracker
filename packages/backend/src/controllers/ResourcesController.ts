@@ -1,4 +1,4 @@
-import { GENERAL_ACCESS, pathParameterSuffix, resourcesEndpointPath } from "@rating-tracker/commons";
+import { GENERAL_ACCESS, resourcesEndpointPath } from "@rating-tracker/commons";
 import { Request, Response } from "express";
 
 import { readResource } from "../redis/repositories/resourceRepository";
@@ -17,26 +17,26 @@ export class ResourcesController {
    * @throws an {@link APIError} if a resource of an unsupported type is requested
    */
   @Router({
-    path: resourcesEndpointPath + pathParameterSuffix,
+    path: resourcesEndpointPath + "/:url",
     method: "get",
     accessRights: GENERAL_ACCESS,
   })
   async get(req: Request, res: Response) {
-    const resourceID = req.params[0];
+    const { url } = req.params;
     // Use the file extension to determine the type of the resource
-    switch (resourceID.split(".").pop().toUpperCase()) {
+    switch (url.split(".").pop().toUpperCase()) {
       case "PNG":
-        const pngResource = await readResource(resourceID);
+        const pngResource = await readResource(url);
         // deepcode ignore XSS: parameter is sanitized by OpenAPI validator
         res.setHeader("content-type", "image/png").status(200).send(Buffer.from(pngResource.content, "base64")).end();
         break;
       case "HTML":
-        const htmlResource = await readResource(resourceID);
+        const htmlResource = await readResource(url);
         // deepcode ignore XSS: parameter is sanitized by OpenAPI validator
         res.setHeader("content-type", "text/html; charset=utf-8").status(200).send(htmlResource.content).end();
         break;
       case "JSON":
-        const jsonResource = await readResource(resourceID);
+        const jsonResource = await readResource(url);
         // deepcode ignore XSS: parameter is sanitized by OpenAPI validator
         res.setHeader("content-type", "application/json; charset=utf-8").status(200).send(jsonResource.content).end();
         break;

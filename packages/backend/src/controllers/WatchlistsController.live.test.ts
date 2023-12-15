@@ -1,4 +1,4 @@
-import { WatchlistSummary, baseURL, watchlistsEndpointPath } from "@rating-tracker/commons";
+import { WatchlistSummary, baseURL, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
 
 import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
 
@@ -103,23 +103,17 @@ tests.push({
 
     // Update the watchlist
     res = await supertest
-      .patch(
-        `${baseURL}${watchlistsEndpointPath}/${id}?stocksToAdd=exampleALV%2CexampleKGX` +
-          "&stocksToRemove=exampleNOVO%20B%2CexampleORSTED&name=Favoriten&subscribed=true",
-      )
+      .patch(`${baseURL}${watchlistsEndpointPath}/${id}?name=Favoriten&subscribed=true`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Updating the watchlist again does not return an error
     res = await supertest
-      .patch(
-        `${baseURL}${watchlistsEndpointPath}/${id}?stocksToAdd=exampleALV%2CexampleKGX` +
-          "&stocksToRemove=exampleNOVO%20B%2CexampleORSTED&name=Favoriten&subscribed=true",
-      )
+      .patch(`${baseURL}${watchlistsEndpointPath}/${id}?name=Favoriten&subscribed=true`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
 
-    // Not sending any update information is meaningless but does not return an error
+    // Not sending any update information is meaningless but valid
     res = await supertest
       .patch(`${baseURL}${watchlistsEndpointPath}/${id}`)
       .set("Cookie", ["authToken=exampleSessionID"]);
@@ -130,9 +124,6 @@ tests.push({
       .get(`${baseURL}${watchlistsEndpointPath}/${id}`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect(res.body.stocks.length).toBe(2);
-    expect(res.body.stocks[0].name).toBe("Allianz SE");
-    expect(res.body.stocks[1].name).toBe("Kion Group AG");
     expect(res.body.name).toBe("Favoriten");
     expect(res.body.subscribed).toBeTruthy();
 
@@ -163,6 +154,106 @@ tests.push({
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch("The name “Favorites” must not be changed.");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] adds a stock to a watchlist",
+  testFunction: async () => {
+    // Get the ID of the watchlist from the summary
+    const id = await getWatchlistID("Fævørites");
+
+    // Add a stock to the watchlist
+    let res = await supertest
+      .put(`${baseURL}${watchlistsEndpointPath}/${id}${stocksEndpointPath}/exampleALV`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+
+    // Adding the same stock again does not return an error
+    res = await supertest
+      .put(`${baseURL}${watchlistsEndpointPath}/${id}${stocksEndpointPath}/exampleALV`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+
+    // Check that the stock has been added
+    res = await supertest
+      .get(`${baseURL}${watchlistsEndpointPath}/${id}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.stocks.length).toBe(3);
+    expect(res.body.stocks[0].name).toBe("Allianz SE");
+    expect(res.body.stocks[1].name).toBe("Novo Nordisk A/S");
+    expect(res.body.stocks[2].name).toBe("Ørsted A/S");
+
+    // Attempting to update a list of a different user returns an error
+    res = await supertest
+      .put(`${baseURL}${watchlistsEndpointPath}/${id}${stocksEndpointPath}/exampleALV`)
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+    expect(res.status).toBe(403);
+    expect(res.body.message).toMatch("does not belong to user with email address john.doe");
+
+    // Attempting to add a stock to a non-existent list returns an error
+    res = await supertest
+      .put(`${baseURL}${watchlistsEndpointPath}/-1${stocksEndpointPath}/exampleALV`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+    expect(res.body.message).toMatch("Watchlist -1 not found.");
+
+    // Attempting to add a non-existent stock returns an error
+    res = await supertest
+      .put(`${baseURL}${watchlistsEndpointPath}/${id}${stocksEndpointPath}/doesNotExist`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+    expect(res.body.message).toMatch("Stock doesNotExist not found.");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] removes a stock from a watchlist",
+  testFunction: async () => {
+    // Get the ID of the watchlist from the summary
+    const id = await getWatchlistID("Fævørites");
+
+    // Remove a stock from the watchlist
+    let res = await supertest
+      .delete(`${baseURL}${watchlistsEndpointPath}/${id}${stocksEndpointPath}/exampleNOVO%20B`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+
+    // Removing the same stock again does not return an error
+    res = await supertest
+      .delete(`${baseURL}${watchlistsEndpointPath}/${id}${stocksEndpointPath}/exampleNOVO%20B`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+
+    // Check that the stock has been removed
+    res = await supertest
+      .get(`${baseURL}${watchlistsEndpointPath}/${id}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.stocks.length).toBe(1);
+    expect(res.body.stocks[0].name).toBe("Ørsted A/S");
+
+    // Attempting to update a list of a different user returns an error
+    res = await supertest
+      .delete(`${baseURL}${watchlistsEndpointPath}/${id}${stocksEndpointPath}/exampleNOVO%20B`)
+      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+    expect(res.status).toBe(403);
+    expect(res.body.message).toMatch("does not belong to user with email address john.doe");
+
+    // Attempting to remove a stock from a non-existent list returns an error
+    res = await supertest
+      .delete(`${baseURL}${watchlistsEndpointPath}/-1${stocksEndpointPath}/exampleNOVO%20B`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+    expect(res.body.message).toMatch("Watchlist -1 not found.");
+
+    // Attempting to remove a non-existent stock returns an error
+    res = await supertest
+      .delete(`${baseURL}${watchlistsEndpointPath}/${id}${stocksEndpointPath}/doesNotExist`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+    expect(res.body.message).toMatch("Stock doesNotExist not found.");
   },
 });
 

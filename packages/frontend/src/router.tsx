@@ -2,6 +2,7 @@ import { Box, CircularProgress } from "@mui/material";
 import {
   User,
   accountEndpointPath,
+  portfoliosEndpointPath,
   stocksEndpointPath,
   usersEndpointPath,
   watchlistsEndpointPath,
@@ -89,6 +90,22 @@ const loader = (
 };
 
 // Modules
+
+/**
+ * The portfolio module, loaded only when needed.
+ *
+ * @param {JSX.IntrinsicAttributes} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const Portfolio = loader(lazy(() => import("./content/modules/Portfolio/Portfolio")));
+
+/**
+ * The portfolio summary module, loaded only when needed.
+ *
+ * @param {JSX.IntrinsicAttributes} props The properties of the component.
+ * @returns {JSX.Element} The component.
+ */
+const PortfolioSummary = loader(lazy(() => import("./content/modules/PortfolioSummary/PortfolioSummary")));
 
 /**
  * The stock list module, loaded only when needed.
@@ -281,6 +298,14 @@ const routes: RouteObject[] = [
       </AuthWrapper>
     ),
     children: [
+      {
+        path: portfoliosEndpointPath + "/:id",
+        element: <Portfolio />,
+      },
+      {
+        path: portfoliosEndpointPath,
+        element: <PortfolioSummary />,
+      },
       {
         path: stocksEndpointPath,
         element: <StockList />,

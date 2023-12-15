@@ -1,36 +1,36 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import { Stock, stocksEndpointPath } from "@rating-tracker/commons";
+import { WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-import { useNotification } from "../../contexts/NotificationContext";
-import api from "../../utils/api";
+import { useNotification } from "../../../contexts/NotificationContext";
+import api from "../../../utils/api";
 
 /**
- * A dialog to delete a stock from the backend.
+ * A dialog to delete a watchlist from the backend.
  *
- * @param {DeleteStockProps} props The properties of the component.
+ * @param {DeleteWatchlistProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-export const DeleteStock = (props: DeleteStockProps): JSX.Element => {
+export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
   const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
   const navigate = useNavigate();
 
   /**
-   * Deletes the stock from the backend.
+   * Deletes the watchlist from the backend.
    */
-  const deleteStock = () => {
-    props.stock &&
+  const deleteWatchlist = () => {
+    props.watchlist &&
       (setRequestInProgress(true),
       api
-        .delete(stocksEndpointPath + `/${props.stock.ticker}`)
-        // If the dialog is shown from the stock list, the list should be updated.
-        .then(() => props.getStocks && props.getStocks())
-        .catch((e) => setErrorNotification(e, "deleting stock"))
+        .delete(watchlistsEndpointPath + `/${props.watchlist.id}`)
+        // If the dialog is shown from the watchlist list, the list should be updated.
+        .then(() => props.getWatchlists && props.getWatchlists())
+        .catch((e) => setErrorNotification(e, "deleting watchlist"))
         .finally(() => {
           setRequestInProgress(false);
           // If the dialog is shown from e.g. a detail page, the user should be redirected to another page.
@@ -42,22 +42,21 @@ export const DeleteStock = (props: DeleteStockProps): JSX.Element => {
   return (
     <>
       <DialogTitle>
-        <Typography variant="h3">Delete Stock “{props.stock.name}”</Typography>
+        <Typography variant="h3">Delete Watchlist “{props.watchlist.name}”</Typography>
       </DialogTitle>
       <DialogContent>
-        Do you really want to delete the Stock “{props.stock.name}” ({props.stock.ticker})? This action cannot be
-        reversed.
+        Do you really want to delete the Watchlist “{props.watchlist.name}”? This action cannot be reversed.
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
         <Button onClick={props.onClose}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}
           variant="contained"
-          onClick={deleteStock}
+          onClick={deleteWatchlist}
           color="error"
           startIcon={<DeleteIcon />}
         >
-          Delete “{props.stock.ticker}”
+          Delete Watchlist
         </LoadingButton>
       </DialogActions>
     </>
@@ -65,23 +64,23 @@ export const DeleteStock = (props: DeleteStockProps): JSX.Element => {
 };
 
 /**
- * Properties for the DeleteStock component.
+ * Properties for the DeleteWatchlist component.
  */
-interface DeleteStockProps {
+interface DeleteWatchlistProps {
   /**
-   * The stock to delete.
+   * The watchlist to delete.
    */
-  stock: Stock;
+  watchlist: WatchlistSummary;
   /**
-   * A method to update the stock list after the stock was deleted.
+   * A method to update the watchlist summaries after the watchlist was deleted.
    */
-  getStocks?: () => void;
+  getWatchlists?: () => void;
   /**
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
   /**
-   * The path to navigate to after the stock was deleted.
+   * The path to navigate to after the watchlist was deleted.
    */
   navigateTo?: string;
 }

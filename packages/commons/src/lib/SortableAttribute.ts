@@ -24,6 +24,7 @@ export const sortableAttributeArray =
     "financialScore",
     "esgScore",
     "totalScore",
+    "amount",
   ] as const;
 
 /**

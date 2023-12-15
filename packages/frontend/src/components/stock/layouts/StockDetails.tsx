@@ -5,6 +5,7 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import { Box, Grid, Typography, useTheme, Tooltip, Chip, useMediaQuery, Skeleton } from "@mui/material";
 import {
   countryNameWithFlag,
+  currencyMinorUnits,
   currencyName,
   groupOfIndustry,
   industryDescription,
@@ -369,15 +370,15 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                     marks={[
                       {
                         value: props.stock.low52w,
-                        label: props.stock.low52w?.toFixed(2),
+                        label: props.stock.low52w?.toFixed(currencyMinorUnits[props.stock.currency]),
                       },
                       {
                         value: props.stock.high52w,
-                        label: props.stock.high52w?.toFixed(2),
+                        label: props.stock.high52w?.toFixed(currencyMinorUnits[props.stock.currency]),
                       },
                     ]}
                     valueLabelDisplay="on"
-                    valueLabelFormat={(value) => value.toFixed(2)}
+                    valueLabelFormat={(value) => value.toFixed(currencyMinorUnits[props.stock.currency])}
                     disabled
                   />
                 )}
@@ -604,7 +605,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                     <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
                       <Box display="inline-block">{props.stock.currency ?? ""}</Box>
                     </Tooltip>{" "}
-                    {props.stock?.morningstarFairValue?.toFixed(2) ?? "–"}
+                    {props.stock?.morningstarFairValue?.toFixed(currencyMinorUnits[props.stock.currency]) ?? "–"}
                   </>
                 ) : (
                   <Skeleton width={90} sx={{ ml: "auto" }} />
@@ -735,7 +736,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                     <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
                       <Box display="inline-block">{props.stock.currency ?? ""}</Box>
                     </Tooltip>{" "}
-                    {props.stock?.analystTargetPrice?.toFixed(2) ?? "–"}
+                    {props.stock?.analystTargetPrice?.toFixed(currencyMinorUnits[props.stock.currency]) ?? "–"}
                   </>
                 ) : (
                   <Skeleton width={90} sx={{ ml: "auto" }} />

@@ -15,12 +15,14 @@ import {
   stocksEndpointPath,
   stockLogoEndpointSuffix,
   WRITE_STOCKS_ACCESS,
-  pathParameterSuffix,
+  WeightedStock,
+  Stock,
 } from "@rating-tracker/commons";
 import axios from "axios";
 import { Request, Response } from "express";
 
 import { Prisma } from "../../prisma/client";
+import { readStocksInPortfolio } from "../db/tables/portfolioTable";
 import { createStock, deleteStock, readStocks, updateStock, readStock } from "../db/tables/stockTable";
 import { readWatchlist } from "../db/tables/watchlistTable";
 import { createResource, readResource, readResourceTTL } from "../redis/repositories/resourceRepository";
@@ -97,26 +99,14 @@ export class StocksController {
   async getList(req: Request, res: Response) {
     const filters: Prisma.Enumerable<Prisma.StockWhereInput> = [];
     const stockFindManyArgs: Prisma.StockFindManyArgs = {
-      where: {
-        AND: filters,
-      },
+      where: { AND: filters },
     };
 
     if (req.query.name) {
       filters.push({
         OR: [
-          {
-            ticker: {
-              startsWith: (req.query.name as string).trim(),
-              mode: "insensitive",
-            },
-          },
-          {
-            name: {
-              contains: (req.query.name as string).trim(),
-              mode: "insensitive",
-            },
-          },
+          { ticker: { startsWith: (req.query.name as string).trim(), mode: "insensitive" } },
+          { name: { contains: (req.query.name as string).trim(), mode: "insensitive" } },
         ],
       });
     }
@@ -125,13 +115,11 @@ export class StocksController {
       const countryParam = req.query.country;
       if (Array.isArray(countryParam)) {
         const countries: Country[] = [];
-        countryParam.forEach((country) => isCountry(country) && countries.push(country));
+        countryParam.forEach(
+          (country: unknown) => typeof country === "string" && isCountry(country) && countries.push(country),
+        );
         // Multiple countries can be specified, one of which must match to the stock’s country.
-        filters.push({
-          country: {
-            in: countries,
-          },
-        });
+        filters.push({ country: { in: countries } });
       }
     }
 
@@ -139,98 +127,64 @@ export class StocksController {
       const industryParam = req.query.industry;
       if (Array.isArray(industryParam)) {
         const industries: Industry[] = [];
-        industryParam.forEach((industry) => isIndustry(industry) && industries.push(industry));
+        industryParam.forEach(
+          (industry: unknown) => typeof industry === "string" && isIndustry(industry) && industries.push(industry),
+        );
         // Multiple industries can be specified, one of which must match to the stock’s industry.
-        filters.push({
-          industry: {
-            in: industries,
-          },
-        });
+        filters.push({ industry: { in: industries } });
       }
     }
 
     if (req.query.size) {
       const size = req.query.size;
       if (typeof size === "string" && isSize(size)) {
-        filters.push({
-          size: {
-            equals: size,
-          },
-        });
+        filters.push({ size: { equals: size } });
       }
     }
 
     if (req.query.style) {
       const style = req.query.style;
       if (typeof style === "string" && isStyle(style)) {
-        filters.push({
-          style: {
-            equals: style,
-          },
-        });
+        filters.push({ style: { equals: style } });
       }
     }
 
     if (req.query.starRatingMin !== undefined) {
       const starRatingMin = Number(req.query.starRatingMin);
       if (!Number.isNaN(starRatingMin)) {
-        filters.push({
-          starRating: {
-            gte: starRatingMin,
-          },
-        });
+        filters.push({ starRating: { gte: starRatingMin } });
       }
     }
     if (req.query.starRatingMax !== undefined) {
       const starRatingMax = Number(req.query.starRatingMax);
       if (!Number.isNaN(starRatingMax)) {
-        filters.push({
-          starRating: {
-            lte: starRatingMax,
-          },
-        });
+        filters.push({ starRating: { lte: starRatingMax } });
       }
     }
 
     if (req.query.dividendYieldPercentMin !== undefined) {
       const dividendYieldPercentMin = Number(req.query.dividendYieldPercentMin);
       if (!Number.isNaN(dividendYieldPercentMin)) {
-        filters.push({
-          dividendYieldPercent: {
-            gte: dividendYieldPercentMin,
-          },
-        });
+        filters.push({ dividendYieldPercent: { gte: dividendYieldPercentMin } });
       }
     }
     if (req.query.dividendYieldPercentMax !== undefined) {
       const dividendYieldPercentMax = Number(req.query.dividendYieldPercentMax);
       if (!Number.isNaN(dividendYieldPercentMax)) {
-        filters.push({
-          dividendYieldPercent: {
-            lte: dividendYieldPercentMax,
-          },
-        });
+        filters.push({ dividendYieldPercent: { lte: dividendYieldPercentMax } });
       }
     }
 
     if (req.query.priceEarningRatioMin !== undefined) {
       const priceEarningRatioMin = Number(req.query.priceEarningRatioMin);
       if (!Number.isNaN(priceEarningRatioMin)) {
-        filters.push({
-          priceEarningRatio: {
-            gte: priceEarningRatioMin,
-          },
-        });
+        filters.push({ priceEarningRatio: { gte: priceEarningRatioMin } });
       }
     }
     if (req.query.priceEarningRatioMax !== undefined) {
       const priceEarningRatioMax = Number(req.query.priceEarningRatioMax);
       if (!Number.isNaN(priceEarningRatioMax)) {
-        filters.push({
-          priceEarningRatio: {
-            lte: priceEarningRatioMax,
-          },
-        });
+        filters.push({ priceEarningRatio: { lte: priceEarningRatioMax } });
       }
     }
 
@@ -238,64 +192,40 @@ export class StocksController {
       // Filter by percentage difference of fair value to last close
       const morningstarFairValueDiffMin = Number(req.query.morningstarFairValueDiffMin);
       if (!Number.isNaN(morningstarFairValueDiffMin)) {
-        filters.push({
-          morningstarFairValuePercentageToLastClose: {
-            gte: morningstarFairValueDiffMin,
-          },
-        });
+        filters.push({ morningstarFairValuePercentageToLastClose: { gte: morningstarFairValueDiffMin } });
       }
     }
     if (req.query.morningstarFairValueDiffMax !== undefined) {
       // Filter by percentage difference of fair value to last close
       const morningstarFairValueDiffMax = Number(req.query.morningstarFairValueDiffMax);
       if (!Number.isNaN(morningstarFairValueDiffMax)) {
-        filters.push({
-          morningstarFairValuePercentageToLastClose: {
-            lte: morningstarFairValueDiffMax,
-          },
-        });
+        filters.push({ morningstarFairValuePercentageToLastClose: { lte: morningstarFairValueDiffMax } });
       }
     }
 
     if (req.query.analystConsensusMin !== undefined) {
       const analystConsensusMin = Number(req.query.analystConsensusMin);
       if (!Number.isNaN(analystConsensusMin)) {
-        filters.push({
-          analystConsensus: {
-            gte: analystConsensusMin,
-          },
-        });
+        filters.push({ analystConsensus: { gte: analystConsensusMin } });
       }
     }
     if (req.query.analystConsensusMax !== undefined) {
       const analystConsensusMax = Number(req.query.analystConsensusMax);
       if (!Number.isNaN(analystConsensusMax)) {
-        filters.push({
-          analystConsensus: {
-            lte: analystConsensusMax,
-          },
-        });
+        filters.push({ analystConsensus: { lte: analystConsensusMax } });
       }
     }
 
     if (req.query.analystCountMin !== undefined) {
       const analystCountMin = Number(req.query.analystCountMin);
       if (!Number.isNaN(analystCountMin)) {
-        filters.push({
-          analystCount: {
-            gte: analystCountMin,
-          },
-        });
+        filters.push({ analystCount: { gte: analystCountMin } });
       }
     }
     if (req.query.analystCountMax !== undefined) {
       const analystCountMax = Number(req.query.analystCountMax);
       if (!Number.isNaN(analystCountMax)) {
-        filters.push({
-          analystCount: {
-            lte: analystCountMax,
-          },
-        });
+        filters.push({ analystCount: { lte: analystCountMax } });
       }
     }
 
@@ -303,22 +233,14 @@ export class StocksController {
       // Filter by percentage difference of analyst target price to last close
       const analystTargetDiffMin = Number(req.query.analystTargetDiffMin);
       if (!Number.isNaN(analystTargetDiffMin)) {
-        filters.push({
-          analystTargetPricePercentageToLastClose: {
-            gte: analystTargetDiffMin,
-          },
-        });
+        filters.push({ analystTargetPricePercentageToLastClose: { gte: analystTargetDiffMin } });
       }
     }
     if (req.query.analystTargetDiffMax !== undefined) {
       // Filter by percentage difference of analyst target price to last close
       const analystTargetDiffMax = Number(req.query.analystTargetDiffMax);
       if (!Number.isNaN(analystTargetDiffMax)) {
-        filters.push({
-          analystTargetPricePercentageToLastClose: {
-            lte: analystTargetDiffMax,
-          },
-        });
+        filters.push({ analystTargetPricePercentageToLastClose: { lte: analystTargetDiffMax } });
       }
     }
 
@@ -340,178 +262,110 @@ export class StocksController {
       }
     }
     if (msciESGRatingArray.some((msciESGRating) => !filteredMSCIESGRatingArray.includes(msciESGRating))) {
-      filters.push({
-        msciESGRating: {
-          in: filteredMSCIESGRatingArray,
-        },
-      });
+      filters.push({ msciESGRating: { in: filteredMSCIESGRatingArray } });
     }
 
     if (req.query.msciTemperatureMin !== undefined) {
       const msciTemperatureMin = Number(req.query.msciTemperatureMin);
       if (!Number.isNaN(msciTemperatureMin)) {
-        filters.push({
-          msciTemperature: {
-            gte: msciTemperatureMin,
-          },
-        });
+        filters.push({ msciTemperature: { gte: msciTemperatureMin } });
       }
     }
     if (req.query.msciTemperatureMax !== undefined) {
       const msciTemperatureMax = Number(req.query.msciTemperatureMax);
       if (!Number.isNaN(msciTemperatureMax)) {
-        filters.push({
-          msciTemperature: {
-            lte: msciTemperatureMax,
-          },
-        });
+        filters.push({ msciTemperature: { lte: msciTemperatureMax } });
       }
     }
 
     if (req.query.refinitivESGScoreMin !== undefined) {
       const refinitivESGScoreMin = Number(req.query.refinitivESGScoreMin);
       if (!Number.isNaN(refinitivESGScoreMin)) {
-        filters.push({
-          refinitivESGScore: {
-            gte: refinitivESGScoreMin,
-          },
-        });
+        filters.push({ refinitivESGScore: { gte: refinitivESGScoreMin } });
       }
     }
     if (req.query.refinitivESGScoreMax !== undefined) {
       const refinitivESGScoreMax = Number(req.query.refinitivESGScoreMax);
       if (!Number.isNaN(refinitivESGScoreMax)) {
-        filters.push({
-          refinitivESGScore: {
-            lte: refinitivESGScoreMax,
-          },
-        });
+        filters.push({ refinitivESGScore: { lte: refinitivESGScoreMax } });
       }
     }
 
     if (req.query.refinitivEmissionsMin !== undefined) {
       const refinitivEmissionsMin = Number(req.query.refinitivEmissionsMin);
       if (!Number.isNaN(refinitivEmissionsMin)) {
-        filters.push({
-          refinitivEmissions: {
-            gte: refinitivEmissionsMin,
-          },
-        });
+        filters.push({ refinitivEmissions: { gte: refinitivEmissionsMin } });
       }
     }
     if (req.query.refinitivEmissionsMax !== undefined) {
       const refinitivEmissionsMax = Number(req.query.refinitivEmissionsMax);
       if (!Number.isNaN(refinitivEmissionsMax)) {
-        filters.push({
-          refinitivEmissions: {
-            lte: refinitivEmissionsMax,
-          },
-        });
+        filters.push({ refinitivEmissions: { lte: refinitivEmissionsMax } });
       }
     }
 
     if (req.query.spESGScoreMin !== undefined) {
       const spESGScoreMin = Number(req.query.spESGScoreMin);
       if (!Number.isNaN(spESGScoreMin)) {
-        filters.push({
-          spESGScore: {
-            gte: spESGScoreMin,
-          },
-        });
+        filters.push({ spESGScore: { gte: spESGScoreMin } });
       }
     }
     if (req.query.spESGScoreMax !== undefined) {
       const spESGScoreMax = Number(req.query.spESGScoreMax);
       if (!Number.isNaN(spESGScoreMax)) {
-        filters.push({
-          spESGScore: {
-            lte: spESGScoreMax,
-          },
-        });
+        filters.push({ spESGScore: { lte: spESGScoreMax } });
       }
     }
 
     if (req.query.sustainalyticsESGRiskMin !== undefined) {
       const sustainalyticsESGRiskMin = Number(req.query.sustainalyticsESGRiskMin);
       if (!Number.isNaN(sustainalyticsESGRiskMin)) {
-        filters.push({
-          sustainalyticsESGRisk: {
-            gte: sustainalyticsESGRiskMin,
-          },
-        });
+        filters.push({ sustainalyticsESGRisk: { gte: sustainalyticsESGRiskMin } });
       }
     }
     if (req.query.sustainalyticsESGRiskMax !== undefined) {
       const sustainalyticsESGRiskMax = Number(req.query.sustainalyticsESGRiskMax);
       if (!Number.isNaN(sustainalyticsESGRiskMax)) {
-        filters.push({
-          sustainalyticsESGRisk: {
-            lte: sustainalyticsESGRiskMax,
-          },
-        });
+        filters.push({ sustainalyticsESGRisk: { lte: sustainalyticsESGRiskMax } });
       }
     }
 
     if (req.query.financialScoreMin !== undefined) {
       const financialScoreMin = Number(req.query.financialScoreMin);
       if (!Number.isNaN(financialScoreMin)) {
-        filters.push({
-          financialScore: {
-            gte: 0.01 * financialScoreMin,
-          },
-        });
+        filters.push({ financialScore: { gte: 0.01 * financialScoreMin } });
       }
     }
     if (req.query.financialScoreMax !== undefined) {
       const financialScoreMax = Number(req.query.financialScoreMax);
       if (!Number.isNaN(financialScoreMax)) {
-        filters.push({
-          financialScore: {
-            lte: 0.01 * financialScoreMax,
-          },
-        });
+        filters.push({ financialScore: { lte: 0.01 * financialScoreMax } });
       }
     }
 
     if (req.query.esgScoreMin !== undefined) {
       const esgScoreMin = Number(req.query.esgScoreMin);
       if (!Number.isNaN(esgScoreMin)) {
-        filters.push({
-          esgScore: {
-            gte: 0.01 * esgScoreMin,
-          },
-        });
+        filters.push({ esgScore: { gte: 0.01 * esgScoreMin } });
       }
     }
     if (req.query.esgScoreMax !== undefined) {
       const esgScoreMax = Number(req.query.esgScoreMax);
       if (!Number.isNaN(esgScoreMax)) {
-        filters.push({
-          esgScore: {
-            lte: 0.01 * esgScoreMax,
-          },
-        });
+        filters.push({ esgScore: { lte: 0.01 * esgScoreMax } });
       }
     }
 
     if (req.query.totalScoreMin !== undefined) {
       const totalScoreMin = Number(req.query.totalScoreMin);
       if (!Number.isNaN(totalScoreMin)) {
-        filters.push({
-          totalScore: {
-            gte: 0.01 * totalScoreMin,
-          },
-        });
+        filters.push({ totalScore: { gte: 0.01 * totalScoreMin } });
       }
     }
     if (req.query.totalScoreMax !== undefined) {
       const totalScoreMax = Number(req.query.totalScoreMax);
       if (!Number.isNaN(totalScoreMax)) {
-        filters.push({
-          totalScore: {
-            lte: 0.01 * totalScoreMax,
-          },
-        });
+        filters.push({ totalScore: { lte: 0.01 * totalScoreMax } });
       }
     }
 
@@ -520,21 +374,23 @@ export class StocksController {
       if (!Number.isNaN(watchlistID)) {
         // Check that the user has access to the watchlist
         await readWatchlist(Number(req.query.watchlist), res.locals.user.email);
-        filters.push({
-          watchlists: {
-            some: {
-              id: watchlistID,
-              email: res.locals.user.email,
-            },
-          },
-        });
+        filters.push({ watchlists: { some: { id: watchlistID, email: res.locals.user.email } } });
       }
     }
+
+    let sortByAmount: Prisma.SortOrder | undefined;
 
     const sortBy = req.query.sortBy;
     if (sortBy && typeof sortBy === "string" && isSortableAttribute(sortBy)) {
       const sort = String(req.query.sortDesc).toLowerCase() === "true" ? "desc" : "asc";
       switch (sortBy) {
+        case "amount":
+          // The portfolio ID must be present
+          if (req.query.portfolio === undefined) {
+            throw new APIError(400, "Cannot sort by amount without specifying a portfolio.");
+          }
+          sortByAmount = sort;
+          break;
         case "ticker":
         case "name":
         case "financialScore":
@@ -563,8 +419,23 @@ export class StocksController {
     // If count is not set, return all
     stockFindManyArgs.take = Number.isNaN(take) ? undefined : take;
 
+    let stocks: Stock[] | WeightedStock[];
+    let count: Number;
+
     // Read all stocks from the database
-    const [stocks, count] = await readStocks(stockFindManyArgs);
+    if (req.query.portfolio !== undefined) {
+      // If a portfolio ID is specified, only return the stocks in that portfolio. This must be done by querying the
+      // portfolio table, since the m:n relation between portfolios and stocks has additional attributes, which are
+      // included in the WeightedStock type.
+      [stocks, count] = await readStocksInPortfolio(
+        Number(req.query.portfolio),
+        res.locals.user.email,
+        stockFindManyArgs,
+        sortByAmount,
+      );
+    } else {
+      [stocks, count] = await readStocks(stockFindManyArgs);
+    }
 
     // Respond with the list of stocks and the total count after filtering and before pagination
     res.status(200).json({ stocks, count }).end();
@@ -596,12 +467,12 @@ export class StocksController {
    * @param {Response} res Response object
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix + stockLogoEndpointSuffix,
+    path: stocksEndpointPath + "/:ticker" + stockLogoEndpointSuffix,
     method: "get",
     accessRights: GENERAL_ACCESS,
   })
   async getLogo(req: Request, res: Response) {
-    const logoResource = await getLogoOfStock(req.params[0], String(req.query.dark) === "true");
+    const logoResource = await getLogoOfStock(req.params.ticker, String(req.query.dark) === "true");
     res.set("Content-Type", "image/svg+xml");
     res.set(
       "Cache-Control",
@@ -664,14 +535,14 @@ export class StocksController {
    * @param {Response} res Response object
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix,
+    path: stocksEndpointPath + "/:ticker",
     method: "get",
     accessRights: GENERAL_ACCESS,
   })
   async get(req: Request, res: Response) {
     res
       .status(200)
-      .json(await readStock(req.params[0]))
+      .json(await readStock(req.params.ticker))
       .end();
   }
 
@@ -683,20 +554,14 @@ export class StocksController {
    * @throws an {@link APIError} if a stock with the same ticker already exists
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix,
+    path: stocksEndpointPath + "/:ticker",
     method: "put",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async put(req: Request, res: Response) {
-    const ticker = req.params[0];
+    const { ticker } = req.params;
     const { name, country, isin } = req.query;
-    if (
-      typeof ticker === "string" &&
-      typeof name === "string" &&
-      typeof country === "string" &&
-      isCountry(country) &&
-      typeof isin === "string"
-    ) {
+    if (typeof name === "string" && typeof country === "string" && isCountry(country) && typeof isin === "string") {
       if (await createStock({ ...optionalStockValuesNull, ticker, name, country, isin })) {
         res.status(201).end();
       } else {
@@ -712,16 +577,15 @@ export class StocksController {
    * @param {Response} res Response object
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix,
+    path: stocksEndpointPath + "/:ticker",
     method: "patch",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async patch(req: Request, res: Response) {
-    const ticker = req.params[0];
+    const { ticker } = req.params;
     const { name, isin, country, morningstarID, marketScreenerID, msciID, ric, sustainalyticsID } = req.query;
-    const spID = req.query.spID === null ? "" : req.query.spID ? +req.query.spID : undefined;
+    const spID = req.query.spID === null ? "" : req.query.spID ? Number(req.query.spID) : undefined;
     if (
-      typeof ticker === "string" &&
       (typeof name === "string" || typeof name === "undefined") &&
       (typeof isin === "string" || typeof isin === "undefined") &&
       ((typeof country === "string" && isCountry(country)) || typeof country === "undefined") &&
@@ -729,7 +593,9 @@ export class StocksController {
       (typeof marketScreenerID === "string" || typeof marketScreenerID === "undefined") &&
       (typeof msciID === "string" || typeof msciID === "undefined") &&
       (typeof ric === "string" || typeof ric === "undefined") &&
-      ((typeof spID === "string" && spID === "") || typeof spID === "number" || typeof spID === "undefined") &&
+      ((typeof spID === "string" && spID === "") ||
+        (typeof spID === "number" && !Number.isNaN(spID)) ||
+        typeof spID === "undefined") &&
       (typeof sustainalyticsID === "string" || typeof sustainalyticsID === "undefined")
     ) {
       // If a data provider ID is removed (i.e., set to an empty string), we remove all information available from that
@@ -778,12 +644,12 @@ export class StocksController {
    * @param {Response} res Response object
    */
   @Router({
-    path: stocksEndpointPath + pathParameterSuffix,
+    path: stocksEndpointPath + "/:ticker",
     method: "delete",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   async delete(req: Request, res: Response) {
-    await deleteStock(req.params[0]);
+    await deleteStock(req.params.ticker);
     res.status(204).end();
   }
 }

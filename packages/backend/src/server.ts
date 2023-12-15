@@ -4,7 +4,6 @@ import "./utils/startup";
 import { randomUUID } from "node:crypto";
 import path from "path";
 
-// Import all controllers
 import { baseURL } from "@rating-tracker/commons";
 import cookieParser from "cookie-parser";
 import express from "express";
@@ -12,10 +11,12 @@ import * as OpenApiValidator from "express-openapi-validator";
 import responseTime from "response-time";
 import SwaggerUI from "swagger-ui-express";
 
+// Import all controllers
 import "./controllers/AccountController";
 import "./controllers/AuthController";
 import "./controllers/FavoritesController";
 import "./controllers/FetchController";
+import "./controllers/PortfoliosController";
 import "./controllers/ResourcesController";
 import "./controllers/SessionController";
 import "./controllers/StatusController";

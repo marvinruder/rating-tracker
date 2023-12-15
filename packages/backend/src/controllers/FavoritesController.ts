@@ -1,7 +1,7 @@
-import { GENERAL_ACCESS, favoritesEndpointPath, pathParameterSuffix } from "@rating-tracker/commons";
+import { GENERAL_ACCESS, favoritesEndpointPath } from "@rating-tracker/commons";
 import { Request, Response } from "express";
 
-import { readFavorites, updateWatchlist } from "../db/tables/watchlistTable";
+import { addStockToWatchlist, readFavorites, removeStockFromWatchlist } from "../db/tables/watchlistTable";
 import Router from "../utils/router";
 
 /**
@@ -33,13 +33,13 @@ export class FavoritesController {
    * @param {Response} res The response.
    */
   @Router({
-    path: favoritesEndpointPath + pathParameterSuffix,
+    path: favoritesEndpointPath + "/:ticker",
     method: "put",
     accessRights: GENERAL_ACCESS,
   })
   async put(req: Request, res: Response) {
     const { id } = await readFavorites(res.locals.user.email);
-    await updateWatchlist(id, res.locals.user.email, {}, [req.params[0]], []);
+    await addStockToWatchlist(id, res.locals.user.email, req.params.ticker);
     res.status(201).end();
   }
 
@@ -50,13 +50,13 @@ export class FavoritesController {
    * @param {Response} res The response.
    */
   @Router({
-    path: favoritesEndpointPath + pathParameterSuffix,
+    path: favoritesEndpointPath + "/:ticker",
     method: "delete",
     accessRights: GENERAL_ACCESS,
   })
   async delete(req: Request, res: Response) {
     const { id } = await readFavorites(res.locals.user.email);
-    await updateWatchlist(id, res.locals.user.email, {}, [], [req.params[0]]);
+    await removeStockFromWatchlist(id, res.locals.user.email, req.params.ticker);
     res.status(204).end();
   }
 }

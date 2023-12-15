@@ -1,36 +1,36 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import { WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
+import { PortfolioSummary, portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-import { useNotification } from "../../contexts/NotificationContext";
-import api from "../../utils/api";
+import { useNotification } from "../../../contexts/NotificationContext";
+import api from "../../../utils/api";
 
 /**
- * A dialog to delete a watchlist from the backend.
+ * A dialog to delete a portfolio from the backend.
  *
- * @param {DeleteWatchlistProps} props The properties of the component.
+ * @param {DeletePortfolioProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
+export const DeletePortfolio = (props: DeletePortfolioProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
   const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
   const navigate = useNavigate();
 
   /**
-   * Deletes the watchlist from the backend.
+   * Deletes the portfolio from the backend.
    */
-  const deleteWatchlist = () => {
-    props.watchlist &&
+  const deletePortfolio = () => {
+    props.portfolio &&
       (setRequestInProgress(true),
       api
-        .delete(watchlistsEndpointPath + `/${props.watchlist.id}`)
-        // If the dialog is shown from the watchlist list, the list should be updated.
-        .then(() => props.getWatchlists && props.getWatchlists())
-        .catch((e) => setErrorNotification(e, "deleting watchlist"))
+        .delete(portfoliosEndpointPath + `/${props.portfolio.id}`)
+        // If the dialog is shown from the portfolio list, the list should be updated.
+        .then(() => props.getPortfolios && props.getPortfolios())
+        .catch((e) => setErrorNotification(e, "deleting portfolio"))
         .finally(() => {
           setRequestInProgress(false);
           // If the dialog is shown from e.g. a detail page, the user should be redirected to another page.
@@ -42,21 +42,21 @@ export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
   return (
     <>
       <DialogTitle>
-        <Typography variant="h3">Delete Watchlist “{props.watchlist.name}”</Typography>
+        <Typography variant="h3">Delete Portfolio “{props.portfolio.name}”</Typography>
       </DialogTitle>
       <DialogContent>
-        Do you really want to delete the Watchlist “{props.watchlist.name}”? This action cannot be reversed.
+        Do you really want to delete the Portfolio “{props.portfolio.name}”? This action cannot be reversed.
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
         <Button onClick={props.onClose}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}
           variant="contained"
-          onClick={deleteWatchlist}
+          onClick={deletePortfolio}
           color="error"
           startIcon={<DeleteIcon />}
         >
-          Delete Watchlist
+          Delete Portfolio
         </LoadingButton>
       </DialogActions>
     </>
@@ -64,23 +64,23 @@ export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
 };
 
 /**
- * Properties for the DeleteWatchlist component.
+ * Properties for the DeletePortfolio component.
  */
-interface DeleteWatchlistProps {
+interface DeletePortfolioProps {
   /**
-   * The watchlist to delete.
+   * The portfolio to delete.
    */
-  watchlist: WatchlistSummary;
+  portfolio: PortfolioSummary;
   /**
-   * A method to update the watchlist summaries after the watchlist was deleted.
+   * A method to update the portfolio summaries after the portfolio was deleted.
    */
-  getWatchlists?: () => void;
+  getPortfolios?: () => void;
   /**
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
   /**
-   * The path to navigate to after the watchlist was deleted.
+   * The path to navigate to after the portfolio was deleted.
    */
   navigateTo?: string;
 }

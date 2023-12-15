@@ -18,6 +18,7 @@ import {
   watchlistsEndpointPath,
   usersEndpointPath,
   logoBackgroundEndpointPath,
+  portfoliosEndpointPath,
 } from "@rating-tracker/commons";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
@@ -36,6 +37,9 @@ import * as refinitivEndpoint from "./paths/fetch/refinitivEndpoint";
 import * as spEndpoint from "./paths/fetch/spEndpoint";
 import * as sustainalyticsEndpoint from "./paths/fetch/sustainalyticsEndpoint";
 import * as logoBackgroundEndpoint from "./paths/logobackground";
+import * as portfoliosEndpoint from "./paths/portfolios";
+import * as portfolioEndpoint from "./paths/portfolios/portfolio";
+import * as portfolioStocksEndpoint from "./paths/portfolios/portfolio/stock";
 import * as resourceEndpoint from "./paths/resources/resource";
 import * as sessionEndpoint from "./paths/sessionEndpoint";
 import * as statusEndpoint from "./paths/statusEndpoint";
@@ -46,6 +50,7 @@ import * as usersEndpoint from "./paths/users";
 import * as userEndpoint from "./paths/users/user";
 import * as watchlistsEndpoint from "./paths/watchlists";
 import * as watchlistEndpoint from "./paths/watchlists/watchlist";
+import * as watchlistStocksEndpoint from "./paths/watchlists/watchlist/stock";
 import { servers } from "./servers";
 
 /**
@@ -85,8 +90,12 @@ export const openapiDocument: OpenAPIV3.Document = {
     [`${baseURL}${usersEndpointPath}/{email}`]: userEndpoint,
     [`${baseURL}${watchlistsEndpointPath}`]: watchlistsEndpoint,
     [`${baseURL}${watchlistsEndpointPath}/{id}`]: watchlistEndpoint,
+    [`${baseURL}${watchlistsEndpointPath}/{id}${stocksEndpointPath}/{ticker}`]: watchlistStocksEndpoint,
     [`${baseURL}${favoritesEndpointPath}`]: favoritesEndpoint,
     [`${baseURL}${favoritesEndpointPath}/{ticker}`]: favoriteEndpoint,
+    [`${baseURL}${portfoliosEndpointPath}`]: portfoliosEndpoint,
+    [`${baseURL}${portfoliosEndpointPath}/{id}`]: portfolioEndpoint,
+    [`${baseURL}${portfoliosEndpointPath}/{id}${stocksEndpointPath}/{ticker}`]: portfolioStocksEndpoint,
   },
   tags: [],
   components: components,

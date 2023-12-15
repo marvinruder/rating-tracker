@@ -104,49 +104,50 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
   /**
    * Checks for errors in the input fields.
+   *
+   * @returns {boolean} Whether the input fields are valid.
    */
-  const validate = () => {
+  const validate = (): boolean => {
     // The following fields are required.
     setEmailError(!validateEmail());
     setNameError(!validateName());
     setPhoneError(!validatePhone());
+    return validateEmail() && validateName() && validatePhone();
   };
 
   /**
    * Updates the user’s profile in the backend.
    */
   const updateProfile = () => {
-    validate();
-    if (validateEmail() && validateName() && validatePhone()) {
-      setRequestInProgress(true);
-      api
-        .patch(
-          accountEndpointPath,
-          avatar !== user.avatar ? { avatar } : undefined, // Include payload with avatar only if it has changed.
-          {
-            params: {
-              // Only send the parameters that have changed.
-              email: email !== user.email ? email.trim() : undefined,
-              name: name !== user.name ? name.trim() : undefined,
-              phone: phone !== user.phone ? phone.trim() : undefined,
-              subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
-            },
+    if (!validate()) return;
+    setRequestInProgress(true);
+    api
+      .patch(
+        accountEndpointPath,
+        avatar !== user.avatar ? { avatar } : undefined, // Include payload with avatar only if it has changed.
+        {
+          params: {
+            // Only send the parameters that have changed.
+            email: email !== user.email ? email.trim() : undefined,
+            name: name !== user.name ? name.trim() : undefined,
+            phone: phone !== user.phone ? phone.trim() : undefined,
+            subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
           },
-        )
-        .then(
-          () => (
-            refetchUser(),
-            setNotification({
-              severity: "success",
-              title: "Profile updated",
-              message: "Your profile has been updated successfully.",
-            }),
-            props.onClose()
-          ), // Update the user in the context, show a notification, and close the dialog on success.
-        )
-        .catch((e) => setErrorNotification(e, "updating user"))
-        .finally(() => setRequestInProgress(false));
-    }
+        },
+      )
+      .then(
+        () => (
+          refetchUser(),
+          setNotification({
+            severity: "success",
+            title: "Profile updated",
+            message: "Your profile has been updated successfully.",
+          }),
+          props.onClose()
+        ), // Update the user in the context, show a notification, and close the dialog on success.
+      )
+      .catch((e) => setErrorNotification(e, "updating user"))
+      .finally(() => setRequestInProgress(false));
   };
 
   useEffect(() => {
@@ -249,6 +250,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   }}
                   error={nameError}
                   label="Name"
+                  autoComplete="name"
                   value={name}
                   placeholder="Jane Doe"
                   fullWidth

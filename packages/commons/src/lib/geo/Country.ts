@@ -524,13 +524,13 @@ export const countryName: Record<Country, string> = {
 /**
  * Returns the emoji flag for a country.
  *
- * @param {Country} country The country
+ * @param {Country | "EU"} country The country, or "EU" for the European Union
  * @returns {string} An emoji of the country’s flag
  */
-export const emojiFlag = (country: Country) =>
+export const emojiFlag = (country: Country | "EU"): string =>
   country
     .split("")
-    .map((a: string) => String.fromCodePoint(0x1f1a5 + a.toUpperCase().codePointAt(0)!))
+    .map((s: string) => String.fromCodePoint(0x1f1a5 + s.toUpperCase().codePointAt(0)!))
     .join("");
 
 /**

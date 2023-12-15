@@ -1,7 +1,5 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
-import * as stock from "./stock";
-
 /**
  * A unique identifier of the watchlist.
  */
@@ -24,7 +22,7 @@ export const name: OpenAPIV3.ParameterObject = {
   description: "The name of the watchlist.",
   schema: {
     type: "string",
-    example: "Favorites",
+    example: "My Watchlist",
   },
 };
 
@@ -38,33 +36,5 @@ export const subscribed: OpenAPIV3.ParameterObject = {
   schema: {
     type: "boolean",
     example: true,
-  },
-};
-
-/**
- * A list of stocks to be added to the watchlist.
- */
-export const stocksToAdd: OpenAPIV3.ParameterObject = {
-  in: "query",
-  name: "stocksToAdd",
-  description: "A list of stocks to be added to the watchlist.",
-  explode: false,
-  schema: {
-    type: "array",
-    items: stock.ticker.schema,
-  },
-};
-
-/**
- * A list of stocks to be removed from the watchlist.
- */
-export const stocksToRemove: OpenAPIV3.ParameterObject = {
-  in: "query",
-  name: "stocksToRemove",
-  description: "A list of stocks to be removed from the watchlist.",
-  explode: false,
-  schema: {
-    type: "array",
-    items: stock.ticker.schema,
   },
 };

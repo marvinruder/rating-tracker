@@ -229,6 +229,19 @@ export const sustainalyticsID: OpenAPIV3.ParameterObject = {
 };
 
 /**
+ * The amount of currency associated with a stock.
+ */
+export const amount: OpenAPIV3.ParameterObject = {
+  in: "query",
+  name: "amount",
+  description: "The amount of currency associated with a stock.",
+  schema: {
+    type: "number",
+    example: 1000,
+  },
+};
+
+/**
  * The minimum star rating of a stock.
  */
 export const starRatingMin: OpenAPIV3.ParameterObject = {

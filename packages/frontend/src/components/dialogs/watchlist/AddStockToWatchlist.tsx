@@ -16,11 +16,17 @@ import {
   Skeleton,
   Dialog,
 } from "@mui/material";
-import { FAVORITES_NAME, Stock, WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
+import {
+  FAVORITES_NAME,
+  Stock,
+  WatchlistSummary,
+  stocksEndpointPath,
+  watchlistsEndpointPath,
+} from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
-import { useNotification } from "../../contexts/NotificationContext";
-import api from "../../utils/api";
+import { useNotification } from "../../../contexts/NotificationContext";
+import api from "../../../utils/api";
 
 import { AddWatchlist } from "./AddWatchlist";
 
@@ -32,7 +38,6 @@ import { AddWatchlist } from "./AddWatchlist";
  */
 export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Element => {
   const [watchlistSummaries, setWatchlistSummaries] = useState<WatchlistSummary[]>([]);
-  const [watchlistsAlreadyContainingStock, setWatchlistsAlreadyContainingStock] = useState<number[]>([]);
   const [watchlistSummariesFinal, setWatchlistSummariesFinal] = useState<boolean>(false);
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
@@ -53,13 +58,9 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
       .finally(() => setWatchlistSummariesFinal(true));
   };
 
-  useEffect(() => {
-    setWatchlistsAlreadyContainingStock(
-      watchlistSummaries
-        .filter((watchlist) => watchlist.stocks.map((stock) => stock.ticker).includes(props.stock.ticker))
-        .map((watchlist) => watchlist.id),
-    );
-  }, [watchlistSummaries]);
+  const watchlistsAlreadyContainingStock: number[] = watchlistSummaries
+    .filter((watchlist) => watchlist.stocks.map((stock) => stock.ticker).includes(props.stock.ticker))
+    .map((watchlist) => watchlist.id);
 
   /**
    * Adds the stock to the watchlist.
@@ -68,7 +69,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    */
   const addStockToWatchlist = (id: number) => {
     api
-      .patch(watchlistsEndpointPath + `/${id}`, {}, { params: { stocksToAdd: [props.stock.ticker] } })
+      .put(`${watchlistsEndpointPath}/${id}${stocksEndpointPath}/${props.stock.ticker}`)
       .then(() => props.onClose())
       .catch((e) => setErrorNotification(e, "adding stock to watchlist"));
   };

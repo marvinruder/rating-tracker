@@ -1,8 +1,8 @@
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
-import * as watchlist from "../../parameters/watchlist";
-import { badRequest, conflict, forbidden, notFound, unauthorized } from "../../responses/clientError";
-import { createdWatchlistID, noContent, okWatchlist } from "../../responses/success";
+import * as watchlist from "../../../parameters/watchlist";
+import { badRequest, conflict, forbidden, notFound, unauthorized } from "../../../responses/clientError";
+import { createdWatchlistID, noContent, okWatchlist } from "../../../responses/success";
 
 /**
  * Get the specified watchlist
@@ -40,9 +40,7 @@ const put: OpenAPIV3.OperationObject = {
       name: "id",
       in: "path",
       required: true,
-      schema: {
-        pattern: "^new$",
-      },
+      schema: { pattern: "^new$" },
     },
     {
       ...watchlist.name,
@@ -74,8 +72,6 @@ const patch: OpenAPIV3.OperationObject = {
     },
     watchlist.name,
     watchlist.subscribed,
-    watchlist.stocksToAdd,
-    watchlist.stocksToRemove,
   ],
   responses: {
     "204": noContent,

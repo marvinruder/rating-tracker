@@ -1,6 +1,7 @@
 import { glob } from "fast-glob";
 import type { SpyInstance } from "vitest";
 
+import * as portfolioTable from "../src/db/tables/portfolioTable";
 import * as stockTable from "../src/db/tables/stockTable";
 import * as userTable from "../src/db/tables/userTable";
 import * as watchlistTable from "../src/db/tables/watchlistTable";
@@ -24,6 +25,12 @@ vi.mock("@simplewebauthn/server", async () => await import("./moduleMocks/@simpl
  */
 const unsafeSpies: SpyInstance[] = [];
 
+unsafeSpies.push(vi.spyOn(portfolioTable, "createPortfolio"));
+unsafeSpies.push(vi.spyOn(portfolioTable, "updatePortfolio"));
+unsafeSpies.push(vi.spyOn(portfolioTable, "addStockToPortfolio"));
+unsafeSpies.push(vi.spyOn(portfolioTable, "updateStockInPortfolio"));
+unsafeSpies.push(vi.spyOn(portfolioTable, "removeStockFromPortfolio"));
+unsafeSpies.push(vi.spyOn(portfolioTable, "deletePortfolio"));
 unsafeSpies.push(vi.spyOn(stockTable, "createStock"));
 unsafeSpies.push(vi.spyOn(stockTable, "updateStock"));
 unsafeSpies.push(vi.spyOn(stockTable, "deleteStock"));
@@ -32,6 +39,8 @@ unsafeSpies.push(vi.spyOn(userTable, "updateUserWithCredentials"));
 unsafeSpies.push(vi.spyOn(userTable, "deleteUser"));
 unsafeSpies.push(vi.spyOn(watchlistTable, "createWatchlist"));
 unsafeSpies.push(vi.spyOn(watchlistTable, "updateWatchlist"));
+unsafeSpies.push(vi.spyOn(watchlistTable, "addStockToWatchlist"));
+unsafeSpies.push(vi.spyOn(watchlistTable, "removeStockFromWatchlist"));
 unsafeSpies.push(vi.spyOn(watchlistTable, "deleteWatchlist"));
 unsafeSpies.push(vi.spyOn(watchlistTable, "readFavorites"));
 unsafeSpies.push(vi.spyOn(resourceRepository, "createResource"));

@@ -28,5 +28,6 @@ services:
       POSTGRES_USER: "rating-tracker-test"
       POSTGRES_PASSWORD: "rating-tracker-test"
     volumes:
-      - ./all_migrations.sql:/docker-entrypoint-initdb.d/all_migrations.sql
+      - ../prisma/migrations:/docker-entrypoint-initdb.d/migrations:ro
+      - ./all_migrations.sh:/docker-entrypoint-initdb.d/migrations.sh:ro
     shm_size: "256mb"

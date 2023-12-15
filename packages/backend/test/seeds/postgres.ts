@@ -480,6 +480,38 @@ const applyWatchlistSeed = async (): Promise<void> => {
 };
 
 /**
+ * Writes example portfolio data into the portfolio table in the database. Must only be used in tests.
+ */
+const applyPortfolioSeed = async (): Promise<void> => {
+  await client.portfolio.create({
+    data: {
+      name: "My Portfolio",
+      email: "jane.doe@example.com",
+      currency: "USD",
+      stocks: {
+        create: [
+          { amount: 120, stock: { connect: { ticker: "exampleAAPL" } } },
+          { amount: 90, stock: { connect: { ticker: "exampleTSM" } } },
+        ],
+      },
+    },
+  });
+  await client.portfolio.create({
+    data: {
+      name: "Min portefølje",
+      email: "jane.doe@example.com",
+      currency: "DKK",
+      stocks: {
+        create: [
+          { amount: 800, stock: { connect: { ticker: "exampleNOVO B" } } },
+          { amount: 100, stock: { connect: { ticker: "exampleORSTED" } } },
+        ],
+      },
+    },
+  });
+};
+
+/**
  * Clears and writes example data into the tables in the database. Must only be used in tests.
  */
 const applyPostgresSeeds = async (): Promise<void> => {
@@ -487,11 +519,12 @@ const applyPostgresSeeds = async (): Promise<void> => {
     throw new Error("Refusing to apply seed when not in a test environment");
   }
 
-  await client.$queryRaw`TRUNCATE TABLE "Stock", "User", "Watchlist", "_StockToWatchlist" RESTART IDENTITY CASCADE`;
+  await client.$queryRaw`TRUNCATE TABLE "Stock", "User", "Watchlist", "_StockToWatchlist", "Portfolio", "StocksInPortfolios" RESTART IDENTITY CASCADE`;
 
   await applyStockSeed();
   await applyUserSeed();
   await applyWatchlistSeed();
+  await applyPortfolioSeed();
 };
 
 export default applyPostgresSeeds;

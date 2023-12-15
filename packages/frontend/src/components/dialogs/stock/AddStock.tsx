@@ -39,9 +39,9 @@ import {
 import { AxiosError } from "axios";
 import { useState } from "react";
 
-import { useNotification } from "../../contexts/NotificationContext";
-import api from "../../utils/api";
-import { StockDetails } from "../stock/layouts/StockDetails";
+import { useNotification } from "../../../contexts/NotificationContext";
+import api from "../../../utils/api";
+import { StockDetails } from "../../stock/layouts/StockDetails";
 
 /**
  * A dialog to add a new stock to the backend.
@@ -85,13 +85,16 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
 
   /**
    * Checks for errors in the input fields.
+   *
+   * @returns {boolean} Whether the input fields are valid.
    */
-  const validate = () => {
+  const validate = (): boolean => {
     // The following fields are required.
     setTickerError(!stock.ticker);
     setNameError(!stock.name);
     setIsinError(!stock.isin);
     setCountryError(!stock.country);
+    return !!stock.ticker && !!stock.name && !!stock.isin && !!stock.country;
   };
 
   /**
@@ -116,6 +119,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
    * Transmits the stock to the server.
    */
   const putStock = () => {
+    if (!validate()) return;
     setRequestInProgress(true);
     const { name, isin, country } = stock;
     api

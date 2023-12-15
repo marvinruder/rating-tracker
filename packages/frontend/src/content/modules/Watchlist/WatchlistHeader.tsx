@@ -6,8 +6,8 @@ import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider }
 import { FAVORITES_NAME, Watchlist, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { DeleteWatchlist } from "../../../components/dialogs/DeleteWatchlist";
-import { RenameWatchlist } from "../../../components/dialogs/RenameWatchlist";
+import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWatchlist";
+import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWatchlist";
 import { StockTableFilters, StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
 import { useNotification } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
@@ -28,9 +28,18 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
     <>
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item sx={{ display: "flex", alignItems: "center", maxWidth: "calc(100% - 147px)" }}>
-          <Typography variant="h3" component="h3" gutterBottom>
-            {props.watchlist ? props.watchlist.name : <Skeleton width={160} />}
-          </Typography>
+          <Box>
+            <Typography variant="h3" component="h3" gutterBottom>
+              {props.watchlist ? props.watchlist.name : <Skeleton width={160} />}
+            </Typography>
+            <Typography variant="subtitle2">
+              {props.watchlist ? (
+                (props.watchlist.stocks.length || "No") + ` stock${props.watchlist.stocks.length !== 1 ? "s" : ""}`
+              ) : (
+                <Skeleton width="48px" />
+              )}
+            </Typography>
+          </Box>
         </Grid>
         <Grid item ml="auto" height={40} display="inline-flex">
           {props.watchlist ? (
