@@ -424,6 +424,9 @@ export class StocksController {
 
     // Read all stocks from the database
     if (req.query.portfolio !== undefined) {
+      // If a portfolio ID is specified, only return the stocks in that portfolio. This must be done by querying the
+      // portfolio table, since the m:n relation between portfolios and stocks has additional attributes, which are
+      // included in the WeightedStock type.
       [stocks, count] = await readStocksInPortfolio(
         Number(req.query.portfolio),
         res.locals.user.email,

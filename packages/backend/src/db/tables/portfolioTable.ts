@@ -108,6 +108,7 @@ export const readStocksInPortfolio = async (
 ): Promise<[WeightedStock[], number]> => {
   await checkPortfolioExistenceAndOwner(id, email);
   const [portfolio, count] = await client.$transaction([
+    // First query the portfolio table, so we can…
     client.portfolio.findUniqueOrThrow({
       select: {
         id: true,
@@ -115,6 +116,7 @@ export const readStocksInPortfolio = async (
         currency: true,
         stocks: {
           where: { stock: args.where },
+          // …order by attributes of the m:n relation table if requested, then…
           orderBy: { stock: Array.isArray(args.orderBy) ? undefined : args.orderBy, amount: sortByAmount },
           skip: args.skip,
           take: args.take,
@@ -127,6 +129,7 @@ export const readStocksInPortfolio = async (
       where: { ...args.where, portfolios: { some: { portfolioID: id, portfolio: { user: { email } } } } },
     }),
   ]);
+  // …return only the stocks, which now also contain the attributes of the m:n relation table.
   return [mapPortfolioFromPrisma(portfolio).stocks, count];
 };
 
