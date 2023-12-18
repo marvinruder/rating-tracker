@@ -47,7 +47,7 @@
     "pino": "8.17.1",
     "pino-pretty": "10.3.0",
     "prisma": "5.7.1",
-    "redis": "4.6.11",
+    "redis": "4.6.12",
     "redis-om": "0.4.3",
     "response-time": "2.3.2",
     "supertest": "6.3.3",
