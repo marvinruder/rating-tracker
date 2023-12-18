@@ -1300,7 +1300,7 @@ __metadata:
     pino-pretty: "npm:10.3.0"
     prettier: "npm:3.1.1"
     prisma: "npm:5.7.1"
-    redis: "npm:4.6.11"
+    redis: "npm:4.6.12"
     redis-om: "npm:0.4.3"
     response-time: "npm:2.3.2"
     supertest: "npm:6.3.3"
@@ -1412,14 +1412,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/client@npm:1.5.12":
-  version: 1.5.12
-  resolution: "@redis/client@npm:1.5.12"
+"@redis/client@npm:1.5.13":
+  version: 1.5.13
+  resolution: "@redis/client@npm:1.5.13"
   dependencies:
     cluster-key-slot: "npm:1.1.2"
     generic-pool: "npm:3.9.0"
     yallist: "npm:4.0.0"
-  checksum: f9046cf4c18df31ed55aa6007324276aa9fb4b91a5bd626374d1e2a4bff8ed18e949ae5a2c29daf113bea97c9b2cb2a8c05179f4ce1972aa27eabf7f6819cb68
+  checksum: f9ddc81abd4117d7d44b76d0620114422eb6dfef17e5bdce993ea79f3b7184cdc3d8ffa81dd30cfe88c683bf1d7e0d7f8ee20f03bf9a5555724bf4586217c65c
   languageName: node
   linkType: hard
 
@@ -7428,17 +7428,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:4.6.11, redis@npm:^4.6.4":
-  version: 4.6.11
-  resolution: "redis@npm:4.6.11"
+"redis@npm:4.6.12, redis@npm:^4.6.4":
+  version: 4.6.12
+  resolution: "redis@npm:4.6.12"
   dependencies:
     "@redis/bloom": "npm:1.2.0"
-    "@redis/client": "npm:1.5.12"
+    "@redis/client": "npm:1.5.13"
     "@redis/graph": "npm:1.1.1"
     "@redis/json": "npm:1.0.6"
     "@redis/search": "npm:1.1.6"
     "@redis/time-series": "npm:1.0.5"
-  checksum: e95ab63c661fb2cdd77fb8df0d4f07d9281ae623da491a8aff5abd9b11c3c02ef5f2f9fbabaacb4f2478b4ac66e70a44aa42d1b0fbf5e622ca344c6263932840
+  checksum: 5b0e865b3da218c75049ed66418f2c894733de0356c0ad331e2e8bfb55fbb84a5ba151c010dc89e9df668fb7a0e08ede6b3c64ae0b4536c2dc84e2a6da5b5be6
   languageName: node
   linkType: hard
 
