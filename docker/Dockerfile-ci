@@ -37,7 +37,7 @@ RUN \
   rm pkg/package.json.bak
 
 
-FROM node:21.4.0-alpine as yarn
+FROM node:21.5.0-alpine as yarn
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -59,7 +59,7 @@ RUN \
   yarn workspaces focus -A --production
 
 
-FROM node:21.4.0-alpine as test
+FROM node:21.5.0-alpine as test
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
@@ -86,7 +86,7 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM node:21.4.0-alpine as build
+FROM node:21.5.0-alpine as build
 LABEL stage=build
 ENV NODE_ENV production
 ENV FORCE_COLOR true
