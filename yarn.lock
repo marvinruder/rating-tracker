@@ -1374,7 +1374,7 @@ __metadata:
     prettier: "npm:3.1.1"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
-    react-router: "npm:6.21.0"
+    react-router: "npm:6.21.1"
     react-router-dom: "npm:6.21.1"
     react-switch-selector: "npm:2.2.1"
     typescript: "npm:5.3.3"
@@ -1463,13 +1463,6 @@ __metadata:
   peerDependencies:
     "@redis/client": ^1.0.0
   checksum: 3c7f31f64a5f215534db6f0a10845be046ffee2928972037713acdd72cdb9ccc4a476ecce70d896333346a8f4081bd2139a4d50da4d19b9d61a6836066188d68
-  languageName: node
-  linkType: hard
-
-"@remix-run/router@npm:1.14.0":
-  version: 1.14.0
-  resolution: "@remix-run/router@npm:1.14.0"
-  checksum: 1a64439087ed77b4eec804f55ba9bbb63275eb756f0c6ef8cfa7d92609e29bb8d87d03f3b5446586130d12d2bd59f799baed167044ee80f6dce5456609c317d4
   languageName: node
   linkType: hard
 
@@ -7335,17 +7328,6 @@ __metadata:
     react: ">=16.8"
     react-dom: ">=16.8"
   checksum: 2c2b653de8cc90397e5b057c0d32dd780fe894c4bd36397005da169a7422b31988ebc14ef0da3ac3f2b7286b244f97a141974acaa86c731715816e64c8cd2912
-  languageName: node
-  linkType: hard
-
-"react-router@npm:6.21.0":
-  version: 6.21.0
-  resolution: "react-router@npm:6.21.0"
-  dependencies:
-    "@remix-run/router": "npm:1.14.0"
-  peerDependencies:
-    react: ">=16.8"
-  checksum: ff499df6994353b79ddd4abf35004c4dce944668fa16b18896a72ba255447d3f5ca50018d90f3034abbe08b87a5757141b09144f8eb17e4f375d8850373a11c3
   languageName: node
   linkType: hard
 
