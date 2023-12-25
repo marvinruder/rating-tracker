@@ -15,7 +15,7 @@ export const stockListColumnArray = [
   "Analyst Target Price",
   "MSCI ESG Rating",
   "MSCI Implied Temperature Rise",
-  "Refinitiv ESG Information",
+  "LSEG ESG Information",
   "S&P ESG Score",
   "Sustainalytics ESG Risk",
   "52 Week Range",

@@ -28,10 +28,10 @@ export type StockFilter = {
   msciESGRatingMax?: MSCIESGRating;
   msciTemperatureMin?: number;
   msciTemperatureMax?: number;
-  refinitivESGScoreMin?: number;
-  refinitivESGScoreMax?: number;
-  refinitivEmissionsMin?: number;
-  refinitivEmissionsMax?: number;
+  lsegESGScoreMin?: number;
+  lsegESGScoreMax?: number;
+  lsegEmissionsMin?: number;
+  lsegEmissionsMax?: number;
   spESGScoreMin?: number;
   spESGScoreMax?: number;
   sustainalyticsESGRiskMin?: number;

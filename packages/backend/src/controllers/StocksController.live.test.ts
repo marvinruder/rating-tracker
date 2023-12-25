@@ -242,8 +242,8 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(
-          `${baseURL}${stocksEndpointPath}?refinitivESGScoreMin=70&refinitivESGScoreMax=80&` +
-            "refinitivEmissionsMin=80&refinitivEmissionsMax=90&sortBy=name",
+          `${baseURL}${stocksEndpointPath}?lsegESGScoreMin=70&lsegESGScoreMax=80&` +
+            "lsegEmissionsMin=80&lsegEmissionsMax=90&sortBy=name",
         )
         .set("Cookie", ["authToken=exampleSessionID"]),
       ["Ørsted A/S"],

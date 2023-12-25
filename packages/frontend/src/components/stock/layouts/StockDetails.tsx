@@ -27,7 +27,7 @@ import {
   MorningstarNavigator,
   MarketScreenerNavigator,
   MSCINavigator,
-  RefinitivNavigator,
+  LSEGNavigator,
   SPNavigator,
   SustainalyticsNavigator,
 } from "../../../utils/navigators";
@@ -883,14 +883,14 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <Skeleton variant="rounded" width={75} height={24} sx={{ mt: "4px", ml: "auto" }} />
             )}
           </Grid>
-          {/* Refinitiv ESG Score */}
+          {/* LSEG ESG Score */}
           <Grid item xs={6}>
             <Tooltip
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The Refinitiv ESG score measures a company’s ESG performance based on verifiable reported data in
-                    the public domain.
+                    The LSEG ESG Score measures a company’s ESG performance based on verifiable reported data in the
+                    public domain.
                   </Typography>
                   <Typography variant="body2">
                     Its values range from 0 to 100, with 0 being the lowest, indicating a poor ESG performance, and 100
@@ -902,19 +902,19 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="6px" height="21px">
-                Refinitiv ESG Score
+                LSEG ESG Score
               </Typography>
             </Tooltip>
           </Grid>
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.refinitivESGScore !== null && (
-                  <RefinitivNavigator stock={props.stock}>
+                {props.stock.lsegESGScore !== null && (
+                  <LSEGNavigator stock={props.stock}>
                     <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
-                      {props.stock.refinitivESGScore}
+                      {props.stock.lsegESGScore}
                     </Typography>
-                  </RefinitivNavigator>
+                  </LSEGNavigator>
                 )}
               </>
             ) : (
@@ -923,13 +923,13 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               </Typography>
             )}
           </Grid>
-          {/* Refinitiv Emissions */}
+          {/* LSEG Emissions */}
           <Grid item xs={6}>
             <Tooltip
               title={
                 <>
                   <Typography variant="body1" paddingBottom={1}>
-                    The Refinitiv emission reduction score measures a company’s commitment and effectiveness towards
+                    The LSEG ESG emissions reduction score measures a company’s commitment and effectiveness towards
                     reducing environmental emissions in its production and operational processes.
                   </Typography>
                   <Typography variant="body2">
@@ -942,19 +942,19 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               placement={columns === 1 ? "bottom" : "left"}
             >
               <Typography variant="h5" mt="6px" height="21px">
-                Refinitiv Emissions
+                LSEG Emissions
               </Typography>
             </Tooltip>
           </Grid>
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock.refinitivEmissions !== null && (
-                  <RefinitivNavigator stock={props.stock}>
+                {props.stock.lsegEmissions !== null && (
+                  <LSEGNavigator stock={props.stock}>
                     <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
-                      {props.stock.refinitivEmissions}
+                      {props.stock.lsegEmissions}
                     </Typography>
-                  </RefinitivNavigator>
+                  </LSEGNavigator>
                 )}
               </>
             ) : (

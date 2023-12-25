@@ -22,7 +22,7 @@ const dataProviderParams: Record<DataProvider, AxiosRequestConfig> = {
     // Fetch data from MSCI with only two instances to avoid being rate-limited
     params: { concurrency: 2 },
   },
-  refinitiv: {
+  lseg: {
     params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   },
   sp: {
@@ -46,7 +46,7 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
       void (async (): Promise<void> => {
         for await (const dataProvider of [
           "msci",
-          "refinitiv",
+          "lseg",
           "sp",
           "sustainalytics",
           // Fetch data from Morningstar first

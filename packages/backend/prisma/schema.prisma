@@ -43,9 +43,9 @@ model Stock {
   msciESGRating                             MSCIESGRating?
   msciTemperature                           Float?
   ric                                       String?              @unique @db.VarChar(25)
-  refinitivLastFetch                        DateTime?            @db.Timestamp(6)
-  refinitivESGScore                         Int?                 @db.SmallInt
-  refinitivEmissions                        Int?                 @db.SmallInt
+  lsegLastFetch                             DateTime?            @db.Timestamp(6)
+  lsegESGScore                              Int?                 @db.SmallInt
+  lsegEmissions                             Int?                 @db.SmallInt
   spID                                      Float?               @unique
   spLastFetch                               DateTime?            @db.Timestamp(6)
   spESGScore                                Int?                 @db.SmallInt

@@ -1,9 +1,9 @@
 import {
   dataProviderTTL,
+  fetchLSEGEndpointPath,
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
   fetchMSCIEndpointPath,
-  fetchRefinitivEndpointPath,
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
   GENERAL_ACCESS,
@@ -79,19 +79,19 @@ export class FetchController {
   }
 
   /**
-   * Fetches data from Refinitiv.
+   * Fetches data from LSEG Data & Analytics.
    *
    * @param {Request} req Request object.
    * @param {Response} res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
   @Router({
-    path: fetchRefinitivEndpointPath,
+    path: fetchLSEGEndpointPath,
     method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async fetchRefinitivData(req: Request, res: Response) {
-    await fetchFromDataProvider(req, res, "refinitiv");
+  async fetchLSEGData(req: Request, res: Response) {
+    await fetchFromDataProvider(req, res, "lseg");
   }
 
   /**

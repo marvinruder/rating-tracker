@@ -26,10 +26,10 @@ import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
 // import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver";
 
+import lsegFetcher from "./lsegFetcher";
 import marketScreenerFetcher from "./marketScreenerFetcher";
 import morningstarFetcher from "./morningstarFetcher";
 import msciFetcher from "./msciFetcher";
-import refinitivFetcher from "./refinitivFetcher";
 import spFetcher from "./spFetcher";
 
 /**
@@ -147,7 +147,7 @@ const dataProviderFetchers: Record<HTMLDataProvider, HTMLFetcher> & Record<JSOND
   morningstar: morningstarFetcher,
   marketScreener: marketScreenerFetcher,
   msci: msciFetcher,
-  refinitiv: refinitivFetcher,
+  lseg: lsegFetcher,
   sp: spFetcher,
 };
 
@@ -391,6 +391,7 @@ export const fetchFromDataProvider = async (
  * @param {IndividualDataProvider} dataProvider The name of the data provider to fetch from
  * @returns {Document} The parsed HTML document
  */
+// TODO: use in-place modification of the document and extract it from an AxiosError if possible
 export const getAndParseHTML = async (
   url: string,
   config: AxiosRequestConfig,

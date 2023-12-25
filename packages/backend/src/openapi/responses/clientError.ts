@@ -82,7 +82,7 @@ export const tooManyRequestsHTML: OpenAPIV3.ResponseObject = {
 
 /**
  * A response with a 429 Too Many Requests status code and an Error object body. Used to forward rate limiting errors
- * from APIs such as Refinitiv.
+ * from APIs such as LSEG.
  */
 export const tooManyRequestsJSONError: OpenAPIV3.ResponseObject = {
   description: "Too Many Requests",

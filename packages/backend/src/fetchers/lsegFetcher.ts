@@ -14,7 +14,7 @@ import logger from "../utils/logger";
 import { type JSONFetcher, type FetcherWorkspace, captureFetchError } from "./fetchHelper";
 
 /**
- * Fetches data from Refinitiv.
+ * Fetches data from LSEG Data & Analytics.
  *
  * @param {Request} req Request object
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
@@ -24,21 +24,21 @@ import { type JSONFetcher, type FetcherWorkspace, captureFetchError } from "./fe
  * @returns {Promise<void>} A promise that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
-const refinitivFetcher: JSONFetcher = async (
+const lsegFetcher: JSONFetcher = async (
   req: Request,
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
   json: Object,
 ): Promise<void> => {
-  let refinitivESGScore: number = req.query.clear ? null : undefined;
-  let refinitivEmissions: number = req.query.clear ? null : undefined;
+  let lsegESGScore: number = req.query.clear ? null : undefined;
+  let lsegEmissions: number = req.query.clear ? null : undefined;
 
-  const url = `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`;
+  const url = `https://www.lseg.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`;
 
   json = (await axios.get(url)).data;
 
   if (Object.keys(json).length === 0 && json.constructor === Object) {
-    throw new APIError(502, "No Refinitiv information available.");
+    throw new APIError(502, "No LSEG information available.");
   }
 
   if (
@@ -52,7 +52,7 @@ const refinitivFetcher: JSONFetcher = async (
   }
 
   // Prepare an error message header containing the stock name and ticker.
-  let errorMessage = `Error while fetching Refinitiv information for stock ${stock.ticker}:`;
+  let errorMessage = `Error while fetching LSEG information for stock ${stock.ticker}:`;
 
   try {
     assert(
@@ -61,20 +61,19 @@ const refinitivFetcher: JSONFetcher = async (
         "TR.TRESG" in json.esgScore &&
         typeof json.esgScore["TR.TRESG"] === "object" &&
         "score" in json.esgScore["TR.TRESG"],
-      "Refinitiv ESG Score not found in JSON response.",
+      "LSEG ESG Score not found in JSON response.",
     );
-    refinitivESGScore = +json.esgScore["TR.TRESG"].score;
+    lsegESGScore = +json.esgScore["TR.TRESG"].score;
   } catch (e) {
-    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Refinitiv ESG Score: ${e}`);
-    if (stock.refinitivESGScore !== null) {
-      // If a Refinitiv ESG Score is already stored in the database, but we cannot extract it from the page, we
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract LSEG ESG Score: ${e}`);
+    if (stock.lsegESGScore !== null) {
+      // If a LSEG ESG Score is already stored in the database, but we cannot extract it from the page, we
       // log this as an error and send a message.
       logger.error(
         { prefix: "fetch", err: e },
-        `Stock ${stock.ticker}: Extraction of Refinitiv ESG Score failed unexpectedly. ` +
-          "This incident will be reported.",
+        `Stock ${stock.ticker}: Extraction of LSEG ESG Score failed unexpectedly. ` + "This incident will be reported.",
       );
-      errorMessage += `\n\tUnable to extract Refinitiv ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`;
+      errorMessage += `\n\tUnable to extract LSEG ESG Score: ${String(e.message).split(/[\n:{]/)[0]}`;
     }
   }
 
@@ -85,32 +84,31 @@ const refinitivFetcher: JSONFetcher = async (
         "TR.TRESGEmissions" in json.esgScore &&
         typeof json.esgScore["TR.TRESGEmissions"] === "object" &&
         "score" in json.esgScore["TR.TRESGEmissions"],
-      "Refinitiv Emissions Score not found in JSON response.",
+      "LSEG Emissions Score not found in JSON response.",
     );
-    refinitivEmissions = +json.esgScore["TR.TRESGEmissions"].score;
+    lsegEmissions = +json.esgScore["TR.TRESGEmissions"].score;
   } catch (e) {
-    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Refinitiv Emissions: ${e}`);
-    if (stock.refinitivEmissions !== null) {
-      // If a Refinitiv Emissions Rating is already stored in the database, but we cannot extract it from the
+    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract LSEG Emissions: ${e}`);
+    if (stock.lsegEmissions !== null) {
+      // If a LSEG Emissions Rating is already stored in the database, but we cannot extract it from the
       // page, we log this as an error and send a message.
       logger.error(
         { prefix: "fetch", err: e },
-        `Stock ${stock.ticker}: Extraction of Refinitiv Emissions failed unexpectedly. ` +
-          "This incident will be reported.",
+        `Stock ${stock.ticker}: Extraction of LSEG Emissions failed unexpectedly. ` + "This incident will be reported.",
       );
-      errorMessage += `\n\tUnable to extract Refinitiv Emissions: ${String(e.message).split(/[\n:{]/)[0]}`;
+      errorMessage += `\n\tUnable to extract LSEG Emissions: ${String(e.message).split(/[\n:{]/)[0]}`;
     }
   }
 
   // Update the stock in the database.
   await updateStock(stock.ticker, {
-    refinitivLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
-    refinitivESGScore,
-    refinitivEmissions,
+    lsegLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
+    lsegESGScore,
+    lsegEmissions,
   });
   if (errorMessage.includes("\n")) {
     // An error occurred if and only if the error message contains a newline character.
-    errorMessage += `\n${await captureFetchError(stock, "refinitiv", { json })}`;
+    errorMessage += `\n${await captureFetchError(stock, "lseg", { json })}`;
     if (req.query.ticker) {
       // If this request was for a single stock, we throw an error instead of sending a message, so that the error
       // message will be part of the response.
@@ -124,4 +122,4 @@ const refinitivFetcher: JSONFetcher = async (
   json = undefined;
 };
 
-export default refinitivFetcher;
+export default lsegFetcher;

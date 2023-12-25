@@ -82,7 +82,7 @@ import {
   MorningstarNavigator,
   MarketScreenerNavigator,
   MSCINavigator,
-  RefinitivNavigator,
+  LSEGNavigator,
   SPNavigator,
   SustainalyticsNavigator,
 } from "../../../utils/navigators";
@@ -735,9 +735,9 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           </MSCINavigator>
         )}
       </TableCell>
-      {/* Refinitiv */}
-      <TableCell sx={{ display: displayColumn("Refinitiv ESG Information") }}>
-        <RefinitivNavigator stock={props.stock}>
+      {/* LSEG */}
+      <TableCell sx={{ display: displayColumn("LSEG ESG Information") }}>
+        <LSEGNavigator stock={props.stock}>
           <Box sx={{ minWidth: 90, display: "flex", alignItems: "center" }}>
             <Typography
               variant="body1"
@@ -748,7 +748,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               sx={{ textAlign: "left", display: "inline-block" }}
               noWrap
             >
-              {props.stock.refinitivESGScore}
+              {props.stock.lsegESGScore}
             </Typography>
             <Typography
               variant="body2"
@@ -758,10 +758,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               sx={{ textAlign: "right", display: "inline-block" }}
               noWrap
             >
-              {props.stock.refinitivEmissions}
+              {props.stock.lsegEmissions}
             </Typography>
           </Box>
-        </RefinitivNavigator>
+        </LSEGNavigator>
       </TableCell>
       {/* S&P ESG Score */}
       <TableCell sx={{ display: displayColumn("S&P ESG Score") }}>
@@ -1093,8 +1093,8 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       <TableCell sx={{ display: displayColumn("MSCI Implied Temperature Rise") }}>
         <Skeleton variant="rounded" width={75} height={24} />
       </TableCell>
-      {/* Refinitiv + Emissions */}
-      <TableCell sx={{ display: displayColumn("Refinitiv ESG Information") }}>
+      {/* LSEG + Emissions */}
+      <TableCell sx={{ display: displayColumn("LSEG ESG Information") }}>
         <Box sx={{ minWidth: 90, display: "flex", alignItems: "center" }}>
           <Typography variant="body1" fontSize={18}>
             <Skeleton width={30} />

@@ -149,23 +149,23 @@ const getMSCITemperatureScore = (stock: OmitDynamicAttributesStock): number | nu
 };
 
 /**
- * Provides a score for the stock based on its Refinitiv ESG score.
+ * Provides a score for the stock based on its LSEG ESG Score.
  *
  * @param {Stock} stock The stock.
- * @returns {number | null} The score, ranging from -1 (0) to 1 (100). `null`, if no Refinitiv ESG score exists.
+ * @returns {number | null} The score, ranging from -1 (0) to 1 (100). `null`, if no LSEG ESG Score exists.
  */
-const getRefinitivESGScore = (stock: OmitDynamicAttributesStock): number | null => {
-  return stock.refinitivESGScore !== null ? (stock.refinitivESGScore - 50) / 50 : null;
+const getLSEGESGScore = (stock: OmitDynamicAttributesStock): number | null => {
+  return stock.lsegESGScore !== null ? (stock.lsegESGScore - 50) / 50 : null;
 };
 
 /**
- * Provides a score for the stock based on its Refinitiv Emissions rating.
+ * Provides a score for the stock based on its LSEG Emissions rating.
  *
  * @param {Stock} stock The stock.
- * @returns {number | null} The score, ranging from -1 (0) to 1 (100). `null`, if no Refinitiv Emissions rating exists.
+ * @returns {number | null} The score, ranging from -1 (0) to 1 (100). `null`, if no LSEG Emissions rating exists.
  */
-const getRefinitivEmissionsScore = (stock: OmitDynamicAttributesStock): number | null => {
-  return stock.refinitivEmissions !== null ? (stock.refinitivEmissions - 50) / 50 : null;
+const getLSEGEmissionsScore = (stock: OmitDynamicAttributesStock): number | null => {
+  return stock.lsegEmissions !== null ? (stock.lsegEmissions - 50) / 50 : null;
 };
 
 /**
@@ -198,8 +198,8 @@ const getSustainalyticsESGRiskScore = (stock: OmitDynamicAttributesStock): numbe
 const getESGScore = (stock: OmitDynamicAttributesStock): number => {
   const msciESGRatingScore = getMSCIESGRatingScore(stock);
   const msciTemperatureScore = getMSCITemperatureScore(stock);
-  const refinitivESGScore = getRefinitivESGScore(stock);
-  const refinitivEmissionsScore = getRefinitivEmissionsScore(stock);
+  const lsegESGScore = getLSEGESGScore(stock);
+  const lsegEmissionsScore = getLSEGEmissionsScore(stock);
   const spESGScore = getSPESGScore(stock);
   const sustainalyticsESGRiskScore = getSustainalyticsESGRiskScore(stock);
 
@@ -214,12 +214,12 @@ const getESGScore = (stock: OmitDynamicAttributesStock): number => {
     esgScore += msciTemperatureScore;
     count += 1;
   }
-  if (refinitivESGScore !== null) {
-    esgScore += refinitivESGScore;
+  if (lsegESGScore !== null) {
+    esgScore += lsegESGScore;
     count += 1;
   }
-  if (refinitivEmissionsScore !== null) {
-    esgScore += refinitivEmissionsScore;
+  if (lsegEmissionsScore !== null) {
+    esgScore += lsegEmissionsScore;
     count += 1;
   }
   if (spESGScore !== null) {
