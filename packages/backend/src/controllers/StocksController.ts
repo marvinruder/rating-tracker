@@ -278,29 +278,29 @@ export class StocksController {
       }
     }
 
-    if (req.query.refinitivESGScoreMin !== undefined) {
-      const refinitivESGScoreMin = Number(req.query.refinitivESGScoreMin);
-      if (!Number.isNaN(refinitivESGScoreMin)) {
-        filters.push({ refinitivESGScore: { gte: refinitivESGScoreMin } });
+    if (req.query.lsegESGScoreMin !== undefined) {
+      const lsegESGScoreMin = Number(req.query.lsegESGScoreMin);
+      if (!Number.isNaN(lsegESGScoreMin)) {
+        filters.push({ lsegESGScore: { gte: lsegESGScoreMin } });
       }
     }
-    if (req.query.refinitivESGScoreMax !== undefined) {
-      const refinitivESGScoreMax = Number(req.query.refinitivESGScoreMax);
-      if (!Number.isNaN(refinitivESGScoreMax)) {
-        filters.push({ refinitivESGScore: { lte: refinitivESGScoreMax } });
+    if (req.query.lsegESGScoreMax !== undefined) {
+      const lsegESGScoreMax = Number(req.query.lsegESGScoreMax);
+      if (!Number.isNaN(lsegESGScoreMax)) {
+        filters.push({ lsegESGScore: { lte: lsegESGScoreMax } });
       }
     }
 
-    if (req.query.refinitivEmissionsMin !== undefined) {
-      const refinitivEmissionsMin = Number(req.query.refinitivEmissionsMin);
-      if (!Number.isNaN(refinitivEmissionsMin)) {
-        filters.push({ refinitivEmissions: { gte: refinitivEmissionsMin } });
+    if (req.query.lsegEmissionsMin !== undefined) {
+      const lsegEmissionsMin = Number(req.query.lsegEmissionsMin);
+      if (!Number.isNaN(lsegEmissionsMin)) {
+        filters.push({ lsegEmissions: { gte: lsegEmissionsMin } });
       }
     }
-    if (req.query.refinitivEmissionsMax !== undefined) {
-      const refinitivEmissionsMax = Number(req.query.refinitivEmissionsMax);
-      if (!Number.isNaN(refinitivEmissionsMax)) {
-        filters.push({ refinitivEmissions: { lte: refinitivEmissionsMax } });
+    if (req.query.lsegEmissionsMax !== undefined) {
+      const lsegEmissionsMax = Number(req.query.lsegEmissionsMax);
+      if (!Number.isNaN(lsegEmissionsMax)) {
+        filters.push({ lsegEmissions: { lte: lsegEmissionsMax } });
       }
     }
 
@@ -626,8 +626,8 @@ export class StocksController {
         msciESGRating: msciID === "" ? null : undefined,
         msciTemperature: msciID === "" ? null : undefined,
         ric: ric === "" ? null : ric,
-        refinitivESGScore: ric === "" ? null : undefined,
-        refinitivEmissions: ric === "" ? null : undefined,
+        lsegESGScore: ric === "" ? null : undefined,
+        lsegEmissions: ric === "" ? null : undefined,
         spID: spID === "" ? null : spID,
         spESGScore: spID === "" ? null : undefined,
         sustainalyticsID: sustainalyticsID === "" ? null : sustainalyticsID,

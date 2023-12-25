@@ -7,13 +7,13 @@ import { badGateway } from "../../responses/serverError";
 import { accepted, noContent, okStockList } from "../../responses/success";
 
 /**
- * Fetch information from Refinitiv ESG company scores
+ * Fetch information from LSEG Data & Analytics
  */
 const post: OpenAPIV3.OperationObject = {
   tags: ["Fetch API"],
-  operationId: "fetchRefinitivData",
-  summary: "Refinitiv Fetch API endpoint",
-  description: "Fetch information from Refinitiv ESG company scores",
+  operationId: "fetchLSEGData",
+  summary: "LSEG Fetch API endpoint",
+  description: "Fetch information from LSEG Data & Analytics",
   parameters: [
     {
       ...stock.ticker,

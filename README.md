@@ -29,12 +29,12 @@ Stocks and their information are presented in a paginated table which offers com
 
 #### Automatic and scheduled data fetching from several providers
 
-By providing identifiers for stocks from [Morningstar](https://www.morningstar.it/it/), [MarketScreener](https://www.marketscreener.com), [MSCI](https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool), [Refinitiv](https://www.refinitiv.com/en/sustainable-finance/esg-scores), [Standard & Poor’s](https://www.spglobal.com/esg/solutions/data-intelligence-esg-scores) and [Sustainalytics](https://www.sustainalytics.com/esg-ratings) in the “Add Stock” dialog, Rating Tracker can automatically fetch financial data as well as financial and ESG ratings. The identifiers to use can be found in the provider’s URL for the stock as shown in the following examples:
+By providing identifiers for stocks from [Morningstar](https://www.morningstar.it/it/), [MarketScreener](https://www.marketscreener.com), [MSCI](https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool), [LSEG Data & Analytics](https://www.lseg.com/en/data-analytics/sustainable-finance/esg-scores), [Standard & Poor’s](https://www.spglobal.com/esg/solutions/data-intelligence-esg-scores) and [Sustainalytics](https://www.sustainalytics.com/esg-ratings) in the “Add Stock” dialog, Rating Tracker can automatically fetch financial data as well as financial and ESG ratings. The identifiers to use can be found in the provider’s URL for the stock as shown in the following examples:
 
 -   Morningstar: `https://tools.morningstar.it/it/stockreport/default.aspx?Site=it&id=`**`0P000000GY`**`&LanguageId=it-IT&SecurityToken=`**`0P000000GY`**`]3]0]E0WWE$$ALL`
 -   MarketScreener: `https://www.marketscreener.com/quote/stock/`**`APPLE-INC-4849`**
 -   MSCI: `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/apple-inc/`**`IID000000002157615`**
--   Refinitiv: `https://www.refinitiv.com/bin/esg/esgsearchresult?ricCode=`**`AAPL.O`** (see also [Refinitiv Identification Code](https://en.wikipedia.org/wiki/Refinitiv_Identification_Code))
+-   LSEG Data & Analytics: `https://www.lseg.com/bin/esg/esgsearchresult?ricCode=`**`AAPL.O`** (see also [Refinitiv Identification Code](https://en.wikipedia.org/wiki/Refinitiv_Identification_Code))
 -   Standard & Poor’s: `https://www.spglobal.com/esg/scores/results?cid=`**`4004205`**
 -   Sustainalytics: `https://www.sustainalytics.com/esg-rating/`**`apple-inc/1007903183`**
 

@@ -137,8 +137,8 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
           "esgScore",
           "starRating",
           "analystConsensus",
-          "refinitivESGScore",
-          "refinitivEmissions",
+          "lsegESGScore",
+          "lsegEmissions",
           "spESGScore",
           "dividendYieldPercent",
           "amount",
@@ -522,19 +522,19 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                     </Tooltip>
                   </TableSortLabel>
                 </TableCell>
-                {/* Refinitiv */}
-                <TableCell sx={{ display: displayColumn("Refinitiv ESG Information") }}>
+                {/* LSEG */}
+                <TableCell sx={{ display: displayColumn("LSEG ESG Information") }}>
                   <TableSortLabel
-                    active={sortBy === "refinitivESGScore"}
-                    direction={sortBy !== "refinitivESGScore" || sortDesc ? "desc" : "asc"}
-                    onClick={handleSortLabelClicked("refinitivESGScore")}
+                    active={sortBy === "lsegESGScore"}
+                    direction={sortBy !== "lsegESGScore" || sortDesc ? "desc" : "asc"}
+                    onClick={handleSortLabelClicked("lsegESGScore")}
                   >
                     <Tooltip
                       title={
                         <>
                           <Typography variant="body1" paddingBottom={1}>
-                            The Refinitiv ESG score measures a company’s ESG performance based on verifiable reported
-                            data in the public domain.
+                            The LSEG ESG Score measures a company’s ESG performance based on verifiable reported data in
+                            the public domain.
                           </Typography>
                           <Typography variant="body2">
                             Its values range from 0 to 100, with 0 being the lowest, indicating a poor ESG performance,
@@ -545,21 +545,21 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       arrow
                       placement="top"
                     >
-                      <Box display="inline-block">Refinitiv </Box>
+                      <Box display="inline-block">LSEG</Box>
                     </Tooltip>
                   </TableSortLabel>
                   <br />
                   <TableSortLabel
-                    active={sortBy === "refinitivEmissions"}
-                    direction={sortBy !== "refinitivEmissions" || sortDesc ? "desc" : "asc"}
-                    onClick={handleSortLabelClicked("refinitivEmissions")}
+                    active={sortBy === "lsegEmissions"}
+                    direction={sortBy !== "lsegEmissions" || sortDesc ? "desc" : "asc"}
+                    onClick={handleSortLabelClicked("lsegEmissions")}
                     sx={{ flexDirection: "row-reverse" }}
                   >
                     <Tooltip
                       title={
                         <>
                           <Typography variant="body1" paddingBottom={1}>
-                            The Refinitiv emission reduction score measures a company’s commitment and effectiveness
+                            The LSEG ESG emissions reduction score measures a company’s commitment and effectiveness
                             towards reducing environmental emissions in its production and operational processes.
                           </Typography>
                           <Typography variant="body2">

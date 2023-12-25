@@ -1,10 +1,10 @@
 import {
   baseURL,
   favoritesEndpointPath,
+  fetchLSEGEndpointPath,
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
   fetchMSCIEndpointPath,
-  fetchRefinitivEndpointPath,
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
   registerEndpointPath,
@@ -30,10 +30,10 @@ import * as registerEndpoint from "./paths/auth/register";
 import * as signInEndpoint from "./paths/auth/signIn";
 import * as favoritesEndpoint from "./paths/favorites";
 import * as favoriteEndpoint from "./paths/favorites/favorite";
+import * as lsegEndpoint from "./paths/fetch/lsegEndpoint";
 import * as marketScreenerEndpoint from "./paths/fetch/marketScreenerEndpoint";
 import * as morningstarEndpoint from "./paths/fetch/morningstarEndpoint";
 import * as msciEndpoint from "./paths/fetch/msciEndpoint";
-import * as refinitivEndpoint from "./paths/fetch/refinitivEndpoint";
 import * as spEndpoint from "./paths/fetch/spEndpoint";
 import * as sustainalyticsEndpoint from "./paths/fetch/sustainalyticsEndpoint";
 import * as logoBackgroundEndpoint from "./paths/logobackground";
@@ -80,7 +80,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     [`${baseURL}${fetchMorningstarEndpointPath}`]: morningstarEndpoint,
     [`${baseURL}${fetchMarketScreenerEndpointPath}`]: marketScreenerEndpoint,
     [`${baseURL}${fetchMSCIEndpointPath}`]: msciEndpoint,
-    [`${baseURL}${fetchRefinitivEndpointPath}`]: refinitivEndpoint,
+    [`${baseURL}${fetchLSEGEndpointPath}`]: lsegEndpoint,
     [`${baseURL}${fetchSPEndpointPath}`]: spEndpoint,
     [`${baseURL}${fetchSustainalyticsEndpointPath}`]: sustainalyticsEndpoint,
     [`${baseURL}${resourcesEndpointPath}/{id}`]: resourceEndpoint,

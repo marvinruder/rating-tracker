@@ -189,18 +189,18 @@ export const components: OpenAPIV3.ComponentsObject = {
           nullable: true,
           example: "AAPL.O",
         },
-        refinitivLastFetch: {
+        lsegLastFetch: {
           type: "string",
           nullable: true,
           format: "date-time",
           example: "2022-11-24T03:30:15.908Z",
         },
-        refinitivESGScore: {
+        lsegESGScore: {
           type: "integer",
           nullable: true,
           example: 80,
         },
-        refinitivEmissions: {
+        lsegEmissions: {
           type: "integer",
           nullable: true,
           example: 97,

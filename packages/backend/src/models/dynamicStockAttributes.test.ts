@@ -29,8 +29,8 @@ describe("Stock Scores", () => {
       analystTargetPrice: 100,
       msciESGRating: "A",
       msciTemperature: 2.0,
-      refinitivESGScore: 50,
-      refinitivEmissions: 50,
+      lsegESGScore: 50,
+      lsegEmissions: 50,
       spESGScore: 50,
       sustainalyticsESGRisk: 20,
     });
@@ -54,8 +54,8 @@ describe("Stock Scores", () => {
       analystTargetPrice: 20,
       msciESGRating: "CCC",
       msciTemperature: 4.0,
-      refinitivESGScore: 0,
-      refinitivEmissions: 0,
+      lsegESGScore: 0,
+      lsegEmissions: 0,
       spESGScore: 0,
       sustainalyticsESGRisk: 45,
     });
@@ -79,8 +79,8 @@ describe("Stock Scores", () => {
       analystTargetPrice: 215,
       msciESGRating: "AAA",
       msciTemperature: 0.5,
-      refinitivESGScore: 100,
-      refinitivEmissions: 100,
+      lsegESGScore: 100,
+      lsegEmissions: 100,
       spESGScore: 100,
       sustainalyticsESGRisk: 0,
     });

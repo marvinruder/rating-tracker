@@ -81,16 +81,23 @@ export const MSCINavigator = (props: NavigatorProps): JSX.Element => (
 );
 
 /**
- * A component that wraps its children in a link to the Refinitiv ESG company scores page and copies the stock’s name
- * to the clipboard. If the stock does not have a RIC, the children are wrapped in a Box instead.
+ * A component that wraps its children in a link to the LSEG ESG Scores page and appends the stock’s name to the URL
+ * using the `esg` parameter. This identifier works fine as long as LSEG writes the stock’s name in the exact same way
+ * as we do. If not, LSEG still shows the input in the search field, so the user can modify it from there.
+ * If the stock does not have a RIC, the children are wrapped in a Box instead.
  *
  * @param {NavigatorProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-export const RefinitivNavigator = (props: NavigatorProps): JSX.Element => (
+export const LSEGNavigator = (props: NavigatorProps): JSX.Element => (
   <LinkToDataProvider
-    href={props.stock?.ric ? "https://www.refinitiv.com/en/sustainable-finance/esg-scores" : ""}
-    copyNameToClipboard={props.stock?.name}
+    href={
+      props.stock?.ric
+        ? "https://www.lseg.com/en/data-analytics/sustainable-finance/esg-scores?esg=" +
+          encodeURIComponent(props.stock?.name)
+        : ""
+    }
+    // copyNameToClipboard={props.stock?.name}
   >
     {props.children}
   </LinkToDataProvider>

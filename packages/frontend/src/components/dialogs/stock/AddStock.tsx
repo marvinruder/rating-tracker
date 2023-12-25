@@ -26,7 +26,7 @@ import {
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
   fetchMSCIEndpointPath,
-  fetchRefinitivEndpointPath,
+  fetchLSEGEndpointPath,
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
   isCountry,
@@ -235,13 +235,13 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       .then(() => {
         setRICSet(!!stock.ric); // Whether the RIC was empty
         if (stock.ric) {
-          // If a RIC was set, we fetch data from Refinitiv using the new RIC.
+          // If a RIC was set, we fetch data from LSEG Data & Analytics using the new RIC.
           api
-            .post(fetchRefinitivEndpointPath, undefined, {
+            .post(fetchLSEGEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
             .then(() => {})
-            .catch((e) => setErrorNotification(e, "fetching information from Refinitiv"))
+            .catch((e) => setErrorNotification(e, "fetching information from LSEG"))
             .finally(() => setRICRequestInProgress(false));
         } else {
           setRICRequestInProgress(false);

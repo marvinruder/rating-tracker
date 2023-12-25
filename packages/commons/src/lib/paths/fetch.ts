@@ -11,9 +11,9 @@ export const fetchMarketScreenerEndpointPath = "/fetch/marketscreener";
  */
 export const fetchMSCIEndpointPath = "/fetch/msci";
 /**
- * The Refinitiv fetch endpoint path.
+ * The LSEG fetch endpoint path.
  */
-export const fetchRefinitivEndpointPath = "/fetch/refinitiv";
+export const fetchLSEGEndpointPath = "/fetch/lseg";
 /**
  * The Standard & Poor’s fetch endpoint path.
  */

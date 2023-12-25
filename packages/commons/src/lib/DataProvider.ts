@@ -1,9 +1,9 @@
 import { Stock } from "./models/stock";
 import {
-  fetchMSCIEndpointPath,
+  fetchLSEGEndpointPath,
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
-  fetchRefinitivEndpointPath,
+  fetchMSCIEndpointPath,
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
 } from "./paths/fetch";
@@ -11,14 +11,7 @@ import {
 /**
  * An array of all data providers.
  */
-export const dataProviderArray = [
-  "morningstar",
-  "marketScreener",
-  "msci",
-  "refinitiv",
-  "sp",
-  "sustainalytics",
-] as const;
+export const dataProviderArray = ["morningstar", "marketScreener", "msci", "lseg", "sp", "sustainalytics"] as const;
 
 /**
  * A data provider to fetch information from.
@@ -33,7 +26,7 @@ export const htmlDataProviderArray = ["morningstar", "marketScreener", "msci", "
 /**
  * An array of data providers which provide information in the form of JSON objects.
  */
-export const jsonDataProviderArray = ["refinitiv"] as const satisfies DataProvider[];
+export const jsonDataProviderArray = ["lseg"] as const satisfies DataProvider[];
 
 /**
  * An array of data providers which provide information for many stocks in one response.
@@ -107,7 +100,7 @@ export const dataProviderName: Record<DataProvider, string> = {
   morningstar: "Morningstar",
   marketScreener: "Market Screener",
   msci: "MSCI",
-  refinitiv: "Refinitiv",
+  lseg: "LSEG Data & Analytics",
   sp: "Standard & Poor’s",
   sustainalytics: "Sustainalytics",
 };
@@ -119,7 +112,7 @@ export const dataProviderID: Record<DataProvider, keyof Stock> = {
   morningstar: "morningstarID",
   marketScreener: "marketScreenerID",
   msci: "msciID",
-  refinitiv: "ric",
+  lseg: "ric",
   sp: "spID",
   sustainalytics: "sustainalyticsID",
 };
@@ -134,7 +127,7 @@ export const dataProviderLastFetch: Record<
   morningstar: "morningstarLastFetch",
   marketScreener: "marketScreenerLastFetch",
   msci: "msciLastFetch",
-  refinitiv: "refinitivLastFetch",
+  lseg: "lsegLastFetch",
   sp: "spLastFetch",
 };
 
@@ -145,7 +138,7 @@ export const dataProviderEndpoints: Record<DataProvider, string> = {
   morningstar: fetchMorningstarEndpointPath,
   marketScreener: fetchMarketScreenerEndpointPath,
   msci: fetchMSCIEndpointPath,
-  refinitiv: fetchRefinitivEndpointPath,
+  lseg: fetchLSEGEndpointPath,
   sp: fetchSPEndpointPath,
   sustainalytics: fetchSustainalyticsEndpointPath,
 };
@@ -157,7 +150,7 @@ export const dataProviderTTL: Record<DataProvider, number> = {
   morningstar: 60 * 60 * 12, // 12 hours
   marketScreener: 60 * 60 * 12, // 12 hours
   msci: 60 * 60 * 24 * 7, // 7 days
-  refinitiv: 60 * 60 * 24 * 7, // 7 days
+  lseg: 60 * 60 * 24 * 7, // 7 days
   sp: 60 * 60 * 24 * 7, // 7 days
   sustainalytics: 60 * 60 * 24 * 7, // 7 days
 };

@@ -83,8 +83,8 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
 
   const [msciESGRatingInput, setMSCIESGRatingInput] = useState<(MSCIESGRating | "None")[]>(["AAA", "None"]);
   const [msciTemperatureInput, setMSCITemperatureInput] = useState<number[]>([1.0, 4.0]);
-  const [refinitivESGScoreInput, setRefinitivESGScoreInput] = useState<number[]>([0, 100]);
-  const [refinitivEmissionsInput, setRefinitivEmissionsInput] = useState<number[]>([0, 100]);
+  const [lsegESGScoreInput, setLSEGESGScoreInput] = useState<number[]>([0, 100]);
+  const [lsegEmissionsInput, setLSEGEmissionsInput] = useState<number[]>([0, 100]);
   const [spESGScoreInput, setSPESGScoreInput] = useState<number[]>([0, 100]);
   const [sustainalyticsESGRiskInput, setSustainalyticsESGRiskInput] = useState<number[]>([0, 50]);
 
@@ -152,10 +152,10 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
       msciESGRatingMax: msciESGRatingInput[1] !== "None" ? msciESGRatingInput[1] : undefined,
       msciTemperatureMin: msciTemperatureInput[0] !== 1.0 ? msciTemperatureInput[0] : undefined,
       msciTemperatureMax: msciTemperatureInput[1] !== 4.0 ? msciTemperatureInput[1] : undefined,
-      refinitivESGScoreMin: refinitivESGScoreInput[0] !== 0 ? refinitivESGScoreInput[0] : undefined,
-      refinitivESGScoreMax: refinitivESGScoreInput[1] !== 100 ? refinitivESGScoreInput[1] : undefined,
-      refinitivEmissionsMin: refinitivEmissionsInput[0] !== 0 ? refinitivEmissionsInput[0] : undefined,
-      refinitivEmissionsMax: refinitivEmissionsInput[1] !== 100 ? refinitivEmissionsInput[1] : undefined,
+      lsegESGScoreMin: lsegESGScoreInput[0] !== 0 ? lsegESGScoreInput[0] : undefined,
+      lsegESGScoreMax: lsegESGScoreInput[1] !== 100 ? lsegESGScoreInput[1] : undefined,
+      lsegEmissionsMin: lsegEmissionsInput[0] !== 0 ? lsegEmissionsInput[0] : undefined,
+      lsegEmissionsMax: lsegEmissionsInput[1] !== 100 ? lsegEmissionsInput[1] : undefined,
       spESGScoreMin: spESGScoreInput[0] !== 0 ? spESGScoreInput[0] : undefined,
       spESGScoreMax: spESGScoreInput[1] !== 100 ? spESGScoreInput[1] : undefined,
       sustainalyticsESGRiskMin: sustainalyticsESGRiskInput[0] !== 0 ? sustainalyticsESGRiskInput[0] : undefined,
@@ -208,8 +208,8 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
               setAnalystTargetDiffInput([-50, 50]);
               setMSCIESGRatingInput(["AAA", "None"]);
               setMSCITemperatureInput([1.0, 4.0]);
-              setRefinitivESGScoreInput([0, 100]);
-              setRefinitivEmissionsInput([0, 100]);
+              setLSEGESGScoreInput([0, 100]);
+              setLSEGEmissionsInput([0, 100]);
               setSPESGScoreInput([0, 100]);
               setSustainalyticsESGRiskInput([0, 50]);
               setStyleboxInput({});
@@ -397,24 +397,24 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelDisplay="auto"
                   valueLabelFormat={(value) => `${value}\u2009℃`}
                 />
-                {/* Refinitiv ESG Score */}
-                <Typography variant="h5">Refinitiv ESG Score</Typography>
+                {/* LSEG ESG Score */}
+                <Typography variant="h5">LSEG ESG Score</Typography>
                 <Slider
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={refinitivESGScoreInput}
+                  value={lsegESGScoreInput}
                   min={0}
                   max={100}
-                  onChange={(_, newValue: number[]) => setRefinitivESGScoreInput(newValue)}
+                  onChange={(_, newValue: number[]) => setLSEGESGScoreInput(newValue)}
                   valueLabelDisplay="auto"
                 />
-                {/* Refinitiv Emissions Rating */}
-                <Typography variant="h5">Refinitiv Emissions</Typography>
+                {/* LSEG Emissions Rating */}
+                <Typography variant="h5">LSEG Emissions</Typography>
                 <Slider
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={refinitivEmissionsInput}
+                  value={lsegEmissionsInput}
                   min={0}
                   max={100}
-                  onChange={(_, newValue: number[]) => setRefinitivEmissionsInput(newValue)}
+                  onChange={(_, newValue: number[]) => setLSEGEmissionsInput(newValue)}
                   valueLabelDisplay="auto"
                 />
                 {/* S&P ESG Score */}

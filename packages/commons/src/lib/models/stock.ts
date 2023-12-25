@@ -151,21 +151,21 @@ export type Stock = {
    */
   msciTemperature: number | null;
   /**
-   * The Reuters Instrument Code of the stock, used by Refinitiv.
+   * The Reuters Instrument Code of the stock, used by LSEG Data & Analytics.
    */
   ric: string | null;
   /**
-   * The date and time of the last fetch from Refinitiv.
+   * The date and time of the last fetch from LSEG Data & Analytics.
    */
-  refinitivLastFetch: Date | null;
+  lsegLastFetch: Date | null;
   /**
-   * Refinitiv’s ESG score of the stock.
+   * LSEG’s ESG score of the stock.
    */
-  refinitivESGScore: number | null;
+  lsegESGScore: number | null;
   /**
-   * Refinitiv’s Emissions rating of the stock.
+   * LSEG’s Emissions rating of the stock.
    */
-  refinitivEmissions: number | null;
+  lsegEmissions: number | null;
   /**
    * Standard & Poor’s identifier for the stock.
    */
@@ -233,9 +233,9 @@ export const optionalStockValuesNull: OmitFunctions<
   msciESGRating: null,
   msciTemperature: null,
   ric: null,
-  refinitivLastFetch: null,
-  refinitivESGScore: null,
-  refinitivEmissions: null,
+  lsegLastFetch: null,
+  lsegESGScore: null,
+  lsegEmissions: null,
   spID: null,
   spLastFetch: null,
   spESGScore: null,

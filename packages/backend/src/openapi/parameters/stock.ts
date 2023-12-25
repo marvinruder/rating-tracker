@@ -474,12 +474,12 @@ export const msciTemperatureMax: OpenAPIV3.ParameterObject = {
 };
 
 /**
- * The minimum Refinitiv ESG score of a stock.
+ * The minimum LSEG ESG Score of a stock.
  */
-export const refinitivESGScoreMin: OpenAPIV3.ParameterObject = {
+export const lsegESGScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "refinitivESGScoreMin",
-  description: "The minimum Refinitiv ESG score of a stock.",
+  name: "lsegESGScoreMin",
+  description: "The minimum LSEG ESG Score of a stock.",
   schema: {
     type: "number",
     example: 50,
@@ -487,22 +487,22 @@ export const refinitivESGScoreMin: OpenAPIV3.ParameterObject = {
 };
 
 /**
- * The maximum Refinitiv ESG score of a stock.
+ * The maximum LSEG ESG Score of a stock.
  */
-export const refinitivESGScoreMax: OpenAPIV3.ParameterObject = {
+export const lsegESGScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "refinitivESGScoreMax",
-  description: "The maximum Refinitiv ESG score of a stock.",
+  name: "lsegESGScoreMax",
+  description: "The maximum LSEG ESG Score of a stock.",
   schema: {
     type: "number",
     example: 95,
   },
 };
 
-export const refinitivEmissionsMin: OpenAPIV3.ParameterObject = {
+export const lsegEmissionsMin: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "refinitivEmissionsMin",
-  description: "The minimum Refinitiv Emissions rating of a stock.",
+  name: "lsegEmissionsMin",
+  description: "The minimum LSEG Emissions rating of a stock.",
   schema: {
     type: "number",
     example: 50,
@@ -510,12 +510,12 @@ export const refinitivEmissionsMin: OpenAPIV3.ParameterObject = {
 };
 
 /**
- * The maximum Refinitiv Emissions rating of a stock.
+ * The maximum LSEG Emissions rating of a stock.
  */
-export const refinitivEmissionsMax: OpenAPIV3.ParameterObject = {
+export const lsegEmissionsMax: OpenAPIV3.ParameterObject = {
   in: "query",
-  name: "refinitivEmissionsMax",
-  description: "The maximum Refinitiv Emissions rating of a stock.",
+  name: "lsegEmissionsMax",
+  description: "The maximum LSEG Emissions rating of a stock.",
   schema: {
     type: "number",
     example: 95,
@@ -523,12 +523,12 @@ export const refinitivEmissionsMax: OpenAPIV3.ParameterObject = {
 };
 
 /**
- * The minimum S&P ESG score of a stock.
+ * The minimum S&P ESG Score of a stock.
  */
 export const spESGScoreMin: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "spESGScoreMin",
-  description: "The minimum S&P ESG score of a stock.",
+  description: "The minimum S&P ESG Score of a stock.",
   schema: {
     type: "number",
     example: 50,
@@ -536,12 +536,12 @@ export const spESGScoreMin: OpenAPIV3.ParameterObject = {
 };
 
 /**
- * The maximum S&P ESG score of a stock.
+ * The maximum S&P ESG Score of a stock.
  */
 export const spESGScoreMax: OpenAPIV3.ParameterObject = {
   in: "query",
   name: "spESGScoreMax",
-  description: "The maximum S&P ESG score of a stock.",
+  description: "The maximum S&P ESG Score of a stock.",
   schema: {
     type: "number",
     example: 95,

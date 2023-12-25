@@ -17,8 +17,8 @@ const SIGNAL_PREFIX_WORSE = "🔴 ";
 const parameterPrettyNames = {
   analystConsensus: "Analyst Consensus",
   msciESGRating: "MSCI ESG Rating",
-  refinitivESGScore: "Refinitiv ESG Score",
-  refinitivEmissions: "Refinitiv Emissions Rating",
+  lsegESGScore: "LSEG ESG Score",
+  lsegEmissions: "LSEG Emissions Rating",
   spESGScore: "S&P ESG Score",
   sustainalyticsESGRisk: "Sustainalytics ESG Risk Score",
 };
@@ -142,8 +142,8 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
           break;
         case "analystConsensus":
         case "msciESGRating":
-        case "refinitivESGScore":
-        case "refinitivEmissions":
+        case "lsegESGScore":
+        case "lsegEmissions":
         case "spESGScore":
         case "sustainalyticsESGRisk":
           let signalPrefix = "";
