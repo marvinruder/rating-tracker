@@ -43,6 +43,7 @@ export default mergeConfig(
           },
         },
         verbose: process.env.NODE_ENV === "development",
+        viteNext: true,
       }),
       wasm(),
     ],
