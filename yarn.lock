@@ -1303,7 +1303,7 @@ __metadata:
     express-rate-limit: "npm:7.1.5"
     fast-glob: "npm:3.3.2"
     luxon: "npm:3.4.4"
-    pino: "npm:8.17.1"
+    pino: "npm:8.17.2"
     pino-pretty: "npm:10.3.0"
     prettier: "npm:3.1.1"
     prisma: "npm:5.7.1"
@@ -7055,16 +7055,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:8.17.1":
-  version: 8.17.1
-  resolution: "pino@npm:8.17.1"
+"pino@npm:8.17.2":
+  version: 8.17.2
+  resolution: "pino@npm:8.17.2"
   dependencies:
     atomic-sleep: "npm:^1.0.0"
     fast-redact: "npm:^3.1.1"
     on-exit-leak-free: "npm:^2.1.0"
     pino-abstract-transport: "npm:v1.1.0"
     pino-std-serializers: "npm:^6.0.0"
-    process-warning: "npm:^2.0.0"
+    process-warning: "npm:^3.0.0"
     quick-format-unescaped: "npm:^4.0.3"
     real-require: "npm:^0.2.0"
     safe-stable-stringify: "npm:^2.3.1"
@@ -7072,7 +7072,7 @@ __metadata:
     thread-stream: "npm:^2.0.0"
   bin:
     pino: bin.js
-  checksum: eab640886ae13b92466ebe3d255faf4c3d8012d8b7609dee3cafd8c8d403241ab336ef15283319fc2078f21ad944e1ee8f9cf154bc695c61a583302c40d2045a
+  checksum: 9e55af6cd9d1833a4dbe64924fc73163295acd3c988a9c7db88926669f2574ab7ec607e8487b6dd71dbdad2d7c1c1aac439f37e59233f37220b1a9d88fa2ce01
   languageName: node
   linkType: hard
 
@@ -7152,10 +7152,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"process-warning@npm:^2.0.0":
-  version: 2.2.0
-  resolution: "process-warning@npm:2.2.0"
-  checksum: 22b252ca6c1edf7fe3c6ab30c39f9a2fa240dc5af46fd0f94c4dcbc577e7570dcccfc1cbfb4510db4759906b9170cb8b18c519d581cdf2ea649e5ac6bb9a0e60
+"process-warning@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "process-warning@npm:3.0.0"
+  checksum: 60f3c8ddee586f0706c1e6cb5aa9c86df05774b9330d792d7c8851cf0031afd759d665404d07037e0b4901b55c44a423f07bdc465c63de07d8d23196bb403622
   languageName: node
   linkType: hard
 
