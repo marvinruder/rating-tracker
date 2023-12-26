@@ -44,7 +44,7 @@
     "express-rate-limit": "7.1.5",
     "fast-glob": "3.3.2",
     "luxon": "3.4.4",
-    "pino": "8.17.1",
+    "pino": "8.17.2",
     "pino-pretty": "10.3.0",
     "prisma": "5.7.1",
     "redis": "4.6.12",
