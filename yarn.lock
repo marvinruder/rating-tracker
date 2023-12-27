@@ -1285,7 +1285,7 @@ __metadata:
     "@vitest/ui": "npm:1.1.0"
     "@xmldom/xmldom": "npm:0.8.10"
     "@yarnpkg/pnpify": "npm:4.0.1"
-    axios: "npm:1.6.2"
+    axios: "npm:1.6.3"
     chalk: "npm:5.3.0"
     concurrently: "npm:8.2.2"
     cookie-parser: "npm:1.4.6"
@@ -1362,7 +1362,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:4.2.1"
     "@vitest/coverage-v8": "npm:1.1.0"
     "@vitest/web-worker": "npm:1.1.0"
-    axios: "npm:1.6.2"
+    axios: "npm:1.6.3"
     eslint: "npm:8.56.0"
     eslint-config-google: "npm:0.14.0"
     eslint-config-prettier: "npm:9.1.0"
@@ -2782,14 +2782,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.6.2":
-  version: 1.6.2
-  resolution: "axios@npm:1.6.2"
+"axios@npm:1.6.3":
+  version: 1.6.3
+  resolution: "axios@npm:1.6.3"
   dependencies:
     follow-redirects: "npm:^1.15.0"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 9b77e030e85e4f9cbcba7bb52fbff67d6ce906c92d213e0bd932346a50140faf83733bf786f55bd58301bd92f9973885c7b87d6348023e10f7eaf286d0791a1d
+  checksum: dcc6d982353db33e6893ef01cdf81d0a0548dbd8fba0cb046dc4aee1a6a16226721faa4c2a13b2673d47130509629cdb93bb991b3a2bd4ef17a5ac27a8bba0da
   languageName: node
   linkType: hard
 
