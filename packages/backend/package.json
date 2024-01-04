@@ -29,7 +29,7 @@
     "@prisma/client": "5.7.1",
     "@rating-tracker/commons": "workspace:*",
     "@simplewebauthn/server": "8.3.6",
-    "@vitest/coverage-v8": "1.1.1",
+    "@vitest/coverage-v8": "1.1.2",
     "@xmldom/xmldom": "0.8.10",
     "@yarnpkg/pnpify": "4.0.1",
     "axios": "1.6.4",
@@ -54,7 +54,7 @@
     "swagger-ui-dist": "5.10.5",
     "swagger-ui-express": "5.0.0",
     "vite": "5.0.10",
-    "vitest": "1.1.1",
+    "vitest": "1.1.2",
     "xpath-ts2": "1.4.2"
   },
   "devDependencies": {
@@ -67,7 +67,7 @@
     "@types/swagger-ui-express": "4.1.6",
     "@typescript-eslint/eslint-plugin": "6.17.0",
     "@typescript-eslint/parser": "6.17.0",
-    "@vitest/ui": "1.1.1",
+    "@vitest/ui": "1.1.2",
     "eslint": "8.56.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "9.1.0",
