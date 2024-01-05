@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@vitest/coverage-v8": "1.1.2",
-    "vite": "5.0.10",
+    "vite": "5.0.11",
     "vitest": "1.1.2"
   },
   "devDependencies": {
