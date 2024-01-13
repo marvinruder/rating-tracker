@@ -23,9 +23,9 @@
     "@mui/icons-material": "5.15.4",
     "@mui/lab": "5.0.0-alpha.160",
     "@mui/material": "5.15.4",
-    "@nivo/core": "0.80.0",
-    "@nivo/sunburst": "0.80.0",
-    "@nivo/tooltip": "0.80.0",
+    "@nivo/core": "0.82.1",
+    "@nivo/sunburst": "0.82.1",
+    "@nivo/tooltip": "0.82.1",
     "@rating-tracker/commons": "workspace:*",
     "@rating-tracker/wasm": "workspace:*",
     "@react-spring/web": "9.7.3",
@@ -63,5 +63,13 @@
     "eslint-plugin-react": "7.33.2",
     "prettier": "3.2.1",
     "typescript": "5.3.3"
+  },
+  "peerDependenciesMeta": {
+    "@nivo/core": {
+      "optional": true
+    },
+    "@nivo/tooltip": {
+      "optional": true
+    }
   }
 }

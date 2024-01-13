@@ -29,7 +29,6 @@
     "typescript": "5.3.3"
   },
   "resolutions": {
-    "d3-color": "3.1.0",
     "react-switch-selector/react": "18.2.0",
     "react-switch-selector/react-dom": "18.2.0",
     "vite/esbuild": "0.19.11",
