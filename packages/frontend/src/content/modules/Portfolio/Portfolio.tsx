@@ -658,7 +658,7 @@ const PortfolioModule = (): JSX.Element => {
                 pt={columns === 3 ? "8px" : undefined}
                 pb="20px"
               >
-                {sizeArray.map((size) =>
+                {sizeArray.toReversed().map((size) =>
                   styleArray.map((style) => (
                     <Grid
                       item
