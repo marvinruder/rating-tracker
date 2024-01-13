@@ -13,7 +13,7 @@ export const Footer = () => {
       }}
     >
       <Typography sx={{ pt: { xs: 2, md: 0 } }} variant="subtitle1">
-        &copy; 2022–2023 Marvin A. Ruder
+        &copy; 2022–2024 Marvin A. Ruder
       </Typography>
     </Container>
   );
