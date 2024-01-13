@@ -255,6 +255,11 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
       main: themeColors.info,
       dark: darken(themeColors.info, 0.2),
     },
+    region: {
+      EMEA: light ? "#EF7622" : "#DA6410",
+      Americas: light ? "#518428" : "#65A432",
+      Asia: light ? "#1F55A5" : "#4F88DE",
+    },
     sector: {
       Cyclical: light ? "#EF7622" : "#DA6410",
       Defensive: light ? "#518428" : "#65A432",

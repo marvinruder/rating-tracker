@@ -100,5 +100,3 @@ export const openapiDocument: OpenAPIV3.Document = {
   tags: [],
   components: components,
 };
-
-export default openapiDocument;

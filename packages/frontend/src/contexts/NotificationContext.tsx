@@ -2,7 +2,7 @@ import { UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
 import { AxiosError } from "axios";
 import React, { createContext, useContext, useState } from "react";
 
-import { UserContext } from "../router";
+import { UserContext } from "../contexts/UserContext";
 import { Notification } from "../types/Notification";
 
 /**

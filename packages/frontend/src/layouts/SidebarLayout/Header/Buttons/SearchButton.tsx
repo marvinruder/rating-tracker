@@ -226,7 +226,7 @@ export const HeaderSearchButton = (): JSX.Element => {
             }}
             disabled={!open}
             onChange={handleSearchChange}
-            inputProps={{ inputMode: "search", autocapitalize: "characters" }}
+            inputProps={{ inputMode: "search", autoCapitalize: "characters" }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

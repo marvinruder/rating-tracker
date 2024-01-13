@@ -2,7 +2,7 @@
   "env": {
     "node": true
   },
-  "extends": ["plugin:jsdoc/recommended", "plugin:import/recommended", "google", "prettier"],
+  "extends": ["plugin:jsdoc/recommended", "plugin:i/recommended", "plugin:i/typescript", "google", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -10,24 +10,23 @@
     "project": "./tsconfig.json"
   },
   "ignorePatterns": ["dist"],
-  "plugins": ["@typescript-eslint", "prettier", "jsdoc", "import"],
+  "plugins": ["@typescript-eslint", "prettier", "jsdoc", "i"],
   "rules": {
     "prettier/prettier": ["warn"],
     "require-await": ["warn"],
-    "no-unused-vars": 0,
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["warn"],
     "@typescript-eslint/no-floating-promises": ["warn"],
     "@typescript-eslint/await-thenable": ["warn"],
-    "@typescript-eslint/no-misused-promises": ["warn"],
-    "require-jsdoc": 0,
-    "valid-jsdoc": 0,
-    "jsdoc/no-undefined-types": 0,
+    "require-jsdoc": "off",
+    "valid-jsdoc": "off",
+    "jsdoc/no-undefined-types": "off",
     "jsdoc/tag-lines": ["warn", "never", { "startLines": 1 }],
     "import/extensions": ["warn", "never", { "json": "always" }],
     "import/first": ["warn"],
-    "import/no-unresolved": 0,
-    "import/no-deprecated": ["warn"],
-    "import/no-cycle": ["warn"],
+    "import/namespace": "off",
+    "import/no-unresolved": "off",
+    "import/no-cycle": "off",
     "import/order": ["warn", {
       "newlines-between": "always",
       "alphabetize": {
@@ -37,18 +36,8 @@
       },
       "warnOnUnassignedImports": true
     }],
-    "new-cap": [
-      "warn",
-      {
-        "capIsNewExceptions": ["Router"]
-      }
-    ],
+    "new-cap": ["warn", { "capIsNewExceptions": ["Router"] }],
     "quotes": ["warn", "double", { "avoidEscape": true }],
-    "max-len": [
-      "warn",
-      {
-        "code": 120
-      }
-    ]
+    "max-len": ["warn", { "code": 120 }]
   }
 }

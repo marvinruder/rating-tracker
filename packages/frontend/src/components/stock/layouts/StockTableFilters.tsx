@@ -61,6 +61,7 @@ import {
 import React, { FC, Fragment, useState } from "react";
 
 import { StockFilter } from "../../../types/StockFilter";
+import { formatPercentage } from "../../../utils/formatters";
 import { NestedCheckboxList } from "../../etc/NestedCheckboxList";
 import { StarRating } from "../properties/StarRating";
 
@@ -280,7 +281,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   step={0.5}
                   onChange={(_, newValue: number[]) => setDividendYieldPercentInput(newValue)}
                   valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => `${value}\u2009%`}
+                  valueLabelFormat={(value) => formatPercentage(value, { total: 100, precision: 2 })}
                 />
                 {/* Price / Earning Ratio */}
                 <Typography variant="h5">Price / Earning Ratio</Typography>
@@ -326,7 +327,9 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   max={50}
                   onChange={(_, newValue: number[]) => setMorningstarFairValueDiffInput(newValue)}
                   valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => `${value}\u2009%`}
+                  valueLabelFormat={(value) =>
+                    formatPercentage(value, { total: 100, precision: 2, forceSign: true, fallbackString: "0\u2009%" })
+                  }
                 />
                 {/* Analyst Consensus */}
                 <Typography variant="h5">Analyst Consensus</Typography>
@@ -358,7 +361,9 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   max={50}
                   onChange={(_, newValue: number[]) => setAnalystTargetDiffInput(newValue)}
                   valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => `${value}\u2009%`}
+                  valueLabelFormat={(value) =>
+                    formatPercentage(value, { total: 100, precision: 2, forceSign: true, fallbackString: "0\u2009%" })
+                  }
                 />
               </Box>
             </Grid>
@@ -480,12 +485,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
               <DialogTitle>
                 <Typography variant="h4">Style</Typography>
               </DialogTitle>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Grid container columns={7} width="175px" ml="51.5px" mr="71.5px">
                   <Grid xs={1} item>
                     <Tooltip title="Clear selection" arrow>
@@ -509,20 +509,8 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                     <Grid key={style} xs={2} item>
                       <Tooltip title={`All ${style}`} arrow>
                         <IconButton
-                          sx={{
-                            ml: "15px",
-                            mr: "15px",
-                            mb: "5px",
-                            width: "20px",
-                            height: "20px",
-                            borderRadius: 20,
-                          }}
-                          onClick={() =>
-                            setStyleboxInput({
-                              size: undefined,
-                              style: style,
-                            })
-                          }
+                          sx={{ ml: "15px", mr: "15px", mb: "5px", width: "20px", height: "20px", borderRadius: 20 }}
+                          onClick={() => setStyleboxInput({ size: undefined, style: style })}
                         >
                           <ArrowDropDownIcon />
                         </IconButton>
@@ -545,19 +533,14 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                                   height: "20px",
                                   borderRadius: 20,
                                 }}
-                                onClick={() =>
-                                  setStyleboxInput({
-                                    size: size,
-                                    style: undefined,
-                                  })
-                                }
+                                onClick={() => setStyleboxInput({ size, style: undefined })}
                               >
                                 <ArrowRightIcon />
                               </IconButton>
                             </Tooltip>
                           </Grid>
                           {styleArray.map((style) => (
-                            <Tooltip title={`${size}-${style}`} key={size + style} arrow>
+                            <Tooltip title={`${size}-${style}`} key={`${size}-${style}`} arrow>
                               <Grid
                                 xs={2}
                                 sx={{
@@ -570,12 +553,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                                   height: "50px",
                                   outline: `1px solid ${theme.colors.alpha.black[100]}`,
                                 }}
-                                onClick={() =>
-                                  setStyleboxInput({
-                                    size: size,
-                                    style: style,
-                                  })
-                                }
+                                onClick={() => setStyleboxInput({ size, style })}
                                 item
                               />
                             </Tooltip>

@@ -6,7 +6,7 @@ import { FC, useContext, useState } from "react";
 
 import { AddStock } from "../../../components/dialogs/stock/AddStock";
 import { StockTableFilters, StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
-import { UserContext } from "../../../router";
+import { UserContext } from "../../../contexts/UserContext";
 
 /**
  * A header for the stock list page. It contains the stock list filters and column filter.

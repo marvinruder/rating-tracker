@@ -49,6 +49,7 @@ import {
   currencyMinorUnits,
   currencyName,
   favoritesEndpointPath,
+  getTotalAmount,
   groupOfIndustry,
   industryDescription,
   industryGroupName,
@@ -75,9 +76,9 @@ import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { UserContext } from "../../../router";
+import { UserContext } from "../../../contexts/UserContext";
 import api from "../../../utils/api";
-import formatMarketCap from "../../../utils/formatters";
+import { CurrencyWithTooltip, formatMarketCap, formatPercentage } from "../../../utils/formatters";
 import {
   MorningstarNavigator,
   MarketScreenerNavigator,
@@ -371,12 +372,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <Tooltip
             title={
               props.stock.amount === +amountInput
-                ? Number(
-                    (
-                      (100 * props.stock.amount) /
-                      props.portfolio.stocks.reduce((sum, stock) => sum + stock.amount, 0)
-                    ).toPrecision(3),
-                  ) + "\u2009%"
+                ? formatPercentage(props.stock.amount, { total: getTotalAmount(props.portfolio) })
                 : undefined
             }
             arrow
@@ -597,20 +593,15 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       <TableCell sx={{ display: displayColumn("Morningstar Fair Value") }}>
         <MorningstarNavigator stock={props.stock}>
           <Typography variant="body1" fontWeight="bold" color="text.primary" width={90} noWrap>
-            <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
-              <Box sx={{ float: "left" }} display="inline-block">
-                {props.stock.currency ?? ""}
-              </Box>
-            </Tooltip>
-            <Box sx={{ float: "right" }}>
-              {props.stock.morningstarFairValue?.toFixed(currencyMinorUnits[props.stock.currency]) ?? "–"}
-            </Box>
+            <CurrencyWithTooltip value={props.stock.morningstarFairValue} currency={props.stock.currency} floatAlign />
           </Typography>
           <Typography variant="body2" color="text.secondary" width={90} sx={{ textAlign: "right" }} noWrap>
-            {props.stock.morningstarFairValuePercentageToLastClose !== null &&
-              `${props.stock.morningstarFairValuePercentageToLastClose > 0 ? "+" : ""}${Math.round(
-                props.stock.morningstarFairValuePercentageToLastClose,
-              )}\u2009%`}
+            {formatPercentage(props.stock.morningstarFairValuePercentageToLastClose, {
+              total: 100,
+              precision: 2,
+              forceSign: true,
+              fallbackString: "",
+            })}
           </Typography>
         </MorningstarNavigator>
       </TableCell>
@@ -622,28 +613,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               label={<strong>{props.stock.analystConsensus}</strong>}
               style={{ cursor: "inherit" }}
               sx={{
-                backgroundColor:
-                  props.stock.analystConsensus <= 0.5
-                    ? theme.colors.consensus[0]
-                    : props.stock.analystConsensus <= 1.5
-                      ? theme.colors.consensus[1]
-                      : props.stock.analystConsensus <= 2.5
-                        ? theme.colors.consensus[2]
-                        : props.stock.analystConsensus <= 3.5
-                          ? theme.colors.consensus[3]
-                          : props.stock.analystConsensus <= 4.5
-                            ? theme.colors.consensus[4]
-                            : props.stock.analystConsensus <= 5.5
-                              ? theme.colors.consensus[5]
-                              : props.stock.analystConsensus <= 6.5
-                                ? theme.colors.consensus[6]
-                                : props.stock.analystConsensus <= 7.5
-                                  ? theme.colors.consensus[7]
-                                  : props.stock.analystConsensus <= 8.5
-                                    ? theme.colors.consensus[8]
-                                    : props.stock.analystConsensus <= 9.5
-                                      ? theme.colors.consensus[9]
-                                      : theme.colors.consensus[10],
+                backgroundColor: theme.colors.consensus[Math.round(props.stock.analystConsensus)],
                 opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
                 width: 60,
               }}
@@ -663,19 +633,12 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             width={90}
             noWrap
           >
-            <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
-              <Box sx={{ float: "left" }} display="inline-block">
-                {props.stock.currency ?? ""}
-              </Box>
-            </Tooltip>
-            <Box style={{ float: "right" }}>
-              {props.stock.analystTargetPrice?.toFixed(currencyMinorUnits[props.stock.currency]) ?? "–"}
-            </Box>
+            <CurrencyWithTooltip value={props.stock.analystTargetPrice} currency={props.stock.currency} floatAlign />
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
-            width={45}
+            width={40}
             sx={{ textAlign: "left", display: "inline-block" }}
             noWrap
           >
@@ -687,15 +650,17 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <Typography
             variant="body2"
             color="text.secondary"
-            width={45}
+            width={50}
             sx={{ textAlign: "right", display: "inline-block" }}
             noWrap
           >
             {props.stock.analystCount !== null &&
-              props.stock.analystTargetPricePercentageToLastClose !== null &&
-              `${props.stock.analystTargetPricePercentageToLastClose > 0 ? "+" : ""}${Math.round(
-                props.stock.analystTargetPricePercentageToLastClose,
-              )}\u2009%`}
+              formatPercentage(props.stock.analystTargetPricePercentageToLastClose, {
+                total: 100,
+                precision: 2,
+                forceSign: true,
+                fallbackString: "",
+              })}
           </Typography>
         </MarketScreenerNavigator>
       </TableCell>
@@ -725,7 +690,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         {props.stock.msciTemperature !== null && (
           <MSCINavigator stock={props.stock}>
             <TemperatureChip
-              stock={props.stock}
+              msciTemperature={props.stock.msciTemperature}
               icon={<ThermostatIcon />}
               label={<strong>{props.stock.msciTemperature + "\u2009℃"}</strong>}
               size="small"
@@ -836,14 +801,13 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       {/* Dividend Yield */}
       <TableCell sx={{ display: displayColumn("Dividend Yield (%)") }}>
         <Typography variant="body1" color="text.primary" width={45} sx={{ textAlign: "right" }} noWrap>
-          {props.stock.dividendYieldPercent ? Number(props.stock.dividendYieldPercent.toPrecision(3)) : "–"}
-          {"\u2009%"}
+          {formatPercentage(props.stock.dividendYieldPercent, { total: 100 })}
         </Typography>
       </TableCell>
       {/* P/E Ratio */}
       <TableCell sx={{ display: displayColumn("P / E Ratio") }}>
         <Typography variant="body1" color="text.primary" width={45} sx={{ textAlign: "right" }} noWrap>
-          {props.stock.priceEarningRatio ? Number(props.stock.priceEarningRatio.toPrecision(3)) : "–"}
+          {Number(props.stock.priceEarningRatio?.toPrecision(3)) || "–"}
         </Typography>
       </TableCell>
       {/* Market Cap */}

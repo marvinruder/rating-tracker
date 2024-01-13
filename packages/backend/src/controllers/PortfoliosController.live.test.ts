@@ -22,14 +22,14 @@ tests.push({
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.length).toBe(2);
-    expect(res.body[0].name).toBe("Min portefølje");
-    expect(res.body[1].name).toBe("My Portfolio");
-    expect(res.body[0].currency).toBe("DKK");
-    expect(res.body[1].currency).toBe("USD");
+    expect(res.body[0].name).toBe("My Portfolio");
+    expect(res.body[1].name).toBe("Min portefølje");
+    expect(res.body[0].currency).toBe("USD");
+    expect(res.body[1].currency).toBe("DKK");
 
     // The summary does not contain the full stock objects
-    expect(res.body[1].stocks[0].ticker).toBe("exampleAAPL");
-    expect(res.body[1].stocks[0].amount).toEqual(120);
+    expect(res.body[0].stocks[0].ticker).toBe("exampleAAPL");
+    expect(res.body[0].stocks[0].amount).toEqual(120);
     expect(Object.entries(res.body[0].stocks[0])).toHaveLength(2);
   },
 });

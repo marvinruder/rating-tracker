@@ -2,7 +2,7 @@
   "env": {
     "browser": true
   },
-  "extends": ["plugin:react/recommended", "plugin:jsdoc/recommended", "plugin:import/recommended", "google", "prettier"],
+  "extends": ["plugin:react/recommended", "plugin:jsdoc/recommended", "plugin:i/recommended", "plugin:i/typescript", "google", "prettier"],
   "settings": {
     "react": {
       "version": "detect"
@@ -20,23 +20,22 @@
   "plugins": ["react", "@typescript-eslint", "prettier", "jsdoc", "import"],
   "rules": {
     "prettier/prettier": ["warn"],
-    "no-unused-vars": 0,
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["warn"],
     "@typescript-eslint/no-floating-promises": ["warn"],
     "@typescript-eslint/await-thenable": ["warn"],
-    "@typescript-eslint/no-misused-promises": ["warn"],
-    "react/react-in-jsx-scope": 0,
+    "react/react-in-jsx-scope": "off",
     "react/jsx-curly-brace-presence": ["warn", "never"],
-    "require-jsdoc": 0,
-    "valid-jsdoc": 0,
-    "jsdoc/no-undefined-types": 0,
+    "require-jsdoc": "off",
+    "valid-jsdoc": "off",
+    "jsdoc/no-undefined-types": "off",
     "jsdoc/tag-lines": ["warn", "never", { "startLines": 1 }],
     "import/extensions": ["warn", "never", { "json": "always" }],
     "import/first": ["warn"],
-    "import/no-unresolved": 0,
-    "import/no-deprecated": ["warn"],
+    "import/namespace": "off",
+    "import/no-unresolved": "off",
     "import/no-nodejs-modules": ["warn"],
-    "import/no-cycle": ["warn"],
+    "import/no-cycle": ["warn", { "ignoreExternal": true }],
     "import/order": ["warn", {
       "newlines-between": "always",
       "alphabetize": {
@@ -46,11 +45,6 @@
       },
       "warnOnUnassignedImports": true
     }],
-    "max-len": [
-      "warn",
-      {
-        "code": 120
-      }
-    ]
+    "max-len": ["warn", { "code": 120 }]
   }
 }

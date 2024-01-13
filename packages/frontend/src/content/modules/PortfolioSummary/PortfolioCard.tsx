@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { PortfolioSummary, currencyMinorUnits, portfoliosEndpointPath } from "@rating-tracker/commons";
+import { PortfolioSummary, currencyMinorUnits, getTotalAmount, portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -47,9 +47,9 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
                   (props.portfolio.stocks.length || "No") +
                   ` stock${props.portfolio.stocks.length !== 1 ? "s" : ""}` +
                   (props.portfolio.stocks.length
-                    ? ` · ${props.portfolio.stocks
-                        .reduce((sum, stock) => sum + stock.amount, 0)
-                        .toFixed(currencyMinorUnits[props.portfolio.currency])} ${props.portfolio.currency} total`
+                    ? `\u2002·\u2002${props.portfolio.currency} ${getTotalAmount(props.portfolio).toFixed(
+                        currencyMinorUnits[props.portfolio.currency],
+                      )} total`
                     : "")
                 ) : (
                   <Skeleton width="48px" />

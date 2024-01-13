@@ -55,3 +55,16 @@ export const superRegionOfRegion: Record<Region, SuperRegion> = {
 export const getRegionsInSuperRegion = (superRegion: SuperRegion): Region[] => {
   return regionArray.filter((region) => superRegionOfRegion[region] == superRegion);
 };
+
+/**
+ * Returns the emoji globe for a super region.
+ *
+ * @param {SuperRegion} superRegion The super region
+ * @returns {string} An emoji of the super region’s globe
+ */
+export const emojiGlobe = (superRegion: SuperRegion): string =>
+  ({
+    Americas: "🌎",
+    EMEA: "🌍",
+    Asia: "🌏",
+  })[superRegion];

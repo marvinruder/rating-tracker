@@ -1,4 +1,4 @@
-import { MessageType } from "../MessageType";
+import type { MessageType } from "../MessageType";
 import { OmitFunctions } from "../OmitFunctions";
 
 /**

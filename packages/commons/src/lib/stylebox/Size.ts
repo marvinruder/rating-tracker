@@ -1,7 +1,7 @@
 /**
  * An array of sizes in the Morningstar Style Box.
  */
-export const sizeArray = ["Small", "Mid", "Large"] as const;
+export const sizeArray = ["Large", "Mid", "Small"] as const;
 
 /**
  * A size in the Morningstar Style Box.

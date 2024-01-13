@@ -8,7 +8,7 @@ import {
   watchlistsEndpointPath,
 } from "@rating-tracker/commons";
 import NProgress from "nprogress";
-import { Suspense, lazy, useState, useEffect, createContext } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import type { RouteObject } from "react-router";
 import { useLocation } from "react-router";
 import { Navigate, useSearchParams } from "react-router-dom";
@@ -29,6 +29,7 @@ import { LoginPage } from "./content/pages/Login";
 import { Status404 } from "./content/pages/Status/Status404";
 import { Status500 } from "./content/pages/Status/Status500";
 import { NotificationProvider } from "./contexts/NotificationContext";
+import { UserContext } from "./contexts/UserContext";
 import { SidebarLayout } from "./layouts/SidebarLayout/SidebarLayout";
 import api from "./utils/api";
 
@@ -37,7 +38,7 @@ import api from "./utils/api";
  *
  * @returns {JSX.Element} The component.
  */
-export const SuspenseLoader = (): JSX.Element => {
+const SuspenseLoader = (): JSX.Element => {
   useEffect(() => {
     NProgress.start();
     return () => {
@@ -146,29 +147,6 @@ const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSu
  * @returns {JSX.Element} The component.
  */
 const Watchlist = loader(lazy(() => import("./content/modules/Watchlist/Watchlist")));
-
-/**
- * An object provided by the user context.
- */
-type UserContextType = {
-  /**
-   * Information regarding the current user.
-   */
-  user: User;
-  /**
-   * Deletes the user information from the context.
-   */
-  clearUser: () => void;
-  /**
-   * Triggers a refetch of the user information.
-   */
-  refetchUser: () => void;
-};
-
-/**
- * A context providing information about the current user.
- */
-export const UserContext = createContext<UserContextType>({} as UserContextType);
 
 /**
  * A wrapper ensuring that the user is authenticated before displaying the page.
