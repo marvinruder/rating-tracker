@@ -115,6 +115,7 @@ export const readAllWatchlists = async (email: string): Promise<WatchlistSummary
       stocks: { select: { ticker: true } },
     },
     where: { user: { email } },
+    orderBy: { id: "asc" },
   });
 };
 

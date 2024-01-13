@@ -149,7 +149,7 @@ export const readAllPortfolios = async (email: string): Promise<PortfolioSummary
         stocks: { orderBy: { amount: "desc" } },
       },
       where: { user: { email } },
-      orderBy: { name: "asc" },
+      orderBy: { id: "asc" },
     })
   ).map((portfolio) => ({
     ...portfolio,

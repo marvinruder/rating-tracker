@@ -1,7 +1,7 @@
 import { OmitDynamicAttributesStock, optionalStockValuesNull } from "@rating-tracker/commons";
 import { describe, expect, it } from "vitest";
 
-import formatMarketCap from "./formatters";
+import { formatMarketCap, formatPercentage } from "./formatters";
 
 const stock: OmitDynamicAttributesStock = {
   ...optionalStockValuesNull,
@@ -35,5 +35,29 @@ describe("Market Capitalization Formatter", () => {
   it("formats other things", () => {
     stock.marketCap = 1.234;
     expect(formatMarketCap(stock)).toBe("1");
+  });
+});
+
+describe("Percentage Formatter", () => {
+  it("formats a simple percentage", () => {
+    expect(formatPercentage(0.1234)).toBe("12.3 %");
+  });
+
+  it("formats a percentage with a given total amount", () => {
+    expect(formatPercentage(3, { total: 4 })).toBe("75 %");
+  });
+
+  it("formats a percentage with a given precision", () => {
+    expect(formatPercentage(0.1234, { precision: 2 })).toBe("12 %");
+  });
+
+  it("formats a percentage with a “+” sign in front of positive numbers", () => {
+    expect(formatPercentage(0.1234, { forceSign: true })).toBe("+12.3 %");
+    expect(formatPercentage(-0.1234, { forceSign: true })).toBe("-12.3 %");
+  });
+
+  it("uses a fallback value if the given value is not a number", () => {
+    expect(formatPercentage(NaN)).toBe("–");
+    expect(formatPercentage(NaN, { fallbackString: "Oh no!" })).toBe("Oh no!");
   });
 });

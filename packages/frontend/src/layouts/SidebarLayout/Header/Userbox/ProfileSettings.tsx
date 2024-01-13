@@ -30,7 +30,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 
 import { useNotification } from "../../../../contexts/NotificationContext";
-import { UserContext } from "../../../../router";
+import { UserContext } from "../../../../contexts/UserContext";
 import api from "../../../../utils/api";
 import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
 

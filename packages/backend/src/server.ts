@@ -23,7 +23,7 @@ import "./controllers/StatusController";
 import "./controllers/StocksController";
 import "./controllers/UsersController";
 import "./controllers/WatchlistsController";
-import openapiDocument from "./openapi";
+import { openapiDocument } from "./openapi";
 import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository";
 import setupCronJobs from "./utils/cron";
 import errorHandler from "./utils/errorHandler";

@@ -8,7 +8,7 @@ import { useContext, useState } from "react";
 
 import { SwitchSelector } from "../../components/etc/SwitchSelector";
 import { useNotification } from "../../contexts/NotificationContext";
-import { UserContext } from "../../router";
+import { UserContext } from "../../contexts/UserContext";
 import api from "../../utils/api";
 
 /**

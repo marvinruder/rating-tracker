@@ -20,7 +20,7 @@ import { DeleteStock } from "../../../components/dialogs/stock/DeleteStock";
 import { EditStock } from "../../../components/dialogs/stock/EditStock";
 import { AddStockToWatchlist } from "../../../components/dialogs/watchlist/AddStockToWatchlist";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { UserContext } from "../../../router";
+import { UserContext } from "../../../contexts/UserContext";
 import api from "../../../utils/api";
 
 /**

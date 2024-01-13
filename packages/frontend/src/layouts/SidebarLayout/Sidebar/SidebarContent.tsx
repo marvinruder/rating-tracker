@@ -31,7 +31,7 @@ import { NavLink } from "react-router-dom";
 
 import { StatusIndicator } from "../../../components/etc/StatusIndicator";
 import SidebarContext from "../../../contexts/SidebarContext";
-import { UserContext } from "../../../router";
+import { UserContext } from "../../../contexts/UserContext";
 
 import { Logo } from "./Logo";
 

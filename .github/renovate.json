@@ -19,6 +19,10 @@
     {
       "groupName": "WebAuthn",
       "matchPackagePatterns": ["@simplewebauthn"]
+    },
+    {
+      "matchPackagePatterns": ["@nivo"],
+      "automerge": false
     }
   ]
 }

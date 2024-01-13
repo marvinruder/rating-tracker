@@ -5,7 +5,7 @@ import { readUser } from "../../db/tables/userTable";
 import { isExistingSessionEntity, sessionSchema } from "../../models/session";
 import APIError from "../../utils/APIError";
 import logger from "../../utils/logger";
-import redis from "../redis";
+import { redis } from "../redis";
 
 /**
  * The time in seconds after which a session should expire.

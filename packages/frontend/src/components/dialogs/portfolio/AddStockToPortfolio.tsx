@@ -121,6 +121,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
               error={amountError}
               label="Amount"
               value={amountInput}
+              autoFocus
               fullWidth
             />
           </Grid>

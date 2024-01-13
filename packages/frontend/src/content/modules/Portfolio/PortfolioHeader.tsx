@@ -1,7 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
-import { currencyMinorUnits, Portfolio, portfoliosEndpointPath } from "@rating-tracker/commons";
+import { currencyMinorUnits, getTotalAmount, Portfolio, portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { DeletePortfolio } from "../../../components/dialogs/portfolio/DeletePortfolio";
@@ -31,9 +31,9 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
                 (props.portfolio.stocks.length || "No") +
                 ` stock${props.portfolio.stocks.length !== 1 ? "s" : ""}` +
                 (props.portfolio.stocks.length
-                  ? ` · ${props.portfolio.stocks
-                      .reduce((sum, stock) => sum + stock.amount, 0)
-                      .toFixed(currencyMinorUnits[props.portfolio.currency])} ${props.portfolio.currency} total`
+                  ? `\u2002·\u2002${props.portfolio.currency} ${getTotalAmount(props.portfolio).toFixed(
+                      currencyMinorUnits[props.portfolio.currency],
+                    )} total`
                   : "")
               ) : (
                 <Skeleton width="48px" />

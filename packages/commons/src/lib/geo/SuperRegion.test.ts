@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isSuperRegion, getRegionsInSuperRegion } from "./SuperRegion";
+import { isSuperRegion, getRegionsInSuperRegion, emojiGlobe } from "./SuperRegion";
 
 describe("Super Region", () => {
   it("is a super region", () => {
@@ -13,5 +13,11 @@ describe("Super Region", () => {
 
   it("contains regions", () => {
     expect(getRegionsInSuperRegion("Americas")).toEqual(["NorthAmerica", "LatinAmerica"]);
+  });
+});
+
+describe("Emoji Globes", () => {
+  it("is a globe emoji", () => {
+    expect(emojiGlobe("EMEA")).toBe("🌍");
   });
 });

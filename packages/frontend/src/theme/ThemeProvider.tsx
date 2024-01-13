@@ -1,6 +1,6 @@
 import type { Theme } from "@mui/material";
 import { ThemeProvider } from "@mui/material";
-import { SuperSector } from "@rating-tracker/commons";
+import { SuperRegion, SuperSector } from "@rating-tracker/commons";
 import React, { createContext, FC, useEffect, useState } from "react";
 
 import { Light, Dark } from "./scheme";
@@ -98,6 +98,7 @@ declare module "@mui/material/styles" {
         main: string;
         dark: string;
       };
+      region: Record<SuperRegion, string>;
       /**
        * The colors Morningstar uses for each super sector.
        */
@@ -287,6 +288,7 @@ declare module "@mui/material/styles" {
         main: string;
         dark: string;
       };
+      region: Record<SuperRegion, string>;
       /**
        * The colors Morningstar uses for each super sector.
        */

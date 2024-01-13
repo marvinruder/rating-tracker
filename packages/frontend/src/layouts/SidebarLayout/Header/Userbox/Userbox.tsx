@@ -21,7 +21,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 
 import NotificationContext from "../../../../contexts/NotificationContext";
-import { UserContext } from "../../../../router";
+import { UserContext } from "../../../../contexts/UserContext";
 import api from "../../../../utils/api";
 
 import { ProfileSettings } from "./ProfileSettings";

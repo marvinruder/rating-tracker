@@ -4,7 +4,7 @@ import { Entity, EntityId, Repository } from "redis-om";
 import { isExistingResourceEntity, resourceSchema } from "../../models/resource";
 import APIError from "../../utils/APIError";
 import logger from "../../utils/logger";
-import redis from "../redis";
+import { redis } from "../redis";
 
 /**
  * The resource repository.

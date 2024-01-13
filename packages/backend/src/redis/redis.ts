@@ -38,5 +38,3 @@ export const redisIsReady = (): Promise<void> =>
         )
     : /* c8 ignore next */ Promise.reject(new Error("Redis is not reachable."));
 // The errors only occurs when Redis server is not available, which is difficult to reproduce.
-
-export default redis;
