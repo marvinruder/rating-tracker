@@ -62,6 +62,16 @@ Users can subscribe to a watchlist, so they receive [notifications](#notificatio
   <img alt="Rating Tracker Watchlists" src="/docs/images/watchlists-light.png">
 </picture>
 
+#### Portfolios
+
+Stocks weighted by a given amount of currency can be aggretated in portfolios. The average rating scores of the portfolio can be displayed, as well as the distribution of regions, industry sectors, company sizes and styles of the stocks in the portfolio.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/portfolios-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/portfolios-light.png">
+  <img alt="Rating Tracker Portfolios" src="/docs/images/portfolios-light.png">
+</picture>
+
 #### User Management
 
 The Rating Tracker supports multiple users, who can self-register via WebAuthn and access the application after being granted fine-grained access by an administrator, for whom a “User Management” web interface is provided.
