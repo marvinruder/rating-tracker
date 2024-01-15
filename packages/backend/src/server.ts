@@ -48,7 +48,7 @@ class Server {
 /**
  * The server instance.
  */
-export const server = new Server();
+const server = new Server();
 
 // Do not send information regarding the server's software and version for security reasons.
 server.app.disable("x-powered-by");
