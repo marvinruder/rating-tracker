@@ -19,16 +19,9 @@ export const Range52WSlider: FC<SliderProps> = (props: SliderProps): JSX.Element
           const style = props.style ?? {};
           style.top = 18;
           // Align the labels based directly on the value
-          switch (Number(props.children)) {
-            case props.ownerState.min:
-              style.transform = "translateX(0%)";
-              break;
-            case props.ownerState.max:
-              style.transform = "translateX(-100%)";
-              break;
-            default:
-              break;
-          }
+          const position = Number(props.style.left.replace("%", ""));
+          if (position <= Number.EPSILON) style.transform = "translateX(0%)";
+          if (position >= 100 * (1 - Number.EPSILON)) style.transform = "translateX(-100%)";
           return <SliderMarkLabel {...props} style={style} />;
         },
       }}
