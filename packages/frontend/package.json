@@ -31,8 +31,8 @@
     "@react-spring/web": "9.7.3",
     "@simplewebauthn/browser": "8.3.4",
     "@vitejs/plugin-react": "4.2.1",
-    "@vitest/coverage-v8": "1.2.0",
-    "@vitest/web-worker": "1.2.0",
+    "@vitest/coverage-v8": "1.2.1",
+    "@vitest/web-worker": "1.2.1",
     "axios": "1.6.5",
     "nprogress": "0.2.0",
     "prop-types": "15.8.1",
@@ -44,7 +44,7 @@
     "vite": "5.0.11",
     "vite-plugin-html": "3.2.1",
     "vite-plugin-wasm": "3.3.0",
-    "vitest": "1.2.0"
+    "vitest": "1.2.1"
   },
   "devDependencies": {
     "@types/node": "20.11.5",
