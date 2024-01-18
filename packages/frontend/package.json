@@ -42,7 +42,7 @@
     "react-router-dom": "6.21.2",
     "react-switch-selector": "2.2.1",
     "vite": "5.0.11",
-    "vite-plugin-html": "3.2.1",
+    "vite-plugin-html": "3.2.2",
     "vite-plugin-wasm": "3.3.0",
     "vitest": "1.2.1"
   },
