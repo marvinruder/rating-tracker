@@ -1378,7 +1378,7 @@ __metadata:
     "@simplewebauthn/server": "npm:8.3.6"
     "@types/cookie-parser": "npm:1.4.6"
     "@types/express": "npm:4.17.21"
-    "@types/luxon": "npm:3.4.1"
+    "@types/luxon": "npm:3.4.2"
     "@types/node": "npm:20.11.5"
     "@types/response-time": "npm:2.3.8"
     "@types/supertest": "npm:6.0.2"
@@ -2012,10 +2012,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:3.4.1":
-  version: 3.4.1
-  resolution: "@types/luxon@npm:3.4.1"
-  checksum: 8681a15eba69b195f76d000e0a2759f6a289fbe4a75651a3e623125b016cf3dfabea1a8d35939e1831c5e886d28af1b02173c2b68a29f73c071c41b6e9afdeb9
+"@types/luxon@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@types/luxon@npm:3.4.2"
+  checksum: d835467de3daf7e17ba78b50bb5a14efd94272439ca067990d71332a54b311544459c69623eddd243b511b28d70194c9591a9ee8cf9c038962c965f991affd7e
   languageName: node
   linkType: hard
 
