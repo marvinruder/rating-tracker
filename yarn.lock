@@ -1375,7 +1375,7 @@ __metadata:
   dependencies:
     "@prisma/client": "npm:5.8.1"
     "@rating-tracker/commons": "workspace:*"
-    "@simplewebauthn/server": "npm:8.3.6"
+    "@simplewebauthn/server": "npm:8.3.7"
     "@types/cookie-parser": "npm:1.4.6"
     "@types/express": "npm:4.17.21"
     "@types/luxon": "npm:3.4.2"
@@ -1462,7 +1462,7 @@ __metadata:
     "@rating-tracker/commons": "workspace:*"
     "@rating-tracker/wasm": "workspace:*"
     "@react-spring/web": "npm:9.7.3"
-    "@simplewebauthn/browser": "npm:8.3.4"
+    "@simplewebauthn/browser": "npm:8.3.7"
     "@types/node": "npm:20.11.5"
     "@types/nprogress": "npm:0.2.3"
     "@types/react": "npm:18.2.48"
@@ -1749,18 +1749,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/browser@npm:8.3.4":
-  version: 8.3.4
-  resolution: "@simplewebauthn/browser@npm:8.3.4"
+"@simplewebauthn/browser@npm:8.3.7":
+  version: 8.3.7
+  resolution: "@simplewebauthn/browser@npm:8.3.7"
   dependencies:
     "@simplewebauthn/typescript-types": "npm:^8.3.4"
-  checksum: c5a8974df6fb3f1ad74fc7e8f7f8dea931c928c28dc9fe41fe48aa6592586efc72545b86a6c9d2d24c7c06b638215350e93e4310af995674be3687fa680e6e45
+  checksum: 99e66f7cb6c9dc6c1891aa4a94161bf09ec239e1e4f27157d35658d797878220590bd82deb6b37c0a5b90d043d89655613f7e6bc8f938aaf0114c99f2c430796
   languageName: node
   linkType: hard
 
-"@simplewebauthn/server@npm:8.3.6":
-  version: 8.3.6
-  resolution: "@simplewebauthn/server@npm:8.3.6"
+"@simplewebauthn/server@npm:8.3.7":
+  version: 8.3.7
+  resolution: "@simplewebauthn/server@npm:8.3.7"
   dependencies:
     "@hexagon/base64": "npm:^1.1.27"
     "@peculiar/asn1-android": "npm:^2.3.10"
@@ -1771,7 +1771,7 @@ __metadata:
     "@simplewebauthn/typescript-types": "npm:^8.3.4"
     cbor-x: "npm:^1.5.2"
     cross-fetch: "npm:^4.0.0"
-  checksum: 82a97813a75214e05bb5095517a18d897b94287542273e15aec900da6ad11e71178611ebc341a8202247f8cc46c19bef0733c9dd49815fc107a7dfa5ded25708
+  checksum: 01c2da34f745bce20eb2fc378ab231dafaa9f4e74df69622ba0160896839e059d12cf3d5f944a569d63ac028ac0d5fe176445a1777947bfe27cd61bb45e9a012
   languageName: node
   linkType: hard
 
