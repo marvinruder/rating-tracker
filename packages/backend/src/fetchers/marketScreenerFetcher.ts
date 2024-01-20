@@ -12,7 +12,6 @@ import logger from "../utils/logger";
 
 import { type FetcherWorkspace, captureFetchError, HTMLFetcher, getAndParseHTML } from "./fetchHelper";
 
-const XPATH_ANALYST_CONSENSUS = xpath.parse("//div[starts-with(@title, 'Rate : ')]");
 const XPATH_ANALYST_COUNT = xpath.parse(
   "//div[@class='card-content']/div/div/div[contains(text(), 'Number of Analysts')]/following-sibling::div",
 );
@@ -57,10 +56,10 @@ const marketScreenerFetcher: HTMLFetcher = async (
     assert(consensusTableDiv, "Unable to find Analyst Consensus div.");
 
     try {
-      const analystConsensusNode = XPATH_ANALYST_CONSENSUS.select1({ node: consensusTableDiv, isHtml: true });
+      const analystConsensusNode = document.getElementsByClassName("consensus-gauge")[0];
       assert(analystConsensusNode, "Unable to find Analyst Consensus node.");
-      const analystConsensusMatches = (analystConsensusNode as Element)
-        .getAttribute("title") // Example: " Rate : 9.1 / 10"
+      const analystConsensusMatches = analystConsensusNode
+        .getAttribute("title") // Example: " Rate: 9.1 / 10"
         .match(/(\d+(\.\d+)?)/g); // Extract the first decimal number from the title.
       if (
         analystConsensusMatches === null ||

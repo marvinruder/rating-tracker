@@ -1,5 +1,5 @@
 import { glob } from "fast-glob";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 
 import * as portfolioTable from "../src/db/tables/portfolioTable";
 import * as stockTable from "../src/db/tables/stockTable";
@@ -23,7 +23,7 @@ vi.mock("@simplewebauthn/server", async () => await import("./moduleMocks/@simpl
  * An array of spy functions on methods that alter the state of PostgreSQL or Redis, or send Signal messages. Must only
  * be called in tests explicitly marked as unsafe.
  */
-const unsafeSpies: SpyInstance[] = [];
+const unsafeSpies: MockInstance[] = [];
 
 unsafeSpies.push(vi.spyOn(portfolioTable, "createPortfolio"));
 unsafeSpies.push(vi.spyOn(portfolioTable, "updatePortfolio"));
@@ -87,7 +87,9 @@ const unsafeTestSuites: { [key: string]: LiveTestSuite } = {};
 
 // Get all test suites
 for await (const path of await glob("../**/*.live.test.ts")) {
-  const { tests, suiteName }: { tests: LiveTestSuite; suiteName: string } = await import("../" + path);
+  const { tests, suiteName }: { tests: LiveTestSuite; suiteName: string } = await import(
+    /* @vite-ignore */ "../" + path
+  );
   testSuites[suiteName] = [];
   unsafeTestSuites[suiteName] = [];
   tests.forEach((test) =>
