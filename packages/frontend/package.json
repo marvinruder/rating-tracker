@@ -29,7 +29,7 @@
     "@rating-tracker/commons": "workspace:*",
     "@rating-tracker/wasm": "workspace:*",
     "@react-spring/web": "9.7.3",
-    "@simplewebauthn/browser": "8.3.7",
+    "@simplewebauthn/browser": "9.0.0",
     "@vitejs/plugin-react": "4.2.1",
     "@vitest/coverage-v8": "1.2.1",
     "@vitest/web-worker": "1.2.1",
