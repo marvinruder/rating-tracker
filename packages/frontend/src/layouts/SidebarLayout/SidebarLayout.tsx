@@ -1,5 +1,5 @@
 import { Box, useTheme } from "@mui/material";
-import { FC } from "react";
+import type { FC } from "react";
 import { Outlet } from "react-router-dom";
 
 import { Header } from "./Header/Header";
@@ -10,7 +10,7 @@ import { Sidebar } from "./Sidebar/Sidebar";
  *
  * @returns {JSX.Element} The component.
  */
-export const SidebarLayout: FC = (): JSX.Element => {
+const SidebarLayout: FC = (): JSX.Element => {
   const theme = useTheme();
 
   return (
@@ -43,3 +43,5 @@ export const SidebarLayout: FC = (): JSX.Element => {
     </>
   );
 };
+
+export default SidebarLayout;

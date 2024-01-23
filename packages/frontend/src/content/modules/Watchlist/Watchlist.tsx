@@ -1,5 +1,6 @@
 import { Card, Container } from "@mui/material";
-import { StockListColumn, Watchlist, stockListColumnArray, watchlistsEndpointPath } from "@rating-tracker/commons";
+import type { StockListColumn, Watchlist } from "@rating-tracker/commons";
+import { stockListColumnArray, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -7,7 +8,7 @@ import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { StockTable } from "../../../components/stock/layouts/StockTable";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { StockFilter } from "../../../types/StockFilter";
+import type { StockFilter } from "../../../types/StockFilter";
 import api from "../../../utils/api";
 
 import { WatchlistHeader } from "./WatchlistHeader";

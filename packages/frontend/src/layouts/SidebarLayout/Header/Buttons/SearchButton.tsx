@@ -19,8 +19,10 @@ import {
   useTheme,
 } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
-import { baseURL, emojiFlag, Stock, stocksEndpointPath, stockLogoEndpointSuffix } from "@rating-tracker/commons";
-import React, { forwardRef, Ref, useState, ReactElement, ChangeEvent, useEffect, Fragment } from "react";
+import type { Stock } from "@rating-tracker/commons";
+import { baseURL, emojiFlag, stocksEndpointPath, stockLogoEndpointSuffix } from "@rating-tracker/commons";
+import type { Ref, ReactElement, ChangeEvent } from "react";
+import React, { forwardRef, useState, useEffect, Fragment } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { SectorIcon } from "../../../../components/stock/properties/SectorIcon";

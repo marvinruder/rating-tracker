@@ -1,4 +1,5 @@
-import { LiveTestSuite, supertest } from "../test/liveTestHelpers";
+import type { LiveTestSuite } from "../test/liveTestHelpers";
+import { supertest } from "../test/liveTestHelpers";
 
 export const suiteName = "Other Server Components";
 

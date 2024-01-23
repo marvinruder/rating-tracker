@@ -1,6 +1,7 @@
 import { baseURL, sessionEndpointPath, accountEndpointPath } from "@rating-tracker/commons";
 
-import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
+import type { LiveTestSuite } from "../../test/liveTestHelpers";
+import { supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Session API";
 

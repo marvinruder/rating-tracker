@@ -3,6 +3,7 @@ import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { Box, Grid, Typography, useTheme, Tooltip, Chip, useMediaQuery, Skeleton } from "@mui/material";
+import type { Stock } from "@rating-tracker/commons";
 import {
   countryNameWithFlag,
   currencyMinorUnits,
@@ -16,7 +17,6 @@ import {
   sectorDescription,
   sectorName,
   sectorOfIndustryGroup,
-  Stock,
   superSectorDescription,
   superSectorName,
   superSectorOfSector,

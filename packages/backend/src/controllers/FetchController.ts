@@ -1,3 +1,4 @@
+import type { Resource, Stock } from "@rating-tracker/commons";
 import {
   dataProviderTTL,
   fetchLSEGEndpointPath,
@@ -7,12 +8,10 @@ import {
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
   GENERAL_ACCESS,
-  Resource,
-  Stock,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
 import axios from "axios";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { DateTime } from "luxon";
 
 import { readStocks, readStock, updateStock } from "../db/tables/stockTable";

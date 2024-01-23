@@ -1,7 +1,8 @@
 import { baseURL, resourcesEndpointPath } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
 
-import { LiveTestSuite, expectRouteToBePrivate, supertest } from "../../test/liveTestHelpers";
+import type { LiveTestSuite } from "../../test/liveTestHelpers";
+import { expectRouteToBePrivate, supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Resources API";
 

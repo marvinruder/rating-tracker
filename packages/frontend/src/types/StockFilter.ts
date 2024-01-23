@@ -1,4 +1,4 @@
-import { Country, Industry, MSCIESGRating, Size, Style } from "@rating-tracker/commons";
+import type { Country, Industry, MSCIESGRating, Size, Style } from "@rating-tracker/commons";
 
 /**
  * An object containing all possible values for filtering stocks.

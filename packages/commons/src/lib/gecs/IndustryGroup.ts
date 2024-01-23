@@ -1,4 +1,5 @@
-import { Industry, industryArray } from "./Industry";
+import type { Industry } from "./Industry";
+import { industryArray } from "./Industry";
 
 /**
  * An array of industry groups in the Morningstar Global Equity Classification Structure.

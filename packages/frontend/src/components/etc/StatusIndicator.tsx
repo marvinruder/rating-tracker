@@ -1,8 +1,8 @@
 import CircleIcon from "@mui/icons-material/Circle";
 import { Box, useTheme } from "@mui/material";
-import { FC } from "react";
+import type { FC } from "react";
 
-import { Status } from "../../types/Status";
+import type { Status } from "../../types/Status";
 
 /**
  * Displays a traffic-light-like status indicator.

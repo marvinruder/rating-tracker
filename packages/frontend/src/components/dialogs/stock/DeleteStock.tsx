@@ -1,7 +1,8 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import { Stock, stocksEndpointPath } from "@rating-tracker/commons";
+import type { Stock } from "@rating-tracker/commons";
+import { stocksEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 

@@ -1,5 +1,5 @@
 import type { AlertColor } from "@mui/material";
-import { Service } from "@rating-tracker/commons";
+import type { Service } from "@rating-tracker/commons";
 
 /**
  * A status displayed by a Status Indicator.

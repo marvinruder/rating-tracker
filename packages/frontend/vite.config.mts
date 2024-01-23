@@ -4,10 +4,6 @@ import { createHtmlPlugin } from "vite-plugin-html";
 import wasm from "vite-plugin-wasm";
 import { defineConfig as defineVitestConfig } from "vitest/config";
 
-const chunkList: string[] = ["@mui"];
-
-const manualChunks = (id: string) => chunkList.find((chunk) => id.match(new RegExp(chunk)));
-
 const customLogger = createLogger();
 const customLoggerError = customLogger.error;
 customLogger.error = (msg, options) => {
@@ -19,8 +15,6 @@ customLogger.error = (msg, options) => {
 export default mergeConfig(
   defineViteConfig({
     build: {
-      cssCodeSplit: false,
-      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         onLog(level, log, handler) {
           // vitejs/vite#15012
@@ -32,7 +26,6 @@ export default mergeConfig(
             return;
           handler(level, log);
         },
-        output: { manualChunks },
       },
       sourcemap: true,
     },

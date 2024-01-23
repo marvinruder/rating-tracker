@@ -1,6 +1,6 @@
 import type { SliderProps } from "@mui/material";
 import { Slider, SliderMarkLabel, useTheme } from "@mui/material";
-import { FC } from "react";
+import type { FC } from "react";
 
 /**
  * A slider that is used to display a 52-week range.

@@ -19,9 +19,8 @@ import {
 } from "@mui/material";
 import type { ComputedDatum, DatumId } from "@nivo/sunburst";
 import { Sunburst } from "@nivo/sunburst";
+import type { StockListColumn, Portfolio, SunburstNode, Country, Sector, SuperSector } from "@rating-tracker/commons";
 import {
-  StockListColumn,
-  Portfolio,
   stockListColumnArray,
   portfoliosEndpointPath,
   getWeightedAverage,
@@ -40,7 +39,6 @@ import {
   isRegion,
   superRegionOfRegion,
   superRegionName,
-  SunburstNode,
   getIndustrySunburstData,
   isSuperSector,
   isSector,
@@ -49,9 +47,6 @@ import {
   superSectorOfSector,
   sectorOfIndustryGroup,
   stripPrefixFromSunburstID,
-  Country,
-  Sector,
-  SuperSector,
 } from "@rating-tracker/commons";
 import { animated } from "@react-spring/web";
 import { useEffect, useState } from "react";
@@ -67,7 +62,7 @@ import { StockTable } from "../../../components/stock/layouts/StockTable";
 import { getSectorIconPaths } from "../../../components/stock/properties/SectorIcon";
 import { StarRating } from "../../../components/stock/properties/StarRating";
 import { useNotification } from "../../../contexts/NotificationContext";
-import { StockFilter } from "../../../types/StockFilter";
+import type { StockFilter } from "../../../types/StockFilter";
 import api from "../../../utils/api";
 import { CurrencyWithTooltip, formatPercentage } from "../../../utils/formatters";
 

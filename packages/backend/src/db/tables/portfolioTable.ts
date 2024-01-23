@@ -1,4 +1,4 @@
-import { Currency, Portfolio, PortfolioSummary, Stock, WeightedStock } from "@rating-tracker/commons";
+import type { Currency, Portfolio, PortfolioSummary, Stock, WeightedStock } from "@rating-tracker/commons";
 
 import type {
   Prisma,

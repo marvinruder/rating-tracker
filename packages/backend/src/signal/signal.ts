@@ -1,4 +1,5 @@
-import { MessageType, REGEX_PHONE_NUMBER, Stock } from "@rating-tracker/commons";
+import type { MessageType, Stock } from "@rating-tracker/commons";
+import { REGEX_PHONE_NUMBER } from "@rating-tracker/commons";
 
 import { readAllUsers, readUsersWithStockOnSubscribedWatchlist } from "../db/tables/userTable";
 

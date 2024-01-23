@@ -1,8 +1,8 @@
 import assert from "node:assert";
 
-import { Stock } from "@rating-tracker/commons";
+import type { Stock } from "@rating-tracker/commons";
 import axios from "axios";
-import { Request } from "express";
+import type { Request } from "express";
 
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
@@ -11,7 +11,8 @@ import APIError from "../utils/APIError";
 import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
 
-import { type JSONFetcher, type FetcherWorkspace, captureFetchError } from "./fetchHelper";
+import type { JSONFetcher, FetcherWorkspace } from "./fetchHelper";
+import { captureFetchError } from "./fetchHelper";
 
 /**
  * Fetches data from LSEG Data & Analytics.

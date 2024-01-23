@@ -16,13 +16,8 @@ import {
   Skeleton,
   Dialog,
 } from "@mui/material";
-import {
-  FAVORITES_NAME,
-  Stock,
-  WatchlistSummary,
-  stocksEndpointPath,
-  watchlistsEndpointPath,
-} from "@rating-tracker/commons";
+import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
+import { FAVORITES_NAME, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";

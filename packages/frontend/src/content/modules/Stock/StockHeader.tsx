@@ -5,10 +5,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
+import type { Stock } from "@rating-tracker/commons";
 import {
   baseURL,
   favoritesEndpointPath,
-  Stock,
   stockLogoEndpointSuffix,
   stocksEndpointPath,
   WRITE_STOCKS_ACCESS,

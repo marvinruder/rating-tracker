@@ -2,7 +2,7 @@ import fs from "node:fs";
 
 import { baseURL, stockLogoEndpointSuffix, stocksEndpointPath } from "@rating-tracker/commons";
 import cron from "cron";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import pino from "pino";
 import pretty from "pino-pretty";
 

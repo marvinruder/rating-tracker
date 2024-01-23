@@ -13,7 +13,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { PortfolioSummary, currencyMinorUnits, getTotalAmount, portfoliosEndpointPath } from "@rating-tracker/commons";
+import type { PortfolioSummary } from "@rating-tracker/commons";
+import { currencyMinorUnits, getTotalAmount, portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 

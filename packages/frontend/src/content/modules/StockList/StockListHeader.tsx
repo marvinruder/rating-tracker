@@ -2,10 +2,12 @@ import AddIcon from "@mui/icons-material/Add";
 import type { SlideProps } from "@mui/material";
 import { Box, Typography, Grid, Tooltip, Dialog, IconButton, useMediaQuery, Slide } from "@mui/material";
 import { WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
-import { FC, useContext, useState } from "react";
+import type { FC } from "react";
+import { useContext, useState } from "react";
 
 import { AddStock } from "../../../components/dialogs/stock/AddStock";
-import { StockTableFilters, StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
+import type { StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
+import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
 import { UserContext } from "../../../contexts/UserContext";
 
 /**

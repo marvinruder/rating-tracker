@@ -1,5 +1,6 @@
 import { FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
-import { NextFunction, Request, Response, Router as expressRouter } from "express";
+import type { NextFunction, Request, Response } from "express";
+import { Router as expressRouter } from "express";
 import rateLimit from "express-rate-limit";
 
 import APIError from "./APIError";

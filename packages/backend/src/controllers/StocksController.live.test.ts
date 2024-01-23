@@ -1,6 +1,5 @@
+import type { Stock, WatchlistSummary, PortfolioSummary } from "@rating-tracker/commons";
 import {
-  Stock,
-  WatchlistSummary,
   baseURL,
   msciESGRatingArray,
   sizeArray,
@@ -11,12 +10,11 @@ import {
   styleArray,
   watchlistsEndpointPath,
   portfoliosEndpointPath,
-  PortfolioSummary,
 } from "@rating-tracker/commons";
 import type { Response } from "supertest";
 
+import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import {
-  LiveTestSuite,
   expectRouteToBePrivate,
   expectSpecialAccessRightsToBeRequired,
   expectStockListLengthToBe,
@@ -478,15 +476,29 @@ tests.push({
 tests.push({
   testName: "[unsafe] provides stock logos for background",
   testFunction: async () => {
-    const res = await supertest
+    let res = await supertest
       .get(`${baseURL}${logoBackgroundEndpointPath}`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     // Check max-age header, should be close to 1 day
     expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
-    expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(86400, -1);
-    // 60 logos are returned
-    expect(res.body).toHaveLength(60);
+    expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(604800, -1);
+    // 50 logos are returned
+    expect(res.body).toHaveLength(50);
+    res.body.forEach((logo: string) => {
+      expect(logo).toMatch(
+        // Each logo is an SVG file
+        '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
+      );
+    });
+
+    // We can request a different number of logos
+    res = await supertest
+      .get(`${baseURL}${logoBackgroundEndpointPath}?count=10`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    // 10 logos are returned
+    expect(res.body).toHaveLength(10);
     res.body.forEach((logo: string) => {
       expect(logo).toMatch(
         // Each logo is an SVG file

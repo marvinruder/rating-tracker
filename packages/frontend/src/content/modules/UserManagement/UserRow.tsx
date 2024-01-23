@@ -19,10 +19,10 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import type { User } from "@rating-tracker/commons";
 import {
   messageTypeArray,
   messageTypeName,
-  User,
   GENERAL_ACCESS,
   WRITE_STOCKS_ACCESS,
   ADMINISTRATIVE_ACCESS,

@@ -1,4 +1,5 @@
-import { OmitDynamicAttributesStock, optionalStockValuesNull } from "@rating-tracker/commons";
+import type { OmitDynamicAttributesStock } from "@rating-tracker/commons";
+import { optionalStockValuesNull } from "@rating-tracker/commons";
 import { describe, expect, it } from "vitest";
 
 import { formatMarketCap, formatPercentage } from "./formatters";

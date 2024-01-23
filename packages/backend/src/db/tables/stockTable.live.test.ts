@@ -1,6 +1,7 @@
-import { optionalStockValuesNull, Stock } from "@rating-tracker/commons";
+import type { Stock } from "@rating-tracker/commons";
+import { optionalStockValuesNull } from "@rating-tracker/commons";
 
-import { LiveTestSuite } from "../../../test/liveTestHelpers";
+import type { LiveTestSuite } from "../../../test/liveTestHelpers";
 import { sentMessages } from "../../signal/__mocks__/signalBase";
 
 import { createStock, readStock, updateStock } from "./stockTable";

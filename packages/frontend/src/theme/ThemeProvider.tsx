@@ -1,7 +1,8 @@
 import type { Theme } from "@mui/material";
 import { ThemeProvider } from "@mui/material";
-import { SuperRegion, SuperSector } from "@rating-tracker/commons";
-import React, { createContext, FC, useEffect, useState } from "react";
+import type { SuperRegion, SuperSector } from "@rating-tracker/commons";
+import type { FC } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import { Light, Dark } from "./scheme";
 

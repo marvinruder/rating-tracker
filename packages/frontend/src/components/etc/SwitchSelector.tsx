@@ -1,5 +1,5 @@
 import { Typography, useTheme } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { default as SwitchSelectorBase } from "react-switch-selector";
 
 /**

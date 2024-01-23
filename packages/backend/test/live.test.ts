@@ -11,7 +11,7 @@ import { listener } from "../src/server";
 import { sentMessages } from "../src/signal/__mocks__/signalBase";
 import * as signal from "../src/signal/signal";
 
-import { LiveTestSuite } from "./liveTestHelpers";
+import type { LiveTestSuite } from "./liveTestHelpers";
 import applyPostgresSeeds from "./seeds/postgres";
 import applyRedisSeeds from "./seeds/redis";
 

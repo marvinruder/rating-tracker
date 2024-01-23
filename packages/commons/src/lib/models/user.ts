@@ -1,5 +1,5 @@
 import type { MessageType } from "../MessageType";
-import { OmitFunctions } from "../OmitFunctions";
+import type { OmitFunctions } from "../OmitFunctions";
 
 /**
  * A regular expression that matches a phone number in E.164 format or an empty string.

@@ -1,4 +1,5 @@
-import { FAVORITES_NAME, Watchlist, WatchlistSummary } from "@rating-tracker/commons";
+import type { Watchlist, WatchlistSummary } from "@rating-tracker/commons";
+import { FAVORITES_NAME } from "@rating-tracker/commons";
 
 import APIError from "../../utils/APIError";
 import logger from "../../utils/logger";

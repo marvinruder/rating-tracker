@@ -1,11 +1,6 @@
 /* eslint-disable max-len */
-import {
-  GENERAL_ACCESS,
-  OmitDynamicAttributesStock,
-  optionalStockValuesNull,
-  Stock,
-  STOCK_UPDATE_MESSAGE,
-} from "@rating-tracker/commons";
+import type { OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
+import { GENERAL_ACCESS, optionalStockValuesNull, STOCK_UPDATE_MESSAGE } from "@rating-tracker/commons";
 
 import client from "../../src/db/client";
 import { addDynamicAttributesToStockData } from "../../src/models/dynamicStockAttributes";

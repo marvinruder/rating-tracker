@@ -10,7 +10,7 @@ import {
   UserWithCredentials,
 } from "@rating-tracker/commons";
 import * as SimpleWebAuthnServer from "@simplewebauthn/server";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable";
 import { createSession, sessionTTLInSeconds } from "../redis/repositories/sessionRepository";

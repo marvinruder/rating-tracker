@@ -1,5 +1,5 @@
 import { FAVORITES_NAME, GENERAL_ACCESS, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import {
   addStockToWatchlist,

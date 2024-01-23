@@ -1,5 +1,5 @@
 import { Box, Container, alpha, lighten, useTheme } from "@mui/material";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 /**
  * The wrapper for a page title.

@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 import * as portfolio from "../../parameters/portfolio";
 import * as stock from "../../parameters/stock";

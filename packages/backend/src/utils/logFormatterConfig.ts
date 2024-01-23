@@ -2,7 +2,7 @@ import { STATUS_CODES } from "http";
 
 import type { ChalkInstance } from "chalk";
 import chalk from "chalk";
-import { PrettyOptions } from "pino-pretty";
+import type { PrettyOptions } from "pino-pretty";
 
 /**
  * A list of error messages whose stack trace should not be printed.

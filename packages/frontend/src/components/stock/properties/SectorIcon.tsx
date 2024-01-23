@@ -1,14 +1,8 @@
 /* eslint-disable max-len */
 import { useTheme } from "@mui/material";
-import {
-  groupOfIndustry,
-  Industry,
-  Sector,
-  sectorOfIndustryGroup,
-  SuperSector,
-  superSectorOfSector,
-} from "@rating-tracker/commons";
-import { FC } from "react";
+import type { Industry, Sector, SuperSector } from "@rating-tracker/commons";
+import { groupOfIndustry, sectorOfIndustryGroup, superSectorOfSector } from "@rating-tracker/commons";
+import type { FC } from "react";
 
 /**
  * Provides the SVG paths for the icon.

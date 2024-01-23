@@ -17,14 +17,8 @@ import {
   TextField,
   InputAdornment,
 } from "@mui/material";
-import {
-  Stock,
-  PortfolioSummary,
-  stocksEndpointPath,
-  portfoliosEndpointPath,
-  Currency,
-  currencyMinorUnits,
-} from "@rating-tracker/commons";
+import type { Stock, PortfolioSummary, Currency } from "@rating-tracker/commons";
+import { stocksEndpointPath, portfoliosEndpointPath, currencyMinorUnits } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";

@@ -1,4 +1,5 @@
-import { Country, countryArray } from "./Country";
+import type { Country } from "./Country";
+import { countryArray } from "./Country";
 
 /**
  * An array of region identifiers.

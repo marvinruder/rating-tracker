@@ -1,4 +1,4 @@
-import { Stock } from "./stock";
+import type { Stock } from "./stock";
 
 /**
  * The name of the dedicated Favorites watchlist.

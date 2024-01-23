@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 import { badGateway } from "../../responses/serverError";
 import { okLogoBackground } from "../../responses/success";
@@ -19,6 +19,15 @@ const get: OpenAPIV3.OperationObject = {
       schema: {
         type: "boolean",
         example: true,
+      },
+    },
+    {
+      in: "query",
+      name: "count",
+      description: "How many logos to return",
+      schema: {
+        type: "integer",
+        example: 25,
       },
     },
   ],

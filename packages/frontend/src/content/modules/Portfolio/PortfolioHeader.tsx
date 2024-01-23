@@ -1,12 +1,14 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
-import { currencyMinorUnits, getTotalAmount, Portfolio, portfoliosEndpointPath } from "@rating-tracker/commons";
+import type { Portfolio } from "@rating-tracker/commons";
+import { currencyMinorUnits, getTotalAmount, portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { DeletePortfolio } from "../../../components/dialogs/portfolio/DeletePortfolio";
 import { EditPortfolio } from "../../../components/dialogs/portfolio/EditPortfolio";
-import { StockTableFilters, StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
+import type { StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
+import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
 
 /**
  * A header for the portfolio details page.

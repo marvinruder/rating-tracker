@@ -1,5 +1,7 @@
-import { Stock, UNAUTHORIZED_ERROR_MESSAGE, baseURL, stocksEndpointPath } from "@rating-tracker/commons";
-import initSupertest, { CallbackHandler, Test } from "supertest";
+import type { Stock } from "@rating-tracker/commons";
+import { UNAUTHORIZED_ERROR_MESSAGE, baseURL, stocksEndpointPath } from "@rating-tracker/commons";
+import type { CallbackHandler, Test } from "supertest";
+import initSupertest from "supertest";
 import type { TestFunction } from "vitest";
 
 /**

@@ -12,19 +12,13 @@ import {
   Box,
   useTheme,
 } from "@mui/material";
-import {
-  Portfolio,
-  SortableAttribute,
-  Stock,
-  StockListColumn,
-  Watchlist,
-  favoritesEndpointPath,
-  stocksEndpointPath,
-} from "@rating-tracker/commons";
-import { FC, ChangeEvent, useState, useEffect } from "react";
+import type { Portfolio, SortableAttribute, Stock, StockListColumn, Watchlist } from "@rating-tracker/commons";
+import { favoritesEndpointPath, stocksEndpointPath } from "@rating-tracker/commons";
+import type { FC, ChangeEvent } from "react";
+import { useState, useEffect } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";
-import { StockFilter } from "../../../types/StockFilter";
+import type { StockFilter } from "../../../types/StockFilter";
 import api from "../../../utils/api";
 import { PropertyDescription } from "../properties/PropertyDescription";
 

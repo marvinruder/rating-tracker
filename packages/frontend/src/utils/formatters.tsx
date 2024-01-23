@@ -1,5 +1,6 @@
 import { Box, Tooltip } from "@mui/material";
-import { Currency, OmitDynamicAttributesStock, currencyMinorUnits, currencyName } from "@rating-tracker/commons";
+import type { Currency, OmitDynamicAttributesStock } from "@rating-tracker/commons";
+import { currencyMinorUnits, currencyName } from "@rating-tracker/commons";
 
 /**
  * Formats the market capitalization of a stock to a human readable format.

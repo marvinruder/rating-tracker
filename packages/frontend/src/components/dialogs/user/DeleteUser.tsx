@@ -1,7 +1,8 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import { User, usersEndpointPath } from "@rating-tracker/commons";
+import type { User } from "@rating-tracker/commons";
+import { usersEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";

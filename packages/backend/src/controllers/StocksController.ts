@@ -1,7 +1,6 @@
+import type { Country, Industry, Resource, WeightedStock, Stock } from "@rating-tracker/commons";
 import {
-  Country,
   GENERAL_ACCESS,
-  Industry,
   isCountry,
   isIndustry,
   isMSCIESGRating,
@@ -10,18 +9,15 @@ import {
   isStyle,
   msciESGRatingArray,
   optionalStockValuesNull,
-  Resource,
   logoBackgroundEndpointPath,
   stocksEndpointPath,
   stockLogoEndpointSuffix,
   WRITE_STOCKS_ACCESS,
-  WeightedStock,
-  Stock,
 } from "@rating-tracker/commons";
 import axios from "axios";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
-import { Prisma } from "../../prisma/client";
+import type { Prisma } from "../../prisma/client";
 import { readStocksInPortfolio } from "../db/tables/portfolioTable";
 import { createStock, deleteStock, readStocks, updateStock, readStock } from "../db/tables/stockTable";
 import { readWatchlist } from "../db/tables/watchlistTable";
@@ -496,25 +492,26 @@ export class StocksController {
     accessRights: 0,
   })
   async getLogoBackground(req: Request, res: Response) {
-    const COUNT = 60;
+    const count = Math.min(50, Number(req.query.count) || 50);
     let logoBundleResource: Resource;
-    const url = logoBackgroundEndpointPath + (req.query.dark ? "_dark" : "_light");
+    const url = logoBackgroundEndpointPath + (req.query.dark ? "_dark" : "_light") + count;
     try {
       // Try to read the logos from Redis cache first.
       logoBundleResource = await readResource(url);
     } catch (e) {
       // If the logos are not in the cache, fetch them one by one and store them in the cache as one bundled resource.
-      const [stocks] = await readStocks({ orderBy: { totalScore: "desc" }, take: COUNT });
-      const logos: string[] = new Array(COUNT).fill(DUMMY_SVG);
+      const [stocks] = await readStocks({ orderBy: { totalScore: "desc" }, take: count });
+      const logos: string[] = new Array(count).fill(DUMMY_SVG);
       await Promise.allSettled(
-        stocks.map(
-          async (stock, index) =>
-            (logos[index] = (await getLogoOfStock(stock.ticker, String(req.query.dark) === "true")).content),
-        ),
+        stocks.map(async (stock, index) => {
+          const { content } = await getLogoOfStock(stock.ticker, String(req.query.dark) === "true");
+          // We do not want the response to be too large, so we limit the size of the logos to 128 kB each.
+          logos[index] = content.length > 128 * 1024 ? DUMMY_SVG : content;
+        }),
       );
       await createResource(
         { url, fetchDate: new Date(), content: JSON.stringify(logos) },
-        60 * 60 * 24, // Cache for one day
+        60 * 60 * 24 * 7, // Cache for one week
       );
       logoBundleResource = await readResource(url);
     }
