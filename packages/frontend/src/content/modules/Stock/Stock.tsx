@@ -1,5 +1,6 @@
 import { Card, Container } from "@mui/material";
-import { Stock, favoritesEndpointPath, stocksEndpointPath } from "@rating-tracker/commons";
+import type { Stock } from "@rating-tracker/commons";
+import { favoritesEndpointPath, stocksEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 

@@ -1,4 +1,5 @@
-import { Region, regionArray } from "./Region";
+import type { Region } from "./Region";
+import { regionArray } from "./Region";
 
 /**
  * An array of super region identifiers.

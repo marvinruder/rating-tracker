@@ -1,6 +1,5 @@
+import type { Stock, WatchlistSummary, PortfolioSummary } from "@rating-tracker/commons";
 import {
-  Stock,
-  WatchlistSummary,
   baseURL,
   msciESGRatingArray,
   sizeArray,
@@ -11,12 +10,11 @@ import {
   styleArray,
   watchlistsEndpointPath,
   portfoliosEndpointPath,
-  PortfolioSummary,
 } from "@rating-tracker/commons";
 import type { Response } from "supertest";
 
+import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import {
-  LiveTestSuite,
   expectRouteToBePrivate,
   expectSpecialAccessRightsToBeRequired,
   expectStockListLengthToBe,

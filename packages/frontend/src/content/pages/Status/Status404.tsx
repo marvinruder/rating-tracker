@@ -5,7 +5,7 @@ import { Box, Typography, Container } from "@mui/material";
  *
  * @returns {JSX.Element} The component.
  */
-export const Status404 = (): JSX.Element => {
+const Status404 = (): JSX.Element => {
   return (
     <Box
       sx={{
@@ -29,3 +29,5 @@ export const Status404 = (): JSX.Element => {
     </Box>
   );
 };
+
+export default Status404;

@@ -1,5 +1,6 @@
-import { SP_PREMIUM_STOCK_ERROR_MESSAGE, Stock } from "@rating-tracker/commons";
-import { Request } from "express";
+import type { Stock } from "@rating-tracker/commons";
+import { SP_PREMIUM_STOCK_ERROR_MESSAGE } from "@rating-tracker/commons";
+import type { Request } from "express";
 
 import { readStock, updateStock } from "../db/tables/stockTable";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
@@ -7,7 +8,8 @@ import * as signal from "../signal/signal";
 import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
 
-import { captureFetchError, getAndParseHTML, type FetcherWorkspace, type HTMLFetcher } from "./fetchHelper";
+import type { FetcherWorkspace, HTMLFetcher } from "./fetchHelper";
+import { captureFetchError, getAndParseHTML } from "./fetchHelper";
 
 /**
  * Fetches data from Standard & Poor’s.

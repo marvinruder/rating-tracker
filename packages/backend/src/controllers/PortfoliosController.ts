@@ -1,5 +1,5 @@
 import { GENERAL_ACCESS, stocksEndpointPath, portfoliosEndpointPath, isCurrency } from "@rating-tracker/commons";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import {
   addStockToPortfolio,

@@ -15,6 +15,7 @@
     "prettier/prettier": ["warn"],
     "require-await": ["warn"],
     "no-unused-vars": "off",
+    "@typescript-eslint/consistent-type-imports": ["warn"],
     "@typescript-eslint/no-unused-vars": ["warn"],
     "@typescript-eslint/no-floating-promises": ["warn"],
     "@typescript-eslint/await-thenable": ["warn"],

@@ -1,4 +1,4 @@
-import { Stock } from "./models/stock";
+import type { Stock } from "./models/stock";
 import {
   fetchLSEGEndpointPath,
   fetchMarketScreenerEndpointPath,

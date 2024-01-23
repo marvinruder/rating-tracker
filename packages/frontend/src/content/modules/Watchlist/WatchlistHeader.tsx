@@ -3,12 +3,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
-import { FAVORITES_NAME, Watchlist, watchlistsEndpointPath } from "@rating-tracker/commons";
+import type { Watchlist } from "@rating-tracker/commons";
+import { FAVORITES_NAME, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWatchlist";
 import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWatchlist";
-import { StockTableFilters, StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
+import type { StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
+import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
 import { useNotification } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 

@@ -1,7 +1,7 @@
 import assert from "node:assert";
 
-import { Stock } from "@rating-tracker/commons";
-import { Request } from "express";
+import type { Stock } from "@rating-tracker/commons";
+import type { Request } from "express";
 import xpath from "xpath-ts2";
 
 import { readStock, updateStock } from "../db/tables/stockTable";
@@ -10,7 +10,8 @@ import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
 
-import { type FetcherWorkspace, captureFetchError, HTMLFetcher, getAndParseHTML } from "./fetchHelper";
+import type { HTMLFetcher, FetcherWorkspace } from "./fetchHelper";
+import { captureFetchError, getAndParseHTML } from "./fetchHelper";
 
 const XPATH_ANALYST_COUNT = xpath.parse(
   "//div[@class='card-content']/div/div/div[contains(text(), 'Number of Analysts')]/following-sibling::div",

@@ -1,7 +1,8 @@
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
-import { Stock, PortfolioSummary, stocksEndpointPath, portfoliosEndpointPath } from "@rating-tracker/commons";
+import type { Stock, PortfolioSummary } from "@rating-tracker/commons";
+import { stocksEndpointPath, portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";

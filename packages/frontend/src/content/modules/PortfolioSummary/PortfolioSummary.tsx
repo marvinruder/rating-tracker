@@ -1,5 +1,6 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
-import { PortfolioSummary, portfoliosEndpointPath } from "@rating-tracker/commons";
+import type { PortfolioSummary } from "@rating-tracker/commons";
+import { portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 
 import { Footer } from "../../../components/etc/Footer";

@@ -1,5 +1,5 @@
 import { GENERAL_ACCESS, sessionEndpointPath } from "@rating-tracker/commons";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { deleteSession } from "../redis/repositories/sessionRepository";
 import Router from "../utils/router";

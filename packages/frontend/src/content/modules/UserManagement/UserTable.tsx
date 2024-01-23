@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TableContainer } from "@mui/material";
 import { User, usersEndpointPath } from "@rating-tracker/commons";
-import { FC, useEffect, useState } from "react";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";

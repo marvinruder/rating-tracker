@@ -1,6 +1,7 @@
 import { baseURL, sessionEndpointPath, accountEndpointPath } from "@rating-tracker/commons";
 
-import { LiveTestSuite, expectRouteToBePrivate, supertest } from "../../test/liveTestHelpers";
+import type { LiveTestSuite } from "../../test/liveTestHelpers";
+import { expectRouteToBePrivate, supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Account API";
 

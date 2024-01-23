@@ -7,8 +7,7 @@ import {
   usersEndpointPath,
   watchlistsEndpointPath,
 } from "@rating-tracker/commons";
-import NProgress from "nprogress";
-import { Suspense, lazy, useState, useEffect } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import type { RouteObject } from "react-router";
 import { useLocation } from "react-router";
 import { Navigate, useSearchParams } from "react-router-dom";
@@ -22,15 +21,8 @@ import { NotificationSnackbar } from "./components/etc/NotificationSnackbar";
  * Since it is displayed first, we load it right away and do not use a suspense loader.
  */
 import { LoginPage } from "./content/pages/Login";
-/**
- * The 404 Not Found and 500 Internal Server Error error pages.
- * Since those are fairly small components, we load them right away and do not use a suspense loader.
- */
-import { Status404 } from "./content/pages/Status/Status404";
-import { Status500 } from "./content/pages/Status/Status500";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { UserContext } from "./contexts/UserContext";
-import { SidebarLayout } from "./layouts/SidebarLayout/SidebarLayout";
 import api from "./utils/api";
 
 /**
@@ -38,30 +30,21 @@ import api from "./utils/api";
  *
  * @returns {JSX.Element} The component.
  */
-const SuspenseLoader = (): JSX.Element => {
-  useEffect(() => {
-    NProgress.start();
-    return () => {
-      NProgress.done();
-    };
-  }, []);
-
-  return (
-    <Box
-      position="fixed"
-      left={0}
-      top={0}
-      width="100%"
-      height="100%"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-    >
-      {/* Loading modules typically blocks the main thread, so we need to use disableShrink */}
-      <CircularProgress size={64} thickness={3} disableShrink />
-    </Box>
-  );
-};
+const SuspenseLoader = (): JSX.Element => (
+  <Box
+    position="fixed"
+    left={0}
+    top={0}
+    width="100%"
+    height="100%"
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+  >
+    {/* Loading modules typically blocks the main thread, so we need to use disableShrink */}
+    <CircularProgress size={64} thickness={3} disableShrink />
+  </Box>
+);
 
 /**
  * A wrapper for lazy-loaded components that adds a suspense loader. While the component is loading, the suspense
@@ -79,13 +62,11 @@ const loader = (
    * @param {JSX.IntrinsicAttributes} props The properties to pass to the component.
    * @returns {JSX.Element} The component.
    */
-  const SuspenseWrapper = (props: JSX.IntrinsicAttributes): JSX.Element => {
-    return (
-      <Suspense fallback={<SuspenseLoader />}>
-        <Component {...props} />
-      </Suspense>
-    );
-  };
+  const SuspenseWrapper = (props: JSX.IntrinsicAttributes): JSX.Element => (
+    <Suspense fallback={<SuspenseLoader />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
   return SuspenseWrapper;
 };
@@ -148,6 +129,30 @@ const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSu
  */
 const Watchlist = loader(lazy(() => import("./content/modules/Watchlist/Watchlist")));
 
+// Pages
+
+/**
+ * The 404 Not Found page, loaded only when needed.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const Status404 = loader(lazy(() => import("./content/pages/Status/Status404")));
+
+/**
+ * The 500 Internal Server Error page, loaded only when needed.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const Status500 = loader(lazy(() => import("./content/pages/Status/Status500")));
+
+// Layouts
+
+/**
+ * The sidebar layout, loaded only when needed.
+ *
+ * @returns {JSX.Element} The component.
+ */
+const SidebarLayout = loader(lazy(() => import("./layouts/SidebarLayout/SidebarLayout")));
 /**
  * A wrapper ensuring that the user is authenticated before displaying the page.
  * Also provides a user context if the user is authenticated.

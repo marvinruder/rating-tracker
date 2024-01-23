@@ -1,8 +1,5 @@
+import type { HTMLDataProvider, IndividualDataProvider, JSONDataProvider, Stock } from "@rating-tracker/commons";
 import {
-  HTMLDataProvider,
-  IndividualDataProvider,
-  JSONDataProvider,
-  Stock,
   dataProviderID,
   dataProviderLastFetch,
   dataProviderName,
@@ -12,8 +9,9 @@ import {
   resourcesEndpointPath,
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
-import axios, { type AxiosRequestConfig } from "axios";
-import { Request, Response } from "express";
+import type { AxiosRequestConfig } from "axios";
+import axios from "axios";
+import type { Request, Response } from "express";
 // import { WebDriver } from "selenium-webdriver";
 import { DateTime } from "luxon";
 

@@ -11,14 +11,13 @@ import {
   Autocomplete,
   Box,
 } from "@mui/material";
+import type { Currency, PortfolioSummary } from "@rating-tracker/commons";
 import {
-  Currency,
   currencyArray,
   currencyName,
   currencyNameWithFlag,
   isCurrency,
   portfoliosEndpointPath,
-  PortfolioSummary,
 } from "@rating-tracker/commons";
 import { useState } from "react";
 

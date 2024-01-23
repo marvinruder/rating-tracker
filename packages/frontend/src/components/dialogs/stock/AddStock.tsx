@@ -19,6 +19,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import type { OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
 import {
   countryArray,
   countryName,
@@ -30,13 +31,11 @@ import {
   fetchSPEndpointPath,
   fetchSustainalyticsEndpointPath,
   isCountry,
-  OmitDynamicAttributesStock,
   optionalStockValuesNull,
   SP_PREMIUM_STOCK_ERROR_MESSAGE,
-  Stock,
   stocksEndpointPath,
 } from "@rating-tracker/commons";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";

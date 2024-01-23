@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 import { internalServerErrorServerUnhealthy } from "../responses/serverError";
 import { okHealthy } from "../responses/success";

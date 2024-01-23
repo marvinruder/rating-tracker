@@ -1,4 +1,4 @@
-import { User } from "@rating-tracker/commons";
+import type { User } from "@rating-tracker/commons";
 import { createContext } from "react";
 
 /**

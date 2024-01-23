@@ -1,5 +1,6 @@
-import { Resource } from "@rating-tracker/commons";
-import { Entity, EntityId, Repository } from "redis-om";
+import type { Resource } from "@rating-tracker/commons";
+import type { Entity } from "redis-om";
+import { EntityId, Repository } from "redis-om";
 
 import { isExistingResourceEntity, resourceSchema } from "../../models/resource";
 import APIError from "../../utils/APIError";

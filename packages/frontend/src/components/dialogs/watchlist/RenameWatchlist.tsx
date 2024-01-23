@@ -1,7 +1,8 @@
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
-import { watchlistsEndpointPath, WatchlistSummary } from "@rating-tracker/commons";
+import type { WatchlistSummary } from "@rating-tracker/commons";
+import { watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";

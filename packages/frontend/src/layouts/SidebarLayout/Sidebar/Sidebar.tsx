@@ -1,6 +1,7 @@
 import type { BoxProps } from "@mui/material";
 import { Box, Drawer, alpha, useTheme, lighten, darken } from "@mui/material";
-import { FC, useContext } from "react";
+import type { FC } from "react";
+import { useContext } from "react";
 
 import SidebarContext from "../../../contexts/SidebarContext";
 

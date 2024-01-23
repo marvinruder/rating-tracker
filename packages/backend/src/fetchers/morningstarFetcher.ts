@@ -1,17 +1,8 @@
 import assert from "node:assert";
 
-import {
-  Industry,
-  Size,
-  Style,
-  Currency,
-  isIndustry,
-  isSize,
-  isStyle,
-  isCurrency,
-  Stock,
-} from "@rating-tracker/commons";
-import { Request } from "express";
+import type { Industry, Size, Style, Currency, Stock } from "@rating-tracker/commons";
+import { isIndustry, isSize, isStyle, isCurrency } from "@rating-tracker/commons";
+import type { Request } from "express";
 import xpath from "xpath-ts2";
 
 import { readStock, updateStock } from "../db/tables/stockTable";
@@ -20,7 +11,8 @@ import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
 
-import { type FetcherWorkspace, captureFetchError, HTMLFetcher, getAndParseHTML } from "./fetchHelper";
+import type { HTMLFetcher, FetcherWorkspace } from "./fetchHelper";
+import { captureFetchError, getAndParseHTML } from "./fetchHelper";
 
 const XPATH_CONTENT = xpath.parse(
   "//*[@id='SnapshotBodyContent'][count(.//*[@id='IntradayPriceSummary']) > 0][count(.//*[@id='CompanyProfile']) > 0]",

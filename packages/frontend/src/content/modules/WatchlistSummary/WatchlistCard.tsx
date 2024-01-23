@@ -17,7 +17,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { FAVORITES_NAME, WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
+import type { WatchlistSummary } from "@rating-tracker/commons";
+import { FAVORITES_NAME, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 

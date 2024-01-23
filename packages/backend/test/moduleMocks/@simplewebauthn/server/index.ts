@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 
-import * as SimpleWebAuthnServer from "@simplewebauthn/server";
+import type * as SimpleWebAuthnServer from "@simplewebauthn/server";
 
 const randomCredential = randomUUID();
 

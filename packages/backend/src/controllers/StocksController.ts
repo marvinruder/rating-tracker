@@ -1,7 +1,6 @@
+import type { Country, Industry, Resource, WeightedStock, Stock } from "@rating-tracker/commons";
 import {
-  Country,
   GENERAL_ACCESS,
-  Industry,
   isCountry,
   isIndustry,
   isMSCIESGRating,
@@ -10,18 +9,15 @@ import {
   isStyle,
   msciESGRatingArray,
   optionalStockValuesNull,
-  Resource,
   logoBackgroundEndpointPath,
   stocksEndpointPath,
   stockLogoEndpointSuffix,
   WRITE_STOCKS_ACCESS,
-  WeightedStock,
-  Stock,
 } from "@rating-tracker/commons";
 import axios from "axios";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
-import { Prisma } from "../../prisma/client";
+import type { Prisma } from "../../prisma/client";
 import { readStocksInPortfolio } from "../db/tables/portfolioTable";
 import { createStock, deleteStock, readStocks, updateStock, readStock } from "../db/tables/stockTable";
 import { readWatchlist } from "../db/tables/watchlistTable";

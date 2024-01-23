@@ -1,5 +1,5 @@
 import { ADMINISTRATIVE_ACCESS, GENERAL_ACCESS, usersEndpointPath } from "@rating-tracker/commons";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { deleteUser, readAllUsers, readUser, updateUserWithCredentials } from "../db/tables/userTable";
 import Router from "../utils/router";

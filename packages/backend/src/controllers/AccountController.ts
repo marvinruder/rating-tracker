@@ -1,5 +1,6 @@
-import { GENERAL_ACCESS, User, accountEndpointPath } from "@rating-tracker/commons";
-import { Request, Response } from "express";
+import type { User } from "@rating-tracker/commons";
+import { GENERAL_ACCESS, accountEndpointPath } from "@rating-tracker/commons";
+import type { Request, Response } from "express";
 
 import { updateUserWithCredentials, deleteUser, readUser } from "../db/tables/userTable";
 import { updateSession } from "../redis/repositories/sessionRepository";

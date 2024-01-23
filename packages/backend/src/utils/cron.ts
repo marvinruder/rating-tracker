@@ -1,11 +1,12 @@
-import { baseURL, DataProvider, dataProviderEndpoints, dataProviderName } from "@rating-tracker/commons";
+import type { DataProvider } from "@rating-tracker/commons";
+import { baseURL, dataProviderEndpoints, dataProviderName } from "@rating-tracker/commons";
 import type { AxiosError, AxiosRequestConfig } from "axios";
 import axios from "axios";
 import * as cron from "cron";
 
 import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal";
 
-import APIError from "./APIError";
+import type APIError from "./APIError";
 import logger from "./logger";
 
 /**

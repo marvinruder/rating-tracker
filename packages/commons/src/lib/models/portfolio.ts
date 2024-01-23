@@ -1,16 +1,21 @@
-import { Currency } from "../Currency";
-import { Industry, isIndustry, industryName } from "../gecs/Industry";
-import { IndustryGroup, isIndustryGroup, groupOfIndustry, industryGroupName } from "../gecs/IndustryGroup";
-import { isSector, Sector, sectorName, sectorOfIndustryGroup } from "../gecs/Sector";
-import { isSuperSector, SuperSector, superSectorName, superSectorOfSector } from "../gecs/SuperSector";
+import type { Currency } from "../Currency";
+import type { Industry } from "../gecs/Industry";
+import { isIndustry, industryName } from "../gecs/Industry";
+import type { IndustryGroup } from "../gecs/IndustryGroup";
+import { isIndustryGroup, groupOfIndustry, industryGroupName } from "../gecs/IndustryGroup";
+import type { Sector } from "../gecs/Sector";
+import { isSector, sectorName, sectorOfIndustryGroup } from "../gecs/Sector";
+import type { SuperSector } from "../gecs/SuperSector";
+import { isSuperSector, superSectorName, superSectorOfSector } from "../gecs/SuperSector";
 import { countryName, isCountry } from "../geo/Country";
 import { isRegion, regionName, regionOfCountry } from "../geo/Region";
 import { isSuperRegion, superRegionName, superRegionOfRegion } from "../geo/SuperRegion";
-import { MSCIESGRating, msciESGRatingArray } from "../ratings/MSCI";
-import { Size } from "../stylebox/Size";
-import { Style } from "../stylebox/Style";
+import type { MSCIESGRating } from "../ratings/MSCI";
+import { msciESGRatingArray } from "../ratings/MSCI";
+import type { Size } from "../stylebox/Size";
+import type { Style } from "../stylebox/Style";
 
-import { Stock } from "./stock";
+import type { Stock } from "./stock";
 
 /**
  * A stock associated with an amount of a specified currency.

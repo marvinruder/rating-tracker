@@ -1,5 +1,5 @@
 import { Box, Link } from "@mui/material";
-import { Stock } from "@rating-tracker/commons";
+import type { Stock } from "@rating-tracker/commons";
 
 /**
  * A component that wraps its children in a link to a given URL with certain properties. If no URL is provided, the

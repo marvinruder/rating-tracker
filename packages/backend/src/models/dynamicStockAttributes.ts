@@ -1,4 +1,4 @@
-import { OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
+import type { OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
 
 /**
  * Provides a score for the stock based on its Morningstar star rating.

@@ -3,7 +3,9 @@
  */
 export const sentMessages: { message: string; recipients: string[] }[] = [];
 
-export const { signalIsReadyOrUnused } = await vi.importActual<typeof import("../signalBase")>("../signalBase");
+export const { signalIsReadyOrUnused } = await vi.importActual<{ signalIsReadyOrUnused: () => Promise<string | void> }>(
+  "../signalBase",
+);
 
 /**
  * A mock of the Signal send function. Stores the message in the sentMessages array.

@@ -1,5 +1,6 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
-import { WatchlistSummary, watchlistsEndpointPath } from "@rating-tracker/commons";
+import type { WatchlistSummary } from "@rating-tracker/commons";
+import { watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 
 import { Footer } from "../../../components/etc/Footer";

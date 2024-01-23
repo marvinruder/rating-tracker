@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import type { Portfolio } from "./portfolio";
 import {
-  Portfolio,
   getCountrySunburstData,
   getEstimateValue,
   getIndustrySunburstData,

@@ -1,6 +1,7 @@
-import { Stock, MSCIESGRating, msciESGRatingArray, OmitDynamicAttributesStock } from "@rating-tracker/commons";
+import type { Stock, MSCIESGRating, OmitDynamicAttributesStock } from "@rating-tracker/commons";
+import { msciESGRatingArray } from "@rating-tracker/commons";
 
-import { Prisma } from "../../../prisma/client";
+import type { Prisma } from "../../../prisma/client";
 import { addDynamicAttributesToStockData, dynamicStockAttributes } from "../../models/dynamicStockAttributes";
 import * as signal from "../../signal/signal";
 import APIError from "../../utils/APIError";

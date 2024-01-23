@@ -1,5 +1,5 @@
 import { GENERAL_ACCESS, resourcesEndpointPath } from "@rating-tracker/commons";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { readResource } from "../redis/repositories/resourceRepository";
 import APIError from "../utils/APIError";

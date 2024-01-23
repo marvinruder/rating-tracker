@@ -1,5 +1,6 @@
-import { MSCIESGRating, Stock, isMSCIESGRating } from "@rating-tracker/commons";
-import { Request } from "express";
+import type { MSCIESGRating, Stock } from "@rating-tracker/commons";
+import { isMSCIESGRating } from "@rating-tracker/commons";
+import type { Request } from "express";
 
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
@@ -7,7 +8,8 @@ import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import FetchError from "../utils/FetchError";
 import logger from "../utils/logger";
 
-import { type FetcherWorkspace, captureFetchError, type HTMLFetcher, getAndParseHTML } from "./fetchHelper";
+import type { FetcherWorkspace, HTMLFetcher } from "./fetchHelper";
+import { captureFetchError, getAndParseHTML } from "./fetchHelper";
 
 /**
  * Fetches data from MSCI.

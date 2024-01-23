@@ -1,9 +1,9 @@
 import { UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import React, { createContext, useContext, useState } from "react";
 
 import { UserContext } from "../contexts/UserContext";
-import { Notification } from "../types/Notification";
+import type { Notification } from "../types/Notification";
 
 /**
  * An object provided by the notification context.

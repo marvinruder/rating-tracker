@@ -1,6 +1,6 @@
 import type { ChipProps } from "@mui/material";
 import { Chip, useTheme } from "@mui/material";
-import { FC } from "react";
+import type { FC } from "react";
 
 /**
  * Displays a chip with a colored icon. The color depends on the value of the stock's

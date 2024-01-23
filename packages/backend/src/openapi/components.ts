@@ -9,7 +9,7 @@ import {
   REGEX_PHONE_NUMBER,
   serviceArray,
 } from "@rating-tracker/commons";
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 import { DUMMY_SVG } from "../controllers/StocksController";
 

@@ -27,40 +27,43 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import {
+import type {
   Country,
+  Industry,
+  IndustryGroup,
+  MSCIESGRating,
+  Region,
+  Sector,
+  Size,
+  StockListColumn,
+  Style,
+  SuperRegion,
+  SuperSector,
+} from "@rating-tracker/commons";
+import {
   countryNameWithFlag,
   getCountriesInRegion,
   getIndustriesInGroup,
   getIndustryGroupsInSector,
   getRegionsInSuperRegion,
   getSectorsInSuperSector,
-  Industry,
-  IndustryGroup,
   industryGroupName,
   industryName,
-  MSCIESGRating,
   msciESGRatingArray,
-  Region,
   regionName,
-  Sector,
   sectorName,
-  Size,
   sizeArray,
-  StockListColumn,
   stockListColumnArray,
-  Style,
   styleArray,
-  SuperRegion,
   superRegionArray,
   superRegionName,
-  SuperSector,
   superSectorArray,
   superSectorName,
 } from "@rating-tracker/commons";
-import React, { FC, Fragment, useState } from "react";
+import type { FC } from "react";
+import React, { Fragment, useState } from "react";
 
-import { StockFilter } from "../../../types/StockFilter";
+import type { StockFilter } from "../../../types/StockFilter";
 import { formatPercentage } from "../../../utils/formatters";
 import { NestedCheckboxList } from "../../etc/NestedCheckboxList";
 import { StarRating } from "../properties/StarRating";

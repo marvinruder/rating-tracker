@@ -1,8 +1,10 @@
-import { Service, serviceArray, statusEndpointPath } from "@rating-tracker/commons";
+import type { Service } from "@rating-tracker/commons";
+import { serviceArray, statusEndpointPath } from "@rating-tracker/commons";
 import { AxiosError } from "axios";
-import { FC, useState, createContext, useEffect } from "react";
+import type { FC } from "react";
+import { useState, createContext, useEffect } from "react";
 
-import { DetailedStatus, SystemStatus } from "../types/Status";
+import type { DetailedStatus, SystemStatus } from "../types/Status";
 import api from "../utils/api";
 
 /**

@@ -8,7 +8,7 @@ import { useState } from "react";
  *
  * @returns {JSX.Element} The component.
  */
-export const Status500 = (): JSX.Element => {
+const Status500 = (): JSX.Element => {
   const [pending, setPending] = useState(false);
   /**
    * Shows a loading indicator and reloads the page.
@@ -64,3 +64,5 @@ export const Status500 = (): JSX.Element => {
     </Box>
   );
 };
+
+export default Status500;

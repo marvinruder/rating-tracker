@@ -1,11 +1,8 @@
-import { User, UserWithCredentials, baseURL, usersEndpointPath } from "@rating-tracker/commons";
+import type { User, UserWithCredentials } from "@rating-tracker/commons";
+import { baseURL, usersEndpointPath } from "@rating-tracker/commons";
 
-import {
-  LiveTestSuite,
-  expectRouteToBePrivate,
-  expectSpecialAccessRightsToBeRequired,
-  supertest,
-} from "../../test/liveTestHelpers";
+import type { LiveTestSuite } from "../../test/liveTestHelpers";
+import { expectRouteToBePrivate, expectSpecialAccessRightsToBeRequired, supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Users API";
 

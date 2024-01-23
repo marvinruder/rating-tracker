@@ -1,5 +1,5 @@
 import { Typography, Grid } from "@mui/material";
-import { FC } from "react";
+import type { FC } from "react";
 
 /**
  * A header for the user list page. It contains the user list filters and column filter.

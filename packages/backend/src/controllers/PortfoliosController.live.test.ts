@@ -1,6 +1,8 @@
-import { PortfolioSummary, baseURL, stocksEndpointPath, portfoliosEndpointPath, Stock } from "@rating-tracker/commons";
+import type { PortfolioSummary, Stock } from "@rating-tracker/commons";
+import { baseURL, stocksEndpointPath, portfoliosEndpointPath } from "@rating-tracker/commons";
 
-import { LiveTestSuite, supertest } from "../../test/liveTestHelpers";
+import type { LiveTestSuite } from "../../test/liveTestHelpers";
+import { supertest } from "../../test/liveTestHelpers";
 
 export const suiteName = "Portfolios API";
 

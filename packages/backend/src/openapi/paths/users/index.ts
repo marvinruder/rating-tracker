@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 import { forbidden, unauthorized } from "../../responses/clientError";
 import { okUserList } from "../../responses/success";

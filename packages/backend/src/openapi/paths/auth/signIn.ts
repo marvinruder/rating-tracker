@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 import { badRequest, forbidden, notFound, tooManyRequestsHTML } from "../../responses/clientError";
 import { internalServerError } from "../../responses/serverError";

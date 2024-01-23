@@ -1,5 +1,6 @@
-import { Resource } from "@rating-tracker/commons";
-import { Entity, EntityId, Schema } from "redis-om";
+import type { Resource } from "@rating-tracker/commons";
+import type { Entity } from "redis-om";
+import { EntityId, Schema } from "redis-om";
 
 export const isExistingResourceEntity = (entity: Entity): entity is Resource & Entity =>
   entity &&

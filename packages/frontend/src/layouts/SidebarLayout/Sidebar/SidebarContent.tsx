@@ -26,7 +26,8 @@ import {
   usersEndpointPath,
   watchlistsEndpointPath,
 } from "@rating-tracker/commons";
-import React, { FC, Fragment, useContext, useState } from "react";
+import type { FC } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { StatusIndicator } from "../../../components/etc/StatusIndicator";

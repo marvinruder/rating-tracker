@@ -1,5 +1,6 @@
-import { Service, serviceArray, statusEndpointPath } from "@rating-tracker/commons";
-import { Request, Response } from "express";
+import type { Service } from "@rating-tracker/commons";
+import { serviceArray, statusEndpointPath } from "@rating-tracker/commons";
+import type { Request, Response } from "express";
 
 import { prismaIsReady } from "../db/client";
 import { redisIsReady } from "../redis/redis";

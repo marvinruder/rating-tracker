@@ -11,8 +11,8 @@ import {
   Autocomplete,
   Box,
 } from "@mui/material";
+import type { Currency } from "@rating-tracker/commons";
 import {
-  Currency,
   currencyArray,
   currencyName,
   currencyNameWithFlag,

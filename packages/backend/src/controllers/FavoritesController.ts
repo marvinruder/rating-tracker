@@ -1,5 +1,5 @@
 import { GENERAL_ACCESS, favoritesEndpointPath } from "@rating-tracker/commons";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { addStockToWatchlist, readFavorites, removeStockFromWatchlist } from "../db/tables/watchlistTable";
 import Router from "../utils/router";

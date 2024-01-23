@@ -1,4 +1,5 @@
-import { Country, emojiFlag } from "./geo/Country";
+import type { Country } from "./geo/Country";
+import { emojiFlag } from "./geo/Country";
 
 /**
  * An array of all ISO 4217 currency codes.

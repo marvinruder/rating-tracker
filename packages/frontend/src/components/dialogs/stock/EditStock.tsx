@@ -15,13 +15,12 @@ import {
   Checkbox,
   Divider,
 } from "@mui/material";
+import type { Country, Stock } from "@rating-tracker/commons";
 import {
   countryArray,
   countryNameWithFlag,
   isCountry,
   countryName,
-  Country,
-  Stock,
   stocksEndpointPath,
   fetchMarketScreenerEndpointPath,
   fetchMSCIEndpointPath,
@@ -31,7 +30,7 @@ import {
   fetchMorningstarEndpointPath,
   SP_PREMIUM_STOCK_ERROR_MESSAGE,
 } from "@rating-tracker/commons";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { useState } from "react";
 
 import { useNotification } from "../../../contexts/NotificationContext";

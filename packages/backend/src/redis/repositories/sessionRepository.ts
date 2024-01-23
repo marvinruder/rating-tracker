@@ -1,5 +1,6 @@
-import { Session, User } from "@rating-tracker/commons";
-import { Entity, EntityId, Repository } from "redis-om";
+import type { Session, User } from "@rating-tracker/commons";
+import type { Entity } from "redis-om";
+import { EntityId, Repository } from "redis-om";
 
 import { readUser } from "../../db/tables/userTable";
 import { isExistingSessionEntity, sessionSchema } from "../../models/session";
