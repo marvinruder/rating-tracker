@@ -492,7 +492,7 @@ export class StocksController {
     accessRights: 0,
   })
   async getLogoBackground(req: Request, res: Response) {
-    const count = Number(req.query.count) || 50;
+    const count = Math.min(50, Number(req.query.count) || 50);
     let logoBundleResource: Resource;
     const url = logoBackgroundEndpointPath + (req.query.dark ? "_dark" : "_light") + count;
     try {
