@@ -503,10 +503,11 @@ export class StocksController {
       const [stocks] = await readStocks({ orderBy: { totalScore: "desc" }, take: count });
       const logos: string[] = new Array(count).fill(DUMMY_SVG);
       await Promise.allSettled(
-        stocks.map(
-          async (stock, index) =>
-            (logos[index] = (await getLogoOfStock(stock.ticker, String(req.query.dark) === "true")).content),
-        ),
+        stocks.map(async (stock, index) => {
+          const { content } = await getLogoOfStock(stock.ticker, String(req.query.dark) === "true");
+          // We do not want the response to be too large, so we limit the size of the logos to 128 kB each.
+          logos[index] = content.length > 128 * 1024 ? DUMMY_SVG : content;
+        }),
       );
       await createResource(
         { url, fetchDate: new Date(), content: JSON.stringify(logos) },
