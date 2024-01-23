@@ -21,6 +21,15 @@ const get: OpenAPIV3.OperationObject = {
         example: true,
       },
     },
+    {
+      in: "query",
+      name: "count",
+      description: "How many logos to return",
+      schema: {
+        type: "integer",
+        example: 25,
+      },
+    },
   ],
   responses: {
     "200": okLogoBackground,

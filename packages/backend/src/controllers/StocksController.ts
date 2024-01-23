@@ -492,16 +492,16 @@ export class StocksController {
     accessRights: 0,
   })
   async getLogoBackground(req: Request, res: Response) {
-    const COUNT = 60;
+    const count = Number(req.query.count) || 50;
     let logoBundleResource: Resource;
-    const url = logoBackgroundEndpointPath + (req.query.dark ? "_dark" : "_light");
+    const url = logoBackgroundEndpointPath + (req.query.dark ? "_dark" : "_light") + count;
     try {
       // Try to read the logos from Redis cache first.
       logoBundleResource = await readResource(url);
     } catch (e) {
       // If the logos are not in the cache, fetch them one by one and store them in the cache as one bundled resource.
-      const [stocks] = await readStocks({ orderBy: { totalScore: "desc" }, take: COUNT });
-      const logos: string[] = new Array(COUNT).fill(DUMMY_SVG);
+      const [stocks] = await readStocks({ orderBy: { totalScore: "desc" }, take: count });
+      const logos: string[] = new Array(count).fill(DUMMY_SVG);
       await Promise.allSettled(
         stocks.map(
           async (stock, index) =>
@@ -510,7 +510,7 @@ export class StocksController {
       );
       await createResource(
         { url, fetchDate: new Date(), content: JSON.stringify(logos) },
-        60 * 60 * 24, // Cache for one day
+        60 * 60 * 24 * 7, // Cache for one week
       );
       logoBundleResource = await readResource(url);
     }

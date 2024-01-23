@@ -7,7 +7,7 @@ import api from "../../utils/api";
 /**
  * The maximum number of logos to show.
  */
-const MAX_COUNT = 60;
+const MAX_COUNT = 50;
 
 /**
  * The background of the page, showing stock logos.
@@ -17,11 +17,11 @@ const MAX_COUNT = 60;
 export const LogoBackground = (): JSX.Element => {
   const theme = useTheme();
 
-  const count = 30 + 30 * +useMediaQuery(theme.breakpoints.up("md"));
+  const count = 25 + 25 * +useMediaQuery(theme.breakpoints.up("md"));
 
   useEffect(() => {
     api
-      .get(logoBackgroundEndpointPath, { params: { dark: theme.palette.mode === "dark" } })
+      .get(logoBackgroundEndpointPath, { params: { dark: theme.palette.mode === "dark", count } })
       .then((res) => {
         const logos = res.data as string[];
         Array.from(document.getElementsByClassName("backgroundlogo")).forEach((logoDiv, i) => {
