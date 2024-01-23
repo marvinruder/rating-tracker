@@ -482,7 +482,7 @@ tests.push({
     expect(res.status).toBe(200);
     // Check max-age header, should be close to 1 day
     expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
-    expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(86400, -1);
+    expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(604800, -1);
     // 60 logos are returned
     expect(res.body).toHaveLength(60);
     res.body.forEach((logo: string) => {
