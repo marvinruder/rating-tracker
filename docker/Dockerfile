@@ -1,4 +1,4 @@
-FROM alpine:3.19.0 as assemble
+FROM alpine:3.19.1 as assemble
 ARG TARGETARCH
 
 # Copy project files
@@ -13,7 +13,7 @@ RUN \
   rm ./libquery_engine-linux-musl-openssl-3.0.x.so.node; \
   fi
 
-FROM alpine:3.19.0 as target
+FROM alpine:3.19.1 as target
 ARG BUILD_DATE
 ARG TARGETARCH
 
