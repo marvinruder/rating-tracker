@@ -128,7 +128,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       .put(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
         params: { name: name.trim(), isin: isin.trim(), country },
       })
-      .then(() => handleNext())
+      .then(handleNext)
       .catch((e) => setErrorNotificationOrClearSession(e, "creating new stock"))
       .finally(() => setRequestInProgress(false));
   };
@@ -150,7 +150,6 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchMorningstarEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Morningstar"))
             .finally(() => setMorningstarIDRequestInProgress(false));
         } else {
@@ -180,7 +179,6 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchMarketScreenerEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Market Screener"))
             .finally(() => setMarketScreenerIDRequestInProgress(false));
         } else {
@@ -210,7 +208,6 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchMSCIEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from MSCI"))
             .finally(() => setMSCIIDRequestInProgress(false));
         } else {
@@ -238,7 +235,6 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchLSEGEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from LSEG"))
             .finally(() => setRICRequestInProgress(false));
         } else {
@@ -268,7 +264,6 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchSPEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
             .catch((e: AxiosError<{ message: string }>) => {
               if (e.response?.data?.message?.includes(SP_PREMIUM_STOCK_ERROR_MESSAGE)) {
                 setNotification({
@@ -308,7 +303,6 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchSustainalyticsEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim() },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Sustainalytics"))
             .finally(() => setSustainalyticsIDRequestInProgress(false));
         } else {

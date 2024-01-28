@@ -127,7 +127,6 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             .post(fetchMorningstarEndpointPath, undefined, {
               params: { ticker: props.stock.ticker, noSkip: true, clear },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Morningstar"))
             .finally(() => setMorningstarIDRequestInProgress(false));
         } else {
@@ -157,7 +156,6 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             .post(fetchMarketScreenerEndpointPath, undefined, {
               params: { ticker: props.stock.ticker, noSkip: true, clear },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Market Screener"))
             .finally(() => setMarketScreenerIDRequestInProgress(false));
         } else {
@@ -187,7 +185,6 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             .post(fetchMSCIEndpointPath, undefined, {
               params: { ticker: props.stock.ticker, noSkip: true, clear },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from MSCI"))
             .finally(() => setMSCIIDRequestInProgress(false));
         } else {
@@ -217,7 +214,6 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             .post(fetchLSEGEndpointPath, undefined, {
               params: { ticker: props.stock.ticker, noSkip: true, clear },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from LSEG"))
             .finally(() => setRICRequestInProgress(false));
         } else {
@@ -247,7 +243,6 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             .post(fetchSPEndpointPath, undefined, {
               params: { ticker: props.stock.ticker, noSkip: true, clear },
             })
-            .then(() => {})
             .catch((e: AxiosError<{ message: string }>) => {
               if (e.response?.data?.message?.includes(SP_PREMIUM_STOCK_ERROR_MESSAGE)) {
                 setNotification({
@@ -287,7 +282,6 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             .post(fetchSustainalyticsEndpointPath, undefined, {
               params: { ticker: props.stock.ticker, clear },
             })
-            .then(() => {})
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Sustainalytics"))
             .finally(() => setSustainalyticsIDRequestInProgress(false));
         } else {
