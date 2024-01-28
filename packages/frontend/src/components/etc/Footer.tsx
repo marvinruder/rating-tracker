@@ -1,4 +1,5 @@
-import { Container, Typography } from "@mui/material";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import { Container, IconButton, Typography } from "@mui/material";
 
 export const Footer = () => {
   return (
@@ -12,7 +13,13 @@ export const Footer = () => {
         textAlign: { xs: "center", md: "left" },
       }}
     >
-      <Typography sx={{ pt: { xs: 2, md: 0 } }} variant="subtitle1">
+      <Typography sx={{ ml: { md: "auto" }, mr: { md: 0.5 }, pt: { xs: 2, md: 0 } }} variant="subtitle1">
+        Something missing or not working correctly? Report it on GitHub:
+      </Typography>
+      <IconButton href="https://github.com/marvinruder/rating-tracker">
+        <GitHubIcon />
+      </IconButton>
+      <Typography sx={{ pt: { xs: 2, md: 0 }, order: -1 }} variant="subtitle1">
         &copy; 2022–2024 Marvin A. Ruder
       </Typography>
     </Container>
