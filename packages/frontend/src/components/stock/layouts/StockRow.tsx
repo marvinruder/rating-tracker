@@ -195,7 +195,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             observer.disconnect();
           }
         },
-        { rootMargin: "0px 0px 20% 0px" },
+        { threshold: 1 },
       );
       observer.observe(infiniteLoadingTriggerRef.current);
     }
