@@ -188,15 +188,12 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
 
   useEffect(() => {
     if (props.isInfiniteLoadingTrigger && infiniteLoadingTriggerRef.current) {
-      const observer = new IntersectionObserver(
-        (entry) => {
-          if (entry[0].isIntersecting) {
-            props.getStocks();
-            observer.disconnect();
-          }
-        },
-        { threshold: 1 },
-      );
+      const observer = new IntersectionObserver((entry) => {
+        if (entry[0].isIntersecting) {
+          props.getStocks();
+          observer.disconnect();
+        }
+      });
       observer.observe(infiniteLoadingTriggerRef.current);
     }
   }, [infiniteLoadingTriggerRef.current]);
