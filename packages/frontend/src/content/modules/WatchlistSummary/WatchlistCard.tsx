@@ -24,7 +24,7 @@ import { NavLink } from "react-router-dom";
 
 import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWatchlist";
 import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWatchlist";
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -37,7 +37,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
   const isFavorites = props.watchlist?.name === FAVORITES_NAME;
   const [renameDialogOpen, setRenameDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-  const { setNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   return (
     <Card>
@@ -91,18 +91,14 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
                       { params: { subscribed: !props.watchlist.subscribed } },
                     )
                     .then(() => props.getWatchlists && props.getWatchlists())
-                    .catch((e) => {
-                      setNotification({
-                        severity: "error",
-                        title: props.watchlist.subscribed
+                    .catch((e) =>
+                      setErrorNotificationOrClearSession(
+                        e,
+                        props.watchlist.subscribed
                           ? `Error while unsubscribing from watchlist “${props.watchlist.name}”`
                           : `Error while subscribing to watchlist “${props.watchlist.name}”`,
-                        message:
-                          e.response?.status && e.response?.data?.message
-                            ? `${e.response.status}: ${e.response.data.message}`
-                            : e.message ?? "No additional information available.",
-                      });
-                    });
+                      ),
+                    );
                 }}
               >
                 {props.watchlist.subscribed ? <NotificationsIcon /> : <NotificationsNoneIcon />}
@@ -138,7 +134,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
         <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
           <RenameWatchlist
             watchlist={props.watchlist}
-            getWatchlists={props.getWatchlists}
+            onRename={props.getWatchlists}
             onClose={() => setRenameDialogOpen(false)}
           />
         </Dialog>
@@ -146,8 +142,8 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
         <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
           <DeleteWatchlist
             watchlist={props.watchlist}
-            getWatchlists={props.getWatchlists}
             onClose={() => setDeleteDialogOpen(false)}
+            onDelete={props.getWatchlists}
           />
         </Dialog>
       </CardActions>

@@ -61,7 +61,7 @@ import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { StockTable } from "../../../components/stock/layouts/StockTable";
 import { getSectorIconPaths } from "../../../components/stock/properties/SectorIcon";
 import { StarRating } from "../../../components/stock/properties/StarRating";
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import type { StockFilter } from "../../../types/StockFilter";
 import api from "../../../utils/api";
 import { CurrencyWithTooltip, formatPercentage } from "../../../utils/formatters";
@@ -77,7 +77,8 @@ const PortfolioModule = (): JSX.Element => {
   const [portfolio, setPortfolio] = useState<Portfolio>();
   const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   const theme = useTheme();
 
@@ -85,12 +86,6 @@ const PortfolioModule = (): JSX.Element => {
    * Possible widths of the statistics container.
    */
   const columns = 1 + +useMediaQuery("(min-width:664px)") + +useMediaQuery("(min-width:964px)");
-
-  const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
-
-  const triggerRefetch = () => {
-    setRefetchTrigger((prevRefetchTrigger) => !prevRefetchTrigger);
-  };
 
   /**
    * Fetches the portfolio with the given ID.
@@ -105,12 +100,12 @@ const PortfolioModule = (): JSX.Element => {
         setCountrySunburstData(getCountrySunburstData(res.data));
         setIndustrySunburstData(getIndustrySunburstData(res.data));
       })
-      .catch((e) => setErrorNotification(e, "fetching portfolio"));
+      .catch((e) => setErrorNotificationOrClearSession(e, "fetching portfolio"));
   };
 
   const { id } = useParams();
 
-  useEffect(() => getPortfolio(Number(id)), [id, refetchTrigger]);
+  useEffect(() => getPortfolio(Number(id)), [id]);
 
   const totalAmount = portfolio ? getTotalAmount(portfolio) : null;
 
@@ -240,12 +235,11 @@ const PortfolioModule = (): JSX.Element => {
       <HeaderWrapper maxWidth={false}>
         <PortfolioHeader
           portfolio={portfolio}
-          getPortfolio={() => (getPortfolio(Number(id)), triggerRefetch())}
+          getPortfolio={() => getPortfolio(Number(id))}
           stockTableFiltersProps={{
             setFilter,
             columnFilter,
             setColumnFilter,
-            triggerRefetch,
             filtersInUse:
               columnFilter.length < stockListColumnArray.length || // If not all columns are shown, or
               Object.values(filter).some(
@@ -876,16 +870,13 @@ const PortfolioModule = (): JSX.Element => {
             </Grid>
           </Grid>
         </Card>
-        <Card>
-          <StockTable
-            filter={filter}
-            triggerRefetch={refetchTrigger}
-            getPortfolio={() => getPortfolio(Number(id))}
-            loading={!portfolio}
-            portfolio={portfolio ?? null}
-            columns={columnFilter}
-          />
-        </Card>
+        <StockTable
+          filter={filter}
+          portfolio={portfolio ?? null}
+          getPortfolio={() => getPortfolio(Number(id))}
+          showSkeletons={!portfolio}
+          columns={columnFilter}
+        />
       </Container>
       <Footer />
     </>

@@ -643,6 +643,5 @@ export interface StockTableFiltersProps {
   columnFilter: StockListColumn[];
   setColumnFilter: React.Dispatch<React.SetStateAction<StockListColumn[]>>;
   filtersInUse: boolean;
-  triggerRefetch: () => void;
   disableTopMargin?: boolean;
 }

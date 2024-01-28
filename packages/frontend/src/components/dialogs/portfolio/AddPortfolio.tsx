@@ -9,19 +9,18 @@ import {
   DialogActions,
   Button,
   Autocomplete,
-  Box,
 } from "@mui/material";
 import type { Currency } from "@rating-tracker/commons";
 import {
   currencyArray,
   currencyName,
-  currencyNameWithFlag,
+  currencyNameWithFlagAndCode,
   isCurrency,
   portfoliosEndpointPath,
 } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -38,7 +37,7 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
   const [currencyInputValue, setCurrencyInputValue] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [currencyError, setCurrencyError] = useState<boolean>(false); // Error in the currency input field.
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Checks for errors in the input fields.
@@ -59,13 +58,9 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .put(portfoliosEndpointPath + `/new`, undefined, {
-        params: { name: name.trim(), currency },
-      })
-      .then(() => {
-        props.onClose();
-      })
-      .catch((e) => setErrorNotification(e, "creating new portfolio"))
+      .put(portfoliosEndpointPath + `/new`, undefined, { params: { name: name.trim(), currency } })
+      .then(() => (props.onAdd(), props.onClose()))
+      .catch((e) => setErrorNotificationOrClearSession(e, "creating new portfolio"))
       .finally(() => setRequestInProgress(false));
   };
 
@@ -78,10 +73,7 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
         <Grid container spacing={1} mt={0} maxWidth={600} alignItems="center">
           <Grid item xs={12}>
             <TextField
-              onChange={(event) => {
-                setName(event.target.value);
-                setNameError(false);
-              }}
+              onChange={(event) => (setName(event.target.value), setNameError(false))}
               error={nameError}
               label="Portfolio name"
               value={name}
@@ -93,12 +85,7 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
             <Autocomplete
               options={currencyArray}
               autoHighlight
-              getOptionLabel={(option) => `${currencyNameWithFlag[option]} (${option})`}
-              renderOption={(props, option) => (
-                <Box component="li" {...props}>
-                  {`${currencyNameWithFlag[option]} (${option})`}
-                </Box>
-              )}
+              getOptionLabel={(option) => currencyNameWithFlagAndCode[option]}
               inputValue={currencyInputValue}
               onInputChange={(_, value) => setCurrencyInputValue(value)}
               multiple={false}
@@ -109,21 +96,25 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
                 // Filter the currency names by the input value.
                 const filteredOptions = options.filter(
                   (option) =>
-                    currencyName[option].toUpperCase().startsWith(currencyInputValue.trim().toUpperCase()) &&
-                    option != currentInputValue,
+                    currencyName[option].toUpperCase().startsWith(currentInputValue) && option != currentInputValue,
                 );
                 // If the text input is a valid currency, we show it as the first option.
                 isCurrency(currentInputValue) && filteredOptions.unshift(currentInputValue);
+                // If the text input is identical to a complete option label (this happens when opening the dropdown for
+                // the first time), we show it as the first option.
+                currencyNameWithFlagAndCode[currency] === currencyInputValue.trim() &&
+                  filteredOptions.unshift(currency);
                 return filteredOptions;
               }}
               disableClearable
+              selectOnFocus
               renderInput={(params) => <TextField {...params} label="Currency" error={currencyError} />}
             />
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
-        <Button onClick={() => props.onClose()}>Cancel</Button>
+        <Button onClick={props.onClose}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}
           variant="contained"
@@ -147,4 +138,8 @@ interface AddPortfolioProps {
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
+  /**
+   * A method that is called after the portfolio was added successfully.
+   */
+  onAdd: () => void;
 }

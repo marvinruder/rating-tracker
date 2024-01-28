@@ -31,7 +31,7 @@ import {
 import { Fragment, useState } from "react";
 
 import { DeleteUser } from "../../../components/dialogs/user/DeleteUser";
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -74,7 +74,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
     const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
     const [accessRights, setAccessRights] = useState<number>(props.user.accessRights);
 
-    const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+    const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
     /**
      * Updates the user’s access rights in the backend.
@@ -83,14 +83,12 @@ const UserRow = (props: UserRowProps): JSX.Element => {
       setRequestInProgress(true);
       api
         .patch(usersEndpointPath + `/${props.user.email}`, undefined, {
-          params: {
-            // Only send the parameters that have changed.
-            accessRights: accessRights !== props.user.accessRights ? accessRights : undefined,
-          },
+          // Only send the parameters that have changed.
+          params: { accessRights: accessRights !== props.user.accessRights ? accessRights : undefined },
         })
         .then(
           () => (
-            props.getUsers && props.getUsers(),
+            props.refetchUsers(),
             setNotification({
               severity: "success",
               title: "User access rights updated",
@@ -100,7 +98,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
             })
           ),
         ) // Update the user in the table, show a notification, and close the dialog on success.
-        .catch((e) => setErrorNotification(e, "updating user"))
+        .catch((e) => setErrorNotificationOrClearSession(e, "updating user"))
         .finally(() => setRequestInProgress(false));
     };
 
@@ -143,12 +141,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
     <TableRow hover sx={{ height: 89 }}>
       {/* Name and Logo */}
       <TableCell>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Avatar sx={{ width: 64, height: 64, m: "4px", background: "none" }} src={props.user.avatar} alt=" " />
           <Box width={8} />
           <Box>
@@ -213,7 +206,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
         </FormControl>
       </TableCell>
       {/* Actions */}
-      {props.getUsers && (
+      {props.refetchUsers && (
         <TableCell style={{ whiteSpace: "nowrap" }}>
           <Tooltip title="Delete User" arrow>
             <Box display="inline-block">
@@ -226,7 +219,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
       )}
       {/* Delete Dialog */}
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DeleteUser user={props.user} getUsers={props.getUsers} onClose={() => setDeleteDialogOpen(false)} />
+        <DeleteUser user={props.user} onDelete={props.refetchUsers} onClose={() => setDeleteDialogOpen(false)} />
       </Dialog>
     </TableRow>
   ) : (
@@ -283,16 +276,14 @@ const UserRow = (props: UserRowProps): JSX.Element => {
         <Skeleton width={280} height={69} />
       </TableCell>
       {/* Actions */}
-      {props.getUsers && (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
-          <Skeleton
-            sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
-            variant="circular"
-            width={2 * (theme.typography.body1.fontSize as number) - 4}
-            height={2 * (theme.typography.body1.fontSize as number) - 4}
-          />
-        </TableCell>
-      )}
+      <TableCell style={{ whiteSpace: "nowrap" }}>
+        <Skeleton
+          sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
+          variant="circular"
+          width={2 * (theme.typography.body1.fontSize as number) - 4}
+          height={2 * (theme.typography.body1.fontSize as number) - 4}
+        />
+      </TableCell>
     </TableRow>
   );
 };
@@ -308,7 +299,7 @@ interface UserRowProps {
   /**
    * A method to update the user list, e.g. after a user was modified or deleted.
    */
-  getUsers?: () => void;
+  refetchUsers?: () => void;
 }
 
 export default UserRow;

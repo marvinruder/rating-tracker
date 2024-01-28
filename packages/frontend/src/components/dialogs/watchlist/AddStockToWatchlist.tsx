@@ -20,7 +20,8 @@ import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
 import { FAVORITES_NAME, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 import { AddWatchlist } from "./AddWatchlist";
@@ -35,7 +36,8 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
   const [watchlistSummaries, setWatchlistSummaries] = useState<WatchlistSummary[]>([]);
   const [watchlistSummariesFinal, setWatchlistSummariesFinal] = useState<boolean>(false);
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+  const { refetchFavorites } = useFavoritesContextUpdater();
 
   useEffect(() => getWatchlists(), []);
 
@@ -47,7 +49,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
       .get(watchlistsEndpointPath)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
-        setErrorNotification(e, "fetching watchlists");
+        setErrorNotificationOrClearSession(e, "fetching watchlists");
         setWatchlistSummaries([]);
       })
       .finally(() => setWatchlistSummariesFinal(true));
@@ -65,8 +67,12 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
   const addStockToWatchlist = (id: number) => {
     api
       .put(`${watchlistsEndpointPath}/${id}${stocksEndpointPath}/${props.stock.ticker}`)
-      .then(() => props.onClose())
-      .catch((e) => setErrorNotification(e, "adding stock to watchlist"));
+      .then(() => {
+        if (watchlistSummaries.find((watchlistSummary) => watchlistSummary.id === id)?.name === FAVORITES_NAME)
+          refetchFavorites();
+        props.onClose();
+      })
+      .catch((e) => setErrorNotificationOrClearSession(e, "adding stock to watchlist"));
   };
 
   return (
@@ -147,7 +153,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
           <Divider />
         </List>
         <Dialog maxWidth="lg" open={addWatchlistOpen} onClose={() => setAddWatchlistOpen(false)}>
-          <AddWatchlist onClose={() => (setAddWatchlistOpen(false), getWatchlists())} />
+          <AddWatchlist onClose={() => setAddWatchlistOpen(false)} onAdd={getWatchlists} />
         </Dialog>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>

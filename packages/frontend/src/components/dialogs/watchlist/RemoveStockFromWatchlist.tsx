@@ -2,10 +2,11 @@ import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
-import { stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -17,18 +18,23 @@ import api from "../../../utils/api";
 export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { refetchFavorites } = useFavoritesContextUpdater();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Removes the stock from the watchlist.
    */
   const removeStockFromWatchlist = () => {
-    setRequestInProgress(true),
-      api
-        .delete(watchlistsEndpointPath + `/${props.watchlist.id}` + stocksEndpointPath + `/${props.stock.ticker}`)
-        .then(() => props.getWatchlist())
-        .catch((e) => setErrorNotification(e, "removing stock from watchlist"))
-        .finally(() => setRequestInProgress(false));
+    setRequestInProgress(true);
+    api
+      .delete(watchlistsEndpointPath + `/${props.watchlist.id}` + stocksEndpointPath + `/${props.stock.ticker}`)
+      .then(() => {
+        if (props.watchlist.name === FAVORITES_NAME) refetchFavorites();
+        props.onRemove();
+        props.onClose();
+      })
+      .catch((e) => setErrorNotificationOrClearSession(e, "removing stock from watchlist"))
+      .finally(() => setRequestInProgress(false));
   };
 
   return (
@@ -71,11 +77,11 @@ interface RemoveStockFromWatchlistProps {
    */
   watchlist: WatchlistSummary;
   /**
-   * A method to update the watchlist after the stock was removed.
-   */
-  getWatchlist: () => void;
-  /**
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
+  /**
+   * A method that is called after the stock was removed from the watchlist.
+   */
+  onRemove: () => void;
 }

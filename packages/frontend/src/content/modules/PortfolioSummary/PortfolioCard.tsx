@@ -87,7 +87,7 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
         <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
           <EditPortfolio
             portfolio={props.portfolio}
-            getPortfolios={props.getPortfolios}
+            onEdit={props.getPortfolios}
             onClose={() => setEditDialogOpen(false)}
           />
         </Dialog>
@@ -95,8 +95,8 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
         <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
           <DeletePortfolio
             portfolio={props.portfolio}
-            getPortfolios={props.getPortfolios}
             onClose={() => setDeleteDialogOpen(false)}
+            onDelete={props.getPortfolios}
           />
         </Dialog>
       </CardActions>

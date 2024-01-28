@@ -4,7 +4,7 @@ import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions,
 import { watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -17,7 +17,7 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Checks for errors in the input fields.
@@ -37,13 +37,9 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .put(watchlistsEndpointPath + `/new`, undefined, {
-        params: { name: name.trim() },
-      })
-      .then(() => {
-        props.onClose();
-      })
-      .catch((e) => setErrorNotification(e, "creating new watchlist"))
+      .put(watchlistsEndpointPath + `/new`, undefined, { params: { name: name.trim() } })
+      .then(() => (props.onAdd(), props.onClose()))
+      .catch((e) => setErrorNotificationOrClearSession(e, "creating new watchlist"))
       .finally(() => setRequestInProgress(false));
   };
 
@@ -56,10 +52,7 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
         <Grid container spacing={1} mt={0} maxWidth={600} alignItems="center">
           <Grid item xs={12}>
             <TextField
-              onChange={(event) => {
-                setName(event.target.value);
-                setNameError(false);
-              }}
+              onChange={(event) => (setName(event.target.value), setNameError(false))}
               error={nameError}
               label="Watchlist name"
               value={name}
@@ -70,7 +63,7 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
         </Grid>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
-        <Button onClick={() => props.onClose()}>Cancel</Button>
+        <Button onClick={props.onClose}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}
           variant="contained"
@@ -94,4 +87,8 @@ interface AddWatchlistProps {
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
+  /**
+   * A method that is called after the watchlist was added successfully.
+   */
+  onAdd: () => void;
 }

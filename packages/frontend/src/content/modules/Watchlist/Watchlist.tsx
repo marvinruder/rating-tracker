@@ -1,4 +1,4 @@
-import { Card, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import type { StockListColumn, Watchlist } from "@rating-tracker/commons";
 import { stockListColumnArray, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { useParams } from "react-router";
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { StockTable } from "../../../components/stock/layouts/StockTable";
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import type { StockFilter } from "../../../types/StockFilter";
 import api from "../../../utils/api";
 
@@ -22,13 +22,8 @@ const WatchlistModule = (): JSX.Element => {
   const [watchlist, setWatchlist] = useState<Watchlist>();
   const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
 
-  const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
-
-  const triggerRefetch = () => {
-    setRefetchTrigger((prevRefetchTrigger) => !prevRefetchTrigger);
-  };
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Fetches the watchlist with the given ID.
@@ -39,13 +34,12 @@ const WatchlistModule = (): JSX.Element => {
     api
       .get(watchlistsEndpointPath + `/${id}`)
       .then((res) => setWatchlist(res.data))
-      .catch((e) => setErrorNotification(e, "fetching watchlist"));
+      .catch((e) => setErrorNotificationOrClearSession(e, "fetching watchlist"));
   };
 
   const { id } = useParams();
 
   useEffect(() => getWatchlist(Number(id)), [id]);
-  // useEffect(() => triggerRefetch(), [watchlist]);
 
   return (
     <>
@@ -57,7 +51,6 @@ const WatchlistModule = (): JSX.Element => {
             setFilter,
             columnFilter,
             setColumnFilter,
-            triggerRefetch,
             filtersInUse:
               columnFilter.length < stockListColumnArray.length || // If not all columns are shown, or
               Object.values(filter).some(
@@ -72,15 +65,13 @@ const WatchlistModule = (): JSX.Element => {
         />
       </HeaderWrapper>
       <Container maxWidth={false}>
-        <Card>
-          <StockTable
-            filter={filter}
-            triggerRefetch={refetchTrigger}
-            loading={!watchlist}
-            watchlist={watchlist}
-            columns={columnFilter}
-          />
-        </Card>
+        <StockTable
+          filter={filter}
+          watchlist={watchlist}
+          getWatchlist={() => getWatchlist(Number(id))}
+          showSkeletons={!watchlist}
+          columns={columnFilter}
+        />
       </Container>
       <Footer />
     </>

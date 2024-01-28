@@ -1,13 +1,14 @@
 import { Card, Container } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
-import { favoritesEndpointPath, stocksEndpointPath } from "@rating-tracker/commons";
+import { stocksEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { StockDetails } from "../../../components/stock/layouts/StockDetails";
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useFavoritesContextState } from "../../../contexts/FavoritesContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 import { StockHeader } from "./StockHeader";
@@ -19,31 +20,27 @@ import { StockHeader } from "./StockHeader";
  */
 const StockModule = (): JSX.Element => {
   const [stock, setStock] = useState<Stock>();
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { favorites } = useFavoritesContextState();
+  const isFavorite = favorites?.includes(stock?.ticker);
+
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Fetches the stock with the given ticker.
    *
    * @param {string} ticker The ticker of the stock to fetch.
+   * @returns {Promise<void>}
    */
-  const getStock = (ticker: string) => {
+  const getStock = (ticker: string): Promise<void> =>
     api
       .get(stocksEndpointPath + `/${ticker}`)
       .then((res) => setStock(res.data))
-      .catch((e) => setErrorNotification(e, "fetching stock"));
-    api
-      .get(favoritesEndpointPath)
-      .then((res) => setIsFavorite((res.data.stocks as Stock[]).find((stock) => ticker === stock.ticker) !== undefined))
-      .catch((e) => setErrorNotification(e, "fetching favorites"));
-  };
+      .catch((e) => setErrorNotificationOrClearSession(e, "fetching stock"));
 
   const { ticker } = useParams();
 
-  useEffect(() => {
-    getStock(ticker);
-  }, [ticker]);
+  useEffect(() => void getStock(ticker), [ticker]);
 
   return (
     <>

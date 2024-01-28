@@ -4,9 +4,8 @@ import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@
 import type { Stock } from "@rating-tracker/commons";
 import { stocksEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -18,26 +17,18 @@ import api from "../../../utils/api";
 export const DeleteStock = (props: DeleteStockProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
-  const navigate = useNavigate();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Deletes the stock from the backend.
    */
   const deleteStock = () => {
-    props.stock &&
-      (setRequestInProgress(true),
-      api
-        .delete(stocksEndpointPath + `/${props.stock.ticker}`)
-        // If the dialog is shown from the stock list, the list should be updated.
-        .then(() => props.getStocks && props.getStocks())
-        .catch((e) => setErrorNotification(e, "deleting stock"))
-        .finally(() => {
-          setRequestInProgress(false);
-          // If the dialog is shown from e.g. a detail page, the user should be redirected to another page.
-          props.navigateTo && navigate(props.navigateTo);
-          props.onClose();
-        }));
+    setRequestInProgress(true);
+    api
+      .delete(stocksEndpointPath + `/${props.stock.ticker}`)
+      .then(() => (props.onDelete(), props.onClose()))
+      .catch((e) => setErrorNotificationOrClearSession(e, "deleting stock"))
+      .finally(() => setRequestInProgress(false));
   };
 
   return (
@@ -74,15 +65,11 @@ interface DeleteStockProps {
    */
   stock: Stock;
   /**
-   * A method to update the stock list after the stock was deleted.
+   * A method that is called after the stock was deleted successfully.
    */
-  getStocks?: () => void;
+  onDelete: () => void;
   /**
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
-  /**
-   * The path to navigate to after the stock was deleted.
-   */
-  navigateTo?: string;
 }

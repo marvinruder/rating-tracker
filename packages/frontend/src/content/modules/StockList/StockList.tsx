@@ -1,4 +1,4 @@
-import { Card, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import type { StockListColumn } from "@rating-tracker/commons";
 import { stockListColumnArray } from "@rating-tracker/commons";
 import { useState } from "react";
@@ -18,12 +18,9 @@ import StockListHeader from "./StockListHeader";
 const StockListModule = (): JSX.Element => {
   const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
+  const [refetchStocksTrigger, setRefetchStocksTrigger] = useState<boolean>(false);
 
-  const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
-
-  const triggerRefetch = () => {
-    setRefetchTrigger((prevRefetchTrigger) => !prevRefetchTrigger);
-  };
+  const refetchStocks = () => setRefetchStocksTrigger((prev) => !prev);
 
   return (
     <>
@@ -33,7 +30,6 @@ const StockListModule = (): JSX.Element => {
             setFilter,
             columnFilter,
             setColumnFilter,
-            triggerRefetch,
             filtersInUse:
               columnFilter.length < stockListColumnArray.length || // If not all columns are shown, or
               Object.values(filter).some(
@@ -44,13 +40,11 @@ const StockListModule = (): JSX.Element => {
                     value.length > 0), // is an array with at least one element
               ),
           }}
-          triggerRefetch={triggerRefetch}
+          refetchStocks={refetchStocks}
         />
       </HeaderWrapper>
       <Container maxWidth={false}>
-        <Card>
-          <StockTable filter={filter} triggerRefetch={refetchTrigger} columns={columnFilter} />
-        </Card>
+        <StockTable filter={filter} refetchStocksTrigger={refetchStocksTrigger} columns={columnFilter} />
       </Container>
       <Footer />
     </>

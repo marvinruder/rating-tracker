@@ -1,18 +1,25 @@
 import { UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
 import type { AxiosError } from "axios";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 
-import { UserContext } from "../contexts/UserContext";
+import type { ContextProviderProps } from "../types/ContextProviderProps";
 import type { Notification } from "../types/Notification";
+export const SESSION_EXPIRED_MESSAGE = "Your session has expired. Please log in again.";
 
 /**
- * An object provided by the notification context.
+ * An object provided by the notification state context.
  */
-type NotificationContextType = {
+type NotificationStateContextType = {
   /**
    * The notification to be displayed.
    */
   notification?: Notification;
+};
+
+/**
+ * An object provided by the notification updater context.
+ */
+type NotificationUpdaterContextType = {
   /**
    * A method to set the notification to be displayed.
    */
@@ -26,53 +33,60 @@ type NotificationContextType = {
 /**
  * A context providing a state for a notification to be displayed in various components.
  */
-const NotificationContext = createContext<NotificationContextType>({} as NotificationContextType);
+const NotificationStateContext = createContext<NotificationStateContextType>({} as NotificationStateContextType);
+
+/**
+ * A context providing update methods for the notification context.
+ */
+const NotificationUpdaterContext = createContext<NotificationUpdaterContextType>({} as NotificationUpdaterContextType);
 
 /**
  * A provider for the notification context.
  *
- * @param {NotificationProviderProps} props The properties of the component.
+ * @param {ContextProviderProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-export const NotificationProvider = (props: NotificationProviderProps): JSX.Element => {
+export const NotificationProvider = (props: ContextProviderProps): JSX.Element => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
-  const { clearUser } = useContext(UserContext);
 
-  const setErrorNotificationOrClearSession = (e: AxiosError<{ message: string }>, actionDescription: string) => {
-    setNotification({
-      severity: "error",
-      title: `Error while ${actionDescription}`,
-      message:
-        e.response?.status && e.response?.data?.message
-          ? `Response Status Code ${e.response.status}: ${e.response.data.message}`
-          : e.message ?? "No additional information available.",
-    });
-    // If the user is no longer authenticated, clear the user information so that they are redirected to the login page
-    e.response?.status === 401 && e.response?.data?.message === UNAUTHORIZED_ERROR_MESSAGE && clearUser();
-  };
+  const setErrorNotificationOrClearSession = useCallback(
+    (e: AxiosError<{ message: string }>, actionDescription: string) => {
+      setNotification({
+        severity: "error",
+        title: `Error while ${actionDescription}`,
+        message:
+          e.response?.status && e.response?.data?.message
+            ? e.response?.status === 401 && e.response?.data?.message === UNAUTHORIZED_ERROR_MESSAGE
+              ? SESSION_EXPIRED_MESSAGE
+              : `Response Status Code ${e.response.status}: ${e.response.data.message}`
+            : e.message ?? "No additional information available.",
+      });
+    },
+    [],
+  );
+
+  const contextValue = useMemo(() => ({ notification }), [notification]);
 
   return (
-    <NotificationContext.Provider value={{ notification, setNotification, setErrorNotificationOrClearSession }}>
-      {props.children}
-    </NotificationContext.Provider>
+    <NotificationStateContext.Provider value={contextValue}>
+      <NotificationUpdaterContext.Provider value={{ setNotification, setErrorNotificationOrClearSession }}>
+        {props.children}
+      </NotificationUpdaterContext.Provider>
+    </NotificationStateContext.Provider>
   );
 };
 
 /**
- * Properties for the notification provider.
+ * Hook to use the notification context’s state.
+ *
+ * @returns {NotificationStateContextType} The notification context’s state.
  */
-type NotificationProviderProps = {
-  /**
-   * The children to be rendered, which are able to access the notification context.
-   */
-  children: React.ReactNode;
-};
+export const useNotificationContextState = (): NotificationStateContextType => useContext(NotificationStateContext);
 
 /**
- * Hook to use the notification context.
+ * Hook to use the notification context’s updater methods.
  *
- * @returns {NotificationContextType} The notification context.
+ * @returns {NotificationUpdaterContextType} The notification context’s updater methods.
  */
-export const useNotification = (): NotificationContextType => useContext(NotificationContext);
-
-export default NotificationContext;
+export const useNotificationContextUpdater = (): NotificationUpdaterContextType =>
+  useContext(NotificationUpdaterContext);

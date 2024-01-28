@@ -74,11 +74,12 @@ import {
   superSectorOfSector,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import { useContext, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import { useNotification } from "../../../contexts/NotificationContext";
-import { UserContext } from "../../../contexts/UserContext";
+import { useFavoritesContextState, useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
+import { useUserContextState } from "../../../contexts/UserContext";
 import api from "../../../utils/api";
 import { CurrencyWithTooltip, formatMarketCap, formatPercentage } from "../../../utils/formatters";
 import {
@@ -113,9 +114,14 @@ import { StockDetails } from "./StockDetails";
  * @returns {JSX.Element} The component.
  */
 export const StockRow = (props: StockRowProps): JSX.Element => {
-  const { user } = useContext(UserContext);
+  const { user } = useUserContextState();
+  const { favorites } = useFavoritesContextState();
+  const { refetchFavorites } = useFavoritesContextUpdater();
+
+  const isFavorite = favorites?.includes(props.stock?.ticker);
+
   const theme = useTheme();
-  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   const [optionsMenuOpen, setOptionsMenuOpen] = useState<boolean>(false);
   const [optionsMenuPositionEvent, setOptionsMenuPositionEvent] = useState<React.MouseEvent<HTMLElement, MouseEvent>>();
@@ -155,11 +161,14 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       .patch(`${portfoliosEndpointPath}/${props.portfolio.id}${stocksEndpointPath}/${props.stock.ticker}`, undefined, {
         params: { amount: +amountInput },
       })
-      .then(() => props.getStocks && props.getStocks())
-      .catch((e) => setErrorNotification(e, "editing stock in portfolio"));
+      .then(() => (props.getPortfolio(), props.getStocks()))
+      .catch((e) => setErrorNotificationOrClearSession(e, "editing stock in portfolio"));
   };
 
   const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
+
+  const contextMenuPositionRef = useRef<HTMLElement>(null);
+  const infiniteLoadingTriggerRef = useRef<HTMLTableRowElement>(null);
 
   /**
    * Returns an appropriate CSS `display` property value for a column. The value is derived from the
@@ -177,15 +186,30 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
     return undefined;
   };
 
+  useEffect(() => {
+    if (props.isInfiniteLoadingTrigger && infiniteLoadingTriggerRef.current) {
+      const observer = new IntersectionObserver(
+        (entry) => {
+          if (entry[0].isIntersecting) {
+            props.getStocks();
+            observer.disconnect();
+          }
+        },
+        { rootMargin: "0px 0px 20% 0px" },
+      );
+      observer.observe(infiniteLoadingTriggerRef.current);
+    }
+  }, [infiniteLoadingTriggerRef.current]);
+
   return props.stock ? (
     // Actual stock row
     <TableRow
       hover
       sx={{
         height: 59,
-        backgroundColor: props.isFavorite && theme.colors.warning.lighter,
+        backgroundColor: isFavorite && theme.colors.warning.lighter,
         ":hover, &.MuiTableRow-hover:hover": {
-          backgroundColor: props.isFavorite && darken(theme.colors.warning.lighter, 0.15),
+          backgroundColor: isFavorite && darken(theme.colors.warning.lighter, 0.15),
         },
       }}
       onContextMenu={(e) => {
@@ -209,165 +233,152 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       }}
     >
       {/* Actions */}
-      {props.getStocks && (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
-          <Tooltip title="Options" placement="top" arrow>
-            <IconButton
-              size="small"
-              color="secondary"
-              onClick={(e) => {
-                setOptionsMenuPositionEvent(e);
-                setOptionsMenuOpen(true);
+      <TableCell style={{ whiteSpace: "nowrap" }}>
+        <Tooltip title="Options" placement="top" arrow>
+          <IconButton
+            size="small"
+            color="secondary"
+            onClick={(e) => (setOptionsMenuPositionEvent(e), setOptionsMenuOpen(true))}
+          >
+            <ArrowDropDownIcon />
+          </IconButton>
+        </Tooltip>
+        <Box
+          ref={contextMenuPositionRef}
+          sx={{
+            position: "fixed",
+            visibility: "hidden",
+            top: optionsMenuPositionEvent?.clientY,
+            left: optionsMenuPositionEvent?.clientX,
+          }}
+        />
+        <Menu
+          open={optionsMenuOpen}
+          onClick={() => setOptionsMenuOpen(false)}
+          onClose={() => setOptionsMenuOpen(false)}
+          anchorEl={contextMenuPositionRef.current}
+        >
+          <MenuItem component={NavLink} to={`${stocksEndpointPath}/${props.stock.ticker}`} target="_blank">
+            <ListItemIcon>
+              <OpenInNewIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>
+              <Typography textOverflow="ellipsis" noWrap>
+                Open “{props.stock.ticker}” in new tab
+              </Typography>
+            </ListItemText>
+          </MenuItem>
+          {!props.watchlist && !props.portfolio && (
+            <MenuItem
+              onClick={() => {
+                (isFavorite ? api.delete : api.put)(favoritesEndpointPath + `/${props.stock.ticker}`)
+                  .then(refetchFavorites)
+                  .catch((e) =>
+                    setErrorNotificationOrClearSession(
+                      e,
+                      isFavorite
+                        ? `removing “${props.stock.name}” from favorites`
+                        : `adding “${props.stock.name}” to favorites`,
+                    ),
+                  );
               }}
             >
-              <ArrowDropDownIcon />
-            </IconButton>
-          </Tooltip>
-          <Box
-            id={`cursor-over-${props.stock.ticker}`}
-            sx={{
-              position: "fixed",
-              visibility: "hidden",
-              top: optionsMenuPositionEvent?.clientY,
-              left: optionsMenuPositionEvent?.clientX,
-            }}
-          />
-          <Menu
-            open={optionsMenuOpen}
-            onClose={() => setOptionsMenuOpen(false)}
-            anchorEl={() => document.getElementById(`cursor-over-${props.stock.ticker}`)}
-          >
-            <MenuItem
-              onClick={() => setOptionsMenuOpen(false)}
-              component={NavLink}
-              to={`${stocksEndpointPath}/${props.stock.ticker}`}
-              target="_blank"
-            >
               <ListItemIcon>
-                <OpenInNewIcon fontSize="small" />
+                {isFavorite ? (
+                  <StarOutlineIcon color="warning" fontSize="small" />
+                ) : (
+                  <StarIcon color="warning" fontSize="small" />
+                )}
               </ListItemIcon>
               <ListItemText>
                 <Typography textOverflow="ellipsis" noWrap>
-                  Open “{props.stock.ticker}” in new tab
+                  {isFavorite
+                    ? `Remove “${props.stock.ticker}” from Favorites`
+                    : `Mark “${props.stock.ticker}” as Favorite`}
                 </Typography>
               </ListItemText>
             </MenuItem>
-            {!props.watchlist && !props.portfolio && (
-              <MenuItem
-                onClick={() => {
-                  (props.isFavorite ? api.delete : api.put)(favoritesEndpointPath + `/${props.stock.ticker}`)
-                    .then(() => props.getStocks && props.getStocks())
-                    .catch((e) => {
-                      setNotification({
-                        severity: "error",
-                        title: props.isFavorite
-                          ? `Error while removing “${props.stock.name}” from favorites`
-                          : `Error while adding “${props.stock.name}” to favorites`,
-                        message:
-                          e.response?.status && e.response?.data?.message
-                            ? `${e.response.status}: ${e.response.data.message}`
-                            : e.message ?? "No additional information available.",
-                      });
-                    });
-                }}
-              >
-                <ListItemIcon>
-                  {props.isFavorite ? (
-                    <StarOutlineIcon color="warning" fontSize="small" />
-                  ) : (
-                    <StarIcon color="warning" fontSize="small" />
-                  )}
-                </ListItemIcon>
-                <ListItemText>
-                  <Typography textOverflow="ellipsis" noWrap>
-                    {props.isFavorite
-                      ? `Remove “${props.stock.ticker}” from Favorites`
-                      : `Mark “${props.stock.ticker}” as Favorite`}
-                  </Typography>
-                </ListItemText>
-              </MenuItem>
-            )}
-            {!props.watchlist && !props.portfolio && (
-              <MenuItem onClick={() => setAddToWatchlistDialogOpen(true)}>
-                <ListItemIcon>
-                  <BookmarkAddIcon color="success" fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>
-                  <Typography textOverflow="ellipsis" noWrap>
-                    Add “{props.stock.ticker}” to watchlist…
-                  </Typography>
-                </ListItemText>
-              </MenuItem>
-            )}
-            {!props.watchlist && !props.portfolio && (
-              <MenuItem onClick={() => setAddToPortfolioDialogOpen(true)}>
-                <ListItemIcon>
-                  <AddShoppingCartIcon color="success" fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>
-                  <Typography textOverflow="ellipsis" noWrap>
-                    Add “{props.stock.ticker}” to portfolio…
-                  </Typography>
-                </ListItemText>
-              </MenuItem>
-            )}
-            {!props.watchlist && !props.portfolio && (
-              <MenuItem
-                onClick={() => setEditDialogOpen(true)}
-                sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
-              >
-                <ListItemIcon>
-                  <EditIcon color="primary" fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>
-                  <Typography textOverflow="ellipsis" noWrap>
-                    Edit “{props.stock.ticker}”…
-                  </Typography>
-                </ListItemText>
-              </MenuItem>
-            )}
-            {!props.watchlist && !props.portfolio && (
-              <MenuItem
-                onClick={() => setDeleteDialogOpen(true)}
-                sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
-              >
-                <ListItemIcon>
-                  <DeleteIcon color="error" fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>
-                  <Typography textOverflow="ellipsis" noWrap>
-                    Delete “{props.stock.ticker}”…
-                  </Typography>
-                </ListItemText>
-              </MenuItem>
-            )}
-            {props.watchlist && (
-              <MenuItem onClick={() => setRemoveFromWatchlistDialogOpen(true)}>
-                <ListItemIcon>
-                  <BookmarkRemoveIcon color="error" fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>
-                  <Typography textOverflow="ellipsis" noWrap>
-                    Remove “{props.stock.ticker}” from “{props.watchlist.name}”
-                  </Typography>
-                </ListItemText>
-              </MenuItem>
-            )}
-            {props.portfolio && (
-              <MenuItem onClick={() => setRemoveFromPortfolioDialogOpen(true)}>
-                <ListItemIcon>
-                  <RemoveShoppingCartIcon color="error" fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>
-                  <Typography textOverflow="ellipsis" noWrap>
-                    Remove “{props.stock.ticker}” from “{props.portfolio.name}”
-                  </Typography>
-                </ListItemText>
-              </MenuItem>
-            )}
-          </Menu>
-        </TableCell>
-      )}
+          )}
+          {!props.watchlist && !props.portfolio && (
+            <MenuItem onClick={() => setAddToWatchlistDialogOpen(true)}>
+              <ListItemIcon>
+                <BookmarkAddIcon color="success" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>
+                <Typography textOverflow="ellipsis" noWrap>
+                  Add “{props.stock.ticker}” to watchlist…
+                </Typography>
+              </ListItemText>
+            </MenuItem>
+          )}
+          {!props.watchlist && !props.portfolio && (
+            <MenuItem onClick={() => setAddToPortfolioDialogOpen(true)}>
+              <ListItemIcon>
+                <AddShoppingCartIcon color="success" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>
+                <Typography textOverflow="ellipsis" noWrap>
+                  Add “{props.stock.ticker}” to portfolio…
+                </Typography>
+              </ListItemText>
+            </MenuItem>
+          )}
+          {!props.watchlist && !props.portfolio && (
+            <MenuItem
+              onClick={() => setEditDialogOpen(true)}
+              sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+            >
+              <ListItemIcon>
+                <EditIcon color="primary" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>
+                <Typography textOverflow="ellipsis" noWrap>
+                  Edit “{props.stock.ticker}”…
+                </Typography>
+              </ListItemText>
+            </MenuItem>
+          )}
+          {!props.watchlist && !props.portfolio && (
+            <MenuItem
+              onClick={() => setDeleteDialogOpen(true)}
+              sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+            >
+              <ListItemIcon>
+                <DeleteIcon color="error" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>
+                <Typography textOverflow="ellipsis" noWrap>
+                  Delete “{props.stock.ticker}”…
+                </Typography>
+              </ListItemText>
+            </MenuItem>
+          )}
+          {props.watchlist && (
+            <MenuItem onClick={() => setRemoveFromWatchlistDialogOpen(true)}>
+              <ListItemIcon>
+                <BookmarkRemoveIcon color="error" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>
+                <Typography textOverflow="ellipsis" noWrap>
+                  Remove “{props.stock.ticker}” from “{props.watchlist.name}”
+                </Typography>
+              </ListItemText>
+            </MenuItem>
+          )}
+          {props.portfolio && (
+            <MenuItem onClick={() => setRemoveFromPortfolioDialogOpen(true)}>
+              <ListItemIcon>
+                <RemoveShoppingCartIcon color="error" fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>
+                <Typography textOverflow="ellipsis" noWrap>
+                  Remove “{props.stock.ticker}” from “{props.portfolio.name}”
+                </Typography>
+              </ListItemText>
+            </MenuItem>
+          )}
+        </Menu>
+      </TableCell>
       {/* Amount in Portfolio */}
       {props.portfolio && "amount" in props.stock && (
         <TableCell>
@@ -437,7 +448,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <Badge
             anchorOrigin={{ vertical: "top", horizontal: "left" }}
             badgeContent={
-              props.isFavorite ? (
+              isFavorite ? (
                 <Tooltip title="This stock is marked as a favorite" arrow>
                   <StarsIcon sx={{ width: 16, height: 16 }} color="warning" />
                 </Tooltip>
@@ -870,41 +881,27 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         </DialogContent>
       </Dialog>
       {/* Add to Watchlist Dialog */}
-      <Dialog
-        maxWidth="xs"
-        open={addToWatchlistDialogOpen}
-        onClose={() => (setAddToWatchlistDialogOpen(false), setOptionsMenuOpen(false))}
-      >
-        <AddStockToWatchlist
-          stock={props.stock}
-          onClose={() => (setAddToWatchlistDialogOpen(false), setOptionsMenuOpen(false), props.getStocks())}
-        />
+      <Dialog maxWidth="xs" open={addToWatchlistDialogOpen} onClose={() => setAddToWatchlistDialogOpen(false)}>
+        <AddStockToWatchlist stock={props.stock} onClose={() => setAddToWatchlistDialogOpen(false)} />
       </Dialog>
       {/* Add to Portfolio Dialog */}
-      <Dialog
-        maxWidth="xs"
-        open={addToPortfolioDialogOpen}
-        onClose={() => (setAddToPortfolioDialogOpen(false), setOptionsMenuOpen(false))}
-      >
-        <AddStockToPortfolio
-          stock={props.stock}
-          onClose={() => (setAddToPortfolioDialogOpen(false), setOptionsMenuOpen(false), props.getStocks())}
-        />
+      <Dialog maxWidth="xs" open={addToPortfolioDialogOpen} onClose={() => setAddToPortfolioDialogOpen(false)}>
+        <AddStockToPortfolio stock={props.stock} onClose={() => setAddToPortfolioDialogOpen(false)} />
       </Dialog>
       {/* Edit Dialog */}
-      <Dialog open={editDialogOpen} onClose={() => (setEditDialogOpen(false), props.getStocks && props.getStocks())}>
-        <EditStock stock={props.stock} getStocks={props.getStocks} onClose={() => setEditDialogOpen(false)} />
+      <Dialog open={editDialogOpen}>
+        <EditStock stock={props.stock} onCloseAfterEdit={props.getStocks} onClose={() => setEditDialogOpen(false)} />
       </Dialog>
       {/* Delete Dialog */}
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DeleteStock stock={props.stock} getStocks={props.getStocks} onClose={() => setDeleteDialogOpen(false)} />
+        <DeleteStock stock={props.stock} onDelete={props.getStocks} onClose={() => setDeleteDialogOpen(false)} />
       </Dialog>
       {/* Remove from Watchlist Dialog */}
       <Dialog open={removeFromWatchlistDialogOpen} onClose={() => setRemoveFromWatchlistDialogOpen(false)}>
         <RemoveStockFromWatchlist
           stock={props.stock}
           watchlist={props.watchlist}
-          getWatchlist={props.getStocks}
+          onRemove={() => (props.getWatchlist(), props.getStocks())}
           onClose={() => setRemoveFromWatchlistDialogOpen(false)}
         />
       </Dialog>
@@ -913,25 +910,23 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         <RemoveStockFromPortfolio
           stock={props.stock}
           portfolio={props.portfolio}
-          getPortfolio={props.getStocks}
+          onRemove={() => (props.getPortfolio(), props.getStocks())}
           onClose={() => setRemoveFromPortfolioDialogOpen(false)}
         />
       </Dialog>
     </TableRow>
   ) : (
     // Skeleton of a stock row
-    <TableRow hover sx={{ height: 59 }}>
+    <TableRow hover sx={{ height: 59 }} {...(props.isInfiniteLoadingTrigger ? { ref: infiniteLoadingTriggerRef } : {})}>
       {/* Actions */}
-      {props.getStocks && (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
-          <Skeleton
-            sx={{ m: "4px", display: "inline-block", verticalAlign: "middle" }}
-            variant="circular"
-            width={2 * (theme.typography.body1.fontSize as number) - 4}
-            height={2 * (theme.typography.body1.fontSize as number) - 4}
-          />
-        </TableCell>
-      )}
+      <TableCell style={{ whiteSpace: "nowrap" }}>
+        <Skeleton
+          sx={{ m: "4px", display: "inline-block", verticalAlign: "middle" }}
+          variant="circular"
+          width={2 * (theme.typography.body1.fontSize as number) - 4}
+          height={2 * (theme.typography.body1.fontSize as number) - 4}
+        />
+      </TableCell>
       {props.portfolio !== undefined && (
         <TableCell>
           <Skeleton variant="rounded" width={150} height={32} />
@@ -1112,13 +1107,13 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
  */
 interface StockRowProps {
   /**
-   * The stock to display
+   * The stock to display. If unset, a skeleton of a stock row is shown.
    */
   stock?: Stock | WeightedStock;
   /**
-   * Whether the stock is a favorite stock of the user.
+   * Whether the stock row is a trigger for infinite loading, which will be executed when the stock row is visible.
    */
-  isFavorite?: boolean;
+  isInfiniteLoadingTrigger?: boolean;
   /**
    * A watchlist the stock is in. If set, the stock row is shown as part of that watchlist’s stocks.
    */
@@ -1129,8 +1124,21 @@ interface StockRowProps {
   portfolio?: PortfolioSummary;
   /**
    * A method to update the stock list, e.g. after a stock was modified or deleted.
+   *
+   * If this is a regular stock row, this method will update all stocks currently present in the stock table without
+   * changing the total number of stocks present.
+   * If this stock row is the trigger for infinite loading, this method will fetch more stocks from the server and
+   * append them to the stock table.
    */
   getStocks?: () => void;
+  /**
+   * A method to update the watchlist, e.g. after a stock was added to or removed from the watchlist.
+   */
+  getWatchlist?: () => void;
+  /**
+   * A method to update the portfolio, e.g. after a stock was added to, modified within or removed from the portfolio.
+   */
+  getPortfolio?: () => void;
   /**
    * The columns to display
    */

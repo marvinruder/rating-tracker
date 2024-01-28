@@ -1,18 +1,15 @@
 import { Box, CircularProgress } from "@mui/material";
 import {
-  User,
-  accountEndpointPath,
   portfoliosEndpointPath,
   stocksEndpointPath,
   usersEndpointPath,
   watchlistsEndpointPath,
 } from "@rating-tracker/commons";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy } from "react";
 import type { RouteObject } from "react-router";
 import { useLocation } from "react-router";
 import { Navigate, useSearchParams } from "react-router-dom";
 
-import { NotificationSnackbar } from "./components/etc/NotificationSnackbar";
 //
 // Applications
 //
@@ -21,9 +18,7 @@ import { NotificationSnackbar } from "./components/etc/NotificationSnackbar";
  * Since it is displayed first, we load it right away and do not use a suspense loader.
  */
 import { LoginPage } from "./content/pages/Login";
-import { NotificationProvider } from "./contexts/NotificationContext";
-import { UserContext } from "./contexts/UserContext";
-import api from "./utils/api";
+import { useUserContextState } from "./contexts/UserContext";
 
 /**
  * A component that renders a loading indicator.
@@ -153,6 +148,7 @@ const Status500 = loader(lazy(() => import("./content/pages/Status/Status500")))
  * @returns {JSX.Element} The component.
  */
 const SidebarLayout = loader(lazy(() => import("./layouts/SidebarLayout/SidebarLayout")));
+
 /**
  * A wrapper ensuring that the user is authenticated before displaying the page.
  * Also provides a user context if the user is authenticated.
@@ -161,57 +157,11 @@ const SidebarLayout = loader(lazy(() => import("./layouts/SidebarLayout/SidebarL
  * @returns {JSX.Element} The component.
  */
 const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
-  const [done, setDone] = useState<boolean>(false);
-  const [user, setUser] = useState<User>(undefined);
-  const [userToggle, setUserToggle] = useState(false);
-
-  /**
-   * Deletes the user information from the context.
-   */
-  const clearUser = () => {
-    setUser(undefined);
-  };
-
-  /**
-   * Triggers a refetch of the user information.
-   */
-  const refetchUser = () => {
-    setUserToggle(!userToggle);
-  };
-
-  useEffect(() => {
-    // Check if the user is authenticated
-    api
-      .get(accountEndpointPath)
-      .then((response) => {
-        if (Object.keys(response.data).length) {
-          setUser(new User(response.data));
-        } else {
-          clearUser();
-        }
-      })
-      // If unsuccessful, delete the user information so that the user is redirected to the login page
-      .catch(clearUser)
-      .finally(() => setDone(true));
-  }, [userToggle]);
-
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
+  const { user } = useUserContextState();
 
-  /**
-   * The requested page, wrapped in a user and notification context.
-   *
-   * @returns {JSX.Element} The component.
-   */
-  const Page = (): JSX.Element => (
-    <UserContext.Provider value={{ user, clearUser, refetchUser }}>
-      <NotificationProvider>
-        {props.children}
-        <NotificationSnackbar snackbarProps={{ anchorOrigin: { horizontal: "center", vertical: "bottom" } }} />
-      </NotificationProvider>
-    </UserContext.Provider>
-  );
-  return done ? (
+  return user !== undefined ? (
     // If the request finished, evaluate the result
     user ? (
       // If the user is authenticated, display the page
@@ -220,11 +170,11 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
         // If no redirect was specified, redirect to the stock page
         <Navigate to={searchParams.get("redirect") || stocksEndpointPath} replace />
       ) : (
-        <Page /> // If any other page was requested, show it
+        props.children // If any other page was requested, show it
       )
     ) : // If the user is not authenticated, show them the login page
     props.isLoginPage ? (
-      <Page /> // If the login page was requested, show it
+      props.children // If the login page was requested, show it
     ) : (
       // If any other page was requested, redirect to the login page while retaining the requested path
       <Navigate to={`/login?redirect=${encodeURIComponent(pathname)}`} replace />

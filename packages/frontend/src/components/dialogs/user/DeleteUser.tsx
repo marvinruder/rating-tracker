@@ -5,7 +5,7 @@ import type { User } from "@rating-tracker/commons";
 import { usersEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -17,24 +17,22 @@ import api from "../../../utils/api";
 export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Deletes the user from the backend.
+   *
+   * @returns {Promise<void>}
    */
-  const deleteUser = () => {
+  const deleteUser = (): Promise<void> =>
     props.user &&
-      (setRequestInProgress(true),
-      api
-        .delete(usersEndpointPath + `/${props.user.email}`)
-        // Update the user list after the user was deleted.
-        .then(() => props.getUsers && props.getUsers())
-        .catch((e) => setErrorNotification(e, "deleting user"))
-        .finally(() => {
-          setRequestInProgress(false);
-          props.onClose();
-        }));
-  };
+    (setRequestInProgress(true),
+    api
+      .delete(usersEndpointPath + `/${props.user.email}`)
+      // Update the user list after the user was deleted.
+      .then(() => (props.onDelete(), props.onClose()))
+      .catch((e) => setErrorNotificationOrClearSession(e, "deleting user"))
+      .finally(() => setRequestInProgress(false)));
 
   return (
     <>
@@ -69,9 +67,9 @@ interface DeleteUserProps {
    */
   user: User;
   /**
-   * A method to update the user list after the user was deleted.
+   * A method that is called after the user was deleted successfully.
    */
-  getUsers?: () => void;
+  onDelete: () => void;
   /**
    * A method that is called when the dialog is closed.
    */

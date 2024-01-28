@@ -32,8 +32,8 @@ export class WatchlistsController {
       .status(200)
       .json(
         (await readAllWatchlists(res.locals.user.email)).sort((a, b) =>
-          // Sort the watchlists alphabetically, with the Favorites watchlist at the top
-          a.name === FAVORITES_NAME ? -1 : b.name === FAVORITES_NAME ? 1 : a.name.localeCompare(b.name),
+          // Sort the Favorites watchlist to the top
+          a.name === FAVORITES_NAME ? -1 : b.name === FAVORITES_NAME ? 1 : 0,
         ),
       )
       .end();

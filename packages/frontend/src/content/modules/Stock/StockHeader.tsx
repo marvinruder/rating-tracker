@@ -13,14 +13,16 @@ import {
   stocksEndpointPath,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import { AddStockToPortfolio } from "../../../components/dialogs/portfolio/AddStockToPortfolio";
 import { DeleteStock } from "../../../components/dialogs/stock/DeleteStock";
 import { EditStock } from "../../../components/dialogs/stock/EditStock";
 import { AddStockToWatchlist } from "../../../components/dialogs/watchlist/AddStockToWatchlist";
-import { useNotification } from "../../../contexts/NotificationContext";
-import { UserContext } from "../../../contexts/UserContext";
+import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
+import { useUserContextState } from "../../../contexts/UserContext";
 import api from "../../../utils/api";
 
 /**
@@ -35,9 +37,12 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 
-  const { user } = useContext(UserContext);
+  const { user } = useUserContextState();
+  const { refetchFavorites } = useFavoritesContextUpdater();
   const theme = useTheme();
-  const { setNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -98,19 +103,15 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                   color={props.isFavorite ? "warning" : undefined}
                   onClick={() => {
                     (props.isFavorite ? api.delete : api.put)(favoritesEndpointPath + `/${props.stock.ticker}`)
-                      .then(() => props.getStock && props.getStock())
-                      .catch((e) => {
-                        setNotification({
-                          severity: "error",
-                          title: props.isFavorite
-                            ? `Error while removing “${props.stock.name}” from favorites`
-                            : `Error while adding “${props.stock.name}” to favorites`,
-                          message:
-                            e.response?.status && e.response?.data?.message
-                              ? `${e.response.status}: ${e.response.data.message}`
-                              : e.message ?? "No additional information available.",
-                        });
-                      });
+                      .then(refetchFavorites)
+                      .catch((e) =>
+                        setErrorNotificationOrClearSession(
+                          e,
+                          props.isFavorite
+                            ? `removing “${props.stock.name}” from favorites`
+                            : `adding “${props.stock.name}” to favorites`,
+                        ),
+                      );
                   }}
                 >
                   {props.isFavorite ? <StarIcon /> : <StarOutlineIcon />}
@@ -188,18 +189,26 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
           )}
         </Grid>
       </Grid>
-      <Dialog maxWidth="xs" open={addToWatchlistDialogOpen} onClose={() => setAddToWatchlistDialogOpen(false)}>
-        <AddStockToWatchlist stock={props.stock} onClose={() => setAddToWatchlistDialogOpen(false)} />
-      </Dialog>
-      <Dialog maxWidth="xs" open={addToPortfolioDialogOpen} onClose={() => setAddToPortfolioDialogOpen(false)}>
-        <AddStockToPortfolio stock={props.stock} onClose={() => setAddToPortfolioDialogOpen(false)} />
-      </Dialog>
-      <Dialog open={editDialogOpen} onClose={() => (setEditDialogOpen(false), props.getStock && props.getStock())}>
-        <EditStock stock={props.stock} getStocks={props.getStock} onClose={() => setEditDialogOpen(false)} />
-      </Dialog>
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DeleteStock stock={props.stock} onClose={() => setDeleteDialogOpen(false)} navigateTo={stocksEndpointPath} />
-      </Dialog>
+      {props.stock && (
+        <>
+          <Dialog maxWidth="xs" open={addToWatchlistDialogOpen} onClose={() => setAddToWatchlistDialogOpen(false)}>
+            <AddStockToWatchlist stock={props.stock} onClose={() => setAddToWatchlistDialogOpen(false)} />
+          </Dialog>
+          <Dialog maxWidth="xs" open={addToPortfolioDialogOpen} onClose={() => setAddToPortfolioDialogOpen(false)}>
+            <AddStockToPortfolio stock={props.stock} onClose={() => setAddToPortfolioDialogOpen(false)} />
+          </Dialog>
+          <Dialog open={editDialogOpen}>
+            <EditStock stock={props.stock} onCloseAfterEdit={props.getStock} onClose={() => setEditDialogOpen(false)} />
+          </Dialog>
+          <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+            <DeleteStock
+              stock={props.stock}
+              onDelete={() => navigate(stocksEndpointPath)}
+              onClose={() => setDeleteDialogOpen(false)}
+            />
+          </Dialog>
+        </>
+      )}
     </>
   );
 };

@@ -22,11 +22,11 @@ import type { TransitionProps } from "@mui/material/transitions";
 import type { Stock } from "@rating-tracker/commons";
 import { baseURL, emojiFlag, stocksEndpointPath, stockLogoEndpointSuffix } from "@rating-tracker/commons";
 import type { Ref, ReactElement, ChangeEvent } from "react";
-import React, { forwardRef, useState, useEffect, Fragment } from "react";
+import { forwardRef, useState, useEffect, Fragment } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { SectorIcon } from "../../../../components/stock/properties/SectorIcon";
-import { useNotification } from "../../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../../contexts/NotificationContext";
 import api from "../../../../utils/api";
 
 /**
@@ -50,7 +50,7 @@ export const HeaderSearchButton = (): JSX.Element => {
   const [count, setCount] = useState<number>(0);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
 
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -189,7 +189,7 @@ export const HeaderSearchButton = (): JSX.Element => {
         setCount(res.data.count);
       })
       .catch((e) => {
-        setErrorNotification(e, "fetching stocks");
+        setErrorNotificationOrClearSession(e, "fetching stocks");
         setStocks([]);
         setCount(0);
       })

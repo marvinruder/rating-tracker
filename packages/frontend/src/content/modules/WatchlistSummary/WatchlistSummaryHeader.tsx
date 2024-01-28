@@ -33,7 +33,7 @@ export const WatchlistSummaryHeader: FC<WatchlistSummaryHeaderProps> = (
           </Box>
         </Tooltip>
         <Dialog maxWidth="lg" open={addWatchlistOpen} onClose={() => setAddWatchlistOpen(false)}>
-          <AddWatchlist onClose={() => (setAddWatchlistOpen(false), props.getWatchlists())} />
+          <AddWatchlist onClose={() => setAddWatchlistOpen(false)} onAdd={props.refetchWatchlists} />
         </Dialog>
       </Grid>
     </Grid>
@@ -44,5 +44,5 @@ interface WatchlistSummaryHeaderProps {
   /**
    * A method to update the watchlist summaries, e.g. after a new watchlist was created.
    */
-  getWatchlists: () => void;
+  refetchWatchlists: () => void;
 }

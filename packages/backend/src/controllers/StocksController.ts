@@ -56,7 +56,7 @@ const getLogoOfStock = async (ticker: string, dark: boolean): Promise<Resource> 
           maxAge = +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
           if (Number.isNaN(maxAge)) throw new TypeError();
           /* c8 ignore start */ // Difficult to test, since valid max-age is always returned
-        } catch (e) {
+        } catch (_) {
           maxAge = 60 * 60 * 24;
         }
         /* c8 ignore stop */
@@ -98,11 +98,11 @@ export class StocksController {
       where: { AND: filters },
     };
 
-    if (req.query.name) {
+    if (req.query.name && typeof req.query.name === "string") {
       filters.push({
         OR: [
-          { ticker: { startsWith: (req.query.name as string).trim(), mode: "insensitive" } },
-          { name: { contains: (req.query.name as string).trim(), mode: "insensitive" } },
+          { ticker: { startsWith: req.query.name.trim(), mode: "insensitive" } },
+          { name: { contains: req.query.name.trim(), mode: "insensitive" } },
         ],
       });
     }
@@ -241,16 +241,16 @@ export class StocksController {
     }
 
     let filteredMSCIESGRatingArray = [...msciESGRatingArray];
-    if (req.query.msciESGRatingMin !== undefined) {
-      const msciESGRatingMin = req.query.msciESGRatingMin as string;
+    if (req.query.msciESGRatingMin !== undefined && typeof req.query.msciESGRatingMin === "string") {
+      const msciESGRatingMin = req.query.msciESGRatingMin;
       if (isMSCIESGRating(msciESGRatingMin)) {
         filteredMSCIESGRatingArray = filteredMSCIESGRatingArray.filter(
           (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) >= msciESGRatingArray.indexOf(msciESGRatingMin),
         );
       }
     }
-    if (req.query.msciESGRatingMax !== undefined) {
-      const msciESGRatingMax = req.query.msciESGRatingMax as string;
+    if (req.query.msciESGRatingMax !== undefined && typeof req.query.msciESGRatingMax === "string") {
+      const msciESGRatingMax = req.query.msciESGRatingMax;
       if (isMSCIESGRating(msciESGRatingMax)) {
         filteredMSCIESGRatingArray = filteredMSCIESGRatingArray.filter(
           (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) <= msciESGRatingArray.indexOf(msciESGRatingMax),
@@ -517,10 +517,8 @@ export class StocksController {
     }
     res.set(
       "Cache-Control",
-      `max-age=${
-        // Allow client-side caching as long as the logo bundle is valid in the cache
-        await readResourceTTL(url)
-      }`,
+      // Allow client-side caching as long as the logo bundle is valid in the cache
+      `max-age=${await readResourceTTL(url)}`,
     );
     res.status(200).send(JSON.parse(logoBundleResource.content)).end();
   }

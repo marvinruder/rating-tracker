@@ -6,12 +6,13 @@ import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider }
 import type { Watchlist } from "@rating-tracker/commons";
 import { FAVORITES_NAME, watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWatchlist";
 import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWatchlist";
 import type { StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
 import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -24,7 +25,9 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
   const isFavorites = props.watchlist?.name === FAVORITES_NAME;
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [renameDialogOpen, setRenameDialogOpen] = useState<boolean>(false);
-  const { setNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -59,19 +62,15 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
                         {},
                         { params: { subscribed: !props.watchlist.subscribed } },
                       )
-                      .then(() => props.getWatchlist && props.getWatchlist())
-                      .catch((e) => {
-                        setNotification({
-                          severity: "error",
-                          title: props.watchlist.subscribed
-                            ? `Error while unsubscribing from watchlist “${props.watchlist.name}”`
-                            : `Error while subscribing to watchlist “${props.watchlist.name}”`,
-                          message:
-                            e.response?.status && e.response?.data?.message
-                              ? `${e.response.status}: ${e.response.data.message}`
-                              : e.message ?? "No additional information available.",
-                        });
-                      });
+                      .then(props.getWatchlist)
+                      .catch((e) =>
+                        setErrorNotificationOrClearSession(
+                          e,
+                          props.watchlist.subscribed
+                            ? `unsubscribing from watchlist “${props.watchlist.name}”`
+                            : `subscribing to watchlist “${props.watchlist.name}”`,
+                        ),
+                      );
                   }}
                 >
                   {props.watchlist.subscribed ? <NotificationsIcon /> : <NotificationsNoneIcon />}
@@ -109,13 +108,10 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
       </Grid>
       {props.watchlist && (
         <>
-          <Dialog
-            open={renameDialogOpen}
-            onClose={() => (setRenameDialogOpen(false), props.getWatchlist && props.getWatchlist())}
-          >
+          <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
             <RenameWatchlist
               watchlist={props.watchlist}
-              getWatchlists={props.getWatchlist}
+              onRename={props.getWatchlist}
               onClose={() => setRenameDialogOpen(false)}
             />
           </Dialog>
@@ -123,7 +119,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
             <DeleteWatchlist
               watchlist={props.watchlist}
               onClose={() => setDeleteDialogOpen(false)}
-              navigateTo={watchlistsEndpointPath}
+              onDelete={() => navigate(watchlistsEndpointPath)}
             />
           </Dialog>
         </>
@@ -143,7 +139,7 @@ interface WatchlistHeaderProps {
   /**
    * A method to update the watchlist, e.g. after editing.
    */
-  getWatchlist?: () => void;
+  getWatchlist: () => void;
   /**
    * The properties of the stock table filters.
    */

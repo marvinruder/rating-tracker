@@ -21,7 +21,7 @@ import type { Stock, PortfolioSummary, Currency } from "@rating-tracker/commons"
 import { stocksEndpointPath, portfoliosEndpointPath, currencyMinorUnits } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 import { AddPortfolio } from "./AddPortfolio";
@@ -39,7 +39,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
   const [amountError, setAmountError] = useState<boolean>(false);
   const [addPortfolioOpen, setAddPortfolioOpen] = useState<boolean>(false);
   const [hoverCurrency, setHoverCurrency] = useState<Currency | "…">("…");
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   useEffect(() => getPortfolios(), []);
 
@@ -62,7 +62,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
       .get(portfoliosEndpointPath)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
-        setErrorNotification(e, "fetching portfolios");
+        setErrorNotificationOrClearSession(e, "fetching portfolios");
         setPortfolioSummaries([]);
       })
       .finally(() => setPortfolioSummariesFinal(true));
@@ -84,7 +84,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
         params: { amount: +amountInput },
       })
       .then(() => props.onClose())
-      .catch((e) => setErrorNotification(e, "adding stock to portfolio"));
+      .catch((e) => setErrorNotificationOrClearSession(e, "adding stock to portfolio"));
   };
 
   return (
@@ -106,7 +106,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
               inputProps={{
                 inputMode: "decimal",
                 pattern: "\\d+(\\.\\d+)?",
-                step: Math.pow(10, -1 * currencyMinorUnits[props.stock.currency]),
+                step: Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]) || undefined,
               }}
               onChange={(event) => {
                 setAmountInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
@@ -191,7 +191,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
           <Divider />
         </List>
         <Dialog maxWidth="lg" open={addPortfolioOpen} onClose={() => setAddPortfolioOpen(false)}>
-          <AddPortfolio onClose={() => (setAddPortfolioOpen(false), getPortfolios())} />
+          <AddPortfolio onClose={() => setAddPortfolioOpen(false)} onAdd={getPortfolios} />
         </Dialog>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>

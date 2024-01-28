@@ -5,7 +5,7 @@ import type { Stock, PortfolioSummary } from "@rating-tracker/commons";
 import { stocksEndpointPath, portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -17,18 +17,18 @@ import api from "../../../utils/api";
 export const RemoveStockFromPortfolio = (props: RemoveStockFromPortfolioProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Removes the stock from the portfolio.
    */
   const removeStockFromPortfolio = () => {
-    setRequestInProgress(true),
-      api
-        .delete(portfoliosEndpointPath + `/${props.portfolio.id}` + stocksEndpointPath + `/${props.stock.ticker}`)
-        .then(() => props.getPortfolio())
-        .catch((e) => setErrorNotification(e, "removing stock from portfolio"))
-        .finally(() => setRequestInProgress(false));
+    setRequestInProgress(true);
+    api
+      .delete(portfoliosEndpointPath + `/${props.portfolio.id}` + stocksEndpointPath + `/${props.stock.ticker}`)
+      .then(() => (props.onRemove(), props.onClose()))
+      .catch((e) => setErrorNotificationOrClearSession(e, "removing stock from portfolio"))
+      .finally(() => setRequestInProgress(false));
   };
 
   return (
@@ -71,11 +71,11 @@ interface RemoveStockFromPortfolioProps {
    */
   portfolio: PortfolioSummary;
   /**
-   * A method to update the portfolio after the stock was removed.
-   */
-  getPortfolio: () => void;
-  /**
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
+  /**
+   * A method that is called after the stock was removed from the portfolio.
+   */
+  onRemove: () => void;
 }

@@ -1,10 +1,7 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Box, alpha, lighten, IconButton, Tooltip, useTheme, Divider } from "@mui/material";
-import { useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-
-import SidebarContext from "../../../contexts/SidebarContext";
 
 import { HeaderButtons } from "./Buttons/Buttons";
 import { HeaderUserbox } from "./Userbox/Userbox";
@@ -12,10 +9,10 @@ import { HeaderUserbox } from "./Userbox/Userbox";
 /**
  * The header of the sidebar layout.
  *
+ * @param {HeaderProps} props The component props.
  * @returns {JSX.Element} The component.
  */
-export const Header = (): JSX.Element => {
-  const { toggleSidebar } = useContext(SidebarContext);
+export const Header = (props: HeaderProps): JSX.Element => {
   const theme = useTheme();
   const { pathname } = useLocation();
 
@@ -60,7 +57,7 @@ export const Header = (): JSX.Element => {
       >
         <Box component="span" sx={{ display: { lg: "none", xs: undefined } }}>
           <Tooltip arrow title="Toggle Menu">
-            <IconButton color="primary" onClick={toggleSidebar}>
+            <IconButton color="primary" onClick={props.toggleSidebar}>
               <MenuIcon />
             </IconButton>
           </Tooltip>
@@ -88,3 +85,10 @@ export const Header = (): JSX.Element => {
     </Box>
   );
 };
+
+interface HeaderProps {
+  /**
+   * Toggles the sidebar.
+   */
+  toggleSidebar: () => void;
+}
