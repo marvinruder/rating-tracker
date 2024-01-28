@@ -4,6 +4,7 @@ import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider }
 import type { Portfolio } from "@rating-tracker/commons";
 import { currencyMinorUnits, getTotalAmount, portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import { DeletePortfolio } from "../../../components/dialogs/portfolio/DeletePortfolio";
 import { EditPortfolio } from "../../../components/dialogs/portfolio/EditPortfolio";
@@ -19,6 +20,8 @@ import { StockTableFilters } from "../../../components/stock/layouts/StockTableF
 export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -72,13 +75,10 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
       </Grid>
       {props.portfolio && (
         <>
-          <Dialog
-            open={editDialogOpen}
-            onClose={() => (setEditDialogOpen(false), props.getPortfolio && props.getPortfolio())}
-          >
+          <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
             <EditPortfolio
               portfolio={props.portfolio}
-              getPortfolios={props.getPortfolio}
+              onEdit={props.getPortfolio}
               onClose={() => setEditDialogOpen(false)}
             />
           </Dialog>
@@ -86,7 +86,7 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
             <DeletePortfolio
               portfolio={props.portfolio}
               onClose={() => setDeleteDialogOpen(false)}
-              navigateTo={portfoliosEndpointPath}
+              onDelete={() => navigate(portfoliosEndpointPath)}
             />
           </Dialog>
         </>
@@ -106,7 +106,7 @@ interface PortfolioHeaderProps {
   /**
    * A method to update the portfolio, e.g. after editing.
    */
-  getPortfolio?: () => void;
+  getPortfolio: () => void;
   /**
    * The properties of the stock table filters.
    */

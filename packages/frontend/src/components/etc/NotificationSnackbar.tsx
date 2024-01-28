@@ -2,7 +2,7 @@ import type { AlertProps, SnackbarCloseReason, SnackbarProps } from "@mui/materi
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { useNotification } from "../../contexts/NotificationContext";
+import { useNotificationContextState, useNotificationContextUpdater } from "../../contexts/NotificationContext";
 
 /**
  * The duration of the transition between the snackbar being shown and hidden.
@@ -18,7 +18,8 @@ const TRANSITION_DURATION = 350;
 export const NotificationSnackbar = (props: NotificationSnackbarProps): JSX.Element => {
   const [snackbarShown, setSnackbarShown] = useState<boolean>(false);
   // The notification is provided by the NotificationContext.
-  const { notification, setNotification } = useNotification();
+  const { notification } = useNotificationContextState();
+  const { setNotification } = useNotificationContextUpdater();
   useEffect(() => setSnackbarShown(notification !== undefined), [notification]);
 
   /**
@@ -39,7 +40,7 @@ export const NotificationSnackbar = (props: NotificationSnackbarProps): JSX.Elem
     }
   };
 
-  return (
+  return notification?.title || notification?.message ? (
     <Snackbar
       {...props.snackbarProps}
       open={snackbarShown}
@@ -59,6 +60,8 @@ export const NotificationSnackbar = (props: NotificationSnackbarProps): JSX.Elem
         {notification?.message}
       </Alert>
     </Snackbar>
+  ) : (
+    <></>
   );
 };
 

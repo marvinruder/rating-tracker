@@ -1,9 +1,6 @@
 import type { BoxProps } from "@mui/material";
 import { Box, Drawer, alpha, useTheme, lighten, darken } from "@mui/material";
 import type { FC } from "react";
-import { useContext } from "react";
-
-import SidebarContext from "../../../contexts/SidebarContext";
 
 import { SidebarContent } from "./SidebarContent";
 
@@ -34,11 +31,10 @@ const SidebarWrapper: FC<BoxProps & { children: React.ReactNode }> = (
 /**
  * The sidebar of the sidebar layout.
  *
+ * @param {SidebarProps} props The component props.
  * @returns {JSX.Element} The component.
  */
-export const Sidebar = (): JSX.Element => {
-  const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
-  const closeSidebar = () => toggleSidebar();
+export const Sidebar = (props: SidebarProps): JSX.Element => {
   const theme = useTheme();
 
   return (
@@ -56,13 +52,13 @@ export const Sidebar = (): JSX.Element => {
           boxShadow: theme.palette.mode === "dark" ? theme.sidebar.boxShadow : "none",
         }}
       >
-        <SidebarContent />
+        <SidebarContent closeSidebar={props.closeSidebar} />
       </SidebarWrapper>
       <Drawer
         sx={{ boxShadow: `${theme.sidebar.boxShadow}` }}
         anchor={theme.direction === "rtl" ? "right" : "left"}
-        open={sidebarToggle}
-        onClose={closeSidebar}
+        open={props.sidebarToggle}
+        onClose={props.closeSidebar}
         variant="temporary"
         elevation={9}
       >
@@ -74,9 +70,20 @@ export const Sidebar = (): JSX.Element => {
                 : alpha(darken(theme.colors.alpha.black[100], 0.5), 0.85),
           }}
         >
-          <SidebarContent />
+          <SidebarContent closeSidebar={props.closeSidebar} />
         </SidebarWrapper>
       </Drawer>
     </>
   );
 };
+
+interface SidebarProps {
+  /**
+   * Whether the sidebar is open or not.
+   */
+  sidebarToggle: boolean;
+  /**
+   * Closes the sidebar.
+   */
+  closeSidebar: () => void;
+}

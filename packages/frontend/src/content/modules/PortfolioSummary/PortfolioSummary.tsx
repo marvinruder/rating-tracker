@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 import PortfolioCard from "./PortfolioCard";
@@ -19,7 +19,7 @@ import { PortfolioSummaryHeader } from "./PortfolioSummaryHeader";
 const PortfolioSummaryModule = (): JSX.Element => {
   const [portfolioSummaries, setPortfolioSummaries] = useState<PortfolioSummary[]>([]);
   const [portfolioSummariesFinal, setPortfolioSummariesFinal] = useState<boolean>(false);
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   useEffect(() => getPortfolios(), []);
 
@@ -31,7 +31,7 @@ const PortfolioSummaryModule = (): JSX.Element => {
       .get(portfoliosEndpointPath)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
-        setErrorNotification(e, "fetching portfolios");
+        setErrorNotificationOrClearSession(e, "fetching portfolios");
         setPortfolioSummaries([]);
       })
       .finally(() => setPortfolioSummariesFinal(true));
@@ -40,7 +40,7 @@ const PortfolioSummaryModule = (): JSX.Element => {
   return (
     <>
       <HeaderWrapper maxWidth={false}>
-        <PortfolioSummaryHeader getPortfolios={getPortfolios} />
+        <PortfolioSummaryHeader refetchPortfolios={getPortfolios} />
       </HeaderWrapper>
       <Container maxWidth={false}>
         <Grid container spacing={2}>

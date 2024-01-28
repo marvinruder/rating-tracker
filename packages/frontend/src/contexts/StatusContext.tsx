@@ -1,28 +1,13 @@
 import type { Service } from "@rating-tracker/commons";
 import { serviceArray, statusEndpointPath } from "@rating-tracker/commons";
 import { AxiosError } from "axios";
-import type { FC } from "react";
-import { useState, createContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
+import type { ContextProviderProps } from "../types/ContextProviderProps";
 import type { DetailedStatus, SystemStatus } from "../types/Status";
 import api from "../utils/api";
 
-/**
- * An object provided by the sidebar context.
- */
-type SidebarContextType = {
-  /**
-   * Whether the sidebar is open or not.
-   */
-  sidebarToggle: boolean;
-  /**
-   * Toggles the sidebar.
-   */
-  toggleSidebar: () => void;
-  /**
-   * Closes the sidebar.
-   */
-  closeSidebar: () => void;
+type StatusStateContextType = {
   /**
    * The current system status.
    */
@@ -31,6 +16,9 @@ type SidebarContextType = {
    * The loading state of the system status.
    */
   systemStatusLoading: boolean;
+};
+
+type StatusUpdaterContextType = {
   /**
    * Fetches the current system status.
    */
@@ -38,18 +26,22 @@ type SidebarContextType = {
 };
 
 /**
- * A context providing a state for a sidebar to be displayed as part of the sidebar layout.
+ * A context providing a state for the current system status.
  */
-const SidebarContext = createContext<SidebarContextType>({} as SidebarContextType);
+const StatusStateContext = createContext<StatusStateContextType>({} as StatusStateContextType);
 
 /**
- * A provider for the sidebar context.
+ * A context providing update methods for the status context.
+ */
+const StatusUpdaterContext = createContext<StatusUpdaterContextType>({} as StatusUpdaterContextType);
+
+/**
+ * A provider for the status context.
  *
- * @param {SidebarProviderProps} props The properties of the component.
+ * @param {ContextProviderProps} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
-export const SidebarProvider: FC<SidebarProviderProps> = (props: SidebarProviderProps): JSX.Element => {
-  const [sidebarToggle, setSidebarToggle] = useState(false);
+export const StatusProvider = (props: ContextProviderProps): JSX.Element => {
   const [systemStatusLoading, setSystemStatusLoading] = useState(false);
 
   const UNKNOWN_STATUS: SystemStatus = {
@@ -121,37 +113,25 @@ export const SidebarProvider: FC<SidebarProviderProps> = (props: SidebarProvider
 
   useEffect(refreshSystemStatus, []);
 
-  /**
-   * Toggles the sidebar.
-   */
-  const toggleSidebar = () => {
-    setSidebarToggle(!sidebarToggle);
-  };
-
-  /**
-   * Closes the sidebar.
-   */
-  const closeSidebar = () => {
-    setSidebarToggle(false);
-  };
+  const contextValue = useMemo(() => ({ systemStatus, systemStatusLoading }), [systemStatus, systemStatusLoading]);
 
   return (
-    <SidebarContext.Provider
-      value={{ sidebarToggle, toggleSidebar, closeSidebar, systemStatus, systemStatusLoading, refreshSystemStatus }}
-    >
-      {props.children}
-    </SidebarContext.Provider>
+    <StatusStateContext.Provider value={contextValue}>
+      <StatusUpdaterContext.Provider value={{ refreshSystemStatus }}>{props.children}</StatusUpdaterContext.Provider>
+    </StatusStateContext.Provider>
   );
 };
 
 /**
- * Properties for the sidebar provider.
+ * Hook to use the status context’s state.
+ *
+ * @returns {StatusStateContextType} The status context’s state.
  */
-type SidebarProviderProps = {
-  /**
-   * The children to be rendered, which are able to access the sidebar context.
-   */
-  children: React.ReactNode;
-};
+export const useStatusContextState = (): StatusStateContextType => useContext(StatusStateContext);
 
-export default SidebarContext;
+/**
+ * Hook to use the status context’s updater.
+ *
+ * @returns {StatusUpdaterContextType} The status context’s updater.
+ */
+export const useStatusContextUpdater = (): StatusUpdaterContextType => useContext(StatusUpdaterContext);

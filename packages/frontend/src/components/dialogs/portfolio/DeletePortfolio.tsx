@@ -4,9 +4,8 @@ import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@
 import type { PortfolioSummary } from "@rating-tracker/commons";
 import { portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -18,26 +17,18 @@ import api from "../../../utils/api";
 export const DeletePortfolio = (props: DeletePortfolioProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
-  const navigate = useNavigate();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Deletes the portfolio from the backend.
    */
   const deletePortfolio = () => {
-    props.portfolio &&
-      (setRequestInProgress(true),
-      api
-        .delete(portfoliosEndpointPath + `/${props.portfolio.id}`)
-        // If the dialog is shown from the portfolio list, the list should be updated.
-        .then(() => props.getPortfolios && props.getPortfolios())
-        .catch((e) => setErrorNotification(e, "deleting portfolio"))
-        .finally(() => {
-          setRequestInProgress(false);
-          // If the dialog is shown from e.g. a detail page, the user should be redirected to another page.
-          props.navigateTo && navigate(props.navigateTo);
-          props.onClose();
-        }));
+    setRequestInProgress(true);
+    api
+      .delete(portfoliosEndpointPath + `/${props.portfolio.id}`)
+      .then(() => (props.onDelete(), props.onClose()))
+      .catch((e) => setErrorNotificationOrClearSession(e, "deleting portfolio"))
+      .finally(() => setRequestInProgress(false));
   };
 
   return (
@@ -73,15 +64,11 @@ interface DeletePortfolioProps {
    */
   portfolio: PortfolioSummary;
   /**
-   * A method to update the portfolio summaries after the portfolio was deleted.
+   * A method that is called after the portfolio was deleted successfully.
    */
-  getPortfolios?: () => void;
+  onDelete: () => void;
   /**
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
-  /**
-   * The path to navigate to after the portfolio was deleted.
-   */
-  navigateTo?: string;
 }

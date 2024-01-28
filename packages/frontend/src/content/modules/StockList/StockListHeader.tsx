@@ -3,12 +3,12 @@ import type { SlideProps } from "@mui/material";
 import { Box, Typography, Grid, Tooltip, Dialog, IconButton, useMediaQuery, Slide } from "@mui/material";
 import { WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
 import type { FC } from "react";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import { AddStock } from "../../../components/dialogs/stock/AddStock";
 import type { StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
 import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
-import { UserContext } from "../../../contexts/UserContext";
+import { useUserContextState } from "../../../contexts/UserContext";
 
 /**
  * A header for the stock list page. It contains the stock list filters and column filter.
@@ -19,7 +19,7 @@ import { UserContext } from "../../../contexts/UserContext";
 const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps): JSX.Element => {
   const [addStockOpen, setAddStockOpen] = useState<boolean>(false);
 
-  const { user } = useContext(UserContext);
+  const { user } = useUserContextState();
 
   const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
 
@@ -60,7 +60,7 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
           TransitionProps={{ direction: "up" } as SlideProps}
           fullWidth
         >
-          <AddStock onClose={() => (setAddStockOpen(false), props.triggerRefetch())} />
+          <AddStock onClose={() => setAddStockOpen(false)} onCloseAfterAdd={props.refetchStocks} />
         </Dialog>
         <StockTableFilters {...props.stockTableFiltersProps} />
       </Grid>
@@ -74,9 +74,9 @@ interface StockListHeaderProps {
    */
   stockTableFiltersProps: StockTableFiltersProps;
   /**
-   * A function to trigger a refetch of the stock list.
+   * A method to update the stock list, e.g. after a new stock was created.
    */
-  triggerRefetch: () => void;
+  refetchStocks: () => void;
 }
 
 export default StockListHeader;

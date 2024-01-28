@@ -27,12 +27,12 @@ import {
   watchlistsEndpointPath,
 } from "@rating-tracker/commons";
 import type { FC } from "react";
-import React, { Fragment, useContext, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { StatusIndicator } from "../../../components/etc/StatusIndicator";
-import SidebarContext from "../../../contexts/SidebarContext";
-import { UserContext } from "../../../contexts/UserContext";
+import { useStatusContextState, useStatusContextUpdater } from "../../../contexts/StatusContext";
+import { useUserContextState } from "../../../contexts/UserContext";
 
 import { Logo } from "./Logo";
 
@@ -151,15 +151,18 @@ const SubMenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
 /**
  * The menu inside the sidebar.
  *
+ * @param {SidebarContentProps} props The component props.
  * @returns {JSX.Element} The component.
  */
-export const SidebarContent = (): JSX.Element => {
-  const { closeSidebar, systemStatus, systemStatusLoading, refreshSystemStatus } = useContext(SidebarContext);
+export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
   const [statusTooltipOpen, setStatusTooltipOpen] = useState(false);
+
+  const { systemStatus, systemStatusLoading } = useStatusContextState();
+  const { refreshSystemStatus } = useStatusContextUpdater();
 
   const theme = useTheme();
 
-  const { user } = useContext(UserContext);
+  const { user } = useUserContextState();
 
   return (
     <>
@@ -175,7 +178,7 @@ export const SidebarContent = (): JSX.Element => {
                 <Button
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
-                  onClick={closeSidebar}
+                  onClick={props.closeSidebar}
                   to={stocksEndpointPath}
                   startIcon={<ListIcon />}
                 >
@@ -186,7 +189,7 @@ export const SidebarContent = (): JSX.Element => {
                 <Button
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
-                  onClick={closeSidebar}
+                  onClick={props.closeSidebar}
                   to={watchlistsEndpointPath}
                   startIcon={<CollectionsBookmarkIcon />}
                 >
@@ -197,7 +200,7 @@ export const SidebarContent = (): JSX.Element => {
                 <Button
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
-                  onClick={closeSidebar}
+                  onClick={props.closeSidebar}
                   to={portfoliosEndpointPath}
                   startIcon={<ShoppingCartIcon />}
                 >
@@ -215,7 +218,7 @@ export const SidebarContent = (): JSX.Element => {
                     <Button
                       sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                       component={NavLink}
-                      onClick={closeSidebar}
+                      onClick={props.closeSidebar}
                       to={usersEndpointPath}
                       startIcon={<ManageAccountsIcon />}
                     >
@@ -314,3 +317,10 @@ export const SidebarContent = (): JSX.Element => {
     </>
   );
 };
+
+export interface SidebarContentProps {
+  /**
+   * Closes the sidebar.
+   */
+  closeSidebar: () => void;
+}

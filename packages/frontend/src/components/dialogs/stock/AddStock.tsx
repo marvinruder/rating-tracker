@@ -38,7 +38,7 @@ import {
 import type { AxiosError } from "axios";
 import { useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 import { StockDetails } from "../../stock/layouts/StockDetails";
 
@@ -80,7 +80,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const [sustainalyticsIDRequestInProgress, setSustainalyticsIDRequestInProgress] = useState<boolean>(false);
   // Whether the Sustainalytics ID has been transmitted to the server.
   const [sustainalyticsIDSet, setSustainalyticsIDSet] = useState<boolean>(false);
-  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+
+  const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Checks for errors in the input fields.
@@ -98,21 +99,23 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
 
   /**
    * Handles a click on the “Move to the next dialog step” button.
+   *
+   * @returns {void}
    */
-  const handleNext = () => {
+  const handleNext = (): void =>
     activeStep === steps.length - 1
-      ? props.onClose() // Close if we are on the last step.
+      ? (props.onClose(), props.onCloseAfterAdd()) // Close and update stock list if we are on the last step.
       : setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
 
   /**
    * Handles a click on the “Go back to the previous dialog step” button.
+   *
+   * @returns {void}
    */
-  const handleBack = () => {
+  const handleBack = (): void =>
     activeStep === 0
       ? props.onClose() // Close if we are on the first step.
       : setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
 
   /**
    * Transmits the stock to the server.
@@ -125,10 +128,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       .put(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
         params: { name: name.trim(), isin: isin.trim(), country },
       })
-      .then(() => {
-        handleNext();
-      })
-      .catch((e) => setErrorNotification(e, "creating new stock"))
+      .then(handleNext)
+      .catch((e) => setErrorNotificationOrClearSession(e, "creating new stock"))
       .finally(() => setRequestInProgress(false));
   };
 
@@ -139,7 +140,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
     setMorningstarIDRequestInProgress(true);
     api
       .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
-        params: { morningstarID: stock.morningstarID.trim() },
+        params: { morningstarID: (stock.morningstarID ?? "").trim() },
       })
       .then(() => {
         setMorningstarIDSet(!!stock.morningstarID); // Whether the Morningstar ID was empty
@@ -149,8 +150,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchMorningstarEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
-            .catch((e) => setErrorNotification(e, "fetching information from Morningstar"))
+            .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Morningstar"))
             .finally(() => setMorningstarIDRequestInProgress(false));
         } else {
           setMorningstarIDRequestInProgress(false);
@@ -158,7 +158,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       })
       .catch((e) => {
         setMorningstarIDRequestInProgress(false);
-        setErrorNotification(e, "setting Morningstar ID");
+        setErrorNotificationOrClearSession(e, "setting Morningstar ID");
       });
   };
 
@@ -169,7 +169,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
     setMarketScreenerIDRequestInProgress(true);
     api
       .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
-        params: { marketScreenerID: stock.marketScreenerID.trim() },
+        params: { marketScreenerID: (stock.marketScreenerID ?? "").trim() },
       })
       .then(() => {
         setMarketScreenerIDSet(!!stock.marketScreenerID); // Whether the Market Screener ID was empty
@@ -179,8 +179,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchMarketScreenerEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
-            .catch((e) => setErrorNotification(e, "fetching information from Market Screener"))
+            .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Market Screener"))
             .finally(() => setMarketScreenerIDRequestInProgress(false));
         } else {
           setMarketScreenerIDRequestInProgress(false);
@@ -188,7 +187,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       })
       .catch((e) => {
         setMarketScreenerIDRequestInProgress(false);
-        setErrorNotification(e, "setting Market Screener ID");
+        setErrorNotificationOrClearSession(e, "setting Market Screener ID");
       });
   };
 
@@ -199,7 +198,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
     setMSCIIDRequestInProgress(true);
     api
       .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
-        params: { msciID: stock.msciID.trim() },
+        params: { msciID: (stock.msciID ?? "").trim() },
       })
       .then(() => {
         setMSCIIDSet(!!stock.msciID); // Whether the MSCI ID was empty
@@ -209,8 +208,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchMSCIEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
-            .catch((e) => setErrorNotification(e, "fetching information from MSCI"))
+            .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from MSCI"))
             .finally(() => setMSCIIDRequestInProgress(false));
         } else {
           setMSCIIDRequestInProgress(false);
@@ -218,7 +216,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       })
       .catch((e) => {
         setMSCIIDRequestInProgress(false);
-        setErrorNotification(e, "setting MSCI ID");
+        setErrorNotificationOrClearSession(e, "setting MSCI ID");
       });
   };
 
@@ -228,9 +226,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockRIC = () => {
     setRICRequestInProgress(true);
     api
-      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
-        params: { ric: stock.ric.trim() },
-      })
+      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, { params: { ric: (stock.ric ?? "").trim() } })
       .then(() => {
         setRICSet(!!stock.ric); // Whether the RIC was empty
         if (stock.ric) {
@@ -239,8 +235,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchLSEGEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
-            .catch((e) => setErrorNotification(e, "fetching information from LSEG"))
+            .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from LSEG"))
             .finally(() => setRICRequestInProgress(false));
         } else {
           setRICRequestInProgress(false);
@@ -248,7 +243,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       })
       .catch((e) => {
         setRICRequestInProgress(false);
-        setErrorNotification(e, "setting RIC");
+        setErrorNotificationOrClearSession(e, "setting RIC");
       });
   };
 
@@ -269,7 +264,6 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchSPEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim(), noSkip: true },
             })
-            .then(() => {})
             .catch((e: AxiosError<{ message: string }>) => {
               if (e.response?.data?.message?.includes(SP_PREMIUM_STOCK_ERROR_MESSAGE)) {
                 setNotification({
@@ -278,7 +272,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                   message: SP_PREMIUM_STOCK_ERROR_MESSAGE,
                 });
               } else {
-                setErrorNotification(e, "fetching information from S&P");
+                setErrorNotificationOrClearSession(e, "fetching information from S&P");
               }
             })
             .finally(() => setSPIDRequestInProgress(false));
@@ -288,7 +282,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       })
       .catch((e) => {
         setSPIDRequestInProgress(false);
-        setErrorNotification(e, "setting S&P ID");
+        setErrorNotificationOrClearSession(e, "setting S&P ID");
       });
   };
 
@@ -299,7 +293,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
     setSustainalyticsIDRequestInProgress(true);
     api
       .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, undefined, {
-        params: { sustainalyticsID: stock.sustainalyticsID.trim() },
+        params: { sustainalyticsID: (stock.sustainalyticsID ?? "").trim() },
       })
       .then(() => {
         setSustainalyticsIDSet(!!stock.sustainalyticsID); // Whether the Sustainalytics ID was empty
@@ -309,8 +303,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             .post(fetchSustainalyticsEndpointPath, undefined, {
               params: { ticker: stock.ticker.trim() },
             })
-            .then(() => {})
-            .catch((e) => setErrorNotification(e, "fetching information from Sustainalytics"))
+            .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Sustainalytics"))
             .finally(() => setSustainalyticsIDRequestInProgress(false));
         } else {
           setSustainalyticsIDRequestInProgress(false);
@@ -318,7 +311,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       })
       .catch((e) => {
         setSustainalyticsIDRequestInProgress(false);
-        setErrorNotification(e, "setting Sustainalytics ID");
+        setErrorNotificationOrClearSession(e, "setting Sustainalytics ID");
       });
   };
 
@@ -334,7 +327,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
         setFinalStock(res.data);
         handleNext();
       })
-      .catch((e) => setErrorNotification(e, "fetching the new stock"))
+      .catch((e) => setErrorNotificationOrClearSession(e, "fetching the new stock"))
       .finally(() => setRequestInProgress(false));
   };
 
@@ -354,12 +347,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             <Grid item xs={12}>
               <TextField
                 onChange={(event) => {
-                  setStock((prevStock) => {
-                    return {
-                      ...prevStock,
-                      ticker: event.target.value,
-                    };
-                  });
+                  setStock((prevStock) => ({ ...prevStock, ticker: event.target.value }));
                   setTickerError(false);
                 }}
                 error={tickerError}
@@ -372,12 +360,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             <Grid item xs={12}>
               <TextField
                 onChange={(event) => {
-                  setStock((prevStock) => {
-                    return {
-                      ...prevStock,
-                      name: event.target.value,
-                    };
-                  });
+                  setStock((prevStock) => ({ ...prevStock, name: event.target.value }));
                   setNameError(false);
                 }}
                 error={nameError}
@@ -390,23 +373,13 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             <Grid item xs={12}>
               <TextField
                 onChange={(event) => {
-                  setStock((prevStock) => {
-                    return {
-                      ...prevStock,
-                      isin: event.target.value,
-                    };
-                  });
+                  setStock((prevStock) => ({ ...prevStock, isin: event.target.value }));
                   if (!stock.country && event.target.value.length >= 2) {
                     // Extract country from ISIN
                     const possibleCountry = event.target.value.substring(0, 2);
                     if (isCountry(possibleCountry)) {
                       // If the extracted country is valid, we set it as the stock’s country.
-                      setStock((prevStock) => {
-                        return {
-                          ...prevStock,
-                          country: possibleCountry,
-                        };
-                      });
+                      setStock((prevStock) => ({ ...prevStock, country: possibleCountry }));
                       setCountryError(false);
                     }
                   }
@@ -424,35 +397,31 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 options={countryArray}
                 autoHighlight
                 getOptionLabel={(option) => countryNameWithFlag[option]}
-                renderOption={(props, option) => (
-                  <Box component="li" {...props}>
-                    {countryNameWithFlag[option]}
-                  </Box>
-                )}
                 inputValue={countryInputValue}
                 onInputChange={(_, value) => setCountryInputValue(value)}
                 multiple={false}
                 value={stock.country ?? null}
                 onChange={(_, value) =>
                   isCountry(value) &&
-                  (setStock((prevStock) => {
-                    return { ...prevStock, country: value };
-                  }),
-                  setCountryError(false))
+                  (setStock((prevStock) => ({ ...prevStock, country: value })), setCountryError(false))
                 }
                 filterOptions={(options) => {
                   const currentInputValue = countryInputValue.trim().toUpperCase();
                   // Filter the country names by the input value.
                   const filteredOptions = options.filter(
                     (option) =>
-                      countryName[option].toUpperCase().startsWith(countryInputValue.trim().toUpperCase()) &&
-                      option != currentInputValue,
+                      countryName[option].toUpperCase().startsWith(currentInputValue) && option != currentInputValue,
                   );
                   // If the text input is a valid country code, we show it as the first option.
                   isCountry(currentInputValue) && filteredOptions.unshift(currentInputValue);
+                  // If the text input is identical to a complete option label (this happens when opening the dropdown
+                  // for the first time), we show it as the first option.
+                  countryNameWithFlag[stock.country] === countryInputValue.trim() &&
+                    filteredOptions.unshift(stock.country);
                   return filteredOptions;
                 }}
                 disableClearable
+                selectOnFocus
                 renderInput={(params) => <TextField {...params} label="Country" error={countryError} />}
               />
             </Grid>
@@ -482,24 +451,11 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             Alright, now connect some data providers:
           </Typography>
           <Grid container spacing={1} alignItems="center">
-            <Grid
-              item
-              width={{
-                xs: "100%",
-                sm: `calc(100% - ${morningstarIDSet ? 112 : 91}px)`,
-              }}
-            >
+            <Grid item width={{ xs: "100%", sm: `calc(100% - ${morningstarIDSet ? 112 : 91}px)` }}>
               <TextField
-                onChange={(event) => {
-                  setStock((prevStock) => {
-                    return {
-                      ...prevStock,
-                      morningstarID: event.target.value,
-                    };
-                  });
-                }}
+                onChange={(event) => setStock((prevStock) => ({ ...prevStock, morningstarID: event.target.value }))}
                 label="Morningstar ID"
-                value={stock.morningstarID}
+                value={stock.morningstarID ?? ""}
                 placeholder="e.g. 0P000000GY"
                 fullWidth
               />
@@ -518,24 +474,11 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid
-              item
-              width={{
-                xs: "100%",
-                sm: `calc(100% - ${marketScreenerIDSet ? 112 : 91}px)`,
-              }}
-            >
+            <Grid item width={{ xs: "100%", sm: `calc(100% - ${marketScreenerIDSet ? 112 : 91}px)` }}>
               <TextField
-                onChange={(event) => {
-                  setStock((prevStock) => {
-                    return {
-                      ...prevStock,
-                      marketScreenerID: event.target.value,
-                    };
-                  });
-                }}
+                onChange={(event) => setStock((prevStock) => ({ ...prevStock, marketScreenerID: event.target.value }))}
                 label="Market Screener ID"
-                value={stock.marketScreenerID}
+                value={stock.marketScreenerID ?? ""}
                 placeholder="e.g. APPLE-INC-4849"
                 fullWidth
               />
@@ -554,24 +497,11 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid
-              item
-              width={{
-                xs: "100%",
-                sm: `calc(100% - ${msciIDSet ? 112 : 91}px)`,
-              }}
-            >
+            <Grid item width={{ xs: "100%", sm: `calc(100% - ${msciIDSet ? 112 : 91}px)` }}>
               <TextField
-                onChange={(event) => {
-                  setStock((prevStock) => {
-                    return {
-                      ...prevStock,
-                      msciID: event.target.value,
-                    };
-                  });
-                }}
+                onChange={(event) => setStock((prevStock) => ({ ...prevStock, msciID: event.target.value }))}
                 label="MSCI ID"
-                value={stock.msciID}
+                value={stock.msciID ?? ""}
                 placeholder="e.g. IID000000002157615"
                 fullWidth
               />
@@ -590,21 +520,11 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid
-              item
-              width={{
-                xs: "100%",
-                sm: `calc(100% - ${ricSet ? 112 : 91}px)`,
-              }}
-            >
+            <Grid item width={{ xs: "100%", sm: `calc(100% - ${ricSet ? 112 : 91}px)` }}>
               <TextField
-                onChange={(event) => {
-                  setStock((prevStock) => {
-                    return { ...prevStock, ric: event.target.value };
-                  });
-                }}
+                onChange={(event) => setStock((prevStock) => ({ ...prevStock, ric: event.target.value }))}
                 label="RIC"
-                value={stock.ric}
+                value={stock.ric ?? ""}
                 placeholder="e.g. AAPL.O"
                 fullWidth
               />
@@ -623,23 +543,12 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid
-              item
-              width={{
-                xs: "100%",
-                sm: `calc(100% - ${spIDSet ? 112 : 91}px)`,
-              }}
-            >
+            <Grid item width={{ xs: "100%", sm: `calc(100% - ${spIDSet ? 112 : 91}px)` }}>
               <TextField
                 inputProps={{ inputMode: "numeric", pattern: "\\d*" }}
                 onChange={(event) => {
                   const value = event.target.value.replaceAll(/\D+/g, "");
-                  setStock((prevStock) => {
-                    return {
-                      ...prevStock,
-                      spID: value ? +value : null,
-                    };
-                  });
+                  setStock((prevStock) => ({ ...prevStock, spID: value ? +value : null }));
                 }}
                 label="S&P ID"
                 value={stock.spID === null ? "" : stock.spID}
@@ -661,24 +570,11 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
             </Grid>
           </Grid>
           <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid
-              item
-              width={{
-                xs: "100%",
-                sm: `calc(100% - ${sustainalyticsIDSet ? 112 : 91}px)`,
-              }}
-            >
+            <Grid item width={{ xs: "100%", sm: `calc(100% - ${sustainalyticsIDSet ? 112 : 91}px)` }}>
               <TextField
-                onChange={(event) => {
-                  setStock((prevStock) => {
-                    return {
-                      ...prevStock,
-                      sustainalyticsID: event.target.value,
-                    };
-                  });
-                }}
+                onChange={(event) => setStock((prevStock) => ({ ...prevStock, sustainalyticsID: event.target.value }))}
                 label="Sustainalytics ID"
-                value={stock.sustainalyticsID}
+                value={stock.sustainalyticsID ?? ""}
                 placeholder="e.g. apple-inc/1007903183"
                 fullWidth
               />
@@ -750,14 +646,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
         <Typography variant="h3">Add a new Stock</Typography>
       </DialogTitle>
       <DialogContent>
-        <Stepper
-          activeStep={activeStep}
-          orientation="vertical"
-          sx={{
-            p: 0,
-            background: "none",
-          }}
-        >
+        <Stepper activeStep={activeStep} orientation="vertical" sx={{ p: 0, background: "none" }}>
           {steps.map((step) => {
             return (
               <Step key={step.title}>
@@ -773,11 +662,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
         <Button
           onClick={handleBack}
-          sx={{
-            mr: 1,
-            float: "left",
-            visibility: steps[activeStep].noStepBack && "hidden",
-          }}
+          sx={{ mr: 1, float: "left", visibility: steps[activeStep].noStepBack && "hidden" }}
         >
           {activeStep === 0 ? "Cancel" : "Back"}
         </Button>
@@ -804,4 +689,8 @@ interface AddStockProps {
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
+  /**
+   * A method that is called when the dialog is closed after the stock was added successfully.
+   */
+  onCloseAfterAdd: () => void;
 }

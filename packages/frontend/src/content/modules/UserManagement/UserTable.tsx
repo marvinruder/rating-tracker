@@ -3,7 +3,7 @@ import { User, usersEndpointPath } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 import UserRow from "./UserRow";
@@ -17,7 +17,7 @@ const UserTable: FC = (): JSX.Element => {
   const [count, setCount] = useState<number>(-1);
   const [users, setUsers] = useState<User[]>([]);
   const [usersFinal, setUsersFinal] = useState<boolean>(false);
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Get the users from the backend.
@@ -31,16 +31,14 @@ const UserTable: FC = (): JSX.Element => {
         setCount(res.data.length);
       })
       .catch((e) => {
-        setErrorNotification(e, "fetching users");
+        setErrorNotificationOrClearSession(e, "fetching users");
         setUsers([]);
         setCount(0);
       })
       .finally(() => setUsersFinal(true));
   };
 
-  useEffect(() => {
-    getUsers();
-  }, []);
+  useEffect(getUsers, []);
 
   return (
     <>
@@ -62,17 +60,10 @@ const UserTable: FC = (): JSX.Element => {
           </TableHead>
           <TableBody>
             {usersFinal
-              ? users.map(
-                  (
-                    user, // Render user rows
-                  ) => <UserRow user={user} getUsers={getUsers} key={user.email} />,
-                )
-              : [...Array(10)].map(
-                  (
-                    _,
-                    key, // Render skeleton rows
-                  ) => <UserRow key={key} getUsers={getUsers} />,
-                )}
+              ? // Render user rows
+                users.map((user) => <UserRow user={user} refetchUsers={getUsers} key={user.email} />)
+              : // Render skeleton rows
+                [...Array(10)].map((_, key) => <UserRow key={key} />)}
           </TableBody>
           <TableFooter>
             <TableRow>

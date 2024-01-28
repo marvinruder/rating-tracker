@@ -705,9 +705,9 @@ export const currencyMinorUnits: Record<Currency, 0 | 2 | 3 | 4> = {
 };
 
 /**
- * A record of currency names with emoji flags for each currency.
+ * A record of currency names and codes with emoji flags for each currency.
  */
-export const currencyNameWithFlag: Record<Currency, string> = { ...currencyName };
+export const currencyNameWithFlagAndCode: Record<Currency, string> = { ...currencyName };
 Object.entries(currencyName).forEach(([key, value]) => {
-  currencyNameWithFlag[key] = emojiFlag(countryOfCurrency[key as Currency]) + " " + value;
+  currencyNameWithFlagAndCode[key] = `${emojiFlag(countryOfCurrency[key])} ${value} (${key})`;
 });

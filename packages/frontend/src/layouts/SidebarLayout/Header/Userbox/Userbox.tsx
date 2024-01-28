@@ -17,20 +17,19 @@ import {
   useTheme,
 } from "@mui/material";
 import { sessionEndpointPath } from "@rating-tracker/commons";
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router";
+import { useState } from "react";
 
-import NotificationContext from "../../../../contexts/NotificationContext";
-import { UserContext } from "../../../../contexts/UserContext";
+import { useNotificationContextUpdater } from "../../../../contexts/NotificationContext";
+import { useUserContextState, useUserContextUpdater } from "../../../../contexts/UserContext";
 import api from "../../../../utils/api";
 
 import { ProfileSettings } from "./ProfileSettings";
 
 export const HeaderUserbox = (): JSX.Element => {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useContext(NotificationContext);
-  const { user } = useContext(UserContext);
+  const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+  const { user } = useUserContextState();
+  const { clearUser } = useUserContextUpdater();
   const theme = useTheme();
 
   const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
@@ -48,10 +47,10 @@ export const HeaderUserbox = (): JSX.Element => {
           title: "See you next time!",
           message: "Signed out successfully",
         });
-        navigate("/");
+        clearUser();
       })
       .catch((e) => {
-        setErrorNotification(e, "signing out");
+        setErrorNotificationOrClearSession(e, "signing out");
       });
   };
 

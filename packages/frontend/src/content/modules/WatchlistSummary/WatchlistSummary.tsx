@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 import WatchlistCard from "./WatchlistCard";
@@ -19,7 +19,7 @@ import { WatchlistSummaryHeader } from "./WatchlistSummaryHeader";
 const WatchlistSummaryModule = (): JSX.Element => {
   const [watchlistSummaries, setWatchlistSummaries] = useState<WatchlistSummary[]>([]);
   const [watchlistSummariesFinal, setWatchlistSummariesFinal] = useState<boolean>(false);
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   useEffect(() => getWatchlists(), []);
 
@@ -31,7 +31,7 @@ const WatchlistSummaryModule = (): JSX.Element => {
       .get(watchlistsEndpointPath)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
-        setErrorNotification(e, "fetching watchlists");
+        setErrorNotificationOrClearSession(e, "fetching watchlists");
         setWatchlistSummaries([]);
       })
       .finally(() => setWatchlistSummariesFinal(true));
@@ -40,7 +40,7 @@ const WatchlistSummaryModule = (): JSX.Element => {
   return (
     <>
       <HeaderWrapper maxWidth={false}>
-        <WatchlistSummaryHeader getWatchlists={getWatchlists} />
+        <WatchlistSummaryHeader refetchWatchlists={getWatchlists} />
       </HeaderWrapper>
       <Container maxWidth={false}>
         <Grid container spacing={2}>

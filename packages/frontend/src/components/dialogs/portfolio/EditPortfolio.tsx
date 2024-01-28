@@ -9,19 +9,18 @@ import {
   DialogActions,
   Button,
   Autocomplete,
-  Box,
 } from "@mui/material";
 import type { Currency, PortfolioSummary } from "@rating-tracker/commons";
 import {
   currencyArray,
   currencyName,
-  currencyNameWithFlag,
+  currencyNameWithFlagAndCode,
   isCurrency,
   portfoliosEndpointPath,
 } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -38,7 +37,7 @@ export const EditPortfolio = (props: EditPortfolioProps): JSX.Element => {
   const [currencyInputValue, setCurrencyInputValue] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [currencyError, setCurrencyError] = useState<boolean>(false); // Error in the currency input field.
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Checks for errors in the input fields.
@@ -56,21 +55,19 @@ export const EditPortfolio = (props: EditPortfolioProps): JSX.Element => {
    * Updates the portfolio in the backend.
    */
   const updatePortfolio = () => {
-    props.portfolio &&
-      props.getPortfolios &&
-      validate() &&
-      (setRequestInProgress(true),
-      api
-        .patch(portfoliosEndpointPath + `/${props.portfolio.id}`, undefined, {
-          params: {
-            // Only send the parameters that have changed.
-            name: name !== props.portfolio.name ? name.trim() : undefined,
-            currency: currency !== props.portfolio.currency ? currency : undefined,
-          },
-        })
-        .then(props.getPortfolios) // Update the portfolios in the parent component.
-        .catch((e) => setErrorNotification(e, "updating portfolio"))
-        .finally(() => (setRequestInProgress(false), props.onClose())));
+    if (!validate()) return;
+    setRequestInProgress(true);
+    api
+      .patch(portfoliosEndpointPath + `/${props.portfolio.id}`, undefined, {
+        params: {
+          // Only send the parameters that have changed.
+          name: name !== props.portfolio.name ? name.trim() : undefined,
+          currency: currency !== props.portfolio.currency ? currency : undefined,
+        },
+      })
+      .then(() => (props.onEdit(), props.onClose())) // Update the portfolios in the parent component.
+      .catch((e) => setErrorNotificationOrClearSession(e, "updating portfolio"))
+      .finally(() => setRequestInProgress(false));
   };
 
   return (
@@ -97,12 +94,7 @@ export const EditPortfolio = (props: EditPortfolioProps): JSX.Element => {
             <Autocomplete
               options={currencyArray}
               autoHighlight
-              getOptionLabel={(option) => `${currencyNameWithFlag[option]} (${option})`}
-              renderOption={(props, option) => (
-                <Box component="li" {...props}>
-                  {`${currencyNameWithFlag[option]} (${option})`}
-                </Box>
-              )}
+              getOptionLabel={(option) => currencyNameWithFlagAndCode[option]}
               inputValue={currencyInputValue}
               onInputChange={(_, value) => setCurrencyInputValue(value)}
               multiple={false}
@@ -113,21 +105,25 @@ export const EditPortfolio = (props: EditPortfolioProps): JSX.Element => {
                 // Filter the currency names by the input value.
                 const filteredOptions = options.filter(
                   (option) =>
-                    currencyName[option].toUpperCase().startsWith(currencyInputValue.trim().toUpperCase()) &&
-                    option != currentInputValue,
+                    currencyName[option].toUpperCase().startsWith(currentInputValue) && option != currentInputValue,
                 );
                 // If the text input is a valid currency, we show it as the first option.
                 isCurrency(currentInputValue) && filteredOptions.unshift(currentInputValue);
+                // If the text input is identical to a complete option label (this happens when opening the dropdown for
+                // the first time), we show it as the first option.
+                currencyNameWithFlagAndCode[currency] === currencyInputValue.trim() &&
+                  filteredOptions.unshift(currency);
                 return filteredOptions;
               }}
               disableClearable
+              selectOnFocus
               renderInput={(params) => <TextField {...params} label="Currency" error={currencyError} />}
             />
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
-        <Button onClick={() => (props.onClose(), props.getPortfolios && props.getPortfolios())}>Cancel</Button>
+        <Button onClick={() => props.onClose()}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}
           variant="contained"
@@ -152,9 +148,9 @@ interface EditPortfolioProps {
    */
   portfolio: PortfolioSummary;
   /**
-   * A method to update the portfolio summaries after the portfolio was editd.
+   * A method that is called after the portfolio was edited successfully.
    */
-  getPortfolios?: () => void;
+  onEdit: () => void;
   /**
    * A method that is called when the dialog is closed.
    */

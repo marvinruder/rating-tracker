@@ -5,7 +5,7 @@ import type { WatchlistSummary } from "@rating-tracker/commons";
 import { watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -18,7 +18,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>(props.watchlist?.name);
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Checks for errors in the input fields.
@@ -35,20 +35,16 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
    * Updates the watchlist in the backend.
    */
   const updateWatchlist = () => {
-    props.watchlist &&
-      props.getWatchlists &&
-      validate() &&
-      (setRequestInProgress(true),
-      api
-        .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, undefined, {
-          params: {
-            // Only send the parameters that have changed.
-            name: name !== props.watchlist.name ? name.trim() : undefined,
-          },
-        })
-        .then(props.getWatchlists) // Update the watchlists in the parent component.
-        .catch((e) => setErrorNotification(e, "updating watchlist"))
-        .finally(() => (setRequestInProgress(false), props.onClose())));
+    if (!validate()) return;
+    setRequestInProgress(true);
+    api
+      .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, undefined, {
+        // Only send the parameters that have changed.
+        params: { name: name !== props.watchlist.name ? name.trim() : undefined },
+      })
+      .then(() => (props.onRename(), props.onClose())) // Update the watchlists in the parent component.
+      .catch((e) => setErrorNotificationOrClearSession(e, "updating watchlist"))
+      .finally(() => setRequestInProgress(false));
   };
 
   return (
@@ -60,10 +56,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
         <Grid container spacing={1} mt={0} maxWidth={600} alignItems="center">
           <Grid item xs={12}>
             <TextField
-              onChange={(event) => {
-                setName(event.target.value);
-                setNameError(false);
-              }}
+              onChange={(event) => (setName(event.target.value), setNameError(false))}
               error={nameError}
               label="Watchlist name"
               value={name}
@@ -74,7 +67,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
         </Grid>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
-        <Button onClick={() => (props.onClose(), props.getWatchlists && props.getWatchlists())}>Cancel</Button>
+        <Button onClick={props.onClose}>Cancel</Button>
         <LoadingButton
           loading={requestInProgress}
           variant="contained"
@@ -99,9 +92,9 @@ interface RenameWatchlistProps {
    */
   watchlist: WatchlistSummary;
   /**
-   * A method to update the watchlist summaries after the watchlist was renamed.
+   * A method that is called after the watchlist was renamed successfully.
    */
-  getWatchlists?: () => void;
+  onRename: () => void;
   /**
    * A method that is called when the dialog is closed.
    */

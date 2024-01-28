@@ -4,11 +4,11 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Card, CardContent, Grid, TextField, Typography, useTheme } from "@mui/material";
 import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
-import { useContext, useState } from "react";
+import { useRef, useState } from "react";
 
 import { SwitchSelector } from "../../components/etc/SwitchSelector";
-import { useNotification } from "../../contexts/NotificationContext";
-import { UserContext } from "../../contexts/UserContext";
+import { useNotificationContextUpdater } from "../../contexts/NotificationContext";
+import { useUserContextUpdater } from "../../contexts/UserContext";
 import api from "../../utils/api";
 
 /**
@@ -23,28 +23,13 @@ export const LoginPage = (): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
-  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
-  const { refetchUser } = useContext(UserContext);
+  const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+  const { refetchUser } = useUserContextUpdater();
 
   const theme = useTheme();
 
-  /**
-   * Validates the email input field.
-   *
-   * @returns {boolean} Whether the email input field contains a valid email address.
-   */
-  const validateEmail = (): boolean => {
-    return (document.getElementById("inputEmail") as HTMLInputElement).reportValidity();
-  };
-
-  /**
-   * Validates the name input field.
-   *
-   * @returns {boolean} Whether the name input field contains a valid name.
-   */
-  const validateName = (): boolean => {
-    return (document.getElementById("inputName") as HTMLInputElement).reportValidity();
-  };
+  const inputEmail = useRef<HTMLInputElement>(null);
+  const inputName = useRef<HTMLInputElement>(null);
 
   /**
    * Validates the input fields.
@@ -53,9 +38,9 @@ export const LoginPage = (): JSX.Element => {
    */
   const validate = (): boolean => {
     if (action === "register") {
-      setEmailError(!validateEmail());
-      setNameError(!validateName());
-      return validateEmail() && validateName();
+      setEmailError(!inputEmail.current.reportValidity());
+      setNameError(!inputName.current.reportValidity());
+      return inputEmail.current.reportValidity() && inputName.current.reportValidity();
     }
     return true;
   };
@@ -92,10 +77,10 @@ export const LoginPage = (): JSX.Element => {
                   "still be necessary before you can access the page.",
               });
             } catch (e) {
-              setErrorNotification(e, "processing registration response");
+              setErrorNotificationOrClearSession(e, "processing registration response");
             }
           } catch (e) {
-            setErrorNotification(e, "requesting registration challenge");
+            setErrorNotificationOrClearSession(e, "requesting registration challenge");
           } finally {
             setRequestInProgress(false);
           }
@@ -114,17 +99,13 @@ export const LoginPage = (): JSX.Element => {
                 { headers: { "Content-Type": "application/json" } },
               );
               // This is only reached if the authentication was successful
-              setNotification({
-                severity: "success",
-                title: "Welcome back!",
-                message: "Authentication successful",
-              });
+              setNotification(undefined);
               refetchUser(); // After refetching, the user is redirected automatically
             } catch (e) {
-              setErrorNotification(e, "processing authorization response");
+              setErrorNotificationOrClearSession(e, "processing authorization response");
             }
           } catch (e) {
-            setErrorNotification(e, "requesting authentication challenge");
+            setErrorNotificationOrClearSession(e, "requesting authentication challenge");
           } finally {
             setRequestInProgress(false);
           }
@@ -170,9 +151,9 @@ export const LoginPage = (): JSX.Element => {
               }}
             >
               <TextField
+                inputRef={inputEmail}
                 sx={{ mb: 1 }}
                 fullWidth
-                id="inputEmail"
                 type="email"
                 label="Email Address"
                 value={email}
@@ -196,9 +177,9 @@ export const LoginPage = (): JSX.Element => {
               }}
             >
               <TextField
+                inputRef={inputName}
                 sx={{ mb: 1 }}
                 fullWidth
-                id="inputName"
                 label="Name"
                 autoComplete="name"
                 value={name}

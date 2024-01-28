@@ -27,10 +27,10 @@ import {
   subscriptionOfMessageType,
   accountEndpointPath,
 } from "@rating-tracker/commons";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { useNotification } from "../../../../contexts/NotificationContext";
-import { UserContext } from "../../../../contexts/UserContext";
+import { useNotificationContextUpdater } from "../../../../contexts/NotificationContext";
+import { useUserContextState, useUserContextUpdater } from "../../../../contexts/UserContext";
 import api from "../../../../utils/api";
 import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
 
@@ -41,8 +41,9 @@ import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
  * @returns {JSX.Element} The component.
  */
 export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
-  const { user, refetchUser } = useContext(UserContext);
-  const { setNotification, setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
+  const { user } = useUserContextState();
+  const { refetchUser } = useUserContextUpdater();
+  const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [email, setEmail] = useState<string>(user.email);
@@ -54,6 +55,10 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const [avatar, setAvatar] = useState<string>(user.avatar);
   const [processingAvatar, setProcessingAvatar] = useState<boolean>(true);
   const [subscriptions, setSubscriptions] = useState<number>(user.subscriptions);
+
+  const inputEmail = useRef<HTMLInputElement>(null);
+  const inputName = useRef<HTMLInputElement>(null);
+  const inputPhone = useRef<HTMLInputElement>(null);
 
   const subscriptionSwitches: {
     subscription: number;
@@ -76,43 +81,18 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   );
 
   /**
-   * Validates the email input field.
-   *
-   * @returns {boolean} Whether the email input field contains a valid email address.
-   */
-  const validateEmail = (): boolean => {
-    return (document.getElementById("inputEmail") as HTMLInputElement).reportValidity();
-  };
-
-  /**
-   * Validates the name input field.
-   *
-   * @returns {boolean} Whether the name input field contains a valid name.
-   */
-  const validateName = (): boolean => {
-    return (document.getElementById("inputName") as HTMLInputElement).reportValidity();
-  };
-
-  /**
-   * Validates the phone input field.
-   *
-   * @returns {boolean} Whether the phone input field contains a valid phone number.
-   */
-  const validatePhone = (): boolean => {
-    return (document.getElementById("inputPhone") as HTMLInputElement).reportValidity();
-  };
-
-  /**
    * Checks for errors in the input fields.
    *
    * @returns {boolean} Whether the input fields are valid.
    */
   const validate = (): boolean => {
     // The following fields are required.
-    setEmailError(!validateEmail());
-    setNameError(!validateName());
-    setPhoneError(!validatePhone());
-    return validateEmail() && validateName() && validatePhone();
+    setEmailError(!inputEmail.current.reportValidity());
+    setNameError(!inputName.current.reportValidity());
+    setPhoneError(!inputPhone.current.reportValidity());
+    return (
+      inputEmail.current.reportValidity() && inputName.current.reportValidity() && inputPhone.current.reportValidity()
+    );
   };
 
   /**
@@ -146,7 +126,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           props.onClose()
         ), // Update the user in the context, show a notification, and close the dialog on success.
       )
-      .catch((e) => setErrorNotification(e, "updating user"))
+      .catch((e) => setErrorNotificationOrClearSession(e, "updating user"))
       .finally(() => setRequestInProgress(false));
   };
 
@@ -227,7 +207,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
             <Grid container spacing={2} mt={0} pl={{ xs: "24px", sm: 0 }} pr="24px">
               <Grid item xs={12}>
                 <TextField
-                  id="inputEmail"
+                  inputRef={inputEmail}
                   type="email"
                   onChange={(event) => {
                     setEmail(event.target.value);
@@ -243,7 +223,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  id="inputName"
+                  inputRef={inputName}
                   onChange={(event) => {
                     setName(event.target.value);
                     setNameError(false);
@@ -259,7 +239,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  id="inputPhone"
+                  inputRef={inputPhone}
                   type="tel"
                   inputProps={{ pattern: REGEX_PHONE_NUMBER }}
                   onChange={(event) => {

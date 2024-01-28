@@ -4,9 +4,8 @@ import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@
 import type { WatchlistSummary } from "@rating-tracker/commons";
 import { watchlistsEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 
-import { useNotification } from "../../../contexts/NotificationContext";
+import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 
 /**
@@ -18,26 +17,18 @@ import api from "../../../utils/api";
 export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const { setErrorNotificationOrClearSession: setErrorNotification } = useNotification();
-  const navigate = useNavigate();
+  const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   /**
    * Deletes the watchlist from the backend.
    */
   const deleteWatchlist = () => {
-    props.watchlist &&
-      (setRequestInProgress(true),
-      api
-        .delete(watchlistsEndpointPath + `/${props.watchlist.id}`)
-        // If the dialog is shown from the watchlist list, the list should be updated.
-        .then(() => props.getWatchlists && props.getWatchlists())
-        .catch((e) => setErrorNotification(e, "deleting watchlist"))
-        .finally(() => {
-          setRequestInProgress(false);
-          // If the dialog is shown from e.g. a detail page, the user should be redirected to another page.
-          props.navigateTo && navigate(props.navigateTo);
-          props.onClose();
-        }));
+    setRequestInProgress(true);
+    api
+      .delete(watchlistsEndpointPath + `/${props.watchlist.id}`)
+      .then(() => (props.onDelete(), props.onClose()))
+      .catch((e) => setErrorNotificationOrClearSession(e, "deleting watchlist"))
+      .finally(() => setRequestInProgress(false));
   };
 
   return (
@@ -73,15 +64,11 @@ interface DeleteWatchlistProps {
    */
   watchlist: WatchlistSummary;
   /**
-   * A method to update the watchlist summaries after the watchlist was deleted.
+   * A method that is called after the watchlist was deleted successfully.
    */
-  getWatchlists?: () => void;
+  onDelete: () => void;
   /**
    * A method that is called when the dialog is closed.
    */
   onClose: () => void;
-  /**
-   * The path to navigate to after the watchlist was deleted.
-   */
-  navigateTo?: string;
 }

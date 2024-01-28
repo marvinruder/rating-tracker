@@ -33,7 +33,7 @@ export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
           </Box>
         </Tooltip>
         <Dialog maxWidth="lg" open={addPortfolioOpen} onClose={() => setAddPortfolioOpen(false)}>
-          <AddPortfolio onClose={() => (setAddPortfolioOpen(false), props.getPortfolios())} />
+          <AddPortfolio onClose={() => setAddPortfolioOpen(false)} onAdd={props.refetchPortfolios} />
         </Dialog>
       </Grid>
     </Grid>
@@ -44,5 +44,5 @@ interface PortfolioSummaryHeaderProps {
   /**
    * A method to update the portfolio summaries, e.g. after a new portfolio was created.
    */
-  getPortfolios: () => void;
+  refetchPortfolios: () => void;
 }
