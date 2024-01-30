@@ -75,7 +75,11 @@ export const UserProvider = (props: ContextProviderProps): JSX.Element => {
       .then((response) => {
         if (Object.keys(response.data).length) {
           const newUser = new User(response.data);
-          if (newUser.avatar && version) newUser.avatar += `?v=${version}`;
+          if (newUser.avatar) {
+            const avatarImage = new Image();
+            avatarImage.src = newUser.avatar;
+            if (version) newUser.avatar += `?v=${version}`;
+          }
           // If the user was previously not authenticated, display a welcome message.
           if (user === null)
             setNotification({
