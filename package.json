@@ -18,7 +18,7 @@
     "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm && sed -E -i.bak 's/\"module\": \"([A-Za-z0-9\\-\\.]+)\",/\"main\": \"\\1\",\\\n  \"module\": \"\\1\",/g ; s/^}$/}\\\n/' packages/wasm/package.json && rm packages/wasm/package.json.bak",
     "validate": "conc \"yarn workspaces foreach -Apv -j unlimited run typecheck\" \"yarn workspaces foreach -Apv -j unlimited run lint\" -n \"ﯤ,\" -p \"{name}\" -c #3178C6,#4B32C3"
   },
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.1.0",
   "dependencies": {
     "concurrently": "8.2.2"
   },
