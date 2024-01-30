@@ -1,7 +1,7 @@
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 /**
- * A response with a 200 OK status code and an empty body.
+ * A response with a 200 OK status code and an unspecified body.
  */
 export const ok: OpenAPIV3.ResponseObject = {
   description: "OK",
@@ -197,6 +197,27 @@ export const okUser: OpenAPIV3.ResponseObject = {
       schema: {
         $ref: "#/components/schemas/User",
         nullable: true,
+      },
+    },
+  },
+};
+
+/**
+ * A response with a 200 OK status code and an Avatar object body.
+ */
+export const okAvatar: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "image/avif": {
+      schema: {
+        type: "string",
+        format: "binary",
+      },
+    },
+    "image/jpeg": {
+      schema: {
+        type: "string",
+        format: "binary",
       },
     },
   },

@@ -1,8 +1,8 @@
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
-import * as user from "../../parameters/user";
-import { forbidden, notFound, unauthorized } from "../../responses/clientError";
-import { noContent, okUser } from "../../responses/success";
+import * as user from "../../../parameters/user";
+import { forbidden, notFound, unauthorized } from "../../../responses/clientError";
+import { noContent, okUser } from "../../../responses/success";
 
 /**
  * Get information about a user
@@ -79,22 +79,6 @@ const patch: OpenAPIV3.OperationObject = {
     user.accessRights,
     user.subscriptions,
   ],
-  requestBody: {
-    required: false,
-    content: {
-      "application/json": {
-        schema: {
-          type: "object",
-          properties: {
-            avatar: {
-              type: "string",
-              format: "binary",
-            },
-          },
-        },
-      },
-    },
-  },
   responses: {
     "204": noContent,
     "401": unauthorized,

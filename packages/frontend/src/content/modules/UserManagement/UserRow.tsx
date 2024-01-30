@@ -142,7 +142,11 @@ const UserRow = (props: UserRowProps): JSX.Element => {
       {/* Name and Logo */}
       <TableCell>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar sx={{ width: 64, height: 64, m: "4px", background: "none" }} src={props.user.avatar} alt=" " />
+          <Avatar
+            sx={{ width: 64, height: 64, m: "4px", background: "none" }}
+            src={props.user.avatar}
+            alt={props.user.name}
+          />
           <Box width={8} />
           <Box>
             <Typography variant="body1" fontWeight="bold" color="text.primary" width={160} noWrap>

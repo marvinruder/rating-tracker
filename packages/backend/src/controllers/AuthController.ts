@@ -11,6 +11,7 @@ import {
 } from "@rating-tracker/commons";
 import * as SimpleWebAuthnServer from "@simplewebauthn/server";
 import type { Request, Response } from "express";
+import express from "express";
 
 import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable";
 import { createSession, sessionTTLInSeconds } from "../redis/repositories/sessionRepository";
@@ -81,6 +82,7 @@ export class AuthController {
     path: registerEndpointPath,
     method: "post",
     accessRights: 0,
+    bodyParser: express.json(),
     rateLimited: true,
   })
   async postRegistrationResponse(req: Request, res: Response) {
@@ -165,6 +167,7 @@ export class AuthController {
     path: signInEndpointPath,
     method: "post",
     accessRights: 0,
+    bodyParser: express.json(),
     rateLimited: true,
   })
   async postAuthenticationResponse(req: Request, res: Response) {

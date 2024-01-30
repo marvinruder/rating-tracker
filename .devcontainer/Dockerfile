@@ -11,6 +11,7 @@ RUN \
   --mount=type=cache,target=/var/cache/apk \
   apk add \
   bash \
+  binaryen \
   curl \
   docker-cli \
   docker-zsh-completion \
@@ -18,7 +19,11 @@ RUN \
   gpg \
   gpgsm \
   htop \
+  musl-dev \
+  nasm \
   openssh \
+  openssl-dev \
+  pkgconfig \
   postgresql-client \
   zsh \
   zsh-autosuggestions \
@@ -28,12 +33,10 @@ RUN \
 
 # Install required tools and libraries for Rust and setup shell and more tools
 RUN \
-  --mount=type=cache,target=/var/cache/apk \
   --mount=type=cache,target=/usr/local/cargo/registry \
-  apk add binaryen pkgconfig musl-dev openssl-dev && \
   RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
   rustup target add wasm32-unknown-unknown && \
-  rustup component add rust-analyzer && \
+  rustup component add rust-analyzer rustfmt && \
   wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh && \
   echo "PS1='\[\e[33m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\] \$([[ \$? == 0 ]] && echo -e \"\\[\\e[32m\\]\" || echo -e \"\\[\\e[31m\\]\")➜\[\e[0m\] '" >> /etc/profile && \
   echo "alias ls='ls --color=auto'" >> /etc/profile && \

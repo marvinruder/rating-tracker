@@ -26,6 +26,7 @@ import {
   REGEX_PHONE_NUMBER,
   subscriptionOfMessageType,
   accountEndpointPath,
+  accountAvatarEndpointSuffix,
 } from "@rating-tracker/commons";
 import { useEffect, useRef, useState } from "react";
 
@@ -52,7 +53,6 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [phone, setPhone] = useState<string>(user.phone);
   const [phoneError, setPhoneError] = useState<boolean>(false); // Error in the phone text field.
-  const [avatar, setAvatar] = useState<string>(user.avatar);
   const [processingAvatar, setProcessingAvatar] = useState<boolean>(true);
   const [subscriptions, setSubscriptions] = useState<number>(user.subscriptions);
 
@@ -102,19 +102,15 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .patch(
-        accountEndpointPath,
-        avatar !== user.avatar ? { avatar } : undefined, // Include payload with avatar only if it has changed.
-        {
-          params: {
-            // Only send the parameters that have changed.
-            email: email !== user.email ? email.trim() : undefined,
-            name: name !== user.name ? name.trim() : undefined,
-            phone: phone !== user.phone ? phone.trim() : undefined,
-            subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
-          },
+      .patch(accountEndpointPath, undefined, {
+        params: {
+          // Only send the parameters that have changed.
+          email: email !== user.email ? email.trim() : undefined,
+          name: name !== user.name ? name.trim() : undefined,
+          phone: phone !== user.phone ? phone.trim() : undefined,
+          subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
         },
-      )
+      })
       .then(
         () => (
           refetchUser(),
@@ -133,7 +129,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   useEffect(() => {
     // Wait for the avatar to be loaded before removing the circular progress indicator to prevent a visual glitch.
     setProcessingAvatar(false);
-  }, [avatar]);
+  }, [user.avatar]);
 
   /**
    * Resizes and stores the uploaded avatar in the state as a base64 string.
@@ -151,7 +147,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
     const worker = new ConvertAvatarWorker();
     worker.postMessage(file);
-    worker.onmessage = (message: MessageEvent<{ result: string } | { isError: true }>) => {
+    worker.onmessage = async (message: MessageEvent<{ result: Uint8Array } | { isError: true }>) => {
       if (!("result" in message.data)) {
         setNotification({
           severity: "error",
@@ -160,13 +156,30 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
         });
         setProcessingAvatar(false);
       } else {
-        avatar === message.data.result ? setProcessingAvatar(false) : setAvatar(message.data.result);
+        api
+          .put(accountEndpointPath + accountAvatarEndpointSuffix, message.data.result, {
+            headers: { "Content-Type": "image/avif" },
+          })
+          .then(() => refetchUser(Date.now()))
+          .catch((e) => setErrorNotificationOrClearSession(e, "uploading account avatar"))
+          .finally(() => setProcessingAvatar(false));
       }
       // Clear the file input to allow the same file to be uploaded again.
       e.target.value = "";
       worker.terminate();
     };
   };
+
+  /**
+   * Deletes the avatar of the current user from the backend.
+   *
+   * @returns {Promise<void>}
+   */
+  const deleteAvatar = (): Promise<void> =>
+    api
+      .delete(accountEndpointPath + accountAvatarEndpointSuffix)
+      .then(() => refetchUser())
+      .catch((e) => setErrorNotificationOrClearSession(e, "deleting account avatar"));
 
   return (
     <>
@@ -178,13 +191,13 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                 <CircularProgress />
               </Avatar>
             ) : (
-              <Avatar sx={{ width: 120, height: 120, margin: "auto" }} alt={user.name} src={avatar} />
+              <Avatar sx={{ width: 120, height: 120, margin: "auto" }} alt={user.name} src={user.avatar} />
             )}
             <Box width="100%" display="flex" justifyContent="center" mt={1}>
               <Tooltip title={user.avatar ? "Change your avatar" : "Upload an avatar"} arrow>
                 <Box>
                   <IconButton color="primary" component="label" disabled={processingAvatar}>
-                    <input hidden accept="image/*" type="file" onChange={uploadAvatar} />
+                    <input hidden accept="image/jpeg, image/png, image/tiff" type="file" onChange={uploadAvatar} />
                     <AddAPhotoIcon />
                   </IconButton>
                 </Box>
@@ -193,8 +206,8 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                 <Box>
                   <IconButton
                     color="error"
-                    sx={{ ml: 1, display: !avatar && "none" }}
-                    onClick={() => setAvatar("")}
+                    sx={{ ml: 1, display: !user.avatar && "none" }}
+                    onClick={deleteAvatar}
                     disabled={processingAvatar}
                   >
                     <DeleteIcon />
@@ -303,11 +316,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
             emailError ||
             nameError ||
             phoneError ||
-            (email === user.email &&
-              name === user.name &&
-              phone === user.phone &&
-              avatar === user.avatar &&
-              subscriptions === user.subscriptions)
+            (email === user.email && name === user.name && phone === user.phone && subscriptions === user.subscriptions)
           }
           startIcon={<SaveIcon />}
         >

@@ -30,8 +30,12 @@ type UserUpdaterContextType = {
   clearUser: () => void;
   /**
    * Triggers a refetch of the user information.
+   *
+   * @param {number} version A version number to append to the avatar URL. This will force the browser to refetch the
+   *                         avatar if it has changed.
+   * @returns {Promise<void>}
    */
-  refetchUser: () => void;
+  refetchUser: (version?: number) => Promise<void>;
 };
 
 /**
@@ -57,13 +61,25 @@ export const UserProvider = (props: ContextProviderProps): JSX.Element => {
 
   const clearUser = useCallback(() => setUser(null), []);
 
-  const fetchUser = () =>
+  /**
+   * Fetches the user information from the server.
+   *
+   * @param {number} version A version number to append to the avatar URL. This will force the browser to refetch the
+   *                         avatar if it has changed.
+   * @returns {Promise<void>}
+   */
+  const fetchUser = (version?: number): Promise<void> =>
     // Check if the user is authenticated
     api
       .get(accountEndpointPath)
       .then((response) => {
         if (Object.keys(response.data).length) {
           const newUser = new User(response.data);
+          if (newUser.avatar) {
+            if (version) newUser.avatar += `?v=${version}`;
+            const avatarImage = new Image();
+            avatarImage.src = newUser.avatar;
+          }
           // If the user was previously not authenticated, display a welcome message.
           if (user === null)
             setNotification({

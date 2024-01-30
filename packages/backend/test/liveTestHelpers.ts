@@ -28,13 +28,15 @@ export const expectStockListLengthToBe = async (length: number): Promise<Stock[]
  *
  * @param {string} route The route to test.
  * @param {Function} method The HTTP request method to use.
+ * @param {string} contentType The content type to use. Used to circumvent the OpenAPI validator.
  */
 export const expectRouteToBePrivate = async (
   route: string,
   method?: (url: string, callback?: CallbackHandler) => Test,
+  contentType?: string,
 ): Promise<void> => {
   method = method ?? supertest.get;
-  const res = await method(route);
+  const res = contentType ? await method(route).set("Content-Type", contentType) : await method(route);
   expect(res.status).toBe(401);
   expect(res.body.message).toMatch(UNAUTHORIZED_ERROR_MESSAGE);
 };
@@ -44,13 +46,17 @@ export const expectRouteToBePrivate = async (
  *
  * @param {string} route The route to test.
  * @param {Function} method The HTTP request method to use.
+ * @param {string} contentType The content type to use. Used to circumvent the OpenAPI validator.
  */
 export const expectSpecialAccessRightsToBeRequired = async (
   route: string,
   method?: (url: string, callback?: CallbackHandler) => Test,
+  contentType?: string,
 ): Promise<void> => {
   method = method ?? supertest.get;
-  const res = await method(route).set("Cookie", ["authToken=anotherExampleSessionID"]);
+  const res = await (contentType ? method(route).set("Content-Type", contentType) : method(route)).set("Cookie", [
+    "authToken=anotherExampleSessionID",
+  ]);
   expect(res.status).toBe(403);
   expect(res.body.message).toMatch(
     "The authenticated user account does not have the rights necessary to access this endpoint",

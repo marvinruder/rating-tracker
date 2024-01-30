@@ -1,5 +1,5 @@
 import { FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { Router as expressRouter } from "express";
 import rateLimit from "express-rate-limit";
 
@@ -23,6 +23,10 @@ interface RouterOptions {
    * The HTTP method.
    */
   method: "get" | "head" | "post" | "put" | "patch" | "delete";
+  /**
+   * A parser for the request body.
+   */
+  bodyParser?: RequestHandler;
   /**
    * The required access rights, encoded as a bitfield.
    */
@@ -55,31 +59,25 @@ export default Router = <This>(options: RouterOptions): any => {
  */
 export default <This>(options: RouterOptions): any => {
   return (controllerClass: This, controllerFnName: string) => {
-    const controllerFn = controllerClass[controllerFnName];
-    const controllerFnWithAccessRightCheck = (req: Request, res: Response, next: NextFunction) => {
-      void (async (): Promise<void> => {
-        try {
-          if (
-            !options.accessRights || // Public Routes do not require an access right check
-            // Check if the user is authenticated and has the required access rights for the endpoint
-            res.locals.user?.hasAccessRight(options.accessRights) ||
-            res.locals.userIsCron // Allow Cron jobs to access all endpoints
-          ) {
-            await controllerFn(req, res);
-          } else {
-            throw new APIError(
+    const accessRightCheck: RequestHandler = (_: Request, res: Response, next: NextFunction) =>
+      !options.accessRights || // Public Routes do not require an access right check
+      // Check if the user is authenticated and has the required access rights for the endpoint
+      res.locals.user?.hasAccessRight(options.accessRights) ||
+      res.locals.userIsCron // Allow Cron jobs to access all endpoints
+        ? next()
+        : next(
+            new APIError(
               // Use the correct error code and message based on whether a user is authenticated.
               res.locals.user ? 403 : 401,
               res.locals.user ? FORBIDDEN_ERROR_MESSAGE : UNAUTHORIZED_ERROR_MESSAGE,
-            );
-          }
-        } catch (err) {
-          next(err);
-        }
-      })();
-    };
-    options.rateLimited
-      ? router[options.method](options.path, rateLimiter, controllerFnWithAccessRightCheck)
-      : router[options.method](options.path, controllerFnWithAccessRightCheck);
+            ),
+          );
+    const controllerFn: RequestHandler = (req: Request, res: Response, next: NextFunction) =>
+      Promise.resolve(controllerClass[controllerFnName](req, res, next)).catch(next);
+
+    const requestHandlers = [accessRightCheck] satisfies RequestHandler[];
+    if (options.rateLimited) requestHandlers.push(rateLimiter);
+    if (options.bodyParser) requestHandlers.push(options.bodyParser);
+    router[options.method](options.path, ...requestHandlers, controllerFn);
   };
 };

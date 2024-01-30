@@ -107,35 +107,30 @@ server.app.use((_, res, next) => {
 // Parses cookies and stores them in req.cookies
 server.app.use(cookieParser());
 
-// Parses JSON payload and stores it in the req.body object
-server.app.use(express.json());
-
 // Checks for user authentication via session cookie
-server.app.use((req, res, next) => {
-  void (async (): Promise<void> => {
-    if (req.cookies.authToken) {
-      // If a session cookie is present
-      try {
-        // Refresh the cookie on the server and append the user to the response
-        res.locals.user = await refreshSessionAndFetchUser(req.cookies.authToken);
-        res.cookie("authToken", req.cookies.authToken, {
-          maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
-          httpOnly: true,
-          secure: process.env.NODE_ENV !== "development", // allow plain HTTP in development
-          sameSite: true,
-        });
-      } catch (e) {
-        // If we encountered an error, the token was invalid, so we delete the cookie
-        res.clearCookie("authToken");
-      }
+server.app.use(async (req, res, next) => {
+  if (req.cookies.authToken) {
+    // If a session cookie is present
+    try {
+      // Refresh the cookie on the server and append the user to the response
+      res.locals.user = await refreshSessionAndFetchUser(req.cookies.authToken);
+      res.cookie("authToken", req.cookies.authToken, {
+        maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== "development", // allow plain HTTP in development
+        sameSite: true,
+      });
+    } catch (e) {
+      // If we encountered an error, the token was invalid, so we delete the cookie
+      res.clearCookie("authToken");
     }
-    /* c8 ignore start */ // We do not test Cron jobs
-    if (req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken) {
-      res.locals.userIsCron = true;
-    }
-    /* c8 ignore stop */
-    next();
-  })();
+  }
+  /* c8 ignore start */ // We do not test Cron jobs
+  if (req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken) {
+    res.locals.userIsCron = true;
+  }
+  /* c8 ignore stop */
+  next();
 });
 
 // Host the OpenAPI UI

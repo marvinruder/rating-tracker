@@ -1,13 +1,11 @@
 /**
- * Converts an uploaded file to a base64-encoded string with smaller size and reduced quality.
+ * Converts an uploaded file to a JPEG image with smaller size and reduced quality.
  *
  * @param {File} file The uploaded file
- * @returns {string} The base64-encoded string containing the encoded image.
+ * @returns {Uint8Array} The image.
  */
-const convertAvatar = async (file: File): Promise<string> =>
-  import("@rating-tracker/wasm").then(
-    async (wasm) => `data:image/jpeg;base64,${wasm.convert_avatar(new Uint8Array(await file.arrayBuffer()))}`,
-  );
+const convertAvatar = async (file: File): Promise<Uint8Array> =>
+  import("@rating-tracker/wasm").then(async (wasm) => wasm.convert_avatar(new Uint8Array(await file.arrayBuffer())));
 
 self.onmessage = async (message: { data: File }) => {
   await convertAvatar(message.data)
