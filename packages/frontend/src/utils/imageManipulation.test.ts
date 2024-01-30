@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import "@vitest/web-worker";
-import { describe, expect, it, vi } from "vitest";
+import { assert, describe, expect, it, vi } from "vitest";
 
 import ConvertAvatarWorker from "./imageManipulation?worker";
 
@@ -20,8 +20,9 @@ describe("Avatar Conversion", async () => {
     let workerHasSentResult = false;
     const worker = new ConvertAvatarWorker();
     worker.postMessage(favicon192);
-    worker.onmessage = (message) => {
-      expect(message.data.result).toMatchSnapshot();
+    worker.onmessage = (message: MessageEvent<{ result: Uint8Array } | { isError: true }>) => {
+      assert("result" in message.data);
+      expect(Buffer.from(message.data.result).toString("base64")).toMatchSnapshot();
       workerHasSentResult = true;
     };
     await vi.waitUntil(() => workerHasSentResult, 16000);
@@ -31,9 +32,10 @@ describe("Avatar Conversion", async () => {
     let workerHasSentResult = false;
     const worker = new ConvertAvatarWorker();
     worker.postMessage("no file here");
-    worker.onmessage = (message) => {
+    worker.onmessage = (message: MessageEvent<{ result: Uint8Array } | { isError: true }>) => {
+      assert("isError" in message.data);
+      assert(!("result" in message.data));
       expect(message.data.isError).toBeTruthy();
-      expect(message.data.result).toBeUndefined();
       workerHasSentResult = true;
     };
     await vi.waitUntil(() => workerHasSentResult, 8000);

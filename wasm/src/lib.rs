@@ -1,6 +1,5 @@
 extern crate console_error_panic_hook;
 
-use base64::Engine;
 use wasm_bindgen::prelude::*;
 
 // // Make Javascript’s `console.log()` available
@@ -11,7 +10,7 @@ use wasm_bindgen::prelude::*;
 // }
 
 #[wasm_bindgen]
-pub fn convert_avatar(_array: &[u8]) -> String {
+pub fn convert_avatar(_array: &[u8]) -> Vec<u8> {
     // Print panic messages to Javascript’s `console.error()`
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));
 
@@ -55,16 +54,16 @@ pub fn convert_avatar(_array: &[u8]) -> String {
     let mut buf = Vec::<u8>::new();
     match img.write_to(
         &mut std::io::Cursor::new(&mut buf),
-        // Use JPEG encoding of medium quality
-        image::ImageOutputFormat::Jpeg(60),
+        // Use AVIF encoding
+        image::ImageOutputFormat::Avif,
     ) {
         Ok(_) => (),
         Err(error) => {
             panic!("Unable to create thumbnail image: {:?}", error)
         }
     };
-    // Encode as base64 string and return
-    return base64::engine::general_purpose::STANDARD.encode(buf);
+    // Return the buffer
+    return buf;
 }
 
 // #[cfg(test)]

@@ -47,7 +47,7 @@ export class User {
    */
   name: string;
   /**
-   * The base64-encoded avatar of the user.
+   * The base64-encoded avatar of the user, or a reference to it.
    */
   avatar: string | null;
   /**

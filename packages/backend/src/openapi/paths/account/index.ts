@@ -32,7 +32,7 @@ const deleteRequest: OpenAPIV3.OperationObject = {
 };
 
 /**
- * Update the current user using the information provided.
+ * Update the current user using the information provided
  */
 const patch: OpenAPIV3.OperationObject = {
   tags: ["Account API"],
@@ -54,22 +54,6 @@ const patch: OpenAPIV3.OperationObject = {
     },
     user.subscriptions,
   ],
-  requestBody: {
-    required: false,
-    content: {
-      "application/json": {
-        schema: {
-          type: "object",
-          properties: {
-            avatar: {
-              type: "string",
-              format: "binary",
-            },
-          },
-        },
-      },
-    },
-  },
   responses: {
     "204": noContent,
     "401": unauthorized,

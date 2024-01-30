@@ -100,7 +100,7 @@ export const LoginPage = (): JSX.Element => {
               );
               // This is only reached if the authentication was successful
               setNotification(undefined);
-              refetchUser(); // After refetching, the user is redirected automatically
+              await refetchUser(); // After refetching, the user is redirected automatically
             } catch (e) {
               setErrorNotificationOrClearSession(e, "processing authorization response");
             }

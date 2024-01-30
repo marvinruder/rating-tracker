@@ -14,11 +14,7 @@ import client from "../client";
 export const createUser = async (user: UserWithCredentials): Promise<boolean> => {
   // Attempt to find an existing user with the same email address
   try {
-    const existingUser = await client.user.findUniqueOrThrow({
-      where: {
-        email: user.email,
-      },
-    });
+    const existingUser = await client.user.findUniqueOrThrow({ where: { email: user.email } });
     // If that worked, a user with the same email address already exists
     logger.warn(
       { prefix: "postgres" },
@@ -45,13 +41,32 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
  */
 export const readUser = async (email: string): Promise<User> => {
   try {
-    const user = await client.user.findUniqueOrThrow({
-      where: { email },
-    });
+    const user = await client.user.findUniqueOrThrow({ where: { email } });
     return new User(user);
   } catch {
     throw new APIError(404, `User ${email} not found.`);
   }
+};
+
+/**
+ * Read the avatar of a user.
+ *
+ * @param {string} email The email address of the user.
+ * @returns {Promise<{ mimeType: string, buffer: Buffer }>} The avatar of the user.
+ * @throws an {@link APIError} if the user does not exist or does not have an avatar.
+ */
+export const readUserAvatar = async (email: string): Promise<{ mimeType: string; buffer: Buffer }> => {
+  const user = await readUser(email);
+  if (user.avatar) {
+    const dataURLMatcher = /^data:(?<mimeType>\w+\/\w+)(;charset=.+)?;base64,(?<data>.*)$/;
+    const match = user.avatar.match(dataURLMatcher);
+    if (match.groups.mimeType && match.groups.data)
+      return { mimeType: match.groups.mimeType, buffer: Buffer.from(match.groups.data, "base64") };
+    /* c8 ignore start */ // We do not expect data of any other format to be stored in the database
+    throw new APIError(500, `Error while reading avatar of user ${email}.`);
+  }
+  /* c8 ignore stop */
+  throw new APIError(404, `User ${email} does not have an avatar.`);
 };
 
 /**
@@ -63,9 +78,7 @@ export const readUser = async (email: string): Promise<User> => {
  */
 export const readUserWithCredentials = async (email: string): Promise<UserWithCredentials> => {
   try {
-    const user = await client.user.findUniqueOrThrow({
-      where: { email },
-    });
+    const user = await client.user.findUniqueOrThrow({ where: { email } });
     return new UserWithCredentials(user);
   } catch {
     throw new APIError(404, `User ${email} not found.`);
@@ -83,9 +96,7 @@ export const readUserByCredentialID = async (credentialID: string): Promise<User
   // Convert base64url (as specified in https://www.w3.org/TR/webauthn-2/) to base64 (which we store in database)
   const credentialIDWithPadding = Buffer.from(credentialID, "base64url").toString("base64");
   try {
-    const user = await client.user.findUniqueOrThrow({
-      where: { credentialID: credentialIDWithPadding },
-    });
+    const user = await client.user.findUniqueOrThrow({ where: { credentialID: credentialIDWithPadding } });
     return new UserWithCredentials(user);
   } catch {
     throw new APIError(404, `User with credential ${credentialID} not found.`);
@@ -109,20 +120,7 @@ export const readAllUsers = async (): Promise<User[]> => {
  */
 export const readUsersWithStockOnSubscribedWatchlist = async (ticker: string): Promise<User[]> => {
   return (
-    await client.user.findMany({
-      where: {
-        watchlists: {
-          some: {
-            subscribed: true,
-            stocks: {
-              some: {
-                ticker,
-              },
-            },
-          },
-        },
-      },
-    })
+    await client.user.findMany({ where: { watchlists: { some: { subscribed: true, stocks: { some: { ticker } } } } } })
   ).map((user) => new User(user));
 };
 
@@ -168,13 +166,19 @@ export const updateUserWithCredentials = async (email: string, newValues: Partia
   }
 
   if (isNewData) {
-    await client.user.update({
-      where: {
-        email: user.email,
+    await client.user.update({ where: { email: user.email }, data: { ...newValues } });
+    logger.info(
+      {
+        prefix: "postgres",
+        newValues: {
+          ...newValues,
+          ...("avatar" in newValues
+            ? { avatar: newValues.avatar?.substring(0, 64).concat("…") ?? newValues.avatar }
+            : {}),
+        },
       },
-      data: { ...newValues },
-    });
-    logger.info({ prefix: "postgres", newValues }, `Updated user ${email}`);
+      `Updated user ${email}`,
+    );
   } else {
     // No new data was provided
     logger.info({ prefix: "postgres" }, `No updates for user ${email}.`);
@@ -192,9 +196,7 @@ export const deleteUser = async (email: string) => {
   try {
     const existingUser = await client.user.findUniqueOrThrow({ where: { email } });
     // If that worked, we can delete the existing user
-    await client.user.delete({
-      where: { email },
-    });
+    await client.user.delete({ where: { email } });
     logger.info({ prefix: "postgres" }, `Deleted user “${existingUser.name}” (email address ${email}).`);
   } catch {
     throw new APIError(404, `User ${email} not found.`);

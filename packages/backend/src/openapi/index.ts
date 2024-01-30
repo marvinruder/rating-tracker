@@ -19,6 +19,8 @@ import {
   usersEndpointPath,
   logoBackgroundEndpointPath,
   portfoliosEndpointPath,
+  accountAvatarEndpointSuffix,
+  usersAvatarEndpointSuffix,
 } from "@rating-tracker/commons";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
@@ -26,6 +28,7 @@ import packageInfo from "../../package.json" with { type: "json" };
 
 import { components } from "./components";
 import * as accountEndpoint from "./paths/account";
+import * as accountAvatarEndpoint from "./paths/account/avatar";
 import * as registerEndpoint from "./paths/auth/register";
 import * as signInEndpoint from "./paths/auth/signIn";
 import * as favoritesEndpoint from "./paths/favorites";
@@ -48,6 +51,7 @@ import * as stockEndpoint from "./paths/stocks/stock";
 import * as stockLogoEndpoint from "./paths/stocks/stock/logo";
 import * as usersEndpoint from "./paths/users";
 import * as userEndpoint from "./paths/users/user";
+import * as userAvatarEndpoint from "./paths/users/user/avatar";
 import * as watchlistsEndpoint from "./paths/watchlists";
 import * as watchlistEndpoint from "./paths/watchlists/watchlist";
 import * as watchlistStocksEndpoint from "./paths/watchlists/watchlist/stock";
@@ -71,6 +75,7 @@ export const openapiDocument: OpenAPIV3.Document = {
   servers: servers,
   paths: {
     [`${baseURL}${accountEndpointPath}`]: accountEndpoint,
+    [`${baseURL}${accountEndpointPath}${accountAvatarEndpointSuffix}`]: accountAvatarEndpoint,
     [`${baseURL}${registerEndpointPath}`]: registerEndpoint,
     [`${baseURL}${signInEndpointPath}`]: signInEndpoint,
     [`${baseURL}${logoBackgroundEndpointPath}`]: logoBackgroundEndpoint,
@@ -88,6 +93,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     [`${baseURL}${sessionEndpointPath}`]: sessionEndpoint,
     [`${baseURL}${usersEndpointPath}`]: usersEndpoint,
     [`${baseURL}${usersEndpointPath}/{email}`]: userEndpoint,
+    [`${baseURL}${usersEndpointPath}/{email}${usersAvatarEndpointSuffix}`]: userAvatarEndpoint,
     [`${baseURL}${watchlistsEndpointPath}`]: watchlistsEndpoint,
     [`${baseURL}${watchlistsEndpointPath}/{id}`]: watchlistEndpoint,
     [`${baseURL}${watchlistsEndpointPath}/{id}${stocksEndpointPath}/{ticker}`]: watchlistStocksEndpoint,

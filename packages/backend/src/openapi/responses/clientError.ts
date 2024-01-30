@@ -71,6 +71,20 @@ export const conflict: OpenAPIV3.ResponseObject = {
 };
 
 /**
+ * A response with a 415 Unsupported Media Type status code and an Error object body.
+ */
+export const unsupportedMediaType: OpenAPIV3.ResponseObject = {
+  description: "Unsupported Media Type",
+  content: {
+    "application/json": {
+      schema: {
+        $ref: "#/components/schemas/Error",
+      },
+    },
+  },
+};
+
+/**
  * A response with a 429 Too Many Requests status code and an HTML body. Used by Express.js rate limiting middleware.
  */
 export const tooManyRequestsHTML: OpenAPIV3.ResponseObject = {

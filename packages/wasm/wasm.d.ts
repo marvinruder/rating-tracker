@@ -2,6 +2,6 @@
 /* eslint-disable */
 /**
 * @param {Uint8Array} _array
-* @returns {string}
+* @returns {Uint8Array}
 */
-export function convert_avatar(_array: Uint8Array): string;
+export function convert_avatar(_array: Uint8Array): Uint8Array;

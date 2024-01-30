@@ -90,6 +90,8 @@ const prefixIcons: Record<string, string> = {
   query: "\uf002",
   responseTime: "\uf520",
   "application/json": "\ue60b",
+  "image/avif": "\uf03e",
+  "image/jpeg": "\uf03e",
   "image/png": "\uf03e",
   "image/svg+xml": "\ufc1f",
   successful: "\uf00c",
