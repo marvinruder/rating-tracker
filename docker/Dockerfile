@@ -39,8 +39,8 @@ RUN \
   apk add libgcc libstdc++
 
 # Copy Node.js binary and user
-COPY --from=node:21.6.0-alpine /etc/passwd /etc
-COPY --from=node:21.6.0-alpine /usr/local/bin/node /usr/local/bin
+COPY --from=node:21.6.1-alpine /etc/passwd /etc
+COPY --from=node:21.6.1-alpine /usr/local/bin/node /usr/local/bin
 
 # Switch to non-root user
 USER node
