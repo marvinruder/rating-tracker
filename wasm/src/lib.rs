@@ -1,5 +1,6 @@
 extern crate console_error_panic_hook;
 
+use image::codecs::avif::AvifEncoder;
 use wasm_bindgen::prelude::*;
 
 // // Make Javascript’s `console.log()` available
@@ -52,11 +53,8 @@ pub fn convert_avatar(_array: &[u8]) -> Vec<u8> {
 
     // Write new image to buffer
     let mut buf = Vec::<u8>::new();
-    match img.write_to(
-        &mut std::io::Cursor::new(&mut buf),
-        // Use AVIF encoding
-        image::ImageOutputFormat::Avif,
-    ) {
+    let encoder = AvifEncoder::new_with_speed_quality(&mut buf, 10, 75);
+    match img.write_with_encoder(encoder) {
         Ok(_) => (),
         Err(error) => {
             panic!("Unable to create thumbnail image: {:?}", error)
