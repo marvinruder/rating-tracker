@@ -196,7 +196,13 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
             <Box width="100%" display="flex" justifyContent="center" mt={1}>
               <Tooltip title={user.avatar ? "Change your avatar" : "Upload an avatar"} arrow>
                 <Box>
-                  <IconButton color="primary" component="label" disabled={processingAvatar}>
+                  <IconButton
+                    color="primary"
+                    component="label"
+                    disabled={processingAvatar}
+                    // Cache the WASM module including the huge `.wasm` file
+                    onMouseDown={() => void import("@rating-tracker/wasm")}
+                  >
                     <input hidden accept="image/jpeg, image/png, image/tiff" type="file" onChange={uploadAvatar} />
                     <AddAPhotoIcon />
                   </IconButton>
