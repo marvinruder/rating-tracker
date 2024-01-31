@@ -1,6 +1,6 @@
-import { Card, Container } from "@mui/material";
+import { Card, Container, useTheme } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
-import { stocksEndpointPath } from "@rating-tracker/commons";
+import { baseURL, stockLogoEndpointSuffix, stocksEndpointPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -26,6 +26,8 @@ const StockModule = (): JSX.Element => {
 
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
+  const theme = useTheme();
+
   /**
    * Fetches the stock with the given ticker.
    *
@@ -41,6 +43,12 @@ const StockModule = (): JSX.Element => {
   const { ticker } = useParams();
 
   useEffect(() => void getStock(ticker), [ticker]);
+
+  // Preload the stock logo
+  const stockLogo = new Image();
+  stockLogo.src = `${baseURL}${stocksEndpointPath}/${ticker}${stockLogoEndpointSuffix}?dark=${
+    theme.palette.mode === "dark"
+  }`;
 
   return (
     <>

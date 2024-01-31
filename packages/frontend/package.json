@@ -9,7 +9,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev:vite": "vite --host",
+    "dev:vite": "vite",
+    "dev:preview": "NODE_ENV=production vite build && vite preview",
     "build": "vite build",
     "test:watch": "vitest",
     "test": "vitest run --color",

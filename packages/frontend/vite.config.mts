@@ -39,14 +39,16 @@ export default mergeConfig(
         template: "src/index.html",
         inject: {
           data: {
-            title: process.env.NODE_ENV === "development" ? "Development Preview – Rating Tracker" : "Rating Tracker",
-            faviconPath: process.env.NODE_ENV === "development" ? "favicon-dev" : "favicon",
+            title: process.env.NODE_ENV === "development" ? "Development Preview – " : "" + "Rating Tracker",
+            faviconPath: "favicon" + process.env.NODE_ENV === "development" ? "-dev" : "",
           },
         },
         verbose: process.env.NODE_ENV === "development",
       }),
       wasm(),
     ],
+    preview: { port: 5173 },
+    server: { host: true },
     worker: { format: "es", plugins: () => [wasm()] },
   }),
   defineVitestConfig({
