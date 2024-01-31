@@ -77,6 +77,7 @@ export const UserProvider = (props: ContextProviderProps): JSX.Element => {
           const newUser = new User(response.data);
           if (newUser.avatar) {
             if (version) newUser.avatar += `?v=${version}`;
+            // Preload the avatar image
             const avatarImage = new Image();
             avatarImage.src = newUser.avatar;
           }
