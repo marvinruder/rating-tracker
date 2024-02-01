@@ -1464,7 +1464,7 @@ __metadata:
     "@react-spring/web": "npm:9.7.3"
     "@simplewebauthn/browser": "npm:9.0.1"
     "@types/node": "npm:20.11.15"
-    "@types/react": "npm:18.2.49"
+    "@types/react": "npm:18.2.51"
     "@types/react-dom": "npm:18.2.18"
     "@typescript-eslint/eslint-plugin": "npm:6.20.0"
     "@typescript-eslint/parser": "npm:6.20.0"
@@ -2127,14 +2127,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:18.2.49":
-  version: 18.2.49
-  resolution: "@types/react@npm:18.2.49"
+"@types/react@npm:*, @types/react@npm:18.2.51":
+  version: 18.2.51
+  resolution: "@types/react@npm:18.2.51"
   dependencies:
     "@types/prop-types": "npm:*"
     "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/ee71591d7b23979f825f134f97583729b1cc56fc10748f215448fb5d6f671ecc8660da6f511cbdb874f4ec6fd1d1a8e423b58a5bc54a1ba918f6a99cfa876472
+  checksum: 10c0/409f684dc1cb03ed542e1f185da7e84f81186d7945119adb553fe0e4e28bad3468213fce9096e1867b358c87fb57fc80b53a3e544a3779f7080ddde7c1b99eb1
   languageName: node
   linkType: hard
 
