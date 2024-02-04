@@ -14,7 +14,6 @@ import {
   stockLogoEndpointSuffix,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import axios from "axios";
 import type { Request, Response } from "express";
 
 import type { Prisma } from "../../prisma/client";
@@ -23,6 +22,7 @@ import { createStock, deleteStock, readStocks, updateStock, readStock } from "..
 import { readWatchlist } from "../db/tables/watchlistTable";
 import { createResource, readResource, readResourceTTL } from "../redis/repositories/resourceRepository";
 import APIError from "../utils/APIError";
+import { performFetchRequest } from "../utils/fetchRequest";
 import Router from "../utils/router";
 
 /**
@@ -47,13 +47,12 @@ const getLogoOfStock = async (ticker: string, dark: boolean): Promise<Resource> 
     logoResource = await readResource(url);
   } catch (e) {
     // If the logo is not in the cache, fetch it from TradeRepublic and store it in the cache.
-    await axios
-      .get(url)
+    await performFetchRequest(url)
       .then(async (response) => {
         let maxAge: number;
         try {
           // Cache as long as TradeRepublic says using the max-age cache control directive
-          maxAge = +response.headers["cache-control"].match(/max-age=(\d+)/)[1];
+          maxAge = +response.headers.get("Cache-Control").match(/max-age=(\d+)/)[1];
           if (Number.isNaN(maxAge)) throw new TypeError();
           /* c8 ignore start */ // Difficult to test, since valid max-age is always returned
         } catch (_) {
@@ -61,7 +60,10 @@ const getLogoOfStock = async (ticker: string, dark: boolean): Promise<Resource> 
         }
         /* c8 ignore stop */
         // Store the logo in the cache
-        await createResource({ url, fetchDate: new Date(response.headers["date"]), content: response.data }, maxAge);
+        await createResource(
+          { url, fetchDate: new Date(response.headers.get("Date")), content: response.data },
+          maxAge,
+        );
         // Read the logo as a Resource object
         logoResource = await readResource(url);
       })

@@ -39,7 +39,11 @@ export * from "./lib/DataProvider";
 
 export * from "./lib/ErrorMessages";
 
+export * from "./lib/Fetch";
+
 export * from "./lib/MessageType";
+
+export * from "./lib/OmitFunctions";
 
 export * from "./lib/Service";
 

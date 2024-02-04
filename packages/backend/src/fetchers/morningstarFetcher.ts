@@ -8,11 +8,11 @@ import xpath from "xpath-ts2";
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import FetchError from "../utils/FetchError";
+import DataProviderError from "../utils/DataProviderError";
 import logger from "../utils/logger";
 
-import type { HTMLFetcher, FetcherWorkspace } from "./fetchHelper";
-import { captureFetchError, getAndParseHTML } from "./fetchHelper";
+import type { HTMLFetcher, FetcherWorkspace, ParseResult } from "./fetchHelper";
+import { captureDataProviderError, getAndParseHTML } from "./fetchHelper";
 
 const XPATH_CONTENT = xpath.parse(
   "//*[@id='SnapshotBodyContent'][count(.//*[@id='IntradayPriceSummary']) > 0][count(.//*[@id='CompanyProfile']) > 0]",
@@ -31,7 +31,7 @@ const MAX_RETRIES = 10;
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
  * with errors)
  * @param {Stock} stock The stock to extract data for
- * @param {Document} document The fetched and parsed HTML document
+ * @param {ParseResult} parseResult The fetched and parsed HTML document and/or the error that occurred during parsing
  * @returns {Promise<void>} A promise that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
@@ -39,7 +39,7 @@ const morningstarFetcher: HTMLFetcher = async (
   req: Request,
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
-  document: Document,
+  parseResult: ParseResult,
 ): Promise<void> => {
   let industry: Industry = req.query.clear ? null : undefined;
   let size: Size = req.query.clear ? null : undefined;
@@ -58,30 +58,33 @@ const morningstarFetcher: HTMLFetcher = async (
   const url =
     `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarID}` +
     `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`;
-  document = await getAndParseHTML(url, undefined, stock, "morningstar");
+  await getAndParseHTML(url, undefined, stock, "morningstar", parseResult);
 
   let attempts = 1;
   while (attempts > 0) {
     try {
       // Check for the presence of the div containing all relevant information.
-      const contentDiv = XPATH_CONTENT.select1({ node: document, isHtml: true });
+      const contentDiv = XPATH_CONTENT.select1({ node: parseResult?.document, isHtml: true });
       assert(contentDiv, "Unable to find content div.");
       attempts = 0; // Page load succeeded.
     } catch (e) {
       // We probably stumbled upon a temporary 502 Bad Gateway or 429 Too Many Requests error, which persists for a
       // few minutes. We periodically retry to fetch the page.
-      if (++attempts > MAX_RETRIES) {
-        throw e; // Too many attempts failed, we throw the last error.
-      }
+
+      // Too many attempts failed, we throw the error occurred during parsing, or the last assertion error.
+      if (++attempts > MAX_RETRIES) throw parseResult?.error ?? e;
+
       logger.warn(
         { prefix: "fetch" },
         `Unable to load Morningstar page for ${stock.name} (${stock.ticker}). ` +
           `Will retry (attempt ${attempts} of ${MAX_RETRIES})`,
       );
       // Load the page once again
-      document = await getAndParseHTML(url, undefined, stock, "morningstar");
+      await getAndParseHTML(url, undefined, stock, "morningstar", parseResult);
     }
   }
+
+  const { document } = parseResult;
 
   // Prepare an error message header containing the stock name and ticker.
   let errorMessage = `Error while fetching Morningstar data for ${stock.name} (${stock.ticker}):`;
@@ -118,9 +121,7 @@ const morningstarFetcher: HTMLFetcher = async (
       // Example: "Stock Style\nLarge-Blend" (the parser may remove the newline character though)
       .replace(/Stock Style\n?/, "") // Remove headline
       .split("-");
-    if (sizeAndStyle.length !== 2) {
-      throw new TypeError("No valid size and style available.");
-    }
+    if (sizeAndStyle.length !== 2) throw new TypeError("No valid size and style available.");
     if (isSize(sizeAndStyle[0])) {
       size = sizeAndStyle[0];
     } else {
@@ -147,9 +148,8 @@ const morningstarFetcher: HTMLFetcher = async (
   try {
     // Remove all non-digit characters
     const starRatingString = document.getElementsByClassName("starsImg")[0].getAttribute("alt").replaceAll(/\D/g, "");
-    if (starRatingString.length === 0 || Number.isNaN(+starRatingString)) {
+    if (starRatingString.length === 0 || Number.isNaN(+starRatingString))
       throw new TypeError("Extracted star rating is no valid number.");
-    }
     starRating = +starRatingString;
   } catch (e) {
     logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract star rating: ${e}`);
@@ -170,9 +170,8 @@ const morningstarFetcher: HTMLFetcher = async (
     if (dividendYieldPercentString === "-") {
       dividendYieldPercent = null;
     } else {
-      if (dividendYieldPercentString.length === 0 || Number.isNaN(+dividendYieldPercentString)) {
+      if (dividendYieldPercentString.length === 0 || Number.isNaN(+dividendYieldPercentString))
         throw new TypeError("Extracted dividend yield is no valid number.");
-      }
       dividendYieldPercent = +dividendYieldPercentString;
     }
   } catch (e) {
@@ -194,9 +193,8 @@ const morningstarFetcher: HTMLFetcher = async (
     if (priceEarningRatioString === "-") {
       priceEarningRatio = null;
     } else {
-      if (priceEarningRatioString.length === 0 || Number.isNaN(+priceEarningRatioString)) {
+      if (priceEarningRatioString.length === 0 || Number.isNaN(+priceEarningRatioString))
         throw new TypeError("Extracted price earning ratio is no valid number.");
-      }
       priceEarningRatio = +priceEarningRatioString;
     }
   } catch (e) {
@@ -240,9 +238,8 @@ const morningstarFetcher: HTMLFetcher = async (
     if (lastCloseString === "-") {
       lastClose = null;
     } else {
-      if (lastCloseString.length === 0 || Number.isNaN(+lastCloseString)) {
+      if (lastCloseString.length === 0 || Number.isNaN(+lastCloseString))
         throw new TypeError("Extracted last close is no valid number.");
-      }
       lastClose = +lastCloseString;
     }
   } catch (e) {
@@ -268,9 +265,8 @@ const morningstarFetcher: HTMLFetcher = async (
     if (morningstarFairValueString === "-") {
       morningstarFairValue = null;
     } else {
-      if (morningstarFairValueString.length === 0 || Number.isNaN(+morningstarFairValueString)) {
+      if (morningstarFairValueString.length === 0 || Number.isNaN(+morningstarFairValueString))
         throw new TypeError("Extracted Morningstar Fair Value is no valid number.");
-      }
       morningstarFairValue = +morningstarFairValueString;
     }
   } catch (e) {
@@ -337,9 +333,8 @@ const morningstarFetcher: HTMLFetcher = async (
         range52wStrings[1].length === 0 ||
         Number.isNaN(+range52wStrings[0]) ||
         Number.isNaN(+range52wStrings[1])
-      ) {
+      )
         throw new TypeError("Extracted 52 week low or high is no valid number.");
-      }
       low52w = +range52wStrings[0];
       high52w = +range52wStrings[1];
     }
@@ -393,18 +388,16 @@ const morningstarFetcher: HTMLFetcher = async (
   if (errorMessage.includes("\n")) {
     // An error occurred if and only if the error message contains a newline character.
     // We capture the resource and send a message.
-    errorMessage += `\n${await captureFetchError(stock, "morningstar", { document })}`;
-    if (req.query.ticker) {
-      // If this request was for a single stock, we throw an error instead of sending a message, so that the error
-      // message will be part of the response.
-      throw new FetchError(errorMessage);
-    }
+    errorMessage += `\n${await captureDataProviderError(stock, "morningstar", { document })}`;
+    // If this request was for a single stock, we throw an error instead of sending a message, so that the error
+    // message will be part of the response.
+    if (req.query.ticker) throw new DataProviderError(errorMessage);
+
     await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
     stocks.failed.push(await readStock(stock.ticker));
   } else {
     stocks.successful.push(await readStock(stock.ticker));
   }
-  document = undefined;
 };
 
 export default morningstarFetcher;

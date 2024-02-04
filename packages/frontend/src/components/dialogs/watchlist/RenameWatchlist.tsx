@@ -38,7 +38,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, undefined, {
+      .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, {
         // Only send the parameters that have changed.
         params: { name: name !== props.watchlist.name ? name.trim() : undefined },
       })

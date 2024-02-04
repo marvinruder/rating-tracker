@@ -57,16 +57,14 @@ export const LoginPage = (): JSX.Element => {
           if (!validate()) return;
           try {
             // Request registration challenge
-            const res = await api.get(registerEndpointPath, {
-              params: { email: email.trim(), name: name.trim() },
-            });
+            const res = await api.get(registerEndpointPath, { params: { email: email.trim(), name: name.trim() } });
             // Ask the browser to perform the WebAuthn registration and store a corresponding credential
             const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
             try {
               // Send the registration challenge response to the server
-              await api.post(registerEndpointPath, authRes, {
+              await api.post(registerEndpointPath, {
+                body: authRes,
                 params: { email: email.trim(), name: name.trim() },
-                headers: { "Content-Type": "application/json" },
               });
               // This is only reached if the registration was successful
               setNotification({
@@ -93,11 +91,7 @@ export const LoginPage = (): JSX.Element => {
             const authRes = await SimpleWebAuthnBrowser.startAuthentication(res.data);
             try {
               // Send the authentication challenge response to the server
-              await api.post(
-                signInEndpointPath,
-                { ...authRes, challenge: res.data.challenge },
-                { headers: { "Content-Type": "application/json" } },
-              );
+              await api.post(signInEndpointPath, { body: { ...authRes, challenge: res.data.challenge } });
               // This is only reached if the authentication was successful
               setNotification(undefined);
               await refetchUser(); // After refetching, the user is redirected automatically

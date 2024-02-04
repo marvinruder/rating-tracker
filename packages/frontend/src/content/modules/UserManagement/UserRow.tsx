@@ -82,7 +82,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
     const patchAccessRights = () => {
       setRequestInProgress(true);
       api
-        .patch(usersEndpointPath + `/${props.user.email}`, undefined, {
+        .patch(usersEndpointPath + `/${props.user.email}`, {
           // Only send the parameters that have changed.
           params: { accessRights: accessRights !== props.user.accessRights ? accessRights : undefined },
         })

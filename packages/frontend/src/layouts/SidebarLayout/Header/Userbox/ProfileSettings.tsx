@@ -102,7 +102,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .patch(accountEndpointPath, undefined, {
+      .patch(accountEndpointPath, {
         params: {
           // Only send the parameters that have changed.
           email: email !== user.email ? email.trim() : undefined,
@@ -157,7 +157,8 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
         setProcessingAvatar(false);
       } else {
         api
-          .put(accountEndpointPath + accountAvatarEndpointSuffix, message.data.result, {
+          .put(accountEndpointPath + accountAvatarEndpointSuffix, {
+            body: message.data.result,
             headers: { "Content-Type": "image/avif" },
           })
           .then(() => refetchUser(Date.now()))

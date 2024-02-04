@@ -1,5 +1,4 @@
-import { UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
-import type { AxiosError } from "axios";
+import { FetchError, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 
 import type { ContextProviderProps } from "../types/ContextProviderProps";
@@ -49,21 +48,18 @@ const NotificationUpdaterContext = createContext<NotificationUpdaterContextType>
 export const NotificationProvider = (props: ContextProviderProps): JSX.Element => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
 
-  const setErrorNotificationOrClearSession = useCallback(
-    (e: AxiosError<{ message: string }>, actionDescription: string) => {
-      setNotification({
-        severity: "error",
-        title: `Error while ${actionDescription}`,
-        message:
-          e.response?.status && e.response?.data?.message
-            ? e.response?.status === 401 && e.response?.data?.message === UNAUTHORIZED_ERROR_MESSAGE
-              ? SESSION_EXPIRED_MESSAGE
-              : `Response Status Code ${e.response.status}: ${e.response.data.message}`
-            : e.message ?? "No additional information available.",
-      });
-    },
-    [],
-  );
+  const setErrorNotificationOrClearSession = useCallback((e: FetchError | Error, actionDescription: string) => {
+    setNotification({
+      severity: "error",
+      title: `Error while ${actionDescription}`,
+      message:
+        e instanceof FetchError && e.response?.status && e.response?.statusText && e.response?.data?.message
+          ? e.response?.status === 401 && e.response?.data?.message === UNAUTHORIZED_ERROR_MESSAGE
+            ? SESSION_EXPIRED_MESSAGE
+            : `${e.response.data.message} (${e.response.status} ${e.response.statusText})`
+          : e.message ?? "No additional information available.",
+    });
+  }, []);
 
   const contextValue = useMemo(() => ({ notification }), [notification]);
 

@@ -1,5 +1,6 @@
-import axios, { AxiosError } from "axios";
+import { FetchError } from "@rating-tracker/commons";
 
+import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
 
 /**
@@ -10,13 +11,15 @@ import logger from "../utils/logger";
  */
 export const signalIsReadyOrUnused = (): Promise<string | void> =>
   process.env.SIGNAL_URL && process.env.SIGNAL_SENDER
-    ? axios
-        .get(`${process.env.SIGNAL_URL}/v1/health`, { timeout: 1000 })
-        .then((res) => (res.status === 204 ? Promise.resolve() : Promise.reject(new Error("Signal is not ready"))))
+    ? Promise.race([
+        performFetchRequest(`${process.env.SIGNAL_URL}/v1/health`),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Signal is not reachable")), 1000)),
+      ])
+        .then((res) => ((res as Response).ok ? Promise.resolve() : Promise.reject(new Error("Signal is not ready"))))
         .catch((e) =>
-          e instanceof AxiosError
-            ? Promise.reject(new Error("Signal is not reachable: " + e.message)) // Only this occurs within test setup
-            : /* c8 ignore next */ Promise.reject(e),
+          Promise.reject(
+            new Error("Signal is not reachable" + (e instanceof FetchError ? ": " + e.response.statusText : "")),
+          ),
         )
     : /* c8 ignore next */ Promise.resolve("Signal is not configured on this instance.");
 
@@ -31,22 +34,15 @@ export const signalIsReadyOrUnused = (): Promise<string | void> =>
  * @param {string[]} recipients The recipients to send the message to.
  */
 export const send = (url: string, message: string, number: string, recipients: string[]) => {
-  axios
-    .post(url + "/v2/send", {
-      message: message,
-      number: number,
-      recipients: recipients,
-    })
-    .catch((e) => {
-      if (e.response?.data?.error) e.message = e.response.data.error;
-      logger.error(
-        {
-          prefix: "signal",
-          err: e,
-          signalMessage: { number, recipients, message },
-        },
-        "Failed to send Signal message",
-      );
-    });
+  performFetchRequest(url + "/v2/send", {
+    body: { message, number, recipients },
+    method: "POST",
+  }).catch((e) => {
+    if (e.response?.data?.error) e.message = e.response.data.error;
+    logger.error(
+      { prefix: "signal", err: e, signalMessage: { number, recipients, message } },
+      "Failed to send Signal message",
+    );
+  });
 };
 /* c8 ignore stop */
