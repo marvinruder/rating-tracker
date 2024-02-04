@@ -421,7 +421,7 @@ const patchHTML = (html: string): string => {
  * Fetches an HTML document from a URL and parses it.
  *
  * @param {string} url The URL to fetch from
- * @param {FetchRequestOptions} config The fetch request configuration
+ * @param {FetchRequestOptions} config The fetch request options
  * @param {Stock} stock The affected stock
  * @param {IndividualDataProvider} dataProvider The name of the data provider to fetch from
  * @param {ParseResult} parseResult The variable the result of the parsing will be assigned to. This may either be a

@@ -34,10 +34,7 @@ export const signalIsReadyOrUnused = (): Promise<string | void> =>
  * @param {string[]} recipients The recipients to send the message to.
  */
 export const send = (url: string, message: string, number: string, recipients: string[]) => {
-  performFetchRequest(url + "/v2/send", {
-    body: { message, number, recipients },
-    method: "POST",
-  }).catch((e) => {
+  performFetchRequest(url + "/v2/send", { body: { message, number, recipients }, method: "POST" }).catch((e) => {
     if (e.response?.data?.error) e.message = e.response.data.error;
     logger.error(
       { prefix: "signal", err: e, signalMessage: { number, recipients, message } },
