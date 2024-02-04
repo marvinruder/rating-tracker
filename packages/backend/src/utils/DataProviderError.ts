@@ -12,7 +12,7 @@ export default class DataProviderError extends Error {
     super(message, options);
 
     // Set the prototype explicitly.
-    DataProviderError.prototype.name = "FetchError";
+    DataProviderError.prototype.name = "DataProviderError";
     Object.setPrototypeOf(this, DataProviderError.prototype);
   }
 }
