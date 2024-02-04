@@ -37,7 +37,7 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .put(watchlistsEndpointPath + `/new`, undefined, { params: { name: name.trim() } })
+      .put(watchlistsEndpointPath + `/new`, { params: { name: name.trim() } })
       .then(() => (props.onAdd(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "creating new watchlist"))
       .finally(() => setRequestInProgress(false));

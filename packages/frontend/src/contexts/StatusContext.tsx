@@ -1,6 +1,5 @@
 import type { Service } from "@rating-tracker/commons";
-import { serviceArray, statusEndpointPath } from "@rating-tracker/commons";
-import { AxiosError } from "axios";
+import { FetchError, serviceArray, statusEndpointPath } from "@rating-tracker/commons";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import type { ContextProviderProps } from "../types/ContextProviderProps";
@@ -96,9 +95,9 @@ export const StatusProvider = (props: ContextProviderProps): JSX.Element => {
     setSystemStatusLoading(true),
     void api
       .get(statusEndpointPath)
-      .then(({ data }) => setSystemStatus(getSystemStatusFromResponseData(data)))
+      .then((res) => setSystemStatus(getSystemStatusFromResponseData(res.data)))
       .catch((e) =>
-        e instanceof AxiosError && "status" in e.response.data && "services" in e.response.data
+        e instanceof FetchError && "status" in e.response.data && "services" in e.response.data
           ? setSystemStatus(getSystemStatusFromResponseData(e.response.data))
           : setSystemStatus({
               ...UNKNOWN_STATUS,

@@ -1,18 +1,18 @@
 import assert from "node:assert";
 
 import type { Stock } from "@rating-tracker/commons";
-import axios from "axios";
 import type { Request } from "express";
 
 import { readStock, updateStock } from "../db/tables/stockTable";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import APIError from "../utils/APIError";
-import FetchError from "../utils/FetchError";
+import DataProviderError from "../utils/DataProviderError";
+import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
 
 import type { JSONFetcher, FetcherWorkspace } from "./fetchHelper";
-import { captureFetchError } from "./fetchHelper";
+import { captureDataProviderError } from "./fetchHelper";
 
 /**
  * Fetches data from LSEG Data & Analytics.
@@ -21,7 +21,7 @@ import { captureFetchError } from "./fetchHelper";
  * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
  * with errors)
  * @param {Stock} stock The stock to extract data for
- * @param {string} json The fetched and parsed JSON
+ * @param {object} json The fetched and parsed JSON
  * @returns {Promise<void>} A promise that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
@@ -36,7 +36,7 @@ const lsegFetcher: JSONFetcher = async (
 
   const url = `https://www.lseg.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`;
 
-  json = (await axios.get(url)).data;
+  Object.assign(json, (await performFetchRequest(url)).data);
 
   if (Object.keys(json).length === 0 && json.constructor === Object) {
     throw new APIError(502, "No LSEG information available.");
@@ -109,18 +109,16 @@ const lsegFetcher: JSONFetcher = async (
   });
   if (errorMessage.includes("\n")) {
     // An error occurred if and only if the error message contains a newline character.
-    errorMessage += `\n${await captureFetchError(stock, "lseg", { json })}`;
-    if (req.query.ticker) {
-      // If this request was for a single stock, we throw an error instead of sending a message, so that the error
-      // message will be part of the response.
-      throw new FetchError(errorMessage);
-    }
+    errorMessage += `\n${await captureDataProviderError(stock, "lseg", { json })}`;
+    // If this request was for a single stock, we throw an error instead of sending a message, so that the error
+    // message will be part of the response.
+    if (req.query.ticker) throw new DataProviderError(errorMessage);
+
     await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
     stocks.failed.push(await readStock(stock.ticker));
   } else {
     stocks.successful.push(await readStock(stock.ticker));
   }
-  json = undefined;
 };
 
 export default lsegFetcher;

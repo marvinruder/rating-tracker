@@ -58,7 +58,7 @@ export const EditPortfolio = (props: EditPortfolioProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .patch(portfoliosEndpointPath + `/${props.portfolio.id}`, undefined, {
+      .patch(portfoliosEndpointPath + `/${props.portfolio.id}`, {
         params: {
           // Only send the parameters that have changed.
           name: name !== props.portfolio.name ? name.trim() : undefined,

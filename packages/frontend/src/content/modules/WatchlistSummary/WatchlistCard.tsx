@@ -85,18 +85,16 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
                 color={props.watchlist.subscribed ? "primary" : undefined}
                 onClick={() => {
                   api
-                    .patch(
-                      watchlistsEndpointPath + `/${props.watchlist.id}`,
-                      {},
-                      { params: { subscribed: !props.watchlist.subscribed } },
-                    )
+                    .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, {
+                      params: { subscribed: !props.watchlist.subscribed },
+                    })
                     .then(() => props.getWatchlists && props.getWatchlists())
                     .catch((e) =>
                       setErrorNotificationOrClearSession(
                         e,
                         props.watchlist.subscribed
-                          ? `Error while unsubscribing from watchlist “${props.watchlist.name}”`
-                          : `Error while subscribing to watchlist “${props.watchlist.name}”`,
+                          ? `unsubscribing from watchlist “${props.watchlist.name}”`
+                          : `subscribing to watchlist “${props.watchlist.name}”`,
                       ),
                     );
                 }}

@@ -80,7 +80,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
   const addStockToPortfolio = (id: number) => {
     if (!validate()) return;
     api
-      .put(`${portfoliosEndpointPath}/${id}${stocksEndpointPath}/${props.stock.ticker}`, undefined, {
+      .put(`${portfoliosEndpointPath}/${id}${stocksEndpointPath}/${props.stock.ticker}`, {
         params: { amount: +amountInput },
       })
       .then(() => props.onClose())

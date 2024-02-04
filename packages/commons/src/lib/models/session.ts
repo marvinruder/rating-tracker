@@ -1,7 +1,7 @@
 /**
  * A session related to a user, the ID of which is stored in a cookie.
  */
-export class Session {
+export type Session = {
   /**
    * The ID of the session, used as a token in session cookies.
    */
@@ -10,4 +10,4 @@ export class Session {
    * The email address of the user.
    */
   email: string;
-}
+};

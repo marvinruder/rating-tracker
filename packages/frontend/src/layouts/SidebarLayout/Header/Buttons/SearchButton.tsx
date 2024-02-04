@@ -171,9 +171,7 @@ export const HeaderSearchButton = (): JSX.Element => {
    */
   const getStocks = (currentSearchValue: string) => {
     api
-      .get(stocksEndpointPath, {
-        params: { name: currentSearchValue.trim(), sortBy: "ticker" },
-      })
+      .get(stocksEndpointPath, { params: { name: currentSearchValue.trim(), sortBy: "ticker" } })
       .then((res) => {
         const upperCaseSearchValue = currentSearchValue.toLocaleUpperCase();
         setStocks(

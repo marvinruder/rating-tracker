@@ -158,7 +158,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
   const updateStockInPortfolio = () => {
     if (!validate()) return;
     api
-      .patch(`${portfoliosEndpointPath}/${props.portfolio.id}${stocksEndpointPath}/${props.stock.ticker}`, undefined, {
+      .patch(`${portfoliosEndpointPath}/${props.portfolio.id}${stocksEndpointPath}/${props.stock.ticker}`, {
         params: { amount: +amountInput },
       })
       .then(() => (props.getPortfolio(), props.getStocks()))

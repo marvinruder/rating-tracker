@@ -57,11 +57,9 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
                   color={props.watchlist.subscribed ? "primary" : undefined}
                   onClick={() => {
                     api
-                      .patch(
-                        watchlistsEndpointPath + `/${props.watchlist.id}`,
-                        {},
-                        { params: { subscribed: !props.watchlist.subscribed } },
-                      )
+                      .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, {
+                        params: { subscribed: !props.watchlist.subscribed },
+                      })
                       .then(props.getWatchlist)
                       .catch((e) =>
                         setErrorNotificationOrClearSession(

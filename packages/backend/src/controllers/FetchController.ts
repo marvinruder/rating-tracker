@@ -10,7 +10,6 @@ import {
   GENERAL_ACCESS,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import axios from "axios";
 import type { Request, Response } from "express";
 import { DateTime } from "luxon";
 
@@ -20,6 +19,7 @@ import { createResource, readResource } from "../redis/repositories/resourceRepo
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import APIError from "../utils/APIError";
+import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
 import Router from "../utils/router";
 
@@ -171,14 +171,12 @@ export class FetchController {
         );
       } catch (e) {
         // If the cached data is not available, we fetch it freshly from the web.
-        await axios
-          .post(
-            URL_SUSTAINALYTICS,
-            "page=1&pageSize=100000&resourcePackage=Sustainalytics", // Using a large pageSize to fetch all at once.
-            {
-              headers: { "Accept-Encoding": "gzip,deflate,compress" },
-            },
-          )
+        await performFetchRequest(URL_SUSTAINALYTICS, {
+          // We use a large pageSize to fetch all at once.
+          body: "page=1&pageSize=100000&resourcePackage=Sustainalytics",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          method: "POST",
+        })
           .then(async (response) => {
             const sustainalyticsXMLLines: string[] = [];
             response.data.split("\n").forEach((line: string) => {
@@ -191,7 +189,7 @@ export class FetchController {
             await createResource(
               {
                 url: URL_SUSTAINALYTICS,
-                fetchDate: new Date(response.headers["date"]),
+                fetchDate: new Date(response.headers.get("Date")),
                 content: sustainalyticsXMLLines.join("\n"),
               },
               dataProviderTTL["sustainalytics"],

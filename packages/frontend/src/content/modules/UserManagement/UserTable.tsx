@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TableContainer } from "@mui/material";
+import type { OmitFunctions } from "@rating-tracker/commons";
 import { User, usersEndpointPath } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
@@ -27,7 +28,7 @@ const UserTable: FC = (): JSX.Element => {
     api
       .get(usersEndpointPath)
       .then((res) => {
-        setUsers(res.data.map((user: any) => new User(user)));
+        setUsers(res.data.map((user: OmitFunctions<User>) => new User(user)));
         setCount(res.data.length);
       })
       .catch((e) => {

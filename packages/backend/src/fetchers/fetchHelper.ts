@@ -1,5 +1,12 @@
-import type { HTMLDataProvider, IndividualDataProvider, JSONDataProvider, Stock } from "@rating-tracker/commons";
+import type {
+  FetchRequestOptions,
+  HTMLDataProvider,
+  IndividualDataProvider,
+  JSONDataProvider,
+  Stock,
+} from "@rating-tracker/commons";
 import {
+  FetchError,
   dataProviderID,
   dataProviderLastFetch,
   dataProviderName,
@@ -9,8 +16,6 @@ import {
   resourcesEndpointPath,
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
-import type { AxiosRequestConfig } from "axios";
-import axios from "axios";
 import type { Request, Response } from "express";
 // import { WebDriver } from "selenium-webdriver";
 import { DateTime } from "luxon";
@@ -20,7 +25,8 @@ import { createResource } from "../redis/repositories/resourceRepository";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import * as signal from "../signal/signal";
 import APIError from "../utils/APIError";
-import FetchError from "../utils/FetchError";
+import DataProviderError from "../utils/DataProviderError";
+import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
 // import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver";
 
@@ -48,7 +54,7 @@ export type HTMLFetcher = (
   req: Request,
   stocks: FetcherWorkspace<Stock>,
   stock: Stock,
-  document: Document,
+  document: ParseResult,
 ) => Promise<void>;
 
 // export type SeleniumFetcher = (
@@ -57,6 +63,20 @@ export type HTMLFetcher = (
 //   stock: Stock,
 //   driver: WebDriver,
 // ) => Promise<boolean>;
+
+/**
+ * An object holding the result of a `DOMParser` and/or the error that occurred during parsing.
+ */
+export type ParseResult = {
+  /**
+   * The parsed HTML document.
+   */
+  document?: Document;
+  /**
+   * The error that occurred during parsing.
+   */
+  error?: Error;
+};
 
 /**
  * An object holding the source of a fetcher. Only one of the properties is set.
@@ -77,15 +97,15 @@ type FetcherSource = {
 };
 
 /**
- * Captures the fetched resource of a fetcher and stores it in Redis. Based on the fetcher type, the resource can either
- * be a {@link Document} or a {@link Object}.
+ * Captures the fetched resource of a fetcher in case of an error and stores it in Redis. Based on the fetcher type, the
+ * resource can either be a {@link Document} or a {@link Object}.
  *
  * @param {Stock} stock the affected stock
  * @param {IndividualDataProvider} dataProvider the name of the data provider
  * @param {FetcherSource} source the source of the fetcher
  * @returns {Promise<string>} A string holding a general informational message and a URL to the screenshot
  */
-export const captureFetchError = async (
+export const captureDataProviderError = async (
   stock: Stock,
   dataProvider: IndividualDataProvider,
   source: FetcherSource,
@@ -104,7 +124,7 @@ export const captureFetchError = async (
             fetchDate: new Date(),
             content: JSON.stringify(source.json),
           },
-          60 * 60 * 48, // We only store the screenshot for 48 hours.
+          60 * 60 * 48, // We only store the resource for 48 hours.
         ))
       )
         resourceID = ""; // If unsuccessful, clear the resource ID
@@ -250,7 +270,7 @@ export const fetchFromDataProvider = async (
   const rejectedResult = (
     await Promise.allSettled(
       [...Array(determineConcurrency(req))].map(async () => {
-        let document: Document;
+        let parseResult: ParseResult;
         let json: Object;
 
         // let driver: WebDriver;
@@ -263,6 +283,8 @@ export const fetchFromDataProvider = async (
 
         // Work while stocks are in the queue
         while (stocks.queued.length) {
+          parseResult = { document: undefined, error: undefined };
+          json = {};
           // Get the first stock in the queue
           const stock = stocks.queued.shift();
           if (!stock) {
@@ -290,7 +312,7 @@ export const fetchFromDataProvider = async (
 
           try {
             if (isHTMLDataProvider(dataProvider)) {
-              await dataProviderFetchers[dataProvider](req, stocks, stock, document);
+              await dataProviderFetchers[dataProvider](req, stocks, stock, parseResult);
             } else if (isJSONDataProvider(dataProvider)) {
               await dataProviderFetchers[dataProvider](req, stocks, stock, json);
               // } else if (isSeleniumDataProvider(dataProvider)) {
@@ -316,7 +338,7 @@ export const fetchFromDataProvider = async (
               SIGNAL_PREFIX_ERROR +
                 `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data: ${
                   String(e.message).split(/[\n:{]/)[0]
-                }\n${await captureFetchError(stock, dataProvider, { json, document /* driver */ })}`,
+                }\n${await captureDataProviderError(stock, dataProvider, { json, document: parseResult?.document })}`,
               "fetchError",
             );
           }
@@ -381,45 +403,63 @@ export const fetchFromDataProvider = async (
 };
 
 /**
+ * Apply data-provider-specific patches to the HTML document.
+ *
+ * @param {string} html The HTML document to patch
+ * @returns {string} The patched HTML document
+ */
+const patchHTML = (html: string): string => {
+  // This patch is required for malformatted Morningstar pages
+  html = html.replaceAll("</P>", "</p>");
+  return html.trim().startsWith("<div")
+    ? // This patch is required as the MSCI response does not contain a complete HTML page
+      `<html><body>${html}</body></html>`
+    : html;
+};
+
+/**
  * Fetches an HTML document from a URL and parses it.
  *
  * @param {string} url The URL to fetch from
- * @param {AxiosRequestConfig} config The Axios request configuration
+ * @param {FetchRequestOptions} config The fetch request options
  * @param {Stock} stock The affected stock
  * @param {IndividualDataProvider} dataProvider The name of the data provider to fetch from
- * @returns {Document} The parsed HTML document
+ * @param {ParseResult} parseResult The variable the result of the parsing will be assigned to. This may either be a
+ *                                  `Document` or a {@link FetchError}.
  */
-// TODO: use in-place modification of the document and extract it from an AxiosError if possible
 export const getAndParseHTML = async (
   url: string,
-  config: AxiosRequestConfig,
+  config: FetchRequestOptions,
   stock: Stock,
   dataProvider: IndividualDataProvider,
-): Promise<Document> =>
-  new DOMParser({
+  parseResult: ParseResult,
+): Promise<void> => {
+  let error: FetchError = undefined;
+  parseResult.document = new DOMParser({
     errorHandler: {
       warning: () => undefined,
       error: () => undefined,
       fatalError: (e) => {
         logger.warn(
-          { prefix: "fetch", err: e instanceof Error ? e : new FetchError(e) },
+          { prefix: "fetch", err: e instanceof Error ? e : new DataProviderError(e) },
           `Stock ${stock.ticker}: Error while parsing ${dataProviderName[dataProvider]} information: ${e}`,
         );
       },
     },
   }).parseFromString(
-    await axios
-      .get(url, config)
-      .then((res) => {
-        // This patch is required for malformatted Morningstar pages
-        const data = (res.data as string).replaceAll("</P>", "</p>");
-        return data.trim().startsWith("<div")
-          ? // This patch is required as the MSCI response does not contain a complete HTML page
-            `<html><body>${data}</body></html>`
-          : data;
-      })
+    await performFetchRequest(url, config)
+      .then((res) => patchHTML(res.data))
       .catch((e) => {
+        if (e instanceof FetchError) {
+          error = e;
+          return patchHTML(e.response.data);
+        }
         throw e;
       }),
     "text/html",
   );
+  if (error) {
+    parseResult.error = error;
+    throw error;
+  }
+};

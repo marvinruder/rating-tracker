@@ -1,18 +1,17 @@
-import type { DataProvider } from "@rating-tracker/commons";
+import type { DataProvider, FetchError, FetchRequestOptions } from "@rating-tracker/commons";
 import { baseURL, dataProviderEndpoints, dataProviderName } from "@rating-tracker/commons";
-import type { AxiosError, AxiosRequestConfig } from "axios";
-import axios from "axios";
 import * as cron from "cron";
 
 import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal";
 
 import type APIError from "./APIError";
+import { performFetchRequest } from "./fetchRequest";
 import logger from "./logger";
 
 /**
  * A record of options for each data provider.
  */
-const dataProviderParams: Record<DataProvider, AxiosRequestConfig> = {
+const dataProviderParams: Record<DataProvider, FetchRequestOptions> = {
   morningstar: {
     params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   },
@@ -56,27 +55,29 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
           // price to calculate the analyst target price properly
           "marketScreener",
         ]) {
-          await axios
-            .post(`http://localhost:${process.env.PORT}${baseURL}${dataProviderEndpoints[dataProvider]}`, undefined, {
+          await performFetchRequest(
+            `http://localhost:${process.env.PORT}${baseURL}${dataProviderEndpoints[dataProvider]}`,
+            {
+              method: "POST",
               ...dataProviderParams[dataProvider],
               headers: {
                 Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
               },
-            })
-            .catch(async (e: AxiosError<APIError>) => {
-              if (e.response?.data?.message) e.message = e.response.data.message;
-              logger.error(
-                { prefix: "cron", err: e },
-                `An error occurred during the ${dataProviderName[dataProvider]} Cron Job`,
-              );
-              await sendMessage(
-                SIGNAL_PREFIX_ERROR +
-                  `An error occurred during the ${dataProviderName[dataProvider]} Cron Job: ${
-                    String(e.message).split(/[\n:{]/)[0]
-                  }`,
-                "fetchError",
-              );
-            });
+            },
+          ).catch(async (e: FetchError<APIError>) => {
+            if (e.response?.data?.message) e.message = e.response.data.message;
+            logger.error(
+              { prefix: "cron", err: e },
+              `An error occurred during the ${dataProviderName[dataProvider]} Cron Job`,
+            );
+            await sendMessage(
+              SIGNAL_PREFIX_ERROR +
+                `An error occurred during the ${dataProviderName[dataProvider]} Cron Job: ${
+                  String(e.message).split(/[\n:{]/)[0]
+                }`,
+              "fetchError",
+            );
+          });
         }
       })();
     },

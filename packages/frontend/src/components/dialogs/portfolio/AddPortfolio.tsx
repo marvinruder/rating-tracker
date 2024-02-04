@@ -58,7 +58,7 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .put(portfoliosEndpointPath + `/new`, undefined, { params: { name: name.trim(), currency } })
+      .put(portfoliosEndpointPath + `/new`, { params: { name: name.trim(), currency } })
       .then(() => (props.onAdd(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "creating new portfolio"))
       .finally(() => setRequestInProgress(false));
