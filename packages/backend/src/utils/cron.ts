@@ -1,36 +1,52 @@
-import type { DataProvider, FetchError, FetchRequestOptions } from "@rating-tracker/commons";
-import { baseURL, dataProviderEndpoints, dataProviderName } from "@rating-tracker/commons";
+import http from "http";
+
+import type { DataProvider } from "@rating-tracker/commons";
+import { baseURL, dataProviderEndpoints, dataProviderName, createURLSearchParams } from "@rating-tracker/commons";
 import * as cron from "cron";
 
 import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal";
 
-import type APIError from "./APIError";
-import { performFetchRequest } from "./fetchRequest";
 import logger from "./logger";
+
+/**
+ * Performs an insecure HTTP request to the own server.
+ *
+ * @param {http.RequestOptions} options The request options.
+ * @returns {Promise<http.IncomingMessage & { data: object | string }>} A promise that resolves to the response of the
+ *                                                                      request.
+ */
+const performInternalRequest = (
+  options: Omit<http.RequestOptions, "protocol" | "host" | "hostname" | "port">,
+): Promise<http.IncomingMessage & { data: object | string }> =>
+  new Promise((resolve, reject) =>
+    http
+      // deepcode ignore HttpToHttps: used for requests to `localhost` only
+      .request(
+        { ...options, hostname: "localhost", port: process.env.PORT },
+        (res: http.IncomingMessage & { data: object | string }) => {
+          let data = "";
+          res.on("data", (chunk) => (data += chunk));
+          res.on("end", () => {
+            res.data = res.headers["content-type"]?.match(/(\/|\+)json$/) ? JSON.parse(data) : data;
+            resolve(res);
+          });
+        },
+      )
+      .on("error", reject)
+      .end(),
+  );
 
 /**
  * A record of options for each data provider.
  */
-const dataProviderParams: Record<DataProvider, FetchRequestOptions> = {
-  morningstar: {
-    params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
-  },
-  marketScreener: {
-    params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
-  },
-  msci: {
-    // Fetch data from MSCI with only two instances to avoid being rate-limited
-    params: { concurrency: 2 },
-  },
-  lseg: {
-    params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
-  },
-  sp: {
-    params: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
-  },
-  sustainalytics: {
-    params: {},
-  },
+const dataProviderParams: Record<DataProvider, Record<string, string>> = {
+  morningstar: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
+  marketScreener: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
+  // Fetch data from MSCI with only two instances to avoid being rate-limited
+  msci: { concurrency: "2" },
+  lseg: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
+  sp: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
+  sustainalytics: {},
 };
 
 /**
@@ -55,29 +71,38 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
           // price to calculate the analyst target price properly
           "marketScreener",
         ]) {
-          await performFetchRequest(
-            `http://localhost:${process.env.PORT}${baseURL}${dataProviderEndpoints[dataProvider]}`,
-            {
-              method: "POST",
-              ...dataProviderParams[dataProvider],
-              headers: {
-                Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-              },
+          const urlSearchParams = createURLSearchParams(dataProviderParams[dataProvider]);
+          await performInternalRequest({
+            path:
+              baseURL + dataProviderEndpoints[dataProvider] + (urlSearchParams.toString() ? "?" + urlSearchParams : ""),
+            method: "POST",
+            headers: {
+              Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
             },
-          ).catch(async (e: FetchError<APIError>) => {
-            if (e.response?.data?.message) e.message = e.response.data.message;
-            logger.error(
-              { prefix: "cron", err: e },
-              `An error occurred during the ${dataProviderName[dataProvider]} Cron Job`,
-            );
-            await sendMessage(
-              SIGNAL_PREFIX_ERROR +
-                `An error occurred during the ${dataProviderName[dataProvider]} Cron Job: ${
-                  String(e.message).split(/[\n:{]/)[0]
-                }`,
-              "fetchError",
-            );
-          });
+          })
+            .then((res) => {
+              if (res.statusCode < 200 || res.statusCode >= 300)
+                throw new Error(
+                  typeof res.data === "object" && "message" in res.data && typeof res.data.message === "string"
+                    ? res.data.message
+                    : typeof res.data === "string"
+                      ? res.data
+                      : `Request failed with status code ${res.statusCode}`,
+                );
+            })
+            .catch(async (e: Error) => {
+              logger.error(
+                { prefix: "cron", err: e },
+                `An error occurred during the ${dataProviderName[dataProvider]} Cron Job`,
+              );
+              await sendMessage(
+                SIGNAL_PREFIX_ERROR +
+                  `An error occurred during the ${dataProviderName[dataProvider]} Cron Job: ${
+                    String(e.message).split(/[\n:{]/)[0]
+                  }`,
+                "fetchError",
+              );
+            });
         }
       })();
     },
