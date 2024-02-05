@@ -15,6 +15,7 @@ export const signalIsReadyOrUnused = (): Promise<string | void> =>
     ? Promise.race([
         // Request all registered accounts from the Signal Client instance
         performFetchRequest(`${process.env.SIGNAL_URL}/v1/accounts`),
+        // We accept a larger timeout here because the Signal Client JVM might be slow to start
         new Promise((_, reject) => setTimeout(() => reject(new Error("Signal is not reachable")), 5000)),
       ])
         .then(
