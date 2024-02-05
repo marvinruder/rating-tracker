@@ -17,16 +17,19 @@ export const signalIsReadyOrUnused = (): Promise<string | void> =>
         performFetchRequest(`${process.env.SIGNAL_URL}/v1/accounts`),
         new Promise((_, reject) => setTimeout(() => reject(new Error("Signal is not reachable")), 5000)),
       ])
-        .then((res: FetchResponse<string[]>) =>
-          // Check if our configured Signal sender is registered
-          res.ok && res.data.includes(process.env.SIGNAL_SENDER)
-            ? Promise.resolve()
-            : Promise.reject(new Error("Signal is not ready")),
+        .then(
+          (res: FetchResponse<string[]>) =>
+            /* c8 ignore start */ // We do not receive a 2XX answer during tests
+            // Check if our configured Signal sender is registered
+            res.ok && res.data.includes(process.env.SIGNAL_SENDER)
+              ? Promise.resolve()
+              : Promise.reject(new Error("Signal is not ready")),
+          /* c8 ignore stop */
         )
         .catch((e) =>
           Promise.reject(
             e.message === "Signal is not ready"
-              ? e
+              ? /* c8 ignore next */ e // We do not receive this passthrough error during tests, see above.
               : new Error("Signal is not reachable" + (e instanceof FetchError ? ": " + e.response.statusText : "")),
           ),
         )
