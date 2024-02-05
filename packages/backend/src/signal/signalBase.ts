@@ -1,3 +1,4 @@
+import type { FetchResponse } from "@rating-tracker/commons";
 import { FetchError } from "@rating-tracker/commons";
 
 import { performFetchRequest } from "../utils/fetchRequest";
@@ -12,13 +13,25 @@ import logger from "../utils/logger";
 export const signalIsReadyOrUnused = (): Promise<string | void> =>
   process.env.SIGNAL_URL && process.env.SIGNAL_SENDER
     ? Promise.race([
-        performFetchRequest(`${process.env.SIGNAL_URL}/v1/health`),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Signal is not reachable")), 1000)),
+        // Request all registered accounts from the Signal Client instance
+        performFetchRequest(`${process.env.SIGNAL_URL}/v1/accounts`),
+        // We accept a larger timeout here because the Signal Client JVM might be slow to start
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Signal is not reachable")), 5000)),
       ])
-        .then((res) => ((res as Response).ok ? Promise.resolve() : Promise.reject(new Error("Signal is not ready"))))
+        .then(
+          (res: FetchResponse<string[]>) =>
+            /* c8 ignore start */ // We do not receive a 2XX answer during tests
+            // Check if our configured Signal sender is registered
+            res.ok && res.data.includes(process.env.SIGNAL_SENDER)
+              ? Promise.resolve()
+              : Promise.reject(new Error("Signal is not ready")),
+          /* c8 ignore stop */
+        )
         .catch((e) =>
           Promise.reject(
-            new Error("Signal is not reachable" + (e instanceof FetchError ? ": " + e.response.statusText : "")),
+            e.message === "Signal is not ready"
+              ? /* c8 ignore next */ e // We do not receive this passthrough error during tests, see above.
+              : new Error("Signal is not reachable" + (e instanceof FetchError ? ": " + e.response.statusText : "")),
           ),
         )
     : /* c8 ignore next */ Promise.resolve("Signal is not configured on this instance.");
