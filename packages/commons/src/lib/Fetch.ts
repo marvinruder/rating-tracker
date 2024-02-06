@@ -1,3 +1,5 @@
+import status from "statuses";
+
 /**
  * This class is used to throw an error when a fetch response has a status code that is not in the 2XX range.
  */
@@ -10,7 +12,8 @@ export class FetchError<D = any> extends Error {
    * @param {FetchResponse} response The response from the fetch request.
    */
   constructor(response: FetchResponse<D>) {
-    super(response.statusText);
+    if (response.statusDescription === "" && response.status) response.statusDescription = status(response.status);
+    super(`Request failed with status ${response.status} ${response.statusDescription}`);
     this.response = response;
 
     // Set the prototype explicitly.
@@ -43,11 +46,15 @@ export type FetchRequestWithBodyOptions = FetchRequestOptions & {
  * The response of a fetch request. It includes the parsed response data as well. The data may be `null` if the response
  * does not contain any data, e.g. for a 204 No Content response.
  */
-export type FetchResponse<D = any> = Response & {
+export type FetchResponse<D = any> = Omit<Response, "statusText"> & {
   /**
    * The parsed response data.
    */
   data: D extends object ? D : D | string | null;
+  /**
+   * The status text of the response.
+   */
+  statusDescription: string;
 };
 
 /**
@@ -91,7 +98,8 @@ export const handleResponse = async (res: Response): Promise<FetchResponse> => {
       break;
   }
 
-  const resWithData: FetchResponse = res as FetchResponse;
+  const resWithData: FetchResponse = res as unknown as FetchResponse;
+  resWithData.statusDescription = res.statusText;
   resWithData.data = data;
 
   // Throw an error if the response status code is not in the 2XX range.

@@ -53,10 +53,10 @@ export const NotificationProvider = (props: ContextProviderProps): JSX.Element =
       severity: "error",
       title: `Error while ${actionDescription}`,
       message:
-        e instanceof FetchError && e.response?.status && e.response?.statusText && e.response?.data?.message
+        e instanceof FetchError && e.response?.status && e.response?.statusDescription && e.response?.data?.message
           ? e.response?.status === 401 && e.response?.data?.message === UNAUTHORIZED_ERROR_MESSAGE
             ? SESSION_EXPIRED_MESSAGE
-            : `${e.response.data.message} (${e.response.status} ${e.response.statusText})`
+            : `${e.response.data.message} (${e.response.status} ${e.response.statusDescription})`
           : e.message ?? "No additional information available.",
     });
   }, []);
