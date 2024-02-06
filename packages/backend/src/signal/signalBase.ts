@@ -31,7 +31,7 @@ export const signalIsReadyOrUnused = (): Promise<string | void> =>
           Promise.reject(
             e.message === "Signal is not ready"
               ? /* c8 ignore next */ e // We do not receive this passthrough error during tests, see above.
-              : new Error("Signal is not reachable" + (e instanceof FetchError ? ": " + e.response.statusText : "")),
+              : new Error("Signal is not reachable" + (e instanceof FetchError ? ": " + e.message : "")),
           ),
         )
     : /* c8 ignore next */ Promise.resolve("Signal is not configured on this instance.");

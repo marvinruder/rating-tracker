@@ -1428,6 +1428,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@rating-tracker/commons@workspace:packages/commons"
   dependencies:
+    "@types/statuses": "npm:2.0.4"
     "@typescript-eslint/eslint-plugin": "npm:6.21.0"
     "@typescript-eslint/parser": "npm:6.21.0"
     "@vitest/coverage-v8": "npm:1.2.2"
@@ -1440,6 +1441,7 @@ __metadata:
     eslint-plugin-jsdoc: "npm:48.0.5"
     eslint-plugin-prettier: "npm:5.1.3"
     prettier: "npm:3.2.5"
+    statuses: "npm:2.0.1"
     typescript: "npm:5.3.3"
     vite: "npm:5.0.12"
     vitest: "npm:1.2.2"
@@ -2187,6 +2189,13 @@ __metadata:
     "@types/mime": "npm:*"
     "@types/node": "npm:*"
   checksum: 10c0/811d1a2f7e74a872195e7a013bcd87a2fb1edf07eaedcb9dcfd20c1eb4bc56ad4ea0d52141c13192c91ccda7c8aeb8a530d8a7e60b9c27f5990d7e62e0fecb03
+  languageName: node
+  linkType: hard
+
+"@types/statuses@npm:2.0.4":
+  version: 2.0.4
+  resolution: "@types/statuses@npm:2.0.4"
+  checksum: 10c0/9e5efd048a7088ab8ca0e0eca87f160ce0afc11fd06a85e130823e12290497c9b0a3a045a8df264b90237a4e92a79b0de9ed1fd6b497ac90c87e58fed7312755
   languageName: node
   linkType: hard
 
