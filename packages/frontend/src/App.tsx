@@ -12,8 +12,7 @@ import ThemeProvider from "./theme/ThemeProvider";
 
 /**
  * The Rating Tracker Application.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const App = (): JSX.Element => {
   /**

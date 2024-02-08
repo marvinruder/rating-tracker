@@ -4,9 +4,8 @@
 export default class DataProviderError extends Error {
   /**
    * Creates a new instance of the {@link DataProviderError} class.
-   *
-   * @param {string} message A descriptive message for the error.
-   * @param {ErrorOptions} options Additional options for the error.
+   * @param message A descriptive message for the error.
+   * @param options Additional options for the error.
    */
   constructor(message?: string, options?: ErrorOptions) {
     super(message, options);

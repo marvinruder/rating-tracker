@@ -6,9 +6,8 @@ import { SidebarContent } from "./SidebarContent";
 
 /**
  * A wrapper for the sidebar component.
- *
- * @param {React.ReactNode} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const SidebarWrapper: FC<BoxProps & { children: React.ReactNode }> = (
   props: BoxProps & { children: React.ReactNode },
@@ -30,9 +29,8 @@ const SidebarWrapper: FC<BoxProps & { children: React.ReactNode }> = (
 
 /**
  * The sidebar of the sidebar layout.
- *
- * @param {SidebarProps} props The component props.
- * @returns {JSX.Element} The component.
+ * @param props The component props.
+ * @returns The component.
  */
 export const Sidebar = (props: SidebarProps): JSX.Element => {
   const theme = useTheme();

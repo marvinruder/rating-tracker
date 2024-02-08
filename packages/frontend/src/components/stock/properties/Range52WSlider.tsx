@@ -4,9 +4,8 @@ import type { FC } from "react";
 
 /**
  * A slider that is used to display a 52-week range.
- *
- * @param {SliderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const Range52WSlider: FC<SliderProps> = (props: SliderProps): JSX.Element => {
   const theme = useTheme();

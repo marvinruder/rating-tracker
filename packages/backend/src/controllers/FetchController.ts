@@ -31,9 +31,8 @@ const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyrating
 export class FetchController {
   /**
    * Fetches data from Morningstar Italy.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    * @throws an {@link APIError} in case of a severe error
    */
   @Router({
@@ -47,9 +46,8 @@ export class FetchController {
 
   /**
    * Fetches data from MarketScreener.
-   *
-   * @param {Request} req Request object.
-   * @param {Response} res Response object.
+   * @param req Request object.
+   * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
   @Router({
@@ -63,9 +61,8 @@ export class FetchController {
 
   /**
    * Fetches data from MSCI.
-   *
-   * @param {Request} req Request object.
-   * @param {Response} res Response object.
+   * @param req Request object.
+   * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
   @Router({
@@ -79,9 +76,8 @@ export class FetchController {
 
   /**
    * Fetches data from LSEG Data & Analytics.
-   *
-   * @param {Request} req Request object.
-   * @param {Response} res Response object.
+   * @param req Request object.
+   * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
   @Router({
@@ -95,9 +91,8 @@ export class FetchController {
 
   /**
    * Fetches data from Standard & Poor’s.
-   *
-   * @param {Request} req Request object.
-   * @param {Response} res Response object.
+   * @param req Request object.
+   * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
   @Router({
@@ -111,9 +106,8 @@ export class FetchController {
 
   /**
    * Fetches data from Morningstar Sustainalytics.
-   *
-   * @param {Request} req Request object.
-   * @param {Response} res Response object.
+   * @param req Request object.
+   * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
   @Router({

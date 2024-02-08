@@ -55,9 +55,8 @@ export type BulkDataProvider = (typeof bulkDataProviderArray)[number];
 
 /**
  * Checks if a string is a valid data provider.
- *
- * @param {string} dataProvider The data provider to check.
- * @returns {boolean} True if the string is a valid data provider.
+ * @param dataProvider The data provider to check.
+ * @returns True if the string is a valid data provider.
  */
 export function isDataProvider(dataProvider: string): dataProvider is DataProvider {
   return dataProviderArray.includes(dataProvider as DataProvider);
@@ -65,9 +64,8 @@ export function isDataProvider(dataProvider: string): dataProvider is DataProvid
 
 /**
  * Checks if a data provider is a valid HTML data provider.
- *
- * @param {DataProvider} dataProvider The data provider to check.
- * @returns {boolean} True if the data provider is a valid HTML data provider.
+ * @param dataProvider The data provider to check.
+ * @returns True if the data provider is a valid HTML data provider.
  */
 export function isHTMLDataProvider(dataProvider: DataProvider): dataProvider is HTMLDataProvider {
   return htmlDataProviderArray.includes(dataProvider as HTMLDataProvider);
@@ -75,9 +73,8 @@ export function isHTMLDataProvider(dataProvider: DataProvider): dataProvider is 
 
 /**
  * Checks if a data provider is a valid JSON data provider.
- *
- * @param {DataProvider} dataProvider The data provider to check.
- * @returns {boolean} True if the data provider is a valid JSON data provider.
+ * @param dataProvider The data provider to check.
+ * @returns True if the data provider is a valid JSON data provider.
  */
 export function isJSONDataProvider(dataProvider: DataProvider): dataProvider is JSONDataProvider {
   return jsonDataProviderArray.includes(dataProvider as JSONDataProvider);
@@ -85,9 +82,8 @@ export function isJSONDataProvider(dataProvider: DataProvider): dataProvider is 
 
 /**
  * Checks if a data provider is a valid bulk data provider.
- *
- * @param {DataProvider} dataProvider The data provider to check.
- * @returns {boolean} True if the data provider is a valid bulk data provider.
+ * @param dataProvider The data provider to check.
+ * @returns True if the data provider is a valid bulk data provider.
  */
 export function isBulkDataProvider(dataProvider: DataProvider): dataProvider is BulkDataProvider {
   return bulkDataProviderArray.includes(dataProvider as BulkDataProvider);

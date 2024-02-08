@@ -13,13 +13,11 @@ import { captureDataProviderError, getAndParseHTML } from "./fetchHelper";
 
 /**
  * Fetches data from Standard & Poor’s.
- *
- * @param {Request} req Request object
- * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
- * with errors)
- * @param {Stock} stock The stock to extract data for
- * @param {ParseResult} parseResult The fetched and parsed HTML document and/or the error that occurred during parsing
- * @returns {Promise<void>} A promise that resolves when the fetch is complete
+ * @param req Request object
+ * @param stocks An object with the stocks to fetch and the stocks already fetched (successful or with errors)
+ * @param stock The stock to extract data for
+ * @param parseResult The fetched and parsed HTML document and/or the error that occurred during parsing
+ * @returns A {@link Promise} that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
 const spFetcher: HTMLFetcher = async (

@@ -6,9 +6,8 @@ import type { Status } from "../../types/Status";
 
 /**
  * Displays a traffic-light-like status indicator.
- *
- * @param {StatusIndicatorProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const StatusIndicator: FC<StatusIndicatorProps> = (props: StatusIndicatorProps): JSX.Element => {
   const theme = useTheme();

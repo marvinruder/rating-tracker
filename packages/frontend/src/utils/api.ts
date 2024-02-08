@@ -3,10 +3,9 @@ import { baseURL, createURLSearchParams, handleResponse } from "@rating-tracker/
 
 /**
  * Performs a request using the browser’s `fetch` API.
- *
- * @param {string} path The relative API path. The base URL is automatically prepended to this path.
- * @param {FetchRequestWithBodyOptions} config The configuration options of the request.
- * @returns {Promise<FetchResponse>} A promise that resolves to the response of the request.
+ * @param path The relative API path. The base URL is automatically prepended to this path.
+ * @param config The configuration options of the request.
+ * @returns A {@link Promise} that resolves to the response of the request.
  * @throws {FetchError} If the response status code is not in the 2XX range.
  */
 const performFetchRequest = (path: string, config: FetchRequestWithBodyOptions): Promise<FetchResponse> => {
@@ -43,55 +42,49 @@ const performFetchRequest = (path: string, config: FetchRequestWithBodyOptions):
 const fetchAPI = {
   /**
    * Performs a GET request using the browser’s `fetch` API.
-   *
-   * @param {string} path The relative API path. The base URL is automatically prepended to this path.
-   * @param {FetchRequestOptions} config The configuration options of the request.
-   * @returns {Promise<FetchResponse>} A promise that resolves to the response of the request.
+   * @param path The relative API path. The base URL is automatically prepended to this path.
+   * @param config The configuration options of the request.
+   * @returns A {@link Promise} that resolves to the response of the request.
    */
   get: (path: string, config?: FetchRequestOptions): Promise<FetchResponse> =>
     performFetchRequest(path, { ...config, method: "GET" }),
   /**
    * Performs a HEAD request using the browser’s `fetch` API.
-   *
-   * @param {string} path The relative API path. The base URL is automatically prepended to this path.
-   * @param {FetchRequestOptions} config The configuration options of the request.
-   * @returns {Promise<FetchResponse>} A promise that resolves to the response of the request.
+   * @param path The relative API path. The base URL is automatically prepended to this path.
+   * @param config The configuration options of the request.
+   * @returns A {@link Promise} that resolves to the response of the request.
    */
   head: (path: string, config?: FetchRequestOptions): Promise<FetchResponse> =>
     performFetchRequest(path, { ...config, method: "HEAD" }),
   /**
    * Performs a POST request using the browser’s `fetch` API.
-   *
-   * @param {string} path The relative API path. The base URL is automatically prepended to this path.
-   * @param {FetchRequestOptions} config The configuration options of the request.
-   * @returns {Promise<FetchResponse>} A promise that resolves to the response of the request.
+   * @param path The relative API path. The base URL is automatically prepended to this path.
+   * @param config The configuration options of the request.
+   * @returns A {@link Promise} that resolves to the response of the request.
    */
   post: (path: string, config?: FetchRequestWithBodyOptions): Promise<FetchResponse> =>
     performFetchRequest(path, { ...config, method: "POST" }),
   /**
    * Performs a PUT request using the browser’s `fetch` API.
-   *
-   * @param {string} path The relative API path. The base URL is automatically prepended to this path.
-   * @param {FetchRequestOptions} config The configuration options of the request.
-   * @returns {Promise<FetchResponse>} A promise that resolves to the response of the request.
+   * @param path The relative API path. The base URL is automatically prepended to this path.
+   * @param config The configuration options of the request.
+   * @returns A {@link Promise} that resolves to the response of the request.
    */
   put: (path: string, config?: FetchRequestWithBodyOptions): Promise<FetchResponse> =>
     performFetchRequest(path, { ...config, method: "PUT" }),
   /**
    * Performs a PATCH request using the browser’s `fetch` API.
-   *
-   * @param {string} path The relative API path. The base URL is automatically prepended to this path.
-   * @param {FetchRequestOptions} config The configuration options of the request.
-   * @returns {Promise<FetchResponse>} A promise that resolves to the response of the request.
+   * @param path The relative API path. The base URL is automatically prepended to this path.
+   * @param config The configuration options of the request.
+   * @returns A {@link Promise} that resolves to the response of the request.
    */
   patch: (path: string, config?: FetchRequestWithBodyOptions): Promise<FetchResponse> =>
     performFetchRequest(path, { ...config, method: "PATCH" }),
   /**
    * Performs a DELETE request using the browser’s `fetch` API.
-   *
-   * @param {string} path The relative API path. The base URL is automatically prepended to this path.
-   * @param {FetchRequestOptions} config The configuration options of the request.
-   * @returns {Promise<FetchResponse>} A promise that resolves to the response of the request.
+   * @param path The relative API path. The base URL is automatically prepended to this path.
+   * @param config The configuration options of the request.
+   * @returns A {@link Promise} that resolves to the response of the request.
    */
   delete: (path: string, config?: FetchRequestOptions): Promise<FetchResponse> =>
     performFetchRequest(path, { ...config, method: "DELETE" }),

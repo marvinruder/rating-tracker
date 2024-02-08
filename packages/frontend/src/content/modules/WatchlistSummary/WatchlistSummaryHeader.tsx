@@ -7,9 +7,8 @@ import { AddWatchlist } from "../../../components/dialogs/watchlist/AddWatchlist
 
 /**
  * A header for the watchlist summaries page.
- *
- * @param {WatchlistSummaryHeaderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const WatchlistSummaryHeader: FC<WatchlistSummaryHeaderProps> = (
   props: WatchlistSummaryHeaderProps,

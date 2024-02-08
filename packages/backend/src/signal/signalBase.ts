@@ -6,9 +6,8 @@ import logger from "../utils/logger";
 
 /**
  * Checks if the Signal Client instance is reachable.
- *
- * @returns {Promise<string | void>} A promise that resolves when the Signal Client instance is reachable, or rejects
- * with an error if it is not.
+ * @returns A {@link Promise} that resolves when the Signal Client instance is reachable, or rejects with an error if it
+ *                            is not.
  */
 export const signalIsReadyOrUnused = (): Promise<string | void> =>
   process.env.SIGNAL_URL && process.env.SIGNAL_SENDER
@@ -40,11 +39,10 @@ export const signalIsReadyOrUnused = (): Promise<string | void> =>
 /* c8 ignore start */
 /**
  * Send a message to a list of recipients.
- *
- * @param {string} url The URL of the Signal Client instance.
- * @param {string} message The message to send.
- * @param {string} number The number from which to send the message.
- * @param {string[]} recipients The recipients to send the message to.
+ * @param url The URL of the Signal Client instance.
+ * @param message The message to send.
+ * @param number The number from which to send the message.
+ * @param recipients The recipients to send the message to.
  */
 export const send = (url: string, message: string, number: string, recipients: string[]) => {
   performFetchRequest(url + "/v2/send", { body: { message, number, recipients }, method: "POST" }).catch((e) => {

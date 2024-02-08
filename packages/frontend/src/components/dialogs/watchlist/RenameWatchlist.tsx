@@ -10,9 +10,8 @@ import api from "../../../utils/api";
 
 /**
  * A dialog to rename a watchlist in the backend.
- *
- * @param {RenameWatchlistProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
@@ -22,8 +21,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
 
   /**
    * Checks for errors in the input fields.
-   *
-   * @returns {boolean} Whether the input fields are valid.
+   * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
     // The following fields are required.

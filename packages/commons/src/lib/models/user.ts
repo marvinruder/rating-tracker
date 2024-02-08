@@ -65,8 +65,7 @@ export class User {
 
   /**
    * Creates a new user from user information and remove credentials, if present.
-   *
-   * @param {OmitFunctions<User | UserWithCredentials>} user The user information, possibly containing credentials.
+   * @param user The user information, possibly containing credentials.
    */
   constructor(user: OmitFunctions<User | UserWithCredentials>) {
     const userWithPossibleCredentials = { ...user };
@@ -84,9 +83,8 @@ export class User {
 
   /**
    * Checks whether the user has the given access right.
-   *
-   * @param {number} accessRight The access right to check.
-   * @returns {boolean} Whether the user has the given access right.
+   * @param accessRight The access right to check.
+   * @returns Whether the user has the given access right.
    */
   public hasAccessRight(accessRight: number): boolean {
     return (this.accessRights & accessRight) === accessRight;
@@ -94,8 +92,7 @@ export class User {
 
   /**
    * Computes the separate access rights a user has.
-   *
-   * @returns {number[]} A list of access rights a user has.
+   * @returns A list of access rights a user has.
    */
   public getAccessRights(): number[] {
     const accessRights: number[] = [];
@@ -106,9 +103,8 @@ export class User {
   /**
    * Checks whether the user has subscribed to the given message type, given either as a number or as a
    * {@link MessageType}.
-   *
-   * @param {number | MessageType} subscription The subscription to check.
-   * @returns {boolean} Whether the user has subscribed to the given message type.
+   * @param subscription The subscription to check.
+   * @returns Whether the user has subscribed to the given message type.
    */
   public hasSubscribedTo(subscription: number | MessageType): boolean {
     switch (typeof subscription) {
@@ -128,9 +124,8 @@ export class User {
 
   /**
    * Checks whether the user has the given message type enabled and the rights necessary to receive it.
-   *
-   * @param {MessageType} messageType The message type to check.
-   * @returns {boolean} Whether the user shall receive a message of the given message type.
+   * @param messageType The message type to check.
+   * @returns Whether the user shall receive a message of the given message type.
    */
   public isAllowedAndWishesToReceiveMessage(messageType: MessageType): boolean {
     return this.hasSubscribedTo(messageType) && this.isAllowedToReceiveMessage(messageType);
@@ -138,9 +133,8 @@ export class User {
 
   /**
    * Checks whether the user has the rights necessary to receive a message of the given message type.
-   *
-   * @param {MessageType} messageType The message type to check.
-   * @returns {boolean} Whether the user shall receive a message of the given message type.
+   * @param messageType The message type to check.
+   * @returns Whether the user shall receive a message of the given message type.
    */
   public isAllowedToReceiveMessage(messageType: MessageType): boolean {
     switch (messageType) {
@@ -173,8 +167,7 @@ export class UserWithCredentials extends User {
 
   /**
    * Creates a new user from user information.
-   *
-   * @param {OmitFunctions<User | UserWithCredentials>} user The user information.
+   * @param user The user information.
    */
   constructor(user: OmitFunctions<User | UserWithCredentials>) {
     super(user);

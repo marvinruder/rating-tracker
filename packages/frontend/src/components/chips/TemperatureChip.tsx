@@ -5,9 +5,8 @@ import type { FC } from "react";
 /**
  * Displays a chip with a colored icon. The color depends on the value of the stock's
  * MSCI Implied Temperature Rise and resembles the company’s alignment with the Paris Agreement.
- *
- * @param {ChipProps & { msciTemperature: number }} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const TemperatureChip: FC<ChipProps & { msciTemperature: number }> = (
   props: ChipProps & { msciTemperature: number },

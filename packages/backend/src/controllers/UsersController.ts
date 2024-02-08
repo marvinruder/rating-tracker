@@ -19,9 +19,8 @@ import Router from "../utils/router";
 export class UsersController {
   /**
    * Returns a list of users.
-   *
-   * @param {Request} _ Request object
-   * @param {Response} res Response object
+   * @param _ Request object
+   * @param res Response object
    */
   @Router({
     path: usersEndpointPath,
@@ -39,9 +38,8 @@ export class UsersController {
 
   /**
    * Reads a single user from the database.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: usersEndpointPath + "/:email",
@@ -57,9 +55,8 @@ export class UsersController {
 
   /**
    * Returns the avatar of a user from the database.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: usersEndpointPath + "/:email" + usersAvatarEndpointSuffix,
@@ -82,9 +79,8 @@ export class UsersController {
 
   /**
    * Updates a user in the database.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: usersEndpointPath + "/:email",
@@ -109,9 +105,8 @@ export class UsersController {
 
   /**
    * Creates an avatar for a user in the database.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: usersEndpointPath + "/:email" + usersAvatarEndpointSuffix,
@@ -138,9 +133,8 @@ export class UsersController {
 
   /**
    * Deletes a user from the database.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: usersEndpointPath + "/:email",
@@ -154,9 +148,8 @@ export class UsersController {
 
   /**
    * Deletes the avatar of a user from the database.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: usersEndpointPath + "/:email" + usersAvatarEndpointSuffix,

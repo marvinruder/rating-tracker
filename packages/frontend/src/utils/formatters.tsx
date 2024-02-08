@@ -4,9 +4,8 @@ import { currencyMinorUnits, currencyName } from "@rating-tracker/commons";
 
 /**
  * Formats the market capitalization of a stock to a human readable format.
- *
- * @param {Stock} stock The stock to format the market capitalization of.
- * @returns {string} The formatted market capitalization.
+ * @param stock The stock to format the market capitalization of.
+ * @returns The formatted market capitalization.
  */
 export const formatMarketCap = (stock: OmitDynamicAttributesStock): string => {
   if (stock.marketCap > 1e12) {
@@ -24,15 +23,13 @@ export const formatMarketCap = (stock: OmitDynamicAttributesStock): string => {
 
 /**
  * Formats a decimal number to a percentage with 3 significant digits.
- *
- * @param {number | undefined | null} decimal The decimal number to format.
- * @param {object} options The options to use for formatting.
- * @param {number} options.total The total number to calculate the percentage from. Defaults to 1.
- * @param {number} options.precision The number of significant digits to round to. Defaults to 3.
- * @param {boolean} options.forceSign Whether to add a “+” sign in front of positive numbers. Defaults to false.
- * @param {string} options.fallbackString The string to return if the decimal is `NaN`, `undefined` or `null`.
- *                                        Defaults to `–`.
- * @returns {string} The formatted percentage.
+ * @param decimal The decimal number to format.
+ * @param options The options to use for formatting.
+ * @param options.total The total number to calculate the percentage from. Defaults to 1.
+ * @param options.precision The number of significant digits to round to. Defaults to 3.
+ * @param options.forceSign Whether to add a “+” sign in front of positive numbers. Defaults to false.
+ * @param options.fallbackString The string to return if the decimal is `NaN`, `undefined` or `null`. Defaults to `–`.
+ * @returns The formatted percentage.
  */
 export const formatPercentage = (
   decimal: number | undefined | null,
@@ -48,9 +45,8 @@ export const formatPercentage = (
 /**
  * This component formats a currency value using the currency’s minor units as the number of decimal places. It adds a
  * tooltip with the full currency name to the ISO 4217 currency code.
- *
- * @param {CurrencyWithTooltipProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const CurrencyWithTooltip = (props: CurrencyWithTooltipProps): JSX.Element =>
   props.floatAlign ? (

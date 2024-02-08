@@ -10,10 +10,8 @@ import logger from "./logger";
 
 /**
  * Performs an insecure HTTP request to the own server.
- *
- * @param {http.RequestOptions} options The request options.
- * @returns {Promise<http.IncomingMessage & { data: object | string }>} A promise that resolves to the response of the
- *                                                                      request.
+ * @param options The request options.
+ * @returns A {@link Promise} that resolves to the response of the request.
  */
 const performInternalRequest = (
   options: Omit<http.RequestOptions, "protocol" | "host" | "hostname" | "port">,
@@ -51,9 +49,8 @@ const dataProviderParams: Record<DataProvider, Record<string, string>> = {
 
 /**
  * Creates Cron jobs for regular fetching from data providers.
- *
- * @param {string} bypassAuthenticationForInternalRequestsToken A token that must be used in an authentication cookie
- * @param {string} autoFetchSchedule A cron-like schedule description.
+ * @param bypassAuthenticationForInternalRequestsToken A token that must be used in an authentication cookie
+ * @param autoFetchSchedule A cron-like schedule description.
  */
 export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchSchedule: string) => {
   new cron.CronJob(

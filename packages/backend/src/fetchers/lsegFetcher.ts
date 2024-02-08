@@ -16,13 +16,11 @@ import { captureDataProviderError } from "./fetchHelper";
 
 /**
  * Fetches data from LSEG Data & Analytics.
- *
- * @param {Request} req Request object
- * @param {FetcherWorkspace} stocks An object with the stocks to fetch and the stocks already fetched (successful or
- * with errors)
- * @param {Stock} stock The stock to extract data for
- * @param {object} json The fetched and parsed JSON
- * @returns {Promise<void>} A promise that resolves when the fetch is complete
+ * @param req Request object
+ * @param stocks An object with the stocks to fetch and the stocks already fetched (successful or with errors)
+ * @param stock The stock to extract data for
+ * @param json The fetched and parsed JSON
+ * @returns A {@link Promise} that resolves when the fetch is complete
  * @throws an {@link APIError} in case of a severe error
  */
 const lsegFetcher: JSONFetcher = async (

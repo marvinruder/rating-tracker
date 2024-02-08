@@ -21,10 +21,8 @@ type CheckboxState = "unchecked" | "indeterminate" | "checked";
  * A list of nested items that can be expanded and collapsed. Each item can be checked or unchecked, where checking or
  * unchecking an item is equivalent to checking or unchecking all of its children. Up to four levels of nesting are
  * supported.
- *
- * @param {NestedCheckboxListProps<FirstLevelType, SecondLevelType, ThirdLevelType, FourthLevelType>} props
- * The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const NestedCheckboxList = <
   FirstLevelType extends string,
@@ -43,8 +41,7 @@ export const NestedCheckboxList = <
   /**
    * Click handler for the first-level checkbox. If the first level element has children, then the children inherit the
    * state of the parent.
-   *
-   * @param {FirstLevelType} firstLevelElement The first-level element that was clicked
+   * @param firstLevelElement The first-level element that was clicked
    */
   const clickFirstLevelCheckbox = (firstLevelElement: FirstLevelType) => {
     if (props.getFourthLevelElements) {
@@ -99,9 +96,8 @@ export const NestedCheckboxList = <
 
   /**
    * Determines the state of a first-level checkbox based on the state of its children.
-   *
-   * @param {FirstLevelType} firstLevelElement The first-level element whose state is to be determined
-   * @returns {CheckboxState} The state of the first-level checkbox
+   * @param firstLevelElement The first-level element whose state is to be determined
+   * @returns The state of the first-level checkbox
    */
   const getFirstLevelCheckboxStatus = (firstLevelElement: FirstLevelType): CheckboxState => {
     if (props.getSecondLevelElements) {
@@ -125,8 +121,7 @@ export const NestedCheckboxList = <
   /**
    * Click handler for the second-level checkbox. If the second level element has children, then the children inherit
    * the state of the parent.
-   *
-   * @param {SecondLevelType} secondLevelElement The second-level element that was clicked
+   * @param secondLevelElement The second-level element that was clicked
    */
   const clickSecondLevelCheckbox = (secondLevelElement: SecondLevelType) => {
     if (props.getFourthLevelElements) {
@@ -167,9 +162,8 @@ export const NestedCheckboxList = <
 
   /**
    * Determines the state of a second-level checkbox based on the state of its children.
-   *
-   * @param {SecondLevelType} secondLevelElement The second-level element whose state is to be determined
-   * @returns {CheckboxState} The state of the second-level checkbox
+   * @param secondLevelElement The second-level element whose state is to be determined
+   * @returns The state of the second-level checkbox
    */
   const getSecondLevelCheckboxStatus = (secondLevelElement: SecondLevelType): CheckboxState => {
     if (props.getThirdLevelElements) {
@@ -193,8 +187,7 @@ export const NestedCheckboxList = <
   /**
    * Click handler for the third-level checkbox. If the third level element has children, then the children inherit the
    * state of the parent.
-   *
-   * @param {ThirdLevelType} thirdLevelElement The third-level element that was clicked
+   * @param thirdLevelElement The third-level element that was clicked
    */
   const clickThirdLevelCheckbox = (thirdLevelElement: ThirdLevelType) => {
     if (props.getFourthLevelElements) {
@@ -222,9 +215,8 @@ export const NestedCheckboxList = <
 
   /**
    * Determines the state of a third-level checkbox based on the state of its children.
-   *
-   * @param {ThirdLevelType} thirdLevelElement The third-level element whose state is to be determined
-   * @returns {CheckboxState} The state of the third-level checkbox
+   * @param thirdLevelElement The third-level element whose state is to be determined
+   * @returns The state of the third-level checkbox
    */
   const getThirdLevelCheckboxStatus = (thirdLevelElement: ThirdLevelType): CheckboxState => {
     if (props.getFourthLevelElements) {
@@ -247,8 +239,7 @@ export const NestedCheckboxList = <
 
   /**
    * Click handler for the fourth-level checkbox. Fourth-level elements have no children.
-   *
-   * @param {FourthLevelType} fourthLevelElement The fourth-level element that was clicked
+   * @param fourthLevelElement The fourth-level element that was clicked
    */
   const clickFourthLevelCheckbox = (fourthLevelElement: FourthLevelType) => {
     // The fourth level is always the last level of nesting
@@ -262,9 +253,8 @@ export const NestedCheckboxList = <
 
   /**
    * Determines the state of a fourth-level checkbox.
-   *
-   * @param {FourthLevelType} fourthLevelElement The fourth-level element whose state is to be determined
-   * @returns {CheckboxState} The state of the fourth-level checkbox
+   * @param fourthLevelElement The fourth-level element whose state is to be determined
+   * @returns The state of the fourth-level checkbox
    */
   const getFourthLevelCheckboxStatus = (fourthLevelElement: FourthLevelType): CheckboxState => {
     // Fourth-level elements never have children
@@ -487,7 +477,6 @@ interface NestedCheckboxListProps<
   /**
    * A function that returns the second-level elements for a given first-level element. If there are no second-level
    * elements, this function is omitted.
-   *
    * @param {FirstLevelType} firstLevelElement The first-level element to get the second-level elements for.
    * @returns {SecondLevelType[]} The second-level elements for the given first-level element.
    */

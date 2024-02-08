@@ -12,9 +12,8 @@ export class SessionController {
    * Provides information regarding the authentication status.
    * If not authenticated, a 401 response would have been returned before this method is reached here.
    * If authenticated, this method is reached and a 204 response is returned.
-   *
-   * @param {Request} _ The request.
-   * @param {Response} res The response.
+   * @param _ The request.
+   * @param res The response.
    */
   @Router({
     path: sessionEndpointPath,
@@ -27,9 +26,8 @@ export class SessionController {
 
   /**
    * Deletes the current session from Redis and clears the session cookie.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: sessionEndpointPath,

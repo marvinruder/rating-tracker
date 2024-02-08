@@ -11,9 +11,8 @@ import Router from "../utils/router";
 export class ResourcesController {
   /**
    * Fetches a resource from Redis.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    * @throws an {@link APIError} if a resource of an unsupported type is requested
    */
   @Router({

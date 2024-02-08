@@ -10,9 +10,8 @@ export type Style = (typeof styleArray)[number];
 
 /**
  * Checks if a string is a valid style in the Morningstar Style Box.
- *
- * @param {string} s The string to check.
- * @returns {boolean} True if the string is a valid style in the Morningstar Style Box.
+ * @param s The string to check.
+ * @returns True if the string is a valid style in the Morningstar Style Box.
  */
 export function isStyle(s: string): s is Style {
   return styleArray.includes(s as Style);

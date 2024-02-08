@@ -8,8 +8,7 @@ export class FetchError<D = any> extends Error {
 
   /**
    * Creates a new instance of the {@link FetchError} class.
-   *
-   * @param {FetchResponse} response The response from the fetch request.
+   * @param response The response from the fetch request.
    */
   constructor(response: FetchResponse<D>) {
     if (response.statusDescription === "" && response.status) response.statusDescription = status(response.status);
@@ -59,9 +58,8 @@ export type FetchResponse<D = any> = Omit<Response, "statusText"> & {
 
 /**
  * Creates a new `URLSearchParams` instance from the given parameter record.
- *
- * @param {FetchRequestOptions["params"]} params The parameters to be added to the URL.
- * @returns {URLSearchParams} The URL search parameters.
+ * @param params The parameters to be added to the URL.
+ * @returns The URL search parameters.
  */
 export const createURLSearchParams = (params: FetchRequestOptions["params"]): URLSearchParams => {
   const urlSearchParams = new URLSearchParams();
@@ -77,9 +75,8 @@ export const createURLSearchParams = (params: FetchRequestOptions["params"]): UR
 /**
  * Parses the response data and adds it to the response object. Throws a {@link FetchError} if the response status code
  * is not in the 2XX range.
- *
- * @param {Response} res The response from the fetch request.
- * @returns {Promise<FetchResponse>} The response with the parsed data.
+ * @param res The response from the fetch request.
+ * @returns The response with the parsed data.
  */
 export const handleResponse = async (res: Response): Promise<FetchResponse> => {
   // Parse the response data and add it to the response object.

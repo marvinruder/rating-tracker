@@ -26,9 +26,8 @@ const parameterPrettyNames = {
 
 /**
  * Create a stock.
- *
- * @param {Stock} stock The stock to create.
- * @returns {boolean} Whether the stock was created.
+ * @param stock The stock to create.
+ * @returns Whether the stock was created.
  */
 export const createStock = async (stock: OmitDynamicAttributesStock): Promise<boolean> => {
   // Attempt to find an existing stock with the same ticker
@@ -55,9 +54,8 @@ export const createStock = async (stock: OmitDynamicAttributesStock): Promise<bo
 
 /**
  * Read a stock.
- *
- * @param {string} ticker The ticker of the stock.
- * @returns {Promise<Stock>} The stock.
+ * @param ticker The ticker of the stock.
+ * @returns The stock.
  * @throws an {@link APIError} if the stock does not exist.
  */
 export const readStock = async (ticker: string): Promise<Stock> => {
@@ -72,9 +70,8 @@ export const readStock = async (ticker: string): Promise<Stock> => {
 
 /**
  * Query multiple stocks as well as their count after filtering.
- *
- * @param {Prisma.StockFindManyArgs} args An object with filtering, sorting and pagination options.
- * @returns {Promise<Stock[]>} A list of all stocks.
+ * @param args An object with filtering, sorting and pagination options.
+ * @returns A list of all stocks.
  */
 export const readStocks = async (args?: Prisma.StockFindManyArgs): Promise<[Stock[], number]> => {
   return await client.$transaction([
@@ -87,11 +84,10 @@ export const readStocks = async (args?: Prisma.StockFindManyArgs): Promise<[Stoc
 
 /**
  * Update a stock.
- *
- * @param {string} ticker The ticker of the stock.
- * @param {Partial<Omit<Stock, "ticker">>} newValues The new values for the stock.
- * @param {boolean} forceUpdate Whether new values are written into the database, even if they are equal to the stock’s
- * current values. Triggers computation of scores.
+ * @param ticker The ticker of the stock.
+ * @param newValues The new values for the stock.
+ * @param forceUpdate Whether new values are written into the database, even if they are equal to the stock’s current
+ *                    values. Triggers computation of scores.
  * @throws an {@link APIError} if the stock does not exist.
  */
 export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock, "ticker">>, forceUpdate?: boolean) => {
@@ -208,8 +204,7 @@ export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock,
 
 /**
  * Delete a stock.
- *
- * @param {string} ticker The ticker of the stock to delete.
+ * @param ticker The ticker of the stock to delete.
  * @throws an {@link APIError} if the stock does not exist.
  */
 export const deleteStock = async (ticker: string) => {

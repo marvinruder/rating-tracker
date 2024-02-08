@@ -37,9 +37,8 @@ import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
 
 /**
  * A dialog to edit the user’s own information.
- *
- * @param {ProfileSettingsProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const { user } = useUserContextState();
@@ -82,8 +81,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
   /**
    * Checks for errors in the input fields.
-   *
-   * @returns {boolean} Whether the input fields are valid.
+   * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
     // The following fields are required.
@@ -133,8 +131,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
   /**
    * Resizes and stores the uploaded avatar in the state as a base64 string.
-   *
-   * @param {React.ChangeEvent<HTMLInputElement>} e The upload event.
+   * @param e The upload event.
    */
   const uploadAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProcessingAvatar(true);
@@ -173,8 +170,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
   /**
    * Deletes the avatar of the current user from the backend.
-   *
-   * @returns {Promise<void>}
+   * @returns a {@link Promise} that resolves when the avatar has been deleted and the user refetch has been triggered.
    */
   const deleteAvatar = (): Promise<void> =>
     api

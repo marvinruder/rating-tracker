@@ -11,9 +11,8 @@ const TRANSITION_DURATION = 350;
 
 /**
  * A snackbar that displays a notification.
- *
- * @param {NotificationSnackbarProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const NotificationSnackbar = (props: NotificationSnackbarProps): JSX.Element => {
   const [snackbarShown, setSnackbarShown] = useState<boolean>(false);
@@ -24,9 +23,8 @@ export const NotificationSnackbar = (props: NotificationSnackbarProps): JSX.Elem
 
   /**
    * A callback that is called when the snackbar is closed.
-   *
-   * @param {Event | React.SyntheticEvent<any, Event>} _ The event that triggered the callback.
-   * @param {SnackbarCloseReason} reason The reason why the snackbar was closed.
+   * @param _ The event that triggered the callback.
+   * @param reason The reason why the snackbar was closed.
    */
   const closeNotification = (_: Event | React.SyntheticEvent<any, Event>, reason?: SnackbarCloseReason) => {
     // Clickaway is not used intentionally, but sometimes fired anyhow, which we want to ignore.

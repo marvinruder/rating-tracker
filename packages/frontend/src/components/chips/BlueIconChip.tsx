@@ -4,9 +4,8 @@ import type { FC } from "react";
 
 /**
  * Displays a chip with a blue icon.
- *
- * @param {ChipProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const BlueIconChip: FC<ChipProps> = (props: ChipProps): JSX.Element => {
   const theme = useTheme();

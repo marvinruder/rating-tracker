@@ -4,9 +4,8 @@ import { default as SwitchSelectorBase } from "react-switch-selector";
 
 /**
  * A component that renders a switch selector with two options. The clickable areas of the options contain their labels.
- *
- * @param {SwitchSelectorProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const SwitchSelector = (props: SwitchSelectorProps): JSX.Element => {
   const theme = useTheme();
@@ -51,7 +50,6 @@ interface SwitchSelectorProps {
   value: string;
   /**
    * A method to set the value of the switch selector.
-   *
    * @param {string} value The new value.
    */
   setValue: Dispatch<SetStateAction<string>>;

@@ -3,9 +3,8 @@ import type { ReactNode } from "react";
 
 /**
  * The wrapper for a page title.
- *
- * @param {HeaderWrapperProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const HeaderWrapper = (props: HeaderWrapperProps): JSX.Element => {
   const theme = useTheme();

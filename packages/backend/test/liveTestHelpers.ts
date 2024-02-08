@@ -11,9 +11,8 @@ export const supertest = initSupertest(`http://localhost:${process.env.PORT}`);
 
 /**
  * Requests the full list of stocks from the server and tests that it has the expected length.
- *
- * @param {number} length The expected length of the stock list.
- * @returns {Promise<Stock[]>} The list of stocks returned by the server.
+ * @param length The expected length of the stock list.
+ * @returns The list of stocks returned by the server.
  */
 export const expectStockListLengthToBe = async (length: number): Promise<Stock[]> => {
   const res = await supertest.get(`${baseURL}${stocksEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
@@ -25,10 +24,9 @@ export const expectStockListLengthToBe = async (length: number): Promise<Stock[]
 
 /**
  * Tests that the given route is only available to authenticated clients.
- *
- * @param {string} route The route to test.
- * @param {Function} method The HTTP request method to use.
- * @param {string} contentType The content type to use. Used to circumvent the OpenAPI validator.
+ * @param route The route to test.
+ * @param method The HTTP request method to use.
+ * @param contentType The content type to use. Used to circumvent the OpenAPI validator.
  */
 export const expectRouteToBePrivate = async (
   route: string,
@@ -43,10 +41,9 @@ export const expectRouteToBePrivate = async (
 
 /**
  * Tests that the given route is only available to users having special access rights.
- *
- * @param {string} route The route to test.
- * @param {Function} method The HTTP request method to use.
- * @param {string} contentType The content type to use. Used to circumvent the OpenAPI validator.
+ * @param route The route to test.
+ * @param method The HTTP request method to use.
+ * @param contentType The content type to use. Used to circumvent the OpenAPI validator.
  */
 export const expectSpecialAccessRightsToBeRequired = async (
   route: string,

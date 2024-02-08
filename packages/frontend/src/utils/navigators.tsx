@@ -4,9 +4,8 @@ import type { Stock } from "@rating-tracker/commons";
 /**
  * A component that wraps its children in a link to a given URL with certain properties. If no URL is provided, the
  * children are wrapped in a Box instead.
- *
- * @param {LinkToDataProviderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const LinkToDataProvider = (props: LinkToDataProviderProps): JSX.Element => {
   return props.href ? (
@@ -26,9 +25,8 @@ const LinkToDataProvider = (props: LinkToDataProviderProps): JSX.Element => {
 /**
  * A component that wraps its children in a link to the Morningstar page of the given stock. If the stock does not have
  * a Morningstar ID, the children are wrapped in a Box instead.
- *
- * @param {NavigatorProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const MorningstarNavigator = (props: NavigatorProps): JSX.Element => (
   <LinkToDataProvider
@@ -46,9 +44,8 @@ export const MorningstarNavigator = (props: NavigatorProps): JSX.Element => (
 /**
  * A component that wraps its children in a link to the MarketScreener page of the given stock. If the stock does not
  * have a MarketScreener ID, the children are wrapped in a Box instead.
- *
- * @param {NavigatorProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const MarketScreenerNavigator = (props: NavigatorProps): JSX.Element => (
   <LinkToDataProvider
@@ -63,9 +60,8 @@ export const MarketScreenerNavigator = (props: NavigatorProps): JSX.Element => (
 /**
  * A component that wraps its children in a link to the MSCI page of the given stock. If the stock does not have
  * a MSCI ID, the children are wrapped in a Box instead.
- *
- * @param {NavigatorProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const MSCINavigator = (props: NavigatorProps): JSX.Element => (
   <LinkToDataProvider
@@ -85,9 +81,8 @@ export const MSCINavigator = (props: NavigatorProps): JSX.Element => (
  * using the `esg` parameter. This identifier works fine as long as LSEG writes the stock’s name in the exact same way
  * as we do. If not, LSEG still shows the input in the search field, so the user can modify it from there.
  * If the stock does not have a RIC, the children are wrapped in a Box instead.
- *
- * @param {NavigatorProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const LSEGNavigator = (props: NavigatorProps): JSX.Element => (
   <LinkToDataProvider
@@ -106,9 +101,8 @@ export const LSEGNavigator = (props: NavigatorProps): JSX.Element => (
 /**
  * A component that wraps its children in a link to the Standard & Poor’s page of the given stock. If the stock does not
  * have an S&P ID, the children are wrapped in a Box instead.
- *
- * @param {NavigatorProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const SPNavigator = (props: NavigatorProps): JSX.Element => (
   <LinkToDataProvider
@@ -121,9 +115,8 @@ export const SPNavigator = (props: NavigatorProps): JSX.Element => (
 /**
  * A component that wraps its children in a link to the Sustainalytics page of the given stock. If the stock does not
  * have a Sustainalytics ID, the children are wrapped in a Box instead.
- *
- * @param {NavigatorProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const SustainalyticsNavigator = (props: NavigatorProps): JSX.Element => (
   <LinkToDataProvider

@@ -53,9 +53,8 @@ export default Router = <This>(options: RouterOptions): any => {
 
 /**
  * A router decorator. Allows for decorating controller methods with routing information.
- *
- * @param {RouterOptions} options The router options.
- * @returns {any} some decorator magic
+ * @param options The router options.
+ * @returns some decorator magic
  */
 export default <This>(options: RouterOptions): any => {
   return (controllerClass: This, controllerFnName: string) => {

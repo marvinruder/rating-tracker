@@ -25,9 +25,8 @@ import api from "../../../utils/api";
 
 /**
  * A dialog to add a new portfolio in the backend.
- *
- * @param {AddPortfolioProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
@@ -41,8 +40,7 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
 
   /**
    * Checks for errors in the input fields.
-   *
-   * @returns {boolean} Whether the input fields are valid.
+   * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
     // The following fields are required.

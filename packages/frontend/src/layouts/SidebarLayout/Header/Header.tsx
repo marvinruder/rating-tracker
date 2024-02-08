@@ -8,9 +8,8 @@ import { HeaderUserbox } from "./Userbox/Userbox";
 
 /**
  * The header of the sidebar layout.
- *
- * @param {HeaderProps} props The component props.
- * @returns {JSX.Element} The component.
+ * @param props The component props.
+ * @returns The component.
  */
 export const Header = (props: HeaderProps): JSX.Element => {
   const theme = useTheme();

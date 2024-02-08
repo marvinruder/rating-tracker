@@ -7,9 +7,8 @@ import { AddPortfolio } from "../../../components/dialogs/portfolio/AddPortfolio
 
 /**
  * A header for the portfolio summaries page.
- *
- * @param {PortfolioSummaryHeaderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
   props: PortfolioSummaryHeaderProps,

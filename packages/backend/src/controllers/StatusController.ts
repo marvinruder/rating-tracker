@@ -14,9 +14,8 @@ import Router from "../utils/router";
 export class StatusController {
   /**
    * Provides a trivial status response whenever the backend API is up and running.
-   *
-   * @param {Request} _ The request.
-   * @param {Response} res The response.
+   * @param _ The request.
+   * @param res The response.
    */
   @Router({
     path: statusEndpointPath,

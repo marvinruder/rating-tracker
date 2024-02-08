@@ -10,9 +10,8 @@ import api from "../../../utils/api";
 
 /**
  * A dialog to delete a user from the backend.
- *
- * @param {DeleteUserProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
@@ -21,8 +20,7 @@ export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
 
   /**
    * Deletes the user from the backend.
-   *
-   * @returns {Promise<void>}
+   * @returns A {@link Promise} that resolves when the user was deleted and the dialog was closed.
    */
   const deleteUser = (): Promise<void> =>
     props.user &&

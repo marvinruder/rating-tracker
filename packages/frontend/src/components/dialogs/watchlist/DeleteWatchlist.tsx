@@ -10,9 +10,8 @@ import api from "../../../utils/api";
 
 /**
  * A dialog to delete a watchlist from the backend.
- *
- * @param {DeleteWatchlistProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);

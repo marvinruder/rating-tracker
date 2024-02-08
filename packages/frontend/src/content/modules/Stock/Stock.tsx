@@ -15,8 +15,7 @@ import { StockHeader } from "./StockHeader";
 
 /**
  * A module that displays the details of a stock.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const StockModule = (): JSX.Element => {
   const [stock, setStock] = useState<Stock>();
@@ -30,9 +29,8 @@ const StockModule = (): JSX.Element => {
 
   /**
    * Fetches the stock with the given ticker.
-   *
-   * @param {string} ticker The ticker of the stock to fetch.
-   * @returns {Promise<void>}
+   * @param ticker The ticker of the stock to fetch.
+   * @returns A {@link Promise} that resolves when the stock has been fetched and set.
    */
   const getStock = (ticker: string): Promise<void> =>
     api

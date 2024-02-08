@@ -6,10 +6,9 @@ export default class APIError extends Error {
 
   /**
    * Creates a new instance of the {@link APIError} class.
-   *
-   * @param {number} httpStatus The HTTP status code associated with the error.
-   * @param {string} message A descriptive message for the error.
-   * @param {Error} cause The error that caused this error.
+   * @param httpStatus The HTTP status code associated with the error.
+   * @param message A descriptive message for the error.
+   * @param cause The error that caused this error.
    */
   constructor(httpStatus: number, message: string, cause?: Error) {
     super(message, { cause });

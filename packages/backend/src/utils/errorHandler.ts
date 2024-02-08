@@ -4,11 +4,10 @@ import logger from "./logger";
 
 /**
  * An error handler. Logs an error and sends an error response to the client.
- *
- * @param {Error} err The error that was thrown
- * @param {Request} _ Request object
- * @param {Response} res Response object
- * @param {NextFunction} __ The function to call the next middleware
+ * @param err The error that was thrown
+ * @param _ Request object
+ * @param res Response object
+ * @param __ The function to call the next middleware
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default (err: Error, _: Request, res: Response, __: NextFunction) => {

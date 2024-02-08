@@ -12,9 +12,8 @@ import { useUserContextState } from "../../../contexts/UserContext";
 
 /**
  * A header for the stock list page. It contains the stock list filters and column filter.
- *
- * @param {StockListHeaderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps): JSX.Element => {
   const [addStockOpen, setAddStockOpen] = useState<boolean>(false);

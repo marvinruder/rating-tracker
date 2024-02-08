@@ -13,8 +13,7 @@ import api from "../../utils/api";
 
 /**
  * This component renders the login page.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 export const LoginPage = (): JSX.Element => {
   const [action, setAction] = useState<"signIn" | "register">("signIn");
@@ -33,8 +32,7 @@ export const LoginPage = (): JSX.Element => {
 
   /**
    * Validates the input fields.
-   *
-   * @returns {boolean} Whether the input fields are valid.
+   * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
     if (action === "register") {

@@ -2,7 +2,7 @@
   "env": {
     "node": true
   },
-  "extends": ["plugin:jsdoc/recommended", "plugin:i/recommended", "plugin:i/typescript", "google", "prettier"],
+  "extends": ["plugin:jsdoc/recommended-typescript", "plugin:i/recommended", "plugin:i/typescript", "google", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -21,8 +21,6 @@
     "@typescript-eslint/await-thenable": ["warn"],
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
-    "jsdoc/no-undefined-types": "off",
-    "jsdoc/tag-lines": ["warn", "never", { "startLines": 1 }],
     "import/extensions": ["warn", "never", { "json": "always" }],
     "import/first": ["warn"],
     "import/namespace": "off",

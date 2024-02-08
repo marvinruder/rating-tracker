@@ -11,9 +11,8 @@ import api from "../../../utils/api";
 
 /**
  * A dialog to remove a stock from a watchlist.
- *
- * @param {RemoveStockFromWatchlistProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);

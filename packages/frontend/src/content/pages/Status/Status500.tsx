@@ -5,8 +5,7 @@ import { useState } from "react";
 
 /**
  * Shows a 500 Internal Server Error page.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const Status500 = (): JSX.Element => {
   const [pending, setPending] = useState(false);

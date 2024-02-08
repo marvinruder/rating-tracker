@@ -18,9 +18,8 @@ import Router from "../utils/router";
 export class WatchlistsController {
   /**
    * Returns a summary of the watchlists of the current user.
-   *
-   * @param {Request} _ The request.
-   * @param {Response} res The response.
+   * @param _ The request.
+   * @param res The response.
    */
   @Router({
     path: watchlistsEndpointPath,
@@ -41,9 +40,8 @@ export class WatchlistsController {
 
   /**
    * Reads a single watchlist from the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: watchlistsEndpointPath + "/:id",
@@ -59,9 +57,8 @@ export class WatchlistsController {
 
   /**
    * Creates a new watchlist in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    * @throws an {@link APIError} if a watchlist with the same ID already exists
    */
   @Router({
@@ -80,9 +77,8 @@ export class WatchlistsController {
 
   /**
    * Updates a watchlist in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: watchlistsEndpointPath + "/:id",
@@ -102,9 +98,8 @@ export class WatchlistsController {
 
   /**
    * Adds a stock to a watchlist in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: watchlistsEndpointPath + "/:id" + stocksEndpointPath + "/:ticker",
@@ -118,9 +113,8 @@ export class WatchlistsController {
 
   /**
    * Removes a stock from a watchlist in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: watchlistsEndpointPath + "/:id" + stocksEndpointPath + "/:ticker",
@@ -134,9 +128,8 @@ export class WatchlistsController {
 
   /**
    * Deletes a watchlist from the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: watchlistsEndpointPath + "/:id",
