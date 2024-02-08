@@ -70,8 +70,7 @@ import { PortfolioHeader } from "./PortfolioHeader";
 
 /**
  * A module that displays a portfolio.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const PortfolioModule = (): JSX.Element => {
   const [portfolio, setPortfolio] = useState<Portfolio>();
@@ -89,8 +88,7 @@ const PortfolioModule = (): JSX.Element => {
 
   /**
    * Fetches the portfolio with the given ID.
-   *
-   * @param {number} id The ID of the portfolio to fetch.
+   * @param id The ID of the portfolio to fetch.
    */
   const getPortfolio = (id: number) => {
     api
@@ -178,10 +176,9 @@ const PortfolioModule = (): JSX.Element => {
 
   /**
    * Checks whether the given path is in the sunburst data.
-   *
-   * @param {SunburstNode} sunburstData The sunburst data to check.
-   * @param {DatumId[]} _path The path to check, starting with the most specific segment.
-   * @returns {boolean} `true` if the path is in the sunburst data, `false` otherwise.
+   * @param sunburstData The sunburst data to check.
+   * @param _path The path to check, starting with the most specific segment.
+   * @returns `true` if the path is in the sunburst data, `false` otherwise.
    */
   const pathInSunburstData = (sunburstData: SunburstNode, _path: readonly DatumId[]): boolean => {
     const path = [..._path];
@@ -211,9 +208,11 @@ const PortfolioModule = (): JSX.Element => {
 
   /**
    * A tooltip component used in sunburst charts.
-   *
-   * @param {ComputedDatum<SunburstNode>} props The datum.
-   * @returns {JSX.Element} The tooltip.
+   * @param props The datum.
+   * @param props.id The ID of the datum.
+   * @param props.value The value of the datum.
+   * @param props.color The color of the datum.
+   * @returns The tooltip.
    */
   const SunburstTooltip = ({ id, value, color }: ComputedDatum<SunburstNode>): JSX.Element => (
     <Paper sx={{ px: 0.75, py: 0.5 }}>

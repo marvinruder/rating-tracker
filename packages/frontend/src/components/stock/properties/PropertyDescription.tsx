@@ -31,10 +31,9 @@ type DescribedProperty =
 
 /**
  * A component that displays the description of a stock property. To be used in tooltips of table headers.
- *
- * @param {{property: DescribedProperty}} props The properties of the component.
- * @param {keyof WeightedStock} props.property The property to display the description of.
- * @returns {JSX.Element} A component that displays the description of a stock property.
+ * @param props The properties of the component.
+ * @param props.property The property to display the description of.
+ * @returns A component that displays the description of a stock property.
  */
 export const PropertyDescription = (props: { property: DescribedProperty }): JSX.Element => {
   switch (props.property) {

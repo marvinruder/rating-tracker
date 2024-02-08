@@ -63,10 +63,9 @@ export type PortfolioSummary = Omit<Portfolio, "stocks"> & {
 /**
  * Computes the total currency amount of the stocks in a portfolio. If an attribute is specified, only the stocks with a
  * non-null value for that attribute are considered.
- *
- * @param {PortfolioSummary} portfolio The portfolio.
- * @param {keyof Stock} attribute The attribute to use for filtering the stocks.
- * @returns {number} The total currency amount of the stocks in the portfolio.
+ * @param portfolio The portfolio.
+ * @param attribute The attribute to use for filtering the stocks.
+ * @returns The total currency amount of the stocks in the portfolio.
  */
 export const getTotalAmount = (portfolio: PortfolioSummary, attribute?: keyof Stock): number =>
   portfolio.stocks.filter((stock) => stock[attribute] !== null).reduce((sum, stock) => sum + stock.amount, 0);
@@ -74,10 +73,9 @@ export const getTotalAmount = (portfolio: PortfolioSummary, attribute?: keyof St
 /**
  * Computes the weighted average value of a numeric attribute of the stocks in a portfolio. Stocks with a null value for
  * the attribute are ignored.
- *
- * @param {PortfolioSummary} portfolio The portfolio.
- * @param {T} attribute The attribute to use for computing the weighted average.
- * @returns {Stock[T] | null} The weighted average value of the attribute of the stocks in the portfolio.
+ * @param portfolio The portfolio.
+ * @param attribute The attribute to use for computing the weighted average.
+ * @returns The weighted average value of the attribute of the stocks in the portfolio.
  */
 export const getWeightedAverage = <
   T extends {
@@ -102,10 +100,9 @@ export const getWeightedAverage = <
  * Computes the estimated value of all stocks in a portfolio based on their amounts and the fair price estimation for
  * it. The estimation will be taken from the given attribute. If a stock does not have a value for the given attribute
  * or no last close price, its amount in the portfolio will be used in the computation.
- *
- * @param {Portfolio} portfolio The portfolio.
- * @param {T} attribute The attribute to use for computing the estimated value.
- * @returns {number | null} The estimated value of the portfolio. `null` if no stock has a value for the given
+ * @param portfolio The portfolio.
+ * @param attribute The attribute to use for computing the estimated value.
+ * @returns The estimated value of the portfolio. `null` if no stock has a value for the given
  *                          attribute.
  */
 export const getEstimateValue = <T extends keyof Pick<Stock, "morningstarFairValue" | "analystTargetPrice">>(
@@ -128,10 +125,9 @@ export const getEstimateValue = <T extends keyof Pick<Stock, "morningstarFairVal
 /**
  * Computes the percentage difference between the total currency amount of the stocks and the estimated value of the
  * portfolio. The estimation will be taken from the given attribute.
- *
- * @param {Portfolio} portfolio The portfolio.
- * @param {T} attribute The attribute to use for computing the estimated value.
- * @returns {number | null} The percentage difference between the total currency amount of the stocks and the estimated
+ * @param portfolio The portfolio.
+ * @param attribute The attribute to use for computing the estimated value.
+ * @returns The percentage difference between the total currency amount of the stocks and the estimated
  *                          value of the portfolio. `null` if no stock has a value for the given attribute.
  */
 export const getPercentageToTotalAmount = <T extends keyof Pick<Stock, "morningstarFairValue" | "analystTargetPrice">>(
@@ -145,9 +141,8 @@ export const getPercentageToTotalAmount = <T extends keyof Pick<Stock, "mornings
 /**
  * Computes the weighted average value of the MSCI ESG Rating of the stocks in a portfolio. Stocks with no MSCI ESG
  * Rating are ignored.
- *
- * @param {PortfolioSummary} portfolio The portfolio.
- * @returns {Stock[T] | null} The weighted average MSCI ESG Rating of the stocks in the portfolio.
+ * @param portfolio The portfolio.
+ * @returns The weighted average MSCI ESG Rating of the stocks in the portfolio.
  */
 export const getWeightedAverageMSCIESGRating = (portfolio: Portfolio): MSCIESGRating | null => {
   const totalAmount = getTotalAmount(portfolio, "msciESGRating");
@@ -165,9 +160,8 @@ export const getWeightedAverageMSCIESGRating = (portfolio: Portfolio): MSCIESGRa
 
 /**
  * Computes the percentages of stocks of every size and style combination in a portfolio weighted by their amounts.
- *
- * @param {Portfolio} portfolio The portfolio.
- * @returns {Record<string, number>} A record of the computed percentages.
+ * @param portfolio The portfolio.
+ * @returns A record of the computed percentages.
  */
 export const getWeightedStylebox = (portfolio: Portfolio): Record<`${Size}-${Style}`, number> => {
   const totalAmount = getTotalAmount(portfolio);
@@ -221,9 +215,8 @@ export type SunburstNode = {
 
 /**
  * Computes an object from which the regions of the stocks in a portfolio can be visualized in a sunburst chart.
- *
- * @param {Portfolio} portfolio The portfolio.
- * @returns {SunburstNode} The object holding the data for the sunburst chart.
+ * @param portfolio The portfolio.
+ * @returns The object holding the data for the sunburst chart.
  */
 export const getCountrySunburstData = (portfolio: Portfolio): SunburstNode => {
   const data: SunburstNode = {
@@ -285,9 +278,8 @@ export const getCountrySunburstData = (portfolio: Portfolio): SunburstNode => {
  * chart.
  * Since IDs of sunburst nodes must be unique and an industry sector identifier can be used on multiple levels (e.g.
  * “Semicoductors” is both an industry group and an industry), the node IDs are prefixed with the level of the node.
- *
- * @param {Portfolio} portfolio The portfolio.
- * @returns {SunburstNode} The object holding the data for the sunburst chart.
+ * @param portfolio The portfolio.
+ * @returns The object holding the data for the sunburst chart.
  */
 export const getIndustrySunburstData = (portfolio: Portfolio): SunburstNode => {
   const data: SunburstNode = {
@@ -368,9 +360,8 @@ export const getIndustrySunburstData = (portfolio: Portfolio): SunburstNode => {
  * Removes the prefix indicating the level (`SuperSector`, `Sector`, `IndustryGroup`, or `Industry`) of a sunburst node
  * from its ID. If the stripped ID is neither a super sector, a sector, an industry group, nor an industry, `undefined`
  * is returned.
- *
- * @param {string} sunburstID The prefixed ID of the sunburst node.
- * @returns {SuperSector | Sector | IndustryGroup | Industry | undefined} The stripped ID of the sunburst node.
+ * @param sunburstID The prefixed ID of the sunburst node.
+ * @returns The stripped ID of the sunburst node.
  */
 export const stripPrefixFromSunburstID = (
   sunburstID: string | undefined,
@@ -390,9 +381,8 @@ export const stripPrefixFromSunburstID = (
 /**
  * Resolves the name of a country or industry sector sunburst node from its ID, which in the case of an industry sector
  * node may be prefixed with the node’s level (`SuperSector`, `Sector`, `IndustryGroup`, or `Industry`).
- *
- * @param {string} id The (possibly prefixed) ID of the sunburst node, holding either country or industry sector data.
- * @returns {string} The name of the sunburst node.
+ * @param id The (possibly prefixed) ID of the sunburst node, holding either country or industry sector data.
+ * @returns The name of the sunburst node.
  */
 export const getSunburstDatumName = (id: string): string => {
   const gecsID = stripPrefixFromSunburstID(id);

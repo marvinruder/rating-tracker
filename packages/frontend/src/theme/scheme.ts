@@ -4,9 +4,8 @@ import { alpha, lighten, darken, createTheme } from "@mui/material";
 
 /**
  * The main colors used in both themes.
- *
- * @param {boolean} light Whether the theme is light or not.
- * @returns {unknown} The main colors used in the theme.
+ * @param light Whether the theme is light or not.
+ * @returns The main colors used in the theme.
  */
 const generateThemeColors = (light: boolean) => ({
   primary: "#2971D6",
@@ -24,10 +23,9 @@ const generateThemeColors = (light: boolean) => ({
 
 /**
  * A variety of colors used in both themes.
- *
- * @param {boolean} light Whether the theme is light or not.
- * @param {unknown} themeColors The main colors used in the theme.
- * @returns {unknown} A variety of colors used in the theme.
+ * @param light Whether the theme is light or not.
+ * @param themeColors The main colors used in the theme.
+ * @returns A variety of colors used in the theme.
  */
 const generateColors = (light: boolean, themeColors) => ({
   gradients: {
@@ -160,11 +158,10 @@ const generateColors = (light: boolean, themeColors) => ({
 
 /**
  * The scheme for both themes
- *
- * @param {boolean} light Whether the theme is light or not.
- * @param {unknown} themeColors The main colors used in the theme.
- * @param {unknown} colors A variety of colors used in the theme.
- * @returns {unknown} The scheme for both themes.
+ * @param light Whether the theme is light or not.
+ * @param themeColors The main colors used in the theme.
+ * @param colors A variety of colors used in the theme.
+ * @returns The scheme for both themes.
  */
 const generateScheme = (light: boolean, themeColors, colors) => ({
   colors: {
@@ -1328,9 +1325,8 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
 
 /**
  * Creates a theme from a color scheme.
- *
- * @param {boolean} light Whether the theme should be light or dark.
- * @returns {Theme} The created theme.
+ * @param light Whether the theme should be light or dark.
+ * @returns The created theme.
  */
 const createThemeFromScheme = (light: boolean): Theme => {
   const themeColors = generateThemeColors(light);

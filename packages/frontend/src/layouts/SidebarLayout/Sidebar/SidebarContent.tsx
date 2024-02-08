@@ -38,9 +38,8 @@ import { Logo } from "./Logo";
 
 /**
  * A wrapper for the sidebar menu component.
- *
- * @param {React.ReactNode} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const MenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
   props: BoxProps & { children: React.ReactNode },
@@ -67,9 +66,8 @@ const MenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
 
 /**
  * A wrapper for the sidebar submenu component.
- *
- * @param {React.ReactNode} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const SubMenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
   props: BoxProps & { children: React.ReactNode },
@@ -150,9 +148,8 @@ const SubMenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
 
 /**
  * The menu inside the sidebar.
- *
- * @param {SidebarContentProps} props The component props.
- * @returns {JSX.Element} The component.
+ * @param props The component props.
+ * @returns The component.
  */
 export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
   const [statusTooltipOpen, setStatusTooltipOpen] = useState(false);

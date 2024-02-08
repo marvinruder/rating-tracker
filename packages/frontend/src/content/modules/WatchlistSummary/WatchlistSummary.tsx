@@ -13,8 +13,7 @@ import { WatchlistSummaryHeader } from "./WatchlistSummaryHeader";
 
 /**
  * A module that displays an overview of the user’s watchlists.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const WatchlistSummaryModule = (): JSX.Element => {
   const [watchlistSummaries, setWatchlistSummaries] = useState<WatchlistSummary[]>([]);

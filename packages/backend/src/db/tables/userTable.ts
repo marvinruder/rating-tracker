@@ -7,9 +7,8 @@ import client from "../client";
 
 /**
  * Create a user with credentials.
- *
- * @param {UserWithCredentials} user The user to create.
- * @returns {Promise<boolean>} Whether the user was created or existed already.
+ * @param user The user to create.
+ * @returns Whether the user was created or existed already.
  */
 export const createUser = async (user: UserWithCredentials): Promise<boolean> => {
   // Attempt to find an existing user with the same email address
@@ -34,9 +33,8 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
 
 /**
  * Read a user.
- *
- * @param {string} email The email address of the user.
- * @returns {Promise<User>} The user.
+ * @param email The email address of the user.
+ * @returns The user.
  * @throws an {@link APIError} if the user does not exist.
  */
 export const readUser = async (email: string): Promise<User> => {
@@ -50,9 +48,8 @@ export const readUser = async (email: string): Promise<User> => {
 
 /**
  * Read the avatar of a user.
- *
- * @param {string} email The email address of the user.
- * @returns {Promise<{ mimeType: string, buffer: Buffer }>} The avatar of the user.
+ * @param email The email address of the user.
+ * @returns The avatar of the user.
  * @throws an {@link APIError} if the user does not exist or does not have an avatar.
  */
 export const readUserAvatar = async (email: string): Promise<{ mimeType: string; buffer: Buffer }> => {
@@ -71,9 +68,8 @@ export const readUserAvatar = async (email: string): Promise<{ mimeType: string;
 
 /**
  * Read a user and include credentials.
- *
- * @param {string} email The email address of the user.
- * @returns {Promise<UserWithCredentials>} The user.
+ * @param email The email address of the user.
+ * @returns The user.
  * @throws an {@link APIError} if the user does not exist.
  */
 export const readUserWithCredentials = async (email: string): Promise<UserWithCredentials> => {
@@ -87,9 +83,8 @@ export const readUserWithCredentials = async (email: string): Promise<UserWithCr
 
 /**
  * Read a user, identified by their credential ID, and include credentials.
- *
- * @param {string} credentialID The ID of the credential of the user.
- * @returns {Promise<UserWithCredentials>} The user.
+ * @param credentialID The ID of the credential of the user.
+ * @returns The user.
  * @throws an {@link APIError} if the user does not exist.
  */
 export const readUserByCredentialID = async (credentialID: string): Promise<UserWithCredentials> => {
@@ -105,8 +100,7 @@ export const readUserByCredentialID = async (credentialID: string): Promise<User
 
 /**
  * Read all users.
- *
- * @returns {Promise<User[]>} A list of all users.
+ * @returns A list of all users.
  */
 export const readAllUsers = async (): Promise<User[]> => {
   return (await client.user.findMany()).map((user) => new User(user));
@@ -114,9 +108,8 @@ export const readAllUsers = async (): Promise<User[]> => {
 
 /**
  * Read all users having at least one watchlist they subscribed to containing the given stock.
- *
- * @param {string} ticker The ticker of the stock.
- * @returns {Promise<User[]>} The users in question.
+ * @param ticker The ticker of the stock.
+ * @returns The users in question.
  */
 export const readUsersWithStockOnSubscribedWatchlist = async (ticker: string): Promise<User[]> => {
   return (
@@ -126,9 +119,8 @@ export const readUsersWithStockOnSubscribedWatchlist = async (ticker: string): P
 
 /**
  * Check whether a user exists.
- *
- * @param {string} email The email address of the user.
- * @returns {Promise<boolean>} Whether the user exists.
+ * @param email The email address of the user.
+ * @returns Whether the user exists.
  */
 export const userExists = async (email: string): Promise<boolean> => {
   try {
@@ -141,9 +133,8 @@ export const userExists = async (email: string): Promise<boolean> => {
 
 /**
  * Update a user.
- *
- * @param {string} email The email address of the user.
- * @param {Partial<Omit<UserWithCredentials, "email">>} newValues The new values for the user.
+ * @param email The email address of the user.
+ * @param newValues The new values for the user.
  * @throws an {@link APIError} if the user does not exist.
  */
 export const updateUserWithCredentials = async (email: string, newValues: Partial<UserWithCredentials>) => {
@@ -187,8 +178,7 @@ export const updateUserWithCredentials = async (email: string, newValues: Partia
 
 /**
  * Delete a user.
- *
- * @param {string} email The email address of the user to delete.
+ * @param email The email address of the user to delete.
  * @throws an {@link APIError} if the user does not exist.
  */
 export const deleteUser = async (email: string) => {

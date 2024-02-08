@@ -23,9 +23,7 @@ void redis.connect();
 
 /**
  * Checks if the Redis server is reachable.
- *
- * @returns {Promise<void>} A promise that resolves when the Redis server is reachable, or rejects with an error if it
- * is not.
+ * @returns A {@link Promise} that resolves when the Redis server is reachable, or rejects with an error if it is not.
  */
 export const redisIsReady = (): Promise<void> =>
   redis.isReady

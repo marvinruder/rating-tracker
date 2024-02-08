@@ -13,9 +13,8 @@ import { StockTableFilters } from "../../../components/stock/layouts/StockTableF
 
 /**
  * A header for the portfolio details page.
- *
- * @param {PortfolioHeaderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);

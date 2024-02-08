@@ -13,9 +13,8 @@ export type SuperRegion = (typeof superRegionArray)[number];
 
 /**
  * Checks if a string is a valid super region.
- *
- * @param {string} s The string to check.
- * @returns {boolean} True if the string is a valid super region.
+ * @param s The string to check.
+ * @returns True if the string is a valid super region.
  */
 export function isSuperRegion(s: string): s is SuperRegion {
   return superRegionArray.includes(s as SuperRegion);
@@ -49,9 +48,8 @@ export const superRegionOfRegion: Record<Region, SuperRegion> = {
 
 /**
  * Returns an array of all regions in a super region.
- *
- * @param {SuperRegion} superRegion The super region to get regions for.
- * @returns {Region[]} The array of regions in the super given region.
+ * @param superRegion The super region to get regions for.
+ * @returns The array of regions in the super given region.
  */
 export const getRegionsInSuperRegion = (superRegion: SuperRegion): Region[] => {
   return regionArray.filter((region) => superRegionOfRegion[region] == superRegion);
@@ -59,9 +57,8 @@ export const getRegionsInSuperRegion = (superRegion: SuperRegion): Region[] => {
 
 /**
  * Returns the emoji globe for a super region.
- *
- * @param {SuperRegion} superRegion The super region
- * @returns {string} An emoji of the super region’s globe
+ * @param superRegion The super region
+ * @returns An emoji of the super region’s globe
  */
 export const emojiGlobe = (superRegion: SuperRegion): string =>
   ({

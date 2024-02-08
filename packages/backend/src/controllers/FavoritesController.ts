@@ -10,9 +10,8 @@ import Router from "../utils/router";
 export class FavoritesController {
   /**
    * Returns the list of favorites of the current user.
-   *
-   * @param {Request} _ The request.
-   * @param {Response} res The response.
+   * @param _ The request.
+   * @param res The response.
    */
   @Router({
     path: favoritesEndpointPath,
@@ -28,9 +27,8 @@ export class FavoritesController {
 
   /**
    * Adds a stock to the favorites of the current user.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: favoritesEndpointPath + "/:ticker",
@@ -45,9 +43,8 @@ export class FavoritesController {
 
   /**
    * Removes a stock from the favorites of the current user.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: favoritesEndpointPath + "/:ticker",

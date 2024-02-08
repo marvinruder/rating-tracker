@@ -6,8 +6,7 @@ import packageInfo from "../../../../package.json";
 
 /**
  * The Logo component, shown at the top of the sidebar. Contains the app name and version.
- *
- * @returns {JSX.Element} The Logo component
+ * @returns The Logo component
  */
 export const Logo = (): JSX.Element => {
   const theme = useTheme();

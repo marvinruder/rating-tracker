@@ -5,9 +5,8 @@ import { Box } from "@mui/material";
 
 /**
  * A component that displays a rating of 1 to 5 stars using full and empty star icons.
- *
- * @param {StarRatingProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps): JSX.Element => {
   let value: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;

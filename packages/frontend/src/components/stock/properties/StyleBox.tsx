@@ -3,17 +3,15 @@ import type { FC } from "react";
 
 /**
  * A component that renders a Morningstar StyleBox.
- *
- * @param {StyleBoxProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
   /**
    * Provides the path for the correct square representing the given size and style.
-   *
-   * @param {Size} size The size of the company, to be represented by the square.
-   * @param {Style} style The style of the company, to be represented by the square.
-   * @returns {JSX.Element} The path for the square.
+   * @param size The size of the company, to be represented by the square.
+   * @param style The style of the company, to be represented by the square.
+   * @returns The path for the square.
    */
   const getSquare = (size: Size, style: Style): JSX.Element => {
     switch (size) {

@@ -43,9 +43,8 @@ import { StyleBox } from "../properties/StyleBox";
 
 /**
  * This component displays detailed information about a stock in a grid.
- *
- * @param {StockDetailsProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const StockDetails = (props: StockDetailsProps): JSX.Element => {
   const theme = useTheme();

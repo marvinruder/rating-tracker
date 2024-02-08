@@ -7,9 +7,7 @@ const client = new PrismaClient();
 
 /**
  * Checks if the database is reachable.
- *
- * @returns {Promise<void>} A promise that resolves when the database is reachable, or rejects with an error if it is
- * not.
+ * @returns A {@link Promise} that resolves when the database is reachable, or rejects with an error if it is not.
  */
 export const prismaIsReady = (): Promise<void> =>
   client.$executeRaw`SELECT null`

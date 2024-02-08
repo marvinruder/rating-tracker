@@ -14,9 +14,8 @@ import { readStock } from "./stockTable";
 
 /**
  * Check whether the given user is the owner of the specified portfolio.
- *
- * @param {number} id The ID of the portfolio.
- * @param {string} email The email of the current user.
+ * @param id The ID of the portfolio.
+ * @param email The email of the current user.
  * @throws an {@link APIError} if the portfolio does not exist or belong to the user.
  */
 const checkPortfolioExistenceAndOwner = async (id: number, email: string) => {
@@ -32,10 +31,8 @@ const checkPortfolioExistenceAndOwner = async (id: number, email: string) => {
 /**
  * Create a Portfolio from the object returned by Prisma when querying the explicit many-to-many relation
  * `StocksInPortfolios`.
- *
- * @param {Omit<PrismaPortfolio, "email"> & { stocks: (StocksInPortfolios & { stock: PrismaStock })[] }} portfolio The
- * portfolio object returned by Prisma.
- * @returns {Portfolio} The portfolio.
+ * @param portfolio The portfolio object returned by Prisma.
+ * @returns The portfolio.
  */
 const mapPortfolioFromPrisma = (
   portfolio: Omit<PrismaPortfolio, "email"> & { stocks: (StocksInPortfolios & { stock: PrismaStock })[] },
@@ -46,11 +43,10 @@ const mapPortfolioFromPrisma = (
 
 /**
  * Create a portfolio.
- *
- * @param {string} name The name of the portfolio to create.
- * @param {string} email The email of the current user.
- * @param {Currency} currency The currency of the portfolio.
- * @returns {Promise<Portfolio>} The created portfolio.
+ * @param name The name of the portfolio to create.
+ * @param email The email of the current user.
+ * @param currency The currency of the portfolio.
+ * @returns The created portfolio.
  */
 export const createPortfolio = async (name: string, email: string, currency: Currency): Promise<Portfolio> => {
   const portfolio = mapPortfolioFromPrisma(
@@ -70,10 +66,9 @@ export const createPortfolio = async (name: string, email: string, currency: Cur
 
 /**
  * Read a portfolio.
- *
- * @param {number} id The ID of the portfolio.
- * @param {string} email The email of the current user.
- * @returns {Promise<Portfolio>} The portfolio.
+ * @param id The ID of the portfolio.
+ * @param email The email of the current user.
+ * @returns The portfolio.
  * @throws an {@link APIError} if the portfolio does not exist or belong to the user.
  */
 export const readPortfolio = async (id: number, email: string): Promise<Portfolio> => {
@@ -93,12 +88,11 @@ export const readPortfolio = async (id: number, email: string): Promise<Portfoli
 
 /**
  * Query multiple stocks in a portfolio as well as their count after filtering.
- *
- * @param {number} id The ID of the portfolio.
- * @param {string} email The email of the current user.
- * @param {Prisma.StockFindManyArgs} args An object with filtering, sorting and pagination options.
- * @param {Prisma.SortOrder | undefined} sortByAmount If set, the direction in which to sort the stocks by their amount.
- * @returns {Promise<(Stock | WeightedStock)[]>} A list of all stocks.
+ * @param id The ID of the portfolio.
+ * @param email The email of the current user.
+ * @param args An object with filtering, sorting and pagination options.
+ * @param sortByAmount If set, the direction in which to sort the stocks by their amount.
+ * @returns A list of all stocks.
  */
 export const readStocksInPortfolio = async (
   id: number,
@@ -135,9 +129,8 @@ export const readStocksInPortfolio = async (
 
 /**
  * Read all portfolios of the current user.
- *
- * @param {string} email The email address of the current user.
- * @returns {Promise<PortfolioSummary[]>} A list of all portfolios belonging to the current user.
+ * @param email The email address of the current user.
+ * @returns A list of all portfolios belonging to the current user.
  */
 export const readAllPortfolios = async (email: string): Promise<PortfolioSummary[]> => {
   return (
@@ -160,10 +153,9 @@ export const readAllPortfolios = async (email: string): Promise<PortfolioSummary
 
 /**
  * Update a portfolio.
- *
- * @param {number} id The ID of the portfolio.
- * @param {string} email The email of the current user.
- * @param {Partial<Omit<Portfolio, "id" | "stocks">>} newValues The new values for the portfolio.
+ * @param id The ID of the portfolio.
+ * @param email The email of the current user.
+ * @param newValues The new values for the portfolio.
  * @throws an {@link APIError} if the portfolio does not exist or belong to the user.
  */
 export const updatePortfolio = async (
@@ -203,10 +195,9 @@ export const updatePortfolio = async (
 
 /**
  * Add a stock to a portfolio.
- *
- * @param {number} id The ID of the portfolio.
- * @param {string} email The email of the current user.
- * @param {Pick<WeightedStock, "ticker" | "amount">} stock The stock to add to the portfolio.
+ * @param id The ID of the portfolio.
+ * @param email The email of the current user.
+ * @param stock The stock to add to the portfolio.
  * @throws an {@link APIError} if the portfolio does not exist or belong to the user, or if the stock does not exist or
  * is already in the portfolio.
  */
@@ -231,11 +222,10 @@ export const addStockToPortfolio = async (
 
 /**
  * Update a stock in a portfolio.
- *
- * @param {number} id The ID of the portfolio.
- * @param {string} email The email of the current user.
- * @param {string} ticker The ticker of the stock.
- * @param {Omit<WeightedStock, keyof Stock>} newValues The new values for the stock in the watchlist.
+ * @param id The ID of the portfolio.
+ * @param email The email of the current user.
+ * @param ticker The ticker of the stock.
+ * @param newValues The new values for the stock in the watchlist.
  * @throws an {@link APIError} if the portfolio does not exist or belong to the user, or if the stock is not in the
  * portfolio.
  */
@@ -284,10 +274,9 @@ export const updateStockInPortfolio = async (
 
 /**
  * Remove a stock from a portfolio.
- *
- * @param {number} id The ID of the portfolio.
- * @param {string} email The email of the current user.
- * @param {string} ticker The ticker of the stock to remove.
+ * @param id The ID of the portfolio.
+ * @param email The email of the current user.
+ * @param ticker The ticker of the stock to remove.
  * @throws an {@link APIError} if the portfolio does not exist or belong to the user, or if the stock is not in the
  * portfolio.
  */
@@ -306,9 +295,8 @@ export const removeStockFromPortfolio = async (id: number, email: string, ticker
 
 /**
  * Delete a portfolio.
- *
- * @param {number} id The ID of the portfolio to delete.
- * @param {string} email The email of the current user.
+ * @param id The ID of the portfolio to delete.
+ * @param email The email of the current user.
  * @throws an {@link APIError} if the portfolio does not exist or belong to the user.
  */
 export const deletePortfolio = async (id: number, email: string) => {

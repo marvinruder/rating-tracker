@@ -404,9 +404,8 @@ export const ThemeContext = createContext<ThemeContextType>({} as ThemeContextTy
 
 /**
  * A wrapped theme provider.
- *
- * @param {ThemeProviderWrapperProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const ThemeProviderWrapper: FC<ThemeProviderWrapperProps> = (props: ThemeProviderWrapperProps): JSX.Element => {
   const [themeName, setThemeName] = useState<"dark" | "light">(

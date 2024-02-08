@@ -14,36 +14,32 @@ export const resourceRepository = new Repository(resourceSchema, redis);
 
 /**
  * Fetch a resource from the repository.
- *
- * @param {string} url The URL of the resource to fetch.
- * @returns {Promise<Entity>} The resource entity.
+ * @param url The URL of the resource to fetch.
+ * @returns The resource entity.
  */
 const fetchResource = (url: string): Promise<Entity> => resourceRepository.fetch(url);
 
 /**
  * Save a resource to the repository.
- *
- * @param {Resource} resource The resource to save.
- * @returns {Promise<Entity>} The saved resource entity, containing an {@link EntityId}.
+ * @param resource The resource to save.
+ * @returns The saved resource entity, containing an {@link EntityId}.
  */
 const saveResource = (resource: Resource): Promise<Entity> => resourceRepository.save(resource.url, { ...resource });
 
 /**
  * Have the repository expire a resource.
- *
- * @param {string} url The URL of the resource to expire.
- * @param {number} ttlInSeconds The time in seconds after which the resource should expire.
- * @returns {Promise<void>}
+ * @param url The URL of the resource to expire.
+ * @param ttlInSeconds The time in seconds after which the resource should expire.
+ * @returns a {@link Promise} that resolves when the resource TTL has been set.
  */
 const expireResource = (url: string, ttlInSeconds: number): Promise<void> =>
   resourceRepository.expire(url, ttlInSeconds);
 
 /**
  * Create a resource.
- *
- * @param {Resource} resource The resource to create.
- * @param {number} ttlInSeconds The time in seconds after which the resource should expire.
- * @returns {Promise<boolean>} Whether the resource was created.
+ * @param resource The resource to create.
+ * @param ttlInSeconds The time in seconds after which the resource should expire.
+ * @returns Whether the resource was created.
  */
 export const createResource = async (resource: Resource, ttlInSeconds?: number): Promise<boolean> => {
   const existingResource = await fetchResource(resource.url); // Attempt to fetch an existing resource with the same URL
@@ -63,9 +59,8 @@ export const createResource = async (resource: Resource, ttlInSeconds?: number):
 
 /**
  * Read a resource.
- *
- * @param {string} url The URL of the resource to read.
- * @returns {Promise<Resource>} The resource.
+ * @param url The URL of the resource to read.
+ * @returns The resource.
  * @throws an {@link APIError} if the resource does not exist.
  */
 export const readResource = async (url: string): Promise<Resource> => {
@@ -81,9 +76,8 @@ export const readResource = async (url: string): Promise<Resource> => {
 
 /**
  * Read a resource’s TTL (time-to-live). Returns -1 if the resource exists but has no associated expire.
- *
- * @param {string} url The URL of the resource to read.
- * @returns {Promise<number>} The TTL, in seconds.
+ * @param url The URL of the resource to read.
+ * @returns The TTL, in seconds.
  * @throws an {@link APIError} if the resource does not exist.
  */
 export const readResourceTTL = async (url: string): Promise<number> => {

@@ -134,25 +134,22 @@ const statusCodeColor: Record<number, string> = {
 
 /**
  * Capitalizes the first character of a string.
- *
- * @param {string} str The string to capitalize the first character of.
- * @returns {string} The string with the first character capitalized.
+ * @param str The string to capitalize the first character of.
+ * @returns The string with the first character capitalized.
  */
 const capitalizeFirstChar = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
 /**
  * Converts a number to a hex color code, prefixed with a hash sign.
- *
- * @param {number} n The number to convert to a hex color code.
- * @returns {number} The hex color code.
+ * @param n The number to convert to a hex color code.
+ * @returns The hex color code.
  */
 const hexNumberToColorCode = (n: number): string => `#${n.toString(16).padStart(6, "0")}`;
 
 /**
  * Returns the default text color for a given background color.
- *
- * @param {string | number} color The background color.
- * @returns {string} The default text color.
+ * @param color The background color.
+ * @returns The default text color.
  */
 const getDefaultTextColorFromBgColor = (color: string | number): string => {
   switch (color) {
@@ -167,10 +164,9 @@ const getDefaultTextColorFromBgColor = (color: string | number): string => {
 
 /**
  * Converts a prefix object into a pretty string. Allows concatenation of multiple prefixes.
- *
- * @param {Prefix} prefix The prefix object to prettify.
- * @param {Prefix} nextPrefix The next prefix object to align the background color with.
- * @returns {string} The prettified prefix.
+ * @param prefix The prefix object to prettify.
+ * @param nextPrefix The next prefix object to align the background color with.
+ * @returns The prettified prefix.
  */
 const prettifyPrefix = (prefix: Prefix, nextPrefix?: Prefix): string => {
   // If no text color is specified, use the default text color for the background color
@@ -213,10 +209,9 @@ const prettifyPrefix = (prefix: Prefix, nextPrefix?: Prefix): string => {
  * Converts a record into a pretty string.
  * The key of every entry will be formatted as a prefix, the value will be formatted as plain text.
  * Every record entry will be printed in its own line.
- *
- * @param {Record<string, unknown>} record The record to prettify.
- * @param {Prefix} prefix The prefix to add in front of each line.
- * @returns {string} The prettified record.
+ * @param record The record to prettify.
+ * @param prefix The prefix to add in front of each line.
+ * @returns The prettified record.
  */
 const prettifyRecord = (record: Record<string, unknown>, prefix?: Prefix): string =>
   "\n\x1b[A" + // Removes all characters in the current line
@@ -233,9 +228,8 @@ const prettifyRecord = (record: Record<string, unknown>, prefix?: Prefix): strin
 /**
  * Replaces the last occurrence of the `BOX DRAWINGS LIGHT VERTICAL AND RIGHT` character with the
  * `BOX DRAWINGS LIGHT ARC UP AND RIGHT` character.
- *
- * @param {string} str The string to process.
- * @returns {string} The processed string.
+ * @param str The string to process.
+ * @returns The processed string.
  */
 const replaceLastJoiner = (str: string): string => str.replace(/├([^├]*)$/, "╰$1");
 
@@ -265,9 +259,8 @@ const levelIcons: Record<number, string> = {
 
 /**
  * Converts a raw prefix into a prefix object.
- *
- * @param {string | object} rawPrefix A description of the prefix, extracted from the log message.
- * @returns {Prefix} The prefix object.
+ * @param rawPrefix A description of the prefix, extracted from the log message.
+ * @returns The prefix object.
  */
 const getPrefixFromRawPrefix = (rawPrefix: string | object): Prefix => {
   if (typeof rawPrefix === "string")

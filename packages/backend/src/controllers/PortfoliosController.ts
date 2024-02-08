@@ -19,9 +19,8 @@ import Router from "../utils/router";
 export class PortfoliosController {
   /**
    * Returns a summary of the portfolios of the current user.
-   *
-   * @param {Request} _ The request.
-   * @param {Response} res The response.
+   * @param _ The request.
+   * @param res The response.
    */
   @Router({
     path: portfoliosEndpointPath,
@@ -37,9 +36,8 @@ export class PortfoliosController {
 
   /**
    * Reads a single portfolio from the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: portfoliosEndpointPath + "/:id",
@@ -55,9 +53,8 @@ export class PortfoliosController {
 
   /**
    * Creates a new portfolio in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    * @throws an {@link APIError} if a portfolio with the same ID already exists
    */
   @Router({
@@ -76,9 +73,8 @@ export class PortfoliosController {
 
   /**
    * Updates a portfolio in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: portfoliosEndpointPath + "/:id",
@@ -98,9 +94,8 @@ export class PortfoliosController {
 
   /**
    * Adds a stock to a portfolio in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: portfoliosEndpointPath + "/:id" + stocksEndpointPath + "/:ticker",
@@ -120,9 +115,8 @@ export class PortfoliosController {
 
   /**
    * Updates a stock in a portfolio in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: portfoliosEndpointPath + "/:id" + stocksEndpointPath + "/:ticker",
@@ -139,9 +133,8 @@ export class PortfoliosController {
 
   /**
    * Removes a stock from a portfolio in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: portfoliosEndpointPath + "/:id" + stocksEndpointPath + "/:ticker",
@@ -155,9 +148,8 @@ export class PortfoliosController {
 
   /**
    * Deletes a portfolio from the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: portfoliosEndpointPath + "/:id",

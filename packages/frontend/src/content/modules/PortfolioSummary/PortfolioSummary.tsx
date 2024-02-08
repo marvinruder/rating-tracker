@@ -13,8 +13,7 @@ import { PortfolioSummaryHeader } from "./PortfolioSummaryHeader";
 
 /**
  * A module that displays an overview of the user’s portfolios.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const PortfolioSummaryModule = (): JSX.Element => {
   const [portfolioSummaries, setPortfolioSummaries] = useState<PortfolioSummary[]>([]);

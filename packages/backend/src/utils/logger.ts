@@ -21,8 +21,7 @@ const prettyStream = pretty(pinoPrettyConfig);
 
 /**
  * Provides the path of the log file for the current day.
- *
- * @returns {string} The path of the log file.
+ * @returns The path of the log file.
  */
 const getLogFilePath = (): string => {
   return (process.env.LOG_FILE ?? "/tmp/rating-tracker-log-(DATE).log").replaceAll(
@@ -33,8 +32,7 @@ const getLogFilePath = (): string => {
 
 /**
  * Creates a new stream to write to the log file.
- *
- * @returns {fs.WriteStream} The stream to write to the log file.
+ * @returns The stream to write to the log file.
  */
 const getNewFileStream = (): fs.WriteStream => fs.createWriteStream(getLogFilePath(), { flags: "a" });
 
@@ -77,13 +75,11 @@ new cron.CronJob(
 
 /**
  * A function logging API requests.
- *
- * @param {Request} req Request object
- * @param {Response} res Response object
- * @param {number} time The response time of the request.
- * @returns {void}
+ * @param req Request object
+ * @param res Response object
+ * @param time The response time of the request.
  */
-export const logRequest = (req: Request, res: Response, time: number): void =>
+export const logRequest = (req: Request, res: Response, time: number): void => {
   logger[
     (req.originalUrl.startsWith(baseURL + stocksEndpointPath) && req.path.endsWith(stockLogoEndpointSuffix)) ||
     req.ip === "::1"
@@ -110,5 +106,6 @@ export const logRequest = (req: Request, res: Response, time: number): void =>
     } as { prefix: string | object; req: LoggedRequest },
     "Processed request",
   );
+};
 
 export default logger;

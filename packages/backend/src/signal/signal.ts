@@ -10,10 +10,9 @@ export const SIGNAL_PREFIX_INFO = "ℹ️ " as const;
 
 /**
  * Send a message to all users subscribed to the given message type.
- *
- * @param {string} message The message to send.
- * @param {MessageType} messageType The type of message to send.
- * @param {Stock} stock The stock in question, if the message type is `stockUpdate`.
+ * @param message The message to send.
+ * @param messageType The type of message to send.
+ * @param stock The stock in question, if the message type is `stockUpdate`.
  */
 export const sendMessage = async (message: string, messageType: MessageType, stock?: Stock) => {
   let users = (await readAllUsers()).filter(

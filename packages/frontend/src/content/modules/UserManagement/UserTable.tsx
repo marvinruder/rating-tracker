@@ -11,8 +11,7 @@ import UserRow from "./UserRow";
 
 /**
  * The user table component.
- *
- * @returns {JSX.Element} The users table component.
+ * @returns The users table component.
  */
 const UserTable: FC = (): JSX.Element => {
   const [count, setCount] = useState<number>(-1);

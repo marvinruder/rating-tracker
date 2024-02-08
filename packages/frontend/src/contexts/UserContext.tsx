@@ -30,7 +30,6 @@ type UserUpdaterContextType = {
   clearUser: () => void;
   /**
    * Triggers a refetch of the user information.
-   *
    * @param {number} version A version number to append to the avatar URL. This will force the browser to refetch the
    *                         avatar if it has changed.
    * @returns {Promise<void>}
@@ -50,9 +49,8 @@ const UserUpdaterContext = createContext<UserUpdaterContextType>({} as UserUpdat
 
 /**
  * A provider for the user context.
- *
- * @param {ContextProviderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const UserProvider = (props: ContextProviderProps): JSX.Element => {
   const [user, setUser] = useState<User>(undefined);
@@ -63,10 +61,9 @@ export const UserProvider = (props: ContextProviderProps): JSX.Element => {
 
   /**
    * Fetches the user information from the server.
-   *
-   * @param {number} version A version number to append to the avatar URL. This will force the browser to refetch the
-   *                         avatar if it has changed.
-   * @returns {Promise<void>}
+   * @param version A version number to append to the avatar URL. This will force the browser to refetch the avatar if
+   *                it has changed.
+   * @returns A {@link Promise} that resolves when the user information has been fetched and processed.
    */
   const fetchUser = (version?: number): Promise<void> =>
     // Check if the user is authenticated
@@ -115,14 +112,12 @@ export const UserProvider = (props: ContextProviderProps): JSX.Element => {
 
 /**
  * Hook to use the user context’s state.
- *
- * @returns {UserStateContextType} The user context’s state.
+ * @returns The user context’s state.
  */
 export const useUserContextState = (): UserStateContextType => useContext(UserStateContext);
 
 /**
  * Hook to use the user context’s updater.
- *
- * @returns {UserUpdaterContextType} The user context’s updater.
+ * @returns The user context’s updater.
  */
 export const useUserContextUpdater = (): UserUpdaterContextType => useContext(UserUpdaterContext);

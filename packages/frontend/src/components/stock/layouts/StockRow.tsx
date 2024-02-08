@@ -109,9 +109,8 @@ import { StockDetails } from "./StockDetails";
 
 /**
  * This component displays information about a stock in a table row that is used in the stock list.
- *
- * @param {StockRowProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const StockRow = (props: StockRowProps): JSX.Element => {
   const { user } = useUserContextState();
@@ -143,8 +142,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
 
   /**
    * Checks for errors in the input fields.
-   *
-   * @returns {boolean} Whether the input fields are valid.
+   * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
     // The following fields are required.
@@ -173,9 +171,8 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
   /**
    * Returns an appropriate CSS `display` property value for a column. The value is derived from the
    * columns filter values that are passed to the component.
-   *
-   * @param {StockListColumn} column The column for which the display value should be returned.
-   * @returns {"none" | undefined} The CSS `display` property value.
+   * @param column The column for which the display value should be returned.
+   * @returns The CSS `display` property value.
    */
   const displayColumn = (column: StockListColumn): "none" | undefined => {
     if (props.columns && !props.columns.includes(column)) {

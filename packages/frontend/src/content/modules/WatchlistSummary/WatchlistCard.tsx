@@ -29,9 +29,8 @@ import api from "../../../utils/api";
 
 /**
  * This component displays information about a watchlist in a card used in the watchlist summary module.
- *
- * @param {WatchlistCardProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
   const isFavorites = props.watchlist?.name === FAVORITES_NAME;

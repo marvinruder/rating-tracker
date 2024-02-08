@@ -27,9 +27,8 @@ import { StockRow } from "./StockRow";
 
 /**
  * The stocks table component.
- *
- * @param {StockTableProps} props The component props.
- * @returns {JSX.Element} The stocks table component.
+ * @param props The component props.
+ * @returns The stocks table component.
  */
 export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element => {
   const [totalCount, setTotalCount] = useState<number>(-1);
@@ -69,11 +68,10 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
 
   /**
    * Get stocks from the backend based on the provided pagination parameters.
-   *
-   * @param {object} options Configuration options for this method.
-   * @param {number} options.count The number of stocks to get.
-   * @param {number} options.offset The offset from which to get the stocks.
-   * @param {boolean} options.append Whether the stocks should be appended to the existing stocks.
+   * @param options Configuration options for this method.
+   * @param options.count The number of stocks to get.
+   * @param options.offset The offset from which to get the stocks.
+   * @param options.append Whether the stocks should be appended to the existing stocks.
    */
   const getStocks = (options?: { count?: number; offset?: number; append?: boolean }) => {
     const { count = fetchCount, offset = 0, append = false } = options ?? {};
@@ -118,9 +116,8 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
 
   /**
    * Provides a handler for a click on one of the sort labels.
-   *
-   * @param {SortableAttribute} attribute The attribute having been clicked.
-   * @returns {() => void} The handler.
+   * @param attribute The attribute having been clicked.
+   * @returns The handler.
    */
   const handleSortLabelClicked =
     (attribute: SortableAttribute): (() => void) =>
@@ -150,9 +147,8 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
   /**
    * Returns an appropriate CSS `display` property value for a column. The value is derived from the
    * columns filter values that are passed to the component.
-   *
-   * @param {StockListColumn} column The column for which the display value should be returned.
-   * @returns {"none" | undefined} The CSS `display` property value.
+   * @param column The column for which the display value should be returned.
+   * @returns The CSS `display` property value.
    */
   const displayColumn = (column: StockListColumn): "none" | undefined => {
     if (props.columns && !props.columns.includes(column)) {

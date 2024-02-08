@@ -39,9 +39,8 @@ const FavoritesUpdaterContext = createContext<FavoritesUpdaterContextType>({} as
 
 /**
  * A provider for the favorites context.
- *
- * @param {ContextProviderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const FavoritesProvider = (props: ContextProviderProps): JSX.Element => {
   const [favorites, setFavorites] = useState<Stock["ticker"][]>([]);
@@ -73,14 +72,12 @@ export const FavoritesProvider = (props: ContextProviderProps): JSX.Element => {
 
 /**
  * Hook to use the favorites context’s state.
- *
- * @returns {FavoritesStateContextType} The favorites context’s state.
+ * @returns The favorites context’s state.
  */
 export const useFavoritesContextState = (): FavoritesStateContextType => useContext(FavoritesStateContext);
 
 /**
  * Hook to use the favorites context’s updater.
- *
- * @returns {FavoritesUpdaterContextType} The favorites context’s updater.
+ * @returns The favorites context’s updater.
  */
 export const useFavoritesContextUpdater = (): FavoritesUpdaterContextType => useContext(FavoritesUpdaterContext);

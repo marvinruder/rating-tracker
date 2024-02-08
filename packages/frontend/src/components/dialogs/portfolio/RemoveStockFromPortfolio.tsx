@@ -10,9 +10,8 @@ import api from "../../../utils/api";
 
 /**
  * A dialog to remove a stock from a portfolio.
- *
- * @param {RemoveStockFromPortfolioProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const RemoveStockFromPortfolio = (props: RemoveStockFromPortfolioProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);

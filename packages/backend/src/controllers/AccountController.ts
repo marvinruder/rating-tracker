@@ -14,9 +14,8 @@ import Router from "../utils/router";
 export class AccountController {
   /**
    * Returns the current user fetched during session validation. If no user is logged in, an empty object is returned.
-   *
-   * @param {Request} _ The request.
-   * @param {Response} res The response.
+   * @param _ The request.
+   * @param res The response.
    */
   @Router({
     path: accountEndpointPath,
@@ -32,9 +31,8 @@ export class AccountController {
 
   /**
    * Returns the avatar of the current user fetched during session validation.
-   *
-   * @param {Request} _ The request.
-   * @param {Response} res The response.
+   * @param _ The request.
+   * @param res The response.
    */
   @Router({
     path: accountEndpointPath + accountAvatarEndpointSuffix,
@@ -56,9 +54,8 @@ export class AccountController {
 
   /**
    * Updates the current account in the database.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: accountEndpointPath,
@@ -86,9 +83,8 @@ export class AccountController {
 
   /**
    * Creates an avatar for the current account in the database.
-   *
-   * @param {Request} req The request.
-   * @param {Response} res The response.
+   * @param req The request.
+   * @param res The response.
    */
   @Router({
     path: accountEndpointPath + accountAvatarEndpointSuffix,
@@ -115,9 +111,8 @@ export class AccountController {
 
   /**
    * Deletes the current account from the database.
-   *
-   * @param {Request} _ The request.
-   * @param {Response} res The response.
+   * @param _ The request.
+   * @param res The response.
    */
   @Router({
     path: accountEndpointPath,
@@ -131,9 +126,8 @@ export class AccountController {
 
   /**
    * Deletes the avatar of the current account from the database.
-   *
-   * @param {Request} _ The request.
-   * @param {Response} res The response.
+   * @param _ The request.
+   * @param res The response.
    */
   @Router({
     path: accountEndpointPath + accountAvatarEndpointSuffix,

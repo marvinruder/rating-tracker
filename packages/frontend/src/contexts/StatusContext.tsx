@@ -36,9 +36,8 @@ const StatusUpdaterContext = createContext<StatusUpdaterContextType>({} as Statu
 
 /**
  * A provider for the status context.
- *
- * @param {ContextProviderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const StatusProvider = (props: ContextProviderProps): JSX.Element => {
   const [systemStatusLoading, setSystemStatusLoading] = useState(false);
@@ -123,14 +122,12 @@ export const StatusProvider = (props: ContextProviderProps): JSX.Element => {
 
 /**
  * Hook to use the status context’s state.
- *
- * @returns {StatusStateContextType} The status context’s state.
+ * @returns The status context’s state.
  */
 export const useStatusContextState = (): StatusStateContextType => useContext(StatusStateContext);
 
 /**
  * Hook to use the status context’s updater.
- *
- * @returns {StatusUpdaterContextType} The status context’s updater.
+ * @returns The status context’s updater.
  */
 export const useStatusContextUpdater = (): StatusUpdaterContextType => useContext(StatusUpdaterContext);

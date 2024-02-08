@@ -55,9 +55,8 @@ export const messageTypeDescription: Record<MessageType, string> = {
 
 /**
  * Checks if a string is a valid type of message that can be sent to a user.
- *
- * @param {string} s The string to check.
- * @returns {boolean} True if the string is a valid type of message that can be sent to a user.
+ * @param s The string to check.
+ * @returns True if the string is a valid type of message that can be sent to a user.
  */
 export function isMessageType(s: string): s is MessageType {
   return messageTypeArray.includes(s as MessageType);

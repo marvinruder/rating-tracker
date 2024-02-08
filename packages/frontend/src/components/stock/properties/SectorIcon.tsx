@@ -6,9 +6,8 @@ import type { FC } from "react";
 
 /**
  * Provides the SVG paths for the icon.
- *
- * @param {SuperSector | Sector} superSectorOrSector The super sector or sector to get the icon’s paths for.
- * @returns {JSX.Element} The SVG paths for the icon.
+ * @param superSectorOrSector The super sector or sector to get the icon’s paths for.
+ * @returns The SVG paths for the icon.
  */
 export const getSectorIconPaths = (superSectorOrSector: SuperSector | Sector): JSX.Element => {
   switch (superSectorOrSector) {
@@ -124,9 +123,8 @@ export const getSectorIconPaths = (superSectorOrSector: SuperSector | Sector): J
 
 /**
  * A SVG icon representing a sector or super sector from the Morningstar Global Equity Classification Structure.
- *
- * @param {SectorIconProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps): JSX.Element => {
   const theme = useTheme();

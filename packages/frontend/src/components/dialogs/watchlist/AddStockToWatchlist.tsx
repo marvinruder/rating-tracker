@@ -28,9 +28,8 @@ import { AddWatchlist } from "./AddWatchlist";
 
 /**
  * A dialog to add a stock to a watchlist.
- *
- * @param {AddStockToWatchlistProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Element => {
   const [watchlistSummaries, setWatchlistSummaries] = useState<WatchlistSummary[]>([]);
@@ -61,8 +60,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
 
   /**
    * Adds the stock to the watchlist.
-   *
-   * @param {number} id The ID of the watchlist.
+   * @param id The ID of the watchlist.
    */
   const addStockToWatchlist = (id: number) => {
     api

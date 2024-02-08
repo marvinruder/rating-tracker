@@ -43,9 +43,8 @@ import { StockDetails } from "../../stock/layouts/StockDetails";
 
 /**
  * A dialog to add a new stock to the backend.
- *
- * @param {AddStockProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const AddStock = (props: AddStockProps): JSX.Element => {
   const [activeStep, setActiveStep] = useState<number>(0); // The dialog step to show.
@@ -84,8 +83,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
 
   /**
    * Checks for errors in the input fields.
-   *
-   * @returns {boolean} Whether the input fields are valid.
+   * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
     // The following fields are required.
@@ -98,23 +96,21 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
 
   /**
    * Handles a click on the “Move to the next dialog step” button.
-   *
-   * @returns {void}
    */
-  const handleNext = (): void =>
+  const handleNext = (): void => {
     activeStep === steps.length - 1
       ? (props.onClose(), props.onCloseAfterAdd()) // Close and update stock list if we are on the last step.
       : setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
 
   /**
    * Handles a click on the “Go back to the previous dialog step” button.
-   *
-   * @returns {void}
    */
-  const handleBack = (): void =>
+  const handleBack = (): void => {
     activeStep === 0
       ? props.onClose() // Close if we are on the first step.
       : setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
 
   /**
    * Transmits the stock to the server.

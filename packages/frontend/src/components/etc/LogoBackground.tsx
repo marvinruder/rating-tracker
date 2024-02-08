@@ -11,8 +11,7 @@ const MAX_COUNT = 50;
 
 /**
  * The background of the page, showing stock logos.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 export const LogoBackground = (): JSX.Element => {
   const theme = useTheme();

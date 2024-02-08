@@ -27,9 +27,8 @@ import api from "../../../utils/api";
 
 /**
  * A header for the stock details page.
- *
- * @param {StockHeaderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const StockHeader = (props: StockHeaderProps): JSX.Element => {
   const [addToWatchlistDialogOpen, setAddToWatchlistDialogOpen] = useState<boolean>(false);

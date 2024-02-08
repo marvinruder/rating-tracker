@@ -28,9 +28,8 @@ import { AddPortfolio } from "./AddPortfolio";
 
 /**
  * A dialog to add a stock to a portfolio.
- *
- * @param {AddStockToPortfolioProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Element => {
   const [portfolioSummaries, setPortfolioSummaries] = useState<PortfolioSummary[]>([]);
@@ -45,8 +44,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
 
   /**
    * Checks for errors in the input fields.
-   *
-   * @returns {boolean} Whether the input fields are valid.
+   * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
     // The following fields are required.
@@ -74,8 +72,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
 
   /**
    * Adds the stock to the portfolio.
-   *
-   * @param {number} id The ID of the portfolio.
+   * @param id The ID of the portfolio.
    */
   const addStockToPortfolio = (id: number) => {
     if (!validate()) return;

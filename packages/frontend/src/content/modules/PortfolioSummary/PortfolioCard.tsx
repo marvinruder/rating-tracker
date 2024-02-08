@@ -23,9 +23,8 @@ import { EditPortfolio } from "../../../components/dialogs/portfolio/EditPortfol
 
 /**
  * This component displays information about a portfolio in a card used in the portfolio summary module.
- *
- * @param {PortfolioCardProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);

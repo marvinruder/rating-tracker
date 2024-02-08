@@ -9,9 +9,8 @@ import { readStock } from "./stockTable";
 
 /**
  * Check whether the given user is the owner of the specified watchlist.
- *
- * @param {number} id The ID of the watchlist.
- * @param {string} email The email of the current user.
+ * @param id The ID of the watchlist.
+ * @param email The email of the current user.
  * @throws an {@link APIError} if the watchlist does not exist or belong to the user.
  */
 const checkWatchlistExistenceAndOwner = async (id: number, email: string) => {
@@ -26,11 +25,10 @@ const checkWatchlistExistenceAndOwner = async (id: number, email: string) => {
 
 /**
  * Create a watchlist.
- *
- * @param {string} name The name of the watchlist to create.
- * @param {string} email The email of the current user.
+ * @param name The name of the watchlist to create.
+ * @param email The email of the current user.
  * @throws an {@link APIError} if a reserved name is used.
- * @returns {Promise<Watchlist>} The created watchlist.
+ * @returns The created watchlist.
  */
 export const createWatchlist = async (name: string, email: string): Promise<Watchlist> => {
   if (name === FAVORITES_NAME) {
@@ -51,9 +49,8 @@ export const createWatchlist = async (name: string, email: string): Promise<Watc
 
 /**
  * Read the Favorites watchlist of a user.
- *
- * @param {string} email The email of the current user.
- * @returns {Promise<Watchlist>} The Favorites watchlist.
+ * @param email The email of the current user.
+ * @returns The Favorites watchlist.
  */
 export const readFavorites = async (email: string): Promise<Watchlist> => {
   try {
@@ -82,10 +79,9 @@ export const readFavorites = async (email: string): Promise<Watchlist> => {
 
 /**
  * Read a watchlist.
- *
- * @param {number} id The ID of the watchlist.
- * @param {string} email The email of the current user.
- * @returns {Promise<Watchlist>} The watchlist.
+ * @param id The ID of the watchlist.
+ * @param email The email of the current user.
+ * @returns The watchlist.
  * @throws an {@link APIError} if the watchlist does not exist or belong to the user.
  */
 export const readWatchlist = async (id: number, email: string): Promise<Watchlist> => {
@@ -103,9 +99,8 @@ export const readWatchlist = async (id: number, email: string): Promise<Watchlis
 
 /**
  * Read all watchlists of the current user.
- *
- * @param {string} email The email address of the current user.
- * @returns {Promise<WatchlistSummary[]>} A list of all watchlists belonging to the current user.
+ * @param email The email address of the current user.
+ * @returns A list of all watchlists belonging to the current user.
  */
 export const readAllWatchlists = async (email: string): Promise<WatchlistSummary[]> => {
   return await client.watchlist.findMany({
@@ -122,10 +117,9 @@ export const readAllWatchlists = async (email: string): Promise<WatchlistSummary
 
 /**
  * Update a watchlist.
- *
- * @param {number} id The ID of the watchlist.
- * @param {string} email The email of the current user.
- * @param {Partial<Omit<Watchlist, "id" | "stocks">>} newValues The new values for the watchlist.
+ * @param id The ID of the watchlist.
+ * @param email The email of the current user.
+ * @param newValues The new values for the watchlist.
  * @throws an {@link APIError} if the watchlist does not exist or belong to the user, or if a reserved name is used in a
  * prohibited way.
  */
@@ -173,10 +167,9 @@ export const updateWatchlist = async (
 
 /**
  * Adds a stock to a watchlist.
- *
- * @param {number} id The ID of the watchlist.
- * @param {string} email The email of the current user.
- * @param {string} ticker The ticker of the stock to add.
+ * @param id The ID of the watchlist.
+ * @param email The email of the current user.
+ * @param ticker The ticker of the stock to add.
  * @throws an {@link APIError} if the watchlist or the stock does not exist.
  */
 export const addStockToWatchlist = async (id: number, email: string, ticker: string) => {
@@ -192,10 +185,9 @@ export const addStockToWatchlist = async (id: number, email: string, ticker: str
 
 /**
  * Removes a stock from a watchlist.
- *
- * @param {number} id The ID of the watchlist.
- * @param {string} email The email of the current user.
- * @param {string} ticker The ticker of the stock to remove.
+ * @param id The ID of the watchlist.
+ * @param email The email of the current user.
+ * @param ticker The ticker of the stock to remove.
  * @throws an {@link APIError} if the watchlist or the stock do not exist.
  */
 export const removeStockFromWatchlist = async (id: number, email: string, ticker: string) => {
@@ -211,9 +203,8 @@ export const removeStockFromWatchlist = async (id: number, email: string, ticker
 
 /**
  * Delete a watchlist.
- *
- * @param {number} id The ID of the watchlist to delete.
- * @param {string} email The email of the current user.
+ * @param id The ID of the watchlist to delete.
+ * @param email The email of the current user.
  * @throws an {@link APIError} if the watchlist or the stock do not exist.
  */
 export const deleteWatchlist = async (id: number, email: string) => {

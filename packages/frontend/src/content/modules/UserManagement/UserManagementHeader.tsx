@@ -3,8 +3,7 @@ import type { FC } from "react";
 
 /**
  * A header for the user list page. It contains the user list filters and column filter.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const UserManagementHeader: FC = (): JSX.Element => {
   return (

@@ -33,10 +33,9 @@ export const DUMMY_SVG: string =
 
 /**
  * Retrieves the logo of a stock from Redis cache or TradeRepublic.
- *
- * @param {string} ticker the ticker of the stock
- * @param {boolean} dark whether to use the dark or light version of the logo
- * @returns {Promise<Resource>} the logo as a Resource object
+ * @param ticker the ticker of the stock
+ * @param dark whether to use the dark or light version of the logo
+ * @returns the logo as a Resource object
  */
 const getLogoOfStock = async (ticker: string, dark: boolean): Promise<Resource> => {
   const stock = await readStock(ticker);
@@ -85,9 +84,8 @@ const getLogoOfStock = async (ticker: string, dark: boolean): Promise<Resource> 
 export class StocksController {
   /**
    * Returns a list of stocks, which can be filtered, sorted and paginated.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: stocksEndpointPath,
@@ -441,9 +439,8 @@ export class StocksController {
 
   /**
    * (Re-)Computes dynamic attributes of all stocks.
-   *
-   * @param {Request} _ Request object
-   * @param {Response} res Response object
+   * @param _ Request object
+   * @param res Response object
    */
   @Router({
     path: stocksEndpointPath,
@@ -460,9 +457,8 @@ export class StocksController {
 
   /**
    * Fetches the logo of a stock from Redis cache or TradeRepublic.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: stocksEndpointPath + "/:ticker" + stockLogoEndpointSuffix,
@@ -484,9 +480,8 @@ export class StocksController {
 
   /**
    * Fetches the logos of the highest rated stocks.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: logoBackgroundEndpointPath,
@@ -527,9 +522,8 @@ export class StocksController {
 
   /**
    * Reads a single stock from the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: stocksEndpointPath + "/:ticker",
@@ -545,9 +539,8 @@ export class StocksController {
 
   /**
    * Creates a new stock in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    * @throws an {@link APIError} if a stock with the same ticker already exists
    */
   @Router({
@@ -569,9 +562,8 @@ export class StocksController {
 
   /**
    * Updates a stock in the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: stocksEndpointPath + "/:ticker",
@@ -636,9 +628,8 @@ export class StocksController {
 
   /**
    * Deletes a stock from the database.
-   *
-   * @param {Request} req Request object
-   * @param {Response} res Response object
+   * @param req Request object
+   * @param res Response object
    */
   @Router({
     path: stocksEndpointPath + "/:ticker",

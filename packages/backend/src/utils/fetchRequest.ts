@@ -3,11 +3,10 @@ import { createURLSearchParams, handleResponse } from "@rating-tracker/commons";
 
 /**
  * Performs a request using the NodeJS’s `fetch` API.
- *
- * @param {string} url The URL of the request.
- * @param {FetchRequestWithBodyOptions} config The configuration options of the request.
- * @returns {Promise<FetchResponse>} A promise that resolves to the response of the request.
- * @throws {FetchError} If the response status code is not in the 2XX range.
+ * @param url The URL of the request.
+ * @param config The configuration options of the request.
+ * @returns A {@link Promise} that resolves to the response of the request.
+ * @throws a {@link FetchError} if the response status code is not in the 2XX range.
  */
 export const performFetchRequest = (url: string, config?: FetchRequestWithBodyOptions): Promise<FetchResponse> => {
   const { body, params, ...init } = config ?? {};

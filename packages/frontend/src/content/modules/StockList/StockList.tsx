@@ -12,8 +12,7 @@ import StockListHeader from "./StockListHeader";
 
 /**
  * A module that displays a list of stocks.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const StockListModule = (): JSX.Element => {
   const [filter, setFilter] = useState<StockFilter>({});

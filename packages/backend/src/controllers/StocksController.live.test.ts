@@ -29,9 +29,8 @@ export const tests: LiveTestSuite = [];
 
 /**
  * Checks a response for the presence of stocks of the given name in the specified order.
- *
- * @param {Response} res The response to check.
- * @param {string[]} stockNames The names of the stocks to check for.
+ * @param res The response to check.
+ * @param stockNames The names of the stocks to check for.
  */
 const expectStocksToBePresent = (res: Response, stockNames: string[]) => {
   expect(res.status).toBe(200);

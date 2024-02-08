@@ -41,8 +41,7 @@ const Transition = forwardRef(function Transition(
 
 /**
  * A search bar that can be activated from a button in the header.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 export const HeaderSearchButton = (): JSX.Element => {
   const [searchValue, setSearchValue] = useState("");
@@ -57,16 +56,14 @@ export const HeaderSearchButton = (): JSX.Element => {
   useEffect(() => {
     /**
      * Checks whether the search shortcut ⌘F or ⌃F was pressed.
-     *
-     * @param {KeyboardEvent} e The keyboard event.
-     * @returns {boolean} Whether the search shortcut was pressed.
+     * @param e The keyboard event.
+     * @returns Whether the search shortcut was pressed.
      */
     const isSearchShortcut = (e: KeyboardEvent) => (e.ctrlKey || e.metaKey) && (e.key === "f" || e.key === "F");
 
     /**
      * Opens the search bar when the search shortcut is pressed.
-     *
-     * @param {KeyboardEvent} e The keyboard event.
+     * @param e The keyboard event.
      */
     const searchShortcutHandler = (e: KeyboardEvent) => {
       if (isSearchShortcut(e)) {
@@ -78,8 +75,7 @@ export const HeaderSearchButton = (): JSX.Element => {
 
     /**
      * Navigates to the first stock in the search results when the ↩︎ key is pressed.
-     *
-     * @param {KeyboardEvent} e The keyboard event.
+     * @param e The keyboard event.
      */
     const enterKeyHandler = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
@@ -92,8 +88,7 @@ export const HeaderSearchButton = (): JSX.Element => {
 
     /**
      * Closes the search bar when the ⎋ key is pressed.
-     *
-     * @param {KeyboardEvent} e The keyboard event.
+     * @param e The keyboard event.
      */
     const escapeKeyHandler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -116,8 +111,7 @@ export const HeaderSearchButton = (): JSX.Element => {
 
   /**
    * Handles the change of the search input.
-   *
-   * @param {ChangeEvent<HTMLInputElement>} event The change event.
+   * @param event The change event.
    */
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
@@ -166,8 +160,7 @@ export const HeaderSearchButton = (): JSX.Element => {
 
   /**
    * Fetches a list of stocks matching the search value.
-   *
-   * @param {string} currentSearchValue The current search value.
+   * @param currentSearchValue The current search value.
    */
   const getStocks = (currentSearchValue: string) => {
     api

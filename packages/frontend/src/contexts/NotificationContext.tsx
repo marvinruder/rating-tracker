@@ -41,9 +41,8 @@ const NotificationUpdaterContext = createContext<NotificationUpdaterContextType>
 
 /**
  * A provider for the notification context.
- *
- * @param {ContextProviderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const NotificationProvider = (props: ContextProviderProps): JSX.Element => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
@@ -74,15 +73,13 @@ export const NotificationProvider = (props: ContextProviderProps): JSX.Element =
 
 /**
  * Hook to use the notification context’s state.
- *
- * @returns {NotificationStateContextType} The notification context’s state.
+ * @returns The notification context’s state.
  */
 export const useNotificationContextState = (): NotificationStateContextType => useContext(NotificationStateContext);
 
 /**
  * Hook to use the notification context’s updater methods.
- *
- * @returns {NotificationUpdaterContextType} The notification context’s updater methods.
+ * @returns The notification context’s updater methods.
  */
 export const useNotificationContextUpdater = (): NotificationUpdaterContextType =>
   useContext(NotificationUpdaterContext);

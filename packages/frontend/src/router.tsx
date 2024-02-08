@@ -22,8 +22,7 @@ import { useUserContextState } from "./contexts/UserContext";
 
 /**
  * A component that renders a loading indicator.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const SuspenseLoader = (): JSX.Element => (
   <Box
@@ -44,18 +43,16 @@ const SuspenseLoader = (): JSX.Element => (
 /**
  * A wrapper for lazy-loaded components that adds a suspense loader. While the component is loading, the suspense
  * loader will display a loading indicator.
- *
- * @param {React.LazyExoticComponent<React.ComponentType<any>>} Component The component to wrap.
- * @returns {JSX.Element} The component.
+ * @param Component The component to wrap.
+ * @returns The component.
  */
 const loader = (
   Component: React.LazyExoticComponent<React.ComponentType<any>>,
 ): ((props: JSX.IntrinsicAttributes) => JSX.Element) => {
   /**
    * A wrapper for the suspense loader.
-   *
-   * @param {JSX.IntrinsicAttributes} props The properties to pass to the component.
-   * @returns {JSX.Element} The component.
+   * @param props The properties to pass to the component.
+   * @returns The component.
    */
   const SuspenseWrapper = (props: JSX.IntrinsicAttributes): JSX.Element => (
     <Suspense fallback={<SuspenseLoader />}>
@@ -70,7 +67,6 @@ const loader = (
 
 /**
  * The portfolio module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -78,7 +74,6 @@ const Portfolio = loader(lazy(() => import("./content/modules/Portfolio/Portfoli
 
 /**
  * The portfolio summary module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -86,7 +81,6 @@ const PortfolioSummary = loader(lazy(() => import("./content/modules/PortfolioSu
 
 /**
  * The stock list module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -94,7 +88,6 @@ const StockList = loader(lazy(() => import("./content/modules/StockList/StockLis
 
 /**
  * The user management module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -102,7 +95,6 @@ const UserManagement = loader(lazy(() => import("./content/modules/UserManagemen
 
 /**
  * The stock module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -110,7 +102,6 @@ const Stock = loader(lazy(() => import("./content/modules/Stock/Stock")));
 
 /**
  * The watchlist summary module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -118,7 +109,6 @@ const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSu
 
 /**
  * The watchlist module, loaded only when needed.
- *
  * @param {JSX.IntrinsicAttributes} props The properties of the component.
  * @returns {JSX.Element} The component.
  */
@@ -128,14 +118,12 @@ const Watchlist = loader(lazy(() => import("./content/modules/Watchlist/Watchlis
 
 /**
  * The 404 Not Found page, loaded only when needed.
- *
  * @returns {JSX.Element} The component.
  */
 const Status404 = loader(lazy(() => import("./content/pages/Status/Status404")));
 
 /**
  * The 500 Internal Server Error page, loaded only when needed.
- *
  * @returns {JSX.Element} The component.
  */
 const Status500 = loader(lazy(() => import("./content/pages/Status/Status500")));
@@ -144,7 +132,6 @@ const Status500 = loader(lazy(() => import("./content/pages/Status/Status500")))
 
 /**
  * The sidebar layout, loaded only when needed.
- *
  * @returns {JSX.Element} The component.
  */
 const SidebarLayout = loader(lazy(() => import("./layouts/SidebarLayout/SidebarLayout")));
@@ -152,9 +139,8 @@ const SidebarLayout = loader(lazy(() => import("./layouts/SidebarLayout/SidebarL
 /**
  * A wrapper ensuring that the user is authenticated before displaying the page.
  * Also provides a user context if the user is authenticated.
- *
- * @param {AuthWrapperProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
   const { pathname } = useLocation();
@@ -202,8 +188,7 @@ interface AuthWrapperProps {
  * A component that redirects to the current URL, triggering an HTTP request to the API instead of interpreting the
  * API URL as a React route. This can happen if the `redirect` parameter contains a URL that is not a React route, but
  * e.g. a screenshot resource URL.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const ForwardToAPI = (): JSX.Element => {
   document.location = document.location;

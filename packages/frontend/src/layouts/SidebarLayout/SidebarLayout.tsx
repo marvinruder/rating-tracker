@@ -8,8 +8,7 @@ import { Sidebar } from "./Sidebar/Sidebar";
 
 /**
  * A layout with a sidebar.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const SidebarLayout: FC = (): JSX.Element => {
   const theme = useTheme();

@@ -4,8 +4,7 @@ import { HeaderSearchButton } from "./SearchButton";
 
 /**
  * Renders the buttons in the header.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 export const HeaderButtons = (): JSX.Element => {
   return (

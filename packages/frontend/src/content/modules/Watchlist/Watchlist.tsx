@@ -15,8 +15,7 @@ import { WatchlistHeader } from "./WatchlistHeader";
 
 /**
  * A module that displays a watchlist.
- *
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const WatchlistModule = (): JSX.Element => {
   const [watchlist, setWatchlist] = useState<Watchlist>();
@@ -27,8 +26,7 @@ const WatchlistModule = (): JSX.Element => {
 
   /**
    * Fetches the watchlist with the given ID.
-   *
-   * @param {number} id The ID of the watchlist to fetch.
+   * @param id The ID of the watchlist to fetch.
    */
   const getWatchlist = (id: number) => {
     api

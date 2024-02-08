@@ -17,9 +17,8 @@ import api from "../../../utils/api";
 
 /**
  * A header for the watchlist details page.
- *
- * @param {WatchlistHeaderProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
   const isFavorites = props.watchlist?.name === FAVORITES_NAME;

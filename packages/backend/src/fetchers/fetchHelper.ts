@@ -99,11 +99,10 @@ type FetcherSource = {
 /**
  * Captures the fetched resource of a fetcher in case of an error and stores it in Redis. Based on the fetcher type, the
  * resource can either be a {@link Document} or a {@link Object}.
- *
- * @param {Stock} stock the affected stock
- * @param {IndividualDataProvider} dataProvider the name of the data provider
- * @param {FetcherSource} source the source of the fetcher
- * @returns {Promise<string>} A string holding a general informational message and a URL to the screenshot
+ * @param stock the affected stock
+ * @param dataProvider the name of the data provider
+ * @param source the source of the fetcher
+ * @returns A string holding a general informational message and a URL to the screenshot
  */
 export const captureDataProviderError = async (
   stock: Stock,
@@ -171,9 +170,8 @@ const dataProviderFetchers: Record<HTMLDataProvider, HTMLFetcher> & Record<JSOND
 
 /**
  * Creates an object containing the aggregated results of the fetch for logging.
- *
- * @param {FetcherWorkspace<unknown>} stocks The fetcher workspace.
- * @returns {object} An object containing the aggregated results of the fetch.
+ * @param stocks The fetcher workspace.
+ * @returns An object containing the aggregated results of the fetch.
  */
 const countFetchResults = (
   stocks: FetcherWorkspace<unknown>,
@@ -185,9 +183,8 @@ const countFetchResults = (
 
 /**
  * Determines the allowed number of fetchers that can work concurrently on fetching a list of stocks.
- *
- * @param {Request} req Request object
- * @returns {number} The number of fetchers to use.
+ * @param req Request object
+ * @returns The number of fetchers to use.
  */
 const determineConcurrency = (req: Request): number => {
   let concurrency: number = Number(req.query.concurrency ?? 1);
@@ -211,10 +208,9 @@ const determineConcurrency = (req: Request): number => {
 
 /**
  * Fetches data from a data provider.
- *
- * @param {Request} req Request object
- * @param {Response} res Response object
- * @param {IndividualDataProvider} dataProvider The data provider to fetch from
+ * @param req Request object
+ * @param res Response object
+ * @param dataProvider The data provider to fetch from
  * @throws an {@link APIError} in case of a severe error
  */
 export const fetchFromDataProvider = async (
@@ -404,9 +400,8 @@ export const fetchFromDataProvider = async (
 
 /**
  * Apply data-provider-specific patches to the HTML document.
- *
- * @param {string} html The HTML document to patch
- * @returns {string} The patched HTML document
+ * @param html The HTML document to patch
+ * @returns The patched HTML document
  */
 const patchHTML = (html: string): string => {
   // This patch is required for malformatted Morningstar pages
@@ -419,13 +414,12 @@ const patchHTML = (html: string): string => {
 
 /**
  * Fetches an HTML document from a URL and parses it.
- *
- * @param {string} url The URL to fetch from
- * @param {FetchRequestOptions} config The fetch request options
- * @param {Stock} stock The affected stock
- * @param {IndividualDataProvider} dataProvider The name of the data provider to fetch from
- * @param {ParseResult} parseResult The variable the result of the parsing will be assigned to. This may either be a
- *                                  `Document` or a {@link FetchError}.
+ * @param url The URL to fetch from
+ * @param config The fetch request options
+ * @param stock The affected stock
+ * @param dataProvider The name of the data provider to fetch from
+ * @param parseResult The variable the result of the parsing will be assigned to. This may either be a
+ *                    `Document` or a {@link FetchError}.
  */
 export const getAndParseHTML = async (
   url: string,

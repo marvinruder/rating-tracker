@@ -10,9 +10,8 @@ import api from "../../../utils/api";
 
 /**
  * A dialog to delete a portfolio from the backend.
- *
- * @param {DeletePortfolioProps} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 export const DeletePortfolio = (props: DeletePortfolioProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
