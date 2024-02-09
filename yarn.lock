@@ -1403,7 +1403,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.1.3"
     express: "npm:4.18.2"
     express-async-errors: "npm:3.1.1"
-    express-openapi-validator: "npm:5.1.3"
+    express-openapi-validator: "npm:5.1.4"
     express-rate-limit: "npm:7.1.5"
     fast-glob: "npm:3.3.2"
     luxon: "npm:3.4.4"
@@ -4701,9 +4701,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-openapi-validator@npm:5.1.3":
-  version: 5.1.3
-  resolution: "express-openapi-validator@npm:5.1.3"
+"express-openapi-validator@npm:5.1.4":
+  version: 5.1.4
+  resolution: "express-openapi-validator@npm:5.1.4"
   dependencies:
     "@apidevtools/json-schema-ref-parser": "npm:^9.1.2"
     "@types/multer": "npm:^1.4.7"
@@ -4714,13 +4714,11 @@ __metadata:
     json-schema-traverse: "npm:^1.0.0"
     lodash.clonedeep: "npm:^4.5.0"
     lodash.get: "npm:^4.4.2"
-    lodash.uniq: "npm:^4.5.0"
-    lodash.zipobject: "npm:^4.1.3"
     media-typer: "npm:^1.1.0"
     multer: "npm:^1.4.5-lts.1"
     ono: "npm:^7.1.3"
     path-to-regexp: "npm:^6.2.0"
-  checksum: 10c0/a71aef14837e941bde5fb1af9479211257a721fbb1e1ed5b5936cbde3575b47d81d6f7eedfc964ac6232868d355eaad8f209c083a3886f887e10e8745ab41f14
+  checksum: 10c0/7958b8cf931328c78ea6415173f917b3a5beb3dfaf68999d495907686a0d4e21e3b6ed23eee02808d059cc812c2b8388ac15a2f10b213fa270bbf95bdde29114
   languageName: node
   linkType: hard
 
@@ -6152,20 +6150,6 @@ __metadata:
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: 10c0/402fa16a1edd7538de5b5903a90228aa48eb5533986ba7fa26606a49db2572bf414ff73a2c9f5d5fd36b31c46a5d5c7e1527749c07cbcf965ccff5fbdf32c506
-  languageName: node
-  linkType: hard
-
-"lodash.uniq@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.uniq@npm:4.5.0"
-  checksum: 10c0/262d400bb0952f112162a320cc4a75dea4f66078b9e7e3075ffbc9c6aa30b3e9df3cf20e7da7d566105e1ccf7804e4fbd7d804eee0b53de05d83f16ffbf41c5e
-  languageName: node
-  linkType: hard
-
-"lodash.zipobject@npm:^4.1.3":
-  version: 4.1.3
-  resolution: "lodash.zipobject@npm:4.1.3"
-  checksum: 10c0/4cd9dad0d8d917f15c8f6c2d777234a1d72806c90af33e3fb622fd1b8350118260c61fa2c47f5203ce11df801f88ca009355b9b26c6a8fb2fa79774205574df4
   languageName: node
   linkType: hard
 
