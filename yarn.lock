@@ -1375,7 +1375,7 @@ __metadata:
   dependencies:
     "@prisma/client": "npm:5.9.1"
     "@rating-tracker/commons": "workspace:*"
-    "@simplewebauthn/server": "npm:9.0.1"
+    "@simplewebauthn/server": "npm:9.0.2"
     "@types/cookie-parser": "npm:1.4.6"
     "@types/express": "npm:4.17.21"
     "@types/luxon": "npm:3.4.2"
@@ -1756,9 +1756,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/server@npm:9.0.1":
-  version: 9.0.1
-  resolution: "@simplewebauthn/server@npm:9.0.1"
+"@simplewebauthn/server@npm:9.0.2":
+  version: 9.0.2
+  resolution: "@simplewebauthn/server@npm:9.0.2"
   dependencies:
     "@hexagon/base64": "npm:^1.1.27"
     "@peculiar/asn1-android": "npm:^2.3.10"
@@ -1766,14 +1766,14 @@ __metadata:
     "@peculiar/asn1-rsa": "npm:^2.3.8"
     "@peculiar/asn1-schema": "npm:^2.3.8"
     "@peculiar/asn1-x509": "npm:^2.3.8"
-    "@simplewebauthn/types": "npm:^9.0.0"
+    "@simplewebauthn/types": "npm:^9.0.1"
     cbor-x: "npm:^1.5.2"
     cross-fetch: "npm:^4.0.0"
-  checksum: 10c0/6581c423a01711c39c07d1b2e70cb647460bf5f101734dcd7ebf6e6110d20797f59d5628b6d31ceebbfcd36495c8e7b6ea9ce1f769b2f0e065f766ae5c63eff7
+  checksum: 10c0/81f7100a9cd03627b1537375e8bda4c2455f09e97b06e486fb5b0d5271218bfa902c18c33d135ee239423a41a4a89c137ced59e07dd127f8fdf1d1987816fd39
   languageName: node
   linkType: hard
 
-"@simplewebauthn/types@npm:^9.0.0, @simplewebauthn/types@npm:^9.0.1":
+"@simplewebauthn/types@npm:^9.0.1":
   version: 9.0.1
   resolution: "@simplewebauthn/types@npm:9.0.1"
   checksum: 10c0/397f079ac029ada1413d6001850e3b49f99297a9933822758bdca9c47c36d6558e1dc81682725e0b03c501551c94fea040cead76883dcd2bb3a34b32984900f5
