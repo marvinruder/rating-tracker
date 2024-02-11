@@ -1403,7 +1403,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.1.3"
     express: "npm:4.18.2"
     express-async-errors: "npm:3.1.1"
-    express-openapi-validator: "npm:5.1.4"
+    express-openapi-validator: "npm:5.1.6"
     express-rate-limit: "npm:7.1.5"
     fast-glob: "npm:3.3.2"
     luxon: "npm:3.4.4"
@@ -4701,9 +4701,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-openapi-validator@npm:5.1.4":
-  version: 5.1.4
-  resolution: "express-openapi-validator@npm:5.1.4"
+"express-openapi-validator@npm:5.1.6":
+  version: 5.1.6
+  resolution: "express-openapi-validator@npm:5.1.6"
   dependencies:
     "@apidevtools/json-schema-ref-parser": "npm:^9.1.2"
     "@types/multer": "npm:^1.4.7"
@@ -4718,7 +4718,7 @@ __metadata:
     multer: "npm:^1.4.5-lts.1"
     ono: "npm:^7.1.3"
     path-to-regexp: "npm:^6.2.0"
-  checksum: 10c0/7958b8cf931328c78ea6415173f917b3a5beb3dfaf68999d495907686a0d4e21e3b6ed23eee02808d059cc812c2b8388ac15a2f10b213fa270bbf95bdde29114
+  checksum: 10c0/92cb7b688bc04d6cc7171b7667a8cc8a3d51fa191236a2e2fcdc3279fb40df3f5a306c2cd8e84219958b184141e583b3326efc127daddb6b392d3492ff06becc
   languageName: node
   linkType: hard
 
