@@ -20,8 +20,6 @@ const PortfolioSummaryModule = (): JSX.Element => {
   const [portfolioSummariesFinal, setPortfolioSummariesFinal] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
-  useEffect(() => getPortfolios(), []);
-
   /**
    * Get the portfolios from the backend.
    */
@@ -35,6 +33,8 @@ const PortfolioSummaryModule = (): JSX.Element => {
       })
       .finally(() => setPortfolioSummariesFinal(true));
   };
+
+  useEffect(getPortfolios, []);
 
   return (
     <>

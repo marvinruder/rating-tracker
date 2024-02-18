@@ -26,6 +26,7 @@ import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWat
 import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWatchlist";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
+import { pluralize } from "../../../utils/formatters";
 
 /**
  * This component displays information about a watchlist in a card used in the watchlist summary module.
@@ -54,8 +55,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
                   <Typography variant="h3">{props.watchlist?.name ?? <Skeleton width="160px" />}</Typography>
                   <Typography variant="subtitle1" color="text.secondary">
                     {props.watchlist ? (
-                      (props.watchlist.stocks.length || "No") +
-                      ` stock${props.watchlist.stocks.length !== 1 ? "s" : ""}`
+                      (props.watchlist.stocks.length || "No") + ` stock${pluralize(props.watchlist.stocks.length)}`
                     ) : (
                       <Skeleton width="48px" />
                     )}

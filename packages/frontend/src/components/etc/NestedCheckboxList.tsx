@@ -477,7 +477,7 @@ interface NestedCheckboxListProps<
   /**
    * A function that returns the second-level elements for a given first-level element. If there are no second-level
    * elements, this function is omitted.
-   * @param {FirstLevelType} firstLevelElement The first-level element to get the second-level elements for.
+   * @param firstLevelElement The first-level element to get the second-level elements for.
    * @returns {SecondLevelType[]} The second-level elements for the given first-level element.
    */
   getSecondLevelElements?: (firstLevelElement: FirstLevelType) => SecondLevelType[];

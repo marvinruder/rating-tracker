@@ -14,6 +14,7 @@ import type { StockTableFiltersProps } from "../../../components/stock/layouts/S
 import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
+import { pluralize } from "../../../utils/formatters";
 
 /**
  * A header for the watchlist details page.
@@ -38,7 +39,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
             </Typography>
             <Typography variant="subtitle2">
               {props.watchlist ? (
-                (props.watchlist.stocks.length || "No") + ` stock${props.watchlist.stocks.length !== 1 ? "s" : ""}`
+                (props.watchlist.stocks.length || "No") + ` stock${pluralize(props.watchlist.stocks.length)}`
               ) : (
                 <Skeleton width="48px" />
               )}

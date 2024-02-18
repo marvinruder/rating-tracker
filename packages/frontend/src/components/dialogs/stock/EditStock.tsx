@@ -6,7 +6,6 @@ import {
   DialogContent,
   Grid,
   TextField,
-  Autocomplete,
   DialogActions,
   Button,
   FormGroup,
@@ -16,10 +15,7 @@ import {
 } from "@mui/material";
 import type { Country, FetchError, Stock } from "@rating-tracker/commons";
 import {
-  countryArray,
-  countryNameWithFlag,
   isCountry,
-  countryName,
   stocksEndpointPath,
   fetchMarketScreenerEndpointPath,
   fetchMSCIEndpointPath,
@@ -33,6 +29,7 @@ import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
+import CountryAutocomplete from "../../autocomplete/CountryAutocomplete";
 
 /**
  * A dialog to edit a new stock in the backend.
@@ -48,8 +45,6 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
   const [isinError, setIsinError] = useState<boolean>(false); // Error in the ISIN text field.
   const [country, setCountry] = useState<Country>(props.stock.country);
   const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
-  // The value of the text field in the country autocomplete.
-  const [countryInputValue, setCountryInputValue] = useState<string>(countryName[props.stock.country]);
   // Whether to clear information related to the data provider before fetching
   const [clear, setClear] = useState<boolean>(false);
   const [morningstarID, setMorningstarID] = useState<string>(props.stock.morningstarID ?? "");
@@ -306,32 +301,10 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete
-              options={countryArray}
-              autoHighlight
-              getOptionLabel={(option) => countryNameWithFlag[option]}
-              inputValue={countryInputValue}
-              onInputChange={(_, value) => setCountryInputValue(value)}
-              multiple={false}
-              value={country ?? null}
+            <CountryAutocomplete
+              value={country}
               onChange={(_, value) => isCountry(value) && (setCountry(value), setCountryError(false))}
-              filterOptions={(options) => {
-                const currentInputValue = countryInputValue.trim().toUpperCase();
-                // Filter the country names by the input value.
-                const filteredOptions = options.filter(
-                  (option) =>
-                    countryName[option].toUpperCase().startsWith(currentInputValue) && option != currentInputValue,
-                );
-                // If the text input is a valid country code, we show it as the first option.
-                isCountry(currentInputValue) && filteredOptions.unshift(currentInputValue);
-                // If the text input is identical to a complete option label (this happens when opening the dropdown for
-                // the first time), we show it as the first option.
-                countryNameWithFlag[country] === countryInputValue.trim() && filteredOptions.unshift(country);
-                return filteredOptions;
-              }}
-              disableClearable
-              selectOnFocus
-              renderInput={(params) => <TextField {...params} label="Country" error={countryError} />}
+              error={countryError}
             />
           </Grid>
           <Grid item xs={12}>

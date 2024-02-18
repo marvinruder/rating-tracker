@@ -10,6 +10,7 @@ import { DeletePortfolio } from "../../../components/dialogs/portfolio/DeletePor
 import { EditPortfolio } from "../../../components/dialogs/portfolio/EditPortfolio";
 import type { StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
 import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
+import { pluralize } from "../../../utils/formatters";
 
 /**
  * A header for the portfolio details page.
@@ -33,7 +34,7 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
             <Typography variant="subtitle2">
               {props.portfolio ? (
                 (props.portfolio.stocks.length || "No") +
-                ` stock${props.portfolio.stocks.length !== 1 ? "s" : ""}` +
+                ` stock${pluralize(props.portfolio.stocks.length)}` +
                 (props.portfolio.stocks.length
                   ? `\u2002·\u2002${props.portfolio.currency} ${getTotalAmount(props.portfolio).toFixed(
                       currencyMinorUnits[props.portfolio.currency],

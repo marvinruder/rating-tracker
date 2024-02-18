@@ -2,7 +2,6 @@ import type { Stock } from "@rating-tracker/commons";
 import { favoritesEndpointPath } from "@rating-tracker/commons";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-import type { ContextProviderProps } from "../types/ContextProviderProps";
 import api from "../utils/api";
 
 import { useUserContextState } from "./UserContext";
@@ -42,7 +41,7 @@ const FavoritesUpdaterContext = createContext<FavoritesUpdaterContextType>({} as
  * @param props The properties of the component.
  * @returns The component.
  */
-export const FavoritesProvider = (props: ContextProviderProps): JSX.Element => {
+export const FavoritesProvider = (props: React.PropsWithChildren): JSX.Element => {
   const [favorites, setFavorites] = useState<Stock["ticker"][]>([]);
   const { user } = useUserContextState();
 

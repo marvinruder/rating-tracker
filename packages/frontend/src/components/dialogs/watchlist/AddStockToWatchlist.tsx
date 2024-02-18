@@ -23,6 +23,7 @@ import { Fragment, useEffect, useState } from "react";
 import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
+import { pluralize } from "../../../utils/formatters";
 
 import { AddWatchlist } from "./AddWatchlist";
 
@@ -107,7 +108,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
                           watchlistsAlreadyContainingStock.includes(watchlistSummary.id)
                             ? `This watchlist already contains “${props.stock.name}”.`
                             : (watchlistSummary.stocks.length || "No") +
-                              ` stock${watchlistSummary.stocks.length !== 1 ? "s" : ""}`
+                              ` stock${pluralize(watchlistSummary.stocks.length)}`
                         }
                       />
                     </ListItemButton>
