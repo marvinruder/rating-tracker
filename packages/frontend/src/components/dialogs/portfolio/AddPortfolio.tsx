@@ -1,27 +1,13 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import LoadingButton from "@mui/lab/LoadingButton";
-import {
-  DialogTitle,
-  Typography,
-  DialogContent,
-  Grid,
-  TextField,
-  DialogActions,
-  Button,
-  Autocomplete,
-} from "@mui/material";
+import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { Currency } from "@rating-tracker/commons";
-import {
-  currencyArray,
-  currencyName,
-  currencyNameWithFlagAndCode,
-  isCurrency,
-  portfoliosEndpointPath,
-} from "@rating-tracker/commons";
+import { isCurrency, portfoliosEndpointPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
+import CurrencyAutocomplete from "../../autocomplete/CurrencyAutocomplete";
 
 /**
  * A dialog to add a new portfolio in the backend.
@@ -32,8 +18,6 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [currency, setCurrency] = useState<Currency>();
-  // The value of the text field in the currency autocomplete.
-  const [currencyInputValue, setCurrencyInputValue] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [currencyError, setCurrencyError] = useState<boolean>(false); // Error in the currency input field.
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
@@ -80,33 +64,10 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete
-              options={currencyArray}
-              autoHighlight
-              getOptionLabel={(option) => currencyNameWithFlagAndCode[option]}
-              inputValue={currencyInputValue}
-              onInputChange={(_, value) => setCurrencyInputValue(value)}
-              multiple={false}
+            <CurrencyAutocomplete
               value={currency ?? null}
               onChange={(_, value) => isCurrency(value) && (setCurrency(value), setCurrencyError(false))}
-              filterOptions={(options) => {
-                const currentInputValue = currencyInputValue.trim().toUpperCase();
-                // Filter the currency names by the input value.
-                const filteredOptions = options.filter(
-                  (option) =>
-                    currencyName[option].toUpperCase().startsWith(currentInputValue) && option != currentInputValue,
-                );
-                // If the text input is a valid currency, we show it as the first option.
-                isCurrency(currentInputValue) && filteredOptions.unshift(currentInputValue);
-                // If the text input is identical to a complete option label (this happens when opening the dropdown for
-                // the first time), we show it as the first option.
-                currencyNameWithFlagAndCode[currency] === currencyInputValue.trim() &&
-                  filteredOptions.unshift(currency);
-                return filteredOptions;
-              }}
-              disableClearable
-              selectOnFocus
-              renderInput={(params) => <TextField {...params} label="Currency" error={currencyError} />}
+              error={currencyError}
             />
           </Grid>
         </Grid>
@@ -120,7 +81,7 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
           variant="contained"
           onClick={putPortfolio}
           onMouseOver={validate} // Validate input fields on hover
-          disabled={nameError}
+          disabled={nameError || currencyError}
           startIcon={<AddBoxIcon />}
         >
           Create Portfolio

@@ -1,7 +1,6 @@
 import { User, accountEndpointPath } from "@rating-tracker/commons";
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-import type { ContextProviderProps } from "../types/ContextProviderProps";
 import api from "../utils/api";
 
 import {
@@ -30,7 +29,7 @@ type UserUpdaterContextType = {
   clearUser: () => void;
   /**
    * Triggers a refetch of the user information.
-   * @param {number} version A version number to append to the avatar URL. This will force the browser to refetch the
+   * @param version A version number to append to the avatar URL. This will force the browser to refetch the
    *                         avatar if it has changed.
    * @returns {Promise<void>}
    */
@@ -52,7 +51,7 @@ const UserUpdaterContext = createContext<UserUpdaterContextType>({} as UserUpdat
  * @param props The properties of the component.
  * @returns The component.
  */
-export const UserProvider = (props: ContextProviderProps): JSX.Element => {
+export const UserProvider = (props: React.PropsWithChildren): JSX.Element => {
   const [user, setUser] = useState<User>(undefined);
   const { notification } = useNotificationContextState();
   const { setNotification } = useNotificationContextUpdater();

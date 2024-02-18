@@ -407,7 +407,7 @@ export const ThemeContext = createContext<ThemeContextType>({} as ThemeContextTy
  * @param props The properties of the component.
  * @returns The component.
  */
-const ThemeProviderWrapper: FC<ThemeProviderWrapperProps> = (props: ThemeProviderWrapperProps): JSX.Element => {
+const ThemeProviderWrapper: FC<React.PropsWithChildren> = (props: React.PropsWithChildren): JSX.Element => {
   const [themeName, setThemeName] = useState<"dark" | "light">(
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
   );
@@ -442,13 +442,6 @@ const ThemeProviderWrapper: FC<ThemeProviderWrapperProps> = (props: ThemeProvide
       <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
     </ThemeContext.Provider>
   );
-};
-
-/**
- * Properties for the theme provider wrapper.
- */
-type ThemeProviderWrapperProps = {
-  children: React.ReactNode;
 };
 
 export default ThemeProviderWrapper;

@@ -20,8 +20,6 @@ const WatchlistSummaryModule = (): JSX.Element => {
   const [watchlistSummariesFinal, setWatchlistSummariesFinal] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
-  useEffect(() => getWatchlists(), []);
-
   /**
    * Get the watchlists from the backend.
    */
@@ -35,6 +33,8 @@ const WatchlistSummaryModule = (): JSX.Element => {
       })
       .finally(() => setWatchlistSummariesFinal(true));
   };
+
+  useEffect(getWatchlists, []);
 
   return (
     <>

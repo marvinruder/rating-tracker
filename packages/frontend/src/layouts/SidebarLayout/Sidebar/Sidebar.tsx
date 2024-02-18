@@ -9,8 +9,8 @@ import { SidebarContent } from "./SidebarContent";
  * @param props The properties of the component.
  * @returns The component.
  */
-const SidebarWrapper: FC<BoxProps & { children: React.ReactNode }> = (
-  props: BoxProps & { children: React.ReactNode },
+const SidebarWrapper: FC<React.PropsWithChildren<BoxProps>> = (
+  props: React.PropsWithChildren<BoxProps>,
 ): JSX.Element => {
   const theme = useTheme();
   return (

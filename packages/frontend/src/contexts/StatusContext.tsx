@@ -2,7 +2,6 @@ import type { Service } from "@rating-tracker/commons";
 import { FetchError, serviceArray, statusEndpointPath } from "@rating-tracker/commons";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-import type { ContextProviderProps } from "../types/ContextProviderProps";
 import type { DetailedStatus, SystemStatus } from "../types/Status";
 import api from "../utils/api";
 
@@ -39,7 +38,7 @@ const StatusUpdaterContext = createContext<StatusUpdaterContextType>({} as Statu
  * @param props The properties of the component.
  * @returns The component.
  */
-export const StatusProvider = (props: ContextProviderProps): JSX.Element => {
+export const StatusProvider = (props: React.PropsWithChildren): JSX.Element => {
   const [systemStatusLoading, setSystemStatusLoading] = useState(false);
 
   const UNKNOWN_STATUS: SystemStatus = {

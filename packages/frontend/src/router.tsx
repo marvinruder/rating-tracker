@@ -67,50 +67,50 @@ const loader = (
 
 /**
  * The portfolio module, loaded only when needed.
- * @param {JSX.IntrinsicAttributes} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const Portfolio = loader(lazy(() => import("./content/modules/Portfolio/Portfolio")));
 
 /**
  * The portfolio summary module, loaded only when needed.
- * @param {JSX.IntrinsicAttributes} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const PortfolioSummary = loader(lazy(() => import("./content/modules/PortfolioSummary/PortfolioSummary")));
 
 /**
  * The stock list module, loaded only when needed.
- * @param {JSX.IntrinsicAttributes} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const StockList = loader(lazy(() => import("./content/modules/StockList/StockList")));
 
 /**
  * The user management module, loaded only when needed.
- * @param {JSX.IntrinsicAttributes} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const UserManagement = loader(lazy(() => import("./content/modules/UserManagement/UserManagement")));
 
 /**
  * The stock module, loaded only when needed.
- * @param {JSX.IntrinsicAttributes} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const Stock = loader(lazy(() => import("./content/modules/Stock/Stock")));
 
 /**
  * The watchlist summary module, loaded only when needed.
- * @param {JSX.IntrinsicAttributes} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const WatchlistSummary = loader(lazy(() => import("./content/modules/WatchlistSummary/WatchlistSummary")));
 
 /**
  * The watchlist module, loaded only when needed.
- * @param {JSX.IntrinsicAttributes} props The properties of the component.
- * @returns {JSX.Element} The component.
+ * @param props The properties of the component.
+ * @returns The component.
  */
 const Watchlist = loader(lazy(() => import("./content/modules/Watchlist/Watchlist")));
 
@@ -118,21 +118,15 @@ const Watchlist = loader(lazy(() => import("./content/modules/Watchlist/Watchlis
 
 /**
  * The 404 Not Found page, loaded only when needed.
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const Status404 = loader(lazy(() => import("./content/pages/Status/Status404")));
-
-/**
- * The 500 Internal Server Error page, loaded only when needed.
- * @returns {JSX.Element} The component.
- */
-const Status500 = loader(lazy(() => import("./content/pages/Status/Status500")));
 
 // Layouts
 
 /**
  * The sidebar layout, loaded only when needed.
- * @returns {JSX.Element} The component.
+ * @returns The component.
  */
 const SidebarLayout = loader(lazy(() => import("./layouts/SidebarLayout/SidebarLayout")));
 
@@ -199,12 +193,9 @@ const ForwardToAPI = (): JSX.Element => {
  * The different routes of the application.
  */
 const routes: RouteObject[] = [
-  {
-    // The home page redirects to the login page. If the user is already logged in, they will be redirected to the stock
-    // list from there.
-    path: "/",
-    element: <Navigate to="/login" replace />,
-  },
+  // The home page redirects to the login page. If the user is already logged in, they will be redirected to the stock
+  // list from there.
+  { path: "/", element: <Navigate to="/login" replace /> },
   {
     // Those pages will be displayed in the sidebar layout
     path: "",
@@ -257,30 +248,14 @@ const routes: RouteObject[] = [
   {
     path: "status",
     children: [
-      {
-        path: "",
-        element: <Navigate to="404" replace />,
-      },
-      {
-        path: "404",
-        element: <Status404 />,
-      },
-      {
-        path: "500",
-        element: <Status500 />,
-      },
+      { path: "", element: <Navigate to="404" replace /> },
+      { path: "404", element: <Status404 /> },
     ],
   },
-  {
-    // API requests are not handled by the router, but by the API client, so we need to trigger an HTTP request
-    path: "api/*",
-    element: <ForwardToAPI />,
-  },
-  {
-    // If no other route matches, display the 404 Not Found error page
-    path: "*",
-    element: <Status404 />,
-  },
+  // API requests are not handled by the router, but by the API client, so we need to trigger an HTTP request
+  { path: "api/*", element: <ForwardToAPI /> },
+  // If no other route matches, display the 404 Not Found error page
+  { path: "*", element: <Status404 /> },
 ];
 
 export default routes;

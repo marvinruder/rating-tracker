@@ -41,9 +41,7 @@ import { Logo } from "./Logo";
  * @param props The properties of the component.
  * @returns The component.
  */
-const MenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
-  props: BoxProps & { children: React.ReactNode },
-): JSX.Element => {
+const MenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (props: React.PropsWithChildren<BoxProps>): JSX.Element => {
   const theme = useTheme();
   return (
     <Box
@@ -69,8 +67,8 @@ const MenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
  * @param props The properties of the component.
  * @returns The component.
  */
-const SubMenuWrapper: FC<BoxProps & { children: React.ReactNode }> = (
-  props: BoxProps & { children: React.ReactNode },
+const SubMenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
+  props: React.PropsWithChildren<BoxProps>,
 ): JSX.Element => {
   const theme = useTheme();
   return (

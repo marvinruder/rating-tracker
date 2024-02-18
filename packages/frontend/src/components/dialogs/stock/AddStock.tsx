@@ -5,7 +5,6 @@ import LinkIcon from "@mui/icons-material/Link";
 import LoadingButton from "@mui/lab/LoadingButton";
 import type { AlertColor } from "@mui/material";
 import {
-  Autocomplete,
   Box,
   Button,
   DialogActions,
@@ -21,9 +20,6 @@ import {
 } from "@mui/material";
 import type { FetchError, OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
 import {
-  countryArray,
-  countryName,
-  countryNameWithFlag,
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
   fetchMSCIEndpointPath,
@@ -39,6 +35,7 @@ import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
+import CountryAutocomplete from "../../autocomplete/CountryAutocomplete";
 import { StockDetails } from "../../stock/layouts/StockDetails";
 
 /**
@@ -57,8 +54,6 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   });
   const [finalStock, setFinalStock] = useState<Stock>();
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
-  // The value of the text field in the country autocomplete.
-  const [countryInputValue, setCountryInputValue] = useState<string>("");
   const [tickerError, setTickerError] = useState<boolean>(false); // Error in the ticker text field.
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [isinError, setIsinError] = useState<boolean>(false); // Error in the ISIN text field.
@@ -376,36 +371,13 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Autocomplete
-                options={countryArray}
-                autoHighlight
-                getOptionLabel={(option) => countryNameWithFlag[option]}
-                inputValue={countryInputValue}
-                onInputChange={(_, value) => setCountryInputValue(value)}
-                multiple={false}
+              <CountryAutocomplete
                 value={stock.country ?? null}
                 onChange={(_, value) =>
                   isCountry(value) &&
                   (setStock((prevStock) => ({ ...prevStock, country: value })), setCountryError(false))
                 }
-                filterOptions={(options) => {
-                  const currentInputValue = countryInputValue.trim().toUpperCase();
-                  // Filter the country names by the input value.
-                  const filteredOptions = options.filter(
-                    (option) =>
-                      countryName[option].toUpperCase().startsWith(currentInputValue) && option != currentInputValue,
-                  );
-                  // If the text input is a valid country code, we show it as the first option.
-                  isCountry(currentInputValue) && filteredOptions.unshift(currentInputValue);
-                  // If the text input is identical to a complete option label (this happens when opening the dropdown
-                  // for the first time), we show it as the first option.
-                  countryNameWithFlag[stock.country] === countryInputValue.trim() &&
-                    filteredOptions.unshift(stock.country);
-                  return filteredOptions;
-                }}
-                disableClearable
-                selectOnFocus
-                renderInput={(params) => <TextField {...params} label="Country" error={countryError} />}
+                error={countryError}
               />
             </Grid>
           </Grid>
@@ -417,7 +389,6 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
           variant="contained"
           onClick={putStock}
           onMouseOver={validate} // Validate input fields on hover
-          sx={{ ml: 1, float: "right" }}
           disabled={tickerError || nameError || countryError}
           startIcon={<AddBoxIcon />}
         >

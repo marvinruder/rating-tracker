@@ -13,7 +13,7 @@ import {
   stocksEndpointPath,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { AddStockToPortfolio } from "../../../components/dialogs/portfolio/AddStockToPortfolio";
@@ -35,6 +35,14 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
   const [addToPortfolioDialogOpen, setAddToPortfolioDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
+
+  // Close the dialogs when the stock changes (e.g. by navigating to another stock using the search bar)
+  useEffect(() => {
+    setAddToWatchlistDialogOpen(false);
+    setAddToPortfolioDialogOpen(false);
+    setDeleteDialogOpen(false);
+    setEditDialogOpen(false);
+  }, [props.stock?.ticker]);
 
   const { user } = useUserContextState();
   const { refetchFavorites } = useFavoritesContextUpdater();

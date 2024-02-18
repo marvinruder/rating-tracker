@@ -14,7 +14,7 @@ export const Footer = () => {
       }}
     >
       <Typography sx={{ ml: { md: "auto" }, mr: { md: 0.5 }, pt: { xs: 2, md: 0 } }} variant="subtitle1">
-        Something missing or not working correctly? Report it on GitHub:
+        Something&nbsp;missing&nbsp;or&nbsp;not&nbsp;working&nbsp;correctly? Report&nbsp;it&nbsp;on&nbsp;GitHub:
       </Typography>
       <IconButton href="https://github.com/marvinruder/rating-tracker">
         <GitHubIcon />

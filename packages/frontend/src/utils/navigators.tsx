@@ -7,7 +7,7 @@ import type { Stock } from "@rating-tracker/commons";
  * @param props The properties of the component.
  * @returns The component.
  */
-const LinkToDataProvider = (props: LinkToDataProviderProps): JSX.Element => {
+const LinkToDataProvider = (props: React.PropsWithChildren<LinkToDataProviderProps>): JSX.Element => {
   return props.href ? (
     <Link
       onClick={() => props.copyNameToClipboard && void navigator.clipboard.writeText(props.copyNameToClipboard)}
@@ -28,7 +28,7 @@ const LinkToDataProvider = (props: LinkToDataProviderProps): JSX.Element => {
  * @param props The properties of the component.
  * @returns The component.
  */
-export const MorningstarNavigator = (props: NavigatorProps): JSX.Element => (
+export const MorningstarNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.morningstarID
@@ -47,7 +47,7 @@ export const MorningstarNavigator = (props: NavigatorProps): JSX.Element => (
  * @param props The properties of the component.
  * @returns The component.
  */
-export const MarketScreenerNavigator = (props: NavigatorProps): JSX.Element => (
+export const MarketScreenerNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.marketScreenerID ? `https://www.marketscreener.com/quote/stock/${props.stock.marketScreenerID}/` : ""
@@ -63,7 +63,7 @@ export const MarketScreenerNavigator = (props: NavigatorProps): JSX.Element => (
  * @param props The properties of the component.
  * @returns The component.
  */
-export const MSCINavigator = (props: NavigatorProps): JSX.Element => (
+export const MSCINavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.msciID
@@ -84,7 +84,7 @@ export const MSCINavigator = (props: NavigatorProps): JSX.Element => (
  * @param props The properties of the component.
  * @returns The component.
  */
-export const LSEGNavigator = (props: NavigatorProps): JSX.Element => (
+export const LSEGNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.ric
@@ -104,7 +104,7 @@ export const LSEGNavigator = (props: NavigatorProps): JSX.Element => (
  * @param props The properties of the component.
  * @returns The component.
  */
-export const SPNavigator = (props: NavigatorProps): JSX.Element => (
+export const SPNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
   <LinkToDataProvider
     href={props.stock?.spID ? `https://www.spglobal.com/esg/scores/results?cid=${String(props.stock.spID)}` : ""}
   >
@@ -118,7 +118,7 @@ export const SPNavigator = (props: NavigatorProps): JSX.Element => (
  * @param props The properties of the component.
  * @returns The component.
  */
-export const SustainalyticsNavigator = (props: NavigatorProps): JSX.Element => (
+export const SustainalyticsNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.sustainalyticsID ? `https://www.sustainalytics.com/esg-rating/${props.stock.sustainalyticsID}` : ""
@@ -136,10 +136,6 @@ interface NavigatorProps {
    * The stock containing the IDs that the navigators use.
    */
   stock: Stock;
-  /**
-   * The children of the component.
-   */
-  children: React.ReactNode;
 }
 
 /**
@@ -150,10 +146,6 @@ interface LinkToDataProviderProps {
    * The URL to navigate to.
    */
   href: string;
-  /**
-   * The children of the component.
-   */
-  children: React.ReactNode;
   /**
    * A stock name to copy to the clipboard.
    */

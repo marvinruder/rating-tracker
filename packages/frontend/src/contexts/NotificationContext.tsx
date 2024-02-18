@@ -1,8 +1,8 @@
 import { FetchError, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 
-import type { ContextProviderProps } from "../types/ContextProviderProps";
 import type { Notification } from "../types/Notification";
+
 export const SESSION_EXPIRED_MESSAGE = "Your session has expired. Please log in again.";
 
 /**
@@ -44,7 +44,7 @@ const NotificationUpdaterContext = createContext<NotificationUpdaterContextType>
  * @param props The properties of the component.
  * @returns The component.
  */
-export const NotificationProvider = (props: ContextProviderProps): JSX.Element => {
+export const NotificationProvider = (props: React.PropsWithChildren): JSX.Element => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
 
   const setErrorNotificationOrClearSession = useCallback((e: FetchError | Error, actionDescription: string) => {

@@ -23,6 +23,7 @@ import { Fragment, useEffect, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
+import { pluralize } from "../../../utils/formatters";
 
 import { AddPortfolio } from "./AddPortfolio";
 
@@ -144,7 +145,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                           portfoliosAlreadyContainingStock.includes(portfolioSummary.id)
                             ? `This portfolio already contains “${props.stock.name}”.`
                             : (portfolioSummary.stocks.length || "No") +
-                              ` stock${portfolioSummary.stocks.length !== 1 ? "s" : ""}`
+                              ` stock${pluralize(portfolioSummary.stocks.length)}`
                         }
                       />
                     </ListItemButton>

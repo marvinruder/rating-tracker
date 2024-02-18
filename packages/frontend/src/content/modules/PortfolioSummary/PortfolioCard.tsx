@@ -20,6 +20,7 @@ import { NavLink } from "react-router-dom";
 
 import { DeletePortfolio } from "../../../components/dialogs/portfolio/DeletePortfolio";
 import { EditPortfolio } from "../../../components/dialogs/portfolio/EditPortfolio";
+import { pluralize } from "../../../utils/formatters";
 
 /**
  * This component displays information about a portfolio in a card used in the portfolio summary module.
@@ -45,7 +46,7 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
               <Typography variant="subtitle1" color="text.secondary">
                 {props.portfolio ? (
                   (props.portfolio.stocks.length || "No") +
-                  ` stock${props.portfolio.stocks.length !== 1 ? "s" : ""}` +
+                  ` stock${pluralize(props.portfolio.stocks.length)}` +
                   (props.portfolio.stocks.length
                     ? `\u2002·\u2002${props.portfolio.currency} ${getTotalAmount(props.portfolio).toFixed(
                         currencyMinorUnits[props.portfolio.currency],

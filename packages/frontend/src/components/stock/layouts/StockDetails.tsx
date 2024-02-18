@@ -69,6 +69,8 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
       break;
   }
 
+  const tooltipPlacement = columns === 1 ? "bottom" : "left";
+
   return (
     <Grid container columns={columns} width="100%" margin="auto">
       {/* Key Figures */}
@@ -79,11 +81,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
         <Grid container spacing={1} px="24px" pb="20px">
           {/* Country */}
           <Grid item xs={3}>
-            <Tooltip
-              title={<PropertyDescription property="country" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="country" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5">Country</Typography>
             </Tooltip>
           </Grid>
@@ -112,7 +110,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                 </>
               }
               arrow
-              placement={columns === 1 ? "bottom" : "left"}
+              placement={tooltipPlacement}
             >
               <Typography variant="h5">StyleBox</Typography>
             </Tooltip>
@@ -148,11 +146,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* Sector and industry */}
           <Grid item xs={3}>
-            <Tooltip
-              title={<PropertyDescription property="industry" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="industry" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5">Industry</Typography>
             </Tooltip>
           </Grid>
@@ -248,11 +242,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
         <Grid container spacing={1} px="24px" pb="20px">
           {/* Dividend Yield */}
           <Grid item xs={4.5}>
-            <Tooltip
-              title={<PropertyDescription property="dividendYieldPercent" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="dividendYieldPercent" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5">Dividend Yield</Typography>
             </Tooltip>
           </Grid>
@@ -267,11 +257,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* P/E Ratio */}
           <Grid item xs={4.5}>
-            <Tooltip
-              title={<PropertyDescription property="priceEarningRatio" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="priceEarningRatio" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5">
                 P{"\u2009"}/{"\u2009"}E Ratio
               </Typography>
@@ -288,11 +274,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* Market Cap */}
           <Grid item xs={4.5}>
-            <Tooltip
-              title={<PropertyDescription property="marketCap" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="marketCap" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5">Market Cap</Typography>
             </Tooltip>
           </Grid>
@@ -312,11 +294,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* 52W Range */}
           <Grid item xs={4.5} mt="11.5px">
-            <Tooltip
-              title={<PropertyDescription property="positionIn52w" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="positionIn52w" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5">52W Range</Typography>
             </Tooltip>
           </Grid>
@@ -363,11 +341,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
         <Grid container spacing={1} px="24px" pb="20px">
           {/* Total Score */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="totalScore" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="totalScore" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" mt="8px">
                 Total Score
               </Typography>
@@ -388,11 +362,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* Financial Score */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="financialScore" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="financialScore" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" mt="8px">
                 Financial Score
               </Typography>
@@ -413,11 +383,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* ESG Score */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="esgScore" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="esgScore" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" mt="8px">
                 ESG Score
               </Typography>
@@ -446,11 +412,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
         <Grid container spacing={1} px="24px" pb="20px">
           {/* Morningstar Star Rating */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="starRating" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="starRating" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5">
                 Morningstar
                 <br />
@@ -481,11 +443,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* Morningstar Fair Value */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="morningstarFairValue" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="morningstarFairValue" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" height="35px">
                 Morningstar
                 <br />
@@ -518,11 +476,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* Analyst Consensus */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="analystConsensus" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="analystConsensus" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" height="35px">
                 Analyst
                 <br />
@@ -557,11 +511,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* Analyst Target Price */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="analystTargetPrice" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="analystTargetPrice" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" height="35px">
                 Analyst Target
               </Typography>
@@ -596,11 +546,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* Analyst Count */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="analystCount" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="analystCount" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5">Analyst Count</Typography>
             </Tooltip>
           </Grid>
@@ -629,11 +575,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
         <Grid container spacing={1} px="24px" pb="20px">
           {/* MSCI ESG Rating */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="msciESGRating" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="msciESGRating" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" mt="5px" height="19px">
                 MSCI ESG Rating
               </Typography>
@@ -669,11 +611,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* MSCI Implied Temperature Rise */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="msciTemperature" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="msciTemperature" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" height="35px">
                 MSCI Implied
                 <br />
@@ -705,11 +643,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* LSEG ESG Score */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="lsegESGScore" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="lsegESGScore" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" mt="6px" height="21px">
                 LSEG ESG Score
               </Typography>
@@ -734,11 +668,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* LSEG Emissions */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="lsegEmissions" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="lsegEmissions" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" mt="6px" height="21px">
                 LSEG Emissions
               </Typography>
@@ -763,11 +693,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           </Grid>
           {/* S&P ESG Score */}
           <Grid item xs={6}>
-            <Tooltip
-              title={<PropertyDescription property="spESGScore" />}
-              arrow
-              placement={columns === 1 ? "bottom" : "left"}
-            >
+            <Tooltip title={<PropertyDescription property="spESGScore" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" mt="6px" height="21px">
                 S&P ESG Score
               </Typography>
@@ -795,7 +721,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <Tooltip
               title={<PropertyDescription property="sustainalyticsESGRisk" />}
               arrow
-              placement={columns === 1 ? "bottom" : "left"}
+              placement={tooltipPlacement}
             >
               <Typography variant="h5">
                 Sustainalytics
