@@ -102,24 +102,21 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
                       <ListItemText
                         inset={watchlistSummary?.name !== FAVORITES_NAME}
                         primary={watchlistSummary.name}
-                        primaryTypographyProps={{ variant: "body1", fontWeight: "bold", color: "text.primary" }}
+                        primaryTypographyProps={{ fontWeight: "bold" }}
                         secondary={
                           watchlistsAlreadyContainingStock.includes(watchlistSummary.id)
                             ? `This watchlist already contains “${props.stock.name}”.`
                             : (watchlistSummary.stocks.length || "No") +
                               ` stock${watchlistSummary.stocks.length !== 1 ? "s" : ""}`
                         }
-                        secondaryTypographyProps={{ variant: "body2", color: "text.secondary" }}
                       />
                     </ListItemButton>
                   </ListItem>
                 </Fragment>
               ))
             : [...Array(3)].map(
-                (
-                  _,
-                  key, // Render skeleton rows
-                ) => (
+                // Render skeleton rows
+                (_, key) => (
                   <Fragment key={key}>
                     <Divider />
                     <ListItem disablePadding disableGutters>
@@ -127,9 +124,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
                         <ListItemText
                           inset
                           primary={<Skeleton width="160px" />}
-                          primaryTypographyProps={{ variant: "body1", fontWeight: "bold", color: "text.primary" }}
                           secondary={<Skeleton width="48px" />}
-                          secondaryTypographyProps={{ variant: "body2", color: "text.secondary" }}
                         />
                       </ListItemButton>
                     </ListItem>
@@ -142,10 +137,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
               <ListItemIcon>
                 <AddIcon color="primary" />
               </ListItemIcon>
-              <ListItemText
-                primary="Create a new watchlist…"
-                primaryTypographyProps={{ variant: "body1", fontWeight: "bold", color: "text.primary" }}
-              />
+              <ListItemText primary="Create a new watchlist…" primaryTypographyProps={{ fontWeight: "bold" }} />
             </ListItemButton>
           </ListItem>
           <Divider />
@@ -155,7 +147,9 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
         </Dialog>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
-        <Button onClick={props.onClose}>Cancel</Button>
+        <Button onClick={props.onClose} sx={{ mr: "auto" }}>
+          Cancel
+        </Button>
       </DialogActions>
     </>
   );

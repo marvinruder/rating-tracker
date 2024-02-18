@@ -673,6 +673,60 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
             },
           },
         },
+        textPrimary: {
+          backgroundColor: alpha(colors.primary.main, 0.1),
+          "&:disabled": {
+            backgroundColor: alpha(themeColors.black, 0.05),
+          },
+          "&:hover:not(:disabled)": {
+            backgroundColor: alpha(colors.primary.main, 0.2),
+          },
+        },
+        textSecondary: {
+          backgroundColor: alpha(colors.secondary.main, 0.1),
+          "&:disabled": {
+            backgroundColor: alpha(themeColors.black, 0.05),
+          },
+          "&:hover:not(:disabled)": {
+            backgroundColor: alpha(colors.secondary.main, 0.2),
+          },
+        },
+        textSuccess: {
+          backgroundColor: alpha(colors.success.main, 0.1),
+          "&:disabled": {
+            backgroundColor: alpha(themeColors.black, 0.05),
+          },
+          "&:hover:not(:disabled)": {
+            backgroundColor: alpha(colors.success.main, 0.2),
+          },
+        },
+        textError: {
+          backgroundColor: alpha(colors.error.main, 0.1),
+          "&:disabled": {
+            backgroundColor: alpha(themeColors.black, 0.05),
+          },
+          "&:hover:not(:disabled)": {
+            backgroundColor: alpha(colors.error.main, 0.2),
+          },
+        },
+        textWarning: {
+          backgroundColor: alpha(colors.warning.main, 0.1),
+          "&:disabled": {
+            backgroundColor: alpha(themeColors.black, 0.05),
+          },
+          "&:hover:not(:disabled)": {
+            backgroundColor: alpha(colors.warning.main, 0.2),
+          },
+        },
+        textInfo: {
+          backgroundColor: alpha(colors.info.main, 0.1),
+          "&:disabled": {
+            backgroundColor: alpha(themeColors.black, 0.05),
+          },
+          "&:hover:not(:disabled)": {
+            backgroundColor: alpha(colors.info.main, 0.2),
+          },
+        },
         endIcon: {
           marginRight: -8,
         },
@@ -686,14 +740,24 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
         sizeLarge: {
           padding: "11px 24px",
         },
+        outlinedSizeSmall: {
+          padding: "5px 15px",
+        },
+        outlinedSizeMedium: {
+          padding: "7px 19px",
+        },
+        outlinedSizeLarge: {
+          padding: "10px 23px",
+        },
         textSizeSmall: {
-          padding: "7px 12px",
+          padding: "6px 16px",
+          lineHeight: 1.5,
         },
         textSizeMedium: {
-          padding: "9px 16px",
+          padding: "8px 20px",
         },
         textSizeLarge: {
-          padding: "12px 16px",
+          padding: "11px 24px",
         },
       },
     },
@@ -740,6 +804,16 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
       },
     },
     MuiListItemText: {
+      defaultProps: {
+        primaryTypographyProps: {
+          variant: "body1",
+          color: "text.primary",
+        },
+        secondaryTypographyProps: {
+          variant: "body2",
+          color: "text.secondary",
+        },
+      },
       styleOverrides: {
         root: {
           margin: 0,

@@ -643,17 +643,13 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
         </Stepper>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
-        <Button
-          onClick={handleBack}
-          sx={{ mr: 1, float: "left", visibility: steps[activeStep].noStepBack && "hidden" }}
-        >
+        <Button onClick={handleBack} sx={{ mr: "auto", visibility: steps[activeStep].noStepBack && "hidden" }}>
           {activeStep === 0 ? "Cancel" : "Back"}
         </Button>
         {steps[activeStep].nextButton ?? (
           <LoadingButton
             variant="contained"
             onClick={handleNext}
-            sx={{ ml: 1, float: "right" }}
             color={(steps[activeStep].buttonColor as AlertColor) ?? "primary"}
           >
             {activeStep === steps.length - 1 ? "Finish" : "Continue"}

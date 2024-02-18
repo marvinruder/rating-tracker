@@ -139,14 +139,13 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                       <ListItemText
                         inset
                         primary={portfolioSummary.name}
-                        primaryTypographyProps={{ variant: "body1", fontWeight: "bold", color: "text.primary" }}
+                        primaryTypographyProps={{ fontWeight: "bold" }}
                         secondary={
                           portfoliosAlreadyContainingStock.includes(portfolioSummary.id)
                             ? `This portfolio already contains “${props.stock.name}”.`
                             : (portfolioSummary.stocks.length || "No") +
                               ` stock${portfolioSummary.stocks.length !== 1 ? "s" : ""}`
                         }
-                        secondaryTypographyProps={{ variant: "body2", color: "text.secondary" }}
                       />
                     </ListItemButton>
                   </ListItem>
@@ -164,9 +163,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                         <ListItemText
                           inset
                           primary={<Skeleton width="160px" />}
-                          primaryTypographyProps={{ variant: "body1", fontWeight: "bold", color: "text.primary" }}
                           secondary={<Skeleton width="48px" />}
-                          secondaryTypographyProps={{ variant: "body2", color: "text.secondary" }}
                         />
                       </ListItemButton>
                     </ListItem>
@@ -179,10 +176,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
               <ListItemIcon>
                 <AddIcon color="primary" />
               </ListItemIcon>
-              <ListItemText
-                primary="Create a new portfolio…"
-                primaryTypographyProps={{ variant: "body1", fontWeight: "bold", color: "text.primary" }}
-              />
+              <ListItemText primary="Create a new portfolio…" primaryTypographyProps={{ fontWeight: "bold" }} />
             </ListItemButton>
           </ListItem>
           <Divider />
@@ -192,7 +186,9 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
         </Dialog>
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
-        <Button onClick={props.onClose}>Cancel</Button>
+        <Button onClick={props.onClose} sx={{ mr: "auto" }}>
+          Cancel
+        </Button>
       </DialogActions>
     </>
   );
