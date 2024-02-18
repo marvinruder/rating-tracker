@@ -256,11 +256,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             <ListItemIcon>
               <OpenInNewIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>
-              <Typography textOverflow="ellipsis" noWrap>
-                Open “{props.stock.ticker}” in new tab
-              </Typography>
-            </ListItemText>
+            <ListItemText
+              primary={`Open “${props.stock.ticker}” in new tab`}
+              primaryTypographyProps={{ color: "text.secondary" }}
+            />
           </MenuItem>
           {!props.watchlist && !props.portfolio && (
             <MenuItem
@@ -284,13 +283,14 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                   <StarIcon color="warning" fontSize="small" />
                 )}
               </ListItemIcon>
-              <ListItemText>
-                <Typography textOverflow="ellipsis" noWrap>
-                  {isFavorite
+              <ListItemText
+                primary={
+                  isFavorite
                     ? `Remove “${props.stock.ticker}” from Favorites`
-                    : `Mark “${props.stock.ticker}” as Favorite`}
-                </Typography>
-              </ListItemText>
+                    : `Mark “${props.stock.ticker}” as Favorite`
+                }
+                primaryTypographyProps={{ color: "text.secondary" }}
+              />
             </MenuItem>
           )}
           {!props.watchlist && !props.portfolio && (
@@ -298,11 +298,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               <ListItemIcon>
                 <BookmarkAddIcon color="success" fontSize="small" />
               </ListItemIcon>
-              <ListItemText>
-                <Typography textOverflow="ellipsis" noWrap>
-                  Add “{props.stock.ticker}” to watchlist…
-                </Typography>
-              </ListItemText>
+              <ListItemText
+                primary={`Add “${props.stock.ticker}” to watchlist…`}
+                primaryTypographyProps={{ color: "text.secondary" }}
+              />
             </MenuItem>
           )}
           {!props.watchlist && !props.portfolio && (
@@ -310,11 +309,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               <ListItemIcon>
                 <AddShoppingCartIcon color="success" fontSize="small" />
               </ListItemIcon>
-              <ListItemText>
-                <Typography textOverflow="ellipsis" noWrap>
-                  Add “{props.stock.ticker}” to portfolio…
-                </Typography>
-              </ListItemText>
+              <ListItemText
+                primary={`Add “${props.stock.ticker}” to portfolio…`}
+                primaryTypographyProps={{ color: "text.secondary" }}
+              />
             </MenuItem>
           )}
           {!props.watchlist && !props.portfolio && (
@@ -325,11 +323,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               <ListItemIcon>
                 <EditIcon color="primary" fontSize="small" />
               </ListItemIcon>
-              <ListItemText>
-                <Typography textOverflow="ellipsis" noWrap>
-                  Edit “{props.stock.ticker}”…
-                </Typography>
-              </ListItemText>
+              <ListItemText
+                primary={`Edit “${props.stock.ticker}”…`}
+                primaryTypographyProps={{ color: "text.secondary" }}
+              />
             </MenuItem>
           )}
           {!props.watchlist && !props.portfolio && (
@@ -340,11 +337,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               <ListItemIcon>
                 <DeleteIcon color="error" fontSize="small" />
               </ListItemIcon>
-              <ListItemText>
-                <Typography textOverflow="ellipsis" noWrap>
-                  Delete “{props.stock.ticker}”…
-                </Typography>
-              </ListItemText>
+              <ListItemText
+                primary={`Delete “${props.stock.ticker}”…`}
+                primaryTypographyProps={{ color: "text.secondary" }}
+              />
             </MenuItem>
           )}
           {props.watchlist && (
@@ -352,11 +348,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               <ListItemIcon>
                 <BookmarkRemoveIcon color="error" fontSize="small" />
               </ListItemIcon>
-              <ListItemText>
-                <Typography textOverflow="ellipsis" noWrap>
-                  Remove “{props.stock.ticker}” from “{props.watchlist.name}”
-                </Typography>
-              </ListItemText>
+              <ListItemText
+                primary={`Remove “${props.stock.ticker}” from “${props.watchlist.name}”`}
+                primaryTypographyProps={{ color: "text.secondary" }}
+              />
             </MenuItem>
           )}
           {props.portfolio && (
@@ -364,11 +359,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               <ListItemIcon>
                 <RemoveShoppingCartIcon color="error" fontSize="small" />
               </ListItemIcon>
-              <ListItemText>
-                <Typography textOverflow="ellipsis" noWrap>
-                  Remove “{props.stock.ticker}” from “{props.portfolio.name}”
-                </Typography>
-              </ListItemText>
+              <ListItemText
+                primary={`Remove “${props.stock.ticker}” from “${props.portfolio.name}”`}
+                primaryTypographyProps={{ color: "text.secondary" }}
+              />
             </MenuItem>
           )}
         </Menu>

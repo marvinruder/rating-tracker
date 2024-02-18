@@ -42,7 +42,9 @@ export const RemoveStockFromPortfolio = (props: RemoveStockFromPortfolioProps): 
         {props.portfolio.name}”?
       </DialogContent>
       <DialogActions sx={{ p: 2.6666, pt: 1 }}>
-        <Button onClick={props.onClose}>Cancel</Button>
+        <Button onClick={props.onClose} sx={{ mr: "auto" }}>
+          Cancel
+        </Button>
         <LoadingButton
           loading={requestInProgress}
           variant="contained"

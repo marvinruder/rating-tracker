@@ -577,7 +577,8 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
             }}
             startIcon={<PublishedWithChangesIcon />}
             color="success"
-            sx={{ width: "100%", borderRadius: 0 }}
+            sx={{ borderRadius: 0 }}
+            fullWidth
           >
             Apply
           </Button>
@@ -588,12 +589,18 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
           <Typography variant="h3" pb={2}>
             Filter Columns
           </Typography>
-          <Button sx={{ width: "50%", pb: 1 }} onClick={() => props.setColumnFilter([])}>
-            Deselect All
-          </Button>
-          <Button sx={{ width: "50%", pb: 1 }} onClick={() => props.setColumnFilter([...stockListColumnArray])}>
-            Select All
-          </Button>
+          <Grid container pb={1} spacing={1}>
+            <Grid item xs={6}>
+              <Button fullWidth onClick={() => props.setColumnFilter([])}>
+                Deselect All
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button fullWidth onClick={() => props.setColumnFilter([...stockListColumnArray])}>
+                Select All
+              </Button>
+            </Grid>
+          </Grid>
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ py: 1 }}>
@@ -624,11 +631,10 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
         </DialogContent>
         <DialogActions sx={{ p: 0 }}>
           <Button
-            onClick={() => {
-              setColumnFilterOpen(false);
-            }}
+            onClick={() => setColumnFilterOpen(false)}
             startIcon={<TableRowsIcon />}
-            sx={{ width: "100%", borderRadius: 0 }}
+            sx={{ borderRadius: 0 }}
+            fullWidth
           >
             View Table
           </Button>

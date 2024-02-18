@@ -13,6 +13,7 @@ import {
   Slide,
   Tooltip,
   Typography,
+  alpha,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -60,8 +61,14 @@ export const HeaderUserbox = (): JSX.Element => {
         <Box display="inline-block">
           {/* Box required for tooltip to work on disabled button */}
           <Button
-            sx={{ px: 1, ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
-            color="secondary"
+            sx={{
+              px: 1,
+              backgroundColor: "transparent",
+              "&:hover:not(:disabled)": {
+                backgroundColor: alpha(theme.colors.secondary.main, 0.1),
+              },
+              ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] },
+            }}
             onClick={() => setOpen(true)}
             disabled={!user}
           >

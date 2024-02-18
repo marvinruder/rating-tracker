@@ -506,6 +506,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             if (unsafeRequestSent) props.onCloseAfterEdit();
             props.onClose();
           }}
+          sx={{ mr: "auto" }}
         >
           Cancel
         </Button>
