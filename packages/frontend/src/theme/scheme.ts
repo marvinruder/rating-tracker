@@ -1131,6 +1131,8 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
           backgroundColor: alpha(colors.alpha.black["100"], 0.95),
           padding: "4px 8px",
           fontSize: 11,
+          // Fixes a visual glitch with Safari where a short tooltip text would wrap the last word to the next line
+          width: "calc(100% + .25px)",
         },
         arrow: {
           color: alpha(colors.alpha.black["100"], 0.95),
