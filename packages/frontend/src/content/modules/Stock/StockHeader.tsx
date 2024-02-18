@@ -42,7 +42,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
     setAddToPortfolioDialogOpen(false);
     setDeleteDialogOpen(false);
     setEditDialogOpen(false);
-  }, [props.stock.ticker]);
+  }, [props.stock?.ticker]);
 
   const { user } = useUserContextState();
   const { refetchFavorites } = useFavoritesContextUpdater();
