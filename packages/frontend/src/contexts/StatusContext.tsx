@@ -90,7 +90,7 @@ export const StatusProvider = (props: ContextProviderProps): JSX.Element => {
     ),
   });
 
-  const refreshSystemStatus = () => (
+  const refreshSystemStatus = (): void => (
     setSystemStatusLoading(true),
     void api
       .get(statusEndpointPath)
@@ -113,6 +113,7 @@ export const StatusProvider = (props: ContextProviderProps): JSX.Element => {
   );
 
   useEffect(() => {
+    refreshSystemStatus();
     const interval = setInterval(refreshSystemStatus, 60000);
     return () => clearInterval(interval);
   }, []);
