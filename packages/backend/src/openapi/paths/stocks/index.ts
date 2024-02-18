@@ -20,6 +20,7 @@ const get: OpenAPIV3.OperationObject = {
     stock.sortBy,
     stock.sortDesc,
     stock.name,
+    stock.isin,
     stock.country,
     stock.industry,
     stock.size,

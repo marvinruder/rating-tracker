@@ -295,6 +295,32 @@ tests.push({
 });
 
 tests.push({
+  testName: "filters and sorts stock list – example 17",
+  testFunction: async () => {
+    const res = await supertest
+      .get(`${baseURL}${stocksEndpointPath}?name=US0378331005`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(1);
+    expect(res.body.stocks).toHaveLength(1);
+    expect(res.body.stocks[0].name).toMatch("Apple");
+  },
+});
+
+tests.push({
+  testName: "filters and sorts stock list – example 18",
+  testFunction: async () => {
+    const res = await supertest
+      .get(`${baseURL}${stocksEndpointPath}?isin=US0378331005`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.body.count).toBe(1);
+    expect(res.body.stocks).toHaveLength(1);
+    expect(res.body.stocks[0].name).toMatch("Apple");
+  },
+});
+
+tests.push({
   testName: "filters and sorts stock list – stocks in watchlist",
   testFunction: async () => {
     // Get the ID of the watchlist from the summary

@@ -101,10 +101,15 @@ export class StocksController {
     if (req.query.name && typeof req.query.name === "string") {
       filters.push({
         OR: [
+          { isin: { equals: req.query.name.trim() } },
           { ticker: { startsWith: req.query.name.trim(), mode: "insensitive" } },
           { name: { contains: req.query.name.trim(), mode: "insensitive" } },
         ],
       });
+    }
+
+    if (req.query.isin && typeof req.query.isin === "string") {
+      filters.push({ isin: { equals: req.query.isin.trim() } });
     }
 
     if (req.query.country) {
