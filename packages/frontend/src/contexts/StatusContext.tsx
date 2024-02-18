@@ -96,7 +96,10 @@ export const StatusProvider = (props: ContextProviderProps): JSX.Element => {
       .get(statusEndpointPath)
       .then((res) => setSystemStatus(getSystemStatusFromResponseData(res.data)))
       .catch((e) =>
-        e instanceof FetchError && "status" in e.response.data && "services" in e.response.data
+        e instanceof FetchError &&
+        typeof e.response.data === "object" &&
+        "status" in e.response.data &&
+        "services" in e.response.data
           ? setSystemStatus(getSystemStatusFromResponseData(e.response.data))
           : setSystemStatus({
               ...UNKNOWN_STATUS,
@@ -109,7 +112,10 @@ export const StatusProvider = (props: ContextProviderProps): JSX.Element => {
       .finally(() => setSystemStatusLoading(false))
   );
 
-  useEffect(refreshSystemStatus, []);
+  useEffect(() => {
+    const interval = setInterval(refreshSystemStatus, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const contextValue = useMemo(() => ({ systemStatus, systemStatusLoading }), [systemStatus, systemStatusLoading]);
 
