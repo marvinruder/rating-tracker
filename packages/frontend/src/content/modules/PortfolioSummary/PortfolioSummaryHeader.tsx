@@ -1,7 +1,10 @@
 import AddIcon from "@mui/icons-material/Add";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import { Box, Dialog, Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import { portfolioBuilderEndpointSuffix, portfoliosEndpointPath } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import { AddPortfolio } from "../../../components/dialogs/portfolio/AddPortfolio";
 
@@ -14,6 +17,7 @@ export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
   props: PortfolioSummaryHeaderProps,
 ): JSX.Element => {
   const [addPortfolioOpen, setAddPortfolioOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   return (
     <Grid container justifyContent="space-between" alignItems="center">
@@ -28,6 +32,16 @@ export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
           <Box display="inline-block" ml={1} mt={1}>
             <IconButton color="primary" onClick={() => setAddPortfolioOpen(true)}>
               <AddIcon />
+            </IconButton>
+          </Box>
+        </Tooltip>
+        <Tooltip arrow title="Start Portfolio Builder">
+          <Box display="inline-block" ml={1} mt={1}>
+            <IconButton
+              color="primary"
+              onClick={() => navigate(portfoliosEndpointPath + portfolioBuilderEndpointSuffix)}
+            >
+              <AutoFixHighIcon />
             </IconButton>
           </Box>
         </Tooltip>

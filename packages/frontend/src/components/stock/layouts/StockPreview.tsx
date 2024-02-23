@@ -1,4 +1,4 @@
-import DeleteIcon from "@mui/icons-material/Delete";
+import ClearIcon from "@mui/icons-material/Clear";
 import type { ListItemProps } from "@mui/material";
 import {
   IconButton,
@@ -59,7 +59,7 @@ export const StockPreview = (props: StockPreviewProps): JSX.Element => {
       {props.onDelete && (
         <ListItemSecondaryAction>
           <IconButton color="error" onClick={props.onDelete}>
-            <DeleteIcon />
+            <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>
       )}

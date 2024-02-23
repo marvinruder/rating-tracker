@@ -3,7 +3,7 @@ import ListIcon from "@mui/icons-material/List";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { LoadingButton } from "@mui/lab";
+import LoadingButton from "@mui/lab/LoadingButton";
 import type { BoxProps } from "@mui/material";
 import {
   alpha,

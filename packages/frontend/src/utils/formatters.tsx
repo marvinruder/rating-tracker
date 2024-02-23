@@ -22,7 +22,7 @@ export const formatMarketCap = (stock: OmitDynamicAttributesStock): string => {
 };
 
 /**
- * Formats a decimal number to a percentage with 3 significant digits.
+ * Formats a decimal number to a percentage.
  * @param decimal The decimal number to format.
  * @param options The options to use for formatting.
  * @param options.total The total number to calculate the percentage from. Defaults to 1.
@@ -33,15 +33,50 @@ export const formatMarketCap = (stock: OmitDynamicAttributesStock): string => {
  */
 export const formatPercentage = (
   decimal: number | undefined | null,
-  options?: { total?: number; precision?: number; forceSign?: boolean; fallbackString?: string },
+  options?: { total?: number; forceSign?: boolean; fallbackString?: string } & (
+    | { precision?: number }
+    | { fixed?: number }
+  ),
 ): string => {
-  const { total = 1, precision = 3, forceSign = false, fallbackString = "–" } = options || {};
+  const { total = 1, forceSign = false, fallbackString = "–" } = options || {};
+  const precision =
+    options && "precision" in options ? options.precision : options && "fixed" in options ? undefined : 3;
+  const fixed = precision === undefined && "fixed" in options ? options.fixed : undefined;
+
   return decimal
-    ? `${forceSign && decimal > 0 ? "+" : ""}${Number(((100 * decimal) / total).toPrecision(precision))}\u2009%`
+    ? (forceSign && decimal > 0 ? "+" : "") +
+        Number(((100 * decimal) / total)[precision !== undefined ? "toPrecision" : "toFixed"](precision ?? fixed)) +
+        "\u2009%"
     : fallbackString;
 };
 
 /* c8 ignore start */ // We currently do not have a test setup for JSX components.
+/**
+ * Formats a decimal number using exponential notation.
+ * @param props The properties of the component.
+ * @param props.decimal The decimal number to format.
+ * @param props.options The options to use for formatting.
+ * @param props.options.precision The number of significant digits to round to. Defaults to 4.
+ * @param props.options.fallbackString The string to return if the decimal is `NaN`, `undefined` or `null`.
+ *                                     Defaults to `–`.
+ * @returns The formatted number.
+ */
+export const ExponentialNumber = (props: {
+  decimal: number | undefined | null;
+  options?: { precision?: number; fallbackString?: string };
+}): JSX.Element => {
+  const { precision = 4, fallbackString = "–" } = props.options || {};
+  if (!props.decimal) return <>{fallbackString}</>;
+  const [mantissa, exponent] = props.decimal.toExponential(precision).split("e");
+  return (
+    <>
+      {mantissa}
+      {"\u2009\u00d7\u200910"}
+      <sup>{exponent}</sup>
+    </>
+  );
+};
+
 /**
  * This component formats a currency value using the currency’s minor units as the number of decimal places. It adds a
  * tooltip with the full currency name to the ISO 4217 currency code.

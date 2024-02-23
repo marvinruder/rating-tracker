@@ -23,6 +23,10 @@ import {
 } from "@rating-tracker/commons";
 
 import { CurrencyWithTooltip, formatMarketCap, formatPercentage } from "../../../utils/formatters";
+import { BlueIconChip } from "../../chips/BlueIconChip";
+import { GreenIconChip } from "../../chips/GreenIconChip";
+import { TemperatureChip } from "../../chips/TemperatureChip";
+import { YellowIconChip } from "../../chips/YellowIconChip";
 import {
   MorningstarNavigator,
   MarketScreenerNavigator,
@@ -30,11 +34,7 @@ import {
   LSEGNavigator,
   SPNavigator,
   SustainalyticsNavigator,
-} from "../../../utils/navigators";
-import { BlueIconChip } from "../../chips/BlueIconChip";
-import { GreenIconChip } from "../../chips/GreenIconChip";
-import { TemperatureChip } from "../../chips/TemperatureChip";
-import { YellowIconChip } from "../../chips/YellowIconChip";
+} from "../../etc/Navigators";
 import { PropertyDescription } from "../properties/PropertyDescription";
 import { Range52WSlider } from "../properties/Range52WSlider";
 import { SectorIcon } from "../properties/SectorIcon";

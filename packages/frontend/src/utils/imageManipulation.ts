@@ -1,5 +1,5 @@
 /**
- * Converts an uploaded file to a JPEG image with smaller size and reduced quality.
+ * Converts an uploaded file to an AVIF image with smaller size and reduced quality.
  * @param file The uploaded file
  * @returns The image.
  */
