@@ -21,12 +21,12 @@ jobs:
           path: |
             ~/.cache
             ~/.yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ github.job }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-yarn-${{ github.job }}
+            ${{ runner.os }}-yarn
       - name: Setup yarn
         run: |
-          ls -la ~/.cache/rating-tracker
           corepack enable
           yarn --immutable
       - name: Run ESLint
@@ -49,9 +49,10 @@ jobs:
           path: |
             ~/.cache
             ~/.yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ github.job }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-yarn-${{ github.job }}
+            ${{ runner.os }}-yarn
       - name: Setup yarn
         run: |
           corepack enable
