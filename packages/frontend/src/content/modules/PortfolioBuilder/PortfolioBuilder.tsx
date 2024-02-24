@@ -273,7 +273,6 @@ const PortfolioBuilderModule = (): JSX.Element => {
     const totalAmount = +totalAmountInput;
 
     weightedStocks
-      .sort((a, b) => a.ticker.localeCompare(b.ticker))
       .sort((a, b) => b.amount - a.amount)
       .forEach((stock) => {
         if (!newScatterData.find((series) => series.id === stock.amount))
