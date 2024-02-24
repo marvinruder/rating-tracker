@@ -26,6 +26,7 @@ import {
   Drawer,
   useTheme,
   useMediaQuery,
+  FormControlLabel,
 } from "@mui/material";
 import type {
   Country,
@@ -589,44 +590,41 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
           <Typography variant="h3" pb={2}>
             Filter Columns
           </Typography>
-          <Grid container pb={1} spacing={1}>
-            <Grid item xs={6}>
-              <Button fullWidth onClick={() => props.setColumnFilter([])}>
-                Deselect All
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button fullWidth onClick={() => props.setColumnFilter([...stockListColumnArray])}>
-                Select All
-              </Button>
-            </Grid>
-          </Grid>
+          <FormControlLabel
+            control={
+              <Checkbox
+                indeterminate={props.columnFilter.length > 0 && props.columnFilter.length < stockListColumnArray.length}
+                checked={props.columnFilter.length === stockListColumnArray.length}
+                onChange={(event) => props.setColumnFilter(event.target.checked ? [...stockListColumnArray] : [])}
+                sx={{ my: -1 }}
+              />
+            }
+            label="Select All"
+            slotProps={{ typography: { variant: "h4", pb: "1px" } }}
+          />
         </DialogTitle>
         <Divider />
-        <DialogContent sx={{ py: 1 }}>
+        <DialogContent sx={{ px: 0, py: 1 }}>
           <List disablePadding>
-            {stockListColumnArray.map((column) => {
-              return (
-                <ListItem key={column} sx={{ px: 0 }} dense>
-                  <ListItemButton
-                    role={undefined}
-                    onClick={() =>
-                      props.setColumnFilter((prevColumnFilter) => [
-                        ...prevColumnFilter.filter((prevColumn) => prevColumn !== column),
-                        ...(prevColumnFilter.includes(column) ? [] : [column]),
-                      ])
-                    }
-                    sx={{ px: 0 }}
-                    dense
-                  >
-                    <ListItemIcon sx={{ minWidth: 32 }}>
-                      <Checkbox checked={props.columnFilter.includes(column)} sx={{ p: 0 }} disableRipple />
-                    </ListItemIcon>
-                    <ListItemText primary={column} />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
+            {stockListColumnArray.map((column) => (
+              <ListItem key={column} dense>
+                <ListItemButton
+                  role={undefined}
+                  onClick={() =>
+                    props.setColumnFilter((prevColumnFilter) => [
+                      ...prevColumnFilter.filter((prevColumn) => prevColumn !== column),
+                      ...(prevColumnFilter.includes(column) ? [] : [column]),
+                    ])
+                  }
+                  dense
+                >
+                  <ListItemIcon sx={{ minWidth: 32 }}>
+                    <Checkbox checked={props.columnFilter.includes(column)} sx={{ p: 0 }} disableRipple />
+                  </ListItemIcon>
+                  <ListItemText primary={column} />
+                </ListItemButton>
+              </ListItem>
+            ))}
           </List>
         </DialogContent>
         <DialogActions sx={{ p: 0 }}>

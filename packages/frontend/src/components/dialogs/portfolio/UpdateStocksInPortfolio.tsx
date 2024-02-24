@@ -148,6 +148,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
                     <ListItemButton
                       onClick={() => setSelectedPortfolio(portfolioSummary)}
                       disabled={requestsInProgress}
+                      selected={selectedPortfolio?.id === portfolioSummary.id}
                     >
                       <ListItemText
                         inset
