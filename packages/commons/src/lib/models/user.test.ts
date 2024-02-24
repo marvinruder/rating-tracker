@@ -8,8 +8,8 @@ import {
   ADMINISTRATIVE_MESSAGE,
   WRITE_STOCKS_ACCESS,
   optionalUserValuesNull,
-  UserWithCredentials,
 } from "./user";
+import { UserWithCredentials } from "./userWithCredentials";
 
 const root = new User({
   ...optionalUserValuesNull,

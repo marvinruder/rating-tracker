@@ -12,6 +12,7 @@ export * from "./lib/models/resource";
 export * from "./lib/models/session";
 export * from "./lib/models/stock";
 export * from "./lib/models/user";
+export * from "./lib/models/userWithCredentials";
 export * from "./lib/models/watchlist";
 
 export * from "./lib/paths/auth";
