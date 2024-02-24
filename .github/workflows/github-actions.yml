@@ -67,6 +67,6 @@ jobs:
           DEPENDENCY_DASHBOARD_ISSUE_NUMBER="$(gh issue list -R ${{ github.repository }} | grep "Dependency Dashboard" | awk '{print $1}')"
           echo $DEPENDENCY_DASHBOARD_ISSUE_NUMBER
           DEPENDENCY_DASHBOARD_BODY="$(gh issue view $DEPENDENCY_DASHBOARD_ISSUE_NUMBER -R ${{ github.repository }} --json body --jq .body | sed 's/- \\[ \\] <!-- manual job -->/- \\[x\\] <!-- manual job -->/ ; s/,\$//')"
-          echo $DEPENDENCY_DASHBOARD_BODY
+          for line in $DEPENDENCY_DASHBOARD_BODY; do echo $line; done
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
