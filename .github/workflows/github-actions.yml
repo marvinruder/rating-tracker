@@ -68,5 +68,6 @@ jobs:
           echo $DEPENDENCY_DASHBOARD_ISSUE_NUMBER
           DEPENDENCY_DASHBOARD_BODY="$(gh issue view $DEPENDENCY_DASHBOARD_ISSUE_NUMBER -R ${{ github.repository }} --json body --jq .body | sed 's/- \[ \] <!-- manual job -->/- \[x\] <!-- manual job -->/')"
           echo $DEPENDENCY_DASHBOARD_BODY
+          gh issue edit $DEPENDENCY_DASHBOARD_ISSUE_NUMBER -R ${{ github.repository }} -F <(echo "$DEPENDENCY_DASHBOARD_BODY")
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
