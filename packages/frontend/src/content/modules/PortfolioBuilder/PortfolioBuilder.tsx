@@ -45,7 +45,8 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { LineChart } from "@mui/x-charts/LineChart";
+import type { ScatterSeriesType, ScatterValueType } from "@mui/x-charts/models/seriesType";
+import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import type {
   Currency,
   Portfolio,
@@ -98,8 +99,6 @@ import { ExponentialNumber, formatPercentage, pluralize } from "../../../utils/f
 import { computePortfolio } from "../../../utils/portfolioComputation";
 
 import { PortfolioBuilderHeader } from "./PortfolioBuilderHeader";
-
-type HistogramData = { amount: number; count: number }[];
 
 /**
  * A module that allows the user to build a portfolio of their selected stocks weighted by their preferred proportions
@@ -157,7 +156,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
 
   const [weightedStocks, setWeightedStocks] = useState<WeightedStock[]>([]);
   const [rse, setRSE] = useState<number>(0);
-  const [histogramData, setHistogramData] = useState<HistogramData>([]);
+  const [scatterData, setScatterData] = useState<ScatterSeriesType[]>([]);
   const [regionResults, setRegionResults] = useState<Record<Region, number>>(
     Object.fromEntries(regionArray.map((region) => [region, 0])) as Record<Region, number>,
   );
@@ -259,7 +258,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
 
   // Set distribution results based on the weighted stocks
   useEffect(() => {
-    const newHistogramData: HistogramData = [];
+    const newScatterData: ScatterSeriesType[] = [];
     const newRegionResults = Object.fromEntries(regionArray.map((region) => [region, 0])) as Record<Region, number>;
     const newSectorResults = Object.fromEntries(sectorArray.map((sector) => [sector, 0])) as Record<Sector, number>;
     const newSizeResults = Object.fromEntries(sizeArray.map((size) => [size, 0])) as Record<Size, number>;
@@ -268,21 +267,35 @@ const PortfolioBuilderModule = (): JSX.Element => {
     const totalAmount = +totalAmountInput;
 
     weightedStocks
+      .sort((a, b) => a.ticker.localeCompare(b.ticker))
       .sort((a, b) => b.amount - a.amount)
-      .forEach((stock, index) => {
-        if (index === 0) {
-          newHistogramData.push({ amount: stock.amount, count: 0 });
-        }
-        while (newHistogramData[0].amount - stock.amount > stocks.length * Number.EPSILON)
-          newHistogramData.unshift({ amount: newHistogramData[0].amount - +tickInput, count: 0 });
-        newHistogramData[0].count++;
+      .forEach((stock) => {
+        if (!newScatterData.find((series) => series.id === stock.amount))
+          newScatterData.push({
+            type: "scatter",
+            id: stock.amount,
+            label: `${currency} ${stock.amount.toFixed(currencyMinorUnits[currency])}`,
+            data: [],
+            color: theme.palette.primary.main,
+            markerSize: 5,
+            valueFormatter: (value) =>
+              `# of stocks: ${(value as ScatterValueType & { count: number }).count.toString()}`,
+          });
+        const index = newScatterData.findIndex((series) => series.id === stock.amount);
+        newScatterData[index].data.push({
+          x: stock.amount,
+          y: newScatterData[index].data.length + 1,
+          id: stock.ticker,
+          count: weightedStocks.filter((otherStock) => otherStock.amount === stock.amount).length,
+        } as ScatterValueType);
+
         newRegionResults[regionOfCountry[stock.country]] += stock.amount / totalAmount;
         newSectorResults[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] += stock.amount / totalAmount;
         newSizeResults[stock.size] += stock.amount / totalAmount;
         newStyleResults[stock.style] += stock.amount / totalAmount;
       });
 
-    setHistogramData(newHistogramData);
+    setScatterData(newScatterData);
     setRegionResults(newRegionResults);
     setSectorResults(newSectorResults);
     setSizeResults(newSizeResults);
@@ -896,19 +909,18 @@ const PortfolioBuilderModule = (): JSX.Element => {
               <Typography variant="h5" mb={-3}>
                 Amount distribution
               </Typography>
-              <LineChart
-                dataset={histogramData}
+              <ScatterChart
+                series={scatterData}
                 xAxis={[
                   {
+                    min: weightedStocks.reduce((min, stock) => Math.min(min, stock.amount), Infinity) - +minAmountInput,
+                    max:
+                      weightedStocks.reduce((max, stock) => Math.max(max, stock.amount), -Infinity) + +minAmountInput,
                     tickMinStep: +tickInput,
-                    tickMaxStep: +tickInput,
-                    dataKey: "amount",
                     valueFormatter: (value) => `${currency} ${value.toFixed(currencyMinorUnits[currency])}`,
                   },
                 ]}
-                series={[
-                  { dataKey: "count", color: theme.palette.primary.main, curve: "catmullRom", label: "# of stocks" },
-                ]}
+                yAxis={[{ min: 0 }]}
                 slotProps={{ legend: { hidden: true } }}
                 height={200}
               />
