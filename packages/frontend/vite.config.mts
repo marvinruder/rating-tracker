@@ -55,7 +55,9 @@ export default mergeConfig(
     customLogger,
     test: {
       cache: { dir: ".vite/vitest" },
-      coverage: { all: false, enabled: true, provider: "v8" },
+      coverage: { all: false, enabled: true, provider: "v8", reporter: ["text", "html", "cobertura"] },
+      reporters: ["default", "junit"],
+      outputFile: "coverage/junit.xml",
     },
   }),
 );

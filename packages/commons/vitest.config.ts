@@ -11,5 +11,10 @@ customLogger.error = (msg, options) => {
 
 export default defineConfig({
   customLogger,
-  test: { cache: { dir: ".vitest" }, coverage: { all: false, enabled: true, provider: "v8" } },
+  test: {
+    cache: { dir: ".vitest" },
+    coverage: { all: false, enabled: true, provider: "v8", reporter: ["text", "html", "cobertura"] },
+    reporters: ["default", "junit"],
+    outputFile: "coverage/junit.xml",
+  },
 });
