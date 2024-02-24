@@ -30,7 +30,7 @@ export default defineConfig({
         "src/utils/logFormatterConfig.*",
         "src/utils/webdriver.*",
       ],
-      reporter: ["text", "html", ["cobertura", { file: "cobertura.xml" }]],
+      reporter: ["text", "html", ["cobertura", { file: "cobertura.xml", projectRoot: "../.." }]],
     },
     reporters: ["default", "junit"],
     outputFile: "coverage/junit.xml",

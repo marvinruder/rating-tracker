@@ -59,7 +59,7 @@ export default mergeConfig(
         all: false,
         enabled: true,
         provider: "v8",
-        reporter: ["text", "html", ["cobertura", { file: "cobertura.xml" }]],
+        reporter: ["text", "html", ["cobertura", { file: "cobertura.xml", projectRoot: "../.." }]],
       },
       reporters: ["default", "junit"],
       outputFile: "coverage/junit.xml",
