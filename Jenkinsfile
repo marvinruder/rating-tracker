@@ -30,20 +30,6 @@ node('rating-tracker-build') {
                             JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/docker/Dockerfile-prefetch-buildx | docker buildx build --builder rating-tracker --network=host --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm -) &'
                             """
                         }
-                    },
-                    renovate_trigger: {
-                        if (env.BRANCH_NAME == 'main') {
-                            stage('Trigger Renovate Run') {
-                                // Trigger a request for Renovate to run on the repository to rebase open pull requests after new commits on the `main` branch
-                                sh """
-                                set +x
-                                DEPENDENCY_DASHBOARD_ISSUE_NUMBER=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/$IMAGE_NAME/issues | grep "Dependency Dashboard" -B 1 | head -n 1 | tr -dc '0-9') && \
-                                DEPENDENCY_DASHBOARD_BODY=\$(curl -sL -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/$IMAGE_NAME/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER | grep '"body":' | sed 's/- \\[ \\] <!-- manual job -->/- \\[x\\] <!-- manual job -->/ ; s/,\$//') && \
-                                curl -fsSL -o /dev/null -w '%{response_code}\n' -X PATCH -H "Authorization: Bearer \$GH_TOKEN" https://api.github.com/repos/$IMAGE_NAME/issues/\$DEPENDENCY_DASHBOARD_ISSUE_NUMBER -d "{\$DEPENDENCY_DASHBOARD_BODY}"
-                                set -x
-                                """
-                            }
-                        }
                     }
                 )
 
