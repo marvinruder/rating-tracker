@@ -16,7 +16,6 @@ services:
       REDIS_URL: redis://redis:6379
       # SELENIUM_URL: http://selenium:4444
       SIGNAL_URL: http://signal:8080
-      NODE_ENV: development
       PORT: 3001
       MAX_FETCH_CONCURRENCY: 4
       REDIS_USER: rating-tracker
