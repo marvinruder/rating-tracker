@@ -26,6 +26,7 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Setup yarn
         run: |
+          ls -la ~/.cache/rating-tracker
           corepack enable
           yarn --immutable
       - name: Run ESLint
