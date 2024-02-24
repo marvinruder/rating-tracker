@@ -96,7 +96,7 @@ node('rating-tracker-build') {
                                 // Publish coverage results by running a container from the test image
                                 sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$IMAGE_NAME:job$JOB_ID-ci report --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $IMAGE_NAME:job$JOB_ID-ci")
                             }
-                            recordCoverage tools: [[parser: 'COBERTURA', pattern: 'coverage/*/cobertura.xml'], [parser: 'JUNIT', pattern: 'coverage/*/junit.xml']], qualityGates: [[criticality: 'NOTE', integerThreshold: 100, metric: 'LINE', threshold: 100.0], [baseline: 'PROJECT_DELTA', criticality: 'NOTE', metric: 'LINE']]
+                            recordCoverage tools: [[parser: 'COBERTURA', pattern: 'coverage/*/cobertura.xml'], [parser: 'JUNIT', pattern: 'coverage/*/junit.xml']], qualityGates: [[criticality: 'NOTE', integerThreshold: 100, metric: 'LINE'], [baseline: 'PROJECT_DELTA', criticality: 'NOTE', metric: 'LINE']]
                         }
                     },
                     dockerhub: {
