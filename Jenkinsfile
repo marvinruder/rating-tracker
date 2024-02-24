@@ -96,9 +96,9 @@ node('rating-tracker-build') {
                                 // Publish coverage results by running a container from the test image
                                 sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$IMAGE_NAME:job$JOB_ID-ci report --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $IMAGE_NAME:job$JOB_ID-ci")
                             }
-                            recordCoverage id: 'backend' tools: [[parser: 'COBERTURA', pattern: 'coverage/backend/cobertura.xml'], [parser: 'JUNIT', pattern: 'coverage/backend/junit.xml']], qualityGates: [[criticality: 'NOTE', metric: 'LINE', threshold: 100.0], [baseline: 'PROJECT_DELTA', criticality: 'NOTE', metric: 'LINE', threshold: 0.0]]
-                            recordCoverage id: 'commons' tools: [[parser: 'COBERTURA', pattern: 'coverage/commons/cobertura.xml'], [parser: 'JUNIT', pattern: 'coverage/commons/junit.xml']], qualityGates: [[criticality: 'NOTE', metric: 'LINE', threshold: 100.0], [baseline: 'PROJECT_DELTA', criticality: 'NOTE', metric: 'LINE', threshold: 0.0]]
-                            recordCoverage id: 'frontend' tools: [[parser: 'COBERTURA', pattern: 'coverage/frontend/cobertura.xml'], [parser: 'JUNIT', pattern: 'coverage/frontend/junit.xml']], qualityGates: [[criticality: 'NOTE', metric: 'LINE', threshold: 100.0], [baseline: 'PROJECT_DELTA', criticality: 'NOTE', metric: 'LINE', threshold: 0.0]]
+                            recordCoverage id: 'backend', tools: [[parser: 'COBERTURA', pattern: 'coverage/backend/cobertura.xml'], [parser: 'JUNIT', pattern: 'coverage/backend/junit.xml']], qualityGates: [[criticality: 'NOTE', metric: 'LINE', threshold: 100.0], [baseline: 'PROJECT_DELTA', criticality: 'NOTE', metric: 'LINE', threshold: 0.0]]
+                            recordCoverage id: 'commons', tools: [[parser: 'COBERTURA', pattern: 'coverage/commons/cobertura.xml'], [parser: 'JUNIT', pattern: 'coverage/commons/junit.xml']], qualityGates: [[criticality: 'NOTE', metric: 'LINE', threshold: 100.0], [baseline: 'PROJECT_DELTA', criticality: 'NOTE', metric: 'LINE', threshold: 0.0]]
+                            recordCoverage id: 'frontend', tools: [[parser: 'COBERTURA', pattern: 'coverage/frontend/cobertura.xml'], [parser: 'JUNIT', pattern: 'coverage/frontend/junit.xml']], qualityGates: [[criticality: 'NOTE', metric: 'LINE', threshold: 100.0], [baseline: 'PROJECT_DELTA', criticality: 'NOTE', metric: 'LINE', threshold: 0.0]]
                         }
                     },
                     dockerhub: {
