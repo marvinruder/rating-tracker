@@ -44,6 +44,7 @@ import {
   useTheme,
 } from "@mui/material";
 import type {
+  PortfolioRawData,
   PortfolioSummary,
   Stock,
   StockListColumn,
@@ -82,14 +83,6 @@ import { useNotificationContextUpdater } from "../../../contexts/NotificationCon
 import { useUserContextState } from "../../../contexts/UserContext";
 import api from "../../../utils/api";
 import { CurrencyWithTooltip, formatMarketCap, formatPercentage } from "../../../utils/formatters";
-import {
-  MorningstarNavigator,
-  MarketScreenerNavigator,
-  MSCINavigator,
-  LSEGNavigator,
-  SPNavigator,
-  SustainalyticsNavigator,
-} from "../../../utils/navigators";
 import { BlueIconChip } from "../../chips/BlueIconChip";
 import { GreenIconChip } from "../../chips/GreenIconChip";
 import { TemperatureChip } from "../../chips/TemperatureChip";
@@ -100,6 +93,14 @@ import { DeleteStock } from "../../dialogs/stock/DeleteStock";
 import { EditStock } from "../../dialogs/stock/EditStock";
 import { AddStockToWatchlist } from "../../dialogs/watchlist/AddStockToWatchlist";
 import { RemoveStockFromWatchlist } from "../../dialogs/watchlist/RemoveStockFromWatchlist";
+import {
+  MorningstarNavigator,
+  MarketScreenerNavigator,
+  MSCINavigator,
+  LSEGNavigator,
+  SPNavigator,
+  SustainalyticsNavigator,
+} from "../../etc/Navigators";
 import { Range52WSlider } from "../properties/Range52WSlider";
 import { SectorIcon } from "../properties/SectorIcon";
 import { StarRating } from "../properties/StarRating";
@@ -154,7 +155,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
    * Edits the stock in the portfolio.
    */
   const updateStockInPortfolio = () => {
-    if (!validate()) return;
+    if (!validate() || !("id" in props.portfolio)) return;
     api
       .patch(`${portfoliosEndpointPath}/${props.portfolio.id}${stocksEndpointPath}/${props.stock.ticker}`, {
         params: { amount: +amountInput },
@@ -207,6 +208,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         },
       }}
       onContextMenu={(e) => {
+        if (props.hideActionsMenu) return;
         if (
           !addToWatchlistDialogOpen &&
           !removeFromWatchlistDialogOpen &&
@@ -227,148 +229,152 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       }}
     >
       {/* Actions */}
-      <TableCell style={{ whiteSpace: "nowrap" }}>
-        <Tooltip title="Options" placement="top" arrow>
-          <IconButton
-            size="small"
-            color="secondary"
-            onClick={(e) => (setOptionsMenuPositionEvent(e), setOptionsMenuOpen(true))}
+      {props.hideActionsMenu ? (
+        <TableCell sx={{ p: 0.25 }} />
+      ) : (
+        <TableCell style={{ whiteSpace: "nowrap" }}>
+          <Tooltip title="Options" placement="top" arrow>
+            <IconButton
+              size="small"
+              color="secondary"
+              onClick={(e) => (setOptionsMenuPositionEvent(e), setOptionsMenuOpen(true))}
+            >
+              <ArrowDropDownIcon />
+            </IconButton>
+          </Tooltip>
+          <Box
+            ref={contextMenuPositionRef}
+            sx={{
+              position: "fixed",
+              visibility: "hidden",
+              top: optionsMenuPositionEvent?.clientY,
+              left: optionsMenuPositionEvent?.clientX,
+            }}
+          />
+          <Menu
+            open={optionsMenuOpen}
+            onClick={() => setOptionsMenuOpen(false)}
+            onClose={() => setOptionsMenuOpen(false)}
+            anchorEl={contextMenuPositionRef.current}
           >
-            <ArrowDropDownIcon />
-          </IconButton>
-        </Tooltip>
-        <Box
-          ref={contextMenuPositionRef}
-          sx={{
-            position: "fixed",
-            visibility: "hidden",
-            top: optionsMenuPositionEvent?.clientY,
-            left: optionsMenuPositionEvent?.clientX,
-          }}
-        />
-        <Menu
-          open={optionsMenuOpen}
-          onClick={() => setOptionsMenuOpen(false)}
-          onClose={() => setOptionsMenuOpen(false)}
-          anchorEl={contextMenuPositionRef.current}
-        >
-          <MenuItem component={NavLink} to={`${stocksEndpointPath}/${props.stock.ticker}`} target="_blank">
-            <ListItemIcon>
-              <OpenInNewIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText
-              primary={`Open “${props.stock.ticker}” in new tab`}
-              primaryTypographyProps={{ color: "text.secondary" }}
-            />
-          </MenuItem>
-          {!props.watchlist && !props.portfolio && (
-            <MenuItem
-              onClick={() => {
-                (isFavorite ? api.delete : api.put)(favoritesEndpointPath + `/${props.stock.ticker}`)
-                  .then(refetchFavorites)
-                  .catch((e) =>
-                    setErrorNotificationOrClearSession(
-                      e,
-                      isFavorite
-                        ? `removing “${props.stock.name}” from favorites`
-                        : `adding “${props.stock.name}” to favorites`,
-                    ),
-                  );
-              }}
-            >
+            <MenuItem component={NavLink} to={`${stocksEndpointPath}/${props.stock.ticker}`} target="_blank">
               <ListItemIcon>
-                {isFavorite ? (
-                  <StarOutlineIcon color="warning" fontSize="small" />
-                ) : (
-                  <StarIcon color="warning" fontSize="small" />
-                )}
+                <OpenInNewIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText
-                primary={
-                  isFavorite
-                    ? `Remove “${props.stock.ticker}” from Favorites`
-                    : `Mark “${props.stock.ticker}” as Favorite`
-                }
+                primary={`Open “${props.stock.ticker}” in new tab`}
                 primaryTypographyProps={{ color: "text.secondary" }}
               />
             </MenuItem>
-          )}
-          {!props.watchlist && !props.portfolio && (
-            <MenuItem onClick={() => setAddToWatchlistDialogOpen(true)}>
-              <ListItemIcon>
-                <BookmarkAddIcon color="success" fontSize="small" />
-              </ListItemIcon>
-              <ListItemText
-                primary={`Add “${props.stock.ticker}” to watchlist…`}
-                primaryTypographyProps={{ color: "text.secondary" }}
-              />
-            </MenuItem>
-          )}
-          {!props.watchlist && !props.portfolio && (
-            <MenuItem onClick={() => setAddToPortfolioDialogOpen(true)}>
-              <ListItemIcon>
-                <AddShoppingCartIcon color="success" fontSize="small" />
-              </ListItemIcon>
-              <ListItemText
-                primary={`Add “${props.stock.ticker}” to portfolio…`}
-                primaryTypographyProps={{ color: "text.secondary" }}
-              />
-            </MenuItem>
-          )}
-          {!props.watchlist && !props.portfolio && (
-            <MenuItem
-              onClick={() => setEditDialogOpen(true)}
-              sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
-            >
-              <ListItemIcon>
-                <EditIcon color="primary" fontSize="small" />
-              </ListItemIcon>
-              <ListItemText
-                primary={`Edit “${props.stock.ticker}”…`}
-                primaryTypographyProps={{ color: "text.secondary" }}
-              />
-            </MenuItem>
-          )}
-          {!props.watchlist && !props.portfolio && (
-            <MenuItem
-              onClick={() => setDeleteDialogOpen(true)}
-              sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
-            >
-              <ListItemIcon>
-                <DeleteIcon color="error" fontSize="small" />
-              </ListItemIcon>
-              <ListItemText
-                primary={`Delete “${props.stock.ticker}”…`}
-                primaryTypographyProps={{ color: "text.secondary" }}
-              />
-            </MenuItem>
-          )}
-          {props.watchlist && (
-            <MenuItem onClick={() => setRemoveFromWatchlistDialogOpen(true)}>
-              <ListItemIcon>
-                <BookmarkRemoveIcon color="error" fontSize="small" />
-              </ListItemIcon>
-              <ListItemText
-                primary={`Remove “${props.stock.ticker}” from “${props.watchlist.name}”`}
-                primaryTypographyProps={{ color: "text.secondary" }}
-              />
-            </MenuItem>
-          )}
-          {props.portfolio && (
-            <MenuItem onClick={() => setRemoveFromPortfolioDialogOpen(true)}>
-              <ListItemIcon>
-                <RemoveShoppingCartIcon color="error" fontSize="small" />
-              </ListItemIcon>
-              <ListItemText
-                primary={`Remove “${props.stock.ticker}” from “${props.portfolio.name}”`}
-                primaryTypographyProps={{ color: "text.secondary" }}
-              />
-            </MenuItem>
-          )}
-        </Menu>
-      </TableCell>
+            {!props.watchlist && !props.portfolio && (
+              <MenuItem
+                onClick={() => {
+                  (isFavorite ? api.delete : api.put)(favoritesEndpointPath + `/${props.stock.ticker}`)
+                    .then(refetchFavorites)
+                    .catch((e) =>
+                      setErrorNotificationOrClearSession(
+                        e,
+                        isFavorite
+                          ? `removing “${props.stock.name}” from favorites`
+                          : `adding “${props.stock.name}” to favorites`,
+                      ),
+                    );
+                }}
+              >
+                <ListItemIcon>
+                  {isFavorite ? (
+                    <StarOutlineIcon color="warning" fontSize="small" />
+                  ) : (
+                    <StarIcon color="warning" fontSize="small" />
+                  )}
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    isFavorite
+                      ? `Remove “${props.stock.ticker}” from Favorites`
+                      : `Mark “${props.stock.ticker}” as Favorite`
+                  }
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                />
+              </MenuItem>
+            )}
+            {!props.watchlist && !props.portfolio && (
+              <MenuItem onClick={() => setAddToWatchlistDialogOpen(true)}>
+                <ListItemIcon>
+                  <BookmarkAddIcon color="success" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={`Add “${props.stock.ticker}” to watchlist…`}
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                />
+              </MenuItem>
+            )}
+            {!props.watchlist && !props.portfolio && (
+              <MenuItem onClick={() => setAddToPortfolioDialogOpen(true)}>
+                <ListItemIcon>
+                  <AddShoppingCartIcon color="success" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={`Add “${props.stock.ticker}” to portfolio…`}
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                />
+              </MenuItem>
+            )}
+            {!props.watchlist && !props.portfolio && (
+              <MenuItem
+                onClick={() => setEditDialogOpen(true)}
+                sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+              >
+                <ListItemIcon>
+                  <EditIcon color="primary" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={`Edit “${props.stock.ticker}”…`}
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                />
+              </MenuItem>
+            )}
+            {!props.watchlist && !props.portfolio && (
+              <MenuItem
+                onClick={() => setDeleteDialogOpen(true)}
+                sx={{ display: !user.hasAccessRight(WRITE_STOCKS_ACCESS) && "none" }}
+              >
+                <ListItemIcon>
+                  <DeleteIcon color="error" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={`Delete “${props.stock.ticker}”…`}
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                />
+              </MenuItem>
+            )}
+            {props.watchlist && (
+              <MenuItem onClick={() => setRemoveFromWatchlistDialogOpen(true)}>
+                <ListItemIcon>
+                  <BookmarkRemoveIcon color="error" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={`Remove “${props.stock.ticker}” from “${props.watchlist.name}”`}
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                />
+              </MenuItem>
+            )}
+            {props.portfolio && "id" in props.portfolio && (
+              <MenuItem onClick={() => setRemoveFromPortfolioDialogOpen(true)}>
+                <ListItemIcon>
+                  <RemoveShoppingCartIcon color="error" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={`Remove “${props.stock.ticker}” from “${props.portfolio.name}”`}
+                  primaryTypographyProps={{ color: "text.secondary" }}
+                />
+              </MenuItem>
+            )}
+          </Menu>
+        </TableCell>
+      )}
       {/* Amount in Portfolio */}
-      {props.portfolio && "amount" in props.stock && (
+      {"amount" in props.stock && (
         <TableCell>
           <Tooltip
             title={
@@ -379,14 +385,15 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             arrow
           >
             <TextField
-              sx={{ width: 150 }}
+              sx={{ width: "id" in props.portfolio ? 150 : 120 }}
+              disabled={!("id" in props.portfolio)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
                     {props.portfolio.currency}
                   </InputAdornment>
                 ),
-                endAdornment: (
+                endAdornment: "id" in props.portfolio && (
                   <InputAdornment position="end" sx={{ ml: 0.5 }}>
                     <IconButton
                       id={`update-stock-${props.stock.ticker}-in-portfolio`}
@@ -868,14 +875,6 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <StockDetails stock={props.stock} />
         </DialogContent>
       </Dialog>
-      {/* Add to Watchlist Dialog */}
-      <Dialog maxWidth="xs" open={addToWatchlistDialogOpen} onClose={() => setAddToWatchlistDialogOpen(false)}>
-        <AddStockToWatchlist stock={props.stock} onClose={() => setAddToWatchlistDialogOpen(false)} />
-      </Dialog>
-      {/* Add to Portfolio Dialog */}
-      <Dialog maxWidth="xs" open={addToPortfolioDialogOpen} onClose={() => setAddToPortfolioDialogOpen(false)}>
-        <AddStockToPortfolio stock={props.stock} onClose={() => setAddToPortfolioDialogOpen(false)} />
-      </Dialog>
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen}>
         <EditStock stock={props.stock} onCloseAfterEdit={props.getStocks} onClose={() => setEditDialogOpen(false)} />
@@ -884,37 +883,55 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DeleteStock stock={props.stock} onDelete={props.getStocks} onClose={() => setDeleteDialogOpen(false)} />
       </Dialog>
-      {/* Remove from Watchlist Dialog */}
-      <Dialog open={removeFromWatchlistDialogOpen} onClose={() => setRemoveFromWatchlistDialogOpen(false)}>
-        <RemoveStockFromWatchlist
-          stock={props.stock}
-          watchlist={props.watchlist}
-          onRemove={() => (props.getWatchlist(), props.getStocks())}
-          onClose={() => setRemoveFromWatchlistDialogOpen(false)}
-        />
-      </Dialog>
-      {/* Remove from Portfolio Dialog */}
-      <Dialog open={removeFromPortfolioDialogOpen} onClose={() => setRemoveFromPortfolioDialogOpen(false)}>
-        <RemoveStockFromPortfolio
-          stock={props.stock}
-          portfolio={props.portfolio}
-          onRemove={() => (props.getPortfolio(), props.getStocks())}
-          onClose={() => setRemoveFromPortfolioDialogOpen(false)}
-        />
-      </Dialog>
+      {props.watchlist ? (
+        <Dialog open={removeFromWatchlistDialogOpen} onClose={() => setRemoveFromWatchlistDialogOpen(false)}>
+          {/* Remove from Watchlist Dialog */}
+          <RemoveStockFromWatchlist
+            stock={props.stock}
+            watchlist={props.watchlist}
+            onRemove={() => (props.getWatchlist(), props.getStocks())}
+            onClose={() => setRemoveFromWatchlistDialogOpen(false)}
+          />
+        </Dialog>
+      ) : (
+        <Dialog maxWidth="xs" open={addToWatchlistDialogOpen} onClose={() => setAddToWatchlistDialogOpen(false)}>
+          {/* Add to Watchlist Dialog */}
+          <AddStockToWatchlist stock={props.stock} onClose={() => setAddToWatchlistDialogOpen(false)} />
+        </Dialog>
+      )}
+      {props.portfolio && "id" in props.portfolio ? (
+        <Dialog open={removeFromPortfolioDialogOpen} onClose={() => setRemoveFromPortfolioDialogOpen(false)}>
+          {/* Remove from Portfolio Dialog */}
+          <RemoveStockFromPortfolio
+            stock={props.stock}
+            portfolio={props.portfolio}
+            onRemove={() => (props.getPortfolio(), props.getStocks())}
+            onClose={() => setRemoveFromPortfolioDialogOpen(false)}
+          />
+        </Dialog>
+      ) : (
+        <Dialog maxWidth="xs" open={addToPortfolioDialogOpen} onClose={() => setAddToPortfolioDialogOpen(false)}>
+          {/* Add to Portfolio Dialog */}
+          <AddStockToPortfolio stock={props.stock} onClose={() => setAddToPortfolioDialogOpen(false)} />
+        </Dialog>
+      )}
     </TableRow>
   ) : (
     // Skeleton of a stock row
     <TableRow hover sx={{ height: 59 }} {...(props.isInfiniteLoadingTrigger ? { ref: infiniteLoadingTriggerRef } : {})}>
       {/* Actions */}
-      <TableCell style={{ whiteSpace: "nowrap" }}>
-        <Skeleton
-          sx={{ m: "4px", display: "inline-block", verticalAlign: "middle" }}
-          variant="circular"
-          width={2 * (theme.typography.body1.fontSize as number) - 4}
-          height={2 * (theme.typography.body1.fontSize as number) - 4}
-        />
-      </TableCell>
+      {props.hideActionsMenu ? (
+        <TableCell sx={{ p: 0.25 }} />
+      ) : (
+        <TableCell style={{ whiteSpace: "nowrap" }}>
+          <Skeleton
+            sx={{ m: "4px", display: "inline-block", verticalAlign: "middle" }}
+            variant="circular"
+            width={2 * (theme.typography.body1.fontSize as number) - 4}
+            height={2 * (theme.typography.body1.fontSize as number) - 4}
+          />
+        </TableCell>
+      )}
       {props.portfolio !== undefined && (
         <TableCell>
           <Skeleton variant="rounded" width={150} height={32} />
@@ -1109,7 +1126,7 @@ interface StockRowProps {
   /**
    * A portfolio the stock is in. If set, the stock row is shown as part of that portfolio’s stocks.
    */
-  portfolio?: PortfolioSummary;
+  portfolio?: PortfolioSummary | PortfolioRawData;
   /**
    * A method to update the stock list, e.g. after a stock was modified or deleted.
    *
@@ -1131,4 +1148,8 @@ interface StockRowProps {
    * The columns to display
    */
   columns?: StockListColumn[];
+  /**
+   * Whether to hide the actions context menu.
+   */
+  hideActionsMenu?: boolean;
 }

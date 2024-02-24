@@ -872,6 +872,9 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
         },
         elevation0: {
           boxShadow: "none",
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: colors.alpha.black[10],
         },
         elevation: {
           boxShadow: colors.shadows.card,
@@ -1139,9 +1142,6 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
     },
     MuiAlert: {
       styleOverrides: {
-        root: {
-          boxShadow: colors.shadows.card,
-        },
         message: {
           lineHeight: 1.5,
           fontSize: 12,
@@ -1291,6 +1291,11 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
         },
       },
       styleOverrides: {
+        root: {
+          ul: {
+            paddingInlineStart: "2em",
+          },
+        },
         gutterBottom: {
           marginBottom: 2,
         },

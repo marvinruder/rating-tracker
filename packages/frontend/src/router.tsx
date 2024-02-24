@@ -1,5 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
 import {
+  portfolioBuilderEndpointSuffix,
   portfoliosEndpointPath,
   stocksEndpointPath,
   usersEndpointPath,
@@ -71,6 +72,13 @@ const loader = (
  * @returns The component.
  */
 const Portfolio = loader(lazy(() => import("./content/modules/Portfolio/Portfolio")));
+
+/**
+ * The portfolio builder module, loaded only when needed.
+ * @param props The properties of the component.
+ * @returns The component.
+ */
+const PortfolioBuilder = loader(lazy(() => import("./content/modules/PortfolioBuilder/PortfolioBuilder")));
 
 /**
  * The portfolio summary module, loaded only when needed.
@@ -207,34 +215,14 @@ const routes: RouteObject[] = [
       </AuthWrapper>
     ),
     children: [
-      {
-        path: portfoliosEndpointPath + "/:id",
-        element: <Portfolio />,
-      },
-      {
-        path: portfoliosEndpointPath,
-        element: <PortfolioSummary />,
-      },
-      {
-        path: stocksEndpointPath,
-        element: <StockList />,
-      },
-      {
-        path: stocksEndpointPath + "/:ticker",
-        element: <Stock />,
-      },
-      {
-        path: usersEndpointPath,
-        element: <UserManagement />,
-      },
-      {
-        path: watchlistsEndpointPath,
-        element: <WatchlistSummary />,
-      },
-      {
-        path: watchlistsEndpointPath + "/:id",
-        element: <Watchlist />,
-      },
+      { path: portfoliosEndpointPath + "/:id", element: <Portfolio /> },
+      { path: portfoliosEndpointPath + portfolioBuilderEndpointSuffix, element: <PortfolioBuilder /> },
+      { path: portfoliosEndpointPath, element: <PortfolioSummary /> },
+      { path: stocksEndpointPath, element: <StockList /> },
+      { path: stocksEndpointPath + "/:ticker", element: <Stock /> },
+      { path: usersEndpointPath, element: <UserManagement /> },
+      { path: watchlistsEndpointPath, element: <WatchlistSummary /> },
+      { path: watchlistsEndpointPath + "/:id", element: <Watchlist /> },
     ],
   },
   {

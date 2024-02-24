@@ -52,6 +52,10 @@ describe("Percentage Formatter", () => {
     expect(formatPercentage(0.1234, { precision: 2 })).toBe("12 %");
   });
 
+  it("formats a percentage with a fixed number of digits after the decimal point", () => {
+    expect(formatPercentage(0.1234, { fixed: 1 })).toBe("12.3 %");
+  });
+
   it("formats a percentage with a “+” sign in front of positive numbers", () => {
     expect(formatPercentage(0.1234, { forceSign: true })).toBe("+12.3 %");
     expect(formatPercentage(-0.1234, { forceSign: true })).toBe("-12.3 %");

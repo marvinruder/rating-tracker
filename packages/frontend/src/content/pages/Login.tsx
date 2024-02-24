@@ -1,6 +1,6 @@
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import { LoadingButton } from "@mui/lab";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { Box, Card, CardContent, Grid, TextField, Typography, useTheme } from "@mui/material";
 import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";

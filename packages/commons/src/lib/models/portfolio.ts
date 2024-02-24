@@ -61,13 +61,18 @@ export type PortfolioSummary = Omit<Portfolio, "stocks"> & {
 };
 
 /**
+ * The raw data from which a portfolio can be created. Does not include an ID or a name.
+ */
+export type PortfolioRawData = Omit<Portfolio, "id" | "name">;
+
+/**
  * Computes the total currency amount of the stocks in a portfolio. If an attribute is specified, only the stocks with a
  * non-null value for that attribute are considered.
  * @param portfolio The portfolio.
  * @param attribute The attribute to use for filtering the stocks.
  * @returns The total currency amount of the stocks in the portfolio.
  */
-export const getTotalAmount = (portfolio: PortfolioSummary, attribute?: keyof Stock): number =>
+export const getTotalAmount = (portfolio: Pick<PortfolioSummary, "stocks">, attribute?: keyof Stock): number =>
   portfolio.stocks.filter((stock) => stock[attribute] !== null).reduce((sum, stock) => sum + stock.amount, 0);
 
 /**
