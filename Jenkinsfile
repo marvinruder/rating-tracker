@@ -94,7 +94,7 @@ node('rating-tracker-build') {
                         stage ('Process test results') {
                             withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
                                 // Publish coverage results by running a container from the test image
-                                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$IMAGE_NAME:job$JOB_ID-ci report \$(find . -name 'cobertura-coverage.xml' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $IMAGE_NAME:job$JOB_ID-ci")
+                                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$IMAGE_NAME:job$JOB_ID-ci report \$(find /coverage -name 'cobertura-coverage.xml' -printf '-r %p ') --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $IMAGE_NAME:job$JOB_ID-ci")
                             }
                             recordCoverage qualityGates: [[criticality: 'NOTE', integerThreshold: 100, metric: 'LINE', threshold: 100.0], [baseline: 'PROJECT_DELTA', criticality: 'NOTE', metric: 'LINE']], tools: [[parser: 'COBERTURA', pattern: './coverage/*/cobertura-coverage.xml'], [parser: 'JUNIT', pattern: './coverage/*/junit.xml']]
                         }
