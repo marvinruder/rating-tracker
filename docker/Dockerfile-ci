@@ -126,7 +126,6 @@ FROM eclipse-temurin:21.0.2_13-jre-alpine as codacy
 
 # Install bash and download and extract Codacy coverage reporter
 RUN --mount=type=cache,target=/var/cache/apk \
-  mkdir -p /coverage/{backend,commons,frontend} && \
   apk --update add bash && \
   wget -qO - https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
   chmod +x /usr/local/bin/codacy-coverage && \
