@@ -17,7 +17,7 @@ export default defineConfig({
       all: false,
       enabled: true,
       provider: "v8",
-      reporter: ["text", "html", ["cobertura", { file: "coverage/cobertura.xml" }]],
+      reporter: ["text", "html", ["cobertura", { file: "cobertura.xml" }]],
     },
     reporters: ["default", "junit"],
     outputFile: "coverage/junit.xml",

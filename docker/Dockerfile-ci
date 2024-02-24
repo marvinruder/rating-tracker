@@ -131,7 +131,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
   chmod +x /usr/local/bin/codacy-coverage && \
   codacy-coverage download
 
-WORKDIR /
+WORKDIR /coverage
 
 # Copy coverage reports from test stage
 COPY --from=test /coverage /coverage
