@@ -4,7 +4,7 @@ node('rating-tracker-build') {
         'FORCE_COLOR=true',
         'DOCKER_CI_FLAGS=-f docker/Dockerfile-ci --network=host --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm'
     ]) {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'), string(credentialsId: 'github_pat', variable: 'GH_TOKEN')]) {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
             // Use random job identifier and test port numbers to avoid collisions
             def JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 4096))", returnStdout: true)
             def PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
