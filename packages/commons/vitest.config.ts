@@ -13,7 +13,12 @@ export default defineConfig({
   customLogger,
   test: {
     cache: { dir: ".vitest" },
-    coverage: { all: false, enabled: true, provider: "v8", reporter: ["text", "html", "cobertura"] },
+    coverage: {
+      all: false,
+      enabled: true,
+      provider: "v8",
+      reporter: ["text", "html", ["cobertura", { file: "coverage/cobertura.xml" }]],
+    },
     reporters: ["default", "junit"],
     outputFile: "coverage/junit.xml",
   },
