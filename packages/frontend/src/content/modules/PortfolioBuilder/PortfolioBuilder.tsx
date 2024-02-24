@@ -45,7 +45,10 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import type { ScatterSeriesType, ScatterValueType } from "@mui/x-charts/models/seriesType";
+import type {
+  ScatterSeriesType as _ScatterSeriesType,
+  ScatterValueType as _ScatterValueType,
+} from "@mui/x-charts/models/seriesType";
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import type {
   Currency,
@@ -99,6 +102,9 @@ import { ExponentialNumber, formatPercentage, pluralize } from "../../../utils/f
 import { computePortfolio } from "../../../utils/portfolioComputation";
 
 import { PortfolioBuilderHeader } from "./PortfolioBuilderHeader";
+
+type ScatterValueType = _ScatterValueType & { count: number };
+type ScatterSeriesType = Omit<_ScatterSeriesType, "data"> & { data: ScatterValueType[] };
 
 /**
  * A module that allows the user to build a portfolio of their selected stocks weighted by their preferred proportions
@@ -278,8 +284,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
             data: [],
             color: theme.palette.primary.main,
             markerSize: 5,
-            valueFormatter: (value) =>
-              `# of stocks: ${(value as ScatterValueType & { count: number }).count.toString()}`,
+            valueFormatter: (value: ScatterValueType) => `# of stocks: ${value.count.toString()}`,
           });
         const index = newScatterData.findIndex((series) => series.id === stock.amount);
         newScatterData[index].data.push({
@@ -287,7 +292,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
           y: newScatterData[index].data.length + 1,
           id: stock.ticker,
           count: weightedStocks.filter((otherStock) => otherStock.amount === stock.amount).length,
-        } as ScatterValueType);
+        });
 
         newRegionResults[regionOfCountry[stock.country]] += stock.amount / totalAmount;
         newSectorResults[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] += stock.amount / totalAmount;
