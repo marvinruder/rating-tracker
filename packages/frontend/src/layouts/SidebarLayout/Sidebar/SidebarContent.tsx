@@ -1,3 +1,4 @@
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ListIcon from "@mui/icons-material/List";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -21,6 +22,7 @@ import {
 } from "@mui/material";
 import {
   ADMINISTRATIVE_ACCESS,
+  portfolioBuilderEndpointSuffix,
   portfoliosEndpointPath,
   stocksEndpointPath,
   usersEndpointPath,
@@ -28,7 +30,7 @@ import {
 } from "@rating-tracker/commons";
 import type { FC } from "react";
 import React, { Fragment, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { StatusIndicator } from "../../../components/etc/StatusIndicator";
 import { useStatusContextState, useStatusContextUpdater } from "../../../contexts/StatusContext";
@@ -101,7 +103,7 @@ const SubMenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
               },
               ".MuiButton-startIcon": { color: theme.colors.alpha.trueWhite[30], fontSize: 20, mr: 1 },
               ".MuiButton-endIcon": { color: theme.colors.alpha.trueWhite[50], ml: "auto", opacity: 0.8, fontSize: 20 },
-              "&.active, &:hover": {
+              "&.active:not(.notActive), &:hover": {
                 backgroundColor: alpha(theme.colors.alpha.trueWhite[100], 0.06),
                 color: theme.colors.alpha.trueWhite[100],
                 ".MuiButton-startIcon, .MuiButton-endIcon": { color: theme.colors.alpha.trueWhite[100] },
@@ -152,10 +154,11 @@ const SubMenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
 export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
   const [statusTooltipOpen, setStatusTooltipOpen] = useState(false);
 
+  const theme = useTheme();
+  const location = useLocation();
+
   const { systemStatus, systemStatusLoading } = useStatusContextState();
   const { refreshSystemStatus } = useStatusContextUpdater();
-
-  const theme = useTheme();
 
   const { user } = useUserContextState();
 
@@ -195,11 +198,30 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
                 <Button
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
+                  {...(location.pathname === portfoliosEndpointPath + portfolioBuilderEndpointSuffix
+                    ? { className: "notActive" }
+                    : {})}
                   onClick={props.closeSidebar}
                   to={portfoliosEndpointPath}
                   startIcon={<ShoppingCartIcon />}
                 >
                   Portfolios
+                </Button>
+              </ListItem>
+            </List>
+          </SubMenuWrapper>
+          <Divider sx={{ mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
+          <SubMenuWrapper>
+            <List component="div">
+              <ListItem component="div">
+                <Button
+                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
+                  component={NavLink}
+                  onClick={props.closeSidebar}
+                  to={portfoliosEndpointPath + portfolioBuilderEndpointSuffix}
+                  startIcon={<AutoFixHighIcon />}
+                >
+                  Portfolio Builder
                 </Button>
               </ListItem>
             </List>
