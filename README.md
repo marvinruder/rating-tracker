@@ -72,6 +72,42 @@ Stocks weighted by a given amount of currency can be aggretated in portfolios. T
   <img alt="Rating Tracker Portfolios" src="/docs/images/portfolios-light.png">
 </picture>
 
+#### Portfolio Builder
+
+This tool can provide optimal weights of stocks in a portfolio based on the preferred proportions of regions, sectors and other factors.
+
+Stocks can be taken from an existing portfolio, a watchlist, or searched for manually:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/portfolio-builder-1-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/portfolio-builder-1-light.png">
+  <img alt="Rating Tracker Portfolio Builder – Select stocks" src="/docs/images/portfolio-builder-1-light.png">
+</picture>
+
+Constraints for regions, sectors, sizes and styles can then be provided, as well as a currency for the portfolio and other settings, such as the total amount to invest, the minimum currency amount per stock or the algorithm to use for proportional representation:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/portfolio-builder-2-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/portfolio-builder-2-light.png">
+  <img alt="Rating Tracker Portfolio Builder – Configure portfolio" src="/docs/images/portfolio-builder-2-light.png">
+</picture>
+
+The resulting stock distribution is presented in a histogram-like chart, and differences between target and actual percentages are highlighted:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/portfolio-builder-3-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/portfolio-builder-3-light.png">
+  <img alt="Rating Tracker Portfolio Builder – View results" src="/docs/images/portfolio-builder-3-light.png">
+</picture>
+
+The dialog to save the weighted stocks to a new or existing portfolio transparently lists all updates to be made as well as the progress in transferring them to the server:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/portfolio-builder-4-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/portfolio-builder-4-light.png">
+  <img alt="Rating Tracker Portfolio Builder – Save results" src="/docs/images/portfolio-builder-4-light.png">
+</picture>
+
 #### User Management
 
 The Rating Tracker supports multiple users, who can self-register via WebAuthn and access the application after being granted fine-grained access by an administrator, for whom a “User Management” web interface is provided.

@@ -12,6 +12,7 @@
   "customizations": {
     "vscode": {
       "settings": {
+        "remote.autoForwardPorts": false,
         "typescript.tsdk": ".yarn/sdks/typescript/lib",
         "editor.tabSize": 2,
         "editor.formatOnSave": true,
