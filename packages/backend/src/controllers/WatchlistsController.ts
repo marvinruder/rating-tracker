@@ -62,14 +62,13 @@ export class WatchlistsController {
    * @throws an {@link APIError} if a watchlist with the same ID already exists
    */
   @Router({
-    path: watchlistsEndpointPath + "/:id",
+    path: watchlistsEndpointPath,
     method: "put",
     accessRights: GENERAL_ACCESS,
   })
   async put(req: Request, res: Response) {
-    const { id } = req.params;
     const { name } = req.query;
-    if (id === "new" && typeof name === "string") {
+    if (typeof name === "string") {
       const watchlist = await createWatchlist(name, res.locals.user.email);
       res.status(201).json({ id: watchlist.id }).end();
     }

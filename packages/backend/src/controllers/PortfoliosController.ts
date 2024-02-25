@@ -58,14 +58,13 @@ export class PortfoliosController {
    * @throws an {@link APIError} if a portfolio with the same ID already exists
    */
   @Router({
-    path: portfoliosEndpointPath + "/:id",
+    path: portfoliosEndpointPath,
     method: "put",
     accessRights: GENERAL_ACCESS,
   })
   async put(req: Request, res: Response) {
-    const { id } = req.params;
     const { name, currency } = req.query;
-    if (id === "new" && typeof name === "string" && typeof currency === "string" && isCurrency(currency)) {
+    if (typeof name === "string" && typeof currency === "string" && isCurrency(currency)) {
       const portfolio = await createPortfolio(name, res.locals.user.email, currency);
       res.status(201).json({ id: portfolio.id }).end();
     }
