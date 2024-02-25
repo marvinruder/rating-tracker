@@ -66,20 +66,14 @@ tests.push({
 tests.push({
   testName: "[unsafe] creates a portfolio",
   testFunction: async () => {
-    // Attempting to use a custom ID returns an error
-    let res = await supertest
-      .put(`${baseURL}${portfoliosEndpointPath}/fancy?name=Fancy`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(400);
-
     // We cannot create a portfolio without a currency
-    res = await supertest
-      .put(`${baseURL}${portfoliosEndpointPath}/new?name=${encodeURIComponent("Mon Portefeuille")}`)
+    let res = await supertest
+      .put(`${baseURL}${portfoliosEndpointPath}?name=${encodeURIComponent("Mon Portefeuille")}`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
 
     res = await supertest
-      .put(`${baseURL}${portfoliosEndpointPath}/new?name=${encodeURIComponent("Mon Portefeuille")}&currency=EUR`)
+      .put(`${baseURL}${portfoliosEndpointPath}?name=${encodeURIComponent("Mon Portefeuille")}&currency=EUR`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(201);
     const { id } = res.body;

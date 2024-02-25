@@ -1,8 +1,8 @@
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
 import * as portfolio from "../../../parameters/portfolio";
-import { badRequest, conflict, forbidden, notFound, unauthorized } from "../../../responses/clientError";
-import { createdPortfolioID, noContent, okPortfolio } from "../../../responses/success";
+import { badRequest, forbidden, notFound, unauthorized } from "../../../responses/clientError";
+import { noContent, okPortfolio } from "../../../responses/success";
 
 /**
  * Get the specified portfolio
@@ -24,38 +24,6 @@ const get: OpenAPIV3.OperationObject = {
     "401": unauthorized,
     "403": forbidden,
     "404": notFound,
-  },
-};
-
-/**
- * Create the portfolio using the information provided.
- */
-const put: OpenAPIV3.OperationObject = {
-  tags: ["Portfolios API"],
-  operationId: "putPortfolio",
-  summary: "Create Portfolio API endpoint",
-  description: "Create the portfolio using the information provided.",
-  parameters: [
-    {
-      name: "id",
-      in: "path",
-      required: true,
-      schema: { pattern: "^new$" },
-    },
-    {
-      ...portfolio.name,
-      required: true,
-    },
-    {
-      ...portfolio.currency,
-      required: true,
-    },
-  ],
-  responses: {
-    "201": createdPortfolioID,
-    "400": badRequest,
-    "401": unauthorized,
-    "409": conflict,
   },
 };
 
@@ -108,4 +76,4 @@ const deleteRequest: OpenAPIV3.OperationObject = {
   },
 };
 
-export { get, deleteRequest as delete, put, patch };
+export { get, deleteRequest as delete, patch };

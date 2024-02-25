@@ -64,19 +64,13 @@ tests.push({
   testFunction: async () => {
     // Attempting to create another Favorites list returns an error
     let res = await supertest
-      .put(`${baseURL}${watchlistsEndpointPath}/new?name=Favorites`)
+      .put(`${baseURL}${watchlistsEndpointPath}?name=Favorites`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch("The name “Favorites” is reserved.");
 
-    // Attempting to use a custom ID returns an error
     res = await supertest
-      .put(`${baseURL}${watchlistsEndpointPath}/fancy?name=Fancy`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(400);
-
-    res = await supertest
-      .put(`${baseURL}${watchlistsEndpointPath}/new?name=${encodeURIComponent("Favȏrïtès")}`)
+      .put(`${baseURL}${watchlistsEndpointPath}?name=${encodeURIComponent("Favȏrïtès")}`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(201);
     const { id } = res.body;
