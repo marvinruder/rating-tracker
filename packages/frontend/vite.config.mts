@@ -39,8 +39,8 @@ export default mergeConfig(
         template: "src/index.html",
         inject: {
           data: {
-            title: process.env.NODE_ENV === "development" ? "Development Preview – " : "" + "Rating Tracker",
-            faviconPath: "favicon" + process.env.NODE_ENV === "development" ? "-dev" : "",
+            title: (process.env.NODE_ENV === "development" ? "Development Preview – " : "") + "Rating Tracker",
+            faviconPath: "favicon" + (process.env.NODE_ENV === "development" ? "-dev" : ""),
           },
         },
         verbose: process.env.NODE_ENV === "development",
