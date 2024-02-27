@@ -26,7 +26,7 @@ LABEL \
   org.opencontainers.image.source="https://github.com/marvinruder/rating-tracker" \
   org.opencontainers.image.vendor="Marvin A. Ruder" \
   org.opencontainers.image.licenses="MIT" \
-  org.opencontainers.image.version="4.3.0" \
+  org.opencontainers.image.version="4.3.1" \
   org.opencontainers.image.created=$BUILD_DATE
 
 ENV NODE_ENV production
