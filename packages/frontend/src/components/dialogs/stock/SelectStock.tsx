@@ -12,6 +12,7 @@ import {
   DialogTitle,
   Skeleton,
   ListItemText,
+  Tooltip,
 } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
 import { stocksEndpointPath } from "@rating-tracker/commons";
@@ -48,6 +49,11 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
     const enterKeyHandler = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         if (stocks.length) {
+          if (
+            props.disabledStocks?.some((disabledStock) => disabledStock.ticker === stocks[0].ticker) ||
+            (props.validate && !props.validate())
+          )
+            return;
           handleSelect();
           props.onSelect ? props.onSelect(stocks[0]) : navigate(`${stocksEndpointPath}/${stocks[0].ticker}`);
         }
@@ -59,7 +65,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
     return () => {
       window.removeEventListener("keydown", enterKeyHandler);
     };
-  }, [stocks]);
+  }, [stocks, props.validate]);
 
   /**
    * Handles the change of the search input.
@@ -184,12 +190,30 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
               {stocksFinal
                 ? stocks.map((stock) => (
                     <Fragment key={stock.ticker}>
-                      <StockPreview
-                        stock={stock}
-                        {...(props.onSelect
-                          ? { onClick: () => (props.onSelect(stock), handleSelect()) }
-                          : { onClick: handleSelect, navLink: true })}
-                      />
+                      {props.disabledStocks?.some((disabledStock) => disabledStock.ticker === stock.ticker) ? (
+                        <Tooltip
+                          title={props.stockDisabledReason}
+                          slotProps={{ popper: { modifiers: [{ name: "offset", options: { offset: [0, -24] } }] } }}
+                          arrow
+                        >
+                          <Box sx={{ opacity: 0.5 }}>
+                            <StockPreview stock={stock} />
+                          </Box>
+                        </Tooltip>
+                      ) : (
+                        <StockPreview
+                          stock={stock}
+                          {...(props.onSelect
+                            ? {
+                                onClick: () => {
+                                  if (props.validate && !props.validate()) return;
+                                  handleSelect();
+                                  props.onSelect(stock);
+                                },
+                              }
+                            : { onClick: handleSelect, navLink: true })}
+                        />
+                      )}
                       <Divider component="li" />
                     </Fragment>
                   ))
@@ -236,6 +260,19 @@ interface SelectStockProps {
    * to.
    */
   onSelect?: (stock: Stock) => void;
+  /**
+   * A method to validate input fields before calling the `onSelect` method.
+   * @returns Whether the input fields are valid.
+   */
+  validate?: () => boolean;
+  /**
+   * A list of stocks that cannot be selected.
+   */
+  disabledStocks?: Pick<Stock, "ticker">[];
+  /**
+   * An explanatory message that is shown when a stock is disabled.
+   */
+  stockDisabledReason?: string;
   /**
    * If `true`, vertical padding is removed from the component.
    */

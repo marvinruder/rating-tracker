@@ -175,25 +175,21 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
   return (
     <>
       <Tooltip arrow title="Filter stocks">
-        <Box display="inline-block" ml={1} mt={props.disableTopMargin ? 0 : 1}>
+        <Box display="inline-block" ml={1}>
           <IconButton color="primary" onClick={() => setFilterOpen(true)}>
             <TuneIcon />
           </IconButton>
         </Box>
       </Tooltip>
       <Tooltip arrow title="Filter columns">
-        <Box display="inline-block" ml={1} mt={props.disableTopMargin ? 0 : 1}>
+        <Box display="inline-block" ml={1}>
           <IconButton color="primary" onClick={() => setColumnFilterOpen(true)}>
             <FilterListIcon />
           </IconButton>
         </Box>
       </Tooltip>
       <Tooltip arrow title="Clear all filters">
-        <Box
-          display="inline-block"
-          ml={props.filtersInUse ? 1 : 0}
-          mt={props.filtersInUse ? (props.disableTopMargin ? 0 : 1) : 0}
-        >
+        <Box display="inline-block" ml={props.filtersInUse ? 1 : 0}>
           <IconButton
             sx={{ display: !props.filtersInUse && "none" }}
             color="error"
@@ -647,5 +643,4 @@ export interface StockTableFiltersProps {
   columnFilter: StockListColumn[];
   setColumnFilter: React.Dispatch<React.SetStateAction<StockListColumn[]>>;
   filtersInUse: boolean;
-  disableTopMargin?: boolean;
 }

@@ -23,7 +23,7 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
   const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
 
   return (
-    <Grid container justifyContent="space-between" alignItems="center">
+    <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
           Stock List
@@ -41,7 +41,7 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
               : "You do not have the necessary access rights to create stocks."
           }
         >
-          <Box display="inline-block" ml={1} mt={1}>
+          <Box display="inline-block" ml={1}>
             <IconButton
               color="primary"
               onClick={() => setAddStockOpen(true)}

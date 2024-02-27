@@ -1,3 +1,4 @@
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
@@ -6,8 +7,10 @@ import { currencyMinorUnits, getTotalAmount, portfoliosEndpointPath } from "@rat
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
+import PinnedDialog from "../../../components/dialogs/PinnedDialog";
 import { DeletePortfolio } from "../../../components/dialogs/portfolio/DeletePortfolio";
 import { EditPortfolio } from "../../../components/dialogs/portfolio/EditPortfolio";
+import AddStockToCollection from "../../../components/dialogs/stock/AddStockToCollection";
 import type { StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
 import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
 import { pluralize } from "../../../utils/formatters";
@@ -18,15 +21,16 @@ import { pluralize } from "../../../utils/formatters";
  * @returns The component.
  */
 export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [addStockToCollectionDialogOpen, setAddStockToCollectionDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center">
-        <Grid item sx={{ display: "flex", alignItems: "center", maxWidth: "calc(100% - 147px)" }}>
+      <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
+        <Grid item sx={{ display: "flex", alignItems: "center" }}>
           <Box>
             <Typography variant="h3" component="h3" gutterBottom>
               {props.portfolio ? props.portfolio.name : <Skeleton width={160} />}
@@ -47,6 +51,17 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
           </Box>
         </Grid>
         <Grid item ml="auto" height={40} display="inline-flex">
+          {props.portfolio ? (
+            <Tooltip arrow title="Add stock">
+              <Box display="inline-block" ml={1}>
+                <IconButton color="success" onClick={() => setAddStockToCollectionDialogOpen(true)}>
+                  <AddShoppingCartIcon />
+                </IconButton>
+              </Box>
+            </Tooltip>
+          ) : (
+            <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
+          )}
           {props.portfolio ? (
             <Tooltip arrow title="Edit portfolio">
               <Box display="inline-block" ml={1}>
@@ -75,6 +90,18 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
       </Grid>
       {props.portfolio && (
         <>
+          <PinnedDialog
+            maxWidth="xs"
+            fullWidth
+            open={addStockToCollectionDialogOpen}
+            onClose={() => setAddStockToCollectionDialogOpen(false)}
+          >
+            <AddStockToCollection
+              collection={props.portfolio}
+              onAdd={() => (props.getPortfolio(), props.refetchStocks())}
+              onClose={() => setAddStockToCollectionDialogOpen(false)}
+            />
+          </PinnedDialog>
           <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
             <EditPortfolio
               portfolio={props.portfolio}
@@ -107,6 +134,10 @@ interface PortfolioHeaderProps {
    * A method to update the portfolio, e.g. after editing.
    */
   getPortfolio: () => void;
+  /**
+   * A method to update the stock list, e.g. after a new stock was added to the portfolio.
+   */
+  refetchStocks: () => void;
   /**
    * The properties of the stock table filters.
    */

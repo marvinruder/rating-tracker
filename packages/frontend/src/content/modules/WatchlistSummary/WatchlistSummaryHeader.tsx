@@ -16,7 +16,7 @@ export const WatchlistSummaryHeader: FC<WatchlistSummaryHeaderProps> = (
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
 
   return (
-    <Grid container justifyContent="space-between" alignItems="center">
+    <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
           Your Watchlists
@@ -25,7 +25,7 @@ export const WatchlistSummaryHeader: FC<WatchlistSummaryHeaderProps> = (
       </Grid>
       <Grid item ml="auto">
         <Tooltip arrow title="Create a new watchlist">
-          <Box display="inline-block" ml={1} mt={1}>
+          <Box display="inline-block" ml={1}>
             <IconButton color="primary" onClick={() => setAddWatchlistOpen(true)}>
               <AddIcon />
             </IconButton>

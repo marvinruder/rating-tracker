@@ -1,3 +1,4 @@
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
@@ -18,8 +19,10 @@ import { currencyMinorUnits, getTotalAmount, portfoliosEndpointPath } from "@rat
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
+import PinnedDialog from "../../../components/dialogs/PinnedDialog";
 import { DeletePortfolio } from "../../../components/dialogs/portfolio/DeletePortfolio";
 import { EditPortfolio } from "../../../components/dialogs/portfolio/EditPortfolio";
+import AddStockToCollection from "../../../components/dialogs/stock/AddStockToCollection";
 import { pluralize } from "../../../utils/formatters";
 
 /**
@@ -28,6 +31,7 @@ import { pluralize } from "../../../utils/formatters";
  * @returns The component.
  */
 const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
+  const [addStockToCollectionDialogOpen, setAddStockToCollectionDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
@@ -62,6 +66,17 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
       </CardActionArea>
       <CardActions sx={{ justifyContent: "flex-end" }}>
         {props.portfolio ? (
+          <Tooltip arrow title="Add stock">
+            <Box display="inline-block" ml={1}>
+              <IconButton color="success" onClick={() => setAddStockToCollectionDialogOpen(true)}>
+                <AddShoppingCartIcon />
+              </IconButton>
+            </Box>
+          </Tooltip>
+        ) : (
+          <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
+        )}
+        {props.portfolio ? (
           <Tooltip arrow title="Edit portfolio">
             <Box display="inline-block" ml={1}>
               <IconButton color="primary" onClick={() => setEditDialogOpen(true)}>
@@ -83,6 +98,19 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
         ) : (
           <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
         )}
+        {/* Add Stock to Collection Dialog */}
+        <PinnedDialog
+          maxWidth="xs"
+          fullWidth
+          open={addStockToCollectionDialogOpen}
+          onClose={() => setAddStockToCollectionDialogOpen(false)}
+        >
+          <AddStockToCollection
+            collection={props.portfolio}
+            onAdd={props.getPortfolios}
+            onClose={() => setAddStockToCollectionDialogOpen(false)}
+          />
+        </PinnedDialog>
         {/* Edit Dialog */}
         <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
           <EditPortfolio

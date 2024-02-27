@@ -20,7 +20,7 @@ export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
   const navigate = useNavigate();
 
   return (
-    <Grid container justifyContent="space-between" alignItems="center">
+    <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
           Your Portfolios
@@ -29,14 +29,14 @@ export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
       </Grid>
       <Grid item ml="auto">
         <Tooltip arrow title="Create a new portfolio">
-          <Box display="inline-block" ml={1} mt={1}>
+          <Box display="inline-block" ml={1}>
             <IconButton color="primary" onClick={() => setAddPortfolioOpen(true)}>
               <AddIcon />
             </IconButton>
           </Box>
         </Tooltip>
         <Tooltip arrow title="Start Portfolio Builder">
-          <Box display="inline-block" ml={1} mt={1}>
+          <Box display="inline-block" ml={1}>
             <IconButton
               color="primary"
               onClick={() => navigate(portfoliosEndpointPath + portfolioBuilderEndpointSuffix)}
