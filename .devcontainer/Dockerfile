@@ -61,8 +61,8 @@ RUN \
   echo 'autoload -Uz up-line-or-beginning-search down-line-or-beginning-search' >> /root/.zshrc && \
   echo 'zle -N up-line-or-beginning-search' >> /root/.zshrc && \
   echo 'zle -N down-line-or-beginning-search' >> /root/.zshrc && \
-  echo '[[ -n "\${key[Up]}"   ]] && bindkey -- "\${key[Up]}"   up-line-or-beginning-search' >> /root/.zshrc && \
-  echo '[[ -n "\${key[Down]}" ]] && bindkey -- "\${key[Down]}" down-line-or-beginning-search' >> /root/.zshrc && \
+  echo 'bindkey "^[[A" up-line-or-beginning-search' >> /root/.zshrc && \
+  echo 'bindkey "^[[B" down-line-or-beginning-search' >> /root/.zshrc && \
   echo "zstyle ':completion:*' menu select" >> /root/.zshrc && \
   echo "zstyle ':completion:*' rehash true" >> /root/.zshrc && \
   echo "zstyle ':completion:*' list-colors 'di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'" >> /root/.zshrc && \
