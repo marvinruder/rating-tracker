@@ -76,6 +76,9 @@ const PortfolioModule = (): JSX.Element => {
   const [portfolio, setPortfolio] = useState<Portfolio>();
   const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
+  const [refetchStocksTrigger, setRefetchStocksTrigger] = useState<boolean>(false);
+
+  const refetchStocks = () => setRefetchStocksTrigger((prev) => !prev);
 
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
@@ -235,6 +238,7 @@ const PortfolioModule = (): JSX.Element => {
         <PortfolioHeader
           portfolio={portfolio}
           getPortfolio={() => getPortfolio(Number(id))}
+          refetchStocks={refetchStocks}
           stockTableFiltersProps={{
             setFilter,
             columnFilter,
@@ -248,7 +252,6 @@ const PortfolioModule = (): JSX.Element => {
                   (!Array.isArray(value) || // is not an array, or
                     value.length > 0), // is an array with at least one element
               ),
-            disableTopMargin: true,
           }}
         />
       </HeaderWrapper>
@@ -871,6 +874,7 @@ const PortfolioModule = (): JSX.Element => {
         </Card>
         <StockTable
           filter={filter}
+          refetchStocksTrigger={refetchStocksTrigger}
           portfolio={portfolio ?? null}
           getPortfolio={() => getPortfolio(Number(id))}
           showSkeletons={!portfolio}

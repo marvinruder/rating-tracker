@@ -13,7 +13,6 @@ import {
   Button,
   Card,
   Container,
-  Dialog,
   Divider,
   FormControl,
   FormControlLabel,
@@ -83,6 +82,7 @@ import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import CurrencyAutocomplete from "../../../components/autocomplete/CurrencyAutocomplete";
+import PinnedDialog from "../../../components/dialogs/PinnedDialog";
 import { UpdateStocksInPortfolio } from "../../../components/dialogs/portfolio/UpdateStocksInPortfolio";
 import SelectStock from "../../../components/dialogs/stock/SelectStock";
 import CheckboxAccordion from "../../../components/etc/CheckboxAccordion";
@@ -568,20 +568,16 @@ const PortfolioBuilderModule = (): JSX.Element => {
                     title="Select a stock to add it to the portfolio"
                     onClose={() => {}}
                     onSelect={(stock) =>
-                      [...stocks].some((otherStock) => otherStock.ticker === stock.ticker)
-                        ? setNotification({
-                            title: "Stock already selected",
-                            message: `The stock “${stock.name}” (${stock.ticker}) is already part of the selection.`,
-                            severity: "warning",
-                          })
-                        : setStocks((prevStocks) =>
-                            [
-                              ...prevStocks,
-                              // If a stock does not have a size or style, set it to the "Small" size and "Blend" style
-                              { ...stock, size: stock.size || "Small", style: stock.style || "Blend" },
-                            ].sort((a, b) => a.ticker.localeCompare(b.ticker)),
-                          )
+                      setStocks((prevStocks) =>
+                        [
+                          ...prevStocks,
+                          // If a stock does not have a size or style, set it to the "Small" size and "Blend" style
+                          { ...stock, size: stock.size || "Small", style: stock.style || "Blend" },
+                        ].sort((a, b) => a.ticker.localeCompare(b.ticker)),
+                      )
                     }
+                    disabledStocks={stocks}
+                    stockDisabledReason="This stock is already part of the selection."
                     disablePadding
                   />
                 </AccordionDetails>
@@ -1155,7 +1151,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
             </Grid>
           </Grid>
           {steps[activeStep].content}
-          <Dialog
+          <PinnedDialog
             maxWidth="xs"
             open={updatePortfolioDialogOpen}
             onClose={() => setUpdatePortfolioDialogOpen(false)}
@@ -1169,7 +1165,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
               onClose={() => setUpdatePortfolioDialogOpen(false)}
               onUpdate={(id) => navigate(`${portfoliosEndpointPath}/${id}`)}
             />
-          </Dialog>
+          </PinnedDialog>
         </Card>
       </Container>
       <Footer />

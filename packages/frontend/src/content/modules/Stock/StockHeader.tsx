@@ -53,18 +53,12 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center">
+      <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
         <Grid item sx={{ display: "flex", alignItems: "center" }}>
           {props.stock ? ( // Actual header with logo and name
             <>
               <Avatar
-                sx={{
-                  width: 112,
-                  height: 112,
-                  m: "-16px",
-                  mr: "-8px",
-                  background: "none",
-                }}
+                sx={{ width: 112, height: 112, m: "-16px", mr: "-8px", background: "none" }}
                 src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
                   theme.palette.mode === "dark"
                 }`}
@@ -82,15 +76,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
           ) : (
             // Skeleton
             <>
-              <Skeleton
-                variant="circular"
-                width={56}
-                height={56}
-                sx={{
-                  m: "12px",
-                  mr: "20px",
-                }}
-              />
+              <Skeleton variant="circular" width={56} height={56} sx={{ m: "12px", mr: "20px" }} />
               <Box>
                 <Typography variant="h3">
                   <Skeleton width={240} />
@@ -102,7 +88,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
             </>
           )}
         </Grid>
-        <Grid item ml="auto" mt={1} height={40}>
+        <Grid item ml="auto" height={40}>
           {props.stock ? (
             <Tooltip arrow title={props.isFavorite ? "Remove from favorites" : "Add to favorites"}>
               <Box display="inline-block" ml={1}>

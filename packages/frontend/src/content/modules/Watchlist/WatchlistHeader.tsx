@@ -1,3 +1,4 @@
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -8,6 +9,8 @@ import { FAVORITES_NAME, watchlistsEndpointPath } from "@rating-tracker/commons"
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
+import PinnedDialog from "../../../components/dialogs/PinnedDialog";
+import AddStockToCollection from "../../../components/dialogs/stock/AddStockToCollection";
 import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWatchlist";
 import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWatchlist";
 import type { StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
@@ -23,16 +26,17 @@ import { pluralize } from "../../../utils/formatters";
  */
 export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
   const isFavorites = props.watchlist?.name === FAVORITES_NAME;
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [addStockToCollectionDialogOpen, setAddStockToCollectionDialogOpen] = useState<boolean>(false);
   const [renameDialogOpen, setRenameDialogOpen] = useState<boolean>(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   const navigate = useNavigate();
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center">
-        <Grid item sx={{ display: "flex", alignItems: "center", maxWidth: "calc(100% - 147px)" }}>
+      <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
+        <Grid item sx={{ display: "flex", alignItems: "center" }}>
           <Box>
             <Typography variant="h3" component="h3" gutterBottom>
               {props.watchlist ? props.watchlist.name : <Skeleton width={160} />}
@@ -79,6 +83,17 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
             <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
           )}
           {props.watchlist ? (
+            <Tooltip arrow title="Add stock">
+              <Box display="inline-block" ml={1}>
+                <IconButton color="success" onClick={() => setAddStockToCollectionDialogOpen(true)}>
+                  <BookmarkAddIcon />
+                </IconButton>
+              </Box>
+            </Tooltip>
+          ) : (
+            <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
+          )}
+          {props.watchlist ? (
             <Tooltip arrow title={isFavorites ? "You cannot rename the Favorites watchlist" : "Rename watchlist"}>
               <Box display="inline-block" ml={1}>
                 <IconButton color="primary" onClick={() => setRenameDialogOpen(true)} disabled={isFavorites}>
@@ -106,6 +121,18 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
       </Grid>
       {props.watchlist && (
         <>
+          <PinnedDialog
+            maxWidth="xs"
+            fullWidth
+            open={addStockToCollectionDialogOpen}
+            onClose={() => setAddStockToCollectionDialogOpen(false)}
+          >
+            <AddStockToCollection
+              collection={props.watchlist}
+              onAdd={() => (props.getWatchlist(), props.refetchStocks())}
+              onClose={() => setAddStockToCollectionDialogOpen(false)}
+            />
+          </PinnedDialog>
           <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
             <RenameWatchlist
               watchlist={props.watchlist}
@@ -138,6 +165,10 @@ interface WatchlistHeaderProps {
    * A method to update the watchlist, e.g. after editing.
    */
   getWatchlist: () => void;
+  /**
+   * A method to update the stock list, e.g. after a new stock was added to the watchlist.
+   */
+  refetchStocks: () => void;
   /**
    * The properties of the stock table filters.
    */

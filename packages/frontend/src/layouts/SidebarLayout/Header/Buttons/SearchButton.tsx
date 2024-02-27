@@ -1,9 +1,10 @@
 import SearchIcon from "@mui/icons-material/Search";
-import { IconButton, Tooltip, Dialog, Slide, useTheme } from "@mui/material";
+import { IconButton, Tooltip, Slide } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
 import type { Ref, ReactElement } from "react";
 import { forwardRef, useState, useEffect, Fragment } from "react";
 
+import PinnedDialog from "../../../../components/dialogs/PinnedDialog";
 import SelectStock from "../../../../components/dialogs/stock/SelectStock";
 
 /**
@@ -22,8 +23,6 @@ const Transition = forwardRef(function Transition(
  */
 export const HeaderSearchButton = (): JSX.Element => {
   const [open, setOpen] = useState(false);
-
-  const theme = useTheme();
 
   useEffect(() => {
     /**
@@ -73,13 +72,7 @@ export const HeaderSearchButton = (): JSX.Element => {
           <SearchIcon />
         </IconButton>
       </Tooltip>
-      <Dialog
-        sx={{
-          ".MuiDialog-container": { height: "auto" },
-          ".MuiDialog-paperScrollPaper": { maxHeight: "calc(100vh - 64px)" },
-          ".MuiDialogTitle-root": { background: theme.colors.alpha.black[5] },
-          ".MuiDialogContent-root": { maxHeight: "calc(100vh - 256px)" },
-        }}
+      <PinnedDialog
         open={open}
         TransitionComponent={Transition}
         maxWidth="xs"
@@ -88,7 +81,7 @@ export const HeaderSearchButton = (): JSX.Element => {
         PaperProps={{ elevation: 16 }}
       >
         <SelectStock title="Search for a stock by name or symbol" onClose={() => setOpen(false)} />
-      </Dialog>
+      </PinnedDialog>
     </>
   );
 };

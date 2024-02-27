@@ -1,3 +1,4 @@
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -22,6 +23,8 @@ import { FAVORITES_NAME, watchlistsEndpointPath } from "@rating-tracker/commons"
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
+import PinnedDialog from "../../../components/dialogs/PinnedDialog";
+import AddStockToCollection from "../../../components/dialogs/stock/AddStockToCollection";
 import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWatchlist";
 import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWatchlist";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -35,8 +38,10 @@ import { pluralize } from "../../../utils/formatters";
  */
 const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
   const isFavorites = props.watchlist?.name === FAVORITES_NAME;
+  const [addStockToCollectionDialogOpen, setAddStockToCollectionDialogOpen] = useState<boolean>(false);
   const [renameDialogOpen, setRenameDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   return (
@@ -106,6 +111,17 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
           <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
         )}
         {props.watchlist ? (
+          <Tooltip arrow title="Add stock">
+            <Box display="inline-block" ml={1}>
+              <IconButton color="success" onClick={() => setAddStockToCollectionDialogOpen(true)}>
+                <BookmarkAddIcon />
+              </IconButton>
+            </Box>
+          </Tooltip>
+        ) : (
+          <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
+        )}
+        {props.watchlist ? (
           <Tooltip arrow title={isFavorites ? "You cannot rename the Favorites watchlist" : "Rename watchlist"}>
             <Box display="inline-block" ml={1}>
               <IconButton color="primary" onClick={() => setRenameDialogOpen(true)} disabled={isFavorites}>
@@ -127,6 +143,19 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
         ) : (
           <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
         )}
+        {/* Add Stock to Collection Dialog */}
+        <PinnedDialog
+          maxWidth="xs"
+          fullWidth
+          open={addStockToCollectionDialogOpen}
+          onClose={() => setAddStockToCollectionDialogOpen(false)}
+        >
+          <AddStockToCollection
+            collection={props.watchlist}
+            onAdd={props.getWatchlists}
+            onClose={() => setAddStockToCollectionDialogOpen(false)}
+          />
+        </PinnedDialog>
         {/* Rename Dialog */}
         <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
           <RenameWatchlist

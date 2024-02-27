@@ -21,6 +21,9 @@ const WatchlistModule = (): JSX.Element => {
   const [watchlist, setWatchlist] = useState<Watchlist>();
   const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
+  const [refetchStocksTrigger, setRefetchStocksTrigger] = useState<boolean>(false);
+
+  const refetchStocks = () => setRefetchStocksTrigger((prev) => !prev);
 
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
@@ -45,6 +48,7 @@ const WatchlistModule = (): JSX.Element => {
         <WatchlistHeader
           watchlist={watchlist}
           getWatchlist={() => getWatchlist(Number(id))}
+          refetchStocks={refetchStocks}
           stockTableFiltersProps={{
             setFilter,
             columnFilter,
@@ -58,13 +62,13 @@ const WatchlistModule = (): JSX.Element => {
                   (!Array.isArray(value) || // is not an array, or
                     value.length > 0), // is an array with at least one element
               ),
-            disableTopMargin: true,
           }}
         />
       </HeaderWrapper>
       <Container maxWidth={false}>
         <StockTable
           filter={filter}
+          refetchStocksTrigger={refetchStocksTrigger}
           watchlist={watchlist}
           getWatchlist={() => getWatchlist(Number(id))}
           showSkeletons={!watchlist}
