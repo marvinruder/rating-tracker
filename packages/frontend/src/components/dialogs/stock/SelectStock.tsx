@@ -49,7 +49,11 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
     const enterKeyHandler = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         if (stocks.length) {
-          if (props.validate && !props.validate()) return;
+          if (
+            props.disabledStocks?.some((disabledStock) => disabledStock.ticker === stocks[0].ticker) ||
+            (props.validate && !props.validate())
+          )
+            return;
           handleSelect();
           props.onSelect ? props.onSelect(stocks[0]) : navigate(`${stocksEndpointPath}/${stocks[0].ticker}`);
         }
@@ -184,41 +188,35 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
             <Divider />
             <List disablePadding>
               {stocksFinal
-                ? stocks.map((stock) => {
-                    const disabled = props.disabledStocks?.some(
-                      (disabledStock) => disabledStock.ticker === stock.ticker,
-                    );
-                    return (
-                      <Fragment key={stock.ticker}>
-                        {disabled ? (
-                          <Tooltip
-                            key={stock.ticker}
-                            title={props.stockDisabledReason}
-                            slotProps={{ popper: { modifiers: [{ name: "offset", options: { offset: [0, -24] } }] } }}
-                            arrow
-                          >
-                            <Box sx={{ opacity: 0.5 }}>
-                              <StockPreview stock={stock} />
-                            </Box>
-                          </Tooltip>
-                        ) : (
-                          <StockPreview
-                            stock={stock}
-                            {...(props.onSelect
-                              ? {
-                                  onClick: () => {
-                                    if (props.validate && !props.validate()) return;
-                                    handleSelect();
-                                    props.onSelect(stock);
-                                  },
-                                }
-                              : { onClick: handleSelect, navLink: true })}
-                          />
-                        )}
-                        <Divider component="li" />
-                      </Fragment>
-                    );
-                  })
+                ? stocks.map((stock) => (
+                    <Fragment key={stock.ticker}>
+                      {props.disabledStocks?.some((disabledStock) => disabledStock.ticker === stock.ticker) ? (
+                        <Tooltip
+                          title={props.stockDisabledReason}
+                          slotProps={{ popper: { modifiers: [{ name: "offset", options: { offset: [0, -24] } }] } }}
+                          arrow
+                        >
+                          <Box sx={{ opacity: 0.5 }}>
+                            <StockPreview stock={stock} />
+                          </Box>
+                        </Tooltip>
+                      ) : (
+                        <StockPreview
+                          stock={stock}
+                          {...(props.onSelect
+                            ? {
+                                onClick: () => {
+                                  if (props.validate && !props.validate()) return;
+                                  handleSelect();
+                                  props.onSelect(stock);
+                                },
+                              }
+                            : { onClick: handleSelect, navLink: true })}
+                        />
+                      )}
+                      <Divider component="li" />
+                    </Fragment>
+                  ))
                 : [...Array(count || 3)].map((_, index) => (
                     <Fragment key={index}>
                       <ListItem sx={{ py: 1.5 }}>
