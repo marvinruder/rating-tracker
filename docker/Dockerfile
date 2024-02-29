@@ -34,7 +34,7 @@ HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
 RUN \
   --mount=type=bind,source=app,target=/mnt/app \
-  cp -r /mnt/app /app && \
+  cp -r /mnt/app / && \
   if [ "$TARGETARCH" == "amd64" ]; then \
   rm /app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
   elif [ "$TARGETARCH" == "arm64" ]; then \
