@@ -9,7 +9,8 @@ RUN \
   apk add libgcc libstdc++ && \
   cp -a /mnt/etc/passwd /etc/passwd && \
   cp -a /mnt/usr/local/bin/node /usr/local/bin/node && \
-  mkdir -p /app
+  mkdir -p /app && \
+  chown -R node:node /app
 
 USER node
 WORKDIR /app
