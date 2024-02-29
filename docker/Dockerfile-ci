@@ -137,9 +137,9 @@ WORKDIR /coverage
 # Copy coverage reports from test stage
 COPY --from=test /coverage /coverage
 
-# Add yarn and prisma cache
+# Add caches
+COPY --from=yarn /root/.cache /cache
 COPY --from=yarn /workdir/cache/yarn /cache/yarn
-COPY --from=yarn /root/.cache/prisma /cache/prisma
 
 # Add build artifacts
 COPY --from=build /app /app
