@@ -9,6 +9,7 @@ node('rating-tracker-build') {
       def JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 4096))", returnStdout: true)
       def PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
       def REDISPORT = sh (script: "#!/bin/bash\necho -n \$((53247 + 10#$JOB_ID))", returnStdout: true)
+      def TESTPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
       def BUILD_DATE = sh (script: "echo -n \$(date -u +'%Y-%m-%dT%H:%M:%SZ')", returnStdout: true)
 
       try {
@@ -39,7 +40,7 @@ node('rating-tracker-build') {
             stage('Start test environment') {
               // Inject IP and ports into test environment
               sh """
-              sed -i \"s/postgres-test:5432/127.0.0.1:$PGPORT/ ; s/redis-test:6379/127.0.0.1:$REDISPORT/\" packages/backend/test/env.ts
+              sed -i \"s/postgres-test:5432/127.0.0.1:$PGPORT/ ; s/redis-test:6379/127.0.0.1:$REDISPORT/ ; s/30001/$TESTPORT/\" packages/backend/test/env.ts
               PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
               """
             }
