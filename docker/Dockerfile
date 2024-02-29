@@ -1,5 +1,6 @@
 FROM alpine:3.19.1
 ARG TARGETARCH
+ENV NODE_ENV production
 
 # Install standard libraries and copy Node.js binary
 RUN \
@@ -7,15 +8,12 @@ RUN \
   --mount=type=bind,from=node:21.6.2-alpine,source=/etc,target=/mnt/etc \
   --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
   apk add libgcc libstdc++ && \
-  cp -a /mnt/etc/passwd /etc/passwd && \
   cp -a /mnt/etc/group /etc/group && \
-  cp -a /mnt/usr/local/bin/node /usr/local/bin/node && \
-  mkdir -p /app && \
-  chown -R node:node /app
+  cp -a /mnt/etc/passwd /etc/passwd && \
+  cp -a /mnt/usr/local/bin/node /usr/local/bin/node
 
 USER node:node
 WORKDIR /app
-ENV NODE_ENV production
 
 # Set OCI image labels
 ARG BUILD_DATE
@@ -33,7 +31,7 @@ LABEL \
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
-### <- This is a special marker, everything above it can be built and cached before the production bundle is available
+### <- This is a special marker, everything above it can and will be built and cached before the production bundle is available
 
 RUN \
   --mount=type=bind,source=app,target=/mnt/app \
