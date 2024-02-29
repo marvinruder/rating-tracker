@@ -1,23 +1,21 @@
-FROM alpine:3.19.1 as assemble
+FROM alpine:3.19.1
 ARG TARGETARCH
 
-# Copy project files
-COPY app /workdir/app
-
-# Remove unused binaries
-WORKDIR /workdir/app/prisma/client
+# Install standard libraries and copy Node.js binary
 RUN \
-  if [ "$TARGETARCH" == "amd64" ]; then \
-  rm ./libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
-  elif [ "$TARGETARCH" == "arm64" ]; then \
-  rm ./libquery_engine-linux-musl-openssl-3.0.x.so.node; \
-  fi
+  --mount=type=bind,from=node:21.6.2-alpine,source=/usr/local/bin/node,target=/mnt/usr/local/bin/node \
+  --mount=type=bind,from=node:21.6.2-alpine,source=/etc/passwd,target=/mnt/etc/passwd \
+  --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
+  apk add libgcc libstdc++ && \
+  cp -a /mnt/etc/passwd /etc/passwd && \
+  cp -a /mnt/usr/local/bin/node /usr/local/bin/node
 
-FROM alpine:3.19.1 as target
-ARG BUILD_DATE
-ARG TARGETARCH
+USER node
+WORKDIR /app
+ENV NODE_ENV production
 
 # Set OCI image labels
+ARG BUILD_DATE
 LABEL \
   org.opencontainers.image.title="Rating Tracker" \
   org.opencontainers.image.authors="Marvin A. Ruder <ratingtracker@mruder.dev>" \
@@ -29,24 +27,16 @@ LABEL \
   org.opencontainers.image.version="4.3.1" \
   org.opencontainers.image.created=$BUILD_DATE
 
-ENV NODE_ENV production
+###
 
-WORKDIR /app
-
-# Install standard libraries
 RUN \
-  --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
-  apk add libgcc libstdc++
-
-# Copy Node.js binary and user
-COPY --from=node:21.6.2-alpine /etc/passwd /etc
-COPY --from=node:21.6.2-alpine /usr/local/bin/node /usr/local/bin
-
-# Switch to non-root user
-USER node
-
-# Copy project files
-COPY --from=assemble --chown=node:node /workdir/app .
+  --mount=type=bind,source=app,target=/mnt/app,rw \
+  if [ "$TARGETARCH" == "amd64" ]; then \
+  rm /mnt/app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
+  elif [ "$TARGETARCH" == "arm64" ]; then \
+  rm /mnt/app/prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
+  fi && \
+  cp -r /mnt/app /app
 
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
