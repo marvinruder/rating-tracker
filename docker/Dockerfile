@@ -8,11 +8,12 @@ RUN \
   --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
   apk add libgcc libstdc++ && \
   cp -a /mnt/etc/passwd /etc/passwd && \
+  cp -a /mnt/etc/group /etc/group && \
   cp -a /mnt/usr/local/bin/node /usr/local/bin/node && \
   mkdir -p /app && \
   chown -R node:node /app
 
-USER node
+USER node:node
 WORKDIR /app
 ENV NODE_ENV production
 
