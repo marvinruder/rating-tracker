@@ -10,6 +10,7 @@ node('rating-tracker-build') {
       def PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
       def REDISPORT = sh (script: "#!/bin/bash\necho -n \$((53247 + 10#$JOB_ID))", returnStdout: true)
       def TESTPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
+      def BUILD_DATE = sh (script: "#!/bin/bash\necho -n \$(date -u +'%Y-%m-%dT%H:%M:%SZ')", returnStdout: true)
 
       try {
         parallel(
@@ -23,11 +24,12 @@ node('rating-tracker-build') {
               // Log in to Docker Hub
               sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
 
-              // Create builder instance and prefetch Docker base images
+              // Create builder instance and prefetch/prebuild Docker images
               sh """
-              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/docker/Dockerfile-prefetch | docker build -) &'
+              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/docker/Dockerfile-prefetch | docker build -) &"
               docker builder create --name rating-tracker --driver docker-container --driver-opt network=host --bootstrap || :
-              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c '(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/docker/Dockerfile-prefetch-buildx | docker buildx build --builder rating-tracker --network=host --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm -) &'
+              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/docker/Dockerfile-prefetch-buildx | docker buildx build --builder rating-tracker --network=host --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm -) &"
+              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/docker/Dockerfile | sed -n '/###/q;p' | docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' -) &"
               """
             }
           }
@@ -115,7 +117,7 @@ node('rating-tracker-build') {
 
               // If tags are present, build and push the image for both amd64 and arm64 architectures
               if (tags.length() > 0) {
-                sh("docker buildx build --builder rating-tracker -f docker/Dockerfile --force-rm --push --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE=\$(date -u +'%Y-%m-%dT%H:%M:%SZ') $tags .")
+                sh("docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --force-rm -f docker/Dockerfile --push $tags .")
               }
             }
           }

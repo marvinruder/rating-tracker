@@ -70,13 +70,12 @@ WORKDIR /workdir
 RUN \
   --mount=type=bind,target=.,rw \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
-  --mount=type=bind,from=yarn,source=/usr/local/lib/node_modules/corepack,target=/usr/local/lib/node_modules/corepack \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
-  --mount=type=bind,from=yarn,source=/root/.cache/yarn,target=/root/.cache/yarn \
+  --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  corepack enable && \
   yarn test && \
   mkdir -p /coverage && \
   mv packages/backend/coverage /coverage/backend && \
@@ -95,13 +94,12 @@ WORKDIR /workdir
 RUN \
   --mount=type=bind,target=.,rw \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
-  --mount=type=bind,from=yarn,source=/usr/local/lib/node_modules/corepack,target=/usr/local/lib/node_modules/corepack \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
-  --mount=type=bind,from=yarn,source=/root/.cache/yarn,target=/root/.cache/yarn \
+  --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  corepack enable && \
   # Bundle frontend and backend
   yarn build && \
   # Create CommonJS module containing log formatter configuration

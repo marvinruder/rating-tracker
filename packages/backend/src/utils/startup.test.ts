@@ -14,4 +14,22 @@ describe("startup routine", () => {
     startup();
     expect(mockExit).toHaveBeenCalledWith(1);
   });
+
+  it("fails when port is out of range", () => {
+    process.env.PORT = "65536";
+    startup();
+    expect(mockExit).toHaveBeenCalledWith(1);
+  });
+
+  it("fails when port is not an integer", () => {
+    process.env.PORT = "30.01";
+    startup();
+    expect(mockExit).toHaveBeenCalledWith(1);
+  });
+
+  it("fails when port is not a number", () => {
+    process.env.PORT = "port";
+    startup();
+    expect(mockExit).toHaveBeenCalledWith(1);
+  });
 });

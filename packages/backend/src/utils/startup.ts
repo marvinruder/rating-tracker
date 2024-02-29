@@ -73,6 +73,13 @@ export const startup = () => {
         throw new Error(`Environment variable ${name} not set. Exiting.`);
       }
     });
+    if (
+      Number(process.env.PORT) < 1 ||
+      Number(process.env.PORT) > 65535 ||
+      !Number.isInteger(Number(process.env.PORT))
+    ) {
+      throw new Error(`Invalid PORT number: ${process.env.PORT}. Exiting.`);
+    }
   } catch (e) {
     if (e instanceof Error) {
       // Print error message and exit

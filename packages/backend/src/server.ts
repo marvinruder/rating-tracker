@@ -174,7 +174,7 @@ process.env.AUTO_FETCH_SCHEDULE &&
   /* c8 ignore next */ // We do not test Cron jobs
   setupCronJobs(bypassAuthenticationForInternalRequestsToken, process.env.AUTO_FETCH_SCHEDULE);
 
-export const listener = server.app.listen(process.env.PORT, () => {
+export const listener = server.app.listen(Number(process.env.PORT), () => {
   logger.info({ prefix: ["nodejs", { port: process.env.PORT }] }, "Listening…");
   process.env.EXIT_AFTER_READY && process.exit(0);
 });
