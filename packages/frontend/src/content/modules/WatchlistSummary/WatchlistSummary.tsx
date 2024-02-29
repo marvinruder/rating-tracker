@@ -46,7 +46,7 @@ const WatchlistSummaryModule = (): JSX.Element => {
           {watchlistSummariesFinal ? (
             watchlistSummaries.length ? (
               watchlistSummaries.map((watchlistSummary) => (
-                <Grid item xs={12} sm={6} md={4} key={watchlistSummary.id}>
+                <Grid item xs={12} sm={6} md={4} xl={3} key={watchlistSummary.id}>
                   <WatchlistCard watchlist={watchlistSummary} getWatchlists={getWatchlists} />
                 </Grid>
               ))

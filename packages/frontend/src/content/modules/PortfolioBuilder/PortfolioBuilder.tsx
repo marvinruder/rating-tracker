@@ -563,7 +563,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
               <Divider />
               <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>Select stocks manually</AccordionSummary>
-                <AccordionDetails sx={{ ".MuiDialogContent-root": { overflowY: "hidden" } }}>
+                <AccordionDetails sx={{ ".MuiDialogContent-root": { overflowY: "clip" } }}>
                   <SelectStock
                     title="Select a stock to add it to the portfolio"
                     onClose={() => {}}
@@ -1090,7 +1090,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
         <PortfolioBuilderHeader />
       </HeaderWrapper>
       <Container maxWidth={false}>
-        <Card sx={{ m: "auto", mb: 2, px: 2, pb: 2, maxWidth: "lg" }}>
+        <Card sx={{ m: "auto", mb: 2, px: 2, pb: 2 }}>
           <Stepper
             activeStep={activeStep}
             sx={{ background: "none" }}

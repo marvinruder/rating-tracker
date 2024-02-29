@@ -58,7 +58,7 @@ const StockModule = (): JSX.Element => {
           <StockDetails stock={stock} />
         </Card>
       </Container>
-      <Footer />
+      <Footer maxWidth="lg" />
     </>
   );
 };
