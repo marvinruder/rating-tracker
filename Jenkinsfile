@@ -10,7 +10,7 @@ node('rating-tracker-build') {
       def PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
       def REDISPORT = sh (script: "#!/bin/bash\necho -n \$((53247 + 10#$JOB_ID))", returnStdout: true)
       def TESTPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
-      def BUILD_DATE = sh (script: "echo -n \$(date -u +'%Y-%m-%dT%H:%M:%SZ')", returnStdout: true)
+      def BUILD_DATE = sh (script: "#!/bin/bash\necho -n \$(date -u +'%Y-%m-%dT%H:%M:%SZ')", returnStdout: true)
 
       try {
         parallel(
