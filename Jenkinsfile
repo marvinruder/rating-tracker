@@ -53,6 +53,7 @@ node('rating-tracker-build') {
                         stage ('Install dependencies') {
                             // Change config files for use in CI, copy cache to workspace and install dependencies
                             sh """
+                            echo \"enableInlineBuilds: true\" >> .yarnrc.yml
                             echo \"globalFolder: /workdir/cache/yarn/global\" >> .yarnrc.yml
                             mkdir -p \$HOME/.cache/yarn \$HOME/.cache/prisma ./cache
                             cp -arln \$HOME/.cache/yarn \$HOME/.cache/prisma ./cache || :
