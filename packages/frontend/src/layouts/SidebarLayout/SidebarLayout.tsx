@@ -38,8 +38,9 @@ const SidebarLayout: FC = (): JSX.Element => {
           sx={{
             position: "relative",
             zIndex: 5,
-            display: "block",
-            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100dvh",
             [theme.breakpoints.up("lg")]: { ml: `${theme.sidebar.width}` },
           }}
         >
