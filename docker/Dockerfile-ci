@@ -42,6 +42,7 @@ WORKDIR /workdir
 
 # Copy files required for installing dependencies
 COPY cache/yarn ./cache/yarn
+COPY cache/prisma /root/.cache/prisma
 COPY packages/backend/prisma ./packages/backend/prisma
 
 # Install dependencies
@@ -136,8 +137,9 @@ WORKDIR /coverage
 # Copy coverage reports from test stage
 COPY --from=test /coverage /coverage
 
-# Add yarn cache
+# Add yarn and prisma cache
 COPY --from=yarn /workdir/cache/yarn /cache/yarn
+COPY --from=yarn /root/.cache/prisma /cache/prisma
 
 # Add build artifacts
 COPY --from=build /app /app
