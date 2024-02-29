@@ -40,9 +40,8 @@ ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Copy files required for installing dependencies
-COPY cache/yarn ./cache/yarn
-COPY cache/prisma /root/.cache/prisma
+# Copy caches and files required for installing dependencies
+COPY cache/. ./cache
 COPY packages/backend/prisma ./packages/backend/prisma
 
 # Install dependencies
@@ -73,7 +72,7 @@ RUN \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/usr/local/lib/node_modules/corepack,target=/usr/local/lib/node_modules/corepack \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
-  --mount=type=bind,from=yarn,source=/workdir/cache/yarn,target=cache/yarn \
+  --mount=type=bind,from=yarn,source=/root/.cache/yarn,target=/root/.cache/yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
@@ -98,7 +97,7 @@ RUN \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/usr/local/lib/node_modules/corepack,target=/usr/local/lib/node_modules/corepack \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
-  --mount=type=bind,from=yarn,source=/workdir/cache/yarn,target=cache/yarn \
+  --mount=type=bind,from=yarn,source=/root/.cache/yarn,target=/root/.cache/yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
@@ -139,7 +138,6 @@ COPY --from=test /coverage /coverage
 
 # Add caches
 COPY --from=yarn /root/.cache /cache
-COPY --from=yarn /workdir/cache/yarn /cache/yarn
 
 # Add build artifacts
 COPY --from=build /app /app

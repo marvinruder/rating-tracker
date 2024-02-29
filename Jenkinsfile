@@ -54,7 +54,7 @@ node('rating-tracker-build') {
                             // Change config files for use in CI, copy cache to workspace and install dependencies
                             sh """
                             echo \"enableInlineBuilds: true\" >> .yarnrc.yml
-                            echo \"globalFolder: /workdir/cache/yarn/global\" >> .yarnrc.yml
+                            echo \"globalFolder: /root/.cache/yarn\" >> .yarnrc.yml
                             mkdir -p \$HOME/.cache/yarn \$HOME/.cache/node \$HOME/.cache/prisma ./cache
                             cp -arln \$HOME/.cache/yarn \$HOME/.cache/node \$HOME/.cache/prisma ./cache || :
                             docker build $DOCKER_CI_FLAGS --target=yarn .
@@ -125,7 +125,7 @@ node('rating-tracker-build') {
                 stage ('Cleanup') {
                     // Upload cache to external storage and remove build artifacts
                     sh """#!/bin/bash
-                    cp -arln ./cache/yarn ./cache/node \$HOME/.cache/prisma \$HOME/.cache
+                    cp -arln ./cache/yarn ./cache/node ./cache/prisma \$HOME/.cache
                     putcache
                     PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0            
                     docker rmi $IMAGE_NAME:job$JOB_ID-wasm $IMAGE_NAME:job$JOB_ID-ci || :
