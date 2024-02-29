@@ -1090,7 +1090,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
         <PortfolioBuilderHeader />
       </HeaderWrapper>
       <Container maxWidth={false}>
-        <Card sx={{ m: "auto", mb: 2, px: 2, pb: 2, maxWidth: "lg" }}>
+        <Card sx={{ m: "auto", mb: 2, px: 2, pb: 2 }}>
           <Stepper
             activeStep={activeStep}
             sx={{ background: "none" }}
