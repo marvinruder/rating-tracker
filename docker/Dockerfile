@@ -27,18 +27,18 @@ LABEL \
   org.opencontainers.image.version="4.3.1" \
   org.opencontainers.image.created=$BUILD_DATE
 
-###
-
-RUN \
-  --mount=type=bind,source=app,target=/mnt/app,rw \
-  if [ "$TARGETARCH" == "amd64" ]; then \
-  rm /mnt/app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
-  elif [ "$TARGETARCH" == "arm64" ]; then \
-  rm /mnt/app/prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
-  fi && \
-  cp -r /mnt/app /app
-
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
+
+### <- This is a special marker, everything above it can be built and cached before the production bundle is available
+
+RUN \
+  --mount=type=bind,source=app,target=/mnt/app \
+  cp -r /mnt/app /app && \
+  if [ "$TARGETARCH" == "amd64" ]; then \
+  rm /app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
+  elif [ "$TARGETARCH" == "arm64" ]; then \
+  rm /app/prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
+  fi
 
 CMD [ "node", "--enable-source-maps", "server.cjs" ]
