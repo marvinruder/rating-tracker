@@ -4,7 +4,7 @@ ARG TARGETARCH
 # Install standard libraries and copy Node.js binary
 RUN \
   --mount=type=bind,from=node:21.6.2-alpine,source=/usr/local/bin/node,target=/mnt/usr/local/bin/node \
-  --mount=type=bind,from=node:21.6.2-alpine,source=/etc/passwd,target=/mnt/etc/passwd \
+  --mount=type=bind,from=node:21.6.2-alpine,source=/etc,target=/mnt/etc \
   --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
   apk add libgcc libstdc++ && \
   cp -a /mnt/etc/passwd /etc/passwd && \
