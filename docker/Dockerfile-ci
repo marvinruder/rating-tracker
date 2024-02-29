@@ -55,7 +55,7 @@ RUN \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
   --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
   corepack enable && \
-  yarn workspaces focus -A --production
+  DEBUG=* yarn workspaces focus -A --production
 
 
 FROM node:21.6.2-alpine as test
