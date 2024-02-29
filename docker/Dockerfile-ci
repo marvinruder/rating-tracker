@@ -41,7 +41,7 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 # Copy caches and files required for installing dependencies
-COPY cache/. ./cache
+COPY cache/. /root/.cache
 COPY packages/backend/prisma ./packages/backend/prisma
 
 # Install dependencies
