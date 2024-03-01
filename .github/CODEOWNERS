@@ -5,8 +5,7 @@
 package.json
 /yarn.lock
 /.yarnrc.yml
-/docker/
-Dockerfile
+/Dockerfile
 docker-compose.yml
 Cargo.toml
 Cargo.lock

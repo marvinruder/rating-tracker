@@ -1,3 +1,18 @@
+# Lists all images to be prefetched by the regular Docker builder
+FROM scratch as prefetch
+COPY --from=postgres:alpine /etc/os-release /etc/os-release-postgres
+COPY --from=redis:alpine /etc/os-release /etc/os-release-redis
+COPY --from=node:21.6.2-alpine /etc/os-release /etc/os-release-node
+COPY --from=eclipse-temurin:21.0.2_13-jre-alpine /etc/os-release /etc/os-release-java
+
+
+# Lists all images to be prefetched by the Docker BuildKit builder
+FROM scratch as prefetch-buildx
+COPY --from=rust:1.76.0-alpine /etc/os-release /etc/os-release-rust
+COPY --from=alpine:3.19.1 /etc/os-release /etc/os-release-alpine
+COPY --from=node:21.6.2-alpine /etc/os-release /etc/os-release-node
+
+
 FROM rust:1.76.0-alpine as wasm
 
 ARG TARGETARCH
@@ -119,8 +134,7 @@ RUN \
   /app/public/api-docs/
 
 
-FROM eclipse-temurin:21.0.2_13-jre-alpine as codacy
-
+FROM eclipse-temurin:21.0.2_13-jre-alpine as result
 
 # Install bash and download and extract Codacy coverage reporter
 RUN --mount=type=cache,target=/var/cache/apk \
@@ -131,13 +145,60 @@ RUN --mount=type=cache,target=/var/cache/apk \
 
 WORKDIR /coverage
 
-# Copy coverage reports from test stage
-COPY --from=test /coverage /coverage
-
 # Add caches
 COPY --from=yarn /root/.cache /cache
 
 # Add build artifacts
 COPY --from=build /app /app
 
+# Copy coverage reports from test stage
+COPY --from=test /coverage /coverage
+
 ENTRYPOINT [ "codacy-coverage" ]
+
+
+FROM alpine:3.19.1 as deploy
+ARG TARGETARCH
+ENV NODE_ENV production
+
+# Install standard libraries and copy Node.js binary
+RUN \
+  --mount=type=bind,from=node:21.6.2-alpine,source=/usr/local/bin/node,target=/mnt/usr/local/bin/node \
+  --mount=type=bind,from=node:21.6.2-alpine,source=/etc,target=/mnt/etc \
+  --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
+  apk add libgcc libstdc++ && \
+  cp -a /mnt/etc/group /etc/group && \
+  cp -a /mnt/etc/passwd /etc/passwd && \
+  cp -a /mnt/usr/local/bin/node /usr/local/bin/node
+
+USER node:node
+WORKDIR /app
+
+# Set OCI image labels
+ARG BUILD_DATE
+LABEL \
+  org.opencontainers.image.title="Rating Tracker" \
+  org.opencontainers.image.authors="Marvin A. Ruder <ratingtracker@mruder.dev>" \
+  org.opencontainers.image.description="A web service fetching and providing financial and ESG ratings for stocks." \
+  org.opencontainers.image.url="https://github.com/marvinruder/rating-tracker" \
+  org.opencontainers.image.source="https://github.com/marvinruder/rating-tracker" \
+  org.opencontainers.image.vendor="Marvin A. Ruder" \
+  org.opencontainers.image.licenses="MIT" \
+  org.opencontainers.image.version="4.3.1" \
+  org.opencontainers.image.created=$BUILD_DATE
+
+# Define health check
+HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
+
+### <- This is a special marker, everything in this stage above it can and will be built and cached before the production bundle is available
+
+RUN \
+  --mount=type=bind,source=app,target=/mnt/app \
+  cp -r /mnt/app / && \
+  if [ "$TARGETARCH" == "amd64" ]; then \
+  rm /app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
+  elif [ "$TARGETARCH" == "arm64" ]; then \
+  rm /app/prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
+  fi
+
+CMD [ "node", "--enable-source-maps", "server.cjs" ]
