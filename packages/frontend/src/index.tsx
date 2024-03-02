@@ -3,12 +3,10 @@ import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
 
-if (/iPad|iPhone|iPod/.test(navigator.platform)) {
-  const viewportMeta = document.createElement("meta");
-  viewportMeta.name = "viewport";
-  viewportMeta.content = "width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no";
-  document.head.appendChild(viewportMeta);
-}
+if (/iPad|iPhone|iPod/.test(navigator.platform))
+  document
+    .querySelector('meta[name="viewport"]')
+    ?.setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no");
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
