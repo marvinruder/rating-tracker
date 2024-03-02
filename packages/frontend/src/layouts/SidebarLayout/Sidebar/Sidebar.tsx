@@ -13,6 +13,7 @@ const SidebarWrapper: FC<React.PropsWithChildren<BoxProps>> = (
   props: React.PropsWithChildren<BoxProps>,
 ): JSX.Element => {
   const theme = useTheme();
+
   return (
     <Box
       width={theme.sidebar.width}

@@ -2,7 +2,7 @@
   "env": {
     "node": true
   },
-  "extends": ["plugin:jsdoc/recommended-typescript", "plugin:i/recommended", "plugin:i/typescript", "google", "prettier"],
+  "extends": ["plugin:jsdoc/recommended-typescript", "plugin:i/recommended", "plugin:i/typescript", "google", "plugin:prettier/recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -10,9 +10,8 @@
     "project": "./tsconfig.json"
   },
   "ignorePatterns": ["dist"],
-  "plugins": ["@typescript-eslint", "prettier", "jsdoc", "i"],
+  "plugins": ["@typescript-eslint", "jsdoc", "i", "prettier"],
   "rules": {
-    "prettier/prettier": ["warn"],
     "require-await": ["warn"],
     "no-unused-vars": "off",
     "@typescript-eslint/consistent-type-imports": ["warn"],
@@ -37,6 +36,11 @@
     }],
     "new-cap": ["warn", { "capIsNewExceptions": ["Router"] }],
     "quotes": ["warn", "double", { "avoidEscape": true }],
-    "max-len": ["warn", { "code": 120 }]
+    "max-len": ["warn", { "code": 120 }],
+    "prettier/prettier": ["warn", {
+      "printWidth": 120,
+      "tabWidth": 2,
+      "useTabs": false
+    }]
   }
 }
