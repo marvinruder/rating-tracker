@@ -1,6 +1,7 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Box, alpha, lighten, IconButton, Tooltip, useTheme, Divider } from "@mui/material";
+import { useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 import { HeaderButtons } from "./Buttons/Buttons";
@@ -14,6 +15,15 @@ import { HeaderUserbox } from "./Userbox/Userbox";
 export const Header = (props: HeaderProps): JSX.Element => {
   const theme = useTheme();
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    document.getElementById(`meta-theme-color-${theme.palette.mode}`)?.setAttribute("content", theme.header.background);
+    return () => {
+      document
+        .getElementById(`meta-theme-color-${theme.palette.mode}`)
+        ?.setAttribute("content", theme.palette.background.default);
+    };
+  }, [theme.palette.mode]);
 
   return (
     <Box

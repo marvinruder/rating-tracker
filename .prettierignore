@@ -1,7 +1,0 @@
-# .prettierignore file
-packages/*/coverage
-packages/*/dist
-.yarn/
-README.md
-
-packages/frontend/public/index.css

@@ -2,7 +2,7 @@
   "env": {
     "browser": true
   },
-  "extends": ["plugin:react/recommended", "plugin:jsdoc/recommended-typescript", "plugin:i/recommended", "plugin:i/typescript", "google", "prettier"],
+  "extends": ["plugin:react/recommended", "plugin:jsdoc/recommended-typescript", "plugin:i/recommended", "plugin:i/typescript", "google", "plugin:prettier/recommended"],
   "settings": {
     "react": {
       "version": "detect"
@@ -17,9 +17,8 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint", "prettier", "jsdoc", "import"],
+  "plugins": ["react", "@typescript-eslint", "jsdoc", "i", "prettier"],
   "rules": {
-    "prettier/prettier": ["warn"],
     "no-unused-vars": "off",
     "@typescript-eslint/consistent-type-imports": ["warn"],
     "@typescript-eslint/no-unused-vars": ["warn"],
@@ -44,6 +43,11 @@
       },
       "warnOnUnassignedImports": true
     }],
-    "max-len": ["warn", { "code": 120 }]
+    "max-len": ["warn", { "code": 120 }],
+    "prettier/prettier": ["warn", {
+      "printWidth": 120,
+      "tabWidth": 2,
+      "useTabs": false
+    }]
   }
 }
