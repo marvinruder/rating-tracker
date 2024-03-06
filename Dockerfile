@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1-labs
+
 # Lists all images to be prefetched by the regular Docker builder
 FROM scratch as prefetch
 COPY --from=postgres:alpine /etc/os-release /etc/os-release-postgres
@@ -87,6 +89,7 @@ RUN \
 
 # Run tests
 RUN \
+  --security=insecure \
   --mount=type=bind,target=.,rw \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
@@ -96,7 +99,6 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
   (dockerd &) && \
-  sed -i "s/localhost/localhost postgres-test redis-test/" /etc/hosts && \
   sleep 2 && \
   docker compose -f packages/backend/test/docker-compose.yml up --force-recreate -V -d && \
   yarn test && \
