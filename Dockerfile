@@ -81,6 +81,10 @@ ENV SIGNAL_SENDER +493012345678
 
 WORKDIR /workdir
 
+RUN \
+  --mount=type=cache,target=/var/cache/apk \
+  apk add docker docker-compose
+
 # Run tests
 RUN \
   --mount=type=bind,target=.,rw \
@@ -91,6 +95,10 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  (dockerd &) && \
+  sed -i "s/localhost/localhost postgres-test redis-test/" /etc/hosts && \
+  sleep 2 && \
+  docker compose -f packages/backend/test/docker-compose.yml up --force-recreate -V -d && \
   yarn test && \
   mkdir -p /coverage && \
   mv packages/backend/coverage /coverage/backend && \

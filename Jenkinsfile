@@ -36,15 +36,15 @@ node('rating-tracker-build') {
         )
 
         parallel(
-          testenv: {
-            stage('Start test environment') {
-              // Inject IP and ports into test environment
-              sh """
-              sed -i \"s/postgres-test:5432/127.0.0.1:$PGPORT/ ; s/redis-test:6379/127.0.0.1:$REDISPORT/ ; s/30001/$TESTPORT/\" packages/backend/test/env.ts
-              PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
-              """
-            }
-          },
+          // testenv: {
+          //   stage('Start test environment') {
+          //     // Inject IP and ports into test environment
+          //     sh """
+          //     sed -i \"s/postgres-test:5432/127.0.0.1:$PGPORT/ ; s/redis-test:6379/127.0.0.1:$REDISPORT/ ; s/30001/$TESTPORT/\" packages/backend/test/env.ts
+          //     PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
+          //     """
+          //   }
+          // },
           wasm: {
             stage ('Compile WebAssembly utils') {
               // Build the WebAssembly image while using registry cache
@@ -65,7 +65,7 @@ node('rating-tracker-build') {
         )
 
         stage ('Run tests and build bundles') {
-          docker.build("$IMAGE_NAME:job$JOB_ID-result", "$DOCKER_CI_FLAGS --target=result --force-rm .")
+          docker.build("$IMAGE_NAME:job$JOB_ID-result", "$DOCKER_CI_FLAGS --allow security.insecure --target=result --force-rm .")
 
           // Copy build artifacts and cache files to workspace
           sh """
@@ -128,7 +128,7 @@ node('rating-tracker-build') {
           sh """#!/bin/bash
           cp -arln ./cache/yarn ./cache/node ./cache/prisma \$HOME/.cache
           putcache
-          PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0      
+          # PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0      
           docker rmi $IMAGE_NAME:job$JOB_ID-wasm $IMAGE_NAME:job$JOB_ID-result || :
           rm -rf app cache
           """
