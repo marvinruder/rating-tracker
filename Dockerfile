@@ -104,8 +104,8 @@ RUN \
   cat /etc/hosts && \
   sleep 5 && \
   docker compose -f packages/backend/test/docker-compose.yml ps && \
-  nc -vvvz postgres-test 5432 && \
-  nc -vvvz redis-test 6379 && \
+  nc -vvvz postgres-test 54321 && \
+  nc -vvvz redis-test 63791 && \
   yarn test && \
   mkdir -p /coverage && \
   mv packages/backend/coverage /coverage/backend && \

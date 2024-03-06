@@ -1,11 +1,11 @@
 process.env = {
   ...process.env,
-  DATABASE_URL: "postgresql://rating-tracker-test:rating-tracker-test@postgres-test:5432/rating-tracker-test",
+  DATABASE_URL: "postgresql://rating-tracker-test:rating-tracker-test@postgres-test:54321/rating-tracker-test",
   NODE_ENV: "test",
   DOMAIN: "example.com",
   SUBDOMAIN: "subdomain",
   PORT: `${30001 + Number(process.env.PORT_OFFSET || 0)}`,
-  REDIS_URL: "redis://redis-test:6379",
+  REDIS_URL: "redis://redis-test:63791",
   REDIS_USER: "",
   REDIS_PASS: "",
   POSTGRES_USER: "rating-tracker-test",
