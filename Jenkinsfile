@@ -2,7 +2,7 @@ node('rating-tracker-build') {
   withEnv([
     'IMAGE_NAME=marvinruder/rating-tracker',
     'FORCE_COLOR=true',
-    'DOCKER_CI_FLAGS=--allow security.insecure --add-host postgres-test=127.0.0.1 --add-host redis-test=127.0.0.1 --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm'
+    'DOCKER_CI_FLAGS=--allow security.insecure --add-host postgres-test:127.0.0.1 --add-host redis-test:127.0.0.1 --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm'
   ]) {
     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
       // Use random job identifier and test port numbers to avoid collisions
