@@ -102,6 +102,7 @@ RUN \
   sleep 2 && \
   docker compose -f packages/backend/test/docker-compose.yml up --force-recreate -V -d && \
   cat /etc/hosts && \
+  sleep 5 && \
   nc -vvvz postgres-test 5432 && \
   nc -vvvz redis-test 6379 && \
   yarn test && \
