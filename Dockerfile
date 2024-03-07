@@ -75,10 +75,10 @@ RUN \
   --mount=type=cache,target=/var/cache/apk \
   --mount=type=bind,source=packages/backend/test/docker-compose.yml,target=packages/backend/test/docker-compose.yml \
   apk add docker docker-compose && \
-  (dockerd &) && \
+  (dockerd -l error &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
   docker compose -f packages/backend/test/docker-compose.yml up -d && \
-  docker compose -f packages/backend/test/docker-compose.yml down
+  docker compose -f packages/backend/test/docker-compose.yml stop
 
 RUN \
   --security=insecure \
@@ -95,7 +95,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  (dockerd &) && \
+  (dockerd -l error &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
   docker compose -f packages/backend/test/docker-compose.yml up -d && \
   yarn workspace @rating-tracker/backend test && \
