@@ -88,6 +88,9 @@ node('rating-tracker-build') {
             }
           }
         )
+      } catch (error) {
+        currentBuild.result = 'FAILURE'
+        throw error
       } finally {
         stage ('Cleanup') {
           if (currentBuild.getCurrentResult() == "SUCCESS") {
