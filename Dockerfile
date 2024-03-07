@@ -100,7 +100,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
   (dockerd > /dev/null 2>&1 &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
-  docker compose -f packages/backend/test/docker-compose.yml up -d && \
+  until docker compose -f packages/backend/test/docker-compose.yml up -d > /dev/null 2>&1; do echo Waiting for Test Containers to be ready…; sleep 1; done && \
   yarn workspace @rating-tracker/backend test && \
   mkdir -p /coverage && \
   mv packages/backend/coverage /coverage/backend
