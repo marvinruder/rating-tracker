@@ -79,8 +79,7 @@ RUN \
   apk add docker docker-compose && \
   (dockerd > /dev/null 2>&1 &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
-  docker compose -f packages/backend/test/docker-compose.yml up --quiet-pull -d && \
-  docker compose -f packages/backend/test/docker-compose.yml stop -t 3
+  docker compose -f packages/backend/test/docker-compose.yml up --quiet-pull --no-start
 
 RUN \
   --security=insecure \
