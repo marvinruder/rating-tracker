@@ -23,7 +23,7 @@ node('rating-tracker-build') {
               
               // Create builder instance and prebuild Docker images
               sh """
-              docker builder create --name rating-tracker --driver docker-container --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap || :
+              docker builder create --name rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap || :
               JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | sed -n '/### deploy ###/q;p' | docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --target=deploy -) &"
               """
             }
