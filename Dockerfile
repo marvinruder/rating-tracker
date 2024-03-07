@@ -58,7 +58,7 @@ RUN \
   corepack enable && \
   yarn workspaces focus -A --production && \
   cat /root/.cache/node/corepack/lastKnownGood.json && \
-  ll -R /root/.cache/node/corepack
+  ls -laR /root/.cache/node/corepack
 
 
 FROM node:21.7.0-alpine as test-backend
