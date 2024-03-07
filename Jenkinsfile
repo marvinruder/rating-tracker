@@ -91,7 +91,7 @@ node('rating-tracker-build') {
         stage ('Cleanup') {
           // Upload cache to external storage and remove build artifacts
           sh """#!/bin/bash
-          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=uncompressed .
+          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=uncompressed,force-compression=true .
           id=\$(docker create $IMAGE_NAME:job$JOB_ID)
           docker cp \$id:/.cache/. ./.cache
           docker rm -v \$id
