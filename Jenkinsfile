@@ -21,7 +21,7 @@ node('rating-tracker-build') {
               // Log in to Docker Hub, create builder instance and prebuild Docker images
               sh """
               echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-              docker builder create --name rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host' --bootstrap || :
+              docker builder create --name rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap || :
               JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | sed -n '/### deploy ###/q;p' | docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --target=deploy -) &"
               """
             }
@@ -89,7 +89,7 @@ node('rating-tracker-build') {
         stage ('Cleanup') {
           // Upload cache to external storage and remove build artifacts
           sh """#!/bin/bash
-          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --network=host --cache-to=type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker,mode=max,compression=zstd,compression-level=0 .
+          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --cache-to=type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker,mode=max,compression=zstd,compression-level=0 .
           id=\$(docker create $IMAGE_NAME:job$JOB_ID)
           docker cp \$id:/.cache/. ./.cache
           docker rm -v \$id
