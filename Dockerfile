@@ -59,7 +59,6 @@ RUN \
   yarn workspaces focus -A --production
 
 
-# Run backend tests
 FROM node:21.6.2-alpine as test-backend
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
@@ -69,6 +68,7 @@ ENV SIGNAL_SENDER +493012345678
 
 WORKDIR /workdir
 
+# Install Docker in Docker and create test containers
 RUN \
   --security=insecure \
   --mount=type=tmpfs,target=/var/run \
@@ -81,6 +81,7 @@ RUN \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
   docker compose -f packages/backend/test/docker-compose.yml up --quiet-pull --no-start
 
+# Run backend tests
 RUN \
   --security=insecure \
   --mount=type=tmpfs,target=/var/run \
@@ -104,12 +105,12 @@ RUN \
   mv packages/backend/coverage /coverage/backend
 
 
-# Run commons tests
 FROM node:21.6.2-alpine as test-commons
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
+# Run commons tests
 RUN \
   --mount=type=bind,source=packages/commons,target=packages/commons,rw \
   --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
@@ -126,12 +127,12 @@ RUN \
   mv packages/commons/coverage /coverage/commons
 
 
-# Run frontend tests
 FROM node:21.6.2-alpine as test-frontend
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
+# Run frontend tests
 RUN \
   --mount=type=bind,source=packages/commons,target=packages/commons \
   --mount=type=bind,source=packages/frontend,target=packages/frontend,rw \
@@ -150,13 +151,13 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-# Build backend
 FROM node:21.6.2-alpine as build-backend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
+# Build backend
 RUN \
   --mount=type=bind,source=packages/backend,target=packages/backend,rw \
   --mount=type=bind,source=packages/commons,target=packages/commons \
@@ -186,13 +187,13 @@ RUN \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /app/public/api-docs/
 
-# Build frontend
 FROM node:21.6.2-alpine as build-frontend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
+# Build frontend
 RUN \
   --mount=type=bind,source=packages/commons,target=packages/commons \
   --mount=type=bind,source=packages/frontend,target=packages/frontend,rw \

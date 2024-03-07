@@ -31,7 +31,7 @@ node('rating-tracker-build') {
         )
 
         stage ('Run tests and build bundles') {
-          // Build image, copy build artifacts and cache files to workspace
+          // Build image and copy build artifacts to workspace
           sh """
           cp -arln \$HOME/.cache . || :
           docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .
@@ -89,15 +89,20 @@ node('rating-tracker-build') {
         )
       } finally {
         stage ('Cleanup') {
-          // Upload cache to external storage and remove build artifacts
+          if (currentStage.getCurrentResult() == "SUCCESS") {
+            // Upload cache to external storage
+            sh """#!/bin/bash
+            docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .
+            id=\$(docker create $IMAGE_NAME:job$JOB_ID)
+            docker cp \$id:/.cache/. ./.cache
+            docker rm -v \$id
+            cp -arln ./.cache \$HOME
+            putcache
+            """
+          }
+          // Remove build artifacts
           sh """#!/bin/bash
-          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd .
-          id=\$(docker create $IMAGE_NAME:job$JOB_ID)
-          docker cp \$id:/.cache/. ./.cache
-          docker rm -v \$id
           docker rmi $IMAGE_NAME:job$JOB_ID || :
-          cp -arln ./.cache \$HOME
-          putcache
           rm -rf app .cache
           """
         }
