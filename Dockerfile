@@ -37,7 +37,7 @@ RUN \
   rm pkg/package.json.bak
 
 
-FROM node:21.6.2-alpine as yarn
+FROM node:21.7.0-alpine as yarn
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -59,7 +59,7 @@ RUN \
   yarn workspaces focus -A --production
 
 
-FROM node:21.6.2-alpine as test-backend
+FROM node:21.7.0-alpine as test-backend
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
@@ -91,9 +91,10 @@ RUN \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
-  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
@@ -105,7 +106,7 @@ RUN \
   mv packages/backend/coverage /coverage/backend
 
 
-FROM node:21.6.2-alpine as test-commons
+FROM node:21.7.0-alpine as test-commons
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -117,9 +118,10 @@ RUN \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
-  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   yarn workspace @rating-tracker/commons test && \
@@ -127,7 +129,7 @@ RUN \
   mv packages/commons/coverage /coverage/commons
 
 
-FROM node:21.6.2-alpine as test-frontend
+FROM node:21.7.0-alpine as test-frontend
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -141,9 +143,10 @@ RUN \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
-  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   yarn workspace @rating-tracker/frontend test && \
@@ -151,7 +154,7 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM node:21.6.2-alpine as build-backend
+FROM node:21.7.0-alpine as build-backend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -165,9 +168,10 @@ RUN \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
-  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
@@ -187,7 +191,7 @@ RUN \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /app/public/api-docs/
 
-FROM node:21.6.2-alpine as build-frontend
+FROM node:21.7.0-alpine as build-frontend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -202,9 +206,10 @@ RUN \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
-  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   # Bundle frontend
