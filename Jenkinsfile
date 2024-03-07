@@ -32,7 +32,7 @@ node('rating-tracker-build') {
           // Build image, copy build artifacts and cache files to workspace
           sh """
           cp -arln \$HOME/.cache . || :
-          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --cache-from=registry.internal.mruder.dev/cache:rating-tracker -t $IMAGE_NAME:job$JOB_ID .
+          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --cache-from=registry.internal.mruder.dev/cache:rating-tracker -t $IMAGE_NAME:job$JOB_ID --load .
           id=\$(docker create $IMAGE_NAME:job$JOB_ID)
           docker cp \$id:/app/. ./app
           docker cp \$id:/.cache/. ./.cache
