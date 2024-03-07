@@ -1,17 +1,4 @@
-# Lists all images to be prefetched by the regular Docker builder
-FROM scratch as prefetch
-COPY --from=postgres:alpine /etc/os-release /etc/os-release-postgres
-COPY --from=redis:alpine /etc/os-release /etc/os-release-redis
-COPY --from=node:21.6.2-alpine /etc/os-release /etc/os-release-node
-COPY --from=eclipse-temurin:21.0.2_13-jre-alpine /etc/os-release /etc/os-release-java
-
-
-# Lists all images to be prefetched by the Docker BuildKit builder
-FROM scratch as prefetch-buildx
-COPY --from=rust:1.76.0-alpine /etc/os-release /etc/os-release-rust
-COPY --from=alpine:3.19.1 /etc/os-release /etc/os-release-alpine
-COPY --from=node:21.6.2-alpine /etc/os-release /etc/os-release-node
-
+# syntax=docker/dockerfile:1-labs
 
 FROM rust:1.76.0-alpine as wasm
 
@@ -56,7 +43,7 @@ ENV FORCE_COLOR true
 WORKDIR /workdir
 
 # Copy caches and files required for installing dependencies
-COPY cache/. /root/.cache
+COPY .cache/. /root/.cache
 COPY packages/backend/prisma ./packages/backend/prisma
 
 # Install dependencies
@@ -72,7 +59,7 @@ RUN \
   yarn workspaces focus -A --production
 
 
-FROM node:21.6.2-alpine as test
+FROM node:21.6.2-alpine as test-backend
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
@@ -81,64 +68,157 @@ ENV SIGNAL_SENDER +493012345678
 
 WORKDIR /workdir
 
-# Run tests
+# Install Docker in Docker and create test containers
 RUN \
-  --mount=type=bind,target=.,rw \
-  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --security=insecure \
+  --mount=type=tmpfs,target=/var/run \
+  --mount=type=cache,target=/var/cache/apk \
+  --mount=type=bind,source=packages/backend/test/docker-compose.yml,target=packages/backend/test/docker-compose.yml \
+  --mount=type=bind,source=packages/backend/test/all_migrations.sh,target=packages/backend/test/all_migrations.sh \
+  --mount=type=bind,source=packages/backend/prisma/migrations,target=packages/backend/prisma/migrations \
+  apk add docker docker-compose && \
+  (dockerd > /dev/null 2>&1 &) && \
+  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
+  docker compose -f packages/backend/test/docker-compose.yml up --quiet-pull --no-start
+
+# Run backend tests
+RUN \
+  --security=insecure \
+  --mount=type=tmpfs,target=/var/run \
+  --mount=type=bind,source=packages/backend,target=packages/backend,rw \
+  --mount=type=bind,source=packages/commons,target=packages/commons \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  yarn test && \
+  (dockerd > /dev/null 2>&1 &) && \
+  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
+  docker compose -f packages/backend/test/docker-compose.yml up -d && \
+  yarn workspace @rating-tracker/backend test && \
   mkdir -p /coverage && \
-  mv packages/backend/coverage /coverage/backend && \
-  mv packages/commons/coverage /coverage/commons && \
+  mv packages/backend/coverage /coverage/backend
+
+
+FROM node:21.6.2-alpine as test-commons
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
+
+# Run commons tests
+RUN \
+  --mount=type=bind,source=packages/commons,target=packages/commons,rw \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
+  --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
+  --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
+  yarn workspace @rating-tracker/commons test && \
+  mkdir -p /coverage && \
+  mv packages/commons/coverage /coverage/commons
+
+
+FROM node:21.6.2-alpine as test-frontend
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
+
+# Run frontend tests
+RUN \
+  --mount=type=bind,source=packages/commons,target=packages/commons \
+  --mount=type=bind,source=packages/frontend,target=packages/frontend,rw \
+  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
+  --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
+  --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
+  yarn workspace @rating-tracker/frontend test && \
+  mkdir -p /coverage && \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM node:21.6.2-alpine as build
-LABEL stage=build
+FROM node:21.6.2-alpine as build-backend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Build project
+# Build backend
 RUN \
-  --mount=type=bind,target=.,rw \
-  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --mount=type=bind,source=packages/backend,target=packages/backend,rw \
+  --mount=type=bind,source=packages/commons,target=packages/commons \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  # Bundle frontend and backend
-  yarn build && \
+  # Bundle backend
+  yarn workspace @rating-tracker/backend build && \
   # Create CommonJS module containing log formatter configuration
-  yarn build:logFormatterConfig && \
+  yarn workspace @rating-tracker/backend build:logFormatterConfig && \
   # Parse backend bundle for correctness and executability in Node.js
-  /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 PORT_OFFSET=4096 node -r ./test/env.ts dist/server.cjs' && \
+  /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 node -r ./test/env.ts dist/server.cjs' && \
   # Create directories for target container and copy only necessary files
   mkdir -p /app/public/api-docs /app/prisma/client && \
   cp packages/backend/dist/* /app && \
   cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* /app/prisma/client && \
-  cp -r packages/frontend/dist/* /app/public && \
-  # Copy project files as well as Swagger UI files and WebAssembly package
   cp \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /app/public/api-docs/
 
+FROM node:21.6.2-alpine as build-frontend
+ENV NODE_ENV production
+ENV FORCE_COLOR true
+
+WORKDIR /workdir
+
+# Build frontend
+RUN \
+  --mount=type=bind,source=packages/commons,target=packages/commons \
+  --mount=type=bind,source=packages/frontend,target=packages/frontend,rw \
+  --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
+  --mount=type=bind,source=package.json,target=package.json \
+  --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
+  --mount=type=bind,source=yarn.lock,target=yarn.lock \
+  --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
+  --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
+  --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
+  # Bundle frontend
+  yarn workspace @rating-tracker/frontend build && \
+  # Create directories for target container and copy only necessary files
+  mkdir -p /app/public && \
+  cp -r packages/frontend/dist/* /app/public
+
 
 FROM eclipse-temurin:21.0.2_13-jre-alpine as result
 
 # Install bash and download and extract Codacy coverage reporter
 RUN --mount=type=cache,target=/var/cache/apk \
-  apk --update add bash && \
+  apk add bash && \
   wget -qO - https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
   chmod +x /usr/local/bin/codacy-coverage && \
   codacy-coverage download
@@ -146,13 +226,16 @@ RUN --mount=type=cache,target=/var/cache/apk \
 WORKDIR /coverage
 
 # Add caches
-COPY --from=yarn /root/.cache /cache
+COPY --from=yarn /root/.cache /.cache
 
 # Add build artifacts
-COPY --from=build /app /app
+COPY --from=build-backend /app /app
+COPY --from=build-frontend /app/public/. /app/public
 
-# Copy coverage reports from test stage
-COPY --from=test /coverage /coverage
+# Copy coverage reports from test stages
+COPY --from=test-backend /coverage/backend /coverage/backend
+COPY --from=test-commons /coverage/commons /coverage/commons
+COPY --from=test-frontend /coverage/frontend /coverage/frontend
 
 ENTRYPOINT [ "codacy-coverage" ]
 
@@ -190,7 +273,7 @@ LABEL \
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
-### <- This is a special marker, everything in this stage above it can and will be built and cached before the production bundle is available
+### deploy ###
 
 RUN \
   --mount=type=bind,source=app,target=/mnt/app \

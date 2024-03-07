@@ -2,14 +2,11 @@ node('rating-tracker-build') {
   withEnv([
     'IMAGE_NAME=marvinruder/rating-tracker',
     'FORCE_COLOR=true',
-    'DOCKER_CI_FLAGS=--network=host --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm'
+    'DOCKER_CI_FLAGS=--add-host postgres-test:127.0.0.1 --add-host redis-test:127.0.0.1 --allow security.insecure'
   ]) {
     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
       // Use random job identifier and test port numbers to avoid collisions
       def JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 4096))", returnStdout: true)
-      def PGPORT = sh (script: "#!/bin/bash\necho -n \$((49151 + 10#$JOB_ID))", returnStdout: true)
-      def REDISPORT = sh (script: "#!/bin/bash\necho -n \$((53247 + 10#$JOB_ID))", returnStdout: true)
-      def TESTPORT = sh (script: "#!/bin/bash\necho -n \$((57343 + 10#$JOB_ID))", returnStdout: true)
       def BUILD_DATE = sh (script: "#!/bin/bash\necho -n \$(date -u +'%Y-%m-%dT%H:%M:%SZ')", returnStdout: true)
 
       try {
@@ -23,55 +20,23 @@ node('rating-tracker-build') {
             stage('Start Docker environment') {
               // Log in to Docker Hub
               sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
-
-              // Create builder instance and prefetch/prebuild Docker images
+              
+              // Create builder instance and prebuild Docker images
               sh """
-              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | docker build --target=prefetch -) &"
-              docker builder create --name rating-tracker --driver docker-container --driver-opt network=host --bootstrap || :
-              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | docker buildx build --builder rating-tracker --network=host --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm --target=prefetch-buildx -) &"
-              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | sed -n '/###/q;p' | docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --target=deploy -) &"
-              """
-            }
-          }
-        )
-
-        parallel(
-          testenv: {
-            stage('Start test environment') {
-              // Inject IP and ports into test environment
-              sh """
-              sed -i \"s/postgres-test:5432/127.0.0.1:$PGPORT/ ; s/redis-test:6379/127.0.0.1:$REDISPORT/ ; s/30001/$TESTPORT/\" packages/backend/test/env.ts
-              PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml up --force-recreate -V -d
-              """
-            }
-          },
-          wasm: {
-            stage ('Compile WebAssembly utils') {
-              // Build the WebAssembly image while using registry cache
-              sh("docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to=registry.internal.mruder.dev/cache:rating-tracker-wasm .")
-            }
-          },
-          dep: {
-            stage ('Install dependencies') {
-              // Change config files for use in CI, copy cache to workspace and install dependencies
-              sh """
-              echo \"globalFolder: /root/.cache/yarn\" >> .yarnrc.yml
-              mkdir -p \$HOME/.cache/yarn \$HOME/.cache/node \$HOME/.cache/prisma ./cache
-              cp -arln \$HOME/.cache/yarn \$HOME/.cache/node \$HOME/.cache/prisma ./cache || :
-              docker build $DOCKER_CI_FLAGS --target=yarn .
+              docker builder create --name rating-tracker --driver docker-container --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap || :
+              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | sed -n '/### deploy ###/q;p' | docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --target=deploy -) &"
               """
             }
           }
         )
 
         stage ('Run tests and build bundles') {
-          docker.build("$IMAGE_NAME:job$JOB_ID-result", "$DOCKER_CI_FLAGS --target=result --force-rm .")
-
-          // Copy build artifacts and cache files to workspace
+          // Build image and copy build artifacts to workspace
           sh """
-          id=\$(docker create $IMAGE_NAME:job$JOB_ID-result)
+          cp -arln \$HOME/.cache . || :
+          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .
+          id=\$(docker create $IMAGE_NAME:job$JOB_ID)
           docker cp \$id:/app/. ./app
-          docker cp \$id:/cache/. ./cache
           docker rm -v \$id
           """
         }
@@ -81,7 +46,7 @@ node('rating-tracker-build') {
             stage ('Publish coverage results to Codacy') {
               withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
                 // Publish coverage results by running a container from the test image
-                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$IMAGE_NAME:job$JOB_ID-result report --commit-uuid \$(git log -n 1 --pretty=format:'%H'); docker rmi $IMAGE_NAME:job$JOB_ID-result")
+                sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$IMAGE_NAME:job$JOB_ID report --commit-uuid \$(git log -n 1 --pretty=format:'%H')")
               }
             }
           },
@@ -117,20 +82,31 @@ node('rating-tracker-build') {
 
               // If tags are present, build and push the image for both amd64 and arm64 architectures
               if (tags.length() > 0) {
-                sh("docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --force-rm --target=deploy --push $tags .")
+                sh("docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --target=deploy --push $tags .")
               }
             }
           }
         )
+      } catch (error) {
+        currentBuild.result = 'FAILURE'
+        throw error
       } finally {
         stage ('Cleanup') {
-          // Upload cache to external storage and remove build artifacts
+          if (currentBuild.getCurrentResult() == "SUCCESS") {
+            // Upload cache to external storage
+            sh """#!/bin/bash
+            docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .
+            id=\$(docker create $IMAGE_NAME:job$JOB_ID)
+            docker cp \$id:/.cache/. ./.cache
+            docker rm -v \$id
+            cp -arln ./.cache \$HOME
+            putcache
+            """
+          }
+          // Remove build artifacts
           sh """#!/bin/bash
-          cp -arln ./cache/yarn ./cache/node ./cache/prisma \$HOME/.cache
-          putcache
-          PGPORT=$PGPORT REDISPORT=$REDISPORT docker compose -p rating-tracker-test-job$JOB_ID -f packages/backend/test/docker-compose.yml down -t 0      
-          docker rmi $IMAGE_NAME:job$JOB_ID-wasm $IMAGE_NAME:job$JOB_ID-result || :
-          rm -rf app cache
+          docker rmi $IMAGE_NAME:job$JOB_ID || :
+          rm -rf app .cache
           """
         }
       }

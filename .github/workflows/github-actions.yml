@@ -20,7 +20,6 @@ jobs:
         with:
           path: |
             ~/.cache
-            ~/.yarn
           key: ${{ runner.os }}-yarn-${{ github.job }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-${{ github.job }}
@@ -48,7 +47,6 @@ jobs:
         with:
           path: |
             ~/.cache
-            ~/.yarn
           key: ${{ runner.os }}-yarn-${{ github.job }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-${{ github.job }}
