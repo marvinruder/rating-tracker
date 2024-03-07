@@ -35,7 +35,6 @@ node('rating-tracker-build') {
           docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --cache-from=registry.internal.mruder.dev/cache:rating-tracker -t $IMAGE_NAME:job$JOB_ID --load .
           id=\$(docker create $IMAGE_NAME:job$JOB_ID)
           docker cp \$id:/app/. ./app
-          docker cp \$id:/.cache/. ./.cache
           docker rm -v \$id
           """
         }
@@ -90,10 +89,13 @@ node('rating-tracker-build') {
         stage ('Cleanup') {
           // Upload cache to external storage and remove build artifacts
           sh """#!/bin/bash
-          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --cache-to=type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker,mode=max .
+          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --network=host --cache-to=type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker,mode=max,compression=zstd,compression-level=0 .
+          id=\$(docker create $IMAGE_NAME:job$JOB_ID)
+          docker cp \$id:/.cache/. ./.cache
+          docker rm -v \$id
+          docker rmi $IMAGE_NAME:job$JOB_ID || :
           cp -arln ./.cache \$HOME
           putcache
-          docker rmi $IMAGE_NAME:job$JOB_ID || :
           rm -rf app .cache
           """
         }
