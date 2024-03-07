@@ -56,7 +56,9 @@ RUN \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
   --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
   corepack enable && \
-  yarn workspaces focus -A --production
+  yarn workspaces focus -A --production && \
+  cat /root/.cache/node/corepack/lastKnownGood.json && \
+  ll -R /root/.cache/node/corepack
 
 
 FROM node:21.7.0-alpine as test-backend
