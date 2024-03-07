@@ -56,9 +56,7 @@ RUN \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
   --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
   corepack enable && \
-  yarn workspaces focus -A --production && \
-  cat /root/.cache/node/corepack/lastKnownGood.json && \
-  ls -laR /root/.cache/node/corepack
+  yarn workspaces focus -A --production
 
 
 FROM node:21.7.0-alpine as test-backend
@@ -93,9 +91,10 @@ RUN \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
-  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
@@ -119,9 +118,10 @@ RUN \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
-  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   yarn workspace @rating-tracker/commons test && \
@@ -143,9 +143,10 @@ RUN \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
-  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   yarn workspace @rating-tracker/frontend test && \
@@ -167,19 +168,18 @@ RUN \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
+  --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
-  --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache,rw \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  ls -laR /root/.cache/node/corepack && \
   # Bundle backend
   yarn workspace @rating-tracker/backend build && \
   # Create CommonJS module containing log formatter configuration
   yarn workspace @rating-tracker/backend build:logFormatterConfig && \
   # Parse backend bundle for correctness and executability in Node.js
-  ls -laR /root/.cache/node/corepack && \
   /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 node -r ./test/env.ts dist/server.cjs' && \
   # Create directories for target container and copy only necessary files
   mkdir -p /app/public/api-docs /app/prisma/client && \
@@ -206,9 +206,10 @@ RUN \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
-  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
+  --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
+  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
+  --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   # Bundle frontend
