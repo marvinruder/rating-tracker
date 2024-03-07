@@ -99,7 +99,8 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
   (dockerd > /dev/null 2>&1 &) && \
-  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
+  START_DOCKER_DAEMON_AGAIN=100 && \
+  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
   until docker compose -f packages/backend/test/docker-compose.yml up -d > /dev/null 2>&1; do echo Waiting for Test Containers to be ready…; sleep 1; done && \
   yarn workspace @rating-tracker/backend test && \
   mkdir -p /coverage && \
