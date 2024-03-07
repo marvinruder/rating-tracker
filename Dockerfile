@@ -59,6 +59,7 @@ RUN \
   yarn workspaces focus -A --production
 
 
+# Run backend tests
 FROM node:21.6.2-alpine as test-backend
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
@@ -76,11 +77,8 @@ RUN \
   (dockerd &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
   docker pull postgres:alpine && \
-  docker pull redis:alpine && \
-  kill -2 $(cat /var/run/docker.pid) && \
-  while cat /var/run/docker.pid > /dev/null 2>&1; do echo Waiting for Docker Daemon to stop…; sleep 0.1; done
+  docker pull redis:alpine
 
-# Run backend tests
 RUN \
   --security=insecure \
   --mount=type=tmpfs,target=/var/run \
@@ -104,12 +102,12 @@ RUN \
   mv packages/backend/coverage /coverage/backend
 
 
+# Run commons tests
 FROM node:21.6.2-alpine as test-commons
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Run commons tests
 RUN \
   --mount=type=bind,source=packages/commons,target=packages/commons,rw \
   --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
@@ -126,12 +124,12 @@ RUN \
   mv packages/commons/coverage /coverage/commons
 
 
+# Run frontend tests
 FROM node:21.6.2-alpine as test-frontend
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Run frontend tests
 RUN \
   --mount=type=bind,source=packages/commons,target=packages/commons \
   --mount=type=bind,source=packages/frontend,target=packages/frontend,rw \
@@ -150,13 +148,13 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
+# Build backend
 FROM node:21.6.2-alpine as build-backend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Build backend
 RUN \
   --mount=type=bind,source=packages/backend,target=packages/backend,rw \
   --mount=type=bind,source=packages/commons,target=packages/commons \
@@ -186,13 +184,13 @@ RUN \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /app/public/api-docs/
 
+# Build frontend
 FROM node:21.6.2-alpine as build-frontend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Build frontend
 RUN \
   --mount=type=bind,source=packages/commons,target=packages/commons \
   --mount=type=bind,source=packages/frontend,target=packages/frontend,rw \
@@ -217,7 +215,7 @@ FROM eclipse-temurin:21.0.2_13-jre-alpine as result
 
 # Install bash and download and extract Codacy coverage reporter
 RUN --mount=type=cache,target=/var/cache/apk \
-  apk --update add bash && \
+  apk add bash && \
   wget -qO - https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
   chmod +x /usr/local/bin/codacy-coverage && \
   codacy-coverage download

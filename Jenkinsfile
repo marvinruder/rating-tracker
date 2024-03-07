@@ -2,7 +2,7 @@ node('rating-tracker-build') {
   withEnv([
     'IMAGE_NAME=marvinruder/rating-tracker',
     'FORCE_COLOR=true',
-    'DOCKER_CI_FLAGS=--add-host postgres-test:127.0.0.1 --add-host redis-test:127.0.0.1 --allow security.insecure --target=result'
+    'DOCKER_CI_FLAGS=--add-host postgres-test:127.0.0.1 --add-host redis-test:127.0.0.1 --allow security.insecure'
   ]) {
     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
       // Use random job identifier and test port numbers to avoid collisions
@@ -34,7 +34,7 @@ node('rating-tracker-build') {
           // Build image, copy build artifacts and cache files to workspace
           sh """
           cp -arln \$HOME/.cache . || :
-          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --cache-from=registry.internal.mruder.dev/cache:rating-tracker -t $IMAGE_NAME:job$JOB_ID --load .
+          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=result --cache-from=registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .
           id=\$(docker create $IMAGE_NAME:job$JOB_ID)
           docker cp \$id:/app/. ./app
           docker rm -v \$id
@@ -91,7 +91,7 @@ node('rating-tracker-build') {
         stage ('Cleanup') {
           // Upload cache to external storage and remove build artifacts
           sh """#!/bin/bash
-          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --cache-to=type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker,mode=max,compression=zstd,compression-level=0 .
+          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to=registry.internal.mruder.dev/cache:rating-tracker-wasm .
           id=\$(docker create $IMAGE_NAME:job$JOB_ID)
           docker cp \$id:/.cache/. ./.cache
           docker rm -v \$id
