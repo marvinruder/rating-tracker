@@ -74,6 +74,8 @@ RUN \
   --mount=type=tmpfs,target=/var/run \
   --mount=type=cache,target=/var/cache/apk \
   --mount=type=bind,source=packages/backend/test/docker-compose.yml,target=packages/backend/test/docker-compose.yml \
+  --mount=type=bind,source=packages/backend/test/all_migrations.sh,target=packages/backend/test/all_migrations.sh \
+  --mount=type=bind,source=packages/backend/prisma/migrations,target=packages/backend/prisma/migrations \
   apk add docker docker-compose && \
   (dockerd -l error &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
