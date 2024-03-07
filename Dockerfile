@@ -158,8 +158,7 @@ WORKDIR /workdir
 
 # Build backend
 RUN \
-  --mount=type=bind,source=packages/backend,target=packages/backend \
-  --mount=type=tmpfs,target=packages/backend/dist \
+  --mount=type=bind,source=packages/backend,target=packages/backend,rw \
   --mount=type=bind,source=packages/commons,target=packages/commons \
   --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
   --mount=type=bind,source=package.json,target=package.json \
@@ -197,7 +196,6 @@ WORKDIR /workdir
 RUN \
   --mount=type=bind,source=packages/commons,target=packages/commons \
   --mount=type=bind,source=packages/frontend,target=packages/frontend,rw \
-  --mount=type=tmpfs,target=packages/frontend/dist \
   --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
   --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
