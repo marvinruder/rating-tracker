@@ -77,7 +77,7 @@ RUN \
   --mount=type=bind,source=packages/backend/test/all_migrations.sh,target=packages/backend/test/all_migrations.sh \
   --mount=type=bind,source=packages/backend/prisma/migrations,target=packages/backend/prisma/migrations \
   apk add docker docker-compose && \
-  (nohup dockerd &) && \
+  (nohup dockerd > /dev/null &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
   docker compose -f packages/backend/test/docker-compose.yml up -d && \
   docker compose -f packages/backend/test/docker-compose.yml stop
@@ -97,7 +97,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
-  (nohup dockerd &) && \
+  (nohup dockerd > /dev/null 2>&1 &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
   docker compose -f packages/backend/test/docker-compose.yml up -d && \
   yarn workspace @rating-tracker/backend test && \
