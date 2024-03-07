@@ -4,7 +4,7 @@ process.env = {
   NODE_ENV: "test",
   DOMAIN: "example.com",
   SUBDOMAIN: "subdomain",
-  PORT: `${30001 + Number(process.env.PORT_OFFSET || 0)}`,
+  PORT: "30001",
   REDIS_URL: "redis://redis-test:63791",
   REDIS_USER: "",
   REDIS_PASS: "",

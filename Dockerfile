@@ -73,11 +73,12 @@ RUN \
   --security=insecure \
   --mount=type=tmpfs,target=/var/run \
   --mount=type=cache,target=/var/cache/apk \
+  --mount=type=bind,source=packages/backend/test/docker-compose.yml,target=packages/backend/test/docker-compose.yml \
   apk add docker docker-compose && \
   (dockerd &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
-  docker pull postgres:alpine && \
-  docker pull redis:alpine
+  docker compose -f packages/backend/test/docker-compose.yml up -d && \
+  docker compose -f packages/backend/test/docker-compose.yml down
 
 RUN \
   --security=insecure \
@@ -96,7 +97,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
   (dockerd &) && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
-  docker compose -f packages/backend/test/docker-compose.yml up --force-recreate -V -d && \
+  docker compose -f packages/backend/test/docker-compose.yml up -d && \
   yarn workspace @rating-tracker/backend test && \
   mkdir -p /coverage && \
   mv packages/backend/coverage /coverage/backend
