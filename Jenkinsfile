@@ -89,7 +89,7 @@ node('rating-tracker-build') {
         )
       } finally {
         stage ('Cleanup') {
-          if (currentStage.getCurrentResult() == "SUCCESS") {
+          if (currentBuild.getCurrentResult() == "SUCCESS") {
             // Upload cache to external storage
             sh """#!/bin/bash
             docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .
