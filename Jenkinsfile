@@ -18,13 +18,10 @@ node('rating-tracker-build') {
           },
           docker_env: {
             stage('Start Docker environment') {
-              // Log in to Docker Hub
-              sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
-
-              // Create builder instance and prebuild Docker images
+              // Log in to Docker Hub, create builder instance and prebuild Docker images
               sh """
-              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(docker pull registry.internal.mruder.dev/cache:rating-tracker) &"
-              docker builder create --name rating-tracker --driver docker-container --bootstrap || :
+              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              docker builder create --name rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap || :
               JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | sed -n '/### deploy ###/q;p' | docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --target=deploy -) &"
               """
             }
@@ -32,11 +29,10 @@ node('rating-tracker-build') {
         )
 
         stage ('Run tests and build bundles') {
-          sh('cp -arln \$HOME/.cache . || :')
-          docker.build("$IMAGE_NAME:job$JOB_ID", "$DOCKER_CI_FLAGS --cache-from=registry.internal.mruder.dev/cache:rating-tracker .")
-
-          // Copy build artifacts and cache files to workspace
+          // Build image, copy build artifacts and cache files to workspace
           sh """
+          cp -arln \$HOME/.cache . || :
+          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --cache-from=registry.internal.mruder.dev/cache:rating-tracker -t $IMAGE_NAME:job$JOB_ID .
           id=\$(docker create $IMAGE_NAME:job$JOB_ID)
           docker cp \$id:/app/. ./app
           docker cp \$id:/.cache/. ./.cache
@@ -93,8 +89,8 @@ node('rating-tracker-build') {
       } finally {
         stage ('Cleanup') {
           // Upload cache to external storage and remove build artifacts
-          docker.build("$IMAGE_NAME:job$JOB_ID", "$DOCKER_CI_FLAGS --cache-to=type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker,mode=max .")
           sh """#!/bin/bash
+          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --cache-to=type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker,mode=max .
           cp -arln ./.cache \$HOME
           putcache
           docker rmi $IMAGE_NAME:job$JOB_ID || :
