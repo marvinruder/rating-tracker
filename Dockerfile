@@ -37,7 +37,7 @@ RUN \
   rm pkg/package.json.bak
 
 
-FROM node:21.6.2-alpine as yarn
+FROM node:21.7.0-alpine as yarn
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -59,7 +59,7 @@ RUN \
   yarn workspaces focus -A --production
 
 
-FROM node:21.6.2-alpine as test-backend
+FROM node:21.7.0-alpine as test-backend
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
@@ -105,7 +105,7 @@ RUN \
   mv packages/backend/coverage /coverage/backend
 
 
-FROM node:21.6.2-alpine as test-commons
+FROM node:21.7.0-alpine as test-commons
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -127,7 +127,7 @@ RUN \
   mv packages/commons/coverage /coverage/commons
 
 
-FROM node:21.6.2-alpine as test-frontend
+FROM node:21.7.0-alpine as test-frontend
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -151,7 +151,7 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM node:21.6.2-alpine as build-backend
+FROM node:21.7.0-alpine as build-backend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -187,7 +187,7 @@ RUN \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /app/public/api-docs/
 
-FROM node:21.6.2-alpine as build-frontend
+FROM node:21.7.0-alpine as build-frontend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
