@@ -1,17 +1,6 @@
 version: "3.8"
 
 services:
-  redis-test:
-    image: redis:alpine
-    user: 1000:1000
-    cap_drop:
-      - all
-    security_opt:
-      - no-new-privileges
-    command: 'redis-server --appendonly no --save ""'
-    ports:
-      - 127.0.0.1:63791:6379
-
   postgres-test:
     image: postgres:alpine
     user: 70:70
@@ -21,8 +10,9 @@ services:
       - CHOWN
     security_opt:
       - no-new-privileges
-    ports:
-      - 127.0.0.1:54321:5432
+    networks:
+      default:
+        ipv4_address: 10.108.116.112
     environment:
       POSTGRES_DB: "rating-tracker-test"
       POSTGRES_USER: "rating-tracker-test"
@@ -31,3 +21,23 @@ services:
       - ../prisma/migrations:/docker-entrypoint-initdb.d/migrations:ro
       - ./all_migrations.sh:/docker-entrypoint-initdb.d/migrations.sh:ro
     shm_size: "256mb"
+
+  redis-test:
+    image: redis:alpine
+    user: 1000:1000
+    cap_drop:
+      - all
+    security_opt:
+      - no-new-privileges
+    networks:
+      default:
+        ipv4_address: 10.108.116.114
+    command: 'redis-server --appendonly no --save ""'
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.108.116.0/24
+          gateway: 10.108.116.1
