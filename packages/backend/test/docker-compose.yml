@@ -12,7 +12,7 @@ services:
       - no-new-privileges
     networks:
       default:
-        ipv4_address: 10.108.116.112
+        ipv4_address: 10.114.116.112
     environment:
       POSTGRES_DB: "rating-tracker-test"
       POSTGRES_USER: "rating-tracker-test"
@@ -31,7 +31,7 @@ services:
       - no-new-privileges
     networks:
       default:
-        ipv4_address: 10.108.116.114
+        ipv4_address: 10.114.116.114
     command: 'redis-server --appendonly no --save ""'
 
 networks:
@@ -39,5 +39,5 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.108.116.0/24
-          gateway: 10.108.116.1
+        - subnet: 10.114.116.0/24
+          gateway: 10.114.116.1

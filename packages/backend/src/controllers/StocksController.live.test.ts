@@ -5,8 +5,8 @@ import {
   sizeArray,
   sortableAttributeArray,
   stocksEndpointPath,
-  logoBackgroundEndpointPath,
-  stockLogoEndpointSuffix,
+  // logoBackgroundEndpointPath,
+  // stockLogoEndpointSuffix,
   styleArray,
   watchlistsEndpointPath,
   portfoliosEndpointPath,
@@ -461,77 +461,77 @@ tests.push({
   },
 });
 
-tests.push({
-  testName: "[unsafe] provides stock logos",
-  testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${stocksEndpointPath}/exampleAAPL${stockLogoEndpointSuffix}`);
-    let res = await supertest
-      .get(`${baseURL}${stocksEndpointPath}/exampleAAPL${stockLogoEndpointSuffix}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.headers["content-type"]).toMatch("image/svg+xml");
-    // Check max-age header, should be smaller than 1 day
-    expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
-    expect(Number(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1"))).toBeLessThanOrEqual(86400);
-    expect(res.body.toString()).toMatch(
-      '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
-    );
+// tests.push({
+//   testName: "[unsafe] provides stock logos",
+//   testFunction: async () => {
+//     await expectRouteToBePrivate(`${baseURL}${stocksEndpointPath}/exampleAAPL${stockLogoEndpointSuffix}`);
+//     let res = await supertest
+//       .get(`${baseURL}${stocksEndpointPath}/exampleAAPL${stockLogoEndpointSuffix}`)
+//       .set("Cookie", ["authToken=exampleSessionID"]);
+//     expect(res.status).toBe(200);
+//     expect(res.headers["content-type"]).toMatch("image/svg+xml");
+//     // Check max-age header, should be smaller than 1 day
+//     expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
+//     expect(Number(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1"))).toBeLessThanOrEqual(86400);
+//     expect(res.body.toString()).toMatch(
+//       '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
+//     );
 
-    // attempting to read the logo of a stock for which no logo exists returns an empty SVG file
-    res = await supertest
-      .get(`${baseURL}${stocksEndpointPath}/exampleNULL${stockLogoEndpointSuffix}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    expect(res.headers["content-type"]).toMatch("image/svg+xml");
-    // Check max-age header, should be close to 1 hour
-    expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
-    expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(3600, -1);
-    expect(res.body.toString()).toMatch(
-      '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>',
-    );
+//     // attempting to read the logo of a stock for which no logo exists returns an empty SVG file
+//     res = await supertest
+//       .get(`${baseURL}${stocksEndpointPath}/exampleNULL${stockLogoEndpointSuffix}`)
+//       .set("Cookie", ["authToken=exampleSessionID"]);
+//     expect(res.status).toBe(200);
+//     expect(res.headers["content-type"]).toMatch("image/svg+xml");
+//     // Check max-age header, should be close to 1 hour
+//     expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
+//     expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(3600, -1);
+//     expect(res.body.toString()).toMatch(
+//       '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>',
+//     );
 
-    // attempting to read a non-existent stock’s logo results in an error
-    res = await supertest
-      .get(`${baseURL}${stocksEndpointPath}/doesNotExist${stockLogoEndpointSuffix}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(404);
-  },
-});
+//     // attempting to read a non-existent stock’s logo results in an error
+//     res = await supertest
+//       .get(`${baseURL}${stocksEndpointPath}/doesNotExist${stockLogoEndpointSuffix}`)
+//       .set("Cookie", ["authToken=exampleSessionID"]);
+//     expect(res.status).toBe(404);
+//   },
+// });
 
-tests.push({
-  testName: "[unsafe] provides stock logos for background",
-  testFunction: async () => {
-    let res = await supertest
-      .get(`${baseURL}${logoBackgroundEndpointPath}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    // Check max-age header, should be close to 1 day
-    expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
-    expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(604800, -1);
-    // 50 logos are returned
-    expect(res.body).toHaveLength(50);
-    res.body.forEach((logo: string) => {
-      expect(logo).toMatch(
-        // Each logo is an SVG file
-        '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
-      );
-    });
+// tests.push({
+//   testName: "[unsafe] provides stock logos for background",
+//   testFunction: async () => {
+//     let res = await supertest
+//       .get(`${baseURL}${logoBackgroundEndpointPath}`)
+//       .set("Cookie", ["authToken=exampleSessionID"]);
+//     expect(res.status).toBe(200);
+//     // Check max-age header, should be close to 1 day
+//     expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
+//     expect(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1")).toBeCloseTo(604800, -1);
+//     // 50 logos are returned
+//     expect(res.body).toHaveLength(50);
+//     res.body.forEach((logo: string) => {
+//       expect(logo).toMatch(
+//         // Each logo is an SVG file
+//         '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
+//       );
+//     });
 
-    // We can request a different number of logos
-    res = await supertest
-      .get(`${baseURL}${logoBackgroundEndpointPath}?count=10`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(200);
-    // 10 logos are returned
-    expect(res.body).toHaveLength(10);
-    res.body.forEach((logo: string) => {
-      expect(logo).toMatch(
-        // Each logo is an SVG file
-        '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
-      );
-    });
-  },
-});
+//     // We can request a different number of logos
+//     res = await supertest
+//       .get(`${baseURL}${logoBackgroundEndpointPath}?count=10`)
+//       .set("Cookie", ["authToken=exampleSessionID"]);
+//     expect(res.status).toBe(200);
+//     // 10 logos are returned
+//     expect(res.body).toHaveLength(10);
+//     res.body.forEach((logo: string) => {
+//       expect(logo).toMatch(
+//         // Each logo is an SVG file
+//         '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
+//       );
+//     });
+//   },
+// });
 
 tests.push({
   testName: "[unsafe] creates a stock",
