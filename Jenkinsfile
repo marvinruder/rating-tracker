@@ -11,9 +11,8 @@ node('rating-tracker-build') {
       try {
         parallel(
           scm: {
-            stage('Prepare workspace') {
+            stage('Checkout repository') {
               checkout scm
-              sh('cp -arln \$HOME/.cache . || :')
             }
           },
           docker_env: {
@@ -84,14 +83,7 @@ node('rating-tracker-build') {
         stage ('Cleanup') {
           if (currentBuild.getCurrentResult() == "SUCCESS") {
             // Upload cache to external storage
-            sh """#!/bin/bash
-            docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .
-            id=\$(docker create $IMAGE_NAME:job$JOB_ID)
-            docker cp \$id:/.cache/. ./.cache
-            docker rm -v \$id
-            cp -arln ./.cache \$HOME
-            putcache
-            """
+            sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .")
           }
           // Remove build artifacts
           sh """#!/bin/bash

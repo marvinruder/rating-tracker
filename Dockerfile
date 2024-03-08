@@ -40,8 +40,7 @@ ENV FORCE_COLOR true
 
 WORKDIR /workdir
 
-# Copy caches and files required for installing dependencies
-COPY .cache/. /root/.cache
+# Copy files required for installing dependencies
 COPY packages/backend/prisma ./packages/backend/prisma
 
 # Install dependencies
@@ -237,9 +236,6 @@ RUN \
   codacy-coverage download
 
 WORKDIR /coverage
-
-# Add caches
-COPY --from=yarn /root/.cache /.cache
 
 # Add build artifacts
 COPY --from=build-backend /app /app
