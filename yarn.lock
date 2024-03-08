@@ -1425,7 +1425,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@rating-tracker/commons@workspace:packages/commons"
   dependencies:
-    "@types/statuses": "npm:2.0.4"
+    "@types/statuses": "npm:2.0.5"
     "@typescript-eslint/eslint-plugin": "npm:7.1.1"
     "@typescript-eslint/parser": "npm:7.1.1"
     "@vitest/coverage-v8": "npm:1.3.1"
@@ -2213,10 +2213,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/statuses@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@types/statuses@npm:2.0.4"
-  checksum: 10c0/9e5efd048a7088ab8ca0e0eca87f160ce0afc11fd06a85e130823e12290497c9b0a3a045a8df264b90237a4e92a79b0de9ed1fd6b497ac90c87e58fed7312755
+"@types/statuses@npm:2.0.5":
+  version: 2.0.5
+  resolution: "@types/statuses@npm:2.0.5"
+  checksum: 10c0/4dacec0b29483a44be902a022a11a22b339de7a6e7b2059daa4f7add10cb6dbcc28d02d2a416fe9687e48d335906bf983065391836d4e7c847e55ddef4de8fad
   languageName: node
   linkType: hard
 
