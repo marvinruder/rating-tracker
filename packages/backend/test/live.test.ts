@@ -15,9 +15,10 @@ import type { LiveTestSuite } from "./liveTestHelpers";
 import applyPostgresSeeds from "./seeds/postgres";
 import applyRedisSeeds from "./seeds/redis";
 
-vi.mock("../src/utils/logger");
-vi.mock("../src/signal/signalBase");
 vi.mock("@simplewebauthn/server", async () => await import("./moduleMocks/@simplewebauthn/server"));
+vi.mock("../src/signal/signalBase");
+vi.mock("../src/utils/fetchRequest");
+vi.mock("../src/utils/logger");
 
 /**
  * An array of spy functions on methods that alter the state of PostgreSQL or Redis, or send Signal messages. Must only

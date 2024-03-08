@@ -78,7 +78,8 @@ RUN \
   --mount=type=bind,source=packages/backend/prisma/migrations,target=packages/backend/prisma/migrations \
   apk add docker docker-compose && \
   (dockerd > /dev/null 2>&1 &) && \
-  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
+  START_DOCKER_DAEMON_AGAIN=100 && \
+  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
   docker compose -f packages/backend/test/docker-compose.yml up --quiet-pull --no-start
 
 # Run backend tests
@@ -103,6 +104,8 @@ RUN \
   START_DOCKER_DAEMON_AGAIN=100 && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
   docker compose -f packages/backend/test/docker-compose.yml up -d && \
+  POSTGRES_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres-test) \
+  REDIS_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' redis-test) \
   yarn workspace @rating-tracker/backend test && \
   mkdir -p /coverage && \
   mv packages/backend/coverage /coverage/backend

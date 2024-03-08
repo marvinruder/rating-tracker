@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   postgres-test:
+    container_name: postgres-test
     image: postgres:alpine
     user: 70:70
     cap_drop:
@@ -10,9 +11,6 @@ services:
       - CHOWN
     security_opt:
       - no-new-privileges
-    networks:
-      default:
-        ipv4_address: 10.114.116.112
     environment:
       POSTGRES_DB: "rating-tracker-test"
       POSTGRES_USER: "rating-tracker-test"
@@ -23,21 +21,11 @@ services:
     shm_size: "256mb"
 
   redis-test:
+    container_name: redis-test
     image: redis:alpine
     user: 1000:1000
     cap_drop:
       - all
     security_opt:
       - no-new-privileges
-    networks:
-      default:
-        ipv4_address: 10.114.116.114
     command: 'redis-server --appendonly no --save ""'
-
-networks:
-  default:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.114.116.0/24
-          gateway: 10.114.116.1

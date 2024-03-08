@@ -23,6 +23,7 @@ services:
       POSTGRES_USER: rating-tracker
       POSTGRES_PASS: rating-tracker
       LOG_LEVEL: trace
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: 0
       # for `psql` / `rtpsql` commands:
       PGHOST: postgres
       PGUSER: rating-tracker
