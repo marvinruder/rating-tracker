@@ -290,6 +290,8 @@ LABEL \
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
+### deploy ###
+
 RUN \
   --mount=type=bind,from=result,source=app,target=/mnt/app \
   cp -r /mnt/app / && \
