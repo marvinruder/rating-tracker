@@ -1,44 +1,38 @@
 node('rating-tracker-build') {
   withEnv([
     'IMAGE_NAME=marvinruder/rating-tracker',
-    'FORCE_COLOR=true',
-    'DOCKER_CI_FLAGS=--allow security.insecure'
+    'FORCE_COLOR=true'
   ]) {
     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-      // Use random job identifier and test port numbers to avoid collisions
+      // Use random job identifier to avoid image tag collisions
       def JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 4096))", returnStdout: true)
-      def BUILD_DATE = sh (script: "#!/bin/bash\necho -n \$(date -u +'%Y-%m-%dT%H:%M:%SZ')", returnStdout: true)
+      def DOCKER_BUILD_FLAGS = sh (script: "#!/bin/bash\necho -n \"--allow security.insecure --build-arg BUILD_DATE='\$(date -u +'%Y-%m-%dT%H:%M:%SZ')'\"", returnStdout: true)
 
       try {
         parallel(
           scm: {
-            stage('Clone repository') {
+            stage('Prepare workspace') {
               checkout scm
+              sh('cp -arln \$HOME/.cache . || :')
             }
           },
           docker_env: {
             stage('Start Docker environment') {
               // Log in to Docker Hub
               sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
-              
+
               // Create builder instance and prebuild Docker images
               sh """
               docker builder create --name rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap || :
-              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | sed -n '/### deploy ###/q;p' | docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --target=deploy -) &"
+              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | sed -n '/### deploy ###/q;p' | docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --platform=linux/amd64,linux/arm64 --target=deploy -) &"
               """
             }
           }
         )
 
         stage ('Run tests and build bundles') {
-          // Build image and copy build artifacts to workspace
-          sh """
-          cp -arln \$HOME/.cache . || :
-          docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .
-          id=\$(docker create $IMAGE_NAME:job$JOB_ID)
-          docker cp \$id:/app/. ./app
-          docker rm -v \$id
-          """
+          // Build image
+          sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .")
         }
 
         parallel(
@@ -82,7 +76,7 @@ node('rating-tracker-build') {
 
               // If tags are present, build and push the image for both amd64 and arm64 architectures
               if (tags.length() > 0) {
-                sh("docker buildx build --builder rating-tracker --platform=linux/amd64,linux/arm64 --build-arg BUILD_DATE='$BUILD_DATE' --target=deploy --push $tags .")
+                sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --platform=linux/amd64,linux/arm64 --target=deploy --push $tags .")
               }
             }
           }
@@ -95,7 +89,7 @@ node('rating-tracker-build') {
           if (currentBuild.getCurrentResult() == "SUCCESS") {
             // Upload cache to external storage
             sh """#!/bin/bash
-            docker buildx build --builder rating-tracker $DOCKER_CI_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .
+            docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .
             id=\$(docker create $IMAGE_NAME:job$JOB_ID)
             docker cp \$id:/.cache/. ./.cache
             docker rm -v \$id
@@ -106,7 +100,6 @@ node('rating-tracker-build') {
           // Remove build artifacts
           sh """#!/bin/bash
           docker rmi $IMAGE_NAME:job$JOB_ID || :
-          rm -rf app .cache
           """
         }
       }

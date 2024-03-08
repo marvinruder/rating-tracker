@@ -1,14 +1,12 @@
 # syntax=docker/dockerfile:1-labs
 
-FROM rust:1.76.0-alpine as wasm
-
-ARG TARGETARCH
+FROM --platform=$BUILDPLATFORM rust:1.76.0-alpine as wasm
 
 WORKDIR /workdir
 
 # Install required tools and libraries
 RUN \
-  --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
+  --mount=type=cache,target=/var/cache/apk \
   --mount=type=cache,target=/usr/local/cargo/registry \
   apk add binaryen pkgconfig musl-dev nasm openssl-dev && \
   RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
@@ -37,7 +35,7 @@ RUN \
   rm pkg/package.json.bak
 
 
-FROM node:21.7.0-alpine as yarn
+FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as yarn
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -59,7 +57,7 @@ RUN \
   yarn workspaces focus -A --production
 
 
-FROM node:21.7.0-alpine as test-backend
+FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as test-backend
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
@@ -111,7 +109,7 @@ RUN \
   mv packages/backend/coverage /coverage/backend
 
 
-FROM node:21.7.0-alpine as test-commons
+FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as test-commons
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -135,7 +133,7 @@ RUN \
   mv packages/commons/coverage /coverage/commons
 
 
-FROM node:21.7.0-alpine as test-frontend
+FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as test-frontend
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -161,7 +159,7 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM node:21.7.0-alpine as build-backend
+FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as build-backend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -199,7 +197,7 @@ RUN \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /app/public/api-docs/
 
-FROM node:21.7.0-alpine as build-frontend
+FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as build-frontend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -228,10 +226,11 @@ RUN \
   cp -r packages/frontend/dist/* /app/public
 
 
-FROM eclipse-temurin:21.0.2_13-jre-alpine as result
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.2_13-jre-alpine as result
 
 # Install bash and download and extract Codacy coverage reporter
-RUN --mount=type=cache,target=/var/cache/apk \
+RUN \
+  --mount=type=cache,target=/var/cache/apk \
   apk add bash && \
   wget -qO - https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
   chmod +x /usr/local/bin/codacy-coverage && \
@@ -254,14 +253,18 @@ COPY --from=test-frontend /coverage/frontend /coverage/frontend
 ENTRYPOINT [ "codacy-coverage" ]
 
 
+# required for Renovate to update the base image:
+FROM node:21.7.0-alpine as node
+
+
 FROM alpine:3.19.1 as deploy
 ARG TARGETARCH
 ENV NODE_ENV production
 
 # Install standard libraries and copy Node.js binary
 RUN \
-  --mount=type=bind,from=node:21.6.2-alpine,source=/usr/local/bin/node,target=/mnt/usr/local/bin/node \
-  --mount=type=bind,from=node:21.6.2-alpine,source=/etc,target=/mnt/etc \
+  --mount=type=bind,from=node,source=/usr/local/bin/node,target=/mnt/usr/local/bin/node \
+  --mount=type=bind,from=node,source=/etc,target=/mnt/etc \
   --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
   apk add libgcc libstdc++ && \
   cp -a /mnt/etc/group /etc/group && \
@@ -287,10 +290,8 @@ LABEL \
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
-### deploy ###
-
 RUN \
-  --mount=type=bind,source=app,target=/mnt/app \
+  --mount=type=bind,from=result,source=app,target=/mnt/app \
   cp -r /mnt/app / && \
   if [ "$TARGETARCH" == "amd64" ]; then \
   rm /app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
