@@ -78,7 +78,8 @@ RUN \
   --mount=type=bind,source=packages/backend/prisma/migrations,target=packages/backend/prisma/migrations \
   apk add docker docker-compose && \
   (dockerd > /dev/null 2>&1 &) && \
-  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
+  START_DOCKER_DAEMON_AGAIN=100 && \
+  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
   docker compose -f packages/backend/test/docker-compose.yml up --quiet-pull --no-start
 
 # Run backend tests
@@ -98,9 +99,13 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  --network=none \
   (dockerd > /dev/null 2>&1 &) && \
-  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; done && \
+  START_DOCKER_DAEMON_AGAIN=100 && \
+  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
   docker compose -f packages/backend/test/docker-compose.yml up -d && \
+  POSTGRES_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres-test) \
+  REDIS_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' redis-test) \
   yarn workspace @rating-tracker/backend test && \
   mkdir -p /coverage && \
   mv packages/backend/coverage /coverage/backend
@@ -124,6 +129,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
+  --network=none \
   yarn workspace @rating-tracker/commons test && \
   mkdir -p /coverage && \
   mv packages/commons/coverage /coverage/commons
@@ -149,6 +155,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
+  --network=none \
   yarn workspace @rating-tracker/frontend test && \
   mkdir -p /coverage && \
   mv packages/frontend/coverage /coverage/frontend
@@ -175,6 +182,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  --network=none \
   # Bundle backend
   yarn workspace @rating-tracker/backend build && \
   # Create CommonJS module containing log formatter configuration
@@ -212,6 +220,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
+  --network=none \
   # Bundle frontend
   yarn workspace @rating-tracker/frontend build && \
   # Create directories for target container and copy only necessary files

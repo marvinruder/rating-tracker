@@ -18,8 +18,9 @@ tests.push({
     expect(res.body.services).not.toHaveProperty("PostgreSQL");
     expect(res.body.services).not.toHaveProperty("Redis");
 
-    // Not available during live tests:
+    // Mocked to be not ready during live tests:
     // expect(res.body.services).toHaveProperty("Selenium");
     expect(res.body.services).toHaveProperty("Signal");
+    expect(res.body.services.Signal).toBe("Signal is not ready");
   },
 });

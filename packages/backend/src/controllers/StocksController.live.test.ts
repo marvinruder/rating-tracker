@@ -476,6 +476,23 @@ tests.push({
     expect(res.body.toString()).toMatch(
       '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
     );
+    expect(res.body.toString()).toMatch('<circle cx="20" cy="20" r="15" fill="#2971D6"/>');
+    expect(res.body.toString()).toMatch("</svg>");
+
+    // This stock’s logo response is mocked to not include a Cache-Control header
+    res = await supertest
+      .get(`${baseURL}${stocksEndpointPath}/exampleTSM${stockLogoEndpointSuffix}`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch("image/svg+xml");
+    // Check max-age header, should be exactly 1 day
+    expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
+    expect(Number(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1"))).toEqual(86400);
+    expect(res.body.toString()).toMatch(
+      '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
+    );
+    expect(res.body.toString()).toMatch('<circle cx="20" cy="20" r="15" fill="#2971D6"/>');
+    expect(res.body.toString()).toMatch("</svg>");
 
     // attempting to read the logo of a stock for which no logo exists returns an empty SVG file
     res = await supertest

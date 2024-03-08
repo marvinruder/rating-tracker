@@ -26,6 +26,7 @@ export default defineConfig({
         "src/fetchers/*",
         "src/utils/cron.*",
         "src/utils/DataProviderError.*",
+        "src/utils/fetchRequest.*",
         "src/utils/logger.*",
         "src/utils/logFormatterConfig.*",
         "src/utils/webdriver.*",

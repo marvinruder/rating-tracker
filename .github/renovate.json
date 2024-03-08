@@ -21,8 +21,8 @@
       "matchPackagePatterns": ["@simplewebauthn"]
     },
     {
-      "matchPackagePatterns": ["@nivo"],
-      "automerge": false
+      "groupName": "Type Definitions",
+      "matchPackagePatterns": ["@types/"]
     }
   ]
 }
