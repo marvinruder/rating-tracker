@@ -32,7 +32,7 @@ node('rating-tracker-build') {
 
         stage ('Run tests and build bundles') {
           // Build image
-          sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm .")
+          sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .")
         }
 
         parallel(
@@ -86,15 +86,17 @@ node('rating-tracker-build') {
             // Upload cache to external storage
             sh """#!/bin/bash
             docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .
-            docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=yarn -t $IMAGE_NAME:job$JOB_ID --load .
             id=\$(docker create $IMAGE_NAME:job$JOB_ID)
             docker cp \$id:/.cache/. ./.cache
             docker rm -v \$id
-            docker rmi $IMAGE_NAME:job$JOB_ID || :
             cp -arln ./.cache \$HOME
             putcache
             """
           }
+          // Remove build artifacts
+          sh """#!/bin/bash
+          docker rmi $IMAGE_NAME:job$JOB_ID || :
+          """
         }
       }
     }
