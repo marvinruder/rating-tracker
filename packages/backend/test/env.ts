@@ -4,7 +4,7 @@ process.env = {
   NODE_ENV: "test",
   DOMAIN: "example.com",
   SUBDOMAIN: "subdomain",
-  PORT: String(Math.floor(Math.random() * 16384) + 49152),
+  PORT: "30001",
   REDIS_URL: "redis://redis-test:6379",
   REDIS_USER: "",
   REDIS_PASS: "",
