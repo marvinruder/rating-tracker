@@ -8,4 +8,8 @@
 !.yarn/unplugged
 !.yarn/install-state.gz
 .git
+packages/*/.vite
+packages/*/.vitest
+packages/*/coverage
+packages/*/dist
 wasm/target
