@@ -32,7 +32,7 @@ node('rating-tracker-build') {
 
         stage ('Run tests and build bundles') {
           // Build image
-          sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .")
+          sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm .")
         }
 
         parallel(
@@ -65,10 +65,6 @@ node('rating-tracker-build') {
               } else if (env.BRANCH_NAME == 'main') {
                 // Images with tag `edge` are built from the main branch
                 tags += " -t $IMAGE_NAME:edge"
-
-                // Prepare update of README.md
-                sh("mkdir -p \$HOME/.cache/README && cat README.md | sed 's|^<!-- <div id|<div id|g;s|</div> -->\$|</div>|g;s|\"/packages/frontend/public/assets|\"https://raw.githubusercontent.com/$IMAGE_NAME/main/packages/frontend/public/assets|g' > \$HOME/.cache/README/job$JOB_ID")
-                // sh("docker run --rm -t -v /tmp:/tmp -e DOCKER_USER -e DOCKER_PASS chko/docker-pushrm --file /tmp/jenkins-cache/README/job$JOB_ID $IMAGE_NAME")
               } else if (!(env.BRANCH_NAME).startsWith('renovate')) {
                 // Images with tag `snapshot` are built from other branches, except when updating dependencies only
                 tags += " -t $IMAGE_NAME:SNAPSHOT"
@@ -76,7 +72,7 @@ node('rating-tracker-build') {
 
               // If tags are present, build and push the image for both amd64 and arm64 architectures
               if (tags.length() > 0) {
-                sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --platform=linux/amd64,linux/arm64 --target=deploy --push $tags .")
+                sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=deploy --platform=linux/amd64,linux/arm64 --push $tags .")
               }
             }
           }
@@ -90,17 +86,15 @@ node('rating-tracker-build') {
             // Upload cache to external storage
             sh """#!/bin/bash
             docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .
+            docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=yarn -t $IMAGE_NAME:job$JOB_ID --load .
             id=\$(docker create $IMAGE_NAME:job$JOB_ID)
             docker cp \$id:/.cache/. ./.cache
             docker rm -v \$id
+            docker rmi $IMAGE_NAME:job$JOB_ID || :
             cp -arln ./.cache \$HOME
             putcache
             """
           }
-          // Remove build artifacts
-          sh """#!/bin/bash
-          docker rmi $IMAGE_NAME:job$JOB_ID || :
-          """
         }
       }
     }
