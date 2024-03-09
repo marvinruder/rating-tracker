@@ -6,9 +6,8 @@ WORKDIR /workdir
 
 # Install required tools and libraries
 RUN \
-  --mount=type=cache,target=/var/cache/apk \
   --mount=type=cache,target=/usr/local/cargo/registry \
-  apk add binaryen pkgconfig musl-dev nasm openssl-dev && \
+  apk add --no-cache binaryen pkgconfig musl-dev nasm openssl-dev && \
   RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
   rustup target add wasm32-unknown-unknown && \
   wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
@@ -65,11 +64,10 @@ WORKDIR /workdir
 RUN \
   --security=insecure \
   --mount=type=tmpfs,target=/var/run \
-  --mount=type=cache,target=/var/cache/apk \
   --mount=type=bind,source=packages/backend/test/docker-compose.yml,target=packages/backend/test/docker-compose.yml \
   --mount=type=bind,source=packages/backend/test/all_migrations.sh,target=packages/backend/test/all_migrations.sh \
   --mount=type=bind,source=packages/backend/prisma/migrations,target=packages/backend/prisma/migrations \
-  apk add docker docker-compose fuse-overlayfs && \
+  apk add --no-cache docker docker-compose fuse-overlayfs && \
   mkdir -p /etc/docker && \
   echo '{"storage-driver": "fuse-overlayfs"}' > /etc/docker/daemon.json && \
   (dockerd > /dev/null 2>&1 &) && \
@@ -235,8 +233,7 @@ FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.2_13-jre-alpine as codacy
 
 # Install bash and download and extract Codacy coverage reporter
 RUN \
-  --mount=type=cache,target=/var/cache/apk \
-  apk add bash && \
+  apk add --no-cache bash && \
   wget -qO - https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
   chmod +x /usr/local/bin/codacy-coverage && \
   codacy-coverage download
@@ -268,8 +265,7 @@ ARG TARGETARCH
 RUN \
   --mount=type=bind,from=node,source=/usr/local/bin/node,target=/mnt/usr/local/bin/node \
   --mount=type=bind,from=node,source=/etc,target=/mnt/etc \
-  --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
-  apk add libgcc libstdc++ && \
+  apk add --no-cache libgcc libstdc++ && \
   cp -a /mnt/etc/group /etc/group && \
   cp -a /mnt/etc/passwd /etc/passwd && \
   cp -a /mnt/usr/local/bin/node /usr/local/bin/node
