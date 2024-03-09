@@ -20,25 +20,29 @@ node('rating-tracker-build') {
               // Log in to Docker Hub
               sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
 
-              // Create builder instance and prebuild Docker images
-              sh """
-              docker builder create --name rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap || :
-              JENKINS_NODE_COOKIE=DONT_KILL_ME /bin/sh -c "(curl -Ls https://raw.githubusercontent.com/$IMAGE_NAME/\$BRANCH_NAME/Dockerfile | sed -n '/### deploy ###/q;p' | docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --platform=linux/amd64,linux/arm64 --target=deploy -) &"
-              """
+              // Create builder instance
+              sh("docker builder create --name rating-tracker --node rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap")
             }
           }
         )
 
-        stage ('Run tests and build bundles') {
-          // Build image
-          sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .")
-        }
+        parallel(
+          ci: {
+            stage ('Run tests and build bundles') {
+              sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .")
+            }
+          },
+          deploy_base: {
+            stage ('Prepare base image for deployment') {
+              sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=deploy-base --platform=linux/amd64,linux/arm64 .")
+            }
+          }
+        )
 
         parallel(
           codacy: {
             stage ('Publish coverage results to Codacy') {
               withCredentials([string(credentialsId: 'codacy-project-token-rating-tracker', variable: 'CODACY_PROJECT_TOKEN')]) {
-                // Publish coverage results by running a container from the test image
                 sh('docker run --rm -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN ' + "$IMAGE_NAME:job$JOB_ID report --commit-uuid \$(git log -n 1 --pretty=format:'%H')")
               }
             }

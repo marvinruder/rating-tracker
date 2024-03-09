@@ -6,9 +6,8 @@ WORKDIR /workdir
 
 # Install required tools and libraries
 RUN \
-  --mount=type=cache,target=/var/cache/apk \
   --mount=type=cache,target=/usr/local/cargo/registry \
-  apk add binaryen pkgconfig musl-dev nasm openssl-dev && \
+  apk add --no-cache binaryen pkgconfig musl-dev nasm openssl-dev && \
   RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
   rustup target add wasm32-unknown-unknown && \
   wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
@@ -69,11 +68,12 @@ WORKDIR /workdir
 RUN \
   --security=insecure \
   --mount=type=tmpfs,target=/var/run \
-  --mount=type=cache,target=/var/cache/apk \
   --mount=type=bind,source=packages/backend/test/docker-compose.yml,target=packages/backend/test/docker-compose.yml \
   --mount=type=bind,source=packages/backend/test/all_migrations.sh,target=packages/backend/test/all_migrations.sh \
   --mount=type=bind,source=packages/backend/prisma/migrations,target=packages/backend/prisma/migrations \
-  apk add docker docker-compose && \
+  apk add --no-cache docker docker-compose fuse-overlayfs && \
+  mkdir -p /etc/docker && \
+  echo '{"storage-driver": "fuse-overlayfs"}' > /etc/docker/daemon.json && \
   (dockerd > /dev/null 2>&1 &) && \
   START_DOCKER_DAEMON_AGAIN=100 && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
@@ -229,8 +229,7 @@ FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.2_13-jre-alpine as result
 
 # Install bash and download and extract Codacy coverage reporter
 RUN \
-  --mount=type=cache,target=/var/cache/apk \
-  apk add bash && \
+  apk add --no-cache bash && \
   wget -qO - https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
   chmod +x /usr/local/bin/codacy-coverage && \
   codacy-coverage download
@@ -252,20 +251,22 @@ ENTRYPOINT [ "codacy-coverage" ]
 # required for Renovate to update the base image:
 FROM node:21.7.0-alpine as node
 
-
-FROM alpine:3.19.1 as deploy
+FROM alpine:3.19.1 as deploy-base
 ARG TARGETARCH
-ENV NODE_ENV production
 
 # Install standard libraries and copy Node.js binary
 RUN \
   --mount=type=bind,from=node,source=/usr/local/bin/node,target=/mnt/usr/local/bin/node \
   --mount=type=bind,from=node,source=/etc,target=/mnt/etc \
-  --mount=type=cache,target=/var/cache/apk,id=${TARGETARCH}:/var/cache/apk \
-  apk add libgcc libstdc++ && \
+  apk add --no-cache libgcc libstdc++ && \
   cp -a /mnt/etc/group /etc/group && \
   cp -a /mnt/etc/passwd /etc/passwd && \
   cp -a /mnt/usr/local/bin/node /usr/local/bin/node
+
+
+FROM deploy-base as deploy
+ARG TARGETARCH
+ENV NODE_ENV production
 
 USER node:node
 WORKDIR /app
@@ -285,8 +286,6 @@ LABEL \
 
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
-
-### deploy ###
 
 RUN \
   --mount=type=bind,from=result,source=app,target=/mnt/app \
