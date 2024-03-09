@@ -55,8 +55,12 @@ RUN \
   yarn workspaces focus -A --production
 
 
-FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as test-containers
+FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as test-backend
 ENV FORCE_COLOR true
+ENV DOMAIN example.com
+ENV SUBDOMAIN subdomain
+ENV SIGNAL_URL http://127.0.0.1:8080
+ENV SIGNAL_SENDER +493012345678
 
 WORKDIR /workdir
 
@@ -74,14 +78,6 @@ RUN \
   START_DOCKER_DAEMON_AGAIN=100 && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
   docker compose -f packages/backend/test/docker-compose.yml up --quiet-pull --no-start
-
-
-FROM --platform=$BUILDPLATFORM test-containers as test-backend
-ENV FORCE_COLOR true
-ENV DOMAIN example.com
-ENV SUBDOMAIN subdomain
-ENV SIGNAL_URL http://127.0.0.1:8080
-ENV SIGNAL_SENDER +493012345678
 
 # Run backend tests
 RUN \
@@ -229,7 +225,7 @@ RUN \
   cp -r packages/frontend/dist/* /app/public
 
 
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.2_13-jre-alpine as codacy
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.2_13-jre-alpine as result
 
 # Install bash and download and extract Codacy coverage reporter
 RUN \
@@ -237,9 +233,6 @@ RUN \
   wget -qO - https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
   chmod +x /usr/local/bin/codacy-coverage && \
   codacy-coverage download
-
-
-FROM --platform=$BUILDPLATFORM codacy as result
 
 WORKDIR /coverage
 
@@ -304,12 +297,3 @@ RUN \
   fi
 
 CMD [ "node", "--enable-source-maps", "server.cjs" ]
-
-
-FROM alpine:3.19.1 as cache
-
-RUN \
-  --mount=type=bind,from=wasm,source=/,target=/mnt/wasm \
-  --mount=type=bind,from=test-containers,source=/,target=/mnt/test-containers \
-  --mount=type=bind,from=codacy,source=/,target=/mnt/codacy \
-  :

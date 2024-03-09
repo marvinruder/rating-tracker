@@ -29,7 +29,7 @@ node('rating-tracker-build') {
         parallel(
           ci: {
             stage ('Run tests and build bundles') {
-              sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker -t $IMAGE_NAME:job$JOB_ID --load .")
+              sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=result --cache-from registry.internal.mruder.dev/cache:rating-tracker-wasm -t $IMAGE_NAME:job$JOB_ID --load .")
             }
           },
           deploy_base: {
@@ -87,7 +87,7 @@ node('rating-tracker-build') {
         stage ('Cleanup') {
           if (currentBuild.getCurrentResult() == "SUCCESS") {
             // Upload cache to external storage
-            sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=cache --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker,mode=max,compression=zstd,compression-level=0 .")
+            sh("docker buildx build --builder rating-tracker $DOCKER_BUILD_FLAGS --target=wasm --cache-to type=registry,ref=registry.internal.mruder.dev/cache:rating-tracker-wasm,compression=zstd,compression-level=0 .")
           }
           // Remove build artifacts
           sh """#!/bin/bash
