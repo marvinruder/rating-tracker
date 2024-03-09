@@ -56,12 +56,8 @@ RUN \
   yarn workspaces focus -A --production
 
 
-FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as test-backend
+FROM --platform=$BUILDPLATFORM node:21.7.0-alpine as test-containers
 ENV FORCE_COLOR true
-ENV DOMAIN example.com
-ENV SUBDOMAIN subdomain
-ENV SIGNAL_URL http://127.0.0.1:8080
-ENV SIGNAL_SENDER +493012345678
 
 WORKDIR /workdir
 
@@ -73,11 +69,21 @@ RUN \
   --mount=type=bind,source=packages/backend/test/docker-compose.yml,target=packages/backend/test/docker-compose.yml \
   --mount=type=bind,source=packages/backend/test/all_migrations.sh,target=packages/backend/test/all_migrations.sh \
   --mount=type=bind,source=packages/backend/prisma/migrations,target=packages/backend/prisma/migrations \
-  apk add docker docker-compose && \
+  apk add docker docker-compose fuse-overlayfs && \
+  mkdir -p /etc/docker && \
+  echo '{"storage-driver": "fuse-overlayfs"}' > /etc/docker/daemon.json && \
   (dockerd > /dev/null 2>&1 &) && \
   START_DOCKER_DAEMON_AGAIN=100 && \
   until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
   docker compose -f packages/backend/test/docker-compose.yml up --quiet-pull --no-start
+
+
+FROM --platform=$BUILDPLATFORM test-containers as test-backend
+ENV FORCE_COLOR true
+ENV DOMAIN example.com
+ENV SUBDOMAIN subdomain
+ENV SIGNAL_URL http://127.0.0.1:8080
+ENV SIGNAL_SENDER +493012345678
 
 # Run backend tests
 RUN \
@@ -225,7 +231,7 @@ RUN \
   cp -r packages/frontend/dist/* /app/public
 
 
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.2_13-jre-alpine as result
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.2_13-jre-alpine as codacy
 
 # Install bash and download and extract Codacy coverage reporter
 RUN \
@@ -234,6 +240,9 @@ RUN \
   wget -qO - https://coverage.codacy.com/get.sh > /usr/local/bin/codacy-coverage && \
   chmod +x /usr/local/bin/codacy-coverage && \
   codacy-coverage download
+
+
+FROM --platform=$BUILDPLATFORM codacy as result
 
 WORKDIR /coverage
 
@@ -252,10 +261,8 @@ ENTRYPOINT [ "codacy-coverage" ]
 # required for Renovate to update the base image:
 FROM node:21.7.0-alpine as node
 
-
-FROM alpine:3.19.1 as deploy
+FROM alpine:3.19.1 as deploy-base
 ARG TARGETARCH
-ENV NODE_ENV production
 
 # Install standard libraries and copy Node.js binary
 RUN \
@@ -266,6 +273,11 @@ RUN \
   cp -a /mnt/etc/group /etc/group && \
   cp -a /mnt/etc/passwd /etc/passwd && \
   cp -a /mnt/usr/local/bin/node /usr/local/bin/node
+
+
+FROM deploy-base as deploy
+ARG TARGETARCH
+ENV NODE_ENV production
 
 USER node:node
 WORKDIR /app
@@ -286,8 +298,6 @@ LABEL \
 # Define health check
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
-### deploy ###
-
 RUN \
   --mount=type=bind,from=result,source=app,target=/mnt/app \
   cp -r /mnt/app / && \
@@ -298,3 +308,12 @@ RUN \
   fi
 
 CMD [ "node", "--enable-source-maps", "server.cjs" ]
+
+
+FROM alpine:3.19.1 as cache
+
+RUN \
+  --mount=type=bind,from=wasm,source=/,target=/mnt/wasm \
+  --mount=type=bind,from=test-containers,source=/,target=/mnt/test-containers \
+  --mount=type=bind,from=codacy,source=/,target=/mnt/codacy \
+  :
