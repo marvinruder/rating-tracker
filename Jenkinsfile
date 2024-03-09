@@ -21,7 +21,7 @@ node('rating-tracker-build') {
               sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
 
               // Create builder instance
-              sh("docker builder create --name rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap || :")
+              sh("docker builder create --name rating-tracker --node rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap")
             }
           }
         )
