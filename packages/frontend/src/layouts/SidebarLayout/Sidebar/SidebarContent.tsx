@@ -248,7 +248,8 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
           )}
         </List>
       </MenuWrapper>
-      <Box bottom={0} position="absolute" width="100%">
+      <Box sx={{ flexGrow: 1 }} />
+      <Box width="100%">
         <Divider sx={{ background: theme.colors.alpha.trueWhite[10] }} />
         <Tooltip
           components={{ Tooltip: Card }}

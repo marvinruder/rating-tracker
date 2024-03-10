@@ -193,6 +193,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         }
       });
       observer.observe(infiniteLoadingTriggerRef.current);
+      return () => infiniteLoadingTriggerRef.current && observer.unobserve(infiniteLoadingTriggerRef.current);
     }
   }, [infiniteLoadingTriggerRef.current]);
 
