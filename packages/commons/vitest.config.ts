@@ -11,5 +11,6 @@ customLogger.error = (msg, options) => {
 
 export default defineConfig({
   customLogger,
+  cacheDir: ".vite",
   test: { cache: { dir: ".vitest" }, coverage: { all: false, enabled: true, provider: "v8" } },
 });
