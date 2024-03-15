@@ -54,7 +54,6 @@ export default mergeConfig(
   defineVitestConfig({
     customLogger,
     test: {
-      cache: { dir: ".vite/vitest" },
       coverage: { all: false, enabled: true, provider: "v8" },
     },
   }),
