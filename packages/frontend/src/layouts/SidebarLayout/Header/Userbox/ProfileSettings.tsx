@@ -192,10 +192,12 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
             )}
             <Box width="100%" display="flex" justifyContent="center" mt={1}>
               <Tooltip title={user.avatar ? "Change your avatar" : "Upload an avatar"} arrow>
-                <Box>
+                <Box id="upload-avatar-label">
                   <IconButton
+                    aria-labelledby="upload-avatar-label"
                     color="primary"
                     component="label"
+                    role={undefined}
                     disabled={processingAvatar}
                     // Cache the WASM module including the huge `.wasm` file
                     onMouseDown={() => void import("@rating-tracker/wasm")}
@@ -206,8 +208,9 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                 </Box>
               </Tooltip>
               <Tooltip title="Delete your avatar" arrow>
-                <Box>
+                <Box id="delete-avatar-label">
                   <IconButton
+                    aria-labelledby="delete-avatar-label"
                     color="error"
                     sx={{ ml: 1, display: !user.avatar && "none" }}
                     onClick={deleteAvatar}

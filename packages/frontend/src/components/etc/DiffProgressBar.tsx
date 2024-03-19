@@ -24,6 +24,8 @@ const DiffProgressBar = (props: DiffProgressBarProps): JSX.Element => {
       <Grid container display="flex" alignItems="center" justifyContent="space-between" mb={0.5}>
         <Grid item flexGrow={1} mr={1}>
           <LinearProgress
+            aria-valuenow={props.actual}
+            aria-label={`Actual percentage of “${props.name}”`}
             variant="buffer"
             value={Math.min(props.actual, props.target) * 100}
             valueBuffer={Math.max(props.actual, props.target) * 100}

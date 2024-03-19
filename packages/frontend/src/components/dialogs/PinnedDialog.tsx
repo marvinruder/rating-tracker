@@ -18,7 +18,7 @@ const PinnedDialog = (props: DialogProps): JSX.Element => {
               ...props.sx,
               ".MuiDialog-container": { height: "auto" },
               ".MuiDialog-paperScrollPaper": { maxHeight: "calc(100dvh - 64px)" },
-              ".MuiDialogTitle-root": { background: theme.colors.alpha.black[5] },
+              ".MuiDialogTitle-root": { background: theme.palette.mode === "dark" && theme.colors.alpha.black[5] },
               ".MuiDialogContent-root": { maxHeight: "calc(100dvh - 256px)" },
             },
           })}

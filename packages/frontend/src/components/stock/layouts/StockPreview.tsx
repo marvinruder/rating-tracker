@@ -26,6 +26,7 @@ export const StockPreview = (props: StockPreviewProps): JSX.Element => {
   const theme = useTheme();
   return (
     <ListItem
+      component={props.component}
       {...(props.navLink ? { component: NavLink, to: `${stocksEndpointPath}/${props.stock.ticker}` } : {})}
       onClick={props.onClick}
       sx={{
@@ -42,7 +43,7 @@ export const StockPreview = (props: StockPreviewProps): JSX.Element => {
           src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
             theme.palette.mode === "dark"
           }`}
-          alt=" "
+          alt={`Logo of “${props.stock.name}”`}
         />
       </ListItemAvatar>
       <ListItemText
@@ -53,12 +54,12 @@ export const StockPreview = (props: StockPreviewProps): JSX.Element => {
       <Typography sx={{ ml: 1 }} fontSize={18}>
         {emojiFlag(props.stock.country)}
       </Typography>
-      <Box width={24} height={24} ml={1}>
+      <Box width={24} height={24} ml={1} mr={props.onDelete && 1}>
         <SectorIcon industry={props.stock.industry} length={24} type="Sector" />
       </Box>
       {props.onDelete && (
-        <ListItemSecondaryAction>
-          <IconButton color="error" onClick={props.onDelete}>
+        <ListItemSecondaryAction sx={{ right: 9 }}>
+          <IconButton aria-label={`Delete stock “${props.stock.name}”`} color="error" onClick={props.onDelete}>
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>
@@ -70,7 +71,7 @@ export const StockPreview = (props: StockPreviewProps): JSX.Element => {
 /**
  * The properties of the StockPreview component.
  */
-interface StockPreviewProps extends Pick<ListItemProps, "disableGutters"> {
+interface StockPreviewProps extends Pick<ListItemProps, "disableGutters" | "component"> {
   /**
    * The stock to preview.
    */

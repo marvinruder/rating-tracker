@@ -68,7 +68,11 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
         {props.portfolio ? (
           <Tooltip arrow title="Add stock">
             <Box display="inline-block" ml={1}>
-              <IconButton color="success" onClick={() => setAddStockToCollectionDialogOpen(true)}>
+              <IconButton
+                aria-label={`Add stock to portfolio “${props.portfolio.name}”`}
+                color="success"
+                onClick={() => setAddStockToCollectionDialogOpen(true)}
+              >
                 <AddShoppingCartIcon />
               </IconButton>
             </Box>
@@ -79,7 +83,11 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
         {props.portfolio ? (
           <Tooltip arrow title="Edit portfolio">
             <Box display="inline-block" ml={1}>
-              <IconButton color="primary" onClick={() => setEditDialogOpen(true)}>
+              <IconButton
+                aria-label={`Edit portfolio “${props.portfolio.name}”`}
+                color="primary"
+                onClick={() => setEditDialogOpen(true)}
+              >
                 <EditIcon />
               </IconButton>
             </Box>
@@ -90,7 +98,11 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
         {props.portfolio ? (
           <Tooltip arrow title="Delete portfolio">
             <Box display="inline-block" ml={1}>
-              <IconButton color="error" onClick={() => setDeleteDialogOpen(true)}>
+              <IconButton
+                aria-label={`Delete portfolio “${props.portfolio.name}”`}
+                color="error"
+                onClick={() => setDeleteDialogOpen(true)}
+              >
                 <DeleteIcon />
               </IconButton>
             </Box>

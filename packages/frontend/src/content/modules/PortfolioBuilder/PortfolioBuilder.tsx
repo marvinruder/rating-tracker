@@ -457,11 +457,16 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   Add all stocks from existing portfolio
                 </AccordionSummary>
                 <AccordionDetails>
-                  {portfolioSummariesFinal
-                    ? portfolioSummaries.map((portfolioSummary, index) => (
-                        <Fragment key={portfolioSummary.id}>
-                          {index ? <Divider /> : <></>}
-                          <ListItem disablePadding disableGutters>
+                  <List
+                    disablePadding
+                    sx={{
+                      " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+                      " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+                    }}
+                  >
+                    {portfolioSummariesFinal
+                      ? portfolioSummaries.map((portfolioSummary) => (
+                          <ListItem key={portfolioSummary.id} disablePadding disableGutters>
                             <ListItemButton
                               onClick={() =>
                                 api
@@ -482,14 +487,11 @@ const PortfolioBuilderModule = (): JSX.Element => {
                               />
                             </ListItemButton>
                           </ListItem>
-                        </Fragment>
-                      ))
-                    : [...Array(3)].map(
-                        // Render skeleton rows
-                        (_, key) => (
-                          <Fragment key={key}>
-                            {key ? <Divider /> : <></>}
-                            <ListItem disablePadding disableGutters>
+                        ))
+                      : [...Array(3)].map(
+                          // Render skeleton rows
+                          (_, key) => (
+                            <ListItem key={key} disablePadding disableGutters>
                               <ListItemButton>
                                 <ListItemText
                                   primary={<Skeleton width="160px" />}
@@ -497,20 +499,25 @@ const PortfolioBuilderModule = (): JSX.Element => {
                                 />
                               </ListItemButton>
                             </ListItem>
-                          </Fragment>
-                        ),
-                      )}
+                          ),
+                        )}
+                  </List>
                 </AccordionDetails>
               </Accordion>
               <Divider />
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>Add all stocks from watchlist</AccordionSummary>
                 <AccordionDetails>
-                  {watchlistSummariesFinal
-                    ? watchlistSummaries.map((watchlistSummary, index) => (
-                        <Fragment key={watchlistSummary.id}>
-                          {index ? <Divider /> : <></>}
-                          <ListItem disablePadding disableGutters>
+                  <List
+                    disablePadding
+                    sx={{
+                      " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+                      " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+                    }}
+                  >
+                    {watchlistSummariesFinal
+                      ? watchlistSummaries.map((watchlistSummary) => (
+                          <ListItem key={watchlistSummary.id} disablePadding disableGutters>
                             <ListItemButton
                               onClick={() =>
                                 api
@@ -539,14 +546,11 @@ const PortfolioBuilderModule = (): JSX.Element => {
                               />
                             </ListItemButton>
                           </ListItem>
-                        </Fragment>
-                      ))
-                    : [...Array(3)].map(
-                        // Render skeleton rows
-                        (_, key) => (
-                          <Fragment key={key}>
-                            {key ? <Divider /> : <></>}
-                            <ListItem disablePadding disableGutters>
+                        ))
+                      : [...Array(3)].map(
+                          // Render skeleton rows
+                          (_, key) => (
+                            <ListItem key={key} disablePadding disableGutters>
                               <ListItemButton>
                                 <ListItemText
                                   inset
@@ -555,9 +559,9 @@ const PortfolioBuilderModule = (): JSX.Element => {
                                 />
                               </ListItemButton>
                             </ListItem>
-                          </Fragment>
-                        ),
-                      )}
+                          ),
+                        )}
+                  </List>
                 </AccordionDetails>
               </Accordion>
               <Divider />
@@ -590,20 +594,22 @@ const PortfolioBuilderModule = (): JSX.Element => {
             </Typography>
             {stocks.length ? (
               <>
-                <List sx={{ pt: 0 }}>
-                  {stocks.map((stock, index) => (
-                    <Fragment key={stock.ticker}>
-                      {index ? <Divider /> : <></>}
-                      <StockPreview
-                        stock={stock}
-                        onDelete={() =>
-                          setStocks((prevStocks) =>
-                            prevStocks.filter((otherStock) => otherStock.ticker !== stock.ticker),
-                          )
-                        }
-                        disableGutters
-                      />
-                    </Fragment>
+                <List
+                  disablePadding
+                  sx={{
+                    pb: 1,
+                    " > li.MuiListItem-container": { borderTop: `1px solid ${theme.palette.divider}` },
+                    " > li.MuiListItem-container:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+                  }}
+                >
+                  {stocks.map((stock) => (
+                    <StockPreview
+                      key={stock.ticker}
+                      stock={stock}
+                      onDelete={() =>
+                        setStocks((prevStocks) => prevStocks.filter((otherStock) => otherStock.ticker !== stock.ticker))
+                      }
+                    />
                   ))}
                 </List>
                 <Typography variant="body2" component="span">
@@ -754,6 +760,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       </Typography>
                       <Box px={1}>
                         <Slider
+                          slotProps={{ input: { "aria-label": `Set target of region “${regionName[region]}”` } }}
                           value={regionConstraints[region]}
                           min={0}
                           max={1}
@@ -803,6 +810,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       </Typography>
                       <Box px={1}>
                         <Slider
+                          slotProps={{ input: { "aria-label": `Set target of sector “${sectorName[sector]}”` } }}
                           value={sectorConstraints[sector]}
                           min={0}
                           max={1}
@@ -835,6 +843,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       </Typography>
                       <Box px={1}>
                         <Slider
+                          slotProps={{ input: { "aria-label": `Set target of size “${size}”` } }}
                           value={sizeConstraints[size]}
                           min={0}
                           max={1}
@@ -867,6 +876,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       </Typography>
                       <Box px={1}>
                         <Slider
+                          slotProps={{ input: { "aria-label": `Set target of style “${style}”` } }}
                           value={styleConstraints[style]}
                           min={0}
                           max={1}

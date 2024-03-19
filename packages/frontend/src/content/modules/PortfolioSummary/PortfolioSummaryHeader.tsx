@@ -29,15 +29,16 @@ export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
       </Grid>
       <Grid item ml="auto">
         <Tooltip arrow title="Create a new portfolio">
-          <Box display="inline-block" ml={1}>
-            <IconButton color="primary" onClick={() => setAddPortfolioOpen(true)}>
+          <Box id="add-portfolio-label" display="inline-block" ml={1}>
+            <IconButton aria-labelledby="add-portfolio-label" color="primary" onClick={() => setAddPortfolioOpen(true)}>
               <AddIcon />
             </IconButton>
           </Box>
         </Tooltip>
         <Tooltip arrow title="Start Portfolio Builder">
-          <Box display="inline-block" ml={1}>
+          <Box id="start-portfolio-builder-label" display="inline-block" ml={1}>
             <IconButton
+              aria-labelledby="start-portfolio-builder-label"
               color="primary"
               onClick={() => navigate(portfoliosEndpointPath + portfolioBuilderEndpointSuffix)}
             >

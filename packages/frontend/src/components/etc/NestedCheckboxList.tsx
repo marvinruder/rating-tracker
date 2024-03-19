@@ -5,12 +5,13 @@ import {
   Collapse,
   IconButton,
   List,
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   useTheme,
 } from "@mui/material";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 
 /**
  * The state of a checkbox that can be either checked, unchecked or indeterminate.
@@ -273,13 +274,24 @@ export const NestedCheckboxList = <
         overflow: "auto",
         border: `1px solid ${theme.colors.alpha.black[30]}`,
         borderRadius: "10px",
+        ".MuiListItem-root": {
+          display: "block",
+        },
       }}
     >
       {props.firstLevelElements.map((firstLevelElement) => (
-        <Fragment key={firstLevelElement}>
-          <ListItemButton onClick={() => clickFirstLevelCheckbox(firstLevelElement)} disableGutters>
+        <ListItem disablePadding disableGutters key={firstLevelElement}>
+          <ListItemButton
+            id={`${firstLevelElement}-1-label`}
+            aria-label={`${getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked" ? "Select" : "Deselect"} “${
+              props.firstLevelLabels ? props.firstLevelLabels[firstLevelElement] : firstLevelElement
+            }”${props.getSecondLevelElements ? " and all items belonging to it" : ""}`}
+            onClick={() => clickFirstLevelCheckbox(firstLevelElement)}
+            disableGutters
+          >
             <ListItemIcon sx={{ minWidth: 0 }}>
               <Checkbox
+                inputProps={{ "aria-labelledby": `${firstLevelElement}-1-label` }}
                 checked={getFirstLevelCheckboxStatus(firstLevelElement) === "checked"}
                 indeterminate={getFirstLevelCheckboxStatus(firstLevelElement) === "indeterminate"}
                 sx={{ p: 0, pl: 1, pr: 1 }}
@@ -293,6 +305,9 @@ export const NestedCheckboxList = <
               // Check whether this first-level element is expanded
               (openFirstLevel.includes(firstLevelElement) ? (
                 <IconButton
+                  aria-label={`Collapse items belonging to “${
+                    props.firstLevelLabels ? props.firstLevelLabels[firstLevelElement] : firstLevelElement
+                  }”`}
                   sx={{ p: 0, mr: 2 }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -303,6 +318,9 @@ export const NestedCheckboxList = <
                 </IconButton>
               ) : (
                 <IconButton
+                  aria-label={`Expand items belonging to “${
+                    props.firstLevelLabels ? props.firstLevelLabels[firstLevelElement] : firstLevelElement
+                  }”`}
                   sx={{ p: 0, mr: 2 }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -317,10 +335,20 @@ export const NestedCheckboxList = <
             <Collapse in={openFirstLevel.includes(firstLevelElement)} timeout="auto" unmountOnExit>
               <List dense disablePadding sx={{ pl: 1 }}>
                 {props.getSecondLevelElements(firstLevelElement).map((secondLevelElement) => (
-                  <Fragment key={secondLevelElement}>
-                    <ListItemButton onClick={() => clickSecondLevelCheckbox(secondLevelElement)} disableGutters>
+                  <ListItem disablePadding disableGutters key={secondLevelElement}>
+                    <ListItemButton
+                      id={`${secondLevelElement}-2-label`}
+                      aria-label={`${
+                        getSecondLevelCheckboxStatus(secondLevelElement) === "unchecked" ? "Select" : "Deselect"
+                      } “${
+                        props.secondLevelLabels ? props.secondLevelLabels[secondLevelElement] : secondLevelElement
+                      }”${props.getThirdLevelElements ? " and all items belonging to it" : ""}`}
+                      onClick={() => clickSecondLevelCheckbox(secondLevelElement)}
+                      disableGutters
+                    >
                       <ListItemIcon sx={{ minWidth: 0 }}>
                         <Checkbox
+                          inputProps={{ "aria-labelledby": `${secondLevelElement}-2-label` }}
                           checked={getSecondLevelCheckboxStatus(secondLevelElement) === "checked"}
                           indeterminate={getSecondLevelCheckboxStatus(secondLevelElement) === "indeterminate"}
                           sx={{ p: 0, pl: 1, pr: 1 }}
@@ -336,6 +364,9 @@ export const NestedCheckboxList = <
                         // Check whether this second-level element is expanded
                         (openSecondLevel.includes(secondLevelElement) ? (
                           <IconButton
+                            aria-label={`Collapse items belonging to “${
+                              props.secondLevelLabels ? props.secondLevelLabels[secondLevelElement] : secondLevelElement
+                            }”`}
                             sx={{ p: 0, mr: 2 }}
                             onClick={(e) => {
                               e.stopPropagation();
@@ -346,6 +377,9 @@ export const NestedCheckboxList = <
                           </IconButton>
                         ) : (
                           <IconButton
+                            aria-label={`Expand items belonging to “${
+                              props.secondLevelLabels ? props.secondLevelLabels[secondLevelElement] : secondLevelElement
+                            }”`}
                             sx={{ p: 0, mr: 2 }}
                             onClick={(e) => {
                               e.stopPropagation();
@@ -360,10 +394,20 @@ export const NestedCheckboxList = <
                       <Collapse in={openSecondLevel.includes(secondLevelElement)} timeout="auto" unmountOnExit>
                         <List dense disablePadding sx={{ pl: 1 }}>
                           {props.getThirdLevelElements(secondLevelElement).map((thirdLevelElement) => (
-                            <Fragment key={thirdLevelElement}>
-                              <ListItemButton onClick={() => clickThirdLevelCheckbox(thirdLevelElement)} disableGutters>
+                            <ListItem disablePadding disableGutters key={thirdLevelElement}>
+                              <ListItemButton
+                                id={`${thirdLevelElement}-3-label`}
+                                aria-label={`${
+                                  getThirdLevelCheckboxStatus(thirdLevelElement) === "unchecked" ? "Select" : "Deselect"
+                                } “${
+                                  props.thirdLevelLabels ? props.thirdLevelLabels[thirdLevelElement] : thirdLevelElement
+                                }”${props.getFourthLevelElements ? " and all items belonging to it" : ""}`}
+                                onClick={() => clickThirdLevelCheckbox(thirdLevelElement)}
+                                disableGutters
+                              >
                                 <ListItemIcon sx={{ minWidth: 0 }}>
                                   <Checkbox
+                                    inputProps={{ "aria-labelledby": `${thirdLevelElement}-3-label` }}
                                     checked={getThirdLevelCheckboxStatus(thirdLevelElement) === "checked"}
                                     indeterminate={getThirdLevelCheckboxStatus(thirdLevelElement) === "indeterminate"}
                                     sx={{ p: 0, pl: 1, pr: 1 }}
@@ -386,6 +430,11 @@ export const NestedCheckboxList = <
                                         e.stopPropagation();
                                         setOpenThirdLevel((prev) => prev.filter((p) => p != thirdLevelElement));
                                       }}
+                                      aria-label={`Collapse items belonging to “${
+                                        props.thirdLevelLabels
+                                          ? props.thirdLevelLabels[thirdLevelElement]
+                                          : thirdLevelElement
+                                      }”`}
                                     >
                                       <ExpandLess />
                                     </IconButton>
@@ -396,6 +445,11 @@ export const NestedCheckboxList = <
                                         e.stopPropagation();
                                         setOpenThirdLevel((prev) => [...prev, thirdLevelElement]);
                                       }}
+                                      aria-label={`Expand items belonging to “${
+                                        props.thirdLevelLabels
+                                          ? props.thirdLevelLabels[thirdLevelElement]
+                                          : thirdLevelElement
+                                      }”`}
                                     >
                                       <ExpandMore />
                                     </IconButton>
@@ -405,41 +459,53 @@ export const NestedCheckboxList = <
                                 <Collapse in={openThirdLevel.includes(thirdLevelElement)} timeout="auto" unmountOnExit>
                                   <List dense disablePadding sx={{ pl: 1 }}>
                                     {props.getFourthLevelElements(thirdLevelElement).map((fourthLevelElement) => (
-                                      <ListItemButton
-                                        key={fourthLevelElement}
-                                        onClick={() => clickFourthLevelCheckbox(fourthLevelElement)}
-                                        disableGutters
-                                      >
-                                        <ListItemIcon sx={{ minWidth: 0 }}>
-                                          <Checkbox
-                                            checked={getFourthLevelCheckboxStatus(fourthLevelElement) === "checked"}
-                                            sx={{ p: 0, pl: 1, pr: 1 }}
-                                            disableRipple
-                                          />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                          primary={
+                                      <ListItem disablePadding disableGutters key={fourthLevelElement}>
+                                        <ListItemButton
+                                          id={`${fourthLevelElement}-4-label`}
+                                          aria-label={`${
+                                            getFourthLevelCheckboxStatus(fourthLevelElement) === "unchecked"
+                                              ? "Select"
+                                              : "Deselect"
+                                          } “${
                                             props.fourthLevelLabels
                                               ? props.fourthLevelLabels[fourthLevelElement]
                                               : fourthLevelElement
-                                          }
-                                        />
-                                      </ListItemButton>
+                                          }”`}
+                                          onClick={() => clickFourthLevelCheckbox(fourthLevelElement)}
+                                          disableGutters
+                                        >
+                                          <ListItemIcon sx={{ minWidth: 0 }}>
+                                            <Checkbox
+                                              inputProps={{ "aria-labelledby": `${fourthLevelElement}-4-label` }}
+                                              checked={getFourthLevelCheckboxStatus(fourthLevelElement) === "checked"}
+                                              sx={{ p: 0, pl: 1, pr: 1 }}
+                                              disableRipple
+                                            />
+                                          </ListItemIcon>
+                                          <ListItemText
+                                            primary={
+                                              props.fourthLevelLabels
+                                                ? props.fourthLevelLabels[fourthLevelElement]
+                                                : fourthLevelElement
+                                            }
+                                          />
+                                        </ListItemButton>
+                                      </ListItem>
                                     ))}
                                   </List>
                                 </Collapse>
                               )}
-                            </Fragment>
+                            </ListItem>
                           ))}
                         </List>
                       </Collapse>
                     )}
-                  </Fragment>
+                  </ListItem>
                 ))}
               </List>
             </Collapse>
           )}
-        </Fragment>
+        </ListItem>
       ))}
     </List>
   );

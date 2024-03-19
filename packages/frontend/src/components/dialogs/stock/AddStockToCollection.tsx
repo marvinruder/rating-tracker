@@ -1,13 +1,5 @@
-import {
-  Button,
-  DialogActions,
-  DialogTitle,
-  Divider,
-  Grid,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, DialogActions, Divider, Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 import {
   portfoliosEndpointPath,
   watchlistsEndpointPath,
@@ -75,41 +67,43 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
 
   return (
     <>
-      <DialogTitle style={{ paddingBottom: 0 }}>
-        <Typography variant="h3">
-          Add Stock to {collectionLabel} “{props.collection.name}”
-        </Typography>
-        {"currency" in props.collection && ( // Required for type narrowing
-          <Grid container spacing={1} my={1} maxWidth={600} alignItems="center">
-            <Grid item xs={12}>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
-                      {props.collection.currency}
-                    </InputAdornment>
-                  ),
-                }}
-                inputProps={{
-                  inputMode: "decimal",
-                  pattern: "\\d+(\\.\\d+)?",
-                  step: Math.pow(10, -1 * currencyMinorUnits[props.collection.currency]),
-                }}
-                onChange={(event) => {
-                  setAmountInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
-                  setAmountError(false);
-                }}
-                error={amountError}
-                label="Amount"
-                value={amountInput}
-                autoFocus
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        )}
-      </DialogTitle>
       <SelectStock
+        titleElement={
+          <Box pb={1}>
+            <Typography variant="h3">
+              Add Stock to {collectionLabel} “{props.collection.name}”
+            </Typography>
+            {"currency" in props.collection && ( // Required for type narrowing
+              <Grid container spacing={1} my={1} maxWidth={600} alignItems="center">
+                <Grid item xs={12}>
+                  <TextField
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
+                          {props.collection.currency}
+                        </InputAdornment>
+                      ),
+                    }}
+                    inputProps={{
+                      inputMode: "decimal",
+                      pattern: "\\d+(\\.\\d+)?",
+                      step: Math.pow(10, -1 * currencyMinorUnits[props.collection.currency]),
+                    }}
+                    onChange={(event) => {
+                      setAmountInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
+                      setAmountError(false);
+                    }}
+                    error={amountError}
+                    label="Amount"
+                    value={amountInput}
+                    autoFocus
+                    fullWidth
+                  />
+                </Grid>
+              </Grid>
+            )}
+          </Box>
+        }
         title={`Select the stock you want to add to the ${collectionLabel.toLowerCase()}:`}
         onClose={props.onClose}
         onSelect={(stock) => addStockToCollection(stock.ticker)}

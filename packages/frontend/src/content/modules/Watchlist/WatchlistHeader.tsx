@@ -56,8 +56,9 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
               arrow
               title={props.watchlist.subscribed ? "Unsubscribe from stock updates" : "Subscribe to stock updates"}
             >
-              <Box display="inline-block" ml={1}>
+              <Box id="subscribe-to-watchlist-label" display="inline-block" ml={1}>
                 <IconButton
+                  aria-labelledby="subscribe-to-watchlist-label"
                   color={props.watchlist.subscribed ? "primary" : undefined}
                   onClick={() => {
                     api
@@ -84,8 +85,12 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
           )}
           {props.watchlist ? (
             <Tooltip arrow title="Add stock">
-              <Box display="inline-block" ml={1}>
-                <IconButton color="success" onClick={() => setAddStockToCollectionDialogOpen(true)}>
+              <Box id="add-stock-to-watchlist-label" display="inline-block" ml={1}>
+                <IconButton
+                  aria-labelledby="add-stock-to-watchlist-label"
+                  color="success"
+                  onClick={() => setAddStockToCollectionDialogOpen(true)}
+                >
                   <BookmarkAddIcon />
                 </IconButton>
               </Box>
@@ -95,8 +100,13 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
           )}
           {props.watchlist ? (
             <Tooltip arrow title={isFavorites ? "You cannot rename the Favorites watchlist" : "Rename watchlist"}>
-              <Box display="inline-block" ml={1}>
-                <IconButton color="primary" onClick={() => setRenameDialogOpen(true)} disabled={isFavorites}>
+              <Box id="rename-watchlist-label" display="inline-block" ml={1}>
+                <IconButton
+                  aria-labelledby="rename-watchlist-label"
+                  color="primary"
+                  onClick={() => setRenameDialogOpen(true)}
+                  disabled={isFavorites}
+                >
                   <EditIcon />
                 </IconButton>
               </Box>
@@ -106,8 +116,13 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
           )}
           {props.watchlist ? (
             <Tooltip arrow title={isFavorites ? "You cannot delete the Favorites watchlist" : "Delete watchlist"}>
-              <Box display="inline-block" ml={1}>
-                <IconButton color="error" onClick={() => setDeleteDialogOpen(true)} disabled={isFavorites}>
+              <Box id="delete-watchlist-label" display="inline-block" ml={1}>
+                <IconButton
+                  aria-labelledby="delete-watchlist-label"
+                  color="error"
+                  onClick={() => setDeleteDialogOpen(true)}
+                  disabled={isFavorites}
+                >
                   <DeleteIcon />
                 </IconButton>
               </Box>

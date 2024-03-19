@@ -167,6 +167,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
   const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
 
   const contextMenuPositionRef = useRef<HTMLElement>(null);
+  const updateAmountButtonRef = useRef<HTMLButtonElement>(null);
   const infiniteLoadingTriggerRef = useRef<HTMLTableRowElement>(null);
 
   /**
@@ -397,7 +398,8 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 endAdornment: "id" in props.portfolio && (
                   <InputAdornment position="end" sx={{ ml: 0.5 }}>
                     <IconButton
-                      id={`update-stock-${props.stock.ticker}-in-portfolio`}
+                      aria-label={`Update amount of “${props.stock.name}” in portfolio`}
+                      ref={updateAmountButtonRef}
                       size="small"
                       onClick={updateStockInPortfolio}
                       onMouseOver={validate}
@@ -421,7 +423,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               }}
               onBlur={(event) =>
                 "amount" in props.stock &&
-                event.relatedTarget?.id !== `update-stock-${props.stock.ticker}-in-portfolio` &&
+                event.relatedTarget !== updateAmountButtonRef.current &&
                 setAmountInput(props.stock.amount.toFixed(currencyMinorUnits[props.portfolio.currency]))
               }
               error={amountError}
@@ -457,7 +459,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
                 theme.palette.mode === "dark"
               }`}
-              alt=" "
+              alt={`Logo of “${props.stock.name}”`}
             />
           </Badge>
           <Box width={8} />
@@ -782,6 +784,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       <TableCell sx={{ display: displayColumn("52 Week Range") }}>
         {props.stock.lastClose !== null && props.stock.low52w !== null && props.stock.high52w !== null && (
           <Range52WSlider
+            aria-label={`52 Week Range of “${props.stock.name}”`}
             size="small"
             sx={{
               mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
@@ -853,10 +856,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
                   theme.palette.mode === "dark"
                 }`}
-                alt=" "
+                alt={`Logo of “${props.stock.name}”`}
               />
               <Box sx={{ my: 1 }}>
-                <Typography variant="h4" component="h4" gutterBottom>
+                <Typography variant="h4" gutterBottom>
                   {props.stock.name}
                 </Typography>
                 <Typography variant="subtitle2">
@@ -865,7 +868,11 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               </Box>
             </Grid>
             <Grid item>
-              <IconButton onClick={() => setDetailsDialogOpen(false)} sx={{ borderRadius: 20 }}>
+              <IconButton
+                aria-label={`Close details dialog of “${props.stock.name}”`}
+                onClick={() => setDetailsDialogOpen(false)}
+                sx={{ borderRadius: 20 }}
+              >
                 <CloseIcon />
               </IconButton>
             </Grid>

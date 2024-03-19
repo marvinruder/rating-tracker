@@ -62,7 +62,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                 src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
                   theme.palette.mode === "dark"
                 }`}
-                alt=" "
+                alt={`Logo of “${props.stock.name}”`}
               />
               <Box>
                 <Typography variant="h3" component="h3" gutterBottom>
