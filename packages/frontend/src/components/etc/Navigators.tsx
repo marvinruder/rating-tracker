@@ -1,5 +1,5 @@
 import { Box, Link } from "@mui/material";
-import type { Stock } from "@rating-tracker/commons";
+import { dataProviderName, type Stock } from "@rating-tracker/commons";
 
 /**
  * A component that wraps its children in a link to a given URL with certain properties. If no URL is provided, the
@@ -10,7 +10,7 @@ import type { Stock } from "@rating-tracker/commons";
 const LinkToDataProvider = (props: React.PropsWithChildren<LinkToDataProviderProps>): JSX.Element => {
   return props.href ? (
     <Link
-      onClick={() => props.copyNameToClipboard && void navigator.clipboard.writeText(props.copyNameToClipboard)}
+      aria-label={`Open “${props.stock.name}” on ${props.dataProvider} in a new tab.`}
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
       href={props.href}
       target="_blank" // Open in new tab
@@ -36,6 +36,8 @@ export const MorningstarNavigator = (props: React.PropsWithChildren<NavigatorPro
           `&LanguageId=en-US&SecurityToken=${props.stock.morningstarID}]3]0]E0WWE$$ALL`
         : ""
     }
+    dataProvider={dataProviderName["morningstar"]}
+    stock={props.stock}
   >
     {props.children}
   </LinkToDataProvider>
@@ -52,6 +54,8 @@ export const MarketScreenerNavigator = (props: React.PropsWithChildren<Navigator
     href={
       props.stock?.marketScreenerID ? `https://www.marketscreener.com/quote/stock/${props.stock.marketScreenerID}/` : ""
     }
+    dataProvider={dataProviderName["marketScreener"]}
+    stock={props.stock}
   >
     {props.children}
   </LinkToDataProvider>
@@ -71,6 +75,8 @@ export const MSCINavigator = (props: React.PropsWithChildren<NavigatorProps>): J
           props.stock.msciID
         : ""
     }
+    dataProvider={dataProviderName["msci"]}
+    stock={props.stock}
   >
     {props.children}
   </LinkToDataProvider>
@@ -92,7 +98,8 @@ export const LSEGNavigator = (props: React.PropsWithChildren<NavigatorProps>): J
           encodeURIComponent(props.stock?.name)
         : ""
     }
-    // copyNameToClipboard={props.stock?.name}
+    dataProvider={dataProviderName["lseg"]}
+    stock={props.stock}
   >
     {props.children}
   </LinkToDataProvider>
@@ -107,6 +114,8 @@ export const LSEGNavigator = (props: React.PropsWithChildren<NavigatorProps>): J
 export const SPNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
   <LinkToDataProvider
     href={props.stock?.spID ? `https://www.spglobal.com/esg/scores/results?cid=${String(props.stock.spID)}` : ""}
+    dataProvider={dataProviderName["sp"]}
+    stock={props.stock}
   >
     {props.children}
   </LinkToDataProvider>
@@ -123,6 +132,8 @@ export const SustainalyticsNavigator = (props: React.PropsWithChildren<Navigator
     href={
       props.stock?.sustainalyticsID ? `https://www.sustainalytics.com/esg-rating/${props.stock.sustainalyticsID}` : ""
     }
+    dataProvider={dataProviderName["sustainalytics"]}
+    stock={props.stock}
   >
     {props.children}
   </LinkToDataProvider>
@@ -147,7 +158,11 @@ interface LinkToDataProviderProps {
    */
   href: string;
   /**
-   * A stock name to copy to the clipboard.
+   * The stock containing the name to use in ARIA labels.
    */
-  copyNameToClipboard?: string;
+  stock: Stock;
+  /**
+   * The name of the data provider to use in ARIA labels.
+   */
+  dataProvider: string;
 }

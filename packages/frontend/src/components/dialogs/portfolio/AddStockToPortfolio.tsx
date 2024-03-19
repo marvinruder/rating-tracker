@@ -10,12 +10,12 @@ import {
   ListItemText,
   ListItemButton,
   ListItemIcon,
-  Divider,
   Skeleton,
   Dialog,
   Grid,
   TextField,
   InputAdornment,
+  useTheme,
 } from "@mui/material";
 import type { Stock, PortfolioSummary, Currency } from "@rating-tracker/commons";
 import { stocksEndpointPath, portfoliosEndpointPath, currencyMinorUnits } from "@rating-tracker/commons";
@@ -40,6 +40,8 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
   const [addPortfolioOpen, setAddPortfolioOpen] = useState<boolean>(false);
   const [hoverCurrency, setHoverCurrency] = useState<Currency | "…">("…");
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+
+  const theme = useTheme();
 
   useEffect(() => getPortfolios(), []);
 
@@ -125,10 +127,10 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
           {portfolioSummariesFinal
             ? portfolioSummaries.map((portfolioSummary) => (
                 <Fragment key={portfolioSummary.id}>
-                  <Divider />
                   <ListItem
                     onMouseEnter={() => setHoverCurrency(portfolioSummary.currency)}
                     onTouchStart={() => setHoverCurrency(portfolioSummary.currency)}
+                    sx={{ borderTop: `1px solid ${theme.palette.divider}` }}
                     disablePadding
                     disableGutters
                   >
@@ -158,8 +160,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                   key, // Render skeleton rows
                 ) => (
                   <Fragment key={key}>
-                    <Divider />
-                    <ListItem disablePadding disableGutters>
+                    <ListItem disablePadding disableGutters sx={{ borderTop: `1px solid ${theme.palette.divider}` }}>
                       <ListItemButton>
                         <ListItemText
                           inset
@@ -171,8 +172,11 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                   </Fragment>
                 ),
               )}
-          <Divider />
-          <ListItem disablePadding disableGutters>
+          <ListItem
+            disablePadding
+            disableGutters
+            sx={{ borderTop: `1px solid ${theme.palette.divider}`, borderBottom: `1px solid ${theme.palette.divider}` }}
+          >
             <ListItemButton onClick={() => setAddPortfolioOpen(true)}>
               <ListItemIcon>
                 <AddIcon color="primary" />
@@ -180,7 +184,6 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
               <ListItemText primary="Create a new portfolio…" primaryTypographyProps={{ fontWeight: "bold" }} />
             </ListItemButton>
           </ListItem>
-          <Divider />
         </List>
         <Dialog maxWidth="lg" open={addPortfolioOpen} onClose={() => setAddPortfolioOpen(false)}>
           <AddPortfolio onClose={() => setAddPortfolioOpen(false)} onAdd={getPortfolios} />

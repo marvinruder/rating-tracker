@@ -25,8 +25,8 @@ export const WatchlistSummaryHeader: FC<WatchlistSummaryHeaderProps> = (
       </Grid>
       <Grid item ml="auto">
         <Tooltip arrow title="Create a new watchlist">
-          <Box display="inline-block" ml={1}>
-            <IconButton color="primary" onClick={() => setAddWatchlistOpen(true)}>
+          <Box id="add-watchlist-label" display="inline-block" ml={1}>
+            <IconButton aria-labelledby="add-watchlist-label" color="primary" onClick={() => setAddWatchlistOpen(true)}>
               <AddIcon />
             </IconButton>
           </Box>

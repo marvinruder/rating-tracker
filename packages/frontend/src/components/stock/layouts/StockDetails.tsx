@@ -303,6 +303,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock?.lastClose !== null && props.stock?.low52w !== null && props.stock?.high52w !== null && (
                   <Range52WSlider
+                    aria-label={`52 Week Range of “${props.stock.name}”`}
                     size="small"
                     sx={{
                       mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,

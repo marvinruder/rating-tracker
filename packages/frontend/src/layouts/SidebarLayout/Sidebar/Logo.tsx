@@ -28,7 +28,7 @@ export const Logo = (): JSX.Element => {
       <Box sx={{ height: 52, transform: "scale(0.83)", fontSize: 52, color: theme.colors.alpha.trueWhite[30] }}>
         <Badge
           badgeContent={packageInfo.version}
-          color="success"
+          color="primary"
           anchorOrigin={{ vertical: "top", horizontal: "left" }}
         >
           <QueryStatsIcon fontSize="inherit" />

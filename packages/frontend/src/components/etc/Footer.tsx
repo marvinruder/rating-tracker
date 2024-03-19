@@ -21,7 +21,7 @@ export const Footer = (props: FooterProps) => (
         <Typography sx={{ ml: { md: "auto" }, mr: { md: 0.5 }, pt: { xs: 2, md: 0 } }} variant="subtitle1">
           Something&nbsp;missing&nbsp;or&nbsp;not&nbsp;working&nbsp;correctly? Report&nbsp;it&nbsp;on&nbsp;GitHub:
         </Typography>
-        <IconButton href="https://github.com/marvinruder/rating-tracker">
+        <IconButton aria-label="Open Rating Tracker on GitHub" href="https://github.com/marvinruder/rating-tracker">
           <GitHubIcon />
         </IconButton>
         <Typography sx={{ pt: { xs: 2, md: 0 }, order: -1 }} variant="subtitle1">

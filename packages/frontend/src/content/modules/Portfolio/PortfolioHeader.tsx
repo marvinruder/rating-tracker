@@ -53,8 +53,12 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
         <Grid item ml="auto" height={40} display="inline-flex">
           {props.portfolio ? (
             <Tooltip arrow title="Add stock">
-              <Box display="inline-block" ml={1}>
-                <IconButton color="success" onClick={() => setAddStockToCollectionDialogOpen(true)}>
+              <Box id="add-stock-to-portfolio-label" display="inline-block" ml={1}>
+                <IconButton
+                  aria-labelledby="add-stock-to-portfolio-label"
+                  color="success"
+                  onClick={() => setAddStockToCollectionDialogOpen(true)}
+                >
                   <AddShoppingCartIcon />
                 </IconButton>
               </Box>
@@ -64,8 +68,12 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
           )}
           {props.portfolio ? (
             <Tooltip arrow title="Edit portfolio">
-              <Box display="inline-block" ml={1}>
-                <IconButton color="primary" onClick={() => setEditDialogOpen(true)}>
+              <Box id="edit-portfolio-label" display="inline-block" ml={1}>
+                <IconButton
+                  aria-labelledby="edit-portfolio-label"
+                  color="primary"
+                  onClick={() => setEditDialogOpen(true)}
+                >
                   <EditIcon />
                 </IconButton>
               </Box>
@@ -75,8 +83,12 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
           )}
           {props.portfolio ? (
             <Tooltip arrow title="Delete portfolio">
-              <Box display="inline-block" ml={1}>
-                <IconButton color="error" onClick={() => setDeleteDialogOpen(true)}>
+              <Box id="delete-portfolio-label" display="inline-block" ml={1}>
+                <IconButton
+                  aria-labelledby="delete-portfolio-label"
+                  color="error"
+                  onClick={() => setDeleteDialogOpen(true)}
+                >
                   <DeleteIcon />
                 </IconButton>
               </Box>

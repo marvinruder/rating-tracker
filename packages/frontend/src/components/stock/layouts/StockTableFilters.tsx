@@ -175,22 +175,23 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
   return (
     <>
       <Tooltip arrow title="Filter stocks">
-        <Box display="inline-block" ml={1}>
-          <IconButton color="primary" onClick={() => setFilterOpen(true)}>
+        <Box id="filter-stocks-label" display="inline-block" ml={1}>
+          <IconButton aria-labelledby="filter-stocks-label" color="primary" onClick={() => setFilterOpen(true)}>
             <TuneIcon />
           </IconButton>
         </Box>
       </Tooltip>
       <Tooltip arrow title="Filter columns">
-        <Box display="inline-block" ml={1}>
-          <IconButton color="primary" onClick={() => setColumnFilterOpen(true)}>
+        <Box id="filter-columns-label" display="inline-block" ml={1}>
+          <IconButton aria-labelledby="filter-columns-label" color="primary" onClick={() => setColumnFilterOpen(true)}>
             <FilterListIcon />
           </IconButton>
         </Box>
       </Tooltip>
       <Tooltip arrow title="Clear all filters">
-        <Box display="inline-block" ml={props.filtersInUse ? 1 : 0}>
+        <Box id="clear-filters-label" display="inline-block" ml={props.filtersInUse ? 1 : 0}>
           <IconButton
+            aria-labelledby="clear-filters-label"
             sx={{ display: !props.filtersInUse && "none" }}
             color="error"
             onClick={() => {
@@ -236,8 +237,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
               </Typography>
               <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
                 {/* Total Score */}
-                <Typography variant="h5">Total Score</Typography>
+                <Typography id="total-score-label" variant="h5">
+                  Total Score
+                </Typography>
                 <Slider
+                  aria-labelledby="total-score-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={totalScoreInput}
                   min={0}
@@ -246,8 +250,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelDisplay="auto"
                 />
                 {/* Financial Score */}
-                <Typography variant="h5">Financial Score</Typography>
+                <Typography id="financial-score-label" variant="h5">
+                  Financial Score
+                </Typography>
                 <Slider
+                  aria-labelledby="financial-score-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={financialScoreInput}
                   min={0}
@@ -256,8 +263,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelDisplay="auto"
                 />
                 {/* ESG Score */}
-                <Typography variant="h5">ESG Score</Typography>
+                <Typography id="esg-score-label" variant="h5">
+                  ESG Score
+                </Typography>
                 <Slider
+                  aria-labelledby="esg-score-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={esgScoreInput}
                   min={0}
@@ -272,8 +282,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
               </Typography>
               <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
                 {/* Dividend Yield */}
-                <Typography variant="h5">Dividend Yield</Typography>
+                <Typography id="dividend-yield-label" variant="h5">
+                  Dividend Yield
+                </Typography>
                 <Slider
+                  aria-labelledby="dividend-yield-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={dividendYieldPercentInput}
                   min={0}
@@ -284,8 +297,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelFormat={(value) => formatPercentage(value, { total: 100, precision: 2 })}
                 />
                 {/* Price / Earning Ratio */}
-                <Typography variant="h5">Price / Earning Ratio</Typography>
+                <Typography id="p-e-ratio-label" variant="h5">
+                  Price / Earning Ratio
+                </Typography>
                 <Slider
+                  aria-labelledby="p-e-ratio-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={priceEarningRatioInput}
                   min={0}
@@ -302,8 +318,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
               </Typography>
               <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
                 {/* Star Rating */}
-                <Typography variant="h5">Star Rating</Typography>
+                <Typography id="star-rating-label" variant="h5">
+                  Star Rating
+                </Typography>
                 <Slider
+                  aria-labelledby="star-rating-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={starRatingInput}
                   min={0}
@@ -319,8 +338,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   )}
                 />
                 {/* Morningstar Fair Value Difference */}
-                <Typography variant="h5">Morningstar Fair Value Difference</Typography>
+                <Typography id="morningstar-fair-value-difference-label" variant="h5">
+                  Morningstar Fair Value Difference
+                </Typography>
                 <Slider
+                  aria-labelledby="morningstar-fair-value-difference-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={morningstarFairValueDiffInput}
                   min={-50}
@@ -332,8 +354,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   }
                 />
                 {/* Analyst Consensus */}
-                <Typography variant="h5">Analyst Consensus</Typography>
+                <Typography id="analyst-consensus-label" variant="h5">
+                  Analyst Consensus
+                </Typography>
                 <Slider
+                  aria-labelledby="analyst-consensus-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={analystConsensusInput}
                   min={0}
@@ -343,8 +368,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelDisplay="auto"
                 />
                 {/* Analyst Count */}
-                <Typography variant="h5">Analyst Count</Typography>
+                <Typography id="analyst-count-label" variant="h5">
+                  Analyst Count
+                </Typography>
                 <Slider
+                  aria-labelledby="analyst-count-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={analystCountInput}
                   min={0}
@@ -353,8 +381,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelDisplay="auto"
                 />
                 {/* Analyst Target Difference */}
-                <Typography variant="h5">Analyst Target Difference</Typography>
+                <Typography id="analyst-target-difference-label" variant="h5">
+                  Analyst Target Difference
+                </Typography>
                 <Slider
+                  aria-labelledby="analyst-target-difference-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={analystTargetDiffInput}
                   min={-50}
@@ -374,8 +405,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
               </Typography>
               <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
                 {/* MSCI ESG Rating */}
-                <Typography variant="h5">MSCI ESG Rating</Typography>
+                <Typography id="msci-esg-rating-label" variant="h5">
+                  MSCI ESG Rating
+                </Typography>
                 <Slider
+                  aria-labelledby="msci-esg-rating-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={msciESGRatingInput.map((value) =>
                     value === "None" ? 7 : msciESGRatingArray.findIndex((element) => element === value),
@@ -391,8 +425,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelFormat={(value) => (value === 7 ? "None" : msciESGRatingArray[value])}
                 />
                 {/* MSCI Implied Temperature Rise */}
-                <Typography variant="h5">MSCI Implied Temperature Rise</Typography>
+                <Typography id="msci-implied-temperature-rise-label" variant="h5">
+                  MSCI Implied Temperature Rise
+                </Typography>
                 <Slider
+                  aria-labelledby="msci-implied-temperature-rise-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={msciTemperatureInput}
                   min={1}
@@ -403,8 +440,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelFormat={(value) => `${value}\u2009℃`}
                 />
                 {/* LSEG ESG Score */}
-                <Typography variant="h5">LSEG ESG Score</Typography>
+                <Typography id="lseg-esg-score-label" variant="h5">
+                  LSEG ESG Score
+                </Typography>
                 <Slider
+                  aria-labelledby="lseg-esg-score-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={lsegESGScoreInput}
                   min={0}
@@ -413,8 +453,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelDisplay="auto"
                 />
                 {/* LSEG Emissions Rating */}
-                <Typography variant="h5">LSEG Emissions</Typography>
+                <Typography id="lseg-emissions-label" variant="h5">
+                  LSEG Emissions
+                </Typography>
                 <Slider
+                  aria-labelledby="lseg-emissions-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={lsegEmissionsInput}
                   min={0}
@@ -423,8 +466,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelDisplay="auto"
                 />
                 {/* S&P ESG Score */}
-                <Typography variant="h5">S&P ESG Score</Typography>
+                <Typography id="sp-esg-score-label" variant="h5">
+                  S&P ESG Score
+                </Typography>
                 <Slider
+                  aria-labelledby="sp-esg-score-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={spESGScoreInput}
                   min={0}
@@ -433,8 +479,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   valueLabelDisplay="auto"
                 />
                 {/* Sustainalytics ESG Risk */}
-                <Typography variant="h5">Sustainalytics ESG Risk</Typography>
+                <Typography id="sustainalytics-esg-risk-label" variant="h5">
+                  Sustainalytics ESG Risk
+                </Typography>
                 <Slider
+                  aria-labelledby="sustainalytics-esg-risk-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
                   value={sustainalyticsESGRiskInput}
                   min={0}
@@ -602,7 +651,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
         <Divider />
         <DialogContent sx={{ px: 0, py: 1 }}>
           <List disablePadding>
-            {stockListColumnArray.map((column) => (
+            {stockListColumnArray.map((column, index) => (
               <ListItem key={column} dense>
                 <ListItemButton
                   role={undefined}
@@ -615,9 +664,14 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   dense
                 >
                   <ListItemIcon sx={{ minWidth: 32 }}>
-                    <Checkbox checked={props.columnFilter.includes(column)} sx={{ p: 0 }} disableRipple />
+                    <Checkbox
+                      inputProps={{ "aria-labelledby": `stock-list-column-${index}-label` }}
+                      checked={props.columnFilter.includes(column)}
+                      sx={{ p: 0 }}
+                      disableRipple
+                    />
                   </ListItemIcon>
-                  <ListItemText primary={column} />
+                  <ListItemText primary={column} primaryTypographyProps={{ id: `stock-list-column-${index}-label` }} />
                 </ListItemButton>
               </ListItem>
             ))}

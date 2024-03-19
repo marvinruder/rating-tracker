@@ -1,6 +1,4 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
-import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Avatar,
   Box,
@@ -28,11 +26,20 @@ import {
   ADMINISTRATIVE_ACCESS,
   usersEndpointPath,
 } from "@rating-tracker/commons";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 
 import { DeleteUser } from "../../../components/dialogs/user/DeleteUser";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
+
+const accessRightArray = [GENERAL_ACCESS, WRITE_STOCKS_ACCESS, ADMINISTRATIVE_ACCESS] as const;
+type AccessRight = (typeof accessRightArray)[number];
+
+const accessRightLabel: Record<AccessRight, string> = {
+  [GENERAL_ACCESS]: "General Access",
+  [WRITE_STOCKS_ACCESS]: "Write Stocks",
+  [ADMINISTRATIVE_ACCESS]: "Administrative Access",
+};
 
 /**
  * This component displays information about a user in a table row that is used in the user list.
@@ -44,92 +51,67 @@ const UserRow = (props: UserRowProps): JSX.Element => {
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
-  const accessRightMap = new Map<number, string>();
-  accessRightMap.set(GENERAL_ACCESS, "General Access");
-  accessRightMap.set(WRITE_STOCKS_ACCESS, "Write Stocks");
-  accessRightMap.set(ADMINISTRATIVE_ACCESS, "Administrative Access");
-
   /**
-   * Provides labels for the access rights of the user.
-   * @returns a list of strings containing access right labels.
-   */
-  const getAccessRightLabels = (): string[] => {
-    const labels: string[] = [];
-    for (const accessRightLabel of accessRightMap) {
-      if (props.user.hasAccessRight(accessRightLabel[0])) {
-        labels.push(accessRightLabel[1]);
-      }
-    }
-    return labels;
-  };
-
-  /**
-   * A list of checkboxes for the access rights.
+   * A dropdown menu for the access rights.
    * @returns The component.
    */
-  const AccessRightCheckboxList = (): JSX.Element => {
-    const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
+  const AccessRightSelect = (): JSX.Element => {
     const [accessRights, setAccessRights] = useState<number>(props.user.accessRights);
 
     const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
-    /**
-     * Updates the user’s access rights in the backend.
-     */
-    const patchAccessRights = () => {
-      setRequestInProgress(true);
-      api
-        .patch(usersEndpointPath + `/${props.user.email}`, {
-          // Only send the parameters that have changed.
-          params: { accessRights: accessRights !== props.user.accessRights ? accessRights : undefined },
-        })
-        .then(
-          () => (
-            props.refetchUsers(),
-            setNotification({
-              severity: "success",
-              title: "User access rights updated",
-              message:
-                `Access rights for the user ${props.user.name} ` +
-                `(${props.user.email}) have been updated successfully`,
-            })
-          ),
-        ) // Update the user in the table, show a notification, and close the dialog on success.
-        .catch((e) => setErrorNotificationOrClearSession(e, "updating user"))
-        .finally(() => setRequestInProgress(false));
-    };
-
-    const accessRightLabels: { accessRight: number; accessRightLabel: string }[] = [];
-    for (const accessRight of accessRightMap) {
-      accessRightLabels.push({ accessRight: accessRight[0], accessRightLabel: accessRight[1] });
-    }
-
     return (
-      <>
-        {accessRightLabels.map((accessRight) => (
+      <Select
+        slotProps={{ input: { "aria-label": `Access rights of user “${props.user.name}”` } }}
+        size="small"
+        multiple
+        value={[props.user.accessRights]}
+        onClose={() =>
+          accessRights !== props.user.accessRights && // Only send the request if the access rights have changed
+          api
+            .patch(usersEndpointPath + `/${props.user.email}`, {
+              params: { accessRights: accessRights },
+            })
+            .then(
+              () => (
+                props.refetchUsers(),
+                setNotification({
+                  severity: "success",
+                  title: "User access rights updated",
+                  message:
+                    `Access rights for the user ${props.user.name} ` +
+                    `(${props.user.email}) have been updated successfully`,
+                })
+              ),
+            ) // Update the user in the table, show a notification, and close the dialog on success.
+            .catch((e) => setErrorNotificationOrClearSession(e, "updating user"))
+        }
+        renderValue={() => (
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+            {accessRightArray
+              .filter((accessRight) => props.user.hasAccessRight(accessRight))
+              .map((accessRight) => (
+                <Chip key={accessRight} label={accessRightLabel[accessRight]} size="small" />
+              ))}
+          </Box>
+        )}
+      >
+        {accessRightArray.map((accessRight) => (
           <MenuItem
-            key={accessRight.accessRight}
-            value={accessRight.accessRightLabel}
+            key={accessRight}
+            value={accessRightLabel[accessRight]}
             sx={{ p: 0 }}
-            onClick={() => setAccessRights(accessRights ^ accessRight.accessRight)}
+            onClick={() => setAccessRights(accessRights ^ accessRight)}
           >
-            <Checkbox checked={(accessRights & accessRight.accessRight) === accessRight.accessRight} disableRipple />
-            <ListItemText primary={accessRight.accessRightLabel} />
+            <Checkbox
+              inputProps={{ "aria-labelledby": `access-right-${accessRight}-label` }}
+              checked={(accessRights & accessRight) === accessRight}
+              disableRipple
+            />
+            <ListItemText id={`access-right-${accessRight}-label`} primary={accessRightLabel[accessRight]} />
           </MenuItem>
         ))}
-        <Box width="100%" display="flex" justifyContent="flex-end" mt={1}>
-          <LoadingButton
-            size="small"
-            loading={requestInProgress}
-            onClick={patchAccessRights}
-            disabled={requestInProgress || accessRights === props.user.accessRights}
-            variant="contained"
-            startIcon={<PublishedWithChangesIcon />}
-          >
-            Update
-          </LoadingButton>
-        </Box>
-      </>
+      </Select>
     );
   };
 
@@ -175,35 +157,19 @@ const UserRow = (props: UserRowProps): JSX.Element => {
           }}
           component="ul"
         >
-          {messageTypeArray.map((messageType) =>
-            props.user.hasSubscribedTo(messageType) ? (
+          {messageTypeArray
+            .filter((messageType) => props.user.hasSubscribedTo(messageType))
+            .map((messageType) => (
               <li key={messageType} style={{ margin: 0, padding: theme.spacing(0.5) }}>
                 <Chip key={messageType} label={messageTypeName[messageType]} size="small" />
               </li>
-            ) : (
-              <Fragment key={messageType} />
-            ),
-          )}
+            ))}
         </Box>
       </TableCell>
       {/* Access Rights */}
       <TableCell>
         <FormControl sx={{ m: 0, width: 280 }}>
-          <Select
-            size="small"
-            multiple
-            value={[props.user.accessRights]}
-            onChange={() => undefined}
-            renderValue={() => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {getAccessRightLabels().map((value) => (
-                  <Chip key={value} label={value} size="small" />
-                ))}
-              </Box>
-            )}
-          >
-            <AccessRightCheckboxList />
-          </Select>
+          <AccessRightSelect />
         </FormControl>
       </TableCell>
       {/* Actions */}
@@ -211,7 +177,12 @@ const UserRow = (props: UserRowProps): JSX.Element => {
         <TableCell style={{ whiteSpace: "nowrap" }}>
           <Tooltip title="Delete User" arrow>
             <Box display="inline-block">
-              <IconButton color="error" size="small" onClick={() => setDeleteDialogOpen(true)}>
+              <IconButton
+                aria-label={`Delete user “${props.user.name}”`}
+                color="error"
+                size="small"
+                onClick={() => setDeleteDialogOpen(true)}
+              >
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </Box>

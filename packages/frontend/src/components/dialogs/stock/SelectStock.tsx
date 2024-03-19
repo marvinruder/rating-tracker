@@ -13,10 +13,11 @@ import {
   Skeleton,
   ListItemText,
   Tooltip,
+  useTheme,
 } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
 import { stocksEndpointPath } from "@rating-tracker/commons";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import { useState, useEffect, Fragment } from "react";
 import { useNavigate } from "react-router";
 
@@ -38,6 +39,8 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
   const [didFocus, setDidFocus] = useState(false);
 
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+
+  const theme = useTheme();
 
   const navigate = useNavigate();
 
@@ -137,6 +140,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
   return (
     <>
       <DialogTitle sx={props.disablePadding ? { px: 0, pt: 0 } : {}} component="div">
+        {props.titleElement}
         <Typography variant="h4" pb={2.5}>
           {props.title}
         </Typography>
@@ -185,53 +189,55 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
                 {!stocksFinal && "…"}
               </Typography>
             </Box>
-            <Divider />
-            <List disablePadding>
+            <List
+              disablePadding
+              sx={{
+                " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+                " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+              }}
+            >
               {stocksFinal
-                ? stocks.map((stock) => (
-                    <Fragment key={stock.ticker}>
-                      {props.disabledStocks?.some((disabledStock) => disabledStock.ticker === stock.ticker) ? (
+                ? stocks.map((stock) =>
+                    props.disabledStocks?.some((disabledStock) => disabledStock.ticker === stock.ticker) ? (
+                      <ListItem key={stock.ticker} sx={{ display: "block" }} disablePadding disableGutters>
                         <Tooltip
                           title={props.stockDisabledReason}
                           slotProps={{ popper: { modifiers: [{ name: "offset", options: { offset: [0, -24] } }] } }}
                           arrow
                         >
                           <Box sx={{ opacity: 0.5 }}>
-                            <StockPreview stock={stock} />
+                            <StockPreview stock={stock} component="div" />
                           </Box>
                         </Tooltip>
-                      ) : (
-                        <StockPreview
-                          stock={stock}
-                          {...(props.onSelect
-                            ? {
-                                onClick: () => {
-                                  if (props.validate && !props.validate()) return;
-                                  handleSelect();
-                                  props.onSelect(stock);
-                                },
-                              }
-                            : { onClick: handleSelect, navLink: true })}
-                        />
-                      )}
-                      <Divider component="li" />
-                    </Fragment>
-                  ))
-                : [...Array(count || 3)].map((_, index) => (
-                    <Fragment key={index}>
-                      <ListItem sx={{ py: 1.5 }}>
-                        <ListItemAvatar>
-                          <Skeleton variant="circular" width={40} height={40} />
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={<Skeleton width="100%" sx={{ maxWidth: 160 }} />}
-                          secondary={<Skeleton width="48px" />}
-                        />
-                        <Skeleton variant="rectangular" width={24} height={24} sx={{ ml: 1 }} />
-                        <Skeleton variant="rectangular" width={24} height={24} sx={{ ml: 1 }} />
                       </ListItem>
-                      <Divider component="li" />
-                    </Fragment>
+                    ) : (
+                      <StockPreview
+                        key={stock.ticker}
+                        stock={stock}
+                        {...(props.onSelect
+                          ? {
+                              onClick: () => {
+                                if (props.validate && !props.validate()) return;
+                                handleSelect();
+                                props.onSelect(stock);
+                              },
+                            }
+                          : { onClick: handleSelect, navLink: true })}
+                      />
+                    ),
+                  )
+                : [...Array(count || 3)].map((_, index) => (
+                    <ListItem key={index} sx={{ py: 1.5 }}>
+                      <ListItemAvatar>
+                        <Skeleton variant="circular" width={40} height={40} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={<Skeleton width="100%" sx={{ maxWidth: 160 }} />}
+                        secondary={<Skeleton width="48px" />}
+                      />
+                      <Skeleton variant="rectangular" width={24} height={24} sx={{ ml: 1 }} />
+                      <Skeleton variant="rectangular" width={24} height={24} sx={{ ml: 1 }} />
+                    </ListItem>
                   ))}
             </List>
             {stocksFinal && count > 10 && (
@@ -247,6 +253,10 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
 };
 
 interface SelectStockProps {
+  /**
+   * An element to be shown above the title text.
+   */
+  titleElement?: ReactNode;
   /**
    * A title for the dialog, shown above the search input field.
    */

@@ -41,8 +41,9 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
               : "You do not have the necessary access rights to create stocks."
           }
         >
-          <Box display="inline-block" ml={1}>
+          <Box id="add-stock-label" display="inline-block" ml={1}>
             <IconButton
+              aria-labelledby="add-stock-label"
               color="primary"
               onClick={() => setAddStockOpen(true)}
               disabled={!user.hasAccessRight(WRITE_STOCKS_ACCESS)}

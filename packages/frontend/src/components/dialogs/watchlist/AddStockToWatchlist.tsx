@@ -11,10 +11,10 @@ import {
   ListItemText,
   ListItemButton,
   ListItemIcon,
-  Divider,
   Tooltip,
   Skeleton,
   Dialog,
+  useTheme,
 } from "@mui/material";
 import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
 import { FAVORITES_NAME, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
@@ -38,6 +38,8 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
   const { refetchFavorites } = useFavoritesContextUpdater();
+
+  const theme = useTheme();
 
   useEffect(() => getWatchlists(), []);
 
@@ -83,11 +85,16 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
         <Typography variant="body1" mb={1}>
           Select the watchlist you want to add the stock to:
         </Typography>
-        <List disablePadding>
+        <List
+          disablePadding
+          sx={{
+            " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+            " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+          }}
+        >
           {watchlistSummariesFinal
             ? watchlistSummaries.map((watchlistSummary) => (
                 <Fragment key={watchlistSummary.id}>
-                  <Divider />
                   <ListItem disablePadding disableGutters>
                     <ListItemButton
                       onClick={() => addStockToWatchlist(watchlistSummary.id)}
@@ -119,7 +126,6 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
                 // Render skeleton rows
                 (_, key) => (
                   <Fragment key={key}>
-                    <Divider />
                     <ListItem disablePadding disableGutters>
                       <ListItemButton>
                         <ListItemText
@@ -132,7 +138,6 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
                   </Fragment>
                 ),
               )}
-          <Divider />
           <ListItem disablePadding disableGutters>
             <ListItemButton onClick={() => setAddWatchlistOpen(true)}>
               <ListItemIcon>
@@ -141,7 +146,6 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
               <ListItemText primary="Create a new watchlist…" primaryTypographyProps={{ fontWeight: "bold" }} />
             </ListItemButton>
           </ListItem>
-          <Divider />
         </List>
         <Dialog maxWidth="lg" open={addWatchlistOpen} onClose={() => setAddWatchlistOpen(false)}>
           <AddWatchlist onClose={() => setAddWatchlistOpen(false)} onAdd={getWatchlists} />

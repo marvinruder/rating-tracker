@@ -139,11 +139,16 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
         <Typography variant="body1" mb={1}>
           Select the portfolio you want to update the stocks of:
         </Typography>
-        <List disablePadding>
+        <List
+          disablePadding
+          sx={{
+            " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+            " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+          }}
+        >
           {portfolioSummariesFinal
             ? portfolioSummaries.map((portfolioSummary) => (
                 <Fragment key={portfolioSummary.id}>
-                  <Divider />
                   <ListItem disablePadding disableGutters>
                     <ListItemButton
                       onClick={() => setSelectedPortfolio(portfolioSummary)}
@@ -167,7 +172,6 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
                 // Render skeleton rows
                 (_, key) => (
                   <Fragment key={key}>
-                    <Divider />
                     <ListItem disablePadding disableGutters>
                       <ListItemButton>
                         <ListItemText
@@ -180,7 +184,6 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
                   </Fragment>
                 ),
               )}
-          <Divider />
           <ListItem disablePadding disableGutters>
             <ListItemButton onClick={() => setAddPortfolioOpen(true)} disabled={requestsInProgress}>
               <ListItemIcon>
@@ -189,7 +192,6 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
               <ListItemText primary="Create a new portfolio…" primaryTypographyProps={{ fontWeight: "bold" }} />
             </ListItemButton>
           </ListItem>
-          <Divider />
         </List>
         {selectedPortfolio && (
           <Typography variant="body1" mt={2}>
@@ -264,7 +266,8 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
               {currentRequest}
             </Typography>
             <LinearProgress
-              sx={{ width: "100%", mb: 2, visibility: requestsInProgress ? "visible" : "hidden" }}
+              aria-label="Progress of updating the portfolio"
+              sx={{ width: "100%", mb: 2 }}
               variant="determinate"
               value={(100 * doneRequests) / totalRequests}
             />

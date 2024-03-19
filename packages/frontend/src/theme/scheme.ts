@@ -90,7 +90,7 @@ const generateColors = (light: boolean, themeColors) => ({
       10: alpha(themeColors.white, 0.1),
       30: alpha(themeColors.white, 0.3),
       50: alpha(themeColors.white, 0.5),
-      70: alpha(themeColors.white, 0.7),
+      70: alpha(themeColors.white, light ? 0.75 : 0.65),
       100: themeColors.white,
     },
     trueWhite: {
@@ -106,7 +106,7 @@ const generateColors = (light: boolean, themeColors) => ({
       10: alpha(themeColors.black, 0.1),
       30: alpha(themeColors.black, 0.3),
       50: alpha(themeColors.black, 0.5),
-      70: alpha(themeColors.black, 0.7),
+      70: alpha(themeColors.black, light ? 0.75 : 0.65),
       100: themeColors.black,
     },
     trueBlack: {
@@ -1367,7 +1367,7 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
     subtitle2: {
       fontWeight: 400,
       fontSize: 13,
-      color: colors.alpha.black[light ? 70 : 50],
+      color: colors.alpha.black[70],
     },
     overline: {
       fontSize: 11,
