@@ -44,10 +44,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import type {
-  ScatterSeriesType as _ScatterSeriesType,
-  ScatterValueType as _ScatterValueType,
-} from "@mui/x-charts/models/seriesType";
+import type { ScatterSeriesType as _ScatterSeriesType, ScatterValueType } from "@mui/x-charts/models/seriesType";
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import type {
   Currency,
@@ -103,8 +100,7 @@ import { computePortfolio } from "../../../utils/portfolioComputation";
 
 import { PortfolioBuilderHeader } from "./PortfolioBuilderHeader";
 
-type ScatterValueType = _ScatterValueType & { count: number };
-type ScatterSeriesType = Omit<_ScatterSeriesType, "data"> & { data: ScatterValueType[] };
+type ScatterSeriesType = _ScatterSeriesType & { data: (ScatterValueType & { count: number })[] };
 
 /**
  * A module that allows the user to build a portfolio of their selected stocks weighted by their preferred proportions
@@ -283,7 +279,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
             data: [],
             color: theme.palette.primary.main,
             markerSize: 5,
-            valueFormatter: (value: ScatterValueType) => `# of stocks: ${value.count.toString()}`,
+            valueFormatter: (value) => ("count" in value ? `# of stocks: ${value.count.toString()}` : ""),
           });
         const index = newScatterData.findIndex((series) => series.id === stock.amount);
         newScatterData[index].data.push({
