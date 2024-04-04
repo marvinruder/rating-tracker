@@ -20,7 +20,6 @@ RUN \
   gpgsm \
   htop \
   musl-dev \
-  nasm \
   openssh \
   openssl-dev \
   pkgconfig \
