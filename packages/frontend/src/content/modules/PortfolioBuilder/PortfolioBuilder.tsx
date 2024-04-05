@@ -273,6 +273,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
       .forEach((stock) => {
         if (!newScatterData.find((series) => series.id === stock.amount))
           newScatterData.push({
+            highlightScope: { highlighted: "series" },
             type: "scatter",
             id: stock.amount,
             label: `${currency} ${stock.amount.toFixed(currencyMinorUnits[currency])}`,
