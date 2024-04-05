@@ -281,7 +281,7 @@ LABEL \
   org.opencontainers.image.source="https://github.com/marvinruder/rating-tracker" \
   org.opencontainers.image.vendor="Marvin A. Ruder" \
   org.opencontainers.image.licenses="MIT" \
-  org.opencontainers.image.version="4.4.0" \
+  org.opencontainers.image.version="4.4.1" \
   org.opencontainers.image.created=$BUILD_DATE
 
 # Define health check
