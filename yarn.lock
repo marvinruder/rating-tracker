@@ -1392,7 +1392,7 @@ __metadata:
     chalk: "npm:5.3.0"
     concurrently: "npm:8.2.2"
     cookie-parser: "npm:1.4.6"
-    cron: "npm:3.1.6"
+    cron: "npm:3.1.7"
     esbuild: "npm:0.20.2"
     eslint: "npm:8.57.0"
     eslint-config-google: "npm:0.14.0"
@@ -2034,17 +2034,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:3.4.2":
+"@types/luxon@npm:3.4.2, @types/luxon@npm:~3.4.0":
   version: 3.4.2
   resolution: "@types/luxon@npm:3.4.2"
   checksum: 10c0/d835467de3daf7e17ba78b50bb5a14efd94272439ca067990d71332a54b311544459c69623eddd243b511b28d70194c9591a9ee8cf9c038962c965f991affd7e
-  languageName: node
-  linkType: hard
-
-"@types/luxon@npm:~3.3.0":
-  version: 3.3.8
-  resolution: "@types/luxon@npm:3.3.8"
-  checksum: 10c0/f2ffa31364eb94ca0474a196f533d301025a203bb2758ce0cf209f338cece0af169edea230b5c0b1a68a71adb02f369faa5ec0bd824deb8f0a08cac6803b1b06
   languageName: node
   linkType: hard
 
@@ -3650,13 +3643,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cron@npm:3.1.6":
-  version: 3.1.6
-  resolution: "cron@npm:3.1.6"
+"cron@npm:3.1.7":
+  version: 3.1.7
+  resolution: "cron@npm:3.1.7"
   dependencies:
-    "@types/luxon": "npm:~3.3.0"
+    "@types/luxon": "npm:~3.4.0"
     luxon: "npm:~3.4.0"
-  checksum: 10c0/f8328ce1052531bc14372acbfbddb38db33b30b29ac878d574b317779160b2947c9315c81dccb8a33724418cd86440a92269055037c96a2e917c867d57274009
+  checksum: 10c0/c009c79714ae2916233c8cd2700cdda17c9e20d0e8e32eeb6c0d63b8e89bb7c38dbf9f0423f0f6da52d3f054f735aabb988cbe5b25bb55d9c6ca48ed4cfaaaec
   languageName: node
   linkType: hard
 
