@@ -1417,7 +1417,7 @@ __metadata:
     supertest: "npm:6.3.4"
     swagger-ui-dist: "npm:5.15.0"
     swagger-ui-express: "npm:5.0.0"
-    typescript: "npm:5.4.4"
+    typescript: "npm:5.4.5"
     vite: "npm:5.2.8"
     vitest: "npm:1.4.0"
     xpath-ts2: "npm:1.4.2"
@@ -1442,7 +1442,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.1.3"
     prettier: "npm:3.2.5"
     statuses: "npm:2.0.1"
-    typescript: "npm:5.4.4"
+    typescript: "npm:5.4.5"
     vite: "npm:5.2.8"
     vitest: "npm:1.4.0"
   languageName: unknown
@@ -1493,7 +1493,7 @@ __metadata:
     react-router-dom: "npm:6.22.3"
     react-switch-selector: "npm:2.2.1"
     sainte-lague: "npm:3.0.0"
-    typescript: "npm:5.4.4"
+    typescript: "npm:5.4.5"
     vite: "npm:5.2.8"
     vite-plugin-html: "npm:3.2.2"
     vite-plugin-wasm: "npm:3.3.0"
@@ -1509,7 +1509,7 @@ __metadata:
     concurrently: "npm:8.2.2"
     eslint: "npm:8.57.0"
     prettier: "npm:3.2.5"
-    typescript: "npm:5.4.4"
+    typescript: "npm:5.4.5"
   dependenciesMeta:
     "@prisma/engines":
       built: true
@@ -8840,23 +8840,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.4.4":
-  version: 5.4.4
-  resolution: "typescript@npm:5.4.4"
+"typescript@npm:5.4.5":
+  version: 5.4.5
+  resolution: "typescript@npm:5.4.5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/4d8de0291204ed61ca97ad0cba2ce064e09c4988ca1c451c787e4653ba76296ba35177a52694e8a00cf4ef899d0ee83338663b926d8b7d55167ff0ba81549999
+  checksum: 10c0/2954022ada340fd3d6a9e2b8e534f65d57c92d5f3989a263754a78aba549f7e6529acc1921913560a4b816c46dce7df4a4d29f9f11a3dc0d4213bb76d043251e
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.4.4#optional!builtin<compat/typescript>":
-  version: 5.4.4
-  resolution: "typescript@patch:typescript@npm%3A5.4.4#optional!builtin<compat/typescript>::version=5.4.4&hash=5adc0c"
+"typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>":
+  version: 5.4.5
+  resolution: "typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/1fa41b9964a9ff0ed913b339c90b46031b2d2da3cb1a192af516610733f7f1d5f7f9754a8e22b9ac7076d3d8aedd2c4f84db3f113bad060eac3a95962443a1bf
+  checksum: 10c0/db2ad2a16ca829f50427eeb1da155e7a45e598eec7b086d8b4e8ba44e5a235f758e606d681c66992230d3fc3b8995865e5fd0b22a2c95486d0b3200f83072ec9
   languageName: node
   linkType: hard
 
