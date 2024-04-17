@@ -22,7 +22,7 @@ export const verifyRegistrationResponse = (options: SimpleWebAuthnServer.VerifyR
       options.expectedRPID.includes(process.env.DOMAIN) &&
       options.requireUserVerification,
     registrationInfo: {
-      credentialID: Buffer.from(options.response.id, "base64").toString("ascii"),
+      credentialID: options.response.id,
       credentialPublicKey: Buffer.from(`${randomCredential}`),
       counter: 0,
     },
@@ -44,7 +44,7 @@ export const verifyAuthenticationResponse = (options: SimpleWebAuthnServer.Verif
       options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
       options.expectedRPID.includes(process.env.DOMAIN) &&
       options.requireUserVerification &&
-      options.authenticator.credentialID.toString() === Buffer.from(options.response.id, "base64").toString("ascii") &&
+      options.authenticator.credentialID === Buffer.from(options.response.id, "base64url").toString("base64") &&
       options.authenticator.credentialPublicKey.toString() === `${randomCredential}`,
     authenticationInfo: {
       newCounter: options.authenticator.counter + 1,
