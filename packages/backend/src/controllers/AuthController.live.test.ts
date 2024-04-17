@@ -26,7 +26,6 @@ tests.push({
     expect(typeof res.body.timeout).toBe("number");
     expect(res.body.rp.id).toBe(`${process.env.DOMAIN}`);
     expect(res.body.rp.name).toMatch("Rating Tracker");
-    expect(res.body.user.id).toBe("jim.doe@example.com");
     expect(res.body.user.name).toBe("Jim Doe");
     expect(res.body.attestation).toBe("none");
     expect(res.body.excludeCredentials).toHaveLength(0);

@@ -55,7 +55,6 @@ export class AuthController {
       const options = await SimpleWebAuthnServer.generateRegistrationOptions({
         rpName,
         rpID,
-        userID: email,
         userName: name, // This will be displayed to the user when they authenticate.
         attestationType: "none", // Do not prompt users for additional information about the authenticator
         authenticatorSelection: {
@@ -117,7 +116,9 @@ export class AuthController {
             email,
             name,
             accessRights: 0, // Users need to be manually approved before they can access the app.
-            credentialID: Buffer.from(credentialID).toString("base64"),
+            // Convert base64url (as specified in https://www.w3.org/TR/webauthn-2/) to base64 (which we want to store
+            // in database)
+            credentialID: Buffer.from(credentialID, "base64url").toString("base64"),
             credentialPublicKey: Buffer.from(credentialPublicKey).toString("base64"),
             counter,
           }),
@@ -127,6 +128,7 @@ export class AuthController {
       }
       if (verified) {
         res.status(201).end();
+        return;
       }
       // We do not provide too much information about the error to the user.
       throw new APIError(400, "Registration failed");
@@ -181,7 +183,7 @@ export class AuthController {
         expectedRPID: rpID,
         authenticator: {
           // This information is stored for each user in the database.
-          credentialID: Buffer.from(user.credentialID, "base64"),
+          credentialID: user.credentialID,
           credentialPublicKey: Buffer.from(user.credentialPublicKey, "base64"),
           counter: user.counter,
         },
