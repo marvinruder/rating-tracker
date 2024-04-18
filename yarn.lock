@@ -1042,9 +1042,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.2.0":
-  version: 7.2.0
-  resolution: "@mui/x-charts@npm:7.2.0"
+"@mui/x-charts@npm:7.3.0":
+  version: 7.3.0
+  resolution: "@mui/x-charts@npm:7.3.0"
   dependencies:
     "@babel/runtime": "npm:^7.24.0"
     "@mui/base": "npm:^5.0.0-beta.40"
@@ -1070,7 +1070,7 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/f3b7bb9114757323ca486d05c48e0a60db1c4202385351b91338961951062db969b1357ee9ecee53b9b2b23ff9f8b68159c2fa7348b19b83fef8f66f2bdee27d
+  checksum: 10c0/cb64e60f44b2aeadb1008dbe2241772e36cfadf7ae8fa32333b56aecf6b623fa84348aff5e071ec10c57ed179f7f270cb04aec5e61fdfb865184ca7082184bbe
   languageName: node
   linkType: hard
 
@@ -1459,7 +1459,7 @@ __metadata:
     "@mui/material": "npm:5.15.15"
     "@mui/system": "npm:5.15.15"
     "@mui/utils": "npm:5.15.14"
-    "@mui/x-charts": "npm:7.2.0"
+    "@mui/x-charts": "npm:7.3.0"
     "@nivo/core": "npm:0.85.1"
     "@nivo/sunburst": "npm:0.85.1"
     "@rating-tracker/commons": "workspace:*"
