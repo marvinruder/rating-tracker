@@ -1415,7 +1415,7 @@ __metadata:
     redis-om: "npm:0.4.3"
     response-time: "npm:2.3.2"
     supertest: "npm:6.3.4"
-    swagger-ui-dist: "npm:5.16.0"
+    swagger-ui-dist: "npm:5.16.2"
     swagger-ui-express: "npm:5.0.0"
     typescript: "npm:5.4.5"
     vite: "npm:5.2.9"
@@ -8533,10 +8533,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:5.16.0, swagger-ui-dist@npm:>=5.0.0":
-  version: 5.16.0
-  resolution: "swagger-ui-dist@npm:5.16.0"
-  checksum: 10c0/a859d733bb5610b92d941f548133f6ed7672a12ca065a9bbf43a4946a7fb2694248f1ce7ba6505a4db8efad40a641f6e03097e688a3d89165c5bab1dfec03a14
+"swagger-ui-dist@npm:5.16.2, swagger-ui-dist@npm:>=5.0.0":
+  version: 5.16.2
+  resolution: "swagger-ui-dist@npm:5.16.2"
+  checksum: 10c0/0ad84282d1e639031e0336bf2db1d3fc51e5d6fc5b80df56072cbea26263420b7e18ecad6dafbfed66a8e9c1df02969614456f727d281a31351db2c70b7baca6
   languageName: node
   linkType: hard
 
