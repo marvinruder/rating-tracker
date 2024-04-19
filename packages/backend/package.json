@@ -50,7 +50,7 @@
     "redis-om": "0.4.3",
     "response-time": "2.3.2",
     "supertest": "6.3.4",
-    "swagger-ui-dist": "5.16.0",
+    "swagger-ui-dist": "5.16.2",
     "swagger-ui-express": "5.0.0",
     "vite": "5.2.9",
     "vitest": "1.5.0",
