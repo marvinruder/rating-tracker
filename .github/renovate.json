@@ -13,6 +13,12 @@
   "rangeStrategy": "pin",
   "packageRules": [
     {
+      "groupName": "Node.js",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["node"],
+      "versioning": "docker"
+    },
+    {
       "groupName": "Linting and Formatting Tools",
       "matchPackagePatterns": ["eslint", "prettier"]
     },
