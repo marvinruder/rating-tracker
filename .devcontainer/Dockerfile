@@ -1,6 +1,6 @@
 FROM alpine:3.19.1
 
-COPY --from=node:21.7.3-alpine / /
+COPY --from=node:22.0.0-alpine / /
 COPY --from=rust:1.77.2-alpine / /
 
 ENV PATH="/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
