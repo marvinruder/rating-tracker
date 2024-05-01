@@ -5,6 +5,8 @@ import APIError from "../../utils/APIError";
 import logger from "../../utils/logger";
 import client from "../client";
 
+const OMIT_CREDENTIALS = { credentialID: true, credentialPublicKey: true, counter: true } as const;
+
 /**
  * Create a user with credentials.
  * @param user The user to create.
@@ -39,7 +41,7 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
  */
 export const readUser = async (email: string): Promise<User> => {
   try {
-    const user = await client.user.findUniqueOrThrow({ where: { email } });
+    const user = await client.user.findUniqueOrThrow({ where: { email }, omit: OMIT_CREDENTIALS });
     return new User(user);
   } catch {
     throw new APIError(404, `User ${email} not found.`);
@@ -103,7 +105,7 @@ export const readUserByCredentialID = async (credentialID: string): Promise<User
  * @returns A list of all users.
  */
 export const readAllUsers = async (): Promise<User[]> => {
-  return (await client.user.findMany()).map((user) => new User(user));
+  return (await client.user.findMany({ omit: OMIT_CREDENTIALS })).map((user) => new User(user));
 };
 
 /**
@@ -113,7 +115,10 @@ export const readAllUsers = async (): Promise<User[]> => {
  */
 export const readUsersWithStockOnSubscribedWatchlist = async (ticker: string): Promise<User[]> => {
   return (
-    await client.user.findMany({ where: { watchlists: { some: { subscribed: true, stocks: { some: { ticker } } } } } })
+    await client.user.findMany({
+      where: { watchlists: { some: { subscribed: true, stocks: { some: { ticker } } } } },
+      omit: OMIT_CREDENTIALS,
+    })
   ).map((user) => new User(user));
 };
 
