@@ -1,6 +1,6 @@
 [package]
 name = "wasm"
-version = "4.4.1"
+version = "4.5.0"
 authors = ["Marvin A. Ruder <ratingtracker@mruder.dev>"]
 description = "A collection of utilities written in Rust and compiled to WebAssembly"
 license = "MIT"
