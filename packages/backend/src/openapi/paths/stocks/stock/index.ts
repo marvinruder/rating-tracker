@@ -101,6 +101,10 @@ const patch: OpenAPIV3.OperationObject = {
       in: "path",
       required: true,
     },
+    {
+      ...stock.ticker,
+      allowEmptyValue: true,
+    },
     stock.name,
     stock.isin,
     {
