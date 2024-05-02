@@ -90,7 +90,7 @@ export const readStocks = async (args?: Prisma.StockFindManyArgs): Promise<[Stoc
  *                    values. Triggers computation of scores.
  * @throws an {@link APIError} if the stock does not exist.
  */
-export const updateStock = async (ticker: string, newValues: Partial<Omit<Stock, "ticker">>, forceUpdate?: boolean) => {
+export const updateStock = async (ticker: string, newValues: Partial<Stock>, forceUpdate?: boolean) => {
   let k: keyof typeof newValues; // all keys of new values
   const stock = await readStock(ticker); // Read the stock from the database
   let signalMessage = `Updates for ${stock.name} (${ticker}):`;

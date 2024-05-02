@@ -650,6 +650,18 @@ tests.push({
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toEqual("0P012345678");
 
+    // We can also update a stock’s ticker:
+    res = await supertest
+      .patch(`${baseURL}${stocksEndpointPath}/exampleALV?ticker=exampleALV.DE`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await supertest
+      .get(`${baseURL}${stocksEndpointPath}/exampleALV.DE`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).ticker).toEqual("exampleALV.DE");
+    expect((res.body as Stock).name).toEqual("Allianz SE");
+
     // attempting to update a non-existent stock results in an error
     res = await supertest
       .patch(`${baseURL}${stocksEndpointPath}/doesNotExist?morningstarID=0P123456789`)

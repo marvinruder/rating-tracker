@@ -39,6 +39,8 @@ import CountryAutocomplete from "../../autocomplete/CountryAutocomplete";
 export const EditStock = (props: EditStockProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [unsafeRequestSent, setUnsafeRequestSent] = useState<boolean>(false); // Whether an unsafe request was sent.
+  const [ticker, setTicker] = useState<string>(props.stock.ticker);
+  const [tickerError, setTickerError] = useState<boolean>(false); // Error in the ticker text field.
   const [name, setName] = useState<string>(props.stock.name);
   const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
   const [isin, setIsin] = useState<string>(props.stock.isin);
@@ -67,6 +69,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
    */
   const validate = (): boolean => {
     // The following fields are required.
+    setTickerError(!ticker);
     setNameError(!name);
     setIsinError(!isin);
     setCountryError(!country);
@@ -84,6 +87,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
       .patch(stocksEndpointPath + `/${props.stock.ticker}`, {
         params: {
           // Only send the parameters that have changed.
+          ticker: ticker.trim() !== props.stock.ticker ? ticker.trim() : undefined,
           name: name.trim() !== props.stock.name ? name.trim() : undefined,
           isin: isin.trim() !== props.stock.isin ? isin.trim() : undefined,
           country: country.trim() !== props.stock.country ? country : undefined,
@@ -97,7 +101,11 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             sustainalyticsID.trim() !== (props.stock.sustainalyticsID ?? "") ? sustainalyticsID.trim() : undefined,
         },
       })
-      .then(() => (props.onCloseAfterEdit(), props.onClose())) // Update the stocks in the parent component.
+      .then(
+        () => (
+          props.onCloseAfterEdit(ticker.trim() !== props.stock.ticker ? ticker.trim() : undefined), props.onClose()
+        ),
+      ) // Update the stocks in the parent component.
       .catch((e) => setErrorNotificationOrClearSession(e, "updating stock"))
       .finally(() => setRequestInProgress(false));
   };
@@ -290,7 +298,17 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              onChange={(event) => (setTicker(event.target.value), setTickerError(false))}
+              error={tickerError}
+              label="Ticker"
+              value={ticker}
+              placeholder="e.g. AAPL"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={8}>
             <TextField
               onChange={(event) => (setIsin(event.target.value), setIsinError(false))}
               error={isinError}
@@ -507,9 +525,10 @@ interface EditStockProps {
    */
   stock: Stock;
   /**
-   * A method to update the stock list after the stock was edited.
+   * A method to update the stock list after the stock was edited. If the ticker of the stock was changed, the new
+   * ticker is passed as an argument, allowing to navigate to the stock’s new URL.
    */
-  onCloseAfterEdit: () => void;
+  onCloseAfterEdit: (newTicker?: string) => void;
   /**
    * A method that is called when the dialog is closed.
    */

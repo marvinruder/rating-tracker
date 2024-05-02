@@ -191,7 +191,13 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
             <AddStockToPortfolio stock={props.stock} onClose={() => setAddToPortfolioDialogOpen(false)} />
           </Dialog>
           <Dialog open={editDialogOpen}>
-            <EditStock stock={props.stock} onCloseAfterEdit={props.getStock} onClose={() => setEditDialogOpen(false)} />
+            <EditStock
+              stock={props.stock}
+              onCloseAfterEdit={(newTicker) =>
+                newTicker ? navigate(`${stocksEndpointPath}/${newTicker}`) : props.getStock()
+              }
+              onClose={() => setEditDialogOpen(false)}
+            />
           </Dialog>
           <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
             <DeleteStock

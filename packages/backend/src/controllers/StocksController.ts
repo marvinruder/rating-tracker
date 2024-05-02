@@ -576,8 +576,10 @@ export class StocksController {
   async patch(req: Request, res: Response) {
     const { ticker } = req.params;
     const { name, isin, country, morningstarID, marketScreenerID, msciID, ric, sustainalyticsID } = req.query;
+    const newTicker = req.query.ticker;
     const spID = req.query.spID === null ? "" : req.query.spID ? Number(req.query.spID) : undefined;
     if (
+      (typeof newTicker === "string" || typeof newTicker === "undefined") &&
       (typeof name === "string" || typeof name === "undefined") &&
       (typeof isin === "string" || typeof isin === "undefined") &&
       ((typeof country === "string" && isCountry(country)) || typeof country === "undefined") &&
@@ -593,6 +595,7 @@ export class StocksController {
       // If a data provider ID is removed (i.e., set to an empty string), we remove all information available from that
       // data provider as well.
       await updateStock(ticker, {
+        ticker: newTicker,
         name,
         isin,
         country,
