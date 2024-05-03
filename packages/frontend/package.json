@@ -34,8 +34,8 @@
     "@react-spring/web": "9.7.3",
     "@simplewebauthn/browser": "10.0.0",
     "@vitejs/plugin-react": "4.2.1",
-    "@vitest/coverage-v8": "1.5.3",
-    "@vitest/web-worker": "1.5.3",
+    "@vitest/coverage-v8": "1.6.0",
+    "@vitest/web-worker": "1.6.0",
     "hare-niemeyer": "3.0.0",
     "ml-fcnnls": "3.0.0",
     "ml-matrix": "6.11.0",
@@ -49,7 +49,7 @@
     "vite": "5.2.11",
     "vite-plugin-html": "3.2.2",
     "vite-plugin-wasm": "3.3.0",
-    "vitest": "1.5.3"
+    "vitest": "1.6.0"
   },
   "devDependencies": {
     "@types/node": "20.12.8",
