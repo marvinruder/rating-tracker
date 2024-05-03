@@ -34,7 +34,7 @@ RUN \
   rm pkg/package.json.bak
 
 
-FROM --platform=$BUILDPLATFORM node:22.0.0-alpine as yarn
+FROM --platform=$BUILDPLATFORM node:22.1.0-alpine as yarn
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -55,7 +55,7 @@ RUN \
   yarn workspaces focus -A --production
 
 
-FROM --platform=$BUILDPLATFORM node:22.0.0-alpine as test-backend
+FROM --platform=$BUILDPLATFORM node:22.1.0-alpine as test-backend
 ENV FORCE_COLOR true
 ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
@@ -108,7 +108,7 @@ RUN \
   mv packages/backend/coverage /coverage/backend
 
 
-FROM --platform=$BUILDPLATFORM node:22.0.0-alpine as test-commons
+FROM --platform=$BUILDPLATFORM node:22.1.0-alpine as test-commons
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -132,7 +132,7 @@ RUN \
   mv packages/commons/coverage /coverage/commons
 
 
-FROM --platform=$BUILDPLATFORM node:22.0.0-alpine as test-frontend
+FROM --platform=$BUILDPLATFORM node:22.1.0-alpine as test-frontend
 ENV FORCE_COLOR true
 
 WORKDIR /workdir
@@ -158,7 +158,7 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM --platform=$BUILDPLATFORM node:22.0.0-alpine as build-backend
+FROM --platform=$BUILDPLATFORM node:22.1.0-alpine as build-backend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -196,7 +196,7 @@ RUN \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /app/public/api-docs/
 
-FROM --platform=$BUILDPLATFORM node:22.0.0-alpine as build-frontend
+FROM --platform=$BUILDPLATFORM node:22.1.0-alpine as build-frontend
 ENV NODE_ENV production
 ENV FORCE_COLOR true
 
@@ -249,7 +249,7 @@ ENTRYPOINT [ "codacy-coverage" ]
 
 
 # required for Renovate to update the base image:
-FROM node:22.0.0-alpine as node
+FROM node:22.1.0-alpine as node
 
 FROM alpine:3.19.1 as deploy-base
 ARG TARGETARCH
