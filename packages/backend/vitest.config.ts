@@ -24,6 +24,7 @@ export default defineConfig({
         "test",
         "src/controllers/FetchController.*",
         "src/fetchers/*",
+        "src/utils/*-shim.*",
         "src/utils/cron.*",
         "src/utils/DataProviderError.*",
         "src/utils/fetchRequest.*",

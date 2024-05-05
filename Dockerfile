@@ -52,7 +52,7 @@ RUN \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
   --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
   corepack enable && \
-  yarn workspaces focus -A --production
+  PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x yarn workspaces focus -A --production
 
 
 FROM --platform=$BUILDPLATFORM node:22.1.0-alpine as test-backend
@@ -69,8 +69,6 @@ RUN \
   --security=insecure \
   --mount=type=tmpfs,target=/var/run \
   --mount=type=bind,source=packages/backend/test/docker-compose.yml,target=packages/backend/test/docker-compose.yml \
-  --mount=type=bind,source=packages/backend/test/all_migrations.sh,target=packages/backend/test/all_migrations.sh \
-  --mount=type=bind,source=packages/backend/prisma/migrations,target=packages/backend/prisma/migrations \
   apk add --no-cache docker docker-compose fuse-overlayfs && \
   mkdir -p /etc/docker && \
   echo '{"storage-driver": "fuse-overlayfs"}' > /etc/docker/daemon.json && \
@@ -91,11 +89,10 @@ RUN \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
-  --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma,target=packages/backend/prisma \
   --network=none \
   (dockerd > /dev/null 2>&1 &) && \
   START_DOCKER_DAEMON_AGAIN=100 && \
@@ -122,7 +119,6 @@ RUN \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
@@ -148,7 +144,6 @@ RUN \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
@@ -174,22 +169,24 @@ RUN \
   --mount=type=bind,source=yarn.lock,target=yarn.lock \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
-  --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma/client,target=packages/backend/prisma/client \
+  --mount=type=bind,from=yarn,source=/workdir/packages/backend/dist,target=packages/backend/dist,rw \
+  --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma,target=packages/backend/prisma \
+  --mount=type=bind,from=yarn,source=/workdir/packages/backend/runtime,target=packages/backend/runtime \
   --network=none \
   # Bundle backend
   yarn workspace @rating-tracker/backend build && \
   # Create CommonJS module containing log formatter configuration
   yarn workspace @rating-tracker/backend build:logFormatterConfig && \
   # Parse backend bundle for correctness and executability in Node.js
-  /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 node -r ./test/env.ts dist/server.cjs' && \
+  /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 node -r ./test/env.ts dist/server.mjs' && \
   # Create directories for target container and copy only necessary files
   mkdir -p /app/public/api-docs /app/prisma/client && \
-  cp packages/backend/dist/* /app && \
-  cp -r packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* /app/prisma/client && \
+  cp -r packages/backend/dist/* /app && \
+  cp -r packages/backend/prisma/migrations packages/backend/runtime /app/prisma && \
+  cp packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* /app/prisma/client && \
   cp \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
@@ -213,7 +210,6 @@ RUN \
   --mount=type=bind,from=wasm,source=/workdir/pkg,target=packages/wasm \
   --mount=type=bind,from=yarn,source=/root/.cache,target=/root/.cache \
   --mount=type=bind,from=yarn,source=/usr/local,target=/usr/local \
-  --mount=type=bind,from=yarn,source=/root/.cache/node/corepack,target=/root/.cache/node/corepack,rw \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
@@ -261,12 +257,15 @@ RUN \
   apk add --no-cache libgcc libstdc++ && \
   cp -a /mnt/etc/group /etc/group && \
   cp -a /mnt/etc/passwd /etc/passwd && \
-  cp -a /mnt/usr/local/bin/node /usr/local/bin/node
+  cp -a /mnt/usr/local/bin/node /usr/local/bin/node && \
+  # Must exist and be parseable for Prisma Migrate to work:
+  echo '{}' > /package.json
 
 
 FROM deploy-base as deploy
 ARG TARGETARCH
 ENV NODE_ENV production
+ENV PRISMA_SCHEMA_ENGINE_BINARY /app/prisma/runtime/schema-engine
 
 USER node:node
 WORKDIR /app
@@ -290,10 +289,15 @@ HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 RUN \
   --mount=type=bind,from=result,source=app,target=/mnt/app \
   cp -r /mnt/app / && \
+  ln -s client/schema.prisma prisma/schema.prisma && \
   if [ "$TARGETARCH" == "amd64" ]; then \
   rm /app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
+  rm /app/prisma/runtime/schema-engine-linux-musl-arm64-openssl-3.0.x; \
+  mv /app/prisma/runtime/schema-engine-linux-musl-openssl-3.0.x /app/prisma/runtime/schema-engine; \
   elif [ "$TARGETARCH" == "arm64" ]; then \
   rm /app/prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
+  rm /app/prisma/runtime/schema-engine-linux-musl-openssl-3.0.x; \
+  mv /app/prisma/runtime/schema-engine-linux-musl-arm64-openssl-3.0.x /app/prisma/runtime/schema-engine; \
   fi
 
-CMD [ "node", "--enable-source-maps", "server.cjs" ]
+CMD [ "node", "--enable-source-maps", "server.mjs" ]

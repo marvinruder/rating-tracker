@@ -262,11 +262,7 @@ The port bindings are optional but helpful to connect to the services from the h
 
 #### Initialize database setup
 
-Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. Although not officially recommended, a quick, easy and fairly safe way to initialize a new database with the required tables, constraints and indexes is to 
-
-1.  Clone the repository and open it in a VS Code development container.
-2.  Using your preferred shell, navigate to the [`packages/backend`](/packages/backend) directory and store the database URL (e.g. `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker`) in the shell environment variable `DATABASE_URL`.
-3.  Run `yarn pnpify prisma migrate deploy`.
+Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. At first startup, Prisma Migrate will automatically create the required tables and indexes.
 
 <!-- <div id="create-redis-user-and-password"></div> -->
 

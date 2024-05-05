@@ -23,6 +23,7 @@ packages/backend/dev/signal-cli
 
 # Prisma
 packages/backend/prisma/client
+packages/backend/runtime
 
 # local test environment
 packages/backend/test/*.sql
