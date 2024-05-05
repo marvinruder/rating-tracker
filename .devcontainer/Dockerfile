@@ -49,7 +49,7 @@ RUN \
   echo 'autoload -Uz compinit && compinit' >> /etc/zsh/zshrc && \
   mkdir -p /root/.local/share/zsh/plugins && \
   ln -s /usr/share/zsh/plugins/powerlevel10k /root/.local/share/zsh/plugins/ && \
-  sed 's/# os_icon/os_icon  /;s/❯/➜/;s/# node_version/node_version  /;s/# package/package  /' /usr/share/zsh/plugins/powerlevel10k/config/p10k-lean.zsh > /root/.p10k.zsh && \
+  sed 's/# os_icon/os_icon  /;s/❯/➜/;s/# node_version/node_version  /;s/# rust_version/rust_version  /;s/# package/package  /' /usr/share/zsh/plugins/powerlevel10k/config/p10k-lean.zsh > /root/.p10k.zsh && \
   echo '[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"' >> /root/.zshrc && \
   echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc && \
   find /usr/share/zsh/plugins/zsh-*/zsh-*.zsh | grep -v .plugin.zsh | sed 's/^/source /' >> /root/.zshrc && \

@@ -1,6 +1,6 @@
 import { useMediaQuery, useTheme } from "@mui/material";
 import { logoBackgroundEndpointPath } from "@rating-tracker/commons";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import api from "../../utils/api";
 
@@ -15,6 +15,7 @@ const MAX_COUNT = 50;
  */
 export const LogoBackground = (): JSX.Element => {
   const theme = useTheme();
+  const backgroundContainerRef = useRef<HTMLDivElement>(null);
 
   const count = 25 + 25 * +useMediaQuery(theme.breakpoints.up("md"));
 
@@ -38,12 +39,14 @@ export const LogoBackground = (): JSX.Element => {
             );
           }
         });
+        if (backgroundContainerRef.current) backgroundContainerRef.current.style.opacity = "1";
       })
       .catch(() => undefined); // Ignore errors since the background is not that important
   }, []);
 
   return (
     <div
+      ref={backgroundContainerRef}
       style={{
         position: "fixed",
         width: "100vw",
@@ -52,6 +55,8 @@ export const LogoBackground = (): JSX.Element => {
         background: theme.palette.background.default,
         zIndex: -2,
         filter: "blur(1px)",
+        opacity: 0,
+        transition: "opacity 2s",
       }}
     >
       {[...Array(MAX_COUNT)].map((_, i) => (
