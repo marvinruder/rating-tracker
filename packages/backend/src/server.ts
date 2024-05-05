@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/order
 import "./utils/startup";
+// eslint-disable-next-line import/order
+import "./db/migrate";
 
 import { randomUUID } from "node:crypto";
 import path from "path";
