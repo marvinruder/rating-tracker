@@ -1,4 +1,5 @@
-import { glob } from "fast-glob";
+import fs from "node:fs";
+
 import type { MockInstance } from "vitest";
 
 import * as portfolioTable from "../src/db/tables/portfolioTable";
@@ -87,7 +88,9 @@ const testSuites: { [key: string]: LiveTestSuite } = {};
 const unsafeTestSuites: { [key: string]: LiveTestSuite } = {};
 
 // Get all test suites
-for await (const path of await glob("../**/*.live.test.ts")) {
+// Expect error until `@types/node` provides types for Node.js 22:
+// @ts-expect-error
+for await (const path of await fs.promises.glob("../**/*.live.test.ts")) {
   const { tests, suiteName }: { tests: LiveTestSuite; suiteName: string } = await import(
     /* @vite-ignore */ "../" + path
   );
