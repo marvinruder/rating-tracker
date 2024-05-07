@@ -21,6 +21,8 @@ import {
   portfoliosEndpointPath,
   accountAvatarEndpointSuffix,
   usersAvatarEndpointSuffix,
+  proxyEndpointPath,
+  yahooFinanceEndpointSuffix,
 } from "@rating-tracker/commons";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
@@ -43,6 +45,7 @@ import * as logoBackgroundEndpoint from "./paths/logobackground";
 import * as portfoliosEndpoint from "./paths/portfolios";
 import * as portfolioEndpoint from "./paths/portfolios/portfolio";
 import * as portfolioStocksEndpoint from "./paths/portfolios/portfolio/stock";
+import * as proxyYahooFinanceEndpoint from "./paths/proxy/yahooFinanceEndpoint";
 import * as resourceEndpoint from "./paths/resources/resource";
 import * as sessionEndpoint from "./paths/sessionEndpoint";
 import * as statusEndpoint from "./paths/statusEndpoint";
@@ -88,6 +91,7 @@ export const openapiDocument: OpenAPIV3.Document = {
     [`${baseURL}${fetchLSEGEndpointPath}`]: lsegEndpoint,
     [`${baseURL}${fetchSPEndpointPath}`]: spEndpoint,
     [`${baseURL}${fetchSustainalyticsEndpointPath}`]: sustainalyticsEndpoint,
+    [`${baseURL}${proxyEndpointPath}${yahooFinanceEndpointSuffix}`]: proxyYahooFinanceEndpoint,
     [`${baseURL}${resourcesEndpointPath}/{id}`]: resourceEndpoint,
     [`${baseURL}${statusEndpointPath}`]: statusEndpoint,
     [`${baseURL}${sessionEndpointPath}`]: sessionEndpoint,

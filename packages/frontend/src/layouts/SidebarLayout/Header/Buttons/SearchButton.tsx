@@ -80,7 +80,7 @@ export const HeaderSearchButton = (): JSX.Element => {
         onClose={() => setOpen(false)}
         PaperProps={{ elevation: 16 }}
       >
-        <SelectStock title="Search for a stock by name or symbol" onClose={() => setOpen(false)} />
+        <SelectStock title="Search for a stock by name, ISIN or ticker symbol" onClose={() => setOpen(false)} />
       </PinnedDialog>
     </>
   );

@@ -96,7 +96,7 @@ export class StocksController {
       where: { AND: filters },
     };
 
-    if (req.query.name && typeof req.query.name === "string") {
+    if (req.query.name && typeof req.query.name === "string")
       filters.push({
         OR: [
           { isin: { equals: req.query.name.trim() } },
@@ -104,11 +104,8 @@ export class StocksController {
           { name: { contains: req.query.name.trim(), mode: "insensitive" } },
         ],
       });
-    }
 
-    if (req.query.isin && typeof req.query.isin === "string") {
-      filters.push({ isin: { equals: req.query.isin.trim() } });
-    }
+    if (req.query.isin && typeof req.query.isin === "string") filters.push({ isin: { equals: req.query.isin.trim() } });
 
     if (req.query.country) {
       const countryParam = req.query.country;
@@ -136,236 +133,177 @@ export class StocksController {
 
     if (req.query.size) {
       const size = req.query.size;
-      if (typeof size === "string" && isSize(size)) {
-        filters.push({ size: { equals: size } });
-      }
+      if (typeof size === "string" && isSize(size)) filters.push({ size: { equals: size } });
     }
 
     if (req.query.style) {
       const style = req.query.style;
-      if (typeof style === "string" && isStyle(style)) {
-        filters.push({ style: { equals: style } });
-      }
+      if (typeof style === "string" && isStyle(style)) filters.push({ style: { equals: style } });
     }
 
     if (req.query.starRatingMin !== undefined) {
       const starRatingMin = Number(req.query.starRatingMin);
-      if (!Number.isNaN(starRatingMin)) {
-        filters.push({ starRating: { gte: starRatingMin } });
-      }
+      if (!Number.isNaN(starRatingMin)) filters.push({ starRating: { gte: starRatingMin } });
     }
     if (req.query.starRatingMax !== undefined) {
       const starRatingMax = Number(req.query.starRatingMax);
-      if (!Number.isNaN(starRatingMax)) {
-        filters.push({ starRating: { lte: starRatingMax } });
-      }
+      if (!Number.isNaN(starRatingMax)) filters.push({ starRating: { lte: starRatingMax } });
     }
 
     if (req.query.dividendYieldPercentMin !== undefined) {
       const dividendYieldPercentMin = Number(req.query.dividendYieldPercentMin);
-      if (!Number.isNaN(dividendYieldPercentMin)) {
+      if (!Number.isNaN(dividendYieldPercentMin))
         filters.push({ dividendYieldPercent: { gte: dividendYieldPercentMin } });
-      }
     }
     if (req.query.dividendYieldPercentMax !== undefined) {
       const dividendYieldPercentMax = Number(req.query.dividendYieldPercentMax);
-      if (!Number.isNaN(dividendYieldPercentMax)) {
+      if (!Number.isNaN(dividendYieldPercentMax))
         filters.push({ dividendYieldPercent: { lte: dividendYieldPercentMax } });
-      }
     }
 
     if (req.query.priceEarningRatioMin !== undefined) {
       const priceEarningRatioMin = Number(req.query.priceEarningRatioMin);
-      if (!Number.isNaN(priceEarningRatioMin)) {
-        filters.push({ priceEarningRatio: { gte: priceEarningRatioMin } });
-      }
+      if (!Number.isNaN(priceEarningRatioMin)) filters.push({ priceEarningRatio: { gte: priceEarningRatioMin } });
     }
     if (req.query.priceEarningRatioMax !== undefined) {
       const priceEarningRatioMax = Number(req.query.priceEarningRatioMax);
-      if (!Number.isNaN(priceEarningRatioMax)) {
-        filters.push({ priceEarningRatio: { lte: priceEarningRatioMax } });
-      }
+      if (!Number.isNaN(priceEarningRatioMax)) filters.push({ priceEarningRatio: { lte: priceEarningRatioMax } });
     }
 
     if (req.query.morningstarFairValueDiffMin !== undefined) {
       // Filter by percentage difference of fair value to last close
       const morningstarFairValueDiffMin = Number(req.query.morningstarFairValueDiffMin);
-      if (!Number.isNaN(morningstarFairValueDiffMin)) {
+      if (!Number.isNaN(morningstarFairValueDiffMin))
         filters.push({ morningstarFairValuePercentageToLastClose: { gte: morningstarFairValueDiffMin } });
-      }
     }
     if (req.query.morningstarFairValueDiffMax !== undefined) {
       // Filter by percentage difference of fair value to last close
       const morningstarFairValueDiffMax = Number(req.query.morningstarFairValueDiffMax);
-      if (!Number.isNaN(morningstarFairValueDiffMax)) {
+      if (!Number.isNaN(morningstarFairValueDiffMax))
         filters.push({ morningstarFairValuePercentageToLastClose: { lte: morningstarFairValueDiffMax } });
-      }
     }
 
     if (req.query.analystConsensusMin !== undefined) {
       const analystConsensusMin = Number(req.query.analystConsensusMin);
-      if (!Number.isNaN(analystConsensusMin)) {
-        filters.push({ analystConsensus: { gte: analystConsensusMin } });
-      }
+      if (!Number.isNaN(analystConsensusMin)) filters.push({ analystConsensus: { gte: analystConsensusMin } });
     }
     if (req.query.analystConsensusMax !== undefined) {
       const analystConsensusMax = Number(req.query.analystConsensusMax);
-      if (!Number.isNaN(analystConsensusMax)) {
-        filters.push({ analystConsensus: { lte: analystConsensusMax } });
-      }
+      if (!Number.isNaN(analystConsensusMax)) filters.push({ analystConsensus: { lte: analystConsensusMax } });
     }
 
     if (req.query.analystCountMin !== undefined) {
       const analystCountMin = Number(req.query.analystCountMin);
-      if (!Number.isNaN(analystCountMin)) {
-        filters.push({ analystCount: { gte: analystCountMin } });
-      }
+      if (!Number.isNaN(analystCountMin)) filters.push({ analystCount: { gte: analystCountMin } });
     }
     if (req.query.analystCountMax !== undefined) {
       const analystCountMax = Number(req.query.analystCountMax);
-      if (!Number.isNaN(analystCountMax)) {
-        filters.push({ analystCount: { lte: analystCountMax } });
-      }
+      if (!Number.isNaN(analystCountMax)) filters.push({ analystCount: { lte: analystCountMax } });
     }
 
     if (req.query.analystTargetDiffMin !== undefined) {
       // Filter by percentage difference of analyst target price to last close
       const analystTargetDiffMin = Number(req.query.analystTargetDiffMin);
-      if (!Number.isNaN(analystTargetDiffMin)) {
+      if (!Number.isNaN(analystTargetDiffMin))
         filters.push({ analystTargetPricePercentageToLastClose: { gte: analystTargetDiffMin } });
-      }
     }
     if (req.query.analystTargetDiffMax !== undefined) {
       // Filter by percentage difference of analyst target price to last close
       const analystTargetDiffMax = Number(req.query.analystTargetDiffMax);
-      if (!Number.isNaN(analystTargetDiffMax)) {
+      if (!Number.isNaN(analystTargetDiffMax))
         filters.push({ analystTargetPricePercentageToLastClose: { lte: analystTargetDiffMax } });
-      }
     }
 
     let filteredMSCIESGRatingArray = [...msciESGRatingArray];
     if (req.query.msciESGRatingMin !== undefined && typeof req.query.msciESGRatingMin === "string") {
       const msciESGRatingMin = req.query.msciESGRatingMin;
-      if (isMSCIESGRating(msciESGRatingMin)) {
+      if (isMSCIESGRating(msciESGRatingMin))
         filteredMSCIESGRatingArray = filteredMSCIESGRatingArray.filter(
           (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) >= msciESGRatingArray.indexOf(msciESGRatingMin),
         );
-      }
     }
     if (req.query.msciESGRatingMax !== undefined && typeof req.query.msciESGRatingMax === "string") {
       const msciESGRatingMax = req.query.msciESGRatingMax;
-      if (isMSCIESGRating(msciESGRatingMax)) {
+      if (isMSCIESGRating(msciESGRatingMax))
         filteredMSCIESGRatingArray = filteredMSCIESGRatingArray.filter(
           (msciESGRating) => msciESGRatingArray.indexOf(msciESGRating) <= msciESGRatingArray.indexOf(msciESGRatingMax),
         );
-      }
     }
-    if (msciESGRatingArray.some((msciESGRating) => !filteredMSCIESGRatingArray.includes(msciESGRating))) {
+    if (msciESGRatingArray.some((msciESGRating) => !filteredMSCIESGRatingArray.includes(msciESGRating)))
       filters.push({ msciESGRating: { in: filteredMSCIESGRatingArray } });
-    }
 
     if (req.query.msciTemperatureMin !== undefined) {
       const msciTemperatureMin = Number(req.query.msciTemperatureMin);
-      if (!Number.isNaN(msciTemperatureMin)) {
-        filters.push({ msciTemperature: { gte: msciTemperatureMin } });
-      }
+      if (!Number.isNaN(msciTemperatureMin)) filters.push({ msciTemperature: { gte: msciTemperatureMin } });
     }
     if (req.query.msciTemperatureMax !== undefined) {
       const msciTemperatureMax = Number(req.query.msciTemperatureMax);
-      if (!Number.isNaN(msciTemperatureMax)) {
-        filters.push({ msciTemperature: { lte: msciTemperatureMax } });
-      }
+      if (!Number.isNaN(msciTemperatureMax)) filters.push({ msciTemperature: { lte: msciTemperatureMax } });
     }
 
     if (req.query.lsegESGScoreMin !== undefined) {
       const lsegESGScoreMin = Number(req.query.lsegESGScoreMin);
-      if (!Number.isNaN(lsegESGScoreMin)) {
-        filters.push({ lsegESGScore: { gte: lsegESGScoreMin } });
-      }
+      if (!Number.isNaN(lsegESGScoreMin)) filters.push({ lsegESGScore: { gte: lsegESGScoreMin } });
     }
     if (req.query.lsegESGScoreMax !== undefined) {
       const lsegESGScoreMax = Number(req.query.lsegESGScoreMax);
-      if (!Number.isNaN(lsegESGScoreMax)) {
-        filters.push({ lsegESGScore: { lte: lsegESGScoreMax } });
-      }
+      if (!Number.isNaN(lsegESGScoreMax)) filters.push({ lsegESGScore: { lte: lsegESGScoreMax } });
     }
 
     if (req.query.lsegEmissionsMin !== undefined) {
       const lsegEmissionsMin = Number(req.query.lsegEmissionsMin);
-      if (!Number.isNaN(lsegEmissionsMin)) {
-        filters.push({ lsegEmissions: { gte: lsegEmissionsMin } });
-      }
+      if (!Number.isNaN(lsegEmissionsMin)) filters.push({ lsegEmissions: { gte: lsegEmissionsMin } });
     }
     if (req.query.lsegEmissionsMax !== undefined) {
       const lsegEmissionsMax = Number(req.query.lsegEmissionsMax);
-      if (!Number.isNaN(lsegEmissionsMax)) {
-        filters.push({ lsegEmissions: { lte: lsegEmissionsMax } });
-      }
+      if (!Number.isNaN(lsegEmissionsMax)) filters.push({ lsegEmissions: { lte: lsegEmissionsMax } });
     }
 
     if (req.query.spESGScoreMin !== undefined) {
       const spESGScoreMin = Number(req.query.spESGScoreMin);
-      if (!Number.isNaN(spESGScoreMin)) {
-        filters.push({ spESGScore: { gte: spESGScoreMin } });
-      }
+      if (!Number.isNaN(spESGScoreMin)) filters.push({ spESGScore: { gte: spESGScoreMin } });
     }
     if (req.query.spESGScoreMax !== undefined) {
       const spESGScoreMax = Number(req.query.spESGScoreMax);
-      if (!Number.isNaN(spESGScoreMax)) {
-        filters.push({ spESGScore: { lte: spESGScoreMax } });
-      }
+      if (!Number.isNaN(spESGScoreMax)) filters.push({ spESGScore: { lte: spESGScoreMax } });
     }
 
     if (req.query.sustainalyticsESGRiskMin !== undefined) {
       const sustainalyticsESGRiskMin = Number(req.query.sustainalyticsESGRiskMin);
-      if (!Number.isNaN(sustainalyticsESGRiskMin)) {
+      if (!Number.isNaN(sustainalyticsESGRiskMin))
         filters.push({ sustainalyticsESGRisk: { gte: sustainalyticsESGRiskMin } });
-      }
     }
     if (req.query.sustainalyticsESGRiskMax !== undefined) {
       const sustainalyticsESGRiskMax = Number(req.query.sustainalyticsESGRiskMax);
-      if (!Number.isNaN(sustainalyticsESGRiskMax)) {
+      if (!Number.isNaN(sustainalyticsESGRiskMax))
         filters.push({ sustainalyticsESGRisk: { lte: sustainalyticsESGRiskMax } });
-      }
     }
 
     if (req.query.financialScoreMin !== undefined) {
       const financialScoreMin = Number(req.query.financialScoreMin);
-      if (!Number.isNaN(financialScoreMin)) {
-        filters.push({ financialScore: { gte: 0.01 * financialScoreMin } });
-      }
+      if (!Number.isNaN(financialScoreMin)) filters.push({ financialScore: { gte: 0.01 * financialScoreMin } });
     }
     if (req.query.financialScoreMax !== undefined) {
       const financialScoreMax = Number(req.query.financialScoreMax);
-      if (!Number.isNaN(financialScoreMax)) {
-        filters.push({ financialScore: { lte: 0.01 * financialScoreMax } });
-      }
+      if (!Number.isNaN(financialScoreMax)) filters.push({ financialScore: { lte: 0.01 * financialScoreMax } });
     }
 
     if (req.query.esgScoreMin !== undefined) {
       const esgScoreMin = Number(req.query.esgScoreMin);
-      if (!Number.isNaN(esgScoreMin)) {
-        filters.push({ esgScore: { gte: 0.01 * esgScoreMin } });
-      }
+      if (!Number.isNaN(esgScoreMin)) filters.push({ esgScore: { gte: 0.01 * esgScoreMin } });
     }
     if (req.query.esgScoreMax !== undefined) {
       const esgScoreMax = Number(req.query.esgScoreMax);
-      if (!Number.isNaN(esgScoreMax)) {
-        filters.push({ esgScore: { lte: 0.01 * esgScoreMax } });
-      }
+      if (!Number.isNaN(esgScoreMax)) filters.push({ esgScore: { lte: 0.01 * esgScoreMax } });
     }
 
     if (req.query.totalScoreMin !== undefined) {
       const totalScoreMin = Number(req.query.totalScoreMin);
-      if (!Number.isNaN(totalScoreMin)) {
-        filters.push({ totalScore: { gte: 0.01 * totalScoreMin } });
-      }
+      if (!Number.isNaN(totalScoreMin)) filters.push({ totalScore: { gte: 0.01 * totalScoreMin } });
     }
     if (req.query.totalScoreMax !== undefined) {
       const totalScoreMax = Number(req.query.totalScoreMax);
-      if (!Number.isNaN(totalScoreMax)) {
-        filters.push({ totalScore: { lte: 0.01 * totalScoreMax } });
-      }
+      if (!Number.isNaN(totalScoreMax)) filters.push({ totalScore: { lte: 0.01 * totalScoreMax } });
     }
 
     if (req.query.watchlist !== undefined) {
@@ -422,7 +360,7 @@ export class StocksController {
     let count: Number;
 
     // Read all stocks from the database
-    if (req.query.portfolio !== undefined) {
+    if (req.query.portfolio !== undefined)
       // If a portfolio ID is specified, only return the stocks in that portfolio. This must be done by querying the
       // portfolio table, since the m:n relation between portfolios and stocks has additional attributes, which are
       // included in the WeightedStock type.
@@ -432,9 +370,7 @@ export class StocksController {
         stockFindManyArgs,
         sortByAmount,
       );
-    } else {
-      [stocks, count] = await readStocks(stockFindManyArgs);
-    }
+    else [stocks, count] = await readStocks(stockFindManyArgs);
 
     // Respond with the list of stocks and the total count after filtering and before pagination
     res.status(200).json({ stocks, count }).end();
@@ -554,13 +490,10 @@ export class StocksController {
   async put(req: Request, res: Response) {
     const { ticker } = req.params;
     const { name, country, isin } = req.query;
-    if (typeof name === "string" && typeof country === "string" && isCountry(country) && typeof isin === "string") {
-      if (await createStock({ ...optionalStockValuesNull, ticker, name, country, isin })) {
-        res.status(201).end();
-      } else {
-        throw new APIError(409, "A stock with that ticker exists already.");
-      }
-    }
+    if (typeof name !== "string" || typeof country !== "string" || !isCountry(country) || typeof isin !== "string")
+      throw new APIError(400, "Invalid query parameters.");
+    if (await createStock({ ...optionalStockValuesNull, ticker, name, country, isin })) res.status(201).end();
+    else throw new APIError(409, "A stock with that ticker exists already.");
   }
 
   /**
@@ -579,57 +512,57 @@ export class StocksController {
     const newTicker = req.query.ticker;
     const spID = req.query.spID === null ? "" : req.query.spID ? Number(req.query.spID) : undefined;
     if (
-      (typeof newTicker === "string" || typeof newTicker === "undefined") &&
-      (typeof name === "string" || typeof name === "undefined") &&
-      (typeof isin === "string" || typeof isin === "undefined") &&
-      ((typeof country === "string" && isCountry(country)) || typeof country === "undefined") &&
-      (typeof morningstarID === "string" || typeof morningstarID === "undefined") &&
-      (typeof marketScreenerID === "string" || typeof marketScreenerID === "undefined") &&
-      (typeof msciID === "string" || typeof msciID === "undefined") &&
-      (typeof ric === "string" || typeof ric === "undefined") &&
-      ((typeof spID === "string" && spID === "") ||
-        (typeof spID === "number" && !Number.isNaN(spID)) ||
-        typeof spID === "undefined") &&
-      (typeof sustainalyticsID === "string" || typeof sustainalyticsID === "undefined")
-    ) {
-      // If a data provider ID is removed (i.e., set to an empty string), we remove all information available from that
-      // data provider as well.
-      await updateStock(ticker, {
-        ticker: newTicker,
-        name,
-        isin,
-        country,
-        morningstarID: morningstarID === "" ? null : morningstarID,
-        industry: morningstarID === "" ? null : undefined,
-        size: morningstarID === "" ? null : undefined,
-        style: morningstarID === "" ? null : undefined,
-        starRating: morningstarID === "" ? null : undefined,
-        dividendYieldPercent: morningstarID === "" ? null : undefined,
-        priceEarningRatio: morningstarID === "" ? null : undefined,
-        currency: morningstarID === "" ? null : undefined,
-        lastClose: morningstarID === "" ? null : undefined,
-        morningstarFairValue: morningstarID === "" ? null : undefined,
-        marketCap: morningstarID === "" ? null : undefined,
-        low52w: morningstarID === "" ? null : undefined,
-        high52w: morningstarID === "" ? null : undefined,
-        description: morningstarID === "" ? null : undefined,
-        marketScreenerID: marketScreenerID === "" ? null : marketScreenerID,
-        analystConsensus: marketScreenerID === "" ? null : undefined,
-        analystCount: marketScreenerID === "" ? null : undefined,
-        analystTargetPrice: marketScreenerID === "" ? null : undefined,
-        msciID: msciID === "" ? null : msciID,
-        msciESGRating: msciID === "" ? null : undefined,
-        msciTemperature: msciID === "" ? null : undefined,
-        ric: ric === "" ? null : ric,
-        lsegESGScore: ric === "" ? null : undefined,
-        lsegEmissions: ric === "" ? null : undefined,
-        spID: spID === "" ? null : spID,
-        spESGScore: spID === "" ? null : undefined,
-        sustainalyticsID: sustainalyticsID === "" ? null : sustainalyticsID,
-        sustainalyticsESGRisk: sustainalyticsID === "" ? null : undefined,
-      });
-      res.status(204).end();
-    }
+      (typeof newTicker !== "string" && typeof newTicker !== "undefined") ||
+      (typeof name !== "string" && typeof name !== "undefined") ||
+      (typeof isin !== "string" && typeof isin !== "undefined") ||
+      ((typeof country !== "string" || !isCountry(country)) && typeof country !== "undefined") ||
+      (typeof morningstarID !== "string" && typeof morningstarID !== "undefined") ||
+      (typeof marketScreenerID !== "string" && typeof marketScreenerID !== "undefined") ||
+      (typeof msciID !== "string" && typeof msciID !== "undefined") ||
+      (typeof ric !== "string" && typeof ric !== "undefined") ||
+      ((typeof spID !== "string" || spID !== "") &&
+        (typeof spID !== "number" || Number.isNaN(spID)) &&
+        typeof spID !== "undefined") ||
+      (typeof sustainalyticsID !== "string" && typeof sustainalyticsID !== "undefined")
+    )
+      throw new APIError(400, "Invalid query parameters.");
+    // If a data provider ID is removed (i.e., set to an empty string), we remove all information available from that
+    // data provider as well.
+    await updateStock(ticker, {
+      ticker: newTicker,
+      name,
+      isin,
+      country,
+      morningstarID: morningstarID === "" ? null : morningstarID,
+      industry: morningstarID === "" ? null : undefined,
+      size: morningstarID === "" ? null : undefined,
+      style: morningstarID === "" ? null : undefined,
+      starRating: morningstarID === "" ? null : undefined,
+      dividendYieldPercent: morningstarID === "" ? null : undefined,
+      priceEarningRatio: morningstarID === "" ? null : undefined,
+      currency: morningstarID === "" ? null : undefined,
+      lastClose: morningstarID === "" ? null : undefined,
+      morningstarFairValue: morningstarID === "" ? null : undefined,
+      marketCap: morningstarID === "" ? null : undefined,
+      low52w: morningstarID === "" ? null : undefined,
+      high52w: morningstarID === "" ? null : undefined,
+      description: morningstarID === "" ? null : undefined,
+      marketScreenerID: marketScreenerID === "" ? null : marketScreenerID,
+      analystConsensus: marketScreenerID === "" ? null : undefined,
+      analystCount: marketScreenerID === "" ? null : undefined,
+      analystTargetPrice: marketScreenerID === "" ? null : undefined,
+      msciID: msciID === "" ? null : msciID,
+      msciESGRating: msciID === "" ? null : undefined,
+      msciTemperature: msciID === "" ? null : undefined,
+      ric: ric === "" ? null : ric,
+      lsegESGScore: ric === "" ? null : undefined,
+      lsegEmissions: ric === "" ? null : undefined,
+      spID: spID === "" ? null : spID,
+      spESGScore: spID === "" ? null : undefined,
+      sustainalyticsID: sustainalyticsID === "" ? null : sustainalyticsID,
+      sustainalyticsESGRisk: sustainalyticsID === "" ? null : undefined,
+    });
+    res.status(204).end();
   }
 
   /**

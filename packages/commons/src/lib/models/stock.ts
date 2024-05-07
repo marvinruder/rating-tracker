@@ -192,6 +192,28 @@ export type Stock = {
   description: string | null;
 };
 
+/**
+ * A stub of a stock, provided by the Yahoo Finance API.
+ */
+export type YahooStockStub = {
+  /**
+   * The stock’s ticker symbol.
+   */
+  ticker: Stock["ticker"];
+  /**
+   * The stock’s name.
+   */
+  name: Stock["name"];
+  /**
+   * The stock’s industry as part of the Morningstar Global Equity Classification Structure.
+   */
+  industry: Stock["industry"] | null;
+  /**
+   * A URL to the stock’s logo.
+   */
+  logoUrl: string | null;
+};
+
 export type OmitDynamicAttributesStock = Omit<
   Stock,
   | "financialScore"

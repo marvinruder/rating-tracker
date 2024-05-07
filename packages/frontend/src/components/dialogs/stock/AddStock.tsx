@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import type { FetchError, OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
+import type { Country, FetchError, OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
 import {
   fetchMarketScreenerEndpointPath,
   fetchMorningstarEndpointPath,
@@ -36,6 +36,7 @@ import { useState } from "react";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
 import CountryAutocomplete from "../../autocomplete/CountryAutocomplete";
+import YahooStockStubAutocomplete from "../../autocomplete/YahooStockStubAutocomplete";
 import { StockDetails } from "../../stock/layouts/StockDetails";
 
 /**
@@ -323,17 +324,34 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
           </Typography>
           <Grid container spacing={1} alignItems="center">
             <Grid item xs={12}>
-              <TextField
-                onChange={(event) => {
-                  setStock((prevStock) => ({ ...prevStock, ticker: event.target.value }));
-                  setTickerError(false);
+              <YahooStockStubAutocomplete
+                onChange={(_, value) => {
+                  const isin = value?.isin ?? "";
+                  let country: Country;
+                  if (isin) {
+                    const countryPrefix = isin.substring(0, 2);
+                    if (isCountry(countryPrefix)) country = countryPrefix;
+                  }
+                  if (value && value.ticker && value.name) {
+                    setStock((prevStock) => ({
+                      ...prevStock,
+                      ticker: value.ticker,
+                      name: value.name,
+                      isin: isin,
+                      country: country,
+                    }));
+                    setTickerError(false);
+                    setNameError(false);
+                    setIsinError(false);
+                    setCountryError(false);
+                  }
                 }}
-                error={tickerError}
-                label="Ticker symbol"
-                value={stock.ticker}
-                placeholder="e.g. AAPL"
-                fullWidth
               />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                …or fill in the information manually:
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -348,7 +366,20 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                onChange={(event) => {
+                  setStock((prevStock) => ({ ...prevStock, ticker: event.target.value }));
+                  setTickerError(false);
+                }}
+                error={tickerError}
+                label="Ticker symbol"
+                value={stock.ticker}
+                placeholder="e.g. AAPL"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={8}>
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => ({ ...prevStock, isin: event.target.value }));

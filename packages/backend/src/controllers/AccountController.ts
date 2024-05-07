@@ -66,19 +66,19 @@ export class AccountController {
     const user: User = res.locals.user;
     const { email, name, phone, subscriptions } = req.query;
     if (
-      (typeof email === "string" || typeof email === "undefined") &&
-      (typeof name === "string" || typeof name === "undefined") &&
-      (typeof phone === "string" || typeof phone === "undefined") &&
-      (typeof subscriptions === "number" || typeof subscriptions === "undefined")
-    ) {
-      await updateUserWithCredentials(user.email, { email, name, phone, subscriptions });
-      if (email) {
-        // If the user’s email changed, the session needs to be updated.
-        res.locals.user = await readUser(email);
-        await updateSession(req.cookies.authToken, res.locals.user.email);
-      }
-      res.status(204).end();
+      (typeof email !== "string" && typeof email !== "undefined") ||
+      (typeof name !== "string" && typeof name !== "undefined") ||
+      (typeof phone !== "string" && typeof phone !== "undefined") ||
+      (typeof subscriptions !== "number" && typeof subscriptions !== "undefined")
+    )
+      throw new APIError(400, "Invalid query parameters.");
+    await updateUserWithCredentials(user.email, { email, name, phone, subscriptions });
+    if (email) {
+      // If the user’s email changed, the session needs to be updated.
+      res.locals.user = await readUser(email);
+      await updateSession(req.cookies.authToken, res.locals.user.email);
     }
+    res.status(204).end();
   }
 
   /**
@@ -94,18 +94,17 @@ export class AccountController {
   })
   async putAvatar(req: Request, res: Response) {
     const avatarBody = (req.body as Buffer)?.toString("base64");
-    if (avatarBody) {
-      switch (req.headers["content-type"]) {
-        case "image/avif":
-          await updateUserWithCredentials(res.locals.user.email, {
-            avatar: `data:${req.headers["content-type"]};base64,${avatarBody}`,
-          });
-          res.status(201).end();
-          break;
-        default: // This is caught by the OpenAPI validator.
-          /* c8 ignore next */
-          throw new APIError(415, `Avatars of type “${req.headers["content-type"]}” are unsupported.`);
-      }
+    if (!avatarBody) throw new APIError(400, "Invalid request body.");
+    switch (req.headers["content-type"]) {
+      case "image/avif":
+        await updateUserWithCredentials(res.locals.user.email, {
+          avatar: `data:${req.headers["content-type"]};base64,${avatarBody}`,
+        });
+        res.status(201).end();
+        break;
+      default: // This is caught by the OpenAPI validator.
+        /* c8 ignore next */
+        throw new APIError(415, `Avatars of type “${req.headers["content-type"]}” are unsupported.`);
     }
   }
 

@@ -265,6 +265,30 @@ export const components: OpenAPIV3.ComponentsObject = {
         },
       ],
     },
+    YahooStockStub: {
+      type: "object",
+      description: "A stub of a stock, provided by the Yahoo Finance API.",
+      properties: {
+        ticker: {
+          type: "string",
+          example: "AAPL",
+        },
+        name: {
+          type: "string",
+          example: "Apple Inc.",
+        },
+        industry: {
+          $ref: "#/components/schemas/Industry",
+        },
+        logoUrl: {
+          type: "string",
+          format: "uri",
+          example: "https://s.yimg.com/lb/brands/150x150_apple.png",
+          nullable: true,
+        },
+      },
+      required: ["ticker", "name"],
+    },
     SortableAttribute: {
       type: "string",
       description: "The name of an attribute whose values can be sorted.",

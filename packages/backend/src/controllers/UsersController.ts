@@ -92,15 +92,15 @@ export class UsersController {
     const { name, phone, accessRights, subscriptions } = req.query;
     const newEmail = req.query.email;
     if (
-      (typeof newEmail === "string" || typeof newEmail === "undefined") &&
-      (typeof name === "string" || typeof name === "undefined") &&
-      (typeof phone === "string" || typeof phone === "undefined") &&
-      (typeof accessRights === "number" || typeof accessRights === "undefined") &&
-      (typeof subscriptions === "number" || typeof subscriptions === "undefined")
-    ) {
-      await updateUserWithCredentials(email, { email: newEmail, name, phone, accessRights, subscriptions });
-      res.status(204).end();
-    }
+      (typeof newEmail !== "string" && typeof newEmail !== "undefined") ||
+      (typeof name !== "string" && typeof name !== "undefined") ||
+      (typeof phone !== "string" && typeof phone !== "undefined") ||
+      (typeof accessRights !== "number" && typeof accessRights !== "undefined") ||
+      (typeof subscriptions !== "number" && typeof subscriptions !== "undefined")
+    )
+      throw new APIError(400, "Invalid query parameters.");
+    await updateUserWithCredentials(email, { email: newEmail, name, phone, accessRights, subscriptions });
+    res.status(204).end();
   }
 
   /**
@@ -116,18 +116,17 @@ export class UsersController {
   })
   async putAvatar(req: Request, res: Response) {
     const avatarBody = (req.body as Buffer)?.toString("base64");
-    if (avatarBody) {
-      switch (req.headers["content-type"]) {
-        case "image/avif":
-          await updateUserWithCredentials(req.params.email, {
-            avatar: `data:${req.headers["content-type"]};base64,${avatarBody}`,
-          });
-          res.status(201).end();
-          break;
-        default: // This is caught by the OpenAPI validator.
-          /* c8 ignore next */
-          throw new APIError(415, `Avatars of type “${req.headers["content-type"]}” are not supported.`);
-      }
+    if (!avatarBody) throw new APIError(400, "Invalid request body.");
+    switch (req.headers["content-type"]) {
+      case "image/avif":
+        await updateUserWithCredentials(req.params.email, {
+          avatar: `data:${req.headers["content-type"]};base64,${avatarBody}`,
+        });
+        res.status(201).end();
+        break;
+      default: // This is caught by the OpenAPI validator.
+        /* c8 ignore next */
+        throw new APIError(415, `Avatars of type “${req.headers["content-type"]}” are not supported.`);
     }
   }
 
