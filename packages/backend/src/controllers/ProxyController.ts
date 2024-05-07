@@ -1,3 +1,4 @@
+import type { FetchResponse } from "@rating-tracker/commons";
 import {
   FetchError,
   GENERAL_ACCESS,
@@ -40,26 +41,45 @@ export class ProxyController {
       throw new APIError(502, "The Yahoo Finance API is currently unavailable. Please try again later.", e);
       /* c8 ignore stop */
     });
+
+    // Get quotes from response
     const { quotes } = yahooFinanceResponse.data;
     if (!quotes || !Array.isArray(quotes))
       throw new APIError(502, "The Yahoo Finance API returned an invalid response.");
+
+    // Filter by valid equities
+    const equities = quotes.filter(
+      (quote) => typeof quote === "object" && "symbol" in quote && "longname" in quote && quote.quoteType === "EQUITY",
+    );
+
+    // Fetch logos from valid URLs and create data URLs
+    const logoDataURLs: Record<string, string> = {};
+    const logoResponseResults = (
+      await Promise.allSettled<FetchResponse>(
+        equities
+          .filter((equity) => "logoUrl" in equity && typeof equity.logoUrl === "string" && URL.canParse(equity.logoUrl))
+          .map((equity) => performFetchRequest(equity.logoUrl)),
+      )
+    ).filter((result): result is PromiseFulfilledResult<FetchResponse> => result.status === "fulfilled");
+    for await (const result of logoResponseResults) {
+      const response = result.value;
+      const mimeType = response.headers.get("content-type");
+      const base64 = Buffer.from(await response.arrayBuffer()).toString("base64");
+      if (mimeType && base64) logoDataURLs[response.url] = `data:${mimeType};base64,${base64}`;
+    }
+
     res
       .status(200)
       .json(
-        quotes
-          .filter(
-            (quote) =>
-              typeof quote === "object" && "symbol" in quote && "longname" in quote && quote.quoteType === "EQUITY",
-          )
-          .map((quote) => {
-            const industry = "industry" in quote ? quote.industry.replaceAll(/[^a-zA-Z0-9]/g, "") : null;
-            return {
-              ticker: quote.symbol,
-              name: quote.longname,
-              logoUrl: "logoUrl" in quote ? quote.logoUrl : null,
-              industry: isIndustry(industry) ? industry : null,
-            };
-          }),
+        equities.map((equity) => {
+          const industry = "industry" in equity ? equity.industry.replaceAll(/[^a-zA-Z0-9]/g, "") : null;
+          return {
+            ticker: equity.symbol,
+            name: equity.longname,
+            logoUrl: "logoUrl" in equity && equity.logoUrl in logoDataURLs ? logoDataURLs[equity.logoUrl] : null,
+            industry: isIndustry(industry) ? industry : null,
+          };
+        }),
       )
       .end();
   }

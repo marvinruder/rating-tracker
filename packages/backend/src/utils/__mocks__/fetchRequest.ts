@@ -23,6 +23,17 @@ export const performFetchRequest = async (
         { headers: new Headers({ "Content-Type": "application/json" }) },
       ),
     );
+  if (url === "https://s.yimg.com/lb/brands/150x150_apple.png")
+    return Object.defineProperty(
+      await handleResponse(
+        new Response(Buffer.from("AVeryFancyStockLogo=", "base64"), {
+          headers: new Headers({ "Content-Type": "image/png" }),
+        }),
+      ),
+      "url",
+      { value: url },
+    );
+
   if (url === "http://nonexisting.signal.api.host/v1/accounts")
     return handleResponse(new Response(JSON.stringify([]), {}));
   if (url.match(/https:\/\/assets\.traderepublic\.com\/img\/logos\/[A-Z0-9]+\/light\.svg/))

@@ -26,7 +26,7 @@ tests.push({
     expect(res.body).toContainEqual({
       ticker: "AAPL",
       name: "Apple Inc.",
-      logoUrl: "https://s.yimg.com/lb/brands/150x150_apple.png",
+      logoUrl: "data:image/png;base64,AVeryFancyStockLogo=",
       industry: "ConsumerElectronics",
     });
     expect(res.body).toContainEqual({
