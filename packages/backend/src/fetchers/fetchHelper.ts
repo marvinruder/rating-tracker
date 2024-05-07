@@ -223,25 +223,18 @@ export const fetchFromDataProvider = async (
   if (req.query.ticker) {
     // A single stock is requested.
     const ticker = req.query.ticker;
-    if (typeof ticker === "string") {
-      stockList = [await readStock(ticker)];
-      if (!stockList[0][dataProviderID[dataProvider]]) {
-        // If the only stock to use does not have an ID for the data provider, we throw an error.
-        throw new APIError(404, `Stock ${ticker} does not have a ${dataProviderID[dataProvider]}.`);
-      }
+    if (typeof ticker !== "string") throw new APIError(400, "Invalid query parameters.");
+    stockList = [await readStock(ticker)];
+    if (!stockList[0][dataProviderID[dataProvider]]) {
+      // If the only stock to use does not have an ID for the data provider, we throw an error.
+      throw new APIError(404, `Stock ${ticker} does not have a ${dataProviderID[dataProvider]}.`);
     }
   } else {
     // When no specific stock is requested, we fetch all stocks from the database which have an ID for the data provider
     [stockList] = await readStocks({
-      where: {
-        [dataProviderID[dataProvider]]: {
-          not: null,
-        },
-      },
-      orderBy: {
-        // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
-        [dataProviderLastFetch[dataProvider]]: "asc",
-      },
+      where: { [dataProviderID[dataProvider]]: { not: null } },
+      // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
+      orderBy: { [dataProviderLastFetch[dataProvider]]: "asc" },
     });
   }
 
@@ -250,10 +243,8 @@ export const fetchFromDataProvider = async (
     res.status(204).end();
     return;
   }
-  if (req.query.detach) {
-    // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-    res.status(202).end();
-  }
+  // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
+  if (req.query.detach) res.status(202).end();
 
   const stocks: FetcherWorkspace<Stock> = {
     successful: [],
@@ -283,10 +274,9 @@ export const fetchFromDataProvider = async (
           json = {};
           // Get the first stock in the queue
           const stock = stocks.queued.shift();
-          if (!stock) {
-            // If the queue got empty in the meantime, we end.
-            break;
-          }
+          // If the queue got empty in the meantime, we end.
+          if (!stock) break;
+
           if (
             !req.query.noSkip &&
             stock[dataProviderLastFetch[dataProvider]] &&
@@ -373,7 +363,7 @@ export const fetchFromDataProvider = async (
   );
 
   // If stocks are still queued, something went wrong and we send an error response.
-  if (stocks.queued.length) {
+  if (stocks.queued.length)
     // If fetchers threw an error, we rethrow the first one
     throw (
       rejectedResult?.reason ??
@@ -384,18 +374,12 @@ export const fetchFromDataProvider = async (
           .join(", ")} still queued.`,
       )
     );
-  }
 
   // If this request was for a single stock and an error occurred, we rethrow that error
-  if (req.query.ticker && rejectedResult) {
-    throw rejectedResult.reason;
-  }
+  if (req.query.ticker && rejectedResult) throw rejectedResult.reason;
 
-  if (!stocks.successful.length) {
-    res.status(204).end();
-  } else {
-    res.status(200).json(stocks.successful).end();
-  }
+  if (!stocks.successful.length) res.status(204).end();
+  else res.status(200).json(stocks.successful).end();
 };
 
 /**

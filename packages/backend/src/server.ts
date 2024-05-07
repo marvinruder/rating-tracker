@@ -19,6 +19,7 @@ import "./controllers/AuthController";
 import "./controllers/FavoritesController";
 import "./controllers/FetchController";
 import "./controllers/PortfoliosController";
+import "./controllers/ProxyController";
 import "./controllers/ResourcesController";
 import "./controllers/SessionController";
 import "./controllers/StatusController";

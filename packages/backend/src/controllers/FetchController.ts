@@ -121,22 +121,13 @@ export class FetchController {
     if (req.query.ticker) {
       // A single stock is requested.
       const ticker = req.query.ticker;
-      if (typeof ticker === "string") {
-        stockList = [await readStock(ticker)];
-        if (!stockList[0].sustainalyticsID) {
-          // If the only stock to use does not have a Sustainalytics ID, we throw an error.
-          throw new APIError(404, `Stock ${ticker} does not have a Sustainalytics ID.`);
-        }
-      }
+      if (typeof ticker !== "string") throw new APIError(400, "Invalid query parameters.");
+      stockList = [await readStock(ticker)];
+      // If the only stock to use does not have a Sustainalytics ID, we throw an error.
+      if (!stockList[0].sustainalyticsID) throw new APIError(404, `Stock ${ticker} does not have a Sustainalytics ID.`);
     } else {
       // When no specific stock is requested, we fetch all stocks from the database which have a Sustainalytics ID.
-      [stockList] = await readStocks({
-        where: {
-          sustainalyticsID: {
-            not: null,
-          },
-        },
-      });
+      [stockList] = await readStocks({ where: { sustainalyticsID: { not: null } } });
     }
 
     if (stockList.length === 0) {
@@ -144,10 +135,8 @@ export class FetchController {
       res.status(204).end();
       return;
     }
-    if (req.query.detach) {
-      // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
-      res.status(202).end();
-    }
+    // If the request is to be detached, we send a 202 Accepted response now and continue processing the request.
+    if (req.query.detach) res.status(202).end();
 
     const updatedStocks: Stock[] = [];
     let successfulCount = 0;
@@ -210,10 +199,10 @@ export class FetchController {
             line.startsWith(`<a data-href="/${stock.sustainalyticsID}`) &&
             sustainalyticsXMLLines[index + 1].startsWith('<div class="col-2">'),
         );
-        if (sustainalyticsIDIndex === -1) {
-          // If the Sustainalytics ID is not found, we throw an error.
+        // If the Sustainalytics ID is not found, we throw an error.
+        if (sustainalyticsIDIndex === -1)
           throw new APIError(404, `Cannot find Sustainalytics ID ${stock.sustainalyticsID} in XML.`);
-        }
+
         const sustainalyticsESGRiskLine = sustainalyticsXMLLines[sustainalyticsIDIndex + 1];
         const sustainalyticsESGRiskMatches = sustainalyticsESGRiskLine // Example: <div class="col-2">25.2</div>
           .substring(sustainalyticsESGRiskLine.indexOf(">") + 1)
@@ -223,9 +212,8 @@ export class FetchController {
           sustainalyticsESGRiskMatches === null ||
           sustainalyticsESGRiskMatches.length < 1 ||
           Number.isNaN(+sustainalyticsESGRiskMatches[0])
-        ) {
+        )
           throw new TypeError("Extracted Sustainalytics ESG Risk is no valid number.");
-        }
         sustainalyticsESGRisk = +sustainalyticsESGRiskMatches[0];
 
         // Update the stock in the database.
@@ -235,14 +223,13 @@ export class FetchController {
         updatedStocks.push(await readStock(stock.ticker));
         successfulCount += 1;
       } catch (e) {
-        if (req.query.ticker) {
+        if (req.query.ticker)
           // If this request was for a single stock, we shut down the driver and throw an error.
           throw new APIError(
             (e as APIError).status ?? 500,
             `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk`,
             e,
           );
-        }
         logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`);
         if (stock.sustainalyticsESGRisk !== null) {
           // If a Sustainalytics ESG Risk is already stored in the database, but we cannot extract it from the page, we
@@ -280,10 +267,7 @@ export class FetchController {
         break;
       }
     }
-    if (updatedStocks.length === 0) {
-      res.status(204).end();
-    } else {
-      res.status(200).json(updatedStocks).end();
-    }
+    if (updatedStocks.length === 0) res.status(204).end();
+    else res.status(200).json(updatedStocks).end();
   }
 }

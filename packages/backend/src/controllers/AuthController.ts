@@ -47,26 +47,25 @@ export class AuthController {
     const email = req.query.email;
     const name = req.query.name;
     // Users are required to provide an email address and a name to register.
-    if (typeof email === "string" && typeof name === "string") {
-      if (await userExists(email)) {
-        throw new APIError(403, ALREADY_REGISTERED_ERROR_MESSAGE);
-      }
-      // We generate the registration options and store the challenge for later verification.
-      const options = await SimpleWebAuthnServer.generateRegistrationOptions({
-        rpName,
-        rpID,
-        userName: name, // This will be displayed to the user when they authenticate.
-        attestationType: "none", // Do not prompt users for additional information about the authenticator
-        authenticatorSelection: {
-          // Require the user to verify their identity with a PIN or biometric sensor, thereby using 2FA.
-          userVerification: "required",
-          // Enables the client to discover the key based on the RP ID provided in subsequent authentication requests.
-          residentKey: "required",
-        },
-      });
-      currentChallenges[email] = options.challenge;
-      res.status(200).json(options).end();
+    if (typeof email !== "string" || typeof name !== "string") throw new APIError(400, "Invalid query parameters.");
+    if (await userExists(email)) {
+      throw new APIError(403, ALREADY_REGISTERED_ERROR_MESSAGE);
     }
+    // We generate the registration options and store the challenge for later verification.
+    const options = await SimpleWebAuthnServer.generateRegistrationOptions({
+      rpName,
+      rpID,
+      userName: name, // This will be displayed to the user when they authenticate.
+      attestationType: "none", // Do not prompt users for additional information about the authenticator
+      authenticatorSelection: {
+        // Require the user to verify their identity with a PIN or biometric sensor, thereby using 2FA.
+        userVerification: "required",
+        // Enables the client to discover the key based on the RP ID provided in subsequent authentication requests.
+        residentKey: "required",
+      },
+    });
+    currentChallenges[email] = options.challenge;
+    res.status(200).json(options).end();
   }
 
   /**
@@ -86,53 +85,49 @@ export class AuthController {
     const email = req.query.email;
     const name = req.query.name;
     // Users are required to provide an email address and a name to complete the registration.
-    if (typeof email === "string" && typeof name === "string") {
-      // We verify the registration response against the challenge we stored earlier.
-      const expectedChallenge: string = currentChallenges[email];
-      let verification: SimpleWebAuthnServer.VerifiedRegistrationResponse;
-      try {
-        verification = await SimpleWebAuthnServer.verifyRegistrationResponse({
-          response: req.body,
-          expectedChallenge,
-          expectedOrigin: origin,
-          expectedRPID: rpID,
-          requireUserVerification: true, // Require the user to verify their identity with a PIN or biometric sensor.
-        });
-      } catch (error) {
-        throw new APIError(500, error.message);
-      }
-
-      const { verified, registrationInfo } = verification;
-      // The following information is required to verify the user’s identity in the future.
-      // We store it in the database.
-      const { credentialPublicKey, credentialID, counter } = registrationInfo;
-      if (
-        verified && // If the verification was successful, this will hold true.
-        // We attempt to create a new user with the provided information.
-        // If the user already exists, createUser(…)  will return false and we throw an error.
-        !(await createUser(
-          new UserWithCredentials({
-            ...optionalUserValuesNull,
-            email,
-            name,
-            accessRights: 0, // Users need to be manually approved before they can access the app.
-            // Convert base64url (as specified in https://www.w3.org/TR/webauthn-2/) to base64 (which we want to store
-            // in database)
-            credentialID: Buffer.from(credentialID, "base64url").toString("base64"),
-            credentialPublicKey: Buffer.from(credentialPublicKey).toString("base64"),
-            counter,
-          }),
-        ))
-      ) {
-        throw new APIError(403, ALREADY_REGISTERED_ERROR_MESSAGE);
-      }
-      if (verified) {
-        res.status(201).end();
-        return;
-      }
-      // We do not provide too much information about the error to the user.
-      throw new APIError(400, "Registration failed");
+    if (typeof email !== "string" || typeof name !== "string") throw new APIError(400, "Invalid query parameters.");
+    // We verify the registration response against the challenge we stored earlier.
+    const expectedChallenge: string = currentChallenges[email];
+    let verification: SimpleWebAuthnServer.VerifiedRegistrationResponse;
+    try {
+      verification = await SimpleWebAuthnServer.verifyRegistrationResponse({
+        response: req.body,
+        expectedChallenge,
+        expectedOrigin: origin,
+        expectedRPID: rpID,
+        requireUserVerification: true, // Require the user to verify their identity with a PIN or biometric sensor.
+      });
+    } catch (error) {
+      throw new APIError(500, error.message);
     }
+
+    const { verified, registrationInfo } = verification;
+    // The following information is required to verify the user’s identity in the future.
+    // We store it in the database.
+    const { credentialPublicKey, credentialID, counter } = registrationInfo;
+    if (
+      verified && // If the verification was successful, this will hold true.
+      // We attempt to create a new user with the provided information.
+      // If the user already exists, createUser(…)  will return false and we throw an error.
+      !(await createUser(
+        new UserWithCredentials({
+          ...optionalUserValuesNull,
+          email,
+          name,
+          accessRights: 0, // Users need to be manually approved before they can access the app.
+          // Convert base64url (as specified in https://www.w3.org/TR/webauthn-2/) to base64 (which we want to store
+          // in database)
+          credentialID: Buffer.from(credentialID, "base64url").toString("base64"),
+          credentialPublicKey: Buffer.from(credentialPublicKey).toString("base64"),
+          counter,
+        }),
+      ))
+    ) {
+      throw new APIError(403, ALREADY_REGISTERED_ERROR_MESSAGE);
+    }
+    if (verified) res.status(201).end();
+    // We do not provide too much information about the error to the user.
+    else throw new APIError(400, "Registration failed");
   }
 
   /**
@@ -215,8 +210,7 @@ export class AuthController {
         sameSite: true,
       });
       res.status(204).end();
-    } else {
-      throw new APIError(400, "Authentication failed");
-    }
+      // We do not provide too much information about the error to the user.
+    } else throw new APIError(400, "Authentication failed");
   }
 }

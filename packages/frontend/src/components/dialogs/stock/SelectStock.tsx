@@ -14,6 +14,7 @@ import {
   ListItemText,
   Tooltip,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
 import { stocksEndpointPath } from "@rating-tracker/commons";
@@ -35,7 +36,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
   const [searchValue, setSearchValue] = useState("");
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [count, setCount] = useState<number>(0);
-  const [stocksFinal, setStocksFinal] = useState<boolean>(false);
+  const [stocksFinal, setStocksFinal] = useState<boolean>(true);
   const [didFocus, setDidFocus] = useState(false);
 
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
@@ -77,7 +78,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
 
-    if (event.target.value) {
+    if (event.target.value.trim()) {
       setStocksFinal(false);
     } else {
       setStocks([]);
@@ -102,7 +103,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       // Only search if the search value is not empty and the search input did not change in the last 200ms.
-      if (searchValue) getStocks(searchValue);
+      if (searchValue.trim()) getStocks(searchValue);
     }, 200);
 
     return () => clearTimeout(delayDebounceFn);
@@ -157,11 +158,16 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon />
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+            endAdornment: stocksFinal ? null : (
+              <InputAdornment position="end">
+                <CircularProgress color="inherit" size={16} aria-label="Loading results…" />
               </InputAdornment>
             ),
           }}
-          placeholder="Enter a stock name or symbol…"
+          placeholder="Enter a stock name, ISIN or ticker symbol…"
           fullWidth
           label="Search"
         />

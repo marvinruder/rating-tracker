@@ -10,6 +10,7 @@ import {
   removeStockFromWatchlist,
   updateWatchlist,
 } from "../db/tables/watchlistTable";
+import APIError from "../utils/APIError";
 import Router from "../utils/router";
 
 /**
@@ -68,10 +69,9 @@ export class WatchlistsController {
   })
   async put(req: Request, res: Response) {
     const { name } = req.query;
-    if (typeof name === "string") {
-      const watchlist = await createWatchlist(name, res.locals.user.email);
-      res.status(201).json({ id: watchlist.id }).end();
-    }
+    if (typeof name !== "string") throw new APIError(400, "Invalid query parameters.");
+    const watchlist = await createWatchlist(name, res.locals.user.email);
+    res.status(201).json({ id: watchlist.id }).end();
   }
 
   /**
@@ -87,12 +87,12 @@ export class WatchlistsController {
   async patch(req: Request, res: Response) {
     const { name, subscribed } = req.query;
     if (
-      (typeof name === "string" || typeof name === "undefined") &&
-      (typeof subscribed === "undefined" || typeof subscribed === "boolean")
-    ) {
-      await updateWatchlist(Number(req.params.id), res.locals.user.email, { name, subscribed });
-      res.status(204).end();
-    }
+      (typeof name !== "string" && typeof name !== "undefined") ||
+      (typeof subscribed !== "undefined" && typeof subscribed !== "boolean")
+    )
+      throw new APIError(400, "Invalid query parameters.");
+    await updateWatchlist(Number(req.params.id), res.locals.user.email, { name, subscribed });
+    res.status(204).end();
   }
 
   /**

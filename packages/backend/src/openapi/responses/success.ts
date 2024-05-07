@@ -67,6 +67,23 @@ export const okStockList: OpenAPIV3.ResponseObject = {
 };
 
 /**
+ * A response with a 200 OK status code and an array of Yahoo Stock Stub objects.
+ */
+export const okYahooStockStubList: OpenAPIV3.ResponseObject = {
+  description: "OK",
+  content: {
+    "application/json": {
+      schema: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/YahooStockStub",
+        },
+      },
+    },
+  },
+};
+
+/**
  * A response with a 200 OK status code and an object containing an array of Stock objects and a count.
  */
 export const okStockListWithCount: OpenAPIV3.ResponseObject = {

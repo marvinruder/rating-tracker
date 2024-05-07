@@ -11,6 +11,7 @@ import {
   updatePortfolio,
   updateStockInPortfolio,
 } from "../db/tables/portfolioTable";
+import APIError from "../utils/APIError";
 import Router from "../utils/router";
 
 /**
@@ -64,10 +65,10 @@ export class PortfoliosController {
   })
   async put(req: Request, res: Response) {
     const { name, currency } = req.query;
-    if (typeof name === "string" && typeof currency === "string" && isCurrency(currency)) {
-      const portfolio = await createPortfolio(name, res.locals.user.email, currency);
-      res.status(201).json({ id: portfolio.id }).end();
-    }
+    if (typeof name !== "string" || typeof currency !== "string" || !isCurrency(currency))
+      throw new APIError(400, "Invalid query parameters.");
+    const portfolio = await createPortfolio(name, res.locals.user.email, currency);
+    res.status(201).json({ id: portfolio.id }).end();
   }
 
   /**
@@ -83,12 +84,12 @@ export class PortfoliosController {
   async patch(req: Request, res: Response) {
     const { name, currency } = req.query;
     if (
-      (typeof name === "string" || typeof name === "undefined") &&
-      ((typeof currency === "string" && isCurrency(currency)) || typeof currency === "undefined")
-    ) {
-      await updatePortfolio(Number(req.params.id), res.locals.user.email, { name, currency });
-      res.status(204).end();
-    }
+      (typeof name !== "string" && typeof name !== "undefined") ||
+      ((typeof currency !== "string" || !isCurrency(currency)) && typeof currency !== "undefined")
+    )
+      throw new APIError(400, "Invalid query parameters.");
+    await updatePortfolio(Number(req.params.id), res.locals.user.email, { name, currency });
+    res.status(204).end();
   }
 
   /**
@@ -103,13 +104,12 @@ export class PortfoliosController {
   })
   async addStock(req: Request, res: Response) {
     const amount = Number(req.query.amount);
-    if (typeof amount === "number" && !Number.isNaN(amount)) {
-      await addStockToPortfolio(Number(req.params.id), res.locals.user.email, {
-        ticker: req.params.ticker,
-        amount,
-      });
-      res.status(204).end();
-    }
+    if (typeof amount !== "number" || Number.isNaN(amount)) throw new APIError(400, "Invalid query parameters.");
+    await addStockToPortfolio(Number(req.params.id), res.locals.user.email, {
+      ticker: req.params.ticker,
+      amount,
+    });
+    res.status(204).end();
   }
 
   /**
@@ -124,10 +124,10 @@ export class PortfoliosController {
   })
   async updateStock(req: Request, res: Response) {
     const amount = req.query.amount ? Number(req.query.amount) : undefined;
-    if ((typeof amount === "number" && !Number.isNaN(amount)) || typeof amount === "undefined") {
-      await updateStockInPortfolio(Number(req.params.id), res.locals.user.email, req.params.ticker, { amount });
-      res.status(204).end();
-    }
+    if ((typeof amount !== "number" || Number.isNaN(amount)) && typeof amount !== "undefined")
+      throw new APIError(400, "Invalid query parameters.");
+    await updateStockInPortfolio(Number(req.params.id), res.locals.user.email, req.params.ticker, { amount });
+    res.status(204).end();
   }
 
   /**

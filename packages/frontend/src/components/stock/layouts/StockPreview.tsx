@@ -11,7 +11,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from "@mui/material";
-import type { Stock } from "@rating-tracker/commons";
+import type { Stock, YahooStockStub } from "@rating-tracker/commons";
 import { baseURL, emojiFlag, stockLogoEndpointSuffix, stocksEndpointPath } from "@rating-tracker/commons";
 import { NavLink } from "react-router-dom";
 
@@ -20,46 +20,53 @@ import { SectorIcon } from "../properties/SectorIcon";
 /**
  * A preview of a stock, showing its name, country and sector in a `ListItem` component.
  * @param props The properties of the component.
+ * @param props.stock The stock to preview.
+ * @param props.navLink Whether the component is a `NavLink`.
+ * @param props.onDelete The function to call when the user clicks on the Delete button.
+ *                       If not provided, the button will not be shown.
  * @returns The component.
  */
-export const StockPreview = (props: StockPreviewProps): JSX.Element => {
+export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPreviewProps): JSX.Element => {
   const theme = useTheme();
   return (
     <ListItem
-      component={props.component}
-      {...(props.navLink ? { component: NavLink, to: `${stocksEndpointPath}/${props.stock.ticker}` } : {})}
-      onClick={props.onClick}
+      {...props}
+      {...(navLink ? { component: NavLink, to: `${stocksEndpointPath}/${stock.ticker}` } : {})}
       sx={{
-        cursor: props.onClick || props.navLink ? "pointer" : undefined,
+        ...props.sx,
+        cursor: props.onClick || navLink ? "pointer" : undefined,
         py: 1.5,
         color: "inherit",
-        "&:hover": props.onClick || props.navLink ? { background: theme.palette.action.hover } : {},
+        "&:hover": props.onClick || navLink ? { background: theme.palette.action.hover } : {},
       }}
-      disableGutters={props.disableGutters}
     >
       <ListItemAvatar>
         <Avatar
-          sx={{ width: 80, height: 80, m: "-20px", background: "none" }}
-          src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
-            theme.palette.mode === "dark"
-          }`}
-          alt={`Logo of “${props.stock.name}”`}
+          sx={
+            "logoUrl" in stock
+              ? { width: 40, height: 40, background: "none", visibility: stock.logoUrl === null ? "hidden" : undefined }
+              : { width: 80, height: 80, m: "-20px", background: "none" }
+          }
+          src={
+            "logoUrl" in stock
+              ? stock.logoUrl
+              : `${baseURL}${stocksEndpointPath}/${stock.ticker}${stockLogoEndpointSuffix}?dark=${
+                  theme.palette.mode === "dark"
+                }`
+          }
+          alt={`Logo of “${stock.name}”`}
         />
       </ListItemAvatar>
-      <ListItemText
-        primary={props.stock.name}
-        primaryTypographyProps={{ fontWeight: "bold" }}
-        secondary={props.stock.ticker}
-      />
+      <ListItemText primary={stock.name} primaryTypographyProps={{ fontWeight: "bold" }} secondary={stock.ticker} />
       <Typography sx={{ ml: 1 }} fontSize={18}>
-        {emojiFlag(props.stock.country)}
+        {"country" in stock ? emojiFlag(stock.country) : ""}
       </Typography>
-      <Box width={24} height={24} ml={1} mr={props.onDelete && 1}>
-        <SectorIcon industry={props.stock.industry} length={24} type="Sector" />
+      <Box width={24} height={24} ml={1} mr={onDelete && 1}>
+        <SectorIcon industry={stock.industry} length={24} type="Sector" />
       </Box>
-      {props.onDelete && (
+      {onDelete && (
         <ListItemSecondaryAction sx={{ right: 9 }}>
-          <IconButton aria-label={`Delete stock “${props.stock.name}”`} color="error" onClick={props.onDelete}>
+          <IconButton aria-label={`Delete stock “${stock.name}”`} color="error" onClick={onDelete}>
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>
@@ -71,19 +78,15 @@ export const StockPreview = (props: StockPreviewProps): JSX.Element => {
 /**
  * The properties of the StockPreview component.
  */
-interface StockPreviewProps extends Pick<ListItemProps, "disableGutters" | "component"> {
+interface StockPreviewProps extends ListItemProps {
   /**
    * The stock to preview.
    */
-  stock: Stock;
+  stock: Stock | YahooStockStub;
   /**
    * Whether the component is a `NavLink`.
    */
   navLink?: boolean;
-  /**
-   * The function to call when the user clicks on the list item.
-   */
-  onClick?: () => void;
   /**
    * The function to call when the user clicks on the Delete button. If not provided, the button will not be shown.
    */

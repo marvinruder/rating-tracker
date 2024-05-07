@@ -568,7 +568,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   <SelectStock
                     title="Select a stock to add it to the portfolio"
                     onClose={() => {}}
-                    onSelect={(stock) =>
+                    onSelect={(stock: Stock) =>
                       setStocks((prevStocks) =>
                         [
                           ...prevStocks,
