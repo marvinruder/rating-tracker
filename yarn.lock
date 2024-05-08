@@ -1448,7 +1448,7 @@ __metadata:
     "@vitest/coverage-v8": "npm:1.6.0"
     "@vitest/ui": "npm:1.6.0"
     "@xmldom/xmldom": "npm:0.8.10"
-    "@yarnpkg/pnpify": "npm:4.0.1"
+    "@yarnpkg/pnpify": "npm:4.1.0"
     chalk: "npm:5.3.0"
     concurrently: "npm:8.2.2"
     cookie-parser: "npm:1.4.6"
@@ -2555,7 +2555,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:^4.0.2, @yarnpkg/core@npm:^4.0.3, @yarnpkg/core@npm:^4.0.5":
+"@yarnpkg/core@npm:^4.0.3, @yarnpkg/core@npm:^4.0.5":
   version: 4.0.5
   resolution: "@yarnpkg/core@npm:4.0.5"
   dependencies:
@@ -2589,12 +2589,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/fslib@npm:^3.0.1, @yarnpkg/fslib@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@yarnpkg/fslib@npm:3.0.2"
+"@yarnpkg/fslib@npm:^3.0.2, @yarnpkg/fslib@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@yarnpkg/fslib@npm:3.1.0"
   dependencies:
     tslib: "npm:^2.4.0"
-  checksum: 10c0/658a2d614eecd3bfe167fc93bcd9fe144e3e0b2bab8926395bcf5a7db71c88e04f636acf4f5c4eee5aecb2bf3f338f0ae1f5dad07323cea53cc0756d66ec4834
+  checksum: 10c0/e327aaf73fe2fff442a71f045fe006f13931a09021b5b868a993a644d4950cd3c5589f1d58ee9e38390bca83705a30b649db7ae462fe704fdb6cdeb12ed2232a
   languageName: node
   linkType: hard
 
@@ -2611,7 +2611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/nm@npm:^4.0.1":
+"@yarnpkg/nm@npm:^4.0.2":
   version: 4.0.2
   resolution: "@yarnpkg/nm@npm:4.0.2"
   dependencies:
@@ -2642,18 +2642,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/pnpify@npm:4.0.1":
-  version: 4.0.1
-  resolution: "@yarnpkg/pnpify@npm:4.0.1"
+"@yarnpkg/pnpify@npm:4.1.0":
+  version: 4.1.0
+  resolution: "@yarnpkg/pnpify@npm:4.1.0"
   dependencies:
-    "@yarnpkg/core": "npm:^4.0.2"
-    "@yarnpkg/fslib": "npm:^3.0.1"
-    "@yarnpkg/nm": "npm:^4.0.1"
+    "@yarnpkg/core": "npm:^4.0.5"
+    "@yarnpkg/fslib": "npm:^3.1.0"
+    "@yarnpkg/nm": "npm:^4.0.2"
     clipanion: "npm:^4.0.0-rc.2"
     tslib: "npm:^2.4.0"
   bin:
     pnpify: ./lib/cli.js
-  checksum: 10c0/54d1f3b42ba82911195dedd73128ae854016d498eb1e2f3dcd9b48617dadac80f9938d41275ad95ca6e775a956c472de87be81c1af50a2a3efa989fa42fbc1bc
+  checksum: 10c0/d38970bc9b8c0b343a3d83ae575855c94b54df8d92d192d628a577cf68d71396c5db831ea2c48a36721f532fd127bd211a979e8cb47d1bb48739b3abefef825e
   languageName: node
   linkType: hard
 
