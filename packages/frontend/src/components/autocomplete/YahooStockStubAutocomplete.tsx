@@ -84,7 +84,7 @@ const YahooStockStubAutocomplete = (props: YahooStockStubAutocompleteProps): JSX
         handleSelect();
         const stockStubWithISIN: YahooStockStub & { isin?: Stock["isin"] } = { ...value };
         if (
-          queryInputValue.toUpperCase().match(/[A-Z]{2}[0-9]{10}/) &&
+          queryInputValue.toUpperCase().match(/[A-Z]{2}[A-Z0-9]{10}/) &&
           isCountry(queryInputValue.substring(0, 2).toUpperCase())
         )
           stockStubWithISIN.isin = queryInputValue;
