@@ -10,40 +10,58 @@ import {
   UserWithCredentials,
 } from "@rating-tracker/commons";
 import * as SimpleWebAuthnServer from "@simplewebauthn/server";
-import type { Request, Response } from "express";
+import type { Request, RequestHandler, Response } from "express";
 import express from "express";
 
 import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable";
+import * as user from "../openapi/parameters/user";
+import { badRequest, forbidden, notFound, tooManyRequestsHTML } from "../openapi/responses/clientError";
+import { internalServerError } from "../openapi/responses/serverError";
+import { created, noContent, okObject } from "../openapi/responses/success";
 import { createSession, sessionTTLInSeconds } from "../redis/repositories/sessionRepository";
 import APIError from "../utils/APIError";
-import Router from "../utils/router";
-
-const rpName = "Rating Tracker";
-// Using only the domain name allows us to use the same code for several subdomains.
-const rpID = process.env.DOMAIN;
-const origin = `https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${rpID}`;
-
-// Stores all challenges between the client’s GET request to get such challenge and their POST request with the
-// challenge response. Those are only required to be stored for a short time, so we can use a simple object here.
-const currentChallenges = {};
+import Endpoint from "../utils/Endpoint";
+import Singleton from "../utils/Singleton";
 
 /**
  * This class is responsible for handling all registration and authentication requests.
  */
-export class AuthController {
+class AuthController extends Singleton {
   /**
-   * Generates a registration challenge for the user to register.
+   * Stores all challenges between the client’s GET request to get such challenge and their POST request with the
+   * challenge response. Those are only required to be stored for a short time, so we can use a simple object here.
+   */
+  #currentChallenges: Record<string, string> = {};
+
+  #rpName = "Rating Tracker";
+  // Using only the domain name allows us to use the same code for several subdomains.
+  #rpID = process.env.DOMAIN;
+  #origin = `https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${this.#rpID}`;
+
+  /**
+   * Generates a registration challenge for the user to register via the WebAuthn standard.
    * @param req Request object
    * @param res Response object
    * @throws an {@link APIError} if the user already exists.
    */
-  @Router({
-    path: registerEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Authentication API"],
+      operationId: "getRegistrationOptions",
+      summary: "Get a challenge for registering a new user",
+      description: "Generates a registration challenge for the user to register via the WebAuthn standard",
+      parameters: [
+        { ...user.email, required: true },
+        { ...user.name, required: true },
+      ],
+      responses: { "200": okObject, "403": forbidden, "429": tooManyRequestsHTML },
+    },
     method: "get",
+    path: registerEndpointPath,
     accessRights: 0,
     rateLimited: true,
   })
-  async getRegistrationOptions(req: Request, res: Response) {
+  getRegistrationOptions: RequestHandler = async (req: Request, res: Response) => {
     const email = req.query.email;
     const name = req.query.name;
     // Users are required to provide an email address and a name to register.
@@ -53,8 +71,8 @@ export class AuthController {
     }
     // We generate the registration options and store the challenge for later verification.
     const options = await SimpleWebAuthnServer.generateRegistrationOptions({
-      rpName,
-      rpID,
+      rpName: this.#rpName,
+      rpID: this.#rpID,
       userName: name, // This will be displayed to the user when they authenticate.
       attestationType: "none", // Do not prompt users for additional information about the authenticator
       authenticatorSelection: {
@@ -64,9 +82,9 @@ export class AuthController {
         residentKey: "required",
       },
     });
-    currentChallenges[email] = options.challenge;
+    this.#currentChallenges[email] = options.challenge;
     res.status(200).json(options).end();
-  }
+  };
 
   /**
    * Verifies the registration response and creates a new user if the request is valid.
@@ -74,27 +92,44 @@ export class AuthController {
    * @param res Response object
    * @throws an {@link APIError} if the registration failed or the user already exists.
    */
-  @Router({
-    path: registerEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Authentication API"],
+      operationId: "postRegistrationResponse",
+      summary: "Verify the response for a WebAuthn registration challenge",
+      description: "Verifies the registration response and creates a new user if the request is valid.",
+      parameters: [
+        { ...user.email, required: true },
+        { ...user.name, required: true },
+      ],
+      responses: {
+        "201": created,
+        "400": badRequest,
+        "403": forbidden,
+        "429": tooManyRequestsHTML,
+        "500": internalServerError,
+      },
+    },
     method: "post",
+    path: registerEndpointPath,
     accessRights: 0,
     bodyParser: express.json(),
     rateLimited: true,
   })
-  async postRegistrationResponse(req: Request, res: Response) {
+  postRegistrationResponse: RequestHandler = async (req: Request, res: Response) => {
     const email = req.query.email;
     const name = req.query.name;
     // Users are required to provide an email address and a name to complete the registration.
     if (typeof email !== "string" || typeof name !== "string") throw new APIError(400, "Invalid query parameters.");
     // We verify the registration response against the challenge we stored earlier.
-    const expectedChallenge: string = currentChallenges[email];
+    const expectedChallenge: string = this.#currentChallenges[email];
     let verification: SimpleWebAuthnServer.VerifiedRegistrationResponse;
     try {
       verification = await SimpleWebAuthnServer.verifyRegistrationResponse({
         response: req.body,
         expectedChallenge,
-        expectedOrigin: origin,
-        expectedRPID: rpID,
+        expectedOrigin: this.#origin,
+        expectedRPID: this.#rpID,
         requireUserVerification: true, // Require the user to verify their identity with a PIN or biometric sensor.
       });
     } catch (error) {
@@ -128,27 +163,36 @@ export class AuthController {
     if (verified) res.status(201).end();
     // We do not provide too much information about the error to the user.
     else throw new APIError(400, "Registration failed");
-  }
+  };
 
   /**
    * Generates an authentication challenge for any user to sign in. The challenge is not related to any specific user.
    * @param _ Request object
    * @param res Response object
    */
-  @Router({
-    path: signInEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Authentication API"],
+      operationId: "getAuthenticationOptions",
+      summary: "Get a challenge for authenticating as a registered user",
+      description:
+        "Generates an authentication challenge for any user to sign in. " +
+        "The challenge is not related to any specific user.",
+      responses: { "200": okObject, "429": tooManyRequestsHTML },
+    },
     method: "get",
+    path: signInEndpointPath,
     accessRights: 0,
     rateLimited: true,
   })
-  async getAuthenticationOptions(_: Request, res: Response) {
+  getAuthenticationOptions: RequestHandler = async (_: Request, res: Response) => {
     const options = await SimpleWebAuthnServer.generateAuthenticationOptions({
-      rpID: rpID,
+      rpID: this.#rpID,
       userVerification: "required", // Require the user to verify their identity with a PIN or biometric sensor.
     });
-    currentChallenges[options.challenge] = options.challenge;
+    this.#currentChallenges[options.challenge] = options.challenge;
     res.status(200).json(options).end();
-  }
+  };
 
   /**
    * Verifies the authentication response and creates a session cookie if the challenge response is valid.
@@ -156,14 +200,29 @@ export class AuthController {
    * @param res Response object
    * @throws an {@link APIError} if the authentication failed or the user lacks access rights.
    */
-  @Router({
-    path: signInEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Authentication API"],
+      operationId: "postAuthenticationResponse",
+      summary: "Verify the response for a WebAuthn authentication challenge",
+      description:
+        "Verifies the authentication response and creates a session cookie if the challenge response is valid.",
+      responses: {
+        "204": noContent,
+        "400": badRequest,
+        "403": forbidden,
+        "404": notFound,
+        "429": tooManyRequestsHTML,
+        "500": internalServerError,
+      },
+    },
     method: "post",
+    path: signInEndpointPath,
     accessRights: 0,
     bodyParser: express.json(),
     rateLimited: true,
   })
-  async postAuthenticationResponse(req: Request, res: Response) {
+  postAuthenticationResponse: RequestHandler = async (req: Request, res: Response) => {
     // We retrieve the user from the database, who we identified by the email address in the challenge response.
     const credentialID: string = req.body.id;
     const user = await readUserByCredentialID(credentialID);
@@ -173,9 +232,9 @@ export class AuthController {
       verification = await SimpleWebAuthnServer.verifyAuthenticationResponse({
         response: req.body,
         // We verify the authentication response against the challenge we stored earlier.
-        expectedChallenge: currentChallenges[req.body.challenge],
-        expectedOrigin: origin,
-        expectedRPID: rpID,
+        expectedChallenge: this.#currentChallenges[req.body.challenge],
+        expectedOrigin: this.#origin,
+        expectedRPID: this.#rpID,
         authenticator: {
           // This information is stored for each user in the database.
           credentialID: user.credentialID,
@@ -206,11 +265,13 @@ export class AuthController {
       res.cookie("authToken", authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
         httpOnly: true,
-        secure: process.env.NODE_ENV !== "development", // allow plain HTTP in development
+        secure: true,
         sameSite: true,
       });
       res.status(204).end();
       // We do not provide too much information about the error to the user.
     } else throw new APIError(400, "Authentication failed");
-  }
+  };
 }
+
+export default new AuthController();

@@ -1,28 +1,38 @@
 import type { Service } from "@rating-tracker/commons";
 import { serviceArray, statusEndpointPath } from "@rating-tracker/commons";
-import type { Request, Response } from "express";
+import type { Request, RequestHandler, Response } from "express";
 
 import { prismaIsReady } from "../db/client";
+import { internalServerErrorServerUnhealthy } from "../openapi/responses/serverError";
+import { okHealthy } from "../openapi/responses/success";
 import { redisIsReady } from "../redis/redis";
 import { signalIsReadyOrUnused } from "../signal/signalBase";
-import Router from "../utils/router";
+import Endpoint from "../utils/Endpoint";
+import Singleton from "../utils/Singleton";
 // import { seleniumIsReady } from "../utils/webdriver";
 
 /**
- * This class is responsible for providing a trivial status response whenever the backend API is up and running.
+ * This class is responsible for providing a status report of the backend API and the services it depends on.
  */
-export class StatusController {
+class StatusController extends Singleton {
   /**
-   * Provides a trivial status response whenever the backend API is up and running.
+   * Provides a status report of the backend API and the services it depends on.
    * @param _ The request.
    * @param res The response.
    */
-  @Router({
-    path: statusEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Status API"],
+      operationId: "status",
+      summary: "Get the status of the API",
+      description: "Provides a status report of the backend API and the services it depends on.",
+      responses: { "200": okHealthy, "500": internalServerErrorServerUnhealthy },
+    },
     method: "get",
+    path: statusEndpointPath,
     accessRights: 0,
   })
-  async get(_: Request, res: Response) {
+  get: RequestHandler = async (_: Request, res: Response) => {
     let healthy = true;
     const services: Partial<Record<Service, string>> = {};
     (
@@ -43,5 +53,7 @@ export class StatusController {
       .status(healthy ? 200 : 500)
       .json({ status: healthy ? "healthy" : "unhealthy", services })
       .end();
-  }
+  };
 }
+
+export default new StatusController();

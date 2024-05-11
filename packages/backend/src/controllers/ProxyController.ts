@@ -6,30 +6,58 @@ import {
   proxyEndpointPath,
   yahooFinanceEndpointSuffix,
 } from "@rating-tracker/commons";
-import type { Request, Response } from "express";
+import type { Request, RequestHandler, Response } from "express";
 
+import { tooManyRequestsJSONError, unauthorized } from "../openapi/responses/clientError";
+import { badGateway } from "../openapi/responses/serverError";
+import { okYahooStockStubList } from "../openapi/responses/success";
 import APIError from "../utils/APIError";
+import Endpoint from "../utils/Endpoint";
 import { performFetchRequest } from "../utils/fetchRequest";
-import Router from "../utils/router";
-
-const YAHOO_FINANCE_API_URL = "https://query1.finance.yahoo.com/v1/finance/search";
+import Singleton from "../utils/Singleton";
 
 /**
  * This class is responsible for relaying requests to external APIs.
  */
-export class ProxyController {
+class ProxyController extends Singleton {
   /**
    * Relays a request to the Yahoo Finance API.
    * @param req Request object
    * @param res Response object
    * @throws an {@link APIError} if the API request is not successful
    */
-  @Router({
-    path: proxyEndpointPath + yahooFinanceEndpointSuffix,
+  @Endpoint({
+    spec: {
+      tags: ["Proxy API"],
+      operationId: "getYahooFinance",
+      summary: "Access the Yahoo Finance API",
+      description: "Relays a request to the Yahoo Finance API.",
+      parameters: [
+        {
+          name: "q",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description:
+            "The query to be sent to the Yahoo Finance API. " +
+            "Can be a ticker, an ISIN, a name or a similar identifier of a stock.",
+          example: "us0378331005",
+        },
+      ],
+      responses: {
+        "200": okYahooStockStubList,
+        "401": unauthorized,
+        "429": tooManyRequestsJSONError,
+        "502": badGateway,
+      },
+    },
     method: "get",
+    path: proxyEndpointPath + yahooFinanceEndpointSuffix,
     accessRights: GENERAL_ACCESS,
   })
-  async getYahooFinance(req: Request, res: Response) {
+  getYahooFinance: RequestHandler = async (req: Request, res: Response) => {
+    const YAHOO_FINANCE_API_URL = "https://query1.finance.yahoo.com/v1/finance/search";
+
     const { q } = req.query;
     if (typeof q !== "string") throw new APIError(400, "Invalid query parameters.");
     const yahooFinanceResponse = await performFetchRequest(YAHOO_FINANCE_API_URL, {
@@ -82,5 +110,7 @@ export class ProxyController {
         }),
       )
       .end();
-  }
+  };
 }
+
+export default new ProxyController();

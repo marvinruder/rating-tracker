@@ -52,7 +52,7 @@ const dataProviderParams: Record<DataProvider, Record<string, string>> = {
  * @param bypassAuthenticationForInternalRequestsToken A token that must be used in an authentication cookie
  * @param autoFetchSchedule A cron-like schedule description.
  */
-export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchSchedule: string) => {
+const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, autoFetchSchedule: string) => {
   new cron.CronJob(
     autoFetchSchedule,
     () => {
@@ -113,3 +113,5 @@ export default (bypassAuthenticationForInternalRequestsToken: string, autoFetchS
     "This process will periodically fetch information from data providers for all known stocks.",
   );
 };
+
+export default setupCronJobs;

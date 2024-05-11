@@ -26,12 +26,12 @@ import "./controllers/StatusController";
 import "./controllers/StocksController";
 import "./controllers/UsersController";
 import "./controllers/WatchlistsController";
-import { openapiDocument } from "./openapi";
+import OpenAPIDocumentation from "./openapi";
 import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository";
 import setupCronJobs from "./utils/cron";
+import { router } from "./utils/Endpoint";
 import errorHandler from "./utils/errorHandler";
 import logger, { logRequest } from "./utils/logger";
-import { router } from "./utils/router";
 
 /**
  * A token that is used to bypass authentication for requests sent by Cron jobs. It is generated randomly and changes on
@@ -120,7 +120,7 @@ server.app.use(async (req, res, next) => {
       res.cookie("authToken", req.cookies.authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
         httpOnly: true,
-        secure: process.env.NODE_ENV !== "development", // allow plain HTTP in development
+        secure: true,
         sameSite: true,
       });
     } catch (e) {
@@ -141,7 +141,7 @@ server.app.use(
   "/api-docs",
   SwaggerUI.serve,
   SwaggerUI.setup(
-    openapiDocument,
+    OpenAPIDocumentation.openAPIDocument,
     undefined,
     undefined,
     undefined,
@@ -152,7 +152,7 @@ server.app.use(
 );
 
 // Host the OpenAPI JSON configuration
-server.app.get("/api-spec/v3", (_, res) => res.json(openapiDocument));
+server.app.get("/api-spec/v3", (_, res) => res.json(OpenAPIDocumentation.openAPIDocument));
 
 // Log all requests
 server.app.use(responseTime(logRequest));
@@ -160,7 +160,7 @@ server.app.use(responseTime(logRequest));
 // Validate requests and responses against the OpenAPI specification
 server.app.use(
   OpenApiValidator.middleware({
-    apiSpec: openapiDocument,
+    apiSpec: OpenAPIDocumentation.openAPIDocument,
     validateRequests: true,
     validateResponses: true,
   }),

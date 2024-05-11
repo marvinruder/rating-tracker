@@ -14,6 +14,7 @@ customLogger.error = (msg, options) => {
 export default defineConfig({
   customLogger,
   cacheDir: ".vite",
+  esbuild: { target: `node${process.versions.node}` },
   test: {
     coverage: {
       enabled: true,

@@ -18,7 +18,7 @@
     "prisma:generate": "pnpify prisma generate",
     "prisma:migrate:dev": "pnpify prisma migrate dev",
     "fix:bundle": "mkdir -p dist/public/api-docs runtime && cp ../../.yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui{.css,-bundle.js,-standalone-preset.js} dist/public/api-docs/ && cp ../../.yarn/unplugged/prisma-*/node_modules/prisma/build/prisma_schema_build_bg.wasm dist && cp ../../.yarn/unplugged/@prisma-engines-*/node_modules/@prisma/engines/schema-engine-* runtime",
-    "build": "esbuild --color=true src/server.ts --bundle --platform=node --format=esm --inject:./src/utils/cjs-shim.ts --sourcemap=linked --sources-content=false --log-override:commonjs-variable-in-esm=silent --outfile=dist/server.mjs",
+    "build": "esbuild --color=true src/server.ts --bundle --platform=node --format=esm --inject:./src/utils/cjs-shim.ts --target=node$(node -v | sed 's/^v//') --sourcemap=linked --sources-content=false --log-override:commonjs-variable-in-esm=silent --outfile=dist/server.mjs",
     "build:logFormatterConfig": "esbuild src/utils/logFormatterConfig.ts --bundle --minify --platform=node --format=cjs --log-override:commonjs-variable-in-esm=silent --outfile=dist/pino-pretty-config.cjs",
     "typecheck": "tsc --noEmit --tsBuildInfoFile $HOME/.cache/rating-tracker/backend.tsbuildinfo",
     "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/backend.eslintcache --cache-strategy content --max-warnings 0 --ext .ts src/ test/",

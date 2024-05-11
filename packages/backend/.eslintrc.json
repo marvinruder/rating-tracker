@@ -34,7 +34,7 @@
       },
       "warnOnUnassignedImports": true
     }],
-    "new-cap": ["warn", { "capIsNewExceptions": ["Router"] }],
+    "new-cap": ["warn", { "capIsNewExceptions": ["Endpoint"] }],
     "quotes": ["warn", "double", { "avoidEscape": true }],
     "max-len": ["warn", { "code": 120 }],
     "prettier/prettier": ["warn", {

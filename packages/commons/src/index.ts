@@ -38,9 +38,13 @@ export * from "./lib/Currency";
 
 export * from "./lib/DataProvider";
 
+export * from "./lib/dummySVG";
+
 export * from "./lib/ErrorMessages";
 
 export * from "./lib/Fetch";
+
+export * from "./lib/HTTPMethod";
 
 export * from "./lib/MessageType";
 
