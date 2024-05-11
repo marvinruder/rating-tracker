@@ -13,84 +13,151 @@ import {
   stocksEndpointPath,
   stockLogoEndpointSuffix,
   WRITE_STOCKS_ACCESS,
+  DUMMY_SVG,
 } from "@rating-tracker/commons";
-import type { Request, Response } from "express";
+import type { Request, RequestHandler, Response } from "express";
 
 import type { Prisma } from "../../prisma/client";
 import { readStocksInPortfolio } from "../db/tables/portfolioTable";
 import { createStock, deleteStock, readStocks, updateStock, readStock } from "../db/tables/stockTable";
 import { readWatchlist } from "../db/tables/watchlistTable";
+import * as portfolio from "../openapi/parameters/portfolio";
+import * as stock from "../openapi/parameters/stock";
+import * as watchlist from "../openapi/parameters/watchlist";
+import { badRequest, conflict, forbidden, notFound, unauthorized } from "../openapi/responses/clientError";
+import { badGateway } from "../openapi/responses/serverError";
+import {
+  created,
+  noContent,
+  okLogoBackground,
+  okStock,
+  okStockListWithCount,
+  okSVG,
+} from "../openapi/responses/success";
 import { createResource, readResource, readResourceTTL } from "../redis/repositories/resourceRepository";
 import APIError from "../utils/APIError";
+import Endpoint from "../utils/Endpoint";
 import { performFetchRequest } from "../utils/fetchRequest";
-import Router from "../utils/router";
-
-/**
- * An empty SVG string, which is used as a placeholder for stock logos that could not be fetched from TradeRepublic.
- */
-export const DUMMY_SVG: string =
-  '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>' as const;
-
-/**
- * Retrieves the logo of a stock from Redis cache or TradeRepublic.
- * @param ticker the ticker of the stock
- * @param dark whether to use the dark or light version of the logo
- * @returns the logo as a Resource object
- */
-const getLogoOfStock = async (ticker: string, dark: boolean): Promise<Resource> => {
-  const stock = await readStock(ticker);
-  let logoResource: Resource;
-  const url = `https://assets.traderepublic.com/img/logos/${stock.isin}/${dark ? "dark" : "light"}.svg`;
-  try {
-    // Try to read the logo from Redis cache first.
-    logoResource = await readResource(url);
-  } catch (e) {
-    // If the logo is not in the cache, fetch it from TradeRepublic and store it in the cache.
-    await performFetchRequest(url)
-      .then(async (response) => {
-        let maxAge: number;
-        try {
-          // Cache as long as TradeRepublic says using the max-age cache control directive
-          maxAge = +response.headers.get("Cache-Control").match(/max-age=(\d+)/)[1];
-          if (Number.isNaN(maxAge)) throw new TypeError();
-        } catch (_) {
-          maxAge = 60 * 60 * 24;
-        }
-        // Store the logo in the cache
-        await createResource(
-          { url, fetchDate: new Date(response.headers.get("Date")), content: response.data },
-          maxAge,
-        );
-        // Read the logo as a Resource object
-        logoResource = await readResource(url);
-      })
-      .catch(async () => {
-        // If the logo could not be fetched from TradeRepublic, use an empty SVG as a placeholder.
-        await createResource(
-          { url, fetchDate: new Date(), content: DUMMY_SVG },
-          60 * 60, // Let’s try again after one hour
-        );
-        logoResource = await readResource(url);
-      });
-  }
-  return logoResource;
-};
+import Singleton from "../utils/Singleton";
 
 /**
  * This class is responsible for handling stock data.
  */
-export class StocksController {
+class StocksController extends Singleton {
+  /**
+   * Retrieves the logo of a stock from Redis cache or TradeRepublic.
+   * @param ticker the ticker of the stock
+   * @param dark whether to use the dark or light version of the logo
+   * @returns the logo as a Resource object
+   */
+  #getLogoOfStock = async (ticker: string, dark: boolean): Promise<Resource> => {
+    const stock = await readStock(ticker);
+    let logoResource: Resource;
+    const url = `https://assets.traderepublic.com/img/logos/${stock.isin}/${dark ? "dark" : "light"}.svg`;
+    try {
+      // Try to read the logo from Redis cache first.
+      logoResource = await readResource(url);
+    } catch (e) {
+      // If the logo is not in the cache, fetch it from TradeRepublic and store it in the cache.
+      await performFetchRequest(url)
+        .then(async (response) => {
+          let maxAge: number;
+          try {
+            // Cache as long as TradeRepublic says using the max-age cache control directive
+            maxAge = +response.headers.get("Cache-Control").match(/max-age=(\d+)/)[1];
+            if (Number.isNaN(maxAge)) throw new TypeError();
+          } catch (_) {
+            maxAge = 60 * 60 * 24;
+          }
+          // Store the logo in the cache
+          await createResource(
+            { url, fetchDate: new Date(response.headers.get("Date")), content: response.data },
+            maxAge,
+          );
+          // Read the logo as a Resource object
+          logoResource = await readResource(url);
+        })
+        .catch(async () => {
+          // If the logo could not be fetched from TradeRepublic, use an empty SVG as a placeholder.
+          await createResource(
+            { url, fetchDate: new Date(), content: DUMMY_SVG },
+            60 * 60, // Let’s try again after one hour
+          );
+          logoResource = await readResource(url);
+        });
+    }
+    return logoResource;
+  };
+
   /**
    * Returns a list of stocks, which can be filtered, sorted and paginated.
    * @param req Request object
    * @param res Response object
    */
-  @Router({
-    path: stocksEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Stocks API"],
+      operationId: "getStocks",
+      summary: "Get a list of stocks",
+      description: "Returns a list of stocks, which can be filtered, sorted and paginated.",
+      parameters: [
+        stock.offset,
+        stock.count,
+        stock.sortBy,
+        stock.sortDesc,
+        stock.name,
+        stock.isin,
+        stock.country,
+        stock.industry,
+        stock.size,
+        stock.style,
+        stock.starRatingMin,
+        stock.starRatingMax,
+        stock.dividendYieldPercentMin,
+        stock.dividendYieldPercentMax,
+        stock.priceEarningRatioMin,
+        stock.priceEarningRatioMax,
+        stock.morningstarFairValueDiffMin,
+        stock.morningstarFairValueDiffMax,
+        stock.analystConsensusMin,
+        stock.analystConsensusMax,
+        stock.analystCountMin,
+        stock.analystCountMax,
+        stock.analystTargetDiffMin,
+        stock.analystTargetDiffMax,
+        stock.msciESGRatingMin,
+        stock.msciESGRatingMax,
+        stock.msciTemperatureMin,
+        stock.msciTemperatureMax,
+        stock.lsegESGScoreMin,
+        stock.lsegESGScoreMax,
+        stock.lsegEmissionsMin,
+        stock.lsegEmissionsMax,
+        stock.spESGScoreMin,
+        stock.spESGScoreMax,
+        stock.sustainalyticsESGRiskMin,
+        stock.sustainalyticsESGRiskMax,
+        stock.financialScoreMin,
+        stock.financialScoreMax,
+        stock.esgScoreMin,
+        stock.esgScoreMax,
+        stock.totalScoreMin,
+        stock.totalScoreMax,
+        { ...watchlist.id, name: "watchlist" },
+        { ...portfolio.id, name: "portfolio" },
+      ],
+      responses: {
+        "200": okStockListWithCount,
+        "400": badRequest,
+        "401": unauthorized,
+        "403": forbidden,
+      },
+    },
     method: "get",
+    path: stocksEndpointPath,
     accessRights: GENERAL_ACCESS,
   })
-  async getList(req: Request, res: Response) {
+  getList: RequestHandler = async (req: Request, res: Response) => {
     const filters: Prisma.Enumerable<Prisma.StockWhereInput> = [];
     const stockFindManyArgs: Prisma.StockFindManyArgs = {
       where: { AND: filters },
@@ -374,38 +441,61 @@ export class StocksController {
 
     // Respond with the list of stocks and the total count after filtering and before pagination
     res.status(200).json({ stocks, count }).end();
-  }
+  };
 
   /**
    * (Re-)Computes dynamic attributes of all stocks.
    * @param _ Request object
    * @param res Response object
    */
-  @Router({
-    path: stocksEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Stocks API"],
+      operationId: "patchStocks",
+      summary: "(Re-)Compute dynamic attributes of all stocks",
+      description: "(Re-)Computes dynamic attributes of all stocks.",
+      responses: { "204": noContent, "401": unauthorized },
+    },
     method: "patch",
+    path: stocksEndpointPath,
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async compute(_: Request, res: Response) {
+  compute: RequestHandler = async (_: Request, res: Response) => {
     const [stocks] = await readStocks();
     for await (const stock of stocks) {
       await updateStock(stock.ticker, {}, true);
     }
     res.status(204).end();
-  }
+  };
 
   /**
-   * Fetches the logo of a stock from Redis cache or TradeRepublic.
+   * Fetches the logo of a stock from the cache or TradeRepublic.
    * @param req Request object
    * @param res Response object
    */
-  @Router({
-    path: stocksEndpointPath + "/:ticker" + stockLogoEndpointSuffix,
+  @Endpoint({
+    spec: {
+      tags: ["Stocks API"],
+      operationId: "getStockLogo",
+      summary: "Get the logo of a stock",
+      description: "Fetches the logo of a stock from the cache or TradeRepublic.",
+      parameters: [
+        { ...stock.ticker, in: "path", required: true },
+        {
+          in: "query",
+          name: "dark",
+          description: "Whether to return a logo for a dark background",
+          schema: { type: "boolean", example: true },
+        },
+      ],
+      responses: { "200": okSVG, "401": unauthorized, "404": notFound, "502": badGateway },
+    },
     method: "get",
+    path: stocksEndpointPath + "/{ticker}" + stockLogoEndpointSuffix,
     accessRights: GENERAL_ACCESS,
   })
-  async getLogo(req: Request, res: Response) {
-    const logoResource = await getLogoOfStock(req.params.ticker, String(req.query.dark) === "true");
+  getLogo: RequestHandler = async (req: Request, res: Response) => {
+    const logoResource = await this.#getLogoOfStock(req.params.ticker, String(req.query.dark) === "true");
     res.set("Content-Type", "image/svg+xml");
     res.set(
       "Cache-Control",
@@ -415,19 +505,40 @@ export class StocksController {
       }`,
     );
     res.status(200).send(logoResource.content).end();
-  }
+  };
 
   /**
    * Fetches the logos of the highest rated stocks.
    * @param req Request object
    * @param res Response object
    */
-  @Router({
-    path: logoBackgroundEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Stocks API"],
+      operationId: "getLogoBackground",
+      summary: "Get the logos of the highest rated stocks",
+      description: "Fetches the logos of the highest rated stocks.",
+      parameters: [
+        {
+          in: "query",
+          name: "dark",
+          description: "Whether to return logos for dark background",
+          schema: { type: "boolean", example: true },
+        },
+        {
+          in: "query",
+          name: "count",
+          description: "How many logos to return",
+          schema: { type: "integer", example: 25 },
+        },
+      ],
+      responses: { "200": okLogoBackground, "502": badGateway },
+    },
     method: "get",
+    path: logoBackgroundEndpointPath,
     accessRights: 0,
   })
-  async getLogoBackground(req: Request, res: Response) {
+  getLogoBackground: RequestHandler = async (req: Request, res: Response) => {
     const count = Math.min(50, Number(req.query.count) || 50);
     let logoBundleResource: Resource;
     const url = logoBackgroundEndpointPath + (req.query.dark ? "_dark" : "_light") + count;
@@ -440,7 +551,7 @@ export class StocksController {
       const logos: string[] = new Array(count).fill(DUMMY_SVG);
       await Promise.allSettled(
         stocks.map(async (stock, index) => {
-          const { content } = await getLogoOfStock(stock.ticker, String(req.query.dark) === "true");
+          const { content } = await this.#getLogoOfStock(stock.ticker, String(req.query.dark) === "true");
           // We do not want the response to be too large, so we limit the size of the logos to 128 kB each.
           logos[index] = content.length > 128 * 1024 ? DUMMY_SVG : content;
         }),
@@ -457,24 +568,32 @@ export class StocksController {
       `max-age=${await readResourceTTL(url)}`,
     );
     res.status(200).send(JSON.parse(logoBundleResource.content)).end();
-  }
+  };
 
   /**
    * Reads a single stock from the database.
    * @param req Request object
    * @param res Response object
    */
-  @Router({
-    path: stocksEndpointPath + "/:ticker",
+  @Endpoint({
+    spec: {
+      tags: ["Stocks API"],
+      operationId: "getStock",
+      summary: "Get a stock",
+      description: "Reads a single stock from the database.",
+      parameters: [{ ...stock.ticker, in: "path", required: true }],
+      responses: { "200": okStock, "401": unauthorized, "404": notFound },
+    },
     method: "get",
+    path: stocksEndpointPath + "/{ticker}",
     accessRights: GENERAL_ACCESS,
   })
-  async get(req: Request, res: Response) {
+  get: RequestHandler = async (req: Request, res: Response) => {
     res
       .status(200)
       .json(await readStock(req.params.ticker))
       .end();
-  }
+  };
 
   /**
    * Creates a new stock in the database.
@@ -482,31 +601,64 @@ export class StocksController {
    * @param res Response object
    * @throws an {@link APIError} if a stock with the same ticker already exists
    */
-  @Router({
-    path: stocksEndpointPath + "/:ticker",
+  @Endpoint({
+    spec: {
+      tags: ["Stocks API"],
+      operationId: "putStock",
+      summary: "Create a new stock",
+      description: "Creates a new stock in the database.",
+      parameters: [
+        { ...stock.ticker, in: "path", required: true },
+        { ...stock.name, required: true },
+        { ...stock.isin, required: true },
+        { ...stock.country, required: true, schema: { $ref: "#/components/schemas/Country" } },
+      ],
+      responses: { "201": created, "401": unauthorized, "403": forbidden, "409": conflict },
+    },
     method: "put",
+    path: stocksEndpointPath + "/{ticker}",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async put(req: Request, res: Response) {
+  put: RequestHandler = async (req: Request, res: Response) => {
     const { ticker } = req.params;
     const { name, country, isin } = req.query;
     if (typeof name !== "string" || typeof country !== "string" || !isCountry(country) || typeof isin !== "string")
       throw new APIError(400, "Invalid query parameters.");
     if (await createStock({ ...optionalStockValuesNull, ticker, name, country, isin })) res.status(201).end();
     else throw new APIError(409, "A stock with that ticker exists already.");
-  }
+  };
 
   /**
    * Updates a stock in the database.
    * @param req Request object
    * @param res Response object
    */
-  @Router({
-    path: stocksEndpointPath + "/:ticker",
+  @Endpoint({
+    spec: {
+      tags: ["Stocks API"],
+      operationId: "patchStock",
+      summary: "Update a stock",
+      description: "Updates a stock in the database.",
+      parameters: [
+        { ...stock.ticker, in: "path", required: true },
+        { ...stock.ticker, allowEmptyValue: true },
+        stock.name,
+        stock.isin,
+        { ...stock.country, schema: { $ref: "#/components/schemas/Country" } },
+        { ...stock.morningstarID, allowEmptyValue: true },
+        { ...stock.marketScreenerID, allowEmptyValue: true },
+        { ...stock.msciID, allowEmptyValue: true },
+        { ...stock.ric, allowEmptyValue: true },
+        { ...stock.spID, allowEmptyValue: true },
+        { ...stock.sustainalyticsID, allowEmptyValue: true },
+      ],
+      responses: { "204": noContent, "400": badRequest, "401": unauthorized, "403": forbidden, "404": notFound },
+    },
     method: "patch",
+    path: stocksEndpointPath + "/{ticker}",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async patch(req: Request, res: Response) {
+  patch: RequestHandler = async (req: Request, res: Response) => {
     const { ticker } = req.params;
     const { name, isin, country, morningstarID, marketScreenerID, msciID, ric, sustainalyticsID } = req.query;
     const newTicker = req.query.ticker;
@@ -563,20 +715,30 @@ export class StocksController {
       sustainalyticsESGRisk: sustainalyticsID === "" ? null : undefined,
     });
     res.status(204).end();
-  }
+  };
 
   /**
    * Deletes a stock from the database.
    * @param req Request object
    * @param res Response object
    */
-  @Router({
-    path: stocksEndpointPath + "/:ticker",
+  @Endpoint({
+    spec: {
+      tags: ["Stocks API"],
+      operationId: "deleteStock",
+      summary: "Delete a stock",
+      description: "Deletes a stock from the database.",
+      parameters: [{ ...stock.ticker, in: "path", required: true }],
+      responses: { "204": noContent, "401": unauthorized, "403": forbidden, "404": notFound },
+    },
     method: "delete",
+    path: stocksEndpointPath + "/{ticker}",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async delete(req: Request, res: Response) {
+  delete: RequestHandler = async (req: Request, res: Response) => {
     await deleteStock(req.params.ticker);
     res.status(204).end();
-  }
+  };
 }
+
+export default new StocksController();

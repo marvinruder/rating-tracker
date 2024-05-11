@@ -8,10 +8,9 @@ import {
   msciESGRatingArray,
   REGEX_PHONE_NUMBER,
   serviceArray,
+  DUMMY_SVG,
 } from "@rating-tracker/commons";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
-
-import { DUMMY_SVG } from "../controllers/StocksController";
 
 export const components: OpenAPIV3.ComponentsObject = {
   schemas: {

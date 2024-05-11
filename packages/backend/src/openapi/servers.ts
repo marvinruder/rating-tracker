@@ -9,7 +9,3 @@ export const servers: OpenAPIV3.ServerObject[] = [
     description: "via HTTPS",
   },
 ];
-
-process.env.NODE_ENV === "development" &&
-  /* c8 ignore next */ // Only available in development environment
-  servers.push({ url: `http://localhost:${process.env.PORT}/`, description: "Local server" });

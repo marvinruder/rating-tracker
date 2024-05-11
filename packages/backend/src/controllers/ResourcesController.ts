@@ -1,26 +1,46 @@
 import { GENERAL_ACCESS, resourcesEndpointPath } from "@rating-tracker/commons";
-import type { Request, Response } from "express";
+import type { Request, RequestHandler, Response } from "express";
 
+import { unauthorized, notFound } from "../openapi/responses/clientError";
+import { notImplemented } from "../openapi/responses/serverError";
+import { ok } from "../openapi/responses/success";
 import { readResource } from "../redis/repositories/resourceRepository";
 import APIError from "../utils/APIError";
-import Router from "../utils/router";
+import Endpoint from "../utils/Endpoint";
+import Singleton from "../utils/Singleton";
 
 /**
  * This class is responsible for providing resources such as images.
  */
-export class ResourcesController {
+class ResourcesController extends Singleton {
   /**
-   * Fetches a resource from Redis.
+   * Fetches a resource from the cache.
    * @param req Request object
    * @param res Response object
    * @throws an {@link APIError} if a resource of an unsupported type is requested
    */
-  @Router({
-    path: resourcesEndpointPath + "/:url",
+  @Endpoint({
+    spec: {
+      tags: ["Resources API"],
+      operationId: "getResource",
+      summary: "Get a resource",
+      description: "Fetches a resource from the cache.",
+      parameters: [
+        {
+          in: "path",
+          name: "url",
+          description: "The ID of the resource.",
+          schema: { type: "string", example: "error-morningstar-AAPL-1672314714007.png" },
+          required: true,
+        },
+      ],
+      responses: { "200": ok, "401": unauthorized, "404": notFound, "501": notImplemented },
+    },
     method: "get",
+    path: resourcesEndpointPath + "/{url}",
     accessRights: GENERAL_ACCESS,
   })
-  async get(req: Request, res: Response) {
+  get: RequestHandler = async (req: Request, res: Response) => {
     const { url } = req.params;
     // Use the file extension to determine the type of the resource
     switch (url.split(".").pop().toUpperCase()) {
@@ -42,5 +62,7 @@ export class ResourcesController {
       default:
         throw new APIError(501, "Resources of this type cannot be fetched using this API endpoint yet.");
     }
-  }
+  };
 }
+
+export default new ResourcesController();

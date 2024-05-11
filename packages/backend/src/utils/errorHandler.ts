@@ -10,7 +10,7 @@ import logger from "./logger";
  * @param __ The function to call the next middleware
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default (err: Error, _: Request, res: Response, __: NextFunction) => {
+const errorHandler = (err: Error, _: Request, res: Response, __: NextFunction) => {
   logger.error(err); // Log the error
   // Send an error response to the client
   res.status("status" in err && err.status && typeof err.status === "number" ? err.status : 500).json({
@@ -22,3 +22,5 @@ export default (err: Error, _: Request, res: Response, __: NextFunction) => {
         : ""),
   });
 };
+
+export default errorHandler;

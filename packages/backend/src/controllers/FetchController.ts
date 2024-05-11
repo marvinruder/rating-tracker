@@ -10,112 +10,280 @@ import {
   GENERAL_ACCESS,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import type { Request, Response } from "express";
+import type { Request, RequestHandler, Response } from "express";
 import { DateTime } from "luxon";
 
 import { readStocks, readStock, updateStock } from "../db/tables/stockTable";
 import { fetchFromDataProvider } from "../fetchers/fetchHelper";
+import * as fetch from "../openapi/parameters/fetch";
+import * as stock from "../openapi/parameters/stock";
+import { unauthorized, forbidden, notFound, tooManyRequestsJSONError } from "../openapi/responses/clientError";
+import { badGateway, internalServerError } from "../openapi/responses/serverError";
+import { accepted, noContent, okStockList } from "../openapi/responses/success";
 import { createResource, readResource } from "../redis/repositories/resourceRepository";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import APIError from "../utils/APIError";
+import Endpoint from "../utils/Endpoint";
 import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
-import Router from "../utils/router";
-
-const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings" as const;
+import Singleton from "../utils/Singleton";
 
 /**
  * This class is responsible for fetching data from external data providers.
  */
-export class FetchController {
+class FetchController extends Singleton {
   /**
-   * Fetches data from Morningstar Italy.
+   * Fetches information from Morningstar Italy web page.
    * @param req Request object
    * @param res Response object
    * @throws an {@link APIError} in case of a severe error
    */
-  @Router({
+  @Endpoint({
+    spec: {
+      tags: ["Fetch API"],
+      operationId: "fetchMorningstarData",
+      summary: "Fetch data from Morningstar",
+      description: "Fetches information from Morningstar Italy web page.",
+      parameters: [
+        {
+          ...stock.ticker,
+          description:
+            "The ticker of a stock for which information is to be fetched. " +
+            "If not present, all stocks known to the system will be used",
+        },
+        fetch.detach,
+        fetch.noSkip,
+        fetch.clear,
+        fetch.concurrency,
+      ],
+      responses: {
+        "200": okStockList,
+        "202": accepted,
+        "204": noContent,
+        "401": unauthorized,
+        "403": forbidden,
+        "404": notFound,
+        "502": badGateway,
+      },
+    },
+    method: "post",
     path: fetchMorningstarEndpointPath,
-    method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async fetchMorningstarData(req: Request, res: Response) {
+  fetchMorningstarData: RequestHandler = async (req: Request, res: Response) => {
     await fetchFromDataProvider(req, res, "morningstar");
-  }
+  };
 
   /**
-   * Fetches data from MarketScreener.
+   * Fetches information from MarketScreener web page.
    * @param req Request object.
    * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
-  @Router({
+  @Endpoint({
+    spec: {
+      tags: ["Fetch API"],
+      operationId: "fetchMarketScreenerData",
+      summary: "Fetch data from MarketScreener",
+      description: "Fetches information from Market Screener web page.",
+      parameters: [
+        {
+          ...stock.ticker,
+          description:
+            "The ticker of a stock for which information is to be fetched. " +
+            "If not present, all stocks known to the system will be used",
+        },
+        fetch.detach,
+        fetch.noSkip,
+        fetch.clear,
+        fetch.concurrency,
+      ],
+      responses: {
+        "200": okStockList,
+        "202": accepted,
+        "204": noContent,
+        "401": unauthorized,
+        "403": forbidden,
+        "404": notFound,
+        "502": badGateway,
+      },
+    },
+    method: "post",
     path: fetchMarketScreenerEndpointPath,
-    method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async fetchMarketScreenerData(req: Request, res: Response) {
+  fetchMarketScreenerData: RequestHandler = async (req: Request, res: Response) => {
     await fetchFromDataProvider(req, res, "marketScreener");
-  }
+  };
 
   /**
-   * Fetches data from MSCI.
+   * Fetches information from MSCI ESG Ratings & Climate Search Tool web page.
    * @param req Request object.
    * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
-  @Router({
-    path: fetchMSCIEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Fetch API"],
+      operationId: "fetchMSCIData",
+      summary: "Fetch data from MSCI",
+      description: "Fetches information from MSCI ESG Ratings & Climate Search Tool web page",
+      parameters: [
+        {
+          ...stock.ticker,
+          description:
+            "The ticker of a stock for which information is to be fetched. " +
+            "If not present, all stocks known to the system will be used",
+        },
+        fetch.detach,
+        fetch.noSkip,
+        fetch.clear,
+        fetch.concurrency,
+      ],
+      responses: {
+        "200": okStockList,
+        "202": accepted,
+        "204": noContent,
+        "401": unauthorized,
+        "403": forbidden,
+        "404": notFound,
+        "502": badGateway,
+      },
+    },
     method: "post",
+    path: fetchMSCIEndpointPath,
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async fetchMSCIData(req: Request, res: Response) {
+  fetchMSCIData: RequestHandler = async (req: Request, res: Response) => {
     await fetchFromDataProvider(req, res, "msci");
-  }
+  };
 
   /**
-   * Fetches data from LSEG Data & Analytics.
+   * Fetches information from LSEG Data & Analytics API.
    * @param req Request object.
    * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
-  @Router({
+  @Endpoint({
+    spec: {
+      tags: ["Fetch API"],
+      operationId: "fetchLSEGData",
+      summary: "Fetch data from LSEG",
+      description: "Fetches information from LSEG Data & Analytics API",
+      parameters: [
+        {
+          ...stock.ticker,
+          description:
+            "The ticker of a stock for which information is to be fetched. " +
+            "If not present, all stocks known to the system will be used",
+        },
+        fetch.detach,
+        fetch.noSkip,
+        fetch.clear,
+        fetch.concurrency,
+      ],
+      responses: {
+        "200": okStockList,
+        "202": accepted,
+        "204": noContent,
+        "401": unauthorized,
+        "403": forbidden,
+        "404": notFound,
+        "429": tooManyRequestsJSONError,
+        "502": badGateway,
+      },
+    },
     path: fetchLSEGEndpointPath,
     method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async fetchLSEGData(req: Request, res: Response) {
+  fetchLSEGData: RequestHandler = async (req: Request, res: Response) => {
     await fetchFromDataProvider(req, res, "lseg");
-  }
+  };
 
   /**
-   * Fetches data from Standard & Poor’s.
+   * Fetches information from Standard & Poor’s Global Sustainable1 ESG Scores web page.
    * @param req Request object.
    * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
-  @Router({
-    path: fetchSPEndpointPath,
+  @Endpoint({
+    spec: {
+      tags: ["Fetch API"],
+      operationId: "fetchSPData",
+      summary: "Fetch data from S&P",
+      description: "Fetches information from Standard & Poor’s Global Sustainable1 ESG Scores web page.",
+      parameters: [
+        {
+          ...stock.ticker,
+          description:
+            "The ticker of a stock for which information is to be fetched. " +
+            "If not present, all stocks known to the system will be used",
+        },
+        fetch.detach,
+        fetch.noSkip,
+        fetch.clear,
+        fetch.concurrency,
+      ],
+      responses: {
+        "200": okStockList,
+        "202": accepted,
+        "204": noContent,
+        "401": unauthorized,
+        "403": forbidden,
+        "404": notFound,
+        "502": badGateway,
+      },
+    },
     method: "post",
+    path: fetchSPEndpointPath,
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async fetchSPData(req: Request, res: Response) {
+  fetchSPData: RequestHandler = async (req: Request, res: Response) => {
     await fetchFromDataProvider(req, res, "sp");
-  }
+  };
 
   /**
-   * Fetches data from Morningstar Sustainalytics.
+   * Fetches information from Morningstar Sustainalytics API.
    * @param req Request object.
    * @param res Response object.
    * @throws an {@link APIError} in case of a severe error
    */
-  @Router({
+  @Endpoint({
+    spec: {
+      tags: ["Fetch API"],
+      operationId: "fetchSustainalyticsData",
+      summary: "Fetch data from Sustainalytics",
+      description: "Fetches information from Morningstar Sustainalytics API.",
+      parameters: [
+        {
+          ...stock.ticker,
+          description:
+            "The ticker of a stock for which information is to be fetched. " +
+            "If not present, all stocks known to the system will be used",
+        },
+        fetch.detach,
+        fetch.clear,
+      ],
+      responses: {
+        "200": okStockList,
+        "202": accepted,
+        "204": noContent,
+        "401": unauthorized,
+        "403": forbidden,
+        "404": notFound,
+        "500": internalServerError,
+        "502": badGateway,
+      },
+    },
     path: fetchSustainalyticsEndpointPath,
     method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
-  async fetchSustainalyticsData(req: Request, res: Response) {
+  fetchSustainalyticsData: RequestHandler = async (req: Request, res: Response) => {
+    const URL_SUSTAINALYTICS = "https://www.sustainalytics.com/sustapi/companyratings/getcompanyratings" as const;
+
     let stockList: Stock[];
 
     if (req.query.ticker) {
@@ -269,5 +437,7 @@ export class FetchController {
     }
     if (updatedStocks.length === 0) res.status(204).end();
     else res.status(200).json(updatedStocks).end();
-  }
+  };
 }
+
+export default new FetchController();
