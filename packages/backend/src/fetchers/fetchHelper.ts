@@ -19,6 +19,7 @@ import { DOMParser } from "@xmldom/xmldom";
 import type { Request, Response } from "express";
 // import { WebDriver } from "selenium-webdriver";
 import { DateTime } from "luxon";
+import { Agent } from "undici";
 
 import { readStocks, readStock } from "../db/tables/stockTable";
 import { createResource } from "../redis/repositories/resourceRepository";
@@ -427,6 +428,7 @@ export const getAndParseHTML = async (
   }).parseFromString(
     await performFetchRequest(url, {
       ...config,
+      dispatcher: new Agent({ allowH2: true }),
       headers: {
         ...config?.headers,
         "User-Agent":

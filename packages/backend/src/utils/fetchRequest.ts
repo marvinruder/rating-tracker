@@ -1,10 +1,6 @@
 import type { FetchRequestWithBodyOptions, FetchResponse } from "@rating-tracker/commons";
 import { createURLSearchParams, handleResponse } from "@rating-tracker/commons";
-
-// Enable HTTP/2 support
-global[Symbol.for("undici.globalDispatcher.1")] = new global[Symbol.for("undici.globalDispatcher.1")].constructor({
-  allowH2: true,
-});
+import type { Agent } from "undici";
 
 /**
  * Performs a request using the NodeJS’s `fetch` API.
@@ -13,7 +9,10 @@ global[Symbol.for("undici.globalDispatcher.1")] = new global[Symbol.for("undici.
  * @returns A {@link Promise} that resolves to the response of the request.
  * @throws a {@link FetchError} if the response status code is not in the 2XX range.
  */
-export const performFetchRequest = (url: string, config?: FetchRequestWithBodyOptions): Promise<FetchResponse> => {
+export const performFetchRequest = (
+  url: string,
+  config?: FetchRequestWithBodyOptions & { dispatcher?: Agent },
+): Promise<FetchResponse> => {
   const { body, params, ...init } = config ?? {};
 
   const urlSearchParams = createURLSearchParams(params);

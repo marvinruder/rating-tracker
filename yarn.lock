@@ -1465,6 +1465,7 @@ __metadata:
     swagger-ui-dist: "npm:5.17.9"
     swagger-ui-express: "npm:5.0.0"
     typescript: "npm:5.4.5"
+    undici: "npm:6.16.1"
     vite: "npm:5.2.11"
     vitest: "npm:1.6.0"
     xpath-ts2: "npm:1.4.2"
@@ -8954,6 +8955,13 @@ __metadata:
   version: 5.26.5
   resolution: "undici-types@npm:5.26.5"
   checksum: 10c0/bb673d7876c2d411b6eb6c560e0c571eef4a01c1c19925175d16e3a30c4c428181fb8d7ae802a261f283e4166a0ac435e2f505743aa9e45d893f9a3df017b501
+  languageName: node
+  linkType: hard
+
+"undici@npm:6.16.1":
+  version: 6.16.1
+  resolution: "undici@npm:6.16.1"
+  checksum: 10c0/df9a46f79dcd4c9b6b8106619de2e31bc756ad88091f93615c0c7e9b60a80f3cffc744d2fda299689aea8d97cca93fecb6952b27f3bad9062efc63baceaf6586
   languageName: node
   linkType: hard
 
