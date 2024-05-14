@@ -1,4 +1,4 @@
-import { User, accountEndpointPath } from "@rating-tracker/commons";
+import { User, accountAPIPath } from "@rating-tracker/commons";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import api from "../utils/api";
@@ -67,7 +67,7 @@ export const UserProvider = (props: React.PropsWithChildren): JSX.Element => {
   const fetchUser = (version?: number): Promise<void> =>
     // Check if the user is authenticated
     api
-      .get(accountEndpointPath)
+      .get(accountAPIPath)
       .then((response) => {
         if (Object.keys(response.data).length) {
           const newUser = new User(response.data);

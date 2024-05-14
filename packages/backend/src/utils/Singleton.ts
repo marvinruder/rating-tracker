@@ -1,5 +1,6 @@
 /**
- * A singleton class, ensuring that only one instance of the class exists.
+ * A singleton class, ensuring that only one instance of the class exists. Note that class names of all implementations
+ * of this abstract class must be globally unique.
  *
  * Its constructor will create the only instance on the first call and return it on subsequent calls.
  */
@@ -9,12 +10,13 @@ export default abstract class Singleton {
    * @returns The singleton instance of the class.
    */
   constructor() {
-    if (Singleton.#instance) return Singleton.#instance;
-    Singleton.#instance = this;
+    const name = this.constructor.name;
+    if (Singleton.#instances[name]) return Singleton.#instances[name];
+    Singleton.#instances[name] = this;
   }
 
   /**
    * The singleton instance of the class.
    */
-  static #instance: Singleton = null;
+  static #instances: Record<string, Singleton> = {};
 }

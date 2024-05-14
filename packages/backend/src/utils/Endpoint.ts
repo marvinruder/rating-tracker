@@ -5,10 +5,10 @@ import { Router as expressRouter } from "express";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import rateLimit from "express-rate-limit";
 
+import type SingletonController from "../controllers/SingletonController";
 import OpenAPIDocumentation from "../openapi";
 
 import APIError from "./APIError";
-import type Singleton from "./Singleton";
 export const router = expressRouter();
 
 /**
@@ -29,10 +29,14 @@ interface EndpointOptions {
    */
   method: HTTPMethod;
   /**
-   * The path of the API endpoint. Must not contain the base URL path (e.g. `/api`).
+   * The path of the API endpoint. Must not contain the base URL path (e.g. `/api`) or the controller’s base path.
    * Path parameters must be encoded using the `/{parameter}` syntax.
    */
   path: string;
+  /**
+   * Whether not to use the controller’s base path.
+   */
+  ignoreBasePath?: boolean;
   /**
    * A parser for the request body.
    */
@@ -48,19 +52,17 @@ interface EndpointOptions {
 }
 
 /**
- * A router decorator. Allows for decorating controller methods with routing information.
- * @param options The router options.
- * @returns A function whose first parameter is a request handler. It will wrap the request handler with the necessary
- *          middleware such as access right checker, rate limiter, or body parser, and add it to the router.
+ * An endpoint decorator. Allows for decorating controller methods with routing, access control, specification, and more
+ * information.
+ * @param options The endpoint options.
+ * @returns The decorator function, operating on the controller method.
  */
 const Endpoint = (
   options: EndpointOptions,
 ): ((
   value: undefined,
-  context: ClassFieldDecoratorContext<Singleton, RequestHandler>,
+  context: ClassFieldDecoratorContext<SingletonController, RequestHandler>,
 ) => (requestHandler: RequestHandler) => RequestHandler) => {
-  OpenAPIDocumentation.addEndpoint(options.method, options.path, options.spec);
-
   const accessRightCheck: RequestHandler = (_: Request, res: Response, next: NextFunction) =>
     !options.accessRights || // Public Routes do not require an access right check
     // Check if the user is authenticated and has the required access rights for the endpoint
@@ -75,15 +77,21 @@ const Endpoint = (
           ),
         );
 
-  return () => (requestHandler: RequestHandler) => {
-    const requestHandlers = [accessRightCheck] satisfies RequestHandler[];
-    if (options.rateLimited) requestHandlers.push(rateLimiter);
-    if (options.bodyParser) requestHandlers.push(options.bodyParser);
-    router[options.method](options.path.replaceAll(/\{(\w+)\}/g, ":$1"), ...requestHandlers, (req, res, next) =>
-      Promise.resolve(requestHandler(req, res, next)).catch(next),
-    );
-    return requestHandler;
-  };
+  return () =>
+    function (requestHandler: RequestHandler) {
+      // eslint-disable-next-line no-invalid-this
+      const controller: SingletonController = this;
+      const fullPath = options.ignoreBasePath ? options.path : controller.path + options.path;
+      OpenAPIDocumentation.addEndpoint(options.method, fullPath, { tags: controller.tags, ...options.spec });
+
+      const requestHandlers = [accessRightCheck] satisfies RequestHandler[];
+      if (options.rateLimited) requestHandlers.push(rateLimiter);
+      if (options.bodyParser) requestHandlers.push(options.bodyParser);
+      router[options.method](fullPath.replaceAll(/\{(\w+)\}/g, ":$1"), ...requestHandlers, (req, res, next) =>
+        Promise.resolve(requestHandler(req, res, next)).catch(next),
+      );
+      return requestHandler;
+    };
 };
 
 export default Endpoint;

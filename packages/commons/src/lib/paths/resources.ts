@@ -1,4 +1,4 @@
 /**
- * The resources endpoint path.
+ * The Resources API path.
  */
-export const resourcesEndpointPath = "/resources";
+export const resourcesAPIPath = "/resources";

@@ -1,7 +1,7 @@
 /**
- * The proxy endpoint path.
+ * The Proxy API path.
  */
-export const proxyEndpointPath = "/proxy";
+export const proxyAPIPath = "/proxy";
 /**
  * The Yahoo Finance API endpoint suffix.
  */

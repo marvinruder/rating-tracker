@@ -2,7 +2,7 @@ import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { Stock, PortfolioSummary } from "@rating-tracker/commons";
-import { stocksEndpointPath, portfoliosEndpointPath } from "@rating-tracker/commons";
+import { stocksAPIPath, portfoliosAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -24,7 +24,7 @@ export const RemoveStockFromPortfolio = (props: RemoveStockFromPortfolioProps): 
   const removeStockFromPortfolio = () => {
     setRequestInProgress(true);
     api
-      .delete(portfoliosEndpointPath + `/${props.portfolio.id}` + stocksEndpointPath + `/${props.stock.ticker}`)
+      .delete(portfoliosAPIPath + `/${props.portfolio.id}` + stocksAPIPath + `/${props.stock.ticker}`)
       .then(() => (props.onRemove(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "removing stock from portfolio"))
       .finally(() => setRequestInProgress(false));

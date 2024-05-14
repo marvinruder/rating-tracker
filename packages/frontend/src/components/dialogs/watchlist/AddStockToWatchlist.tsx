@@ -17,7 +17,7 @@ import {
   useTheme,
 } from "@mui/material";
 import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
-import { FAVORITES_NAME, stocksEndpointPath, watchlistsEndpointPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, stocksAPIPath, watchlistsAPIPath } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
 import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
@@ -48,7 +48,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    */
   const getWatchlists = () => {
     api
-      .get(watchlistsEndpointPath)
+      .get(watchlistsAPIPath)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching watchlists");
@@ -67,7 +67,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    */
   const addStockToWatchlist = (id: number) => {
     api
-      .put(`${watchlistsEndpointPath}/${id}${stocksEndpointPath}/${props.stock.ticker}`)
+      .put(`${watchlistsAPIPath}/${id}${stocksAPIPath}/${props.stock.ticker}`)
       .then(() => {
         if (watchlistSummaries.find((watchlistSummary) => watchlistSummary.id === id)?.name === FAVORITES_NAME)
           refetchFavorites();

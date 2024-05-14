@@ -1,6 +1,6 @@
 import { Card, Container, useTheme } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
-import { baseURL, stockLogoEndpointSuffix, stocksEndpointPath } from "@rating-tracker/commons";
+import { baseURL, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -34,7 +34,7 @@ const StockModule = (): JSX.Element => {
    */
   const getStock = (ticker: string): Promise<void> =>
     api
-      .get(stocksEndpointPath + `/${ticker}`)
+      .get(stocksAPIPath + `/${ticker}`)
       .then((res) => setStock(res.data))
       .catch((e) => setErrorNotificationOrClearSession(e, "fetching stock"));
 
@@ -44,7 +44,7 @@ const StockModule = (): JSX.Element => {
 
   // Preload the stock logo
   const stockLogo = new Image();
-  stockLogo.src = `${baseURL}${stocksEndpointPath}/${ticker}${stockLogoEndpointSuffix}?dark=${
+  stockLogo.src = `${baseURL}${stocksAPIPath}/${ticker}${stockLogoEndpointSuffix}?dark=${
     theme.palette.mode === "dark"
   }`;
 

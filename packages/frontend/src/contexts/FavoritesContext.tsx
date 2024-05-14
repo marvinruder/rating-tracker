@@ -1,5 +1,5 @@
 import type { Stock } from "@rating-tracker/commons";
-import { favoritesEndpointPath } from "@rating-tracker/commons";
+import { favoritesAPIPath } from "@rating-tracker/commons";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import api from "../utils/api";
@@ -48,7 +48,7 @@ export const FavoritesProvider = (props: React.PropsWithChildren): JSX.Element =
   const fetchFavorites = () => {
     if (user) {
       api
-        .get(favoritesEndpointPath)
+        .get(favoritesAPIPath)
         .then((res) => setFavorites((res.data.stocks as Stock[]).map((stock) => stock.ticker)))
         .catch(() => setFavorites([]));
     } else {

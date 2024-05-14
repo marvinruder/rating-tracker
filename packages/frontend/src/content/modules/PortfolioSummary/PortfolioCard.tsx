@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import type { PortfolioSummary } from "@rating-tracker/commons";
-import { currencyMinorUnits, getTotalAmount, portfoliosEndpointPath } from "@rating-tracker/commons";
+import { currencyMinorUnits, getTotalAmount, portfoliosAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -38,12 +38,7 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
   return (
     <Card>
       <CardActionArea>
-        <Link
-          to={`${portfoliosEndpointPath}/${props.portfolio?.id}`}
-          component={NavLink}
-          color="inherit"
-          underline="none"
-        >
+        <Link to={`${portfoliosAPIPath}/${props.portfolio?.id}`} component={NavLink} color="inherit" underline="none">
           <CardContent>
             <Box>
               <Typography variant="h3">{props.portfolio?.name ?? <Skeleton width="160px" />}</Typography>

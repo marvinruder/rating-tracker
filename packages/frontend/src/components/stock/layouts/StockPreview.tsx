@@ -12,7 +12,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import type { Stock, YahooStockStub } from "@rating-tracker/commons";
-import { baseURL, emojiFlag, stockLogoEndpointSuffix, stocksEndpointPath } from "@rating-tracker/commons";
+import { baseURL, emojiFlag, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
 import { NavLink } from "react-router-dom";
 
 import { SectorIcon } from "../properties/SectorIcon";
@@ -31,7 +31,7 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
   return (
     <ListItem
       {...props}
-      {...(navLink ? { component: NavLink, to: `${stocksEndpointPath}/${stock.ticker}` } : {})}
+      {...(navLink ? { component: NavLink, to: `${stocksAPIPath}/${stock.ticker}` } : {})}
       sx={{
         ...props.sx,
         cursor: props.onClick || navLink ? "pointer" : undefined,
@@ -50,7 +50,7 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
           src={
             "logoUrl" in stock
               ? stock.logoUrl
-              : `${baseURL}${stocksEndpointPath}/${stock.ticker}${stockLogoEndpointSuffix}?dark=${
+              : `${baseURL}${stocksAPIPath}/${stock.ticker}${stockLogoEndpointSuffix}?dark=${
                   theme.palette.mode === "dark"
                 }`
           }

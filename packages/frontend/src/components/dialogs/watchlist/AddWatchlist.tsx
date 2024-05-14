@@ -1,7 +1,7 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
-import { watchlistsEndpointPath } from "@rating-tracker/commons";
+import { watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -35,7 +35,7 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .put(watchlistsEndpointPath, { params: { name: name.trim() } })
+      .put(watchlistsAPIPath, { params: { name: name.trim() } })
       .then(() => (props.onAdd(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "creating new watchlist"))
       .finally(() => setRequestInProgress(false));

@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import { Box, Dialog, Grid, IconButton, Tooltip, Typography } from "@mui/material";
-import { portfolioBuilderEndpointSuffix, portfoliosEndpointPath } from "@rating-tracker/commons";
+import { portfolioBuilderEndpointSuffix, portfoliosAPIPath } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -40,7 +40,7 @@ export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
             <IconButton
               aria-labelledby="start-portfolio-builder-label"
               color="primary"
-              onClick={() => navigate(portfoliosEndpointPath + portfolioBuilderEndpointSuffix)}
+              onClick={() => navigate(portfoliosAPIPath + portfolioBuilderEndpointSuffix)}
             >
               <AutoFixHighIcon />
             </IconButton>

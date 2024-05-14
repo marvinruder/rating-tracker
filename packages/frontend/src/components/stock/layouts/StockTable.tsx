@@ -14,7 +14,7 @@ import {
   Card,
 } from "@mui/material";
 import type { Portfolio, SortableAttribute, Stock, StockListColumn, Watchlist } from "@rating-tracker/commons";
-import { stocksEndpointPath } from "@rating-tracker/commons";
+import { stocksAPIPath } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 
@@ -76,7 +76,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
   const getStocks = (options?: { count?: number; offset?: number; append?: boolean }) => {
     const { count = fetchCount, offset = 0, append = false } = options ?? {};
     api
-      .get(stocksEndpointPath, { params: { count, offset, ...sortAndFilterParams } })
+      .get(stocksAPIPath, { params: { count, offset, ...sortAndFilterParams } })
       .then((res) => {
         setStocks((prev) => (append ? [...prev, ...res.data.stocks] : res.data.stocks));
         setTotalCount(res.data.count);

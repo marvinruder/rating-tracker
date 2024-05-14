@@ -8,9 +8,9 @@ import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, 
 import type { Stock } from "@rating-tracker/commons";
 import {
   baseURL,
-  favoritesEndpointPath,
+  favoritesAPIPath,
   stockLogoEndpointSuffix,
-  stocksEndpointPath,
+  stocksAPIPath,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
@@ -59,7 +59,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
             <>
               <Avatar
                 sx={{ width: 112, height: 112, m: "-16px", mr: "-8px", background: "none" }}
-                src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
+                src={`${baseURL}${stocksAPIPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
                   theme.palette.mode === "dark"
                 }`}
                 alt={`Logo of “${props.stock.name}”`}
@@ -95,7 +95,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                 <IconButton
                   color={props.isFavorite ? "warning" : undefined}
                   onClick={() => {
-                    (props.isFavorite ? api.delete : api.put)(favoritesEndpointPath + `/${props.stock.ticker}`)
+                    (props.isFavorite ? api.delete : api.put)(favoritesAPIPath + `/${props.stock.ticker}`)
                       .then(refetchFavorites)
                       .catch((e) =>
                         setErrorNotificationOrClearSession(
@@ -194,7 +194,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
             <EditStock
               stock={props.stock}
               onCloseAfterEdit={(newTicker) =>
-                newTicker ? navigate(`${stocksEndpointPath}/${newTicker}`) : props.getStock()
+                newTicker ? navigate(`${stocksAPIPath}/${newTicker}`) : props.getStock()
               }
               onClose={() => setEditDialogOpen(false)}
             />
@@ -202,7 +202,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
           <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
             <DeleteStock
               stock={props.stock}
-              onDelete={() => navigate(stocksEndpointPath)}
+              onDelete={() => navigate(stocksAPIPath)}
               onClose={() => setDeleteDialogOpen(false)}
             />
           </Dialog>

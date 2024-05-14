@@ -1,8 +1,8 @@
 /**
- * The account endpoint path.
+ * The Account API path.
  */
-export const accountEndpointPath = "/account";
+export const accountAPIPath = "/account";
 /**
- * The account avatar endpoint suffix.
+ * The Account Avatar endpoint suffix.
  */
 export const accountAvatarEndpointSuffix = "/avatar";

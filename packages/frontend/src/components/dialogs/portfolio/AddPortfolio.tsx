@@ -2,7 +2,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { Currency } from "@rating-tracker/commons";
-import { isCurrency, portfoliosEndpointPath } from "@rating-tracker/commons";
+import { isCurrency, portfoliosAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -40,7 +40,7 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .put(portfoliosEndpointPath, { params: { name: name.trim(), currency } })
+      .put(portfoliosAPIPath, { params: { name: name.trim(), currency } })
       .then(() => (props.onAdd(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "creating new portfolio"))
       .finally(() => setRequestInProgress(false));

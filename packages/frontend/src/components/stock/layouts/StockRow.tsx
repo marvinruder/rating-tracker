@@ -56,20 +56,20 @@ import {
   countryNameWithFlag,
   currencyMinorUnits,
   currencyName,
-  favoritesEndpointPath,
+  favoritesAPIPath,
   getTotalAmount,
   groupOfIndustry,
   industryDescription,
   industryGroupName,
   industryName,
-  portfoliosEndpointPath,
+  portfoliosAPIPath,
   regionName,
   regionOfCountry,
   sectorDescription,
   sectorName,
   sectorOfIndustryGroup,
   stockLogoEndpointSuffix,
-  stocksEndpointPath,
+  stocksAPIPath,
   superSectorDescription,
   superSectorName,
   superSectorOfSector,
@@ -158,7 +158,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
   const updateStockInPortfolio = () => {
     if (!validate() || !("id" in props.portfolio)) return;
     api
-      .patch(`${portfoliosEndpointPath}/${props.portfolio.id}${stocksEndpointPath}/${props.stock.ticker}`, {
+      .patch(`${portfoliosAPIPath}/${props.portfolio.id}${stocksAPIPath}/${props.stock.ticker}`, {
         params: { amount: +amountInput },
       })
       .then(() => (props.getPortfolio(), props.getStocks()))
@@ -260,7 +260,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             onClose={() => setOptionsMenuOpen(false)}
             anchorEl={contextMenuPositionRef.current}
           >
-            <MenuItem component={NavLink} to={`${stocksEndpointPath}/${props.stock.ticker}`} target="_blank">
+            <MenuItem component={NavLink} to={`${stocksAPIPath}/${props.stock.ticker}`} target="_blank">
               <ListItemIcon>
                 <OpenInNewIcon fontSize="small" />
               </ListItemIcon>
@@ -272,7 +272,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             {!props.watchlist && !props.portfolio && (
               <MenuItem
                 onClick={() => {
-                  (isFavorite ? api.delete : api.put)(favoritesEndpointPath + `/${props.stock.ticker}`)
+                  (isFavorite ? api.delete : api.put)(favoritesAPIPath + `/${props.stock.ticker}`)
                     .then(refetchFavorites)
                     .catch((e) =>
                       setErrorNotificationOrClearSession(
@@ -457,7 +457,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           >
             <Avatar
               sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
-              src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
+              src={`${baseURL}${stocksAPIPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
                 theme.palette.mode === "dark"
               }`}
               alt={`Logo of “${props.stock.name}”`}
@@ -821,7 +821,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                   mr: "-8px",
                   background: "none",
                 }}
-                src={`${baseURL}${stocksEndpointPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
+                src={`${baseURL}${stocksAPIPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
                   theme.palette.mode === "dark"
                 }`}
                 alt={`Logo of “${props.stock.name}”`}

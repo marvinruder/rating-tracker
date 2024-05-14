@@ -5,7 +5,7 @@ import {
   dataProviderLastFetch,
   dataProviderName,
   dataProviderTTL,
-  resourcesEndpointPath,
+  resourcesAPIPath,
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
 import type { Request, Response } from "express";
@@ -101,7 +101,7 @@ export const captureDataProviderError = async (
             `https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
               process.env.DOMAIN
               // Ensure the user is logged in before accessing the resource API endpoint.
-            }/login?redirect=${encodeURIComponent(`/api${resourcesEndpointPath}/${resourceID}`)}`,
+            }/login?redirect=${encodeURIComponent(`/api${resourcesAPIPath}/${resourceID}`)}`,
         )
         .join(", ")}.`
     : "No additional information available.";

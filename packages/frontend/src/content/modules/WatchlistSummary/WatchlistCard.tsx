@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
-import { FAVORITES_NAME, watchlistsEndpointPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -47,12 +47,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
   return (
     <Card>
       <CardActionArea>
-        <Link
-          to={`${watchlistsEndpointPath}/${props.watchlist?.id}`}
-          component={NavLink}
-          color="inherit"
-          underline="none"
-        >
+        <Link to={`${watchlistsAPIPath}/${props.watchlist?.id}`} component={NavLink} color="inherit" underline="none">
           <CardContent>
             <Grid container justifyContent="space-between">
               <Grid item display="flex" alignItems="center" maxWidth={isFavorites ? "calc(100% - 36px)" : undefined}>
@@ -92,7 +87,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
                 color={props.watchlist.subscribed ? "primary" : undefined}
                 onClick={() => {
                   api
-                    .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, {
+                    .patch(watchlistsAPIPath + `/${props.watchlist.id}`, {
                       params: { subscribed: !props.watchlist.subscribed },
                     })
                     .then(() => props.getWatchlists && props.getWatchlists())

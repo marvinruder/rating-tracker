@@ -25,7 +25,7 @@ import {
   messageTypeName,
   REGEX_PHONE_NUMBER,
   subscriptionOfMessageType,
-  accountEndpointPath,
+  accountAPIPath,
   accountAvatarEndpointSuffix,
 } from "@rating-tracker/commons";
 import { useEffect, useRef, useState } from "react";
@@ -100,7 +100,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .patch(accountEndpointPath, {
+      .patch(accountAPIPath, {
         params: {
           // Only send the parameters that have changed.
           email: email !== user.email ? email.trim() : undefined,
@@ -154,7 +154,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
         setProcessingAvatar(false);
       } else {
         api
-          .put(accountEndpointPath + accountAvatarEndpointSuffix, {
+          .put(accountAPIPath + accountAvatarEndpointSuffix, {
             body: message.data.result,
             headers: { "Content-Type": "image/avif" },
           })
@@ -174,7 +174,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    */
   const deleteAvatar = (): Promise<void> =>
     api
-      .delete(accountEndpointPath + accountAvatarEndpointSuffix)
+      .delete(accountAPIPath + accountAvatarEndpointSuffix)
       .then(() => refetchUser())
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting account avatar"));
 

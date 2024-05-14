@@ -1,8 +1,8 @@
 /**
- * The users endpoint path.
+ * The Users API path.
  */
-export const usersEndpointPath = "/users";
+export const usersAPIPath = "/users";
 /**
- * The users avatar endpoint suffix.
+ * The User Avatar endpoint suffix.
  */
 export const usersAvatarEndpointSuffix = "/avatar";

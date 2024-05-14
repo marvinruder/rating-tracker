@@ -5,7 +5,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import type { Watchlist } from "@rating-tracker/commons";
-import { FAVORITES_NAME, watchlistsEndpointPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -62,7 +62,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
                   color={props.watchlist.subscribed ? "primary" : undefined}
                   onClick={() => {
                     api
-                      .patch(watchlistsEndpointPath + `/${props.watchlist.id}`, {
+                      .patch(watchlistsAPIPath + `/${props.watchlist.id}`, {
                         params: { subscribed: !props.watchlist.subscribed },
                       })
                       .then(props.getWatchlist)
@@ -159,7 +159,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
             <DeleteWatchlist
               watchlist={props.watchlist}
               onClose={() => setDeleteDialogOpen(false)}
-              onDelete={() => navigate(watchlistsEndpointPath)}
+              onDelete={() => navigate(watchlistsAPIPath)}
             />
           </Dialog>
         </>

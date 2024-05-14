@@ -1,4 +1,4 @@
-import { GENERAL_ACCESS, stocksEndpointPath, portfoliosEndpointPath, isCurrency } from "@rating-tracker/commons";
+import { GENERAL_ACCESS, stocksAPIPath, portfoliosAPIPath, isCurrency } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
 
 import {
@@ -17,12 +17,16 @@ import { badRequest, conflict, forbidden, notFound, unauthorized } from "../open
 import { created, createdPortfolioID, noContent, okPortfolio, okPortfolioSummary } from "../openapi/responses/success";
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
-import Singleton from "../utils/Singleton";
+
+import SingletonController from "./SingletonController";
 
 /**
  * This class is responsible for handling portfolio information.
  */
-class PortfoliosController extends Singleton {
+class PortfoliosController extends SingletonController {
+  path = portfoliosAPIPath;
+  tags = ["Portfolios API"];
+
   /**
    * Returns a summary of the portfolios of the current user.
    * @param _ The request.
@@ -30,14 +34,12 @@ class PortfoliosController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Portfolios API"],
-      operationId: "getPortfolios",
       summary: "Get a summary of all portfolios",
       description: "Returns a summary of the portfolios of the current user.",
       responses: { "200": okPortfolioSummary, "401": unauthorized },
     },
     method: "get",
-    path: portfoliosEndpointPath,
+    path: "",
     accessRights: GENERAL_ACCESS,
   })
   getSummary: RequestHandler = async (_: Request, res: Response) => {
@@ -54,15 +56,13 @@ class PortfoliosController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Portfolios API"],
-      operationId: "getPortfolio",
       summary: "Get a portfolio",
       description: "Reads a single portfolio from the database.",
       parameters: [{ ...portfolio.id, in: "path", required: true }],
       responses: { "200": okPortfolio, "401": unauthorized, "403": forbidden, "404": notFound },
     },
     method: "get",
-    path: portfoliosEndpointPath + "/{id}",
+    path: "/{id}",
     accessRights: GENERAL_ACCESS,
   })
   get: RequestHandler = async (req: Request, res: Response) => {
@@ -80,8 +80,6 @@ class PortfoliosController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Portfolios API"],
-      operationId: "putPortfolio",
       summary: "Create a new portfolio",
       description: "Creates a new portfolio in the database.",
       parameters: [
@@ -91,7 +89,7 @@ class PortfoliosController extends Singleton {
       responses: { "201": createdPortfolioID, "400": badRequest, "401": unauthorized, "409": conflict },
     },
     method: "put",
-    path: portfoliosEndpointPath,
+    path: "",
     accessRights: GENERAL_ACCESS,
   })
   put: RequestHandler = async (req: Request, res: Response) => {
@@ -109,15 +107,13 @@ class PortfoliosController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Portfolios API"],
-      operationId: "patchPortfolio",
       summary: "Update a portfolio",
       description: "Updates a portfolio in the database.",
       parameters: [{ ...portfolio.id, in: "path", required: true }, portfolio.name, portfolio.currency],
       responses: { "204": noContent, "400": badRequest, "401": unauthorized, "403": forbidden, "404": notFound },
     },
     method: "patch",
-    path: portfoliosEndpointPath + "/{id}",
+    path: "/{id}",
     accessRights: GENERAL_ACCESS,
   })
   patch: RequestHandler = async (req: Request, res: Response) => {
@@ -138,8 +134,6 @@ class PortfoliosController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Portfolios API"],
-      operationId: "putStockToPortfolio",
       summary: "Add a stock to a portfolio",
       description: "Adds a stock to a portfolio in the database.",
       parameters: [
@@ -150,7 +144,7 @@ class PortfoliosController extends Singleton {
       responses: { "201": created, "401": unauthorized, "403": forbidden, "404": notFound, "409": conflict },
     },
     method: "put",
-    path: portfoliosEndpointPath + "/{id}" + stocksEndpointPath + "/{ticker}",
+    path: "/{id}" + stocksAPIPath + "/{ticker}",
     accessRights: GENERAL_ACCESS,
   })
   addStock: RequestHandler = async (req: Request, res: Response) => {
@@ -170,8 +164,6 @@ class PortfoliosController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Portfolios API"],
-      operationId: "patchStockInPortfolio",
       summary: "Update a stock in a portfolio",
       description: "Updates a stock in a portfolio in the database.",
       parameters: [
@@ -182,7 +174,7 @@ class PortfoliosController extends Singleton {
       responses: { "204": noContent, "401": unauthorized, "403": forbidden, "404": notFound, "409": conflict },
     },
     method: "patch",
-    path: portfoliosEndpointPath + "/{id}" + stocksEndpointPath + "/{ticker}",
+    path: "/{id}" + stocksAPIPath + "/{ticker}",
     accessRights: GENERAL_ACCESS,
   })
   updateStock: RequestHandler = async (req: Request, res: Response) => {
@@ -200,8 +192,6 @@ class PortfoliosController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Portfolios API"],
-      operationId: "deleteStockFromPortfolio",
       summary: "Remove a stock from a portfolio",
       description: "Removes a stock from a portfolio in the database.",
       parameters: [
@@ -211,7 +201,7 @@ class PortfoliosController extends Singleton {
       responses: { "204": noContent, "401": unauthorized, "403": forbidden, "404": notFound, "409": conflict },
     },
     method: "delete",
-    path: portfoliosEndpointPath + "/{id}" + stocksEndpointPath + "/{ticker}",
+    path: "/{id}" + stocksAPIPath + "/{ticker}",
     accessRights: GENERAL_ACCESS,
   })
   removeStock: RequestHandler = async (req: Request, res: Response) => {
@@ -226,15 +216,13 @@ class PortfoliosController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Portfolios API"],
-      operationId: "deletePortfolio",
       summary: "Delete a portfolio",
       description: "Deletes a portfolio from the database.",
       parameters: [{ ...portfolio.id, in: "path", required: true }],
       responses: { "204": noContent, "401": unauthorized, "403": forbidden, "404": notFound },
     },
     method: "delete",
-    path: portfoliosEndpointPath + "/{id}",
+    path: "/{id}",
     accessRights: GENERAL_ACCESS,
   })
   delete: RequestHandler = async (req: Request, res: Response) => {

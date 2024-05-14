@@ -1,7 +1,13 @@
 import http from "http";
 
 import type { DataProvider } from "@rating-tracker/commons";
-import { baseURL, dataProviderEndpoints, dataProviderName, createURLSearchParams } from "@rating-tracker/commons";
+import {
+  baseURL,
+  dataProviderEndpoints,
+  dataProviderName,
+  createURLSearchParams,
+  fetchAPIPath,
+} from "@rating-tracker/commons";
 import * as cron from "cron";
 
 import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal";
@@ -71,7 +77,10 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
           const urlSearchParams = createURLSearchParams(dataProviderParams[dataProvider]);
           await performInternalRequest({
             path:
-              baseURL + dataProviderEndpoints[dataProvider] + (urlSearchParams.toString() ? "?" + urlSearchParams : ""),
+              baseURL +
+              fetchAPIPath +
+              dataProviderEndpoints[dataProvider] +
+              (urlSearchParams.toString() ? "?" + urlSearchParams : ""),
             method: "POST",
             headers: {
               Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,

@@ -2,7 +2,7 @@ import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Box, Card, CardContent, Grid, TextField, Typography, useTheme } from "@mui/material";
-import { registerEndpointPath, signInEndpointPath } from "@rating-tracker/commons";
+import { authAPIPath, registerEndpointSuffix, signInEndpointSuffix } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import { useRef, useState } from "react";
 
@@ -55,12 +55,14 @@ export const LoginPage = (): JSX.Element => {
           if (!validate()) return;
           try {
             // Request registration challenge
-            const res = await api.get(registerEndpointPath, { params: { email: email.trim(), name: name.trim() } });
+            const res = await api.get(authAPIPath + registerEndpointSuffix, {
+              params: { email: email.trim(), name: name.trim() },
+            });
             // Ask the browser to perform the WebAuthn registration and store a corresponding credential
             const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
             try {
               // Send the registration challenge response to the server
-              await api.post(registerEndpointPath, {
+              await api.post(authAPIPath + registerEndpointSuffix, {
                 body: authRes,
                 params: { email: email.trim(), name: name.trim() },
               });
@@ -84,12 +86,14 @@ export const LoginPage = (): JSX.Element => {
         case "signIn":
           try {
             // Request authentication challenge
-            const res = await api.get(signInEndpointPath);
+            const res = await api.get(authAPIPath + signInEndpointSuffix);
             // Ask the browser to perform the WebAuthn authentication
             const authRes = await SimpleWebAuthnBrowser.startAuthentication(res.data);
             try {
               // Send the authentication challenge response to the server
-              await api.post(signInEndpointPath, { body: { ...authRes, challenge: res.data.challenge } });
+              await api.post(authAPIPath + signInEndpointSuffix, {
+                body: { ...authRes, challenge: res.data.challenge },
+              });
               // This is only reached if the authentication was successful
               setNotification(undefined);
               await refetchUser(); // After refetching, the user is redirected automatically

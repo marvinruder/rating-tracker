@@ -1,4 +1,4 @@
 /**
- * The Favorites endpoint path.
+ * The Favorites API path.
  */
-export const favoritesEndpointPath = "/favorites";
+export const favoritesAPIPath = "/favorites";

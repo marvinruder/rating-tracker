@@ -2,7 +2,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { PortfolioSummary } from "@rating-tracker/commons";
-import { portfoliosEndpointPath } from "@rating-tracker/commons";
+import { portfoliosAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -24,7 +24,7 @@ export const DeletePortfolio = (props: DeletePortfolioProps): JSX.Element => {
   const deletePortfolio = () => {
     setRequestInProgress(true);
     api
-      .delete(portfoliosEndpointPath + `/${props.portfolio.id}`)
+      .delete(portfoliosAPIPath + `/${props.portfolio.id}`)
       .then(() => (props.onDelete(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting portfolio"))
       .finally(() => setRequestInProgress(false));

@@ -18,7 +18,7 @@ import {
   useTheme,
 } from "@mui/material";
 import type { Stock, PortfolioSummary, Currency } from "@rating-tracker/commons";
-import { stocksEndpointPath, portfoliosEndpointPath, currencyMinorUnits } from "@rating-tracker/commons";
+import { stocksAPIPath, portfoliosAPIPath, currencyMinorUnits } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -60,7 +60,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
    */
   const getPortfolios = () => {
     api
-      .get(portfoliosEndpointPath)
+      .get(portfoliosAPIPath)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching portfolios");
@@ -80,7 +80,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
   const addStockToPortfolio = (id: number) => {
     if (!validate()) return;
     api
-      .put(`${portfoliosEndpointPath}/${id}${stocksEndpointPath}/${props.stock.ticker}`, {
+      .put(`${portfoliosAPIPath}/${id}${stocksAPIPath}/${props.stock.ticker}`, {
         params: { amount: +amountInput },
       })
       .then(() => props.onClose())

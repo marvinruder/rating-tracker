@@ -1,24 +1,28 @@
 /**
- * The Morningstar fetch endpoint path.
+ * The Fetch API path.
  */
-export const fetchMorningstarEndpointPath = "/fetch/morningstar";
+export const fetchAPIPath = "/fetch";
 /**
- * The Market Screener fetch endpoint path.
+ * The Morningstar Fetch endpoint suffix.
  */
-export const fetchMarketScreenerEndpointPath = "/fetch/marketscreener";
+export const fetchMorningstarEndpointSuffix = "/morningstar";
 /**
- * The MSCI fetch endpoint path.
+ * The Market Screener Fetch endpoint suffix.
  */
-export const fetchMSCIEndpointPath = "/fetch/msci";
+export const fetchMarketScreenerEndpointSuffix = "/marketscreener";
 /**
- * The LSEG fetch endpoint path.
+ * The MSCI Fetch endpoint suffix.
  */
-export const fetchLSEGEndpointPath = "/fetch/lseg";
+export const fetchMSCIEndpointSuffix = "/msci";
 /**
- * The Standard & Poor’s fetch endpoint path.
+ * The LSEG Fetch endpoint suffix.
  */
-export const fetchSPEndpointPath = "/fetch/sp";
+export const fetchLSEGEndpointSuffix = "/lseg";
 /**
- * The Sustainalytics fetch endpoint path.
+ * The Standard & Poor’s Fetch endpoint suffix.
  */
-export const fetchSustainalyticsEndpointPath = "/fetch/sustainalytics";
+export const fetchSPEndpointSuffix = "/sp";
+/**
+ * The Sustainalytics Fetch endpoint suffix.
+ */
+export const fetchSustainalyticsEndpointSuffix = "/sustainalytics";

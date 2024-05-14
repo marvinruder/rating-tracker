@@ -2,7 +2,7 @@ import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { Currency, PortfolioSummary } from "@rating-tracker/commons";
-import { isCurrency, portfoliosEndpointPath } from "@rating-tracker/commons";
+import { isCurrency, portfoliosAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -40,7 +40,7 @@ export const EditPortfolio = (props: EditPortfolioProps): JSX.Element => {
     if (!validate()) return;
     setRequestInProgress(true);
     api
-      .patch(portfoliosEndpointPath + `/${props.portfolio.id}`, {
+      .patch(portfoliosAPIPath + `/${props.portfolio.id}`, {
         params: {
           // Only send the parameters that have changed.
           name: name !== props.portfolio.name ? name.trim() : undefined,

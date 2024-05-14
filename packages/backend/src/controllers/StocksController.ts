@@ -9,8 +9,8 @@ import {
   isStyle,
   msciESGRatingArray,
   optionalStockValuesNull,
-  logoBackgroundEndpointPath,
-  stocksEndpointPath,
+  logoBackgroundAPIPath,
+  stocksAPIPath,
   stockLogoEndpointSuffix,
   WRITE_STOCKS_ACCESS,
   DUMMY_SVG,
@@ -40,12 +40,16 @@ import { createResource, readResource, readResourceTTL } from "../redis/reposito
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
 import { performFetchRequest } from "../utils/fetchRequest";
-import Singleton from "../utils/Singleton";
+
+import SingletonController from "./SingletonController";
 
 /**
  * This class is responsible for handling stock data.
  */
-class StocksController extends Singleton {
+class StocksController extends SingletonController {
+  path = stocksAPIPath;
+  tags = ["Stocks API"];
+
   /**
    * Retrieves the logo of a stock from Redis cache or TradeRepublic.
    * @param ticker the ticker of the stock
@@ -98,8 +102,6 @@ class StocksController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Stocks API"],
-      operationId: "getStocks",
       summary: "Get a list of stocks",
       description: "Returns a list of stocks, which can be filtered, sorted and paginated.",
       parameters: [
@@ -156,7 +158,7 @@ class StocksController extends Singleton {
       },
     },
     method: "get",
-    path: stocksEndpointPath,
+    path: "",
     accessRights: GENERAL_ACCESS,
   })
   getList: RequestHandler = async (req: Request, res: Response) => {
@@ -463,14 +465,12 @@ class StocksController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Stocks API"],
-      operationId: "patchStocks",
       summary: "(Re-)Compute dynamic attributes of all stocks",
       description: "(Re-)Computes dynamic attributes of all stocks.",
       responses: { "204": noContent, "401": unauthorized },
     },
     method: "patch",
-    path: stocksEndpointPath,
+    path: "",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   compute: RequestHandler = async (_: Request, res: Response) => {
@@ -488,8 +488,6 @@ class StocksController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Stocks API"],
-      operationId: "getStockLogo",
       summary: "Get the logo of a stock",
       description: "Fetches the logo of a stock from the cache or TradeRepublic.",
       parameters: [
@@ -504,7 +502,7 @@ class StocksController extends Singleton {
       responses: { "200": okSVG, "401": unauthorized, "404": notFound, "502": badGateway },
     },
     method: "get",
-    path: stocksEndpointPath + "/{ticker}" + stockLogoEndpointSuffix,
+    path: "/{ticker}" + stockLogoEndpointSuffix,
     accessRights: GENERAL_ACCESS,
   })
   getLogo: RequestHandler = async (req: Request, res: Response) => {
@@ -527,8 +525,7 @@ class StocksController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Stocks API"],
-      operationId: "getLogoBackground",
+      tags: ["Logo Background API"],
       summary: "Get the logos of the highest rated stocks",
       description: "Fetches the logos of the highest rated stocks.",
       parameters: [
@@ -548,13 +545,14 @@ class StocksController extends Singleton {
       responses: { "200": okLogoBackground, "502": badGateway },
     },
     method: "get",
-    path: logoBackgroundEndpointPath,
+    path: logoBackgroundAPIPath,
+    ignoreBasePath: true,
     accessRights: 0,
   })
   getLogoBackground: RequestHandler = async (req: Request, res: Response) => {
     const count = Math.min(50, Number(req.query.count) || 50);
     let logoBundleResource: Resource;
-    const url = logoBackgroundEndpointPath + (req.query.dark ? "_dark" : "_light") + count;
+    const url = logoBackgroundAPIPath + (req.query.dark ? "_dark" : "_light") + count;
     try {
       // Try to read the logos from Redis cache first.
       logoBundleResource = await readResource(url);
@@ -590,15 +588,13 @@ class StocksController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Stocks API"],
-      operationId: "getStock",
       summary: "Get a stock",
       description: "Reads a single stock from the database.",
       parameters: [{ ...stock.ticker, in: "path", required: true }],
       responses: { "200": okStock, "401": unauthorized, "404": notFound },
     },
     method: "get",
-    path: stocksEndpointPath + "/{ticker}",
+    path: "/{ticker}",
     accessRights: GENERAL_ACCESS,
   })
   get: RequestHandler = async (req: Request, res: Response) => {
@@ -616,8 +612,6 @@ class StocksController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Stocks API"],
-      operationId: "putStock",
       summary: "Create a new stock",
       description: "Creates a new stock in the database.",
       parameters: [
@@ -629,7 +623,7 @@ class StocksController extends Singleton {
       responses: { "201": created, "401": unauthorized, "403": forbidden, "409": conflict },
     },
     method: "put",
-    path: stocksEndpointPath + "/{ticker}",
+    path: "/{ticker}",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   put: RequestHandler = async (req: Request, res: Response) => {
@@ -648,8 +642,6 @@ class StocksController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Stocks API"],
-      operationId: "patchStock",
       summary: "Update a stock",
       description: "Updates a stock in the database.",
       parameters: [
@@ -668,7 +660,7 @@ class StocksController extends Singleton {
       responses: { "204": noContent, "400": badRequest, "401": unauthorized, "403": forbidden, "404": notFound },
     },
     method: "patch",
-    path: stocksEndpointPath + "/{ticker}",
+    path: "/{ticker}",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   patch: RequestHandler = async (req: Request, res: Response) => {
@@ -737,15 +729,13 @@ class StocksController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Stocks API"],
-      operationId: "deleteStock",
       summary: "Delete a stock",
       description: "Deletes a stock from the database.",
       parameters: [{ ...stock.ticker, in: "path", required: true }],
       responses: { "204": noContent, "401": unauthorized, "403": forbidden, "404": notFound },
     },
     method: "delete",
-    path: stocksEndpointPath + "/{ticker}",
+    path: "/{ticker}",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   delete: RequestHandler = async (req: Request, res: Response) => {

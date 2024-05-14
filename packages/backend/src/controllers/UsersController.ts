@@ -4,7 +4,7 @@ import {
   GENERAL_ACCESS,
   baseURL,
   usersAvatarEndpointSuffix,
-  usersEndpointPath,
+  usersAPIPath,
 } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
 import express from "express";
@@ -16,12 +16,16 @@ import { internalServerError, notImplemented } from "../openapi/responses/server
 import { created, noContent, okAvatar, okUser, okUserList } from "../openapi/responses/success";
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
-import Singleton from "../utils/Singleton";
+
+import SingletonController from "./SingletonController";
 
 /**
  * This class is responsible for handling information of other users.
  */
-class UsersController extends Singleton {
+class UsersController extends SingletonController {
+  path = usersAPIPath;
+  tags = ["Users API"];
+
   /**
    * Returns a list of users.
    * @param _ Request object
@@ -29,20 +33,18 @@ class UsersController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Users API"],
-      operationId: "getUsers",
       summary: "Get a list of users",
       description: "Returns a list of users.",
       responses: { "200": okUserList, "401": unauthorized, "403": forbidden },
     },
     method: "get",
-    path: usersEndpointPath,
+    path: "",
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   getList: RequestHandler = async (_: Request, res: Response) => {
     const users: User[] = (await readAllUsers()).map((user: User) => {
       if (user.avatar?.startsWith("data:"))
-        user.avatar = `${baseURL}${usersEndpointPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`;
+        user.avatar = `${baseURL}${usersAPIPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`;
       return user;
     });
     res.status(200).json(users).end();
@@ -55,21 +57,19 @@ class UsersController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Users API"],
-      operationId: "getUser",
       summary: "Get a user",
       description: "Reads a single user from the database.",
       parameters: [{ ...user.email, in: "path", required: true }],
       responses: { "200": okUser, "401": unauthorized, "403": forbidden, "404": notFound },
     },
     method: "get",
-    path: usersEndpointPath + "/{email}",
+    path: "/{email}",
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   get: RequestHandler = async (req: Request, res: Response) => {
     const user: User = await readUser(req.params.email);
     if (user.avatar?.startsWith("data:"))
-      user.avatar = `${baseURL}${usersEndpointPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`;
+      user.avatar = `${baseURL}${usersAPIPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`;
     res.status(200).json(user).end();
   };
 
@@ -80,8 +80,6 @@ class UsersController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Users API"],
-      operationId: "getAvatar",
       summary: "Get the avatar of a user",
       description: "Returns the avatar of a user from the database.",
       parameters: [
@@ -104,7 +102,7 @@ class UsersController extends Singleton {
       },
     },
     method: "get",
-    path: usersEndpointPath + "/{email}" + usersAvatarEndpointSuffix,
+    path: "/{email}" + usersAvatarEndpointSuffix,
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   getAvatar: RequestHandler = async (req: Request, res: Response) => {
@@ -128,8 +126,6 @@ class UsersController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Users API"],
-      operationId: "patchUser",
       summary: "Update a user",
       description: "Updates a user in the database.",
       parameters: [
@@ -143,7 +139,7 @@ class UsersController extends Singleton {
       responses: { "204": noContent, "401": unauthorized, "403": forbidden, "404": notFound },
     },
     method: "patch",
-    path: usersEndpointPath + "/{email}",
+    path: "/{email}",
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   patch: RequestHandler = async (req: Request, res: Response) => {
@@ -169,8 +165,6 @@ class UsersController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Users API"],
-      operationId: "createAvatar",
       summary: "Create an avatar for a user",
       description: "Creates an avatar for a user in the database.",
       parameters: [{ ...user.email, in: "path", required: true }],
@@ -184,7 +178,7 @@ class UsersController extends Singleton {
       responses: { "201": created, "401": unauthorized, "403": forbidden, "404": notFound },
     },
     method: "put",
-    path: usersEndpointPath + "/{email}" + usersAvatarEndpointSuffix,
+    path: "/{email}" + usersAvatarEndpointSuffix,
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
     bodyParser: express.raw({ type: ["image/avif"], limit: "1mb" }),
   })
@@ -211,15 +205,13 @@ class UsersController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Users API"],
-      operationId: "deleteUser",
       summary: "Delete a user",
       description: "Deletes a user from the database.",
       parameters: [{ ...user.email, in: "path", required: true }],
       responses: { "204": noContent, "401": unauthorized, "403": forbidden, "404": notFound },
     },
     method: "delete",
-    path: usersEndpointPath + "/{email}",
+    path: "/{email}",
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   delete: RequestHandler = async (req: Request, res: Response) => {
@@ -234,8 +226,6 @@ class UsersController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Users API"],
-      operationId: "deleteAvatar",
       summary: "Delete the avatar of a user",
       description: "Deletes the avatar of a user from the database.",
       parameters: [{ ...user.email, in: "path", required: true }],
@@ -248,7 +238,7 @@ class UsersController extends Singleton {
       },
     },
     method: "delete",
-    path: usersEndpointPath + "/{email}" + usersAvatarEndpointSuffix,
+    path: "/{email}" + usersAvatarEndpointSuffix,
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   deleteAvatar: RequestHandler = async (req: Request, res: Response) => {

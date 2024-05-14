@@ -1,8 +1,12 @@
 /**
- * The user registration endpoint path.
+ * The Authentication API path.
  */
-export const registerEndpointPath = "/auth/register";
+export const authAPIPath = "/auth";
 /**
- * The sign in endpoint path.
+ * The User Registration endpoint suffix.
  */
-export const signInEndpointPath = "/auth/signIn";
+export const registerEndpointSuffix = "/register";
+/**
+ * The Sign In endpoint suffix.
+ */
+export const signInEndpointSuffix = "/signIn";

@@ -1,6 +1,6 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import type { PortfolioSummary } from "@rating-tracker/commons";
-import { portfoliosEndpointPath } from "@rating-tracker/commons";
+import { portfoliosAPIPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 
 import { Footer } from "../../../components/etc/Footer";
@@ -25,7 +25,7 @@ const PortfolioSummaryModule = (): JSX.Element => {
    */
   const getPortfolios = () => {
     api
-      .get(portfoliosEndpointPath)
+      .get(portfoliosAPIPath)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching portfolios");

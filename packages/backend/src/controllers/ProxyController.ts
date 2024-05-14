@@ -3,7 +3,7 @@ import {
   FetchError,
   GENERAL_ACCESS,
   isIndustry,
-  proxyEndpointPath,
+  proxyAPIPath,
   yahooFinanceEndpointSuffix,
 } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
@@ -14,12 +14,16 @@ import { okYahooStockStubList } from "../openapi/responses/success";
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
 import { performFetchRequest } from "../utils/fetchRequest";
-import Singleton from "../utils/Singleton";
+
+import SingletonController from "./SingletonController";
 
 /**
  * This class is responsible for relaying requests to external APIs.
  */
-class ProxyController extends Singleton {
+class ProxyController extends SingletonController {
+  path = proxyAPIPath;
+  tags = ["Proxy API"];
+
   /**
    * Relays a request to the Yahoo Finance API.
    * @param req Request object
@@ -28,8 +32,6 @@ class ProxyController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Proxy API"],
-      operationId: "getYahooFinance",
       summary: "Access the Yahoo Finance API",
       description: "Relays a request to the Yahoo Finance API.",
       parameters: [
@@ -52,7 +54,7 @@ class ProxyController extends Singleton {
       },
     },
     method: "get",
-    path: proxyEndpointPath + yahooFinanceEndpointSuffix,
+    path: yahooFinanceEndpointSuffix,
     accessRights: GENERAL_ACCESS,
   })
   getYahooFinance: RequestHandler = async (req: Request, res: Response) => {

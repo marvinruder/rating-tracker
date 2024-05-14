@@ -3,10 +3,11 @@ import { randomUUID } from "node:crypto";
 
 import {
   ALREADY_REGISTERED_ERROR_MESSAGE,
+  authAPIPath,
   GENERAL_ACCESS,
   optionalUserValuesNull,
-  registerEndpointPath,
-  signInEndpointPath,
+  registerEndpointSuffix,
+  signInEndpointSuffix,
   UserWithCredentials,
 } from "@rating-tracker/commons";
 import * as SimpleWebAuthnServer from "@simplewebauthn/server";
@@ -21,12 +22,16 @@ import { created, noContent, okObject } from "../openapi/responses/success";
 import { createSession, sessionTTLInSeconds } from "../redis/repositories/sessionRepository";
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
-import Singleton from "../utils/Singleton";
+
+import SingletonController from "./SingletonController";
 
 /**
  * This class is responsible for handling all registration and authentication requests.
  */
-class AuthController extends Singleton {
+class AuthController extends SingletonController {
+  path = authAPIPath;
+  tags = ["Authentication API"];
+
   /**
    * Stores all challenges between the client’s GET request to get such challenge and their POST request with the
    * challenge response. Those are only required to be stored for a short time, so we can use a simple object here.
@@ -46,8 +51,6 @@ class AuthController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Authentication API"],
-      operationId: "getRegistrationOptions",
       summary: "Get a challenge for registering a new user",
       description: "Generates a registration challenge for the user to register via the WebAuthn standard",
       parameters: [
@@ -57,7 +60,7 @@ class AuthController extends Singleton {
       responses: { "200": okObject, "403": forbidden, "429": tooManyRequestsHTML },
     },
     method: "get",
-    path: registerEndpointPath,
+    path: registerEndpointSuffix,
     accessRights: 0,
     rateLimited: true,
   })
@@ -94,8 +97,6 @@ class AuthController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Authentication API"],
-      operationId: "postRegistrationResponse",
       summary: "Verify the response for a WebAuthn registration challenge",
       description: "Verifies the registration response and creates a new user if the request is valid.",
       parameters: [
@@ -111,7 +112,7 @@ class AuthController extends Singleton {
       },
     },
     method: "post",
-    path: registerEndpointPath,
+    path: registerEndpointSuffix,
     accessRights: 0,
     bodyParser: express.json(),
     rateLimited: true,
@@ -172,8 +173,6 @@ class AuthController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Authentication API"],
-      operationId: "getAuthenticationOptions",
       summary: "Get a challenge for authenticating as a registered user",
       description:
         "Generates an authentication challenge for any user to sign in. " +
@@ -181,7 +180,7 @@ class AuthController extends Singleton {
       responses: { "200": okObject, "429": tooManyRequestsHTML },
     },
     method: "get",
-    path: signInEndpointPath,
+    path: signInEndpointSuffix,
     accessRights: 0,
     rateLimited: true,
   })
@@ -202,8 +201,6 @@ class AuthController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Authentication API"],
-      operationId: "postAuthenticationResponse",
       summary: "Verify the response for a WebAuthn authentication challenge",
       description:
         "Verifies the authentication response and creates a session cookie if the challenge response is valid.",
@@ -217,7 +214,7 @@ class AuthController extends Singleton {
       },
     },
     method: "post",
-    path: signInEndpointPath,
+    path: signInEndpointSuffix,
     accessRights: 0,
     bodyParser: express.json(),
     rateLimited: true,

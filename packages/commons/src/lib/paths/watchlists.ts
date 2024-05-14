@@ -1,4 +1,4 @@
 /**
- * The watchlists endpoint path.
+ * The Watchlists API path.
  */
-export const watchlistsEndpointPath = "/watchlists";
+export const watchlistsAPIPath = "/watchlists";

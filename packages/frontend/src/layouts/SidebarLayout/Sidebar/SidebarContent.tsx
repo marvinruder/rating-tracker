@@ -23,10 +23,10 @@ import {
 import {
   ADMINISTRATIVE_ACCESS,
   portfolioBuilderEndpointSuffix,
-  portfoliosEndpointPath,
-  stocksEndpointPath,
-  usersEndpointPath,
-  watchlistsEndpointPath,
+  portfoliosAPIPath,
+  stocksAPIPath,
+  usersAPIPath,
+  watchlistsAPIPath,
 } from "@rating-tracker/commons";
 import type { FC } from "react";
 import React, { Fragment, useState } from "react";
@@ -177,7 +177,7 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
                   onClick={props.closeSidebar}
-                  to={stocksEndpointPath}
+                  to={stocksAPIPath}
                   startIcon={<ListIcon />}
                 >
                   All Stocks
@@ -188,7 +188,7 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
                   onClick={props.closeSidebar}
-                  to={watchlistsEndpointPath}
+                  to={watchlistsAPIPath}
                   startIcon={<CollectionsBookmarkIcon />}
                 >
                   Watchlists
@@ -198,11 +198,11 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
                 <Button
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
-                  {...(location.pathname === portfoliosEndpointPath + portfolioBuilderEndpointSuffix
+                  {...(location.pathname === portfoliosAPIPath + portfolioBuilderEndpointSuffix
                     ? { className: "notActive" }
                     : {})}
                   onClick={props.closeSidebar}
-                  to={portfoliosEndpointPath}
+                  to={portfoliosAPIPath}
                   startIcon={<ShoppingCartIcon />}
                 >
                   Portfolios
@@ -218,7 +218,7 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                   component={NavLink}
                   onClick={props.closeSidebar}
-                  to={portfoliosEndpointPath + portfolioBuilderEndpointSuffix}
+                  to={portfoliosAPIPath + portfolioBuilderEndpointSuffix}
                   startIcon={<AutoFixHighIcon />}
                 >
                   Portfolio Builder
@@ -236,7 +236,7 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
                       sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
                       component={NavLink}
                       onClick={props.closeSidebar}
-                      to={usersEndpointPath}
+                      to={usersAPIPath}
                       startIcon={<ManageAccountsIcon />}
                     >
                       User Management
