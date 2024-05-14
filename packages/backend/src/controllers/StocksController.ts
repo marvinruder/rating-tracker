@@ -14,6 +14,8 @@ import {
   stockLogoEndpointSuffix,
   WRITE_STOCKS_ACCESS,
   DUMMY_SVG,
+  isAnalystRating,
+  analystRatingArray,
 } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
 
@@ -250,14 +252,25 @@ class StocksController extends Singleton {
         filters.push({ morningstarFairValuePercentageToLastClose: { lte: morningstarFairValueDiffMax } });
     }
 
-    if (req.query.analystConsensusMin !== undefined) {
-      const analystConsensusMin = Number(req.query.analystConsensusMin);
-      if (!Number.isNaN(analystConsensusMin)) filters.push({ analystConsensus: { gte: analystConsensusMin } });
+    let analystConsensusArray = [...analystRatingArray];
+    if (req.query.analystConsensusMin !== undefined && typeof req.query.analystConsensusMin === "string") {
+      const analystConsensusMin = req.query.analystConsensusMin;
+      if (isAnalystRating(analystConsensusMin))
+        analystConsensusArray = analystConsensusArray.filter(
+          (analystRating) =>
+            analystRatingArray.indexOf(analystRating) >= analystRatingArray.indexOf(analystConsensusMin),
+        );
     }
-    if (req.query.analystConsensusMax !== undefined) {
-      const analystConsensusMax = Number(req.query.analystConsensusMax);
-      if (!Number.isNaN(analystConsensusMax)) filters.push({ analystConsensus: { lte: analystConsensusMax } });
+    if (req.query.analystConsensusMax !== undefined && typeof req.query.analystConsensusMax === "string") {
+      const analystConsensusMax = req.query.analystConsensusMax;
+      if (isAnalystRating(analystConsensusMax))
+        analystConsensusArray = analystConsensusArray.filter(
+          (analystRating) =>
+            analystRatingArray.indexOf(analystRating) <= analystRatingArray.indexOf(analystConsensusMax),
+        );
     }
+    if (analystRatingArray.some((msciESGRating) => !analystConsensusArray.includes(msciESGRating)))
+      filters.push({ analystConsensus: { in: analystConsensusArray } });
 
     if (req.query.analystCountMin !== undefined) {
       const analystCountMin = Number(req.query.analystCountMin);

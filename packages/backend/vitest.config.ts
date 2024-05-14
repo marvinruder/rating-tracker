@@ -31,7 +31,6 @@ export default defineConfig({
         "src/utils/fetchRequest.*",
         "src/utils/logger.*",
         "src/utils/logFormatterConfig.*",
-        "src/utils/webdriver.*",
       ],
     },
     exclude: ["**/*.live.test.ts"],

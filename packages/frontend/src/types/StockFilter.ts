@@ -1,4 +1,4 @@
-import type { Country, Industry, MSCIESGRating, Size, Style } from "@rating-tracker/commons";
+import type { AnalystRating, Country, Industry, MSCIESGRating, Size, Style } from "@rating-tracker/commons";
 
 /**
  * An object containing all possible values for filtering stocks.
@@ -18,8 +18,8 @@ export type StockFilter = {
   starRatingMax?: number;
   morningstarFairValueDiffMin?: number;
   morningstarFairValueDiffMax?: number;
-  analystConsensusMin?: number;
-  analystConsensusMax?: number;
+  analystConsensusMin?: AnalystRating;
+  analystConsensusMax?: AnalystRating;
   analystCountMin?: number;
   analystCountMax?: number;
   analystTargetDiffMin?: number;

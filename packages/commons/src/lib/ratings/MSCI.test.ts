@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { isMSCIESGRating } from "./MSCI";
 
-describe("MSCI ESG Rating", () => {
+describe.concurrent("MSCI ESG Rating", () => {
   it("is a rating", () => {
     expect(isMSCIESGRating("AAA")).toBe(true);
   });

@@ -19,7 +19,6 @@ tests.push({
     expect(res.body.services).not.toHaveProperty("Redis");
 
     // Mocked to be not ready during live tests:
-    // expect(res.body.services).toHaveProperty("Selenium");
     expect(res.body.services).toHaveProperty("Signal");
     expect(res.body.services.Signal).toBe("Signal is not ready");
   },

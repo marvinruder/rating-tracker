@@ -1,6 +1,6 @@
 import type { Theme } from "@mui/material";
 import { ThemeProvider } from "@mui/material";
-import type { SuperRegion, SuperSector } from "@rating-tracker/commons";
+import type { AnalystRating, SuperRegion, SuperSector } from "@rating-tracker/commons";
 import type { FC } from "react";
 import React, { createContext, useEffect, useState } from "react";
 
@@ -105,21 +105,9 @@ declare module "@mui/material/styles" {
        */
       sector: Record<SuperSector, string>;
       /**
-       * A color spectrum from red (0) to green (10) used for the analyst consensus.
+       * A color spectrum from red (Sell) to green (Buy) used for the analyst ratings.
        */
-      consensus: {
-        0: string;
-        1: string;
-        2: string;
-        3: string;
-        4: string;
-        5: string;
-        6: string;
-        7: string;
-        8: string;
-        9: string;
-        10: string;
-      };
+      consensus: Record<AnalystRating, string>;
       /**
        * The colors MSCI uses for ratings and implied temperature rises.
        */
@@ -295,21 +283,9 @@ declare module "@mui/material/styles" {
        */
       sector: Record<SuperSector, string>;
       /**
-       * A color spectrum from red (0) to green (10) used for the analyst consensus.
+       * A color spectrum from red (Sell) to green (Buy) used for the analyst ratings.
        */
-      consensus: {
-        0: string;
-        1: string;
-        2: string;
-        3: string;
-        4: string;
-        5: string;
-        6: string;
-        7: string;
-        8: string;
-        9: string;
-        10: string;
-      };
+      consensus: Record<AnalystRating, string>;
       /**
        * The colors MSCI uses for ratings and implied temperature rises.
        */

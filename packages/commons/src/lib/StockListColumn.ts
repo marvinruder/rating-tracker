@@ -11,7 +11,7 @@ export const stockListColumnArray = [
   "ESG Score",
   "Star Rating",
   "Morningstar Fair Value",
-  "Analyst Consensus",
+  "Analyst Ratings",
   "Analyst Target Price",
   "MSCI ESG Rating",
   "MSCI Implied Temperature Rise",

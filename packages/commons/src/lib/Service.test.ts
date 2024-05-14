@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { isService } from "./Service";
 
-describe("Sortable Attribute", () => {
+describe.concurrent("Sortable Attribute", () => {
   it("is a service", () => {
     expect(isService("PostgreSQL")).toBe(true);
   });

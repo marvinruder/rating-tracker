@@ -7,11 +7,26 @@ export default class DataProviderError extends Error {
    * @param message A descriptive message for the error.
    * @param options Additional options for the error.
    */
-  constructor(message?: string, options?: ErrorOptions) {
-    super(message, options);
+  constructor(
+    message?: string,
+    options?: ErrorOptions & {
+      /**
+       * A data source from which fetching failed. Can be an HTML document or a JSON object.
+       */
+      dataSources?: (Document | Object)[];
+    },
+  ) {
+    super(message, typeof options === "object" && "cause" in options ? { cause: options.cause } : undefined);
+
+    this.dataSources = options?.dataSources;
 
     // Set the prototype explicitly.
     DataProviderError.prototype.name = "DataProviderError";
     Object.setPrototypeOf(this, DataProviderError.prototype);
   }
+
+  /**
+   * A data source from which fetching failed. Can be an HTML document or a JSON object.
+   */
+  public dataSources?: (Document | Object)[];
 }

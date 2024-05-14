@@ -12,7 +12,7 @@ const stock: OmitDynamicAttributesStock = {
   country: "US",
 };
 
-describe("Market Capitalization Formatter", () => {
+describe.concurrent("Market Capitalization Formatter", () => {
   it("formats trillions", () => {
     stock.marketCap = 1234000000000;
     expect(formatMarketCap(stock)).toBe("1.23 T");
@@ -39,7 +39,7 @@ describe("Market Capitalization Formatter", () => {
   });
 });
 
-describe("Percentage Formatter", () => {
+describe.concurrent("Percentage Formatter", () => {
   it("formats a simple percentage", () => {
     expect(formatPercentage(0.1234)).toBe("12.3 %");
   });

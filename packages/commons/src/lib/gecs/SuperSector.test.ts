@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getSectorsInSuperSector, isSuperSector } from "./SuperSector";
 
-describe("Super Sector", () => {
+describe.concurrent("Super Sector", () => {
   it("is a super sector", () => {
     expect(isSuperSector("Defensive")).toBeTruthy();
   });

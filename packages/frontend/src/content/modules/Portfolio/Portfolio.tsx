@@ -47,6 +47,8 @@ import {
   superSectorOfSector,
   sectorOfIndustryGroup,
   stripPrefixFromSunburstID,
+  getAnalystRatingDistribution,
+  getWeightedMeanAnalystConsensus,
 } from "@rating-tracker/commons";
 import { animated } from "@react-spring/web";
 import { useEffect, useState } from "react";
@@ -59,6 +61,7 @@ import { YellowIconChip } from "../../../components/chips/YellowIconChip";
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { StockTable } from "../../../components/stock/layouts/StockTable";
+import { AnalystRatingBar } from "../../../components/stock/properties/AnalystRatingBar";
 import { getSectorIconPaths } from "../../../components/stock/properties/SectorIcon";
 import { StarRating } from "../../../components/stock/properties/StarRating";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -121,7 +124,8 @@ const PortfolioModule = (): JSX.Element => {
   const percentageToMorningstarFairValue = portfolio
     ? getPercentageToTotalAmount(portfolio, "morningstarFairValue")
     : null;
-  const analystConsensus = portfolio ? getWeightedAverage(portfolio, "analystConsensus") : null;
+  const analystConsensus = portfolio ? getWeightedMeanAnalystConsensus(portfolio) : null;
+  const analystRatings = portfolio ? getAnalystRatingDistribution(portfolio) : null;
   const analystTargetPrice = portfolio ? getEstimateValue(portfolio, "analystTargetPrice") : null;
   const percentageToAnalystTargetPrice = portfolio ? getPercentageToTotalAmount(portfolio, "analystTargetPrice") : null;
 
@@ -415,23 +419,16 @@ const PortfolioModule = (): JSX.Element => {
                 <Grid item xs={6}>
                   {portfolio ? (
                     <>
-                      {analystConsensus !== null && (
+                      {analystConsensus !== null && analystRatings !== null && (
                         <Box width="100%" display="inline-flex" justifyContent="end">
-                          <Chip
-                            label={<strong>{analystConsensus?.toFixed(1)}</strong>}
-                            style={{ cursor: "inherit" }}
-                            sx={{
-                              backgroundColor: theme.colors.consensus[Math.round(analystConsensus)],
-                              width: 60,
-                              mt: "4px",
-                            }}
-                            size="small"
-                          />
+                          <Box width="100%" display="block">
+                            <AnalystRatingBar stock={{ analystConsensus, analystRatings }} />
+                          </Box>
                         </Box>
                       )}
                     </>
                   ) : (
-                    <Skeleton variant="rounded" width={60} height={24} sx={{ ml: "auto", mt: "4px" }} />
+                    <Skeleton variant="rounded" height={42} sx={{ ml: "auto", mt: "4px" }} />
                   )}
                 </Grid>
                 {/* Analyst Target Price */}

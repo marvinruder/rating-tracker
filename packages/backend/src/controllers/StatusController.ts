@@ -9,7 +9,6 @@ import { redisIsReady } from "../redis/redis";
 import { signalIsReadyOrUnused } from "../signal/signalBase";
 import Endpoint from "../utils/Endpoint";
 import Singleton from "../utils/Singleton";
-// import { seleniumIsReady } from "../utils/webdriver";
 
 /**
  * This class is responsible for providing a status report of the backend API and the services it depends on.
@@ -40,7 +39,6 @@ class StatusController extends Singleton {
         // The order is important here and must match the order in `serviceArray`.
         prismaIsReady(),
         redisIsReady(),
-        // seleniumIsReady(),
         signalIsReadyOrUnused(),
       ])
     ).forEach((result, index) => {

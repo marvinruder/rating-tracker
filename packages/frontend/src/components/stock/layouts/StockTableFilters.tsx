@@ -29,6 +29,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import type {
+  AnalystRating,
   Country,
   Industry,
   IndustryGroup,
@@ -42,6 +43,7 @@ import type {
   SuperSector,
 } from "@rating-tracker/commons";
 import {
+  analystRatingArray,
   countryNameWithFlag,
   getCountriesInRegion,
   getIndustriesInGroup,
@@ -82,7 +84,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
 
   const [starRatingInput, setStarRatingInput] = useState<number[]>([0, 5]);
   const [morningstarFairValueDiffInput, setMorningstarFairValueDiffInput] = useState<number[]>([-50, 50]);
-  const [analystConsensusInput, setAnalystConsensusInput] = useState<number[]>([0, 10]);
+  const [analystConsensusInput, setAnalystConsensusInput] = useState<(AnalystRating | "None")[]>(["None", "Buy"]);
   const [analystCountInput, setAnalystCountInput] = useState<number[]>([0, 60]);
   const [analystTargetDiffInput, setAnalystTargetDiffInput] = useState<number[]>([-50, 50]);
 
@@ -146,8 +148,11 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
         morningstarFairValueDiffInput[0] !== -50 ? morningstarFairValueDiffInput[0] : undefined,
       morningstarFairValueDiffMax:
         morningstarFairValueDiffInput[1] !== 50 ? morningstarFairValueDiffInput[1] : undefined,
-      analystConsensusMin: analystConsensusInput[0] !== 0 ? analystConsensusInput[0] : undefined,
-      analystConsensusMax: analystConsensusInput[1] !== 10 ? analystConsensusInput[1] : undefined,
+      analystConsensusMin: analystConsensusInput[0] !== "None" ? analystConsensusInput[0] : undefined,
+      analystConsensusMax:
+        analystConsensusInput[1] !== "Buy" && analystConsensusInput[1] !== "None"
+          ? analystConsensusInput[1]
+          : undefined,
       analystCountMin: analystCountInput[0] !== 0 ? analystCountInput[0] : undefined,
       analystCountMax: analystCountInput[1] !== 60 ? analystCountInput[1] : undefined,
       analystTargetDiffMin: analystTargetDiffInput[0] !== -50 ? analystTargetDiffInput[0] : undefined,
@@ -205,7 +210,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
               setPriceEarningRatioInput([0, 100]);
               setStarRatingInput([0, 5]);
               setMorningstarFairValueDiffInput([-50, 50]);
-              setAnalystConsensusInput([0, 10]);
+              setAnalystConsensusInput(["None", "Buy"]);
               setAnalystCountInput([0, 60]);
               setAnalystTargetDiffInput([-50, 50]);
               setMSCIESGRatingInput(["AAA", "None"]);
@@ -360,12 +365,20 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                 <Slider
                   aria-labelledby="analyst-consensus-label"
                   sx={{ width: "230px", ml: "10px", mr: "10px" }}
-                  value={analystConsensusInput}
-                  min={0}
-                  max={10}
-                  step={0.1}
-                  onChange={(_, newValue: number[]) => setAnalystConsensusInput(newValue)}
+                  value={analystConsensusInput.map((value) =>
+                    value === "None" ? -1 : analystRatingArray.findIndex((element) => element === value),
+                  )}
+                  min={-1}
+                  max={4}
+                  step={1}
+                  marks
+                  onChange={(_, newValue: number[]) =>
+                    setAnalystConsensusInput(
+                      newValue.map((value) => (value === -1 ? "None" : analystRatingArray[value])),
+                    )
+                  }
                   valueLabelDisplay="auto"
+                  valueLabelFormat={(value) => (value === -1 ? "None" : analystRatingArray[value])}
                 />
                 {/* Analyst Count */}
                 <Typography id="analyst-count-label" variant="h5">

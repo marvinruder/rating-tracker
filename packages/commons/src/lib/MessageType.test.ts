@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { isMessageType } from "./MessageType";
 
-describe("Message Type", () => {
+describe.concurrent("Message Type", () => {
   it("is a message type", () => {
     expect(isMessageType("fetchError")).toBe(true);
   });

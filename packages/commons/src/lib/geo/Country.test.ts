@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { emojiFlag, isCountry } from "./Country";
 
-describe("Country Codes", () => {
+describe.concurrent("Country Codes", () => {
   it("is an ISO 3166-1 alpha-2 country code", () => {
     expect(isCountry("US")).toBe(true);
   });
@@ -12,7 +12,7 @@ describe("Country Codes", () => {
   });
 });
 
-describe("Emoji Flags", () => {
+describe.concurrent("Emoji Flags", () => {
   it("is a flag emoji", () => {
     expect(emojiFlag("US")).toBe("🇺🇸");
   });

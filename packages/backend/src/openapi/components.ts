@@ -9,6 +9,7 @@ import {
   REGEX_PHONE_NUMBER,
   serviceArray,
   DUMMY_SVG,
+  analystRatingArray,
 } from "@rating-tracker/commons";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 
@@ -55,6 +56,13 @@ export const components: OpenAPIV3.ComponentsObject = {
       description: "The MSCI ESG rating of the stock.",
       enum: [...Array.from(msciESGRatingArray), null],
       example: "AA",
+    },
+    AnalystConsensus: {
+      type: "string",
+      nullable: true,
+      description: "The consensus of analysts’ opinions on the stock, that is, the mean value of all analyst ratings.",
+      enum: [...Array.from(analystRatingArray), null],
+      example: "Outperform",
     },
     Stock: {
       type: "object",
@@ -150,9 +158,19 @@ export const components: OpenAPIV3.ComponentsObject = {
           example: "2022-11-24T03:30:15.908Z",
         },
         analystConsensus: {
-          type: "number",
+          $ref: "#/components/schemas/AnalystConsensus",
+        },
+        analystRatings: {
+          type: "object",
           nullable: true,
-          example: 8.1,
+          properties: Object.fromEntries(analystRatingArray.map((rating) => [rating, { type: "number" }])),
+          example: {
+            Sell: 1,
+            Underperform: 1,
+            Hold: 12,
+            Outperform: 8,
+            Buy: 20,
+          },
         },
         analystCount: {
           type: "integer",

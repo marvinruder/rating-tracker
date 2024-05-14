@@ -1,0 +1,66 @@
+import { Box, Tooltip, useTheme } from "@mui/material";
+import type { Stock } from "@rating-tracker/commons";
+import { RecordMath, analystRatingArray } from "@rating-tracker/commons";
+
+/**
+ * A colored bar with a tooltip that is used to visualize the Analyst Ratings.
+ * @param props The properties of the component.
+ * @param props.stock The stock to display the analyst rating for.
+ * @returns The component.
+ */
+export const AnalystRatingBar = ({ stock, ...props }: AnalystRatingBarProps): JSX.Element => {
+  const theme = useTheme();
+  const sum = RecordMath.sum(stock.analystRatings);
+
+  let processedCount = 0;
+  const gradient = `linear-gradient(to right, ${analystRatingArray
+    .map((rating) => {
+      const colorStart = `${theme.colors.consensus[rating]} ${(processedCount / sum) * 100}%`;
+      const count = stock.analystRatings[rating];
+      const colorEnd = `${theme.colors.consensus[rating]} ${((processedCount + count) / sum) * 100}%`;
+      processedCount += count;
+      return `${colorStart}, ${colorEnd}`;
+    })
+    .join(", ")})`;
+
+  return (
+    <Tooltip
+      title={stock.analystConsensus}
+      PopperProps={{
+        sx: {
+          width: props.width,
+          position: "static !important",
+          transform: "none !important",
+          ".MuiTooltip-tooltip": {
+            mt: "-4px !important",
+            width: "fit-content",
+            mx: "auto",
+            transition: "none !important",
+          },
+        },
+        disablePortal: true,
+        modifiers: [
+          { name: "flip", enabled: false },
+          { name: "preventOverflow", enabled: false },
+        ],
+      }}
+      enterDelay={0}
+      placement="bottom"
+      open
+      arrow
+    >
+      <Box sx={{ width: props.width, height: 24, background: gradient, borderRadius: 0.5 }} />
+    </Tooltip>
+  );
+};
+
+interface AnalystRatingBarProps {
+  /**
+   * The stock to display the analyst rating for.
+   */
+  stock: Pick<Stock, "analystConsensus" | "analystRatings">;
+  /**
+   * The width of the slider.
+   */
+  width?: number;
+}

@@ -10,6 +10,7 @@ import {
   styleArray,
   watchlistsEndpointPath,
   portfoliosEndpointPath,
+  analystRatingArray,
 } from "@rating-tracker/commons";
 import type { Response } from "supertest";
 
@@ -185,11 +186,11 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(
-          `${baseURL}${stocksEndpointPath}?analystConsensusMin=7&analystConsensusMax=8.5` +
-            "&analystCountMin=20&analystCountMax=40&sortBy=name",
+          `${baseURL}${stocksEndpointPath}?analystConsensusMin=Outperform&analystConsensusMax=Outperform` +
+            "&analystCountMin=25&analystCountMax=40&sortBy=name",
         )
         .set("Cookie", ["authToken=exampleSessionID"]),
-      ["Iberdrola", "MercadoLibre", "Novo Nordisk", "Ørsted A/S"],
+      ["Novo Nordisk"],
     );
   },
 });
@@ -285,12 +286,13 @@ tests.push({
       .get(`${baseURL}${stocksEndpointPath}?totalScoreMin=30&totalScoreMax=60&sortBy=name`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
-    expect(res.body.count).toBe(4);
-    expect(res.body.stocks).toHaveLength(4);
+    expect(res.body.count).toBe(5);
+    expect(res.body.stocks).toHaveLength(5);
     expect(res.body.stocks[0].name).toMatch("Allianz");
     expect(res.body.stocks[1].name).toMatch("Danone");
     expect(res.body.stocks[2].name).toMatch("Kion");
-    expect(res.body.stocks[3].name).toMatch("Ørsted");
+    expect(res.body.stocks[3].name).toMatch("Newmont");
+    expect(res.body.stocks[4].name).toMatch("Ørsted");
   },
 });
 
@@ -393,6 +395,9 @@ tests.push({
               break;
             case "style":
               sortCriterionArray = styleArray;
+              break;
+            case "analystConsensus":
+              sortCriterionArray = analystRatingArray;
               break;
             case "msciESGRating":
               sortCriterionArray = msciESGRatingArray;

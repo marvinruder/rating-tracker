@@ -15,7 +15,7 @@ type DescribedProperty =
   | "esgScore"
   | "starRating"
   | "morningstarFairValue"
-  | "analystConsensus"
+  | "analystRatings"
   | "analystTargetPrice"
   | "analystCount"
   | "msciESGRating"
@@ -111,8 +111,8 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
             rating.
           </Typography>
           <Typography variant="body2">
-            Four- and 5-star ratings mean the stock is undervalued, while a 3-star rating means it’s fairly valued, and
-            1- and 2-star stocks are overvalued. When looking for investments, a 5-star stock is generally a better
+            4- and 5-star ratings mean the stock is undervalued, while a 3-star rating means it’s fairly valued, and 1-
+            and 2-star stocks are overvalued. When looking for investments, a 5-star stock is generally a better
             opportunity than a 1-star stock.
           </Typography>
         </>
@@ -133,18 +133,13 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
           </Typography>
         </>
       );
-    case "analystConsensus":
+    case "analystRatings":
       return (
-        <>
-          <Typography variant="body1" paddingBottom={1}>
-            The consensus of analyst recommendations for a stock is calculated by aggregating the recommendations of
-            analysts who cover the stock and then normalizing the data to a scale of 0 to 10.
-          </Typography>
-          <Typography variant="body2">
-            A score of 0 indicates a strong sell recommendation, while a score of 10 indicates a strong buy
-            recommendation.
-          </Typography>
-        </>
+        <Typography variant="body1">
+          The consensus of analyst recommendations for a stock is defined as the mean analyst rating, i.e., the
+          consensus value is chosen so that half of the analysts have a more optimistic opinion on the stock and half
+          have a more pessimistic opinion.
+        </Typography>
       );
     case "analystTargetPrice":
       return (

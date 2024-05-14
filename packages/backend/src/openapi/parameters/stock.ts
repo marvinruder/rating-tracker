@@ -353,8 +353,7 @@ export const analystConsensusMin: OpenAPIV3.ParameterObject = {
   name: "analystConsensusMin",
   description: "The minimum analyst consensus of a stock.",
   schema: {
-    type: "number",
-    example: 5.5,
+    $ref: "#/components/schemas/AnalystConsensus",
   },
 };
 
@@ -366,8 +365,7 @@ export const analystConsensusMax: OpenAPIV3.ParameterObject = {
   name: "analystConsensusMax",
   description: "The maximum analyst consensus of a stock.",
   schema: {
-    type: "number",
-    example: 9.5,
+    $ref: "#/components/schemas/AnalystConsensus",
   },
 };
 

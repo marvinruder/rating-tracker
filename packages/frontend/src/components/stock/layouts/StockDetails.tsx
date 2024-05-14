@@ -6,7 +6,6 @@ import { Box, Grid, Typography, useTheme, Tooltip, Chip, useMediaQuery, Skeleton
 import type { Stock } from "@rating-tracker/commons";
 import {
   countryNameWithFlag,
-  currencyMinorUnits,
   currencyName,
   groupOfIndustry,
   industryDescription,
@@ -35,6 +34,7 @@ import {
   SPNavigator,
   SustainalyticsNavigator,
 } from "../../etc/Navigators";
+import { AnalystRatingBar } from "../properties/AnalystRatingBar";
 import { PropertyDescription } from "../properties/PropertyDescription";
 import { Range52WSlider } from "../properties/Range52WSlider";
 import { SectorIcon } from "../properties/SectorIcon";
@@ -302,34 +302,11 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
             {props.stock ? (
               <>
                 {props.stock?.lastClose !== null && props.stock?.low52w !== null && props.stock?.high52w !== null && (
-                  <Range52WSlider
-                    aria-label={`52 Week Range of “${props.stock.name}”`}
-                    size="small"
-                    sx={{
-                      mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
-                      mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
-                    }}
-                    value={props.stock.lastClose}
-                    min={props.stock.low52w}
-                    max={props.stock.high52w}
-                    marks={[
-                      {
-                        value: props.stock.low52w,
-                        label: props.stock.low52w?.toFixed(currencyMinorUnits[props.stock.currency]),
-                      },
-                      {
-                        value: props.stock.high52w,
-                        label: props.stock.high52w?.toFixed(currencyMinorUnits[props.stock.currency]),
-                      },
-                    ]}
-                    valueLabelDisplay="on"
-                    valueLabelFormat={(value) => value.toFixed(currencyMinorUnits[props.stock.currency])}
-                    disabled
-                  />
+                  <Range52WSlider stock={props.stock} />
                 )}
               </>
             ) : (
-              <Skeleton variant="rectangular" width={150} height={42} sx={{ ml: "auto" }} />
+              <Skeleton variant="rectangular" height={42} sx={{ ml: "auto" }} />
             )}
           </Grid>
         </Grid>
@@ -475,39 +452,27 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               </Typography>
             </MorningstarNavigator>
           </Grid>
-          {/* Analyst Consensus */}
+          {/* Analyst Ratings */}
           <Grid item xs={6}>
-            <Tooltip title={<PropertyDescription property="analystConsensus" />} arrow placement={tooltipPlacement}>
+            <Tooltip title={<PropertyDescription property="analystRatings" />} arrow placement={tooltipPlacement}>
               <Typography variant="h5" height="35px">
                 Analyst
                 <br />
-                Consensus
+                Ratings
               </Typography>
             </Tooltip>
           </Grid>
           <Grid item xs={6}>
             {props.stock ? (
               <>
-                {props.stock?.analystConsensus !== null && (
+                {props.stock?.analystConsensus !== null && props.stock?.analystRatings !== null && (
                   <MarketScreenerNavigator stock={props.stock}>
-                    <Box width="100%" display="inline-flex" justifyContent="end">
-                      <Chip
-                        label={<strong>{props.stock.analystConsensus}</strong>}
-                        style={{ cursor: "inherit" }}
-                        sx={{
-                          backgroundColor: theme.colors.consensus[Math.round(Math.round(props.stock.analystConsensus))],
-                          opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
-                          width: 60,
-                          mt: "4px",
-                        }}
-                        size="small"
-                      />
-                    </Box>
+                    <AnalystRatingBar stock={props.stock} />
                   </MarketScreenerNavigator>
                 )}
               </>
             ) : (
-              <Skeleton variant="rounded" width={60} height={24} sx={{ ml: "auto", mt: "4px" }} />
+              <Skeleton variant="rounded" height={42} sx={{ ml: "auto", mt: "4px" }} />
             )}
           </Grid>
           {/* Analyst Target Price */}

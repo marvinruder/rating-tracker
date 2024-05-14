@@ -299,15 +299,15 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
-                  {/* Analyst Consensus */}
-                  <TableCell sx={{ display: displayColumn("Analyst Consensus") }}>
+                  {/* Analyst Ratings */}
+                  <TableCell sx={{ display: displayColumn("Analyst Ratings") }}>
                     <TableSortLabel
                       active={sortBy === "analystConsensus"}
                       direction={sortBy !== "analystConsensus" || sortDesc ? "desc" : "asc"}
                       onClick={handleSortLabelClicked("analystConsensus")}
                     >
-                      <Tooltip title={<PropertyDescription property="analystConsensus" />} arrow>
-                        <Box display="inline-block">Anlst Consns</Box>
+                      <Tooltip title={<PropertyDescription property="analystRatings" />} arrow>
+                        <Box display="inline-block">Analyst Ratings</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>

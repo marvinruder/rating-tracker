@@ -101,6 +101,7 @@ import {
   SPNavigator,
   SustainalyticsNavigator,
 } from "../../etc/Navigators";
+import { AnalystRatingBar } from "../properties/AnalystRatingBar";
 import { Range52WSlider } from "../properties/Range52WSlider";
 import { SectorIcon } from "../properties/SectorIcon";
 import { StarRating } from "../properties/StarRating";
@@ -616,20 +617,11 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           </Typography>
         </MorningstarNavigator>
       </TableCell>
-      {/* Analyst Consensus */}
-      <TableCell sx={{ display: displayColumn("Analyst Consensus") }}>
-        {props.stock.analystConsensus !== null && (
+      {/* Analyst Ratings */}
+      <TableCell sx={{ display: displayColumn("Analyst Ratings") }}>
+        {props.stock.analystConsensus !== null && props.stock.analystRatings && (
           <MarketScreenerNavigator stock={props.stock}>
-            <Chip
-              label={<strong>{props.stock.analystConsensus}</strong>}
-              style={{ cursor: "inherit" }}
-              sx={{
-                backgroundColor: theme.colors.consensus[Math.round(props.stock.analystConsensus)],
-                opacity: props.stock.analystCount < 10 ? props.stock.analystCount / 10 : 1,
-                width: 60,
-              }}
-              size="small"
-            />
+            <AnalystRatingBar stock={props.stock} width={120} />
           </MarketScreenerNavigator>
         )}
       </TableCell>
@@ -783,31 +775,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       {/* 52 Week Range */}
       <TableCell sx={{ display: displayColumn("52 Week Range") }}>
         {props.stock.lastClose !== null && props.stock.low52w !== null && props.stock.high52w !== null && (
-          <Range52WSlider
-            aria-label={`52 Week Range of “${props.stock.name}”`}
-            size="small"
-            sx={{
-              mb: `${-0.5 * (theme.typography.body2.fontSize as number)}px`,
-              mt: `${0.5 * (theme.typography.body2.fontSize as number)}px`,
-              width: 150,
-            }}
-            value={props.stock.lastClose}
-            min={props.stock.low52w}
-            max={props.stock.high52w}
-            marks={[
-              {
-                value: props.stock.low52w,
-                label: props.stock.low52w?.toFixed(currencyMinorUnits[props.stock.currency]),
-              },
-              {
-                value: props.stock.high52w,
-                label: props.stock.high52w?.toFixed(currencyMinorUnits[props.stock.currency]),
-              },
-            ]}
-            valueLabelDisplay="on"
-            valueLabelFormat={(value) => value.toFixed(currencyMinorUnits[props.stock.currency])}
-            disabled
-          />
+          <Range52WSlider stock={props.stock} width={150} />
         )}
       </TableCell>
       {/* Dividend Yield */}
@@ -1046,9 +1014,9 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <Skeleton width={90} />
         </Typography>
       </TableCell>
-      {/* Analyst Consensus */}
-      <TableCell sx={{ display: displayColumn("Analyst Consensus") }}>
-        <Skeleton variant="rounded" width={60} height={24} />
+      {/* Analyst Ratings */}
+      <TableCell sx={{ display: displayColumn("Analyst Ratings") }}>
+        <Skeleton variant="rounded" width={120} height={42} />
       </TableCell>
       {/* Analyst Target */}
       <TableCell sx={{ display: displayColumn("Analyst Target Price") }}>

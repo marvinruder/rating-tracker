@@ -52,7 +52,9 @@ export const MorningstarNavigator = (props: React.PropsWithChildren<NavigatorPro
 export const MarketScreenerNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
   <LinkToDataProvider
     href={
-      props.stock?.marketScreenerID ? `https://www.marketscreener.com/quote/stock/${props.stock.marketScreenerID}/` : ""
+      props.stock?.marketScreenerID
+        ? `https://www.marketscreener.com/quote/stock/${props.stock.marketScreenerID}/consensus`
+        : ""
     }
     dataProvider={dataProviderName["marketScreener"]}
     stock={props.stock}

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { isRegion, getCountriesInRegion } from "./Region";
 
-describe("Region", () => {
+describe.concurrent("Region", () => {
   it("is a region", () => {
     expect(isRegion("Eurozone")).toBe(true);
   });

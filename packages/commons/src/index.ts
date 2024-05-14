@@ -7,6 +7,8 @@ export * from "./lib/gecs/IndustryGroup";
 export * from "./lib/gecs/Sector";
 export * from "./lib/gecs/SuperSector";
 
+export * from "./lib/math/Record";
+
 export * from "./lib/models/portfolio";
 export * from "./lib/models/resource";
 export * from "./lib/models/session";
@@ -29,6 +31,7 @@ export * from "./lib/paths/account";
 export * from "./lib/paths/users";
 export * from "./lib/paths/watchlists";
 
+export * from "./lib/ratings/AnalystRating";
 export * from "./lib/ratings/MSCI";
 
 export * from "./lib/stylebox/Size";
