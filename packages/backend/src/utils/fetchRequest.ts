@@ -1,5 +1,6 @@
 import type { FetchRequestWithBodyOptions, FetchResponse } from "@rating-tracker/commons";
 import { createURLSearchParams, handleResponse } from "@rating-tracker/commons";
+import type { Agent } from "undici";
 
 /**
  * Performs a request using the NodeJS’s `fetch` API.
@@ -8,7 +9,10 @@ import { createURLSearchParams, handleResponse } from "@rating-tracker/commons";
  * @returns A {@link Promise} that resolves to the response of the request.
  * @throws a {@link FetchError} if the response status code is not in the 2XX range.
  */
-export const performFetchRequest = (url: string, config?: FetchRequestWithBodyOptions): Promise<FetchResponse> => {
+export const performFetchRequest = (
+  url: string,
+  config?: FetchRequestWithBodyOptions & { dispatcher?: Agent },
+): Promise<FetchResponse> => {
   const { body, params, ...init } = config ?? {};
 
   const urlSearchParams = createURLSearchParams(params);

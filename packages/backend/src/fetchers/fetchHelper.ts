@@ -19,6 +19,7 @@ import { DOMParser } from "@xmldom/xmldom";
 import type { Request, Response } from "express";
 // import { WebDriver } from "selenium-webdriver";
 import { DateTime } from "luxon";
+import { Agent } from "undici";
 
 import { readStocks, readStock } from "../db/tables/stockTable";
 import { createResource } from "../redis/repositories/resourceRepository";
@@ -425,7 +426,17 @@ export const getAndParseHTML = async (
       },
     },
   }).parseFromString(
-    await performFetchRequest(url, config)
+    await performFetchRequest(url, {
+      ...config,
+      dispatcher: new Agent({ allowH2: true }),
+      headers: {
+        ...config?.headers,
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+          "AppleWebKit/537.36 (KHTML, like Gecko) " +
+          "Chrome/124.0.0.0 Safari/537.36",
+      },
+    })
       .then((res) => patchHTML(res.data))
       .catch((e) => {
         if (e instanceof FetchError) {

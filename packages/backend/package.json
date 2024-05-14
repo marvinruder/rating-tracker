@@ -52,6 +52,7 @@
     "supertest": "7.0.0",
     "swagger-ui-dist": "5.17.9",
     "swagger-ui-express": "5.0.0",
+    "undici": "6.16.1",
     "vite": "5.2.11",
     "vitest": "1.6.0",
     "xpath-ts2": "1.4.2"
