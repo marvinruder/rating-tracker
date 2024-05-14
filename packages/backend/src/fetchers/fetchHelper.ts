@@ -428,7 +428,7 @@ export const getAndParseHTML = async (
     await performFetchRequest(url, {
       ...config,
       headers: {
-        ...config.headers,
+        ...config?.headers,
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
           "AppleWebKit/537.36 (KHTML, like Gecko) " +
