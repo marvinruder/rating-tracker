@@ -1,6 +1,11 @@
 import type { FetchRequestWithBodyOptions, FetchResponse } from "@rating-tracker/commons";
 import { createURLSearchParams, handleResponse } from "@rating-tracker/commons";
 
+// Enable HTTP/2 support
+global[Symbol.for("undici.globalDispatcher.1")] = new global[Symbol.for("undici.globalDispatcher.1")].constructor({
+  allowH2: true,
+});
+
 /**
  * Performs a request using the NodeJS’s `fetch` API.
  * @param url The URL of the request.
