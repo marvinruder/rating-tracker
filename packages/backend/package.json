@@ -26,8 +26,8 @@
     "postinstall": "yarn prisma:generate && yarn fix:bundle"
   },
   "dependencies": {
-    "@prisma/client": "5.13.0",
-    "@prisma/migrate": "5.13.0",
+    "@prisma/client": "5.14.0",
+    "@prisma/migrate": "5.14.0",
     "@rating-tracker/commons": "workspace:*",
     "@simplewebauthn/server": "10.0.0",
     "@vitest/coverage-v8": "1.6.0",
@@ -45,7 +45,7 @@
     "luxon": "3.4.4",
     "pino": "9.1.0",
     "pino-pretty": "11.0.0",
-    "prisma": "5.13.0",
+    "prisma": "5.14.0",
     "redis": "4.6.13",
     "redis-om": "0.4.3",
     "response-time": "2.3.2",
