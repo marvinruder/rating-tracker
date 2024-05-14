@@ -1,4 +1,4 @@
 /**
- * The session endpoint path.
+ * The Session API path.
  */
-export const sessionEndpointPath = "/session";
+export const sessionAPIPath = "/session";

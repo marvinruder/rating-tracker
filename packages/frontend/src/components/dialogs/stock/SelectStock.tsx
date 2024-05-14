@@ -17,7 +17,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
-import { stocksEndpointPath } from "@rating-tracker/commons";
+import { stocksAPIPath } from "@rating-tracker/commons";
 import type { ChangeEvent, ReactNode } from "react";
 import { useState, useEffect, Fragment } from "react";
 import { useNavigate } from "react-router";
@@ -59,7 +59,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
           )
             return;
           handleSelect();
-          props.onSelect ? props.onSelect(stocks[0]) : navigate(`${stocksEndpointPath}/${stocks[0].ticker}`);
+          props.onSelect ? props.onSelect(stocks[0]) : navigate(`${stocksAPIPath}/${stocks[0].ticker}`);
         }
       }
     };
@@ -115,7 +115,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
    */
   const getStocks = (currentSearchValue: string) => {
     api
-      .get(stocksEndpointPath, { params: { name: currentSearchValue.trim(), sortBy: "ticker" } })
+      .get(stocksAPIPath, { params: { name: currentSearchValue.trim(), sortBy: "ticker" } })
       .then((res) => {
         const upperCaseSearchValue = currentSearchValue.toLocaleUpperCase();
         setStocks(

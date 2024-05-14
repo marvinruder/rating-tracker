@@ -1,4 +1,4 @@
-import { baseURL, statusEndpointPath } from "@rating-tracker/commons";
+import { baseURL, statusAPIPath } from "@rating-tracker/commons";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import { supertest } from "../../test/liveTestHelpers";
@@ -10,7 +10,7 @@ export const tests: LiveTestSuite = [];
 tests.push({
   testName: "returns status “unhealthy”",
   testFunction: async () => {
-    const res = await supertest.get(`${baseURL}${statusEndpointPath}`);
+    const res = await supertest.get(`${baseURL}${statusAPIPath}`);
     expect(res.status).toBe(500);
     expect(res.body.status).toBe("unhealthy");
 

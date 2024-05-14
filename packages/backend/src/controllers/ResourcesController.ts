@@ -1,4 +1,4 @@
-import { GENERAL_ACCESS, resourcesEndpointPath } from "@rating-tracker/commons";
+import { GENERAL_ACCESS, resourcesAPIPath } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
 
 import { unauthorized, notFound } from "../openapi/responses/clientError";
@@ -7,12 +7,16 @@ import { ok } from "../openapi/responses/success";
 import { readResource } from "../redis/repositories/resourceRepository";
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
-import Singleton from "../utils/Singleton";
+
+import SingletonController from "./SingletonController";
 
 /**
  * This class is responsible for providing resources such as images.
  */
-class ResourcesController extends Singleton {
+class ResourcesController extends SingletonController {
+  path = resourcesAPIPath;
+  tags = ["Resources API"];
+
   /**
    * Fetches a resource from the cache.
    * @param req Request object
@@ -21,8 +25,6 @@ class ResourcesController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Resources API"],
-      operationId: "getResource",
       summary: "Get a resource",
       description: "Fetches a resource from the cache.",
       parameters: [
@@ -37,7 +39,7 @@ class ResourcesController extends Singleton {
       responses: { "200": ok, "401": unauthorized, "404": notFound, "501": notImplemented },
     },
     method: "get",
-    path: resourcesEndpointPath + "/{url}",
+    path: "/{url}",
     accessRights: GENERAL_ACCESS,
   })
   get: RequestHandler = async (req: Request, res: Response) => {

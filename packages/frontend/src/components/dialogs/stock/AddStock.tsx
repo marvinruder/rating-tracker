@@ -20,16 +20,17 @@ import {
 } from "@mui/material";
 import type { Country, FetchError, OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
 import {
-  fetchMarketScreenerEndpointPath,
-  fetchMorningstarEndpointPath,
-  fetchMSCIEndpointPath,
-  fetchLSEGEndpointPath,
-  fetchSPEndpointPath,
-  fetchSustainalyticsEndpointPath,
+  fetchMarketScreenerEndpointSuffix,
+  fetchMorningstarEndpointSuffix,
+  fetchMSCIEndpointSuffix,
+  fetchLSEGEndpointSuffix,
+  fetchSPEndpointSuffix,
+  fetchSustainalyticsEndpointSuffix,
   isCountry,
   optionalStockValuesNull,
   SP_PREMIUM_STOCK_ERROR_MESSAGE,
-  stocksEndpointPath,
+  stocksAPIPath,
+  fetchAPIPath,
 } from "@rating-tracker/commons";
 import { useState } from "react";
 
@@ -116,7 +117,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
     setRequestInProgress(true);
     const { name, isin, country } = stock;
     api
-      .put(stocksEndpointPath + `/${stock.ticker.trim()}`, {
+      .put(stocksAPIPath + `/${stock.ticker.trim()}`, {
         params: { name: name.trim(), isin: isin.trim(), country },
       })
       .then(handleNext)
@@ -130,7 +131,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockMorningstarID = () => {
     setMorningstarIDRequestInProgress(true);
     api
-      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
         params: { morningstarID: (stock.morningstarID ?? "").trim() },
       })
       .then(() => {
@@ -138,7 +139,9 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.morningstarID) {
           // If a Morningstar ID was set, we fetch data from Morningstar using the new ID.
           api
-            .post(fetchMorningstarEndpointPath, { params: { ticker: stock.ticker.trim(), noSkip: true } })
+            .post(fetchAPIPath + fetchMorningstarEndpointSuffix, {
+              params: { ticker: stock.ticker.trim(), noSkip: true },
+            })
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Morningstar"))
             .finally(() => setMorningstarIDRequestInProgress(false));
         } else {
@@ -157,7 +160,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockMarketScreenerID = () => {
     setMarketScreenerIDRequestInProgress(true);
     api
-      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
         params: { marketScreenerID: (stock.marketScreenerID ?? "").trim() },
       })
       .then(() => {
@@ -165,7 +168,9 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.marketScreenerID) {
           // If a Market Screener ID was set, we fetch data from Market Screener using the new ID.
           api
-            .post(fetchMarketScreenerEndpointPath, { params: { ticker: stock.ticker.trim(), noSkip: true } })
+            .post(fetchAPIPath + fetchMarketScreenerEndpointSuffix, {
+              params: { ticker: stock.ticker.trim(), noSkip: true },
+            })
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Market Screener"))
             .finally(() => setMarketScreenerIDRequestInProgress(false));
         } else {
@@ -184,7 +189,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockMSCIID = () => {
     setMSCIIDRequestInProgress(true);
     api
-      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
         params: { msciID: (stock.msciID ?? "").trim() },
       })
       .then(() => {
@@ -192,7 +197,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.msciID) {
           // If an MSCI ID was set, we fetch data from MSCI using the new ID.
           api
-            .post(fetchMSCIEndpointPath, { params: { ticker: stock.ticker.trim(), noSkip: true } })
+            .post(fetchAPIPath + fetchMSCIEndpointSuffix, { params: { ticker: stock.ticker.trim(), noSkip: true } })
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from MSCI"))
             .finally(() => setMSCIIDRequestInProgress(false));
         } else {
@@ -211,13 +216,13 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockRIC = () => {
     setRICRequestInProgress(true);
     api
-      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, { params: { ric: (stock.ric ?? "").trim() } })
+      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, { params: { ric: (stock.ric ?? "").trim() } })
       .then(() => {
         setRICSet(!!stock.ric); // Whether the RIC was empty
         if (stock.ric) {
           // If a RIC was set, we fetch data from LSEG Data & Analytics using the new RIC.
           api
-            .post(fetchLSEGEndpointPath, { params: { ticker: stock.ticker.trim(), noSkip: true } })
+            .post(fetchAPIPath + fetchLSEGEndpointSuffix, { params: { ticker: stock.ticker.trim(), noSkip: true } })
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from LSEG"))
             .finally(() => setRICRequestInProgress(false));
         } else {
@@ -236,7 +241,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockSPID = () => {
     setSPIDRequestInProgress(true);
     api
-      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
         params: { spID: stock.spID === null ? "" : stock.spID },
       })
       .then(() => {
@@ -244,7 +249,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.spID) {
           // If an S&P ID was set, we fetch data from S&P using the new ID.
           api
-            .post(fetchSPEndpointPath, { params: { ticker: stock.ticker.trim(), noSkip: true } })
+            .post(fetchAPIPath + fetchSPEndpointSuffix, { params: { ticker: stock.ticker.trim(), noSkip: true } })
             .catch((e: FetchError<{ message: string }>) => {
               if (e.response?.data?.message?.includes(SP_PREMIUM_STOCK_ERROR_MESSAGE)) {
                 setNotification({
@@ -273,7 +278,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const patchStockSustainalyticsID = () => {
     setSustainalyticsIDRequestInProgress(true);
     api
-      .patch(stocksEndpointPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
         params: { sustainalyticsID: (stock.sustainalyticsID ?? "").trim() },
       })
       .then(() => {
@@ -281,7 +286,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
         if (stock.sustainalyticsID) {
           // If a Sustainalytics ID was set, we fetch data from Sustainalytics using the new ID.
           api
-            .post(fetchSustainalyticsEndpointPath, { params: { ticker: stock.ticker.trim() } })
+            .post(fetchAPIPath + fetchSustainalyticsEndpointSuffix, { params: { ticker: stock.ticker.trim() } })
             .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Sustainalytics"))
             .finally(() => setSustainalyticsIDRequestInProgress(false));
         } else {
@@ -300,7 +305,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const getAndShowStock = () => {
     setRequestInProgress(true);
     api
-      .get(stocksEndpointPath + `/${stock.ticker.trim()}`)
+      .get(stocksAPIPath + `/${stock.ticker.trim()}`)
       .then((res) => {
         setStock(res.data);
         setFinalStock(res.data);

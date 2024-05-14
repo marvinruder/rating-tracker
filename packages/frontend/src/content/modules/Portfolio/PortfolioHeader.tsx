@@ -3,7 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import type { Portfolio } from "@rating-tracker/commons";
-import { currencyMinorUnits, getTotalAmount, portfoliosEndpointPath } from "@rating-tracker/commons";
+import { currencyMinorUnits, getTotalAmount, portfoliosAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -125,7 +125,7 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
             <DeletePortfolio
               portfolio={props.portfolio}
               onClose={() => setDeleteDialogOpen(false)}
-              onDelete={() => navigate(portfoliosEndpointPath)}
+              onDelete={() => navigate(portfoliosAPIPath)}
             />
           </Dialog>
         </>

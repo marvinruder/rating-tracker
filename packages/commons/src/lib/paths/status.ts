@@ -1,4 +1,4 @@
 /**
- * The status endpoint path.
+ * The Status API path.
  */
-export const statusEndpointPath = "/status";
+export const statusAPIPath = "/status";

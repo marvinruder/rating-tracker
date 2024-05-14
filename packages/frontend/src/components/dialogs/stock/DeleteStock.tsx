@@ -2,7 +2,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
-import { stocksEndpointPath } from "@rating-tracker/commons";
+import { stocksAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -24,7 +24,7 @@ export const DeleteStock = (props: DeleteStockProps): JSX.Element => {
   const deleteStock = () => {
     setRequestInProgress(true);
     api
-      .delete(stocksEndpointPath + `/${props.stock.ticker}`)
+      .delete(stocksAPIPath + `/${props.stock.ticker}`)
       .then(() => (props.onDelete(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting stock"))
       .finally(() => setRequestInProgress(false));

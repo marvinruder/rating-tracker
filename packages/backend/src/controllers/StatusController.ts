@@ -1,5 +1,5 @@
 import type { Service } from "@rating-tracker/commons";
-import { serviceArray, statusEndpointPath } from "@rating-tracker/commons";
+import { serviceArray, statusAPIPath } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
 
 import { prismaIsReady } from "../db/client";
@@ -8,12 +8,16 @@ import { okHealthy } from "../openapi/responses/success";
 import { redisIsReady } from "../redis/redis";
 import { signalIsReadyOrUnused } from "../signal/signalBase";
 import Endpoint from "../utils/Endpoint";
-import Singleton from "../utils/Singleton";
+
+import SingletonController from "./SingletonController";
 
 /**
  * This class is responsible for providing a status report of the backend API and the services it depends on.
  */
-class StatusController extends Singleton {
+class StatusController extends SingletonController {
+  path = statusAPIPath;
+  tags = ["Status API"];
+
   /**
    * Provides a status report of the backend API and the services it depends on.
    * @param _ The request.
@@ -21,14 +25,12 @@ class StatusController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Status API"],
-      operationId: "status",
       summary: "Get the status of the API",
       description: "Provides a status report of the backend API and the services it depends on.",
       responses: { "200": okHealthy, "500": internalServerErrorServerUnhealthy },
     },
     method: "get",
-    path: statusEndpointPath,
+    path: "",
     accessRights: 0,
   })
   get: RequestHandler = async (_: Request, res: Response) => {

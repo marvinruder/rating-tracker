@@ -1,10 +1,10 @@
 import { Box, CircularProgress } from "@mui/material";
 import {
   portfolioBuilderEndpointSuffix,
-  portfoliosEndpointPath,
-  stocksEndpointPath,
-  usersEndpointPath,
-  watchlistsEndpointPath,
+  portfoliosAPIPath,
+  stocksAPIPath,
+  usersAPIPath,
+  watchlistsAPIPath,
 } from "@rating-tracker/commons";
 import { Suspense, lazy } from "react";
 import type { RouteObject } from "react-router";
@@ -156,7 +156,7 @@ const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
       props.isLoginPage ? (
         // If an authenticated user tries to access the login page, redirect them to their desired page
         // If no redirect was specified, redirect to the stock page
-        <Navigate to={searchParams.get("redirect") || stocksEndpointPath} replace />
+        <Navigate to={searchParams.get("redirect") || stocksAPIPath} replace />
       ) : (
         props.children // If any other page was requested, show it
       )
@@ -215,14 +215,14 @@ const routes: RouteObject[] = [
       </AuthWrapper>
     ),
     children: [
-      { path: portfoliosEndpointPath + "/:id", element: <Portfolio /> },
-      { path: portfoliosEndpointPath + portfolioBuilderEndpointSuffix, element: <PortfolioBuilder /> },
-      { path: portfoliosEndpointPath, element: <PortfolioSummary /> },
-      { path: stocksEndpointPath, element: <StockList /> },
-      { path: stocksEndpointPath + "/:ticker", element: <Stock /> },
-      { path: usersEndpointPath, element: <UserManagement /> },
-      { path: watchlistsEndpointPath, element: <WatchlistSummary /> },
-      { path: watchlistsEndpointPath + "/:id", element: <Watchlist /> },
+      { path: portfoliosAPIPath + "/:id", element: <Portfolio /> },
+      { path: portfoliosAPIPath + portfolioBuilderEndpointSuffix, element: <PortfolioBuilder /> },
+      { path: portfoliosAPIPath, element: <PortfolioSummary /> },
+      { path: stocksAPIPath, element: <StockList /> },
+      { path: stocksAPIPath + "/:ticker", element: <Stock /> },
+      { path: usersAPIPath, element: <UserManagement /> },
+      { path: watchlistsAPIPath, element: <WatchlistSummary /> },
+      { path: watchlistsAPIPath + "/:id", element: <Watchlist /> },
     ],
   },
   {

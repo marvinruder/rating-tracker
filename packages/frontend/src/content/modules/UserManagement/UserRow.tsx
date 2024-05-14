@@ -24,7 +24,7 @@ import {
   GENERAL_ACCESS,
   WRITE_STOCKS_ACCESS,
   ADMINISTRATIVE_ACCESS,
-  usersEndpointPath,
+  usersAPIPath,
 } from "@rating-tracker/commons";
 import { useState } from "react";
 
@@ -69,7 +69,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
         onClose={() =>
           accessRights !== props.user.accessRights && // Only send the request if the access rights have changed
           api
-            .patch(usersEndpointPath + `/${props.user.email}`, {
+            .patch(usersAPIPath + `/${props.user.email}`, {
               params: { accessRights: accessRights },
             })
             .then(

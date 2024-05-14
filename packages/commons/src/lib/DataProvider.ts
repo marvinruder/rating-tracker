@@ -1,11 +1,11 @@
 import type { Stock } from "./models/stock";
 import {
-  fetchLSEGEndpointPath,
-  fetchMarketScreenerEndpointPath,
-  fetchMorningstarEndpointPath,
-  fetchMSCIEndpointPath,
-  fetchSPEndpointPath,
-  fetchSustainalyticsEndpointPath,
+  fetchLSEGEndpointSuffix,
+  fetchMarketScreenerEndpointSuffix,
+  fetchMorningstarEndpointSuffix,
+  fetchMSCIEndpointSuffix,
+  fetchSPEndpointSuffix,
+  fetchSustainalyticsEndpointSuffix,
 } from "./paths/fetch";
 
 /**
@@ -113,12 +113,12 @@ export const dataProviderLastFetch: Record<
  * The endpoints of the data providers.
  */
 export const dataProviderEndpoints: Record<DataProvider, string> = {
-  morningstar: fetchMorningstarEndpointPath,
-  marketScreener: fetchMarketScreenerEndpointPath,
-  msci: fetchMSCIEndpointPath,
-  lseg: fetchLSEGEndpointPath,
-  sp: fetchSPEndpointPath,
-  sustainalytics: fetchSustainalyticsEndpointPath,
+  morningstar: fetchMorningstarEndpointSuffix,
+  marketScreener: fetchMarketScreenerEndpointSuffix,
+  msci: fetchMSCIEndpointSuffix,
+  lseg: fetchLSEGEndpointSuffix,
+  sp: fetchSPEndpointSuffix,
+  sustainalytics: fetchSustainalyticsEndpointSuffix,
 };
 
 /**

@@ -1,11 +1,11 @@
 import { Button, DialogActions, Divider, Grid, InputAdornment, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import {
-  portfoliosEndpointPath,
-  watchlistsEndpointPath,
+  portfoliosAPIPath,
+  watchlistsAPIPath,
   type PortfolioSummary,
   type WatchlistSummary,
-  stocksEndpointPath,
+  stocksAPIPath,
   currencyMinorUnits,
   FAVORITES_NAME,
 } from "@rating-tracker/commons";
@@ -31,7 +31,7 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
   const isPortfolio = "currency" in props.collection;
   const isWatchlist = "subscribed" in props.collection;
   const collectionLabel = isPortfolio ? "Portfolio" : "Watchlist";
-  const collectionsEndpointPath = isPortfolio ? portfoliosEndpointPath : watchlistsEndpointPath;
+  const collectionsAPIPath = isPortfolio ? portfoliosAPIPath : watchlistsAPIPath;
 
   /**
    * Checks for errors in the input fields.
@@ -54,7 +54,7 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
   const addStockToCollection = (ticker: string) => {
     if (!validate()) return;
     api
-      .put(`${collectionsEndpointPath}/${props.collection.id}${stocksEndpointPath}/${ticker}`, {
+      .put(`${collectionsAPIPath}/${props.collection.id}${stocksAPIPath}/${ticker}`, {
         params: isPortfolio ? { amount: +amountInput } : {},
       })
       .then(() => {

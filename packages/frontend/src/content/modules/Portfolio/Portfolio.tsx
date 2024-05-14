@@ -22,7 +22,7 @@ import { Sunburst } from "@nivo/sunburst";
 import type { StockListColumn, Portfolio, SunburstNode, Country, Sector, SuperSector } from "@rating-tracker/commons";
 import {
   stockListColumnArray,
-  portfoliosEndpointPath,
+  portfoliosAPIPath,
   getWeightedAverage,
   getEstimateValue,
   getPercentageToTotalAmount,
@@ -98,7 +98,7 @@ const PortfolioModule = (): JSX.Element => {
    */
   const getPortfolio = (id: number) => {
     api
-      .get(portfoliosEndpointPath + `/${id}`)
+      .get(portfoliosAPIPath + `/${id}`)
       .then((res) => {
         setPortfolio(res.data);
         setCountrySunburstData(getCountrySunburstData(res.data));

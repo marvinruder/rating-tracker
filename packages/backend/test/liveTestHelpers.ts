@@ -1,5 +1,5 @@
 import type { Stock } from "@rating-tracker/commons";
-import { UNAUTHORIZED_ERROR_MESSAGE, baseURL, stocksEndpointPath } from "@rating-tracker/commons";
+import { UNAUTHORIZED_ERROR_MESSAGE, baseURL, stocksAPIPath } from "@rating-tracker/commons";
 import type { CallbackHandler, Test } from "supertest";
 import initSupertest from "supertest";
 import type { TestFunction } from "vitest";
@@ -15,7 +15,7 @@ export const supertest = initSupertest(`http://localhost:${process.env.PORT}`);
  * @returns The list of stocks returned by the server.
  */
 export const expectStockListLengthToBe = async (length: number): Promise<Stock[]> => {
-  const res = await supertest.get(`${baseURL}${stocksEndpointPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+  const res = await supertest.get(`${baseURL}${stocksAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
   expect(res.status).toBe(200);
   expect(res.body.count).toBe(length);
   expect(res.body.stocks).toHaveLength(length);

@@ -2,7 +2,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
-import { watchlistsEndpointPath } from "@rating-tracker/commons";
+import { watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -24,7 +24,7 @@ export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
   const deleteWatchlist = () => {
     setRequestInProgress(true);
     api
-      .delete(watchlistsEndpointPath + `/${props.watchlist.id}`)
+      .delete(watchlistsAPIPath + `/${props.watchlist.id}`)
       .then(() => (props.onDelete(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting watchlist"))
       .finally(() => setRequestInProgress(false));

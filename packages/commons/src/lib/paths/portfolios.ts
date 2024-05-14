@@ -1,8 +1,8 @@
 /**
- * The portfolios endpoint path.
+ * The Portfolios API path.
  */
-export const portfoliosEndpointPath = "/portfolios";
+export const portfoliosAPIPath = "/portfolios";
 /**
- * The portfolio builder endpoint suffix.
+ * The Portfolio Builder endpoint suffix.
  */
 export const portfolioBuilderEndpointSuffix = "/builder";

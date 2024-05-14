@@ -1,12 +1,13 @@
 import type { Resource, Stock } from "@rating-tracker/commons";
 import {
   dataProviderTTL,
-  fetchLSEGEndpointPath,
-  fetchMarketScreenerEndpointPath,
-  fetchMorningstarEndpointPath,
-  fetchMSCIEndpointPath,
-  fetchSPEndpointPath,
-  fetchSustainalyticsEndpointPath,
+  fetchAPIPath,
+  fetchLSEGEndpointSuffix,
+  fetchMarketScreenerEndpointSuffix,
+  fetchMorningstarEndpointSuffix,
+  fetchMSCIEndpointSuffix,
+  fetchSPEndpointSuffix,
+  fetchSustainalyticsEndpointSuffix,
   GENERAL_ACCESS,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
@@ -27,12 +28,16 @@ import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
 import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
-import Singleton from "../utils/Singleton";
+
+import SingletonController from "./SingletonController";
 
 /**
  * This class is responsible for fetching data from external data providers.
  */
-class FetchController extends Singleton {
+class FetchController extends SingletonController {
+  path = fetchAPIPath;
+  tags = ["Fetch API"];
+
   /**
    * Fetches information from Morningstar Italy web page.
    * @param req Request object
@@ -41,8 +46,6 @@ class FetchController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Fetch API"],
-      operationId: "fetchMorningstarData",
       summary: "Fetch data from Morningstar",
       description: "Fetches information from Morningstar Italy web page.",
       parameters: [
@@ -68,7 +71,7 @@ class FetchController extends Singleton {
       },
     },
     method: "post",
-    path: fetchMorningstarEndpointPath,
+    path: fetchMorningstarEndpointSuffix,
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   fetchMorningstarData: RequestHandler = async (req: Request, res: Response) => {
@@ -83,8 +86,6 @@ class FetchController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Fetch API"],
-      operationId: "fetchMarketScreenerData",
       summary: "Fetch data from MarketScreener",
       description: "Fetches information from Market Screener web page.",
       parameters: [
@@ -110,7 +111,7 @@ class FetchController extends Singleton {
       },
     },
     method: "post",
-    path: fetchMarketScreenerEndpointPath,
+    path: fetchMarketScreenerEndpointSuffix,
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   fetchMarketScreenerData: RequestHandler = async (req: Request, res: Response) => {
@@ -125,8 +126,6 @@ class FetchController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Fetch API"],
-      operationId: "fetchMSCIData",
       summary: "Fetch data from MSCI",
       description: "Fetches information from MSCI ESG Ratings & Climate Search Tool web page",
       parameters: [
@@ -152,7 +151,7 @@ class FetchController extends Singleton {
       },
     },
     method: "post",
-    path: fetchMSCIEndpointPath,
+    path: fetchMSCIEndpointSuffix,
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   fetchMSCIData: RequestHandler = async (req: Request, res: Response) => {
@@ -167,8 +166,6 @@ class FetchController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Fetch API"],
-      operationId: "fetchLSEGData",
       summary: "Fetch data from LSEG",
       description: "Fetches information from LSEG Data & Analytics API",
       parameters: [
@@ -194,7 +191,7 @@ class FetchController extends Singleton {
         "502": badGateway,
       },
     },
-    path: fetchLSEGEndpointPath,
+    path: fetchLSEGEndpointSuffix,
     method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
@@ -210,8 +207,6 @@ class FetchController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Fetch API"],
-      operationId: "fetchSPData",
       summary: "Fetch data from S&P",
       description: "Fetches information from Standard & Poor’s Global Sustainable1 ESG Scores web page.",
       parameters: [
@@ -237,7 +232,7 @@ class FetchController extends Singleton {
       },
     },
     method: "post",
-    path: fetchSPEndpointPath,
+    path: fetchSPEndpointSuffix,
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })
   fetchSPData: RequestHandler = async (req: Request, res: Response) => {
@@ -252,8 +247,6 @@ class FetchController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Fetch API"],
-      operationId: "fetchSustainalyticsData",
       summary: "Fetch data from Sustainalytics",
       description: "Fetches information from Morningstar Sustainalytics API.",
       parameters: [
@@ -277,7 +270,7 @@ class FetchController extends Singleton {
         "502": badGateway,
       },
     },
-    path: fetchSustainalyticsEndpointPath,
+    path: fetchSustainalyticsEndpointSuffix,
     method: "post",
     accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
   })

@@ -1,4 +1,4 @@
 /**
- * The logo background endpoint path.
+ * The Logo Background API path.
  */
-export const logoBackgroundEndpointPath = "/logobackground";
+export const logoBackgroundAPIPath = "/logobackground";

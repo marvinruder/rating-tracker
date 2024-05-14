@@ -1,5 +1,5 @@
 import type { User } from "@rating-tracker/commons";
-import { GENERAL_ACCESS, accountAvatarEndpointSuffix, accountEndpointPath, baseURL } from "@rating-tracker/commons";
+import { GENERAL_ACCESS, accountAvatarEndpointSuffix, accountAPIPath, baseURL } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
 import express from "express";
 
@@ -11,12 +11,16 @@ import { created, noContent, okAvatar, okUser } from "../openapi/responses/succe
 import { updateSession } from "../redis/repositories/sessionRepository";
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
-import Singleton from "../utils/Singleton";
+
+import SingletonController from "./SingletonController";
 
 /**
  * This class is responsible for handling a user’s own account information.
  */
-class AccountController extends Singleton {
+class AccountController extends SingletonController {
+  path = accountAPIPath;
+  tags = ["Account API"];
+
   /**
    * Returns the current user fetched during session validation. If no user is logged in, an empty object is returned.
    * @param _ The request.
@@ -24,8 +28,6 @@ class AccountController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Account API"],
-      operationId: "getAccount",
       summary: "Get the current user",
       description:
         "Returns the current user fetched during session validation. " +
@@ -33,13 +35,12 @@ class AccountController extends Singleton {
       responses: { "200": okUser },
     },
     method: "get",
-    path: accountEndpointPath,
+    path: "",
     accessRights: 0,
   })
   get: RequestHandler = (_: Request, res: Response) => {
     const user: User = { ...res.locals.user };
-    if (user?.avatar?.startsWith("data:"))
-      user.avatar = `${baseURL}${accountEndpointPath}${accountAvatarEndpointSuffix}`;
+    if (user?.avatar?.startsWith("data:")) user.avatar = `${baseURL}${accountAPIPath}${accountAvatarEndpointSuffix}`;
     res.status(200).json(user).end();
   };
 
@@ -50,8 +51,6 @@ class AccountController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Account API"],
-      operationId: "getAvatar",
       summary: "Get the avatar of the current user",
       description: "Returns the avatar of the current user fetched during session validation.",
       parameters: [
@@ -72,7 +71,7 @@ class AccountController extends Singleton {
       },
     },
     method: "get",
-    path: accountEndpointPath + accountAvatarEndpointSuffix,
+    path: accountAvatarEndpointSuffix,
     accessRights: GENERAL_ACCESS,
   })
   getAvatar: RequestHandler = async (_: Request, res: Response) => {
@@ -95,8 +94,6 @@ class AccountController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Account API"],
-      operationId: "updateAccount",
       summary: "Update the current user",
       description: "Updates the current user in the database.",
       parameters: [
@@ -108,7 +105,7 @@ class AccountController extends Singleton {
       responses: { "204": noContent, "401": unauthorized },
     },
     method: "patch",
-    path: accountEndpointPath,
+    path: "",
     accessRights: GENERAL_ACCESS,
   })
   patch: RequestHandler = async (req: Request, res: Response) => {
@@ -137,15 +134,13 @@ class AccountController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Account API"],
-      operationId: "createAvatar",
       summary: "Create an avatar for the current user",
       description: "Creates an avatar for the current user in the database.",
       requestBody: { required: true, content: { "image/avif": { schema: { type: "string", format: "binary" } } } },
       responses: { "201": created, "401": unauthorized, "415": unsupportedMediaType },
     },
     method: "put",
-    path: accountEndpointPath + accountAvatarEndpointSuffix,
+    path: accountAvatarEndpointSuffix,
     accessRights: GENERAL_ACCESS,
     bodyParser: express.raw({ type: ["image/avif"], limit: "1mb" }),
   })
@@ -172,14 +167,12 @@ class AccountController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Account API"],
-      operationId: "deleteAccount",
       summary: "Delete the current user",
       description: "Deletes the current user from the database.",
       responses: { "204": noContent, "401": unauthorized },
     },
     method: "delete",
-    path: accountEndpointPath,
+    path: "",
     accessRights: GENERAL_ACCESS,
   })
   delete: RequestHandler = async (_: Request, res: Response) => {
@@ -194,14 +187,12 @@ class AccountController extends Singleton {
    */
   @Endpoint({
     spec: {
-      tags: ["Account API"],
-      operationId: "deleteAvatar",
       summary: "Delete the avatar of the current user",
       description: "Deletes the avatar of the current user from the database.",
       responses: { "204": noContent, "401": unauthorized },
     },
     method: "delete",
-    path: accountEndpointPath + accountAvatarEndpointSuffix,
+    path: accountAvatarEndpointSuffix,
     accessRights: GENERAL_ACCESS,
   })
   deleteAvatar: RequestHandler = async (_: Request, res: Response) => {

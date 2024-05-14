@@ -1,6 +1,6 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
-import { watchlistsEndpointPath } from "@rating-tracker/commons";
+import { watchlistsAPIPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 
 import { Footer } from "../../../components/etc/Footer";
@@ -25,7 +25,7 @@ const WatchlistSummaryModule = (): JSX.Element => {
    */
   const getWatchlists = () => {
     api
-      .get(watchlistsEndpointPath)
+      .get(watchlistsAPIPath)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching watchlists");

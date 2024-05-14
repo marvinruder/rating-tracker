@@ -17,7 +17,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { sessionEndpointPath } from "@rating-tracker/commons";
+import { sessionAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../../contexts/NotificationContext";
@@ -41,7 +41,7 @@ export const HeaderUserbox = (): JSX.Element => {
   const signOut = () => {
     // Delete the session
     api
-      .delete(sessionEndpointPath)
+      .delete(sessionAPIPath)
       .then(() => {
         setNotification({
           severity: "success",

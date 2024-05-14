@@ -1,8 +1,8 @@
 /**
- * The stocks endpoint path.
+ * The Stocks API path.
  */
-export const stocksEndpointPath = "/stocks";
+export const stocksAPIPath = "/stocks";
 /**
- * The stocks logo endpoint suffix.
+ * The Stock Logo endpoint suffix.
  */
 export const stockLogoEndpointSuffix = "/logo";

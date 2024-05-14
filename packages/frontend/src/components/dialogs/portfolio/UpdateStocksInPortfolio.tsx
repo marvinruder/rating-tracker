@@ -20,7 +20,7 @@ import {
   useTheme,
 } from "@mui/material";
 import type { PortfolioSummary, PortfolioRawData, WeightedStock } from "@rating-tracker/commons";
-import { portfoliosEndpointPath, stocksEndpointPath } from "@rating-tracker/commons";
+import { portfoliosAPIPath, stocksAPIPath } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -78,7 +78,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
    */
   const getPortfolios = () => {
     api
-      .get(portfoliosEndpointPath)
+      .get(portfoliosAPIPath)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching portfolios");
@@ -97,28 +97,28 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
         setCurrentRequest(
           `Changing currency from ${props.portfolioRawData.currency} to ${selectedPortfolio?.currency}…`,
         );
-        await api.patch(`${portfoliosEndpointPath}/${selectedPortfolio?.id}`, {
+        await api.patch(`${portfoliosAPIPath}/${selectedPortfolio?.id}`, {
           params: { currency: props.portfolioRawData.currency },
         });
         setDoneRequests((prev) => prev + 1);
       }
       for await (const stock of stocksToAdd) {
         setCurrentRequest(`Adding “${stock.name}” (${stock.ticker})…`);
-        await api.put(`${portfoliosEndpointPath}/${selectedPortfolio.id}${stocksEndpointPath}/${stock.ticker}`, {
+        await api.put(`${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${stock.ticker}`, {
           params: { amount: stock.amount },
         });
         setDoneRequests((prev) => prev + 1);
       }
       for await (const stock of stocksToUpdate) {
         setCurrentRequest(`Updating amount of “${stock.name}” (${stock.ticker})…`);
-        await api.patch(`${portfoliosEndpointPath}/${selectedPortfolio.id}${stocksEndpointPath}/${stock.ticker}`, {
+        await api.patch(`${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${stock.ticker}`, {
           params: { amount: stock.amount },
         });
         setDoneRequests((prev) => prev + 1);
       }
       for await (const stock of stocksToRemove) {
         setCurrentRequest(`Removing “${stock.ticker}”…`);
-        await api.delete(`${portfoliosEndpointPath}/${selectedPortfolio.id}${stocksEndpointPath}/${stock.ticker}`);
+        await api.delete(`${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${stock.ticker}`);
         setDoneRequests((prev) => prev + 1);
       }
       props.onUpdate(selectedPortfolio.id);

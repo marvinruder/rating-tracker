@@ -1,5 +1,5 @@
 import type { Service } from "@rating-tracker/commons";
-import { FetchError, serviceArray, statusEndpointPath } from "@rating-tracker/commons";
+import { FetchError, serviceArray, statusAPIPath } from "@rating-tracker/commons";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import type { DetailedStatus, SystemStatus } from "../types/Status";
@@ -92,7 +92,7 @@ export const StatusProvider = (props: React.PropsWithChildren): JSX.Element => {
   const refreshSystemStatus = (): void => (
     setSystemStatusLoading(true),
     void api
-      .get(statusEndpointPath)
+      .get(statusAPIPath)
       .then((res) => setSystemStatus(getSystemStatusFromResponseData(res.data)))
       .catch((e) =>
         e instanceof FetchError &&

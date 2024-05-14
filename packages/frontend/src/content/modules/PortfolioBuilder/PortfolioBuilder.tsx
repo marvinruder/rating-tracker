@@ -65,7 +65,7 @@ import {
   currencyMinorUnits,
   groupOfIndustry,
   isCurrency,
-  portfoliosEndpointPath,
+  portfoliosAPIPath,
   regionArray,
   regionName,
   regionOfCountry,
@@ -74,7 +74,7 @@ import {
   sectorOfIndustryGroup,
   sizeArray,
   styleArray,
-  watchlistsEndpointPath,
+  watchlistsAPIPath,
 } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -412,7 +412,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
    */
   const getPortfolios = () => {
     api
-      .get(portfoliosEndpointPath)
+      .get(portfoliosAPIPath)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching portfolios");
@@ -426,7 +426,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
    */
   const getWatchlists = () => {
     api
-      .get(watchlistsEndpointPath)
+      .get(watchlistsAPIPath)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching watchlists");
@@ -468,7 +468,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                             <ListItemButton
                               onClick={() =>
                                 api
-                                  .get(portfoliosEndpointPath + `/${portfolioSummary.id}`)
+                                  .get(portfoliosAPIPath + `/${portfolioSummary.id}`)
                                   .then((res) => addToSelection(res.data))
                                   .catch((e) =>
                                     setErrorNotificationOrClearSession(e, "adding stocks from portfolio to selection"),
@@ -519,7 +519,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                             <ListItemButton
                               onClick={() =>
                                 api
-                                  .get(watchlistsEndpointPath + `/${watchlistSummary.id}`)
+                                  .get(watchlistsAPIPath + `/${watchlistSummary.id}`)
                                   .then((res) => addToSelection(res.data))
                                   .catch((e) =>
                                     setErrorNotificationOrClearSession(e, "adding stocks from watchlist to selection"),
@@ -1171,7 +1171,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
             <UpdateStocksInPortfolio
               portfolioRawData={{ currency, stocks: weightedStocks }}
               onClose={() => setUpdatePortfolioDialogOpen(false)}
-              onUpdate={(id) => navigate(`${portfoliosEndpointPath}/${id}`)}
+              onUpdate={(id) => navigate(`${portfoliosAPIPath}/${id}`)}
             />
           </PinnedDialog>
         </Card>
