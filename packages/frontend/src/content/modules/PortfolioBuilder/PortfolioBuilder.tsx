@@ -61,6 +61,7 @@ import type {
 } from "@rating-tracker/commons";
 import {
   FAVORITES_NAME,
+  RecordMath,
   currencyMinorUnits,
   groupOfIndustry,
   isCurrency,
@@ -179,25 +180,25 @@ const PortfolioBuilderModule = (): JSX.Element => {
   /**
    * The sum of all region constraints. Must be 1 in order to be able to proceed to the next step.
    */
-  let regionConstraintsSum = Object.values(regionConstraints).reduce((a, b) => a + b);
+  let regionConstraintsSum = RecordMath.sum(regionConstraints);
   if (Math.abs(regionConstraintsSum - 1) < regionArray.length * Number.EPSILON) regionConstraintsSum = 1;
 
   /**
    * The sum of all sector constraints. Must be 1 in order to be able to proceed to the next step.
    */
-  let sectorConstraintsSum = Object.values(sectorConstraints).reduce((a, b) => a + b);
+  let sectorConstraintsSum = RecordMath.sum(sectorConstraints);
   if (Math.abs(sectorConstraintsSum - 1) < sectorArray.length * Number.EPSILON) sectorConstraintsSum = 1;
 
   /**
    * The sum of all size constraints. Must be 1 in order to be able to proceed to the next step.
    */
-  let sizeConstraintsSum = Object.values(sizeConstraints).reduce((a, b) => a + b);
+  let sizeConstraintsSum = RecordMath.sum(sizeConstraints);
   if (Math.abs(sizeConstraintsSum - 1) < sizeArray.length * Number.EPSILON) sizeConstraintsSum = 1;
 
   /**
    * The sum of all style constraints. Must be 1 in order to be able to proceed to the next step.
    */
-  let styleConstraintsSum = Object.values(styleConstraints).reduce((a, b) => a + b);
+  let styleConstraintsSum = RecordMath.sum(styleConstraints);
   if (Math.abs(styleConstraintsSum - 1) < styleArray.length * Number.EPSILON) styleConstraintsSum = 1;
 
   // Recompute the disabled controls when the stocks change

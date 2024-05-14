@@ -1,5 +1,5 @@
-import type { Stock, MSCIESGRating, OmitDynamicAttributesStock } from "@rating-tracker/commons";
-import { msciESGRatingArray } from "@rating-tracker/commons";
+import type { Stock, MSCIESGRating, OmitDynamicAttributesStock, AnalystRating } from "@rating-tracker/commons";
+import { analystRatingArray, msciESGRatingArray } from "@rating-tracker/commons";
 
 import type { Prisma } from "../../../prisma/client";
 import { addDynamicAttributesToStockData, dynamicStockAttributes } from "../../models/dynamicStockAttributes";
@@ -145,6 +145,17 @@ export const updateStock = async (ticker: string, newValues: Partial<Stock>, for
         case "sustainalyticsESGRisk":
           let signalPrefix = "";
           switch (k) {
+            case "analystConsensus":
+              signalPrefix =
+                // larger index in array [Sell, ..., Buy] is better
+                (newValues.analystConsensus ? analystRatingArray.indexOf(newValues.analystConsensus) : -1) >
+                (stock.analystConsensus
+                  ? analystRatingArray.indexOf(stock.analystConsensus as AnalystRating)
+                  : /* c8 ignore next */ // This never occurs with our test dataset
+                    -1)
+                  ? SIGNAL_PREFIX_BETTER
+                  : SIGNAL_PREFIX_WORSE;
+              break;
             case "msciESGRating":
               signalPrefix =
                 // smaller index in array [AAA, ..., CCC] is better

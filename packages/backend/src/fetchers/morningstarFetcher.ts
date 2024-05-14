@@ -5,14 +5,12 @@ import { isIndustry, isSize, isStyle, isCurrency } from "@rating-tracker/commons
 import type { Request } from "express";
 import xpath from "xpath-ts2";
 
-import { readStock, updateStock } from "../db/tables/stockTable";
-import * as signal from "../signal/signal";
-import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
+import { updateStock } from "../db/tables/stockTable";
 import DataProviderError from "../utils/DataProviderError";
 import logger from "../utils/logger";
 
-import type { HTMLFetcher, FetcherWorkspace, ParseResult } from "./fetchHelper";
-import { captureDataProviderError, getAndParseHTML } from "./fetchHelper";
+import type { Fetcher } from "./fetchHelper";
+import { getAndParseHTML } from "./fetchHelper";
 
 const XPATH_CONTENT = xpath.parse(
   "//*[@id='SnapshotBodyContent'][count(.//*[@id='IntradayPriceSummary']) > 0][count(.//*[@id='CompanyProfile']) > 0]",
@@ -22,23 +20,14 @@ const XPATH_SIZE_STYLE = xpath.parse("//*/div[@id='CompanyProfile']/div/h3[conta
 const XPATH_DESCRIPTION = xpath.parse("//*/div[@id='CompanyProfile']/div[1][not(.//h3)]");
 const XPATH_FAIR_VALUE = xpath.parse("//*/div[@id='FairValueEstimate']/span/datapoint");
 
-const MAX_RETRIES = 10;
-
 /**
  * Fetches data from Morningstar Italy.
  * @param req Request object
- * @param stocks An object with the stocks to fetch and the stocks already fetched (successful or with errors)
  * @param stock The stock to extract data for
- * @param parseResult The fetched and parsed HTML document and/or the error that occurred during parsing
  * @returns A {@link Promise} that resolves when the fetch is complete
- * @throws an {@link APIError} in case of a severe error
+ * @throws a {@link DataProviderError} in case of a severe error
  */
-const morningstarFetcher: HTMLFetcher = async (
-  req: Request,
-  stocks: FetcherWorkspace<Stock>,
-  stock: Stock,
-  parseResult: ParseResult,
-): Promise<void> => {
+const morningstarFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> => {
   let industry: Industry = req.query.clear ? null : undefined;
   let size: Size = req.query.clear ? null : undefined;
   let style: Style = req.query.clear ? null : undefined;
@@ -53,39 +42,24 @@ const morningstarFetcher: HTMLFetcher = async (
   let high52w: number = req.query.clear ? null : undefined;
   let description: string = req.query.clear ? null : undefined;
 
-  const url =
+  const document = await getAndParseHTML(
     `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarID}` +
-    `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`;
-  await getAndParseHTML(url, undefined, stock, "morningstar", parseResult);
+      `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`,
+    undefined,
+    stock,
+    "morningstar",
+  );
 
-  let attempts = 1;
-  while (attempts > 0) {
-    try {
-      // Check for the presence of the div containing all relevant information.
-      const contentDiv = XPATH_CONTENT.select1({ node: parseResult?.document, isHtml: true });
-      assert(contentDiv, "Unable to find content div.");
-      attempts = 0; // Page load succeeded.
-    } catch (e) {
-      // We probably stumbled upon a temporary 502 Bad Gateway or 429 Too Many Requests error, which persists for a
-      // few minutes. We periodically retry to fetch the page.
-
-      // Too many attempts failed, we throw the error occurred during parsing, or the last assertion error.
-      if (++attempts > MAX_RETRIES) throw parseResult?.error ?? e;
-
-      logger.warn(
-        { prefix: "fetch" },
-        `Unable to load Morningstar page for ${stock.name} (${stock.ticker}). ` +
-          `Will retry (attempt ${attempts} of ${MAX_RETRIES})`,
-      );
-      // Load the page once again
-      await getAndParseHTML(url, undefined, stock, "morningstar", parseResult);
-    }
+  try {
+    // Check for the presence of the div containing all relevant information.
+    const contentDiv = XPATH_CONTENT.select1({ node: document, isHtml: true });
+    assert(contentDiv, "Unable to find content div.");
+  } catch (e) {
+    throw new DataProviderError("Unable to find content div.", { cause: e, dataSources: [document] });
   }
 
-  const { document } = parseResult;
-
-  // Prepare an error message header containing the stock name and ticker.
-  let errorMessage = `Error while fetching Morningstar data for ${stock.name} (${stock.ticker}):`;
+  // Prepare an error message.
+  let errorMessage = "";
 
   try {
     const industryNode = XPATH_INDUSTRY.select1({ node: document, isHtml: true });
@@ -383,19 +357,8 @@ const morningstarFetcher: HTMLFetcher = async (
     high52w,
     description,
   });
-  if (errorMessage.includes("\n")) {
-    // An error occurred if and only if the error message contains a newline character.
-    // We capture the resource and send a message.
-    errorMessage += `\n${await captureDataProviderError(stock, "morningstar", { document })}`;
-    // If this request was for a single stock, we throw an error instead of sending a message, so that the error
-    // message will be part of the response.
-    if (req.query.ticker) throw new DataProviderError(errorMessage);
-
-    await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
-    stocks.failed.push(await readStock(stock.ticker));
-  } else {
-    stocks.successful.push(await readStock(stock.ticker));
-  }
+  // An error occurred if and only if the error message contains a newline character.
+  if (errorMessage.includes("\n")) throw new DataProviderError(errorMessage, { dataSources: [document] });
 };
 
 export default morningstarFetcher;

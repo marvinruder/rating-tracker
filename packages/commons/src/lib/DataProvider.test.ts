@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { isDataProvider, isBulkDataProvider, isHTMLDataProvider, isJSONDataProvider } from "./DataProvider";
+import { isDataProvider, isBulkDataProvider, isIndividualDataProvider } from "./DataProvider";
 
-describe("Data Provider", () => {
+describe.concurrent("Data Provider", () => {
   it("is a data provider", () => {
     expect(isDataProvider("morningstar")).toBe(true);
     expect(isDataProvider("marketScreener")).toBe(true);
@@ -12,22 +12,13 @@ describe("Data Provider", () => {
     expect(isDataProvider("sustainalytics")).toBe(true);
   });
 
-  it("is an HTML data provider", () => {
-    expect(isHTMLDataProvider("morningstar")).toBe(true);
-    expect(isHTMLDataProvider("marketScreener")).toBe(true);
-    expect(isHTMLDataProvider("msci")).toBe(true);
-    expect(isHTMLDataProvider("lseg")).toBe(false);
-    expect(isHTMLDataProvider("sp")).toBe(true);
-    expect(isHTMLDataProvider("sustainalytics")).toBe(false);
-  });
-
-  it("is a JSON data provider", () => {
-    expect(isJSONDataProvider("morningstar")).toBe(false);
-    expect(isJSONDataProvider("marketScreener")).toBe(false);
-    expect(isJSONDataProvider("msci")).toBe(false);
-    expect(isJSONDataProvider("lseg")).toBe(true);
-    expect(isJSONDataProvider("sp")).toBe(false);
-    expect(isJSONDataProvider("sustainalytics")).toBe(false);
+  it("is an individual data provider", () => {
+    expect(isIndividualDataProvider("morningstar")).toBe(true);
+    expect(isIndividualDataProvider("marketScreener")).toBe(true);
+    expect(isIndividualDataProvider("msci")).toBe(true);
+    expect(isIndividualDataProvider("lseg")).toBe(true);
+    expect(isIndividualDataProvider("sp")).toBe(true);
+    expect(isIndividualDataProvider("sustainalytics")).toBe(false);
   });
 
   it("is a bulk data provider", () => {

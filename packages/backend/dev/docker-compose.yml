@@ -59,21 +59,6 @@ services:
       - ./postgresql/pgpass:/var/lib/postgresql/pgpass
     shm_size: "256mb"
 
-  # selenium:
-  #   container_name: selenium
-  #   hostname: selenium
-  #   image: seleniarm/standalone-chromium
-  #   restart: unless-stopped
-  #   environment:
-  #     - SE_NODE_MAX_SESSIONS=2
-  #   cap_drop:
-  #     - all
-  #   security_opt:
-  #     - no-new-privileges
-  #   ports:
-  #     - "127.0.0.1:4444:4444"
-  #   shm_size: "2gb"
-
   signal:
     container_name: signal
     hostname: signal

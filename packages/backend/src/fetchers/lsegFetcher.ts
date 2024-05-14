@@ -3,55 +3,40 @@ import assert from "node:assert";
 import type { Stock } from "@rating-tracker/commons";
 import type { Request } from "express";
 
-import { readStock, updateStock } from "../db/tables/stockTable";
-import * as signal from "../signal/signal";
-import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import APIError from "../utils/APIError";
+import { updateStock } from "../db/tables/stockTable";
 import DataProviderError from "../utils/DataProviderError";
 import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
 
-import type { JSONFetcher, FetcherWorkspace } from "./fetchHelper";
-import { captureDataProviderError } from "./fetchHelper";
+import type { Fetcher } from "./fetchHelper";
 
 /**
  * Fetches data from LSEG Data & Analytics.
  * @param req Request object
- * @param stocks An object with the stocks to fetch and the stocks already fetched (successful or with errors)
  * @param stock The stock to extract data for
- * @param json The fetched and parsed JSON
  * @returns A {@link Promise} that resolves when the fetch is complete
- * @throws an {@link APIError} in case of a severe error
+ * @throws a {@link DataProviderError} in case of a severe error
  */
-const lsegFetcher: JSONFetcher = async (
-  req: Request,
-  stocks: FetcherWorkspace<Stock>,
-  stock: Stock,
-  json: Object,
-): Promise<void> => {
+const lsegFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> => {
   let lsegESGScore: number = req.query.clear ? null : undefined;
   let lsegEmissions: number = req.query.clear ? null : undefined;
 
-  const url = `https://www.lseg.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`;
+  const json = (await performFetchRequest(`https://www.lseg.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`)).data;
 
-  Object.assign(json, (await performFetchRequest(url)).data);
-
-  if (Object.keys(json).length === 0 && json.constructor === Object) {
-    throw new APIError(502, "No LSEG information available.");
-  }
+  if (Object.keys(json).length === 0 && json.constructor === Object)
+    throw new DataProviderError("No LSEG information available.", { dataSources: [json] });
 
   if (
     "status" in json &&
     typeof json.status === "object" &&
     "limitExceeded" in json.status &&
     json.status.limitExceeded === true
-  ) {
+  )
     // If the limit has been exceeded, we stop fetching data and throw an error.
-    throw new APIError(429, "Limit exceeded.");
-  }
+    throw new DataProviderError("Limit exceeded.", { dataSources: [json] });
 
-  // Prepare an error message header containing the stock name and ticker.
-  let errorMessage = `Error while fetching LSEG information for stock ${stock.ticker}:`;
+  // Prepare an error message.
+  let errorMessage = "";
 
   try {
     assert(
@@ -105,18 +90,8 @@ const lsegFetcher: JSONFetcher = async (
     lsegESGScore,
     lsegEmissions,
   });
-  if (errorMessage.includes("\n")) {
-    // An error occurred if and only if the error message contains a newline character.
-    errorMessage += `\n${await captureDataProviderError(stock, "lseg", { json })}`;
-    // If this request was for a single stock, we throw an error instead of sending a message, so that the error
-    // message will be part of the response.
-    if (req.query.ticker) throw new DataProviderError(errorMessage);
-
-    await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
-    stocks.failed.push(await readStock(stock.ticker));
-  } else {
-    stocks.successful.push(await readStock(stock.ticker));
-  }
+  // An error occurred if and only if the error message contains a newline character.
+  if (errorMessage.includes("\n")) throw new DataProviderError(errorMessage, { dataSources: [json] });
 };
 
 export default lsegFetcher;

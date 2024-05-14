@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { isSuperRegion, getRegionsInSuperRegion, emojiGlobe } from "./SuperRegion";
 
-describe("Super Region", () => {
+describe.concurrent("Super Region", () => {
   it("is a super region", () => {
     expect(isSuperRegion("Americas")).toBe(true);
   });
@@ -16,7 +16,7 @@ describe("Super Region", () => {
   });
 });
 
-describe("Emoji Globes", () => {
+describe.concurrent("Emoji Globes", () => {
   it("is a globe emoji", () => {
     expect(emojiGlobe("EMEA")).toBe("🌍");
   });

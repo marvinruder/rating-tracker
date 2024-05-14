@@ -1,8 +1,13 @@
 generator client {
-  provider      = "prisma-client-js"
-  output        = "./client"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  output          = "./client"
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
   previewFeatures = ["omitApi"]
+}
+
+generator json {
+  provider  = "prisma-json-types-generator"
+  namespace = "PrismaJSON"
 }
 
 datasource db {
@@ -35,7 +40,9 @@ model Stock {
   positionIn52w                             Float?
   marketScreenerID                          String?              @unique @db.VarChar(255)
   marketScreenerLastFetch                   DateTime?            @db.Timestamp(6)
-  analystConsensus                          Float?
+  analystConsensus                          AnalystRating?
+  /// [AnalystRatings]
+  analystRatings                            Json?
   analystCount                              Int?                 @db.SmallInt
   analystTargetPrice                        Float?
   analystTargetPricePercentageToLastClose   Float?
@@ -688,4 +695,12 @@ enum MSCIESGRating {
   BB
   B
   CCC
+}
+
+enum AnalystRating {
+  Sell
+  Underperform
+  Hold
+  Outperform
+  Buy
 }

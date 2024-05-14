@@ -10,6 +10,9 @@ import { isSuperSector, superSectorName, superSectorOfSector } from "../gecs/Sup
 import { countryName, isCountry } from "../geo/Country";
 import { isRegion, regionName, regionOfCountry } from "../geo/Region";
 import { isSuperRegion, superRegionName, superRegionOfRegion } from "../geo/SuperRegion";
+import { RecordMath } from "../math/Record";
+import type { AnalystRating } from "../ratings/AnalystRating";
+import { analystRatingArray } from "../ratings/AnalystRating";
 import type { MSCIESGRating } from "../ratings/MSCI";
 import { msciESGRatingArray } from "../ratings/MSCI";
 import type { Size } from "../stylebox/Size";
@@ -144,6 +147,48 @@ export const getPercentageToTotalAmount = <T extends keyof Pick<Stock, "mornings
 };
 
 /**
+ * Computes the analyst rating distribution of the stocks in a portfolio. Stocks with no Analyst Consensus are ignored.
+ * @param portfolio The portfolio.
+ * @returns The analyst rating distribution of the stocks in the portfolio. `null` if no stock has an Analyst Consensus.
+ */
+export const getAnalystRatingDistribution = (portfolio: Portfolio): Record<AnalystRating, number> | null => {
+  const totalAmount = getTotalAmount(portfolio, "analystRatings");
+  if (totalAmount === 0) return null;
+
+  return portfolio.stocks
+    .filter((stock) => stock.analystRatings)
+    .reduce<Record<AnalystRating, number>>(
+      (distribution, stock) => {
+        const sum = RecordMath.sum(stock.analystRatings);
+        Object.entries(stock.analystRatings).forEach(
+          ([rating, value]) => (distribution[rating] += (Number(value) * stock.amount) / (totalAmount * sum)),
+        );
+        return distribution;
+      },
+      { Sell: 0, Underperform: 0, Hold: 0, Outperform: 0, Buy: 0 },
+    );
+};
+
+/**
+ * Computes the weighted mean value of the analyst ratings of the stocks in a portfolio. Stocks with no analyst
+ * ratings are ignored.
+ * @param portfolio The portfolio.
+ * @returns The weighted mean of the analyst ratings of the stocks in the portfolio.
+ */
+export const getWeightedMeanAnalystConsensus = (portfolio: Portfolio): AnalystRating | null => {
+  const analystRatingDistribution = getAnalystRatingDistribution(portfolio);
+  if (analystRatingDistribution === null) return null;
+  const sum = RecordMath.sum(analystRatingDistribution); // should be 1, but we add it here just in case
+
+  let cumulativeSum = 0;
+  for (const analystRating of analystRatingArray) {
+    cumulativeSum += analystRatingDistribution[analystRating];
+    if (cumulativeSum >= 0.5 * sum) return analystRating;
+  }
+  /* c8 ignore next */ // Unreachable, since we compare against the distribution’s sum, so the loop will always return.
+};
+
+/**
  * Computes the weighted average value of the MSCI ESG Rating of the stocks in a portfolio. Stocks with no MSCI ESG
  * Rating are ignored.
  * @param portfolio The portfolio.
@@ -151,9 +196,8 @@ export const getPercentageToTotalAmount = <T extends keyof Pick<Stock, "mornings
  */
 export const getWeightedAverageMSCIESGRating = (portfolio: Portfolio): MSCIESGRating | null => {
   const totalAmount = getTotalAmount(portfolio, "msciESGRating");
-  if (totalAmount === 0) {
-    return null;
-  }
+  if (totalAmount === 0) return null;
+
   return msciESGRatingArray[
     Math.round(
       portfolio.stocks

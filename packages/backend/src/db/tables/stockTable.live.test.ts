@@ -41,7 +41,7 @@ tests.push({
       high52w: 145.67,
       marketScreenerID: "NEW-STOCK-238712974",
       marketScreenerLastFetch: new Date(),
-      analystConsensus: 2.5,
+      analystConsensus: "Hold",
       analystCount: 5,
       analystTargetPrice: 150,
       msciID: "IID000001238712974",
@@ -66,7 +66,7 @@ tests.push({
     const slightlyWorseValues: Partial<Omit<Stock, "ticker">> = {
       starRating: 3,
       morningstarFairValue: 150,
-      analystConsensus: 2.3,
+      analystConsensus: "Underperform",
       analystTargetPrice: 145,
       msciESGRating: "CCC",
       msciTemperature: 2.2,

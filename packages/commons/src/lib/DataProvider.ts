@@ -19,14 +19,15 @@ export const dataProviderArray = ["morningstar", "marketScreener", "msci", "lseg
 export type DataProvider = (typeof dataProviderArray)[number];
 
 /**
- * An array of data providers which provide information in the form of HTML pages.
+ * An array of data providers from which stocks are fetched individually.
  */
-export const htmlDataProviderArray = ["morningstar", "marketScreener", "msci", "sp"] as const satisfies DataProvider[];
-
-/**
- * An array of data providers which provide information in the form of JSON objects.
- */
-export const jsonDataProviderArray = ["lseg"] as const satisfies DataProvider[];
+export const individualDataProviderArray = [
+  "morningstar",
+  "marketScreener",
+  "msci",
+  "lseg",
+  "sp",
+] as const satisfies DataProvider[];
 
 /**
  * An array of data providers which provide information for many stocks in one response.
@@ -34,19 +35,9 @@ export const jsonDataProviderArray = ["lseg"] as const satisfies DataProvider[];
 export const bulkDataProviderArray = ["sustainalytics"] as const satisfies DataProvider[];
 
 /**
- * A data provider which provides information in the form of HTML pages.
- */
-export type HTMLDataProvider = (typeof htmlDataProviderArray)[number];
-
-/**
- * A data provider which provides information in the form of JSON objects.
- */
-export type JSONDataProvider = (typeof jsonDataProviderArray)[number];
-
-/**
  * A data provider from which stocks are fetched individually.
  */
-export type IndividualDataProvider = HTMLDataProvider | JSONDataProvider;
+export type IndividualDataProvider = (typeof individualDataProviderArray)[number];
 
 /**
  * A data provider from which stocks are fetched in bulk.
@@ -63,21 +54,12 @@ export function isDataProvider(dataProvider: string): dataProvider is DataProvid
 }
 
 /**
- * Checks if a data provider is a valid HTML data provider.
+ * Checks if a data provider is a valid individual data provider.
  * @param dataProvider The data provider to check.
- * @returns True if the data provider is a valid HTML data provider.
+ * @returns True if the data provider is a valid individual data provider.
  */
-export function isHTMLDataProvider(dataProvider: DataProvider): dataProvider is HTMLDataProvider {
-  return htmlDataProviderArray.includes(dataProvider as HTMLDataProvider);
-}
-
-/**
- * Checks if a data provider is a valid JSON data provider.
- * @param dataProvider The data provider to check.
- * @returns True if the data provider is a valid JSON data provider.
- */
-export function isJSONDataProvider(dataProvider: DataProvider): dataProvider is JSONDataProvider {
-  return jsonDataProviderArray.includes(dataProvider as JSONDataProvider);
+export function isIndividualDataProvider(dataProvider: DataProvider): dataProvider is IndividualDataProvider {
+  return individualDataProviderArray.includes(dataProvider as IndividualDataProvider);
 }
 
 /**

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { isStyle } from "./Style";
 
-describe("Style", () => {
+describe.concurrent("Style", () => {
   it("is a style", () => {
     expect(isStyle("Blend")).toBe(true);
   });

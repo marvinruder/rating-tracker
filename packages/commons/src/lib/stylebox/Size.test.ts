@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { isSize } from "./Size";
 
-describe("Size", () => {
+describe.concurrent("Size", () => {
   it("is a size", () => {
     expect(isSize("Small")).toBe(true);
   });

@@ -74,7 +74,7 @@ const validateResults = (
   },
 ) => {
   // The sum of all amounts should be equal to the total amount
-  expect(result.weightedStocks.map((stock) => stock.amount).reduce((a, b) => a + b)).toBe(options.totalAmount);
+  expect(result.weightedStocks.reduce((sum, stock) => sum + stock.amount, 0)).toBe(options.totalAmount);
 
   // The constraints should be fulfilled
   Object.entries(constraints).forEach(([key, value]) => {
@@ -88,8 +88,7 @@ const validateResults = (
               return stock.size === key;
           }
         })
-        .map((stock) => stock.amount)
-        .reduce((a, b) => a + b, 0),
+        .reduce((sum, stock) => sum + stock.amount, 0),
     ).toBe(options.totalAmount * value);
   });
 
@@ -104,7 +103,7 @@ const validateResults = (
   expect(result.rse).toBe(0);
 };
 
-describe("Portfolio Computation", () => {
+describe.concurrent("Portfolio Computation", () => {
   it("computes weights for stocks fulfilling given constraints with Sainte-Laguë/Schepers algorithm", () => {
     const options = { ...defaultOptions, proportionalRepresentationAlgorithm: "sainteLague" as const };
     const result = computePortfolio(stocks as Stock[], constraints, options);

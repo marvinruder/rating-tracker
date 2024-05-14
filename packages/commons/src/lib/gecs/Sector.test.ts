@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getIndustryGroupsInSector, isSector } from "./Sector";
 
-describe("Sector", () => {
+describe.concurrent("Sector", () => {
   it("is a sector", () => {
     expect(isSector("RealEstate")).toBe(true);
   });

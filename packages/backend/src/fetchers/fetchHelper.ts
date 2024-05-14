@@ -1,23 +1,14 @@
-import type {
-  FetchRequestOptions,
-  HTMLDataProvider,
-  IndividualDataProvider,
-  JSONDataProvider,
-  Stock,
-} from "@rating-tracker/commons";
+import type { FetchRequestOptions, IndividualDataProvider, Stock } from "@rating-tracker/commons";
 import {
   FetchError,
   dataProviderID,
   dataProviderLastFetch,
   dataProviderName,
   dataProviderTTL,
-  isHTMLDataProvider,
-  isJSONDataProvider,
   resourcesEndpointPath,
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
 import type { Request, Response } from "express";
-// import { WebDriver } from "selenium-webdriver";
 import { DateTime } from "luxon";
 import { Agent } from "undici";
 
@@ -29,7 +20,6 @@ import APIError from "../utils/APIError";
 import DataProviderError from "../utils/DataProviderError";
 import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
-// import { getDriver, quitDriver, takeScreenshot } from "../utils/webdriver";
 
 import lsegFetcher from "./lsegFetcher";
 import marketScreenerFetcher from "./marketScreenerFetcher";
@@ -47,121 +37,80 @@ export type FetcherWorkspace<T> = {
   failed: T[];
 };
 
-// type Fetcher = HTMLFetcher | JSONFetcher; // | SeleniumFetcher;
-
-export type JSONFetcher = (req: Request, stocks: FetcherWorkspace<Stock>, stock: Stock, json: Object) => Promise<void>;
-
-export type HTMLFetcher = (
-  req: Request,
-  stocks: FetcherWorkspace<Stock>,
-  stock: Stock,
-  document: ParseResult,
-) => Promise<void>;
-
-// export type SeleniumFetcher = (
-//   req: Request,
-//   stocks: FetcherWorkspace<Stock>,
-//   stock: Stock,
-//   driver: WebDriver,
-// ) => Promise<boolean>;
-
 /**
- * An object holding the result of a `DOMParser` and/or the error that occurred during parsing.
+ * A function fetching information from a data provider for a single stock.
+ * @param req Request object
+ * @param stock The stock to fetch information for
+ * @returns a Promise that resolves after the fetch is completed successfully
+ * @throws a {@link DataProviderError} in case of a severe error
  */
-export type ParseResult = {
-  /**
-   * The parsed HTML document.
-   */
-  document?: Document;
-  /**
-   * The error that occurred during parsing.
-   */
-  error?: Error;
-};
-
-/**
- * An object holding the source of a fetcher. Only one of the properties is set.
- */
-type FetcherSource = {
-  /**
-   * The JSON object fetched by a {@link JSONFetcher}.
-   */
-  json?: Object;
-  /**
-   * The HTML document fetched by a {@link HTMLFetcher}.
-   */
-  document?: Document;
-  // /**
-  //  * The WebDriver instance used by a {@link SeleniumFetcher}.
-  //  */
-  // driver?: WebDriver;
-};
+export type Fetcher = (req: Request, stock: Stock) => Promise<void>;
 
 /**
  * Captures the fetched resource of a fetcher in case of an error and stores it in Redis. Based on the fetcher type, the
  * resource can either be a {@link Document} or a {@link Object}.
  * @param stock the affected stock
  * @param dataProvider the name of the data provider
- * @param source the source of the fetcher
+ * @param e The error that occurred during fetching, holding fetched resources if available
  * @returns A string holding a general informational message and a URL to the screenshot
  */
 export const captureDataProviderError = async (
   stock: Stock,
   dataProvider: IndividualDataProvider,
-  source: FetcherSource,
+  e: DataProviderError,
 ): Promise<string> => {
-  let resourceID: string = "";
-  switch (true) {
-    case isJSONDataProvider(dataProvider):
-      resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.json`;
-      if (
-        // Only create the resource if we actually have a JSON object
-        !source?.json ||
-        // Create the JSON resource in Redis
-        !(await createResource(
+  const resourceIDs: string[] = [];
+
+  for await (const dataSource of e.dataSources ?? []) {
+    if (!dataSource) continue;
+    switch (true) {
+      case "documentElement" in dataSource && dataSource.documentElement?.toString().length > 0: {
+        // HTML documents
+        const resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString(16)}.html`;
+        const success = await createResource(
           {
             url: resourceID,
             fetchDate: new Date(),
-            content: JSON.stringify(source.json),
-          },
-          60 * 60 * 48, // We only store the resource for 48 hours.
-        ))
-      )
-        resourceID = ""; // If unsuccessful, clear the resource ID
-      break;
-    case isHTMLDataProvider(dataProvider):
-      resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString()}.html`;
-      if (
-        // Only create the resource if we actually have a valid HTML document
-        !source?.document?.documentElement?.toString() ||
-        // Create the HTML resource in Redis
-        !(await createResource(
-          {
-            url: resourceID,
-            fetchDate: new Date(),
-            content: source.document.documentElement.toString(),
+            content: dataSource.documentElement.toString(),
           },
           60 * 60 * 48, // We only store the screenshot for 48 hours.
-        ))
-      )
-        resourceID = ""; // If unsuccessful, clear the resource ID
-      break;
-    // case isSeleniumDataProvider(dataProvider):
-    //   resourceID = await takeScreenshot(source.driver, stock, dataProvider);
-    //   break;
+        );
+        if (success) resourceIDs.push(resourceID);
+        break;
+      }
+      default: {
+        // All other objects (usually parsed from JSON)
+        const resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString(16)}.json`;
+        const success = await createResource(
+          {
+            url: resourceID,
+            fetchDate: new Date(),
+            content: JSON.stringify(dataSource),
+          },
+          60 * 60 * 48, // We only store the resource for 48 hours.
+        );
+        if (success) resourceIDs.push(resourceID);
+        break;
+      }
+    }
   }
-  return resourceID
-    ? `For additional information, see https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
-        process.env.DOMAIN
-        // Ensure the user is logged in before accessing the resource API endpoint.
-      }/login?redirect=${encodeURIComponent(`/api${resourcesEndpointPath}/${resourceID}`)}.`
+  return resourceIDs.length
+    ? `For additional information, see ${resourceIDs
+        .map(
+          (resourceID) =>
+            `https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
+              process.env.DOMAIN
+              // Ensure the user is logged in before accessing the resource API endpoint.
+            }/login?redirect=${encodeURIComponent(`/api${resourcesEndpointPath}/${resourceID}`)}`,
+        )
+        .join(", ")}.`
     : "No additional information available.";
 };
 
 /**
  * A record of functions that extract data from a data provider.
  */
-const dataProviderFetchers: Record<HTMLDataProvider, HTMLFetcher> & Record<JSONDataProvider, JSONFetcher> = {
+const dataProviderFetchers: Record<IndividualDataProvider, Fetcher> = {
   morningstar: morningstarFetcher,
   marketScreener: marketScreenerFetcher,
   msci: msciFetcher,
@@ -258,21 +207,8 @@ export const fetchFromDataProvider = async (
   const rejectedResult = (
     await Promise.allSettled(
       [...Array(determineConcurrency(req))].map(async () => {
-        let parseResult: ParseResult;
-        let json: Object;
-
-        // let driver: WebDriver;
-        // let sessionID: string;
-        // if (seleniumDataProviders.includes(dataProvider)) {
-        //   // Acquire a new session
-        //   driver = await getDriver(true);
-        //   sessionID = (await driver.getSession()).getId();
-        // }
-
         // Work while stocks are in the queue
         while (stocks.queued.length) {
-          parseResult = { document: undefined, error: undefined };
-          json = {};
           // Get the first stock in the queue
           const stock = stocks.queued.shift();
           // If the queue got empty in the meantime, we end.
@@ -298,34 +234,26 @@ export const fetchFromDataProvider = async (
           }
 
           try {
-            if (isHTMLDataProvider(dataProvider)) {
-              await dataProviderFetchers[dataProvider](req, stocks, stock, parseResult);
-            } else if (isJSONDataProvider(dataProvider)) {
-              await dataProviderFetchers[dataProvider](req, stocks, stock, json);
-              // } else if (isSeleniumDataProvider(dataProvider)) {
-              //   if (!(await (dataProviderFetchers[dataProvider] as SeleniumFetcher)(req, stocks, stock, driver)))
-              //     break;
-            }
+            await dataProviderFetchers[dataProvider](req, stock);
+            stocks.successful.push(await readStock(stock.ticker));
           } catch (e) {
-            stocks.failed.push(stock);
+            stocks.failed.push(await readStock(stock.ticker));
             if (req.query.ticker) {
-              // // If the request was for a single stock, we shut down the driver and throw an error.
-              // driver && (await quitDriver(driver, sessionID));
               throw new APIError(
                 502,
-                `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data`,
+                `Stock ${stock.ticker}: Error while fetching ${dataProviderName[dataProvider]} data`,
                 e,
               );
             }
             logger.error(
               { prefix: "fetch", err: e },
-              `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data`,
+              `Stock ${stock.ticker}: Error while fetching ${dataProviderName[dataProvider]} data`,
             );
             await signal.sendMessage(
               SIGNAL_PREFIX_ERROR +
-                `Stock ${stock.ticker}: Unable to fetch ${dataProviderName[dataProvider]} data: ${
-                  String(e.message).split(/[\n:{]/)[0]
-                }\n${await captureDataProviderError(stock, dataProvider, { json, document: parseResult?.document })}`,
+                `Stock ${stock.ticker}: Error while fetching ${dataProviderName[dataProvider]} data: ` +
+                e.message +
+                (e instanceof DataProviderError ? "\n" + (await captureDataProviderError(stock, dataProvider, e)) : ""),
               "fetchError",
             );
           }
@@ -353,8 +281,6 @@ export const fetchFromDataProvider = async (
             break;
           }
         }
-        // // The queue is now empty, we end the session.
-        // driver && (await quitDriver(driver, sessionID));
       }),
     )
   ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
@@ -403,18 +329,37 @@ const patchHTML = (html: string): string => {
  * @param config The fetch request options
  * @param stock The affected stock
  * @param dataProvider The name of the data provider to fetch from
- * @param parseResult The variable the result of the parsing will be assigned to. This may either be a
- *                    `Document` or a {@link FetchError}.
+ * @returns The parsed HTML document
  */
 export const getAndParseHTML = async (
   url: string,
   config: FetchRequestOptions,
   stock: Stock,
   dataProvider: IndividualDataProvider,
-  parseResult: ParseResult,
-): Promise<void> => {
-  let error: FetchError = undefined;
-  parseResult.document = new DOMParser({
+): Promise<Document> => {
+  let error: Error;
+  // Fetch the response
+  const responseData = await performFetchRequest(url, {
+    ...config,
+    dispatcher: new Agent({ allowH2: true }),
+    headers: {
+      ...config?.headers,
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+        "AppleWebKit/537.36 (KHTML, like Gecko) " +
+        "Chrome/124.0.0.0 Safari/537.36",
+    },
+  })
+    .then((res) => patchHTML(res.data))
+    .catch((e) => {
+      // If the status code indicates a non-successful fetch, we try to parse the response nonetheless
+      if (e instanceof FetchError) {
+        error = e;
+        return patchHTML(e.response.data);
+      }
+      throw e;
+    });
+  const parser = new DOMParser({
     errorHandler: {
       warning: () => undefined,
       error: () => undefined,
@@ -425,30 +370,12 @@ export const getAndParseHTML = async (
         );
       },
     },
-  }).parseFromString(
-    await performFetchRequest(url, {
-      ...config,
-      dispatcher: new Agent({ allowH2: true }),
-      headers: {
-        ...config?.headers,
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
-          "AppleWebKit/537.36 (KHTML, like Gecko) " +
-          "Chrome/124.0.0.0 Safari/537.36",
-      },
-    })
-      .then((res) => patchHTML(res.data))
-      .catch((e) => {
-        if (e instanceof FetchError) {
-          error = e;
-          return patchHTML(e.response.data);
-        }
-        throw e;
-      }),
-    "text/html",
-  );
-  if (error) {
-    parseResult.error = error;
-    throw error;
-  }
+  });
+  const document = parser.parseFromString(responseData, "text/html");
+  if (error)
+    throw new DataProviderError(`Error while fetching HTML page: ${error.message}`, {
+      cause: error,
+      dataSources: [document],
+    });
+  return document;
 };

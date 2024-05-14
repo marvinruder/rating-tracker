@@ -14,7 +14,6 @@ services:
     environment:
       DATABASE_URL: postgresql://rating-tracker:rating-tracker@postgres:5432/rating-tracker?schema=rating-tracker
       REDIS_URL: redis://redis:6379
-      # SELENIUM_URL: http://selenium:4444
       SIGNAL_URL: http://signal:8080
       PORT: 3001
       MAX_FETCH_CONCURRENCY: 4

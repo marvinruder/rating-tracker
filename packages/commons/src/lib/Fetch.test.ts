@@ -35,7 +35,7 @@ const mockedResponse: Pick<
   text: () => undefined,
 };
 
-describe("URL Search Parameters", () => {
+describe.concurrent("URL Search Parameters", () => {
   it("creates a new URLSearchParams instance from the given parameter record", () => {
     const params = {
       string: "string with symbols?",
@@ -49,7 +49,7 @@ describe("URL Search Parameters", () => {
   });
 });
 
-describe("Response handler", () => {
+describe.concurrent("Response handler", () => {
   it("parses JSON response", async () => {
     const response = {
       ...mockedResponse,

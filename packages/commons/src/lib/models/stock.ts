@@ -2,6 +2,7 @@ import type { Currency } from "../Currency";
 import type { Industry } from "../gecs/Industry";
 import type { Country } from "../geo/Country";
 import type { OmitFunctions } from "../OmitFunctions";
+import type { AnalystRating } from "../ratings/AnalystRating";
 import type { MSCIESGRating } from "../ratings/MSCI";
 import type { Size } from "../stylebox/Size";
 import type { Style } from "../stylebox/Style";
@@ -117,9 +118,13 @@ export type Stock = {
    */
   marketScreenerLastFetch: Date | null;
   /**
-   * The consensus of analysts’ opinions on the stock.
+   * The consensus of analysts’ opinions on the stock, that is, the mean value of all analyst ratings.
    */
-  analystConsensus: number | null;
+  analystConsensus: AnalystRating | null;
+  /**
+   * The ratings of analysts for the stock.
+   */
+  analystRatings: Record<AnalystRating, number> | null;
   /**
    * The number of analysts that cover the stock.
    */
@@ -248,6 +253,7 @@ export const optionalStockValuesNull: OmitFunctions<
   marketScreenerID: null,
   marketScreenerLastFetch: null,
   analystConsensus: null,
+  analystRatings: null,
   analystCount: null,
   analystTargetPrice: null,
   msciID: null,

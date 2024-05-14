@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { isCurrency } from "./Currency";
 
-describe("Currency", () => {
+describe.concurrent("Currency", () => {
   it("is a currency", () => {
     expect(isCurrency("EUR")).toBe(true);
   });

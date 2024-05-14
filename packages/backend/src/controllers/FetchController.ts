@@ -392,7 +392,7 @@ class FetchController extends Singleton {
         successfulCount += 1;
       } catch (e) {
         if (req.query.ticker)
-          // If this request was for a single stock, we shut down the driver and throw an error.
+          // If this request was for a single stock, we throw an error.
           throw new APIError(
             (e as APIError).status ?? 500,
             `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk`,

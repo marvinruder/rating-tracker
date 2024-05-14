@@ -24,7 +24,7 @@ describe("Stock Scores", () => {
       lastClose: 100,
       starRating: 3,
       morningstarFairValue: 100,
-      analystConsensus: 5,
+      analystConsensus: "Hold",
       analystCount: 10,
       analystTargetPrice: 100,
       msciESGRating: "A",
@@ -49,7 +49,7 @@ describe("Stock Scores", () => {
       lastClose: 100,
       starRating: 1,
       morningstarFairValue: 25,
-      analystConsensus: 0,
+      analystConsensus: "Sell",
       analystCount: 10,
       analystTargetPrice: 20,
       msciESGRating: "CCC",
@@ -74,7 +74,7 @@ describe("Stock Scores", () => {
       lastClose: 100,
       starRating: 5,
       morningstarFairValue: 230,
-      analystConsensus: 10,
+      analystConsensus: "Buy",
       analystCount: 10,
       analystTargetPrice: 215,
       msciESGRating: "AAA",
@@ -137,6 +137,29 @@ describe("Stock Scores", () => {
     expect(dynamicStockAttributes(stock).esgScore).toBe(-0.5);
   });
 
+  it("has defined scores for every possible Analyst Consensus", () => {
+    const stock = addDynamicAttributesToStockData({
+      ...optionalStockValuesNull,
+      ticker: "EXAMPLE",
+      name: "Example Inc.",
+      isin: "US0000000000",
+      country: "US",
+    });
+    expect(stock.esgScore).toBe(0);
+
+    stock.analystCount = 10;
+    stock.analystConsensus = "Buy";
+    expect(dynamicStockAttributes(stock).financialScore).toBe(1 / 3);
+    stock.analystConsensus = "Outperform";
+    expect(dynamicStockAttributes(stock).financialScore).toBe(0.5 / 3);
+    stock.analystConsensus = "Hold";
+    expect(dynamicStockAttributes(stock).financialScore).toBe(0);
+    stock.analystConsensus = "Underperform";
+    expect(dynamicStockAttributes(stock).financialScore).toBe(-0.5 / 3);
+    stock.analystConsensus = "Sell";
+    expect(dynamicStockAttributes(stock).financialScore).toBe(-1 / 3);
+  });
+
   it("has financial score depending on analyst count", () => {
     const stock = addDynamicAttributesToStockData({
       ...optionalStockValuesNull,
@@ -148,7 +171,7 @@ describe("Stock Scores", () => {
 
     stock.lastClose = 100;
     stock.analystTargetPrice = 200;
-    stock.analystConsensus = 10;
+    stock.analystConsensus = "Buy";
     stock.analystCount = 10;
     expect(dynamicStockAttributes(stock).financialScore).toBe((2 / 3) * 1);
 

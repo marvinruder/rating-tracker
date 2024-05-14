@@ -2,44 +2,32 @@ import type { Stock } from "@rating-tracker/commons";
 import { SP_PREMIUM_STOCK_ERROR_MESSAGE } from "@rating-tracker/commons";
 import type { Request } from "express";
 
-import { readStock, updateStock } from "../db/tables/stockTable";
-import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
-import * as signal from "../signal/signal";
+import { updateStock } from "../db/tables/stockTable";
 import DataProviderError from "../utils/DataProviderError";
 import logger from "../utils/logger";
 
-import type { FetcherWorkspace, HTMLFetcher, ParseResult } from "./fetchHelper";
-import { captureDataProviderError, getAndParseHTML } from "./fetchHelper";
+import type { Fetcher } from "./fetchHelper";
+import { getAndParseHTML } from "./fetchHelper";
 
 /**
  * Fetches data from Standard & Poor’s.
  * @param req Request object
- * @param stocks An object with the stocks to fetch and the stocks already fetched (successful or with errors)
  * @param stock The stock to extract data for
- * @param parseResult The fetched and parsed HTML document and/or the error that occurred during parsing
  * @returns A {@link Promise} that resolves when the fetch is complete
- * @throws an {@link APIError} in case of a severe error
+ * @throws a {@link DataProviderError} in case of a severe error
  */
-const spFetcher: HTMLFetcher = async (
-  req: Request,
-  stocks: FetcherWorkspace<Stock>,
-  stock: Stock,
-  parseResult: ParseResult,
-): Promise<void> => {
+const spFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> => {
   let spESGScore: number = req.query.clear ? null : undefined;
 
-  await getAndParseHTML(
+  const document = await getAndParseHTML(
     `https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`,
     undefined,
     stock,
     "sp",
-    parseResult,
   );
 
-  const { document } = parseResult;
-
-  // Prepare an error message header containing the stock name and ticker.
-  let errorMessage = `Error while fetching S&P information for ${stock.name} (${stock.ticker}):`;
+  // Prepare an error message.
+  let errorMessage = "";
 
   try {
     const lockedContent = document.getElementsByClassName("lock__content");
@@ -53,7 +41,7 @@ const spFetcher: HTMLFetcher = async (
       // Sadly, we are not a premium subscriber :(
       // We will still count this as a successful fetch
       await updateStock(stock.ticker, { spLastFetch: new Date() });
-      throw new DataProviderError(SP_PREMIUM_STOCK_ERROR_MESSAGE);
+      throw new DataProviderError(SP_PREMIUM_STOCK_ERROR_MESSAGE, { dataSources: [document] });
     }
     spESGScore = +document.getElementsByClassName("scoreModule__score")[0].textContent;
   } catch (e) {
@@ -73,19 +61,8 @@ const spFetcher: HTMLFetcher = async (
 
   // Update the stock in the database.
   await updateStock(stock.ticker, { spLastFetch: errorMessage.includes("\n") ? undefined : new Date(), spESGScore });
-  if (errorMessage.includes("\n")) {
-    // An error occurred if and only if the error message contains a newline character.
-    // We capture the resource and send a message.
-    errorMessage += `\n${await captureDataProviderError(stock, "sp", { document })}`;
-    // If this request was for a single stock, we throw an error instead of sending a message, so that the error
-    // message will be part of the response.
-    if (req.query.ticker) throw new DataProviderError(errorMessage);
-
-    await signal.sendMessage(SIGNAL_PREFIX_ERROR + errorMessage, "fetchError");
-    stocks.failed.push(await readStock(stock.ticker));
-  } else {
-    stocks.successful.push(await readStock(stock.ticker));
-  }
+  // An error occurred if and only if the error message contains a newline character.
+  if (errorMessage.includes("\n")) throw new DataProviderError(errorMessage, { dataSources: [document] });
 };
 
 export default spFetcher;

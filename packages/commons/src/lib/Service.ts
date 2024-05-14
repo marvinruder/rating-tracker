@@ -1,7 +1,7 @@
 /**
  * An array of services Rating Tracker depends on.
  */
-export const serviceArray = ["PostgreSQL", "Redis", /* "Selenium", */ "Signal"] as const;
+export const serviceArray = ["PostgreSQL", "Redis", "Signal"] as const;
 
 /**
  * A service Rating Tracker depends on.

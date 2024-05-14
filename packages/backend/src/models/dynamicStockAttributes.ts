@@ -1,4 +1,9 @@
-import type { OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
+import {
+  analystRatingArray,
+  msciESGRatingArray,
+  type OmitDynamicAttributesStock,
+  type Stock,
+} from "@rating-tracker/commons";
 
 /**
  * Provides a score for the stock based on its Morningstar star rating.
@@ -36,19 +41,16 @@ const getMorningstarFairValueScore = (stock: OmitDynamicAttributesStock): number
 /**
  * Provides a score for the stock based on its analyst consensus.
  * @param stock The stock.
- * @returns The score, ranging from -1 (consensus of 0) to 1 (consensus of 10). `null`, if no analyst consensus exists,
- *          or if the analyst count is 0.
+ * @returns The score, ranging from -1 (consensus of Sell) to 1 (consensus of Buy). `null`, if no analyst consensus
+ *          exists, or if the analyst count is 0. If less than 10 analysts have rated the stock, the score is adjusted
+ *          based on the number of analysts.
  */
 const getAnalystConsensusScore = (stock: OmitDynamicAttributesStock): number | null => {
   if (stock.analystCount && stock.analystConsensus !== null) {
-    if (stock.analystCount >= 10) {
-      return (stock.analystConsensus - 5) / 5;
-    } else {
-      return (stock.analystCount / 10) * ((stock.analystConsensus - 5) / 5);
-    }
-  } else {
-    return null;
-  }
+    const rawAnalystConsensusScore = 0.5 * analystRatingArray.indexOf(stock.analystConsensus) - 1;
+    if (stock.analystCount >= 10) return rawAnalystConsensusScore;
+    else return rawAnalystConsensusScore * (stock.analystCount / 10);
+  } else return null;
 };
 
 /**
@@ -113,22 +115,7 @@ const getMSCIESGRatingScore = (stock: OmitDynamicAttributesStock): number | null
   if (stock.msciESGRating === null) {
     return null;
   }
-  switch (stock.msciESGRating) {
-    case "AAA":
-      return 1;
-    case "AA":
-      return 0.5;
-    case "A":
-      return 0;
-    case "BBB":
-      return -0.5;
-    case "BB":
-      return -1;
-    case "B":
-      return -1.5;
-    case "CCC":
-      return -2;
-  }
+  return -0.5 * msciESGRatingArray.indexOf(stock.msciESGRating) + 1;
 };
 
 /**

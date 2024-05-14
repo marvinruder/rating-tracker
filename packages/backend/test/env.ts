@@ -12,7 +12,6 @@ process.env = {
   REDIS_PASS: "",
   POSTGRES_USER: "rating-tracker-test",
   POSTGRES_PASS: "rating-tracker-test",
-  // SELENIUM_URL: "unused in tests, but needs to be set",
   SIGNAL_URL: "http://nonexisting.signal.api.host",
   SIGNAL_SENDER: "+493012345678",
 };

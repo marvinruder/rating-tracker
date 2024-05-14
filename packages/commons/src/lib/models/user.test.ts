@@ -47,7 +47,7 @@ const userWhoDoesNotGiveAFuckAboutAnything = new User({
   subscriptions: 0,
 });
 
-describe("User Constructor", () => {
+describe.concurrent("User Constructor", () => {
   it("removes credentials", () => {
     const userWithCredentials: UserWithCredentials = new UserWithCredentials({
       ...regularUser,
@@ -66,7 +66,7 @@ describe("User Constructor", () => {
   });
 });
 
-describe("User Access Rights", () => {
+describe.concurrent("User Access Rights", () => {
   it("has all access rights", () => {
     expect(root.hasAccessRight(GENERAL_ACCESS)).toBe(true);
     expect(root.hasAccessRight(WRITE_STOCKS_ACCESS)).toBe(true);
@@ -92,7 +92,7 @@ describe("User Access Rights", () => {
   });
 });
 
-describe("Message Subscriptions", () => {
+describe.concurrent("Message Subscriptions", () => {
   it("receives messages if subscribed and access rights suffice", () => {
     expect(root.isAllowedAndWishesToReceiveMessage("stockUpdate")).toBe(true);
     expect(root.isAllowedAndWishesToReceiveMessage("fetchError")).toBe(true);

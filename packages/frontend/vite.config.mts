@@ -55,6 +55,7 @@ export default mergeConfig(
     customLogger,
     test: {
       coverage: { all: false, enabled: true, provider: "v8" },
+      poolOptions: { threads: { useAtomics: true } },
     },
   }),
 );
