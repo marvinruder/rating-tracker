@@ -425,7 +425,17 @@ export const getAndParseHTML = async (
       },
     },
   }).parseFromString(
-    await performFetchRequest(url, config)
+    await performFetchRequest(url, {
+      ...config,
+      headers: {
+        ...config.headers,
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+          "AppleWebKit/537.36 (KHTML, like Gecko) " +
+          "Chrome/124.0.0.0 Safari/537.36",
+        "Accept-Encoding": "none",
+      },
+    })
       .then((res) => patchHTML(res.data))
       .catch((e) => {
         if (e instanceof FetchError) {
