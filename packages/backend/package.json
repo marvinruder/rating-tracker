@@ -51,7 +51,7 @@
     "redis-om": "0.4.3",
     "response-time": "2.3.2",
     "supertest": "7.0.0",
-    "swagger-ui-dist": "5.17.9",
+    "swagger-ui-dist": "5.17.10",
     "swagger-ui-express": "5.0.0",
     "typescript": "5.4.5",
     "undici": "6.16.1",
