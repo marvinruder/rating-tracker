@@ -871,7 +871,7 @@ const PortfolioModule = (): JSX.Element => {
         </Card>
         <StockTable
           filter={filter}
-          refetchStocksTrigger={refetchStocksTrigger}
+          refetchInitialStocksTrigger={refetchStocksTrigger}
           portfolio={portfolio ?? null}
           getPortfolio={() => getPortfolio(Number(id))}
           showSkeletons={!portfolio}

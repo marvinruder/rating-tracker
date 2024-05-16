@@ -75,7 +75,7 @@ import {
   superSectorOfSector,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { useFavoritesContextState, useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
@@ -1082,6 +1082,13 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
     </TableRow>
   );
 };
+
+/**
+ * This memoized component displays information about a stock in a table row that is used in the stock list.
+ * @param props The properties of the component.
+ * @returns The component.
+ */
+export const MemoizedStockRow = memo(StockRow);
 
 /**
  * Properties for the StockRow component

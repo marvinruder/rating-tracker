@@ -43,7 +43,7 @@ const StockListModule = (): JSX.Element => {
         />
       </HeaderWrapper>
       <Container maxWidth={false}>
-        <StockTable filter={filter} refetchStocksTrigger={refetchStocksTrigger} columns={columnFilter} />
+        <StockTable filter={filter} refetchInitialStocksTrigger={refetchStocksTrigger} columns={columnFilter} />
       </Container>
       <Footer />
     </>
