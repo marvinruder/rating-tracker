@@ -16,14 +16,14 @@ import {
 import type { Portfolio, SortableAttribute, Stock, StockListColumn, Watchlist } from "@rating-tracker/commons";
 import { stocksAPIPath } from "@rating-tracker/commons";
 import type { FC } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import type { StockFilter } from "../../../types/StockFilter";
 import api from "../../../utils/api";
 import { PropertyDescription } from "../properties/PropertyDescription";
 
-import { StockRow } from "./StockRow";
+import { MemoizedStockRow, StockRow } from "./StockRow";
 
 /**
  * The stocks table component.
@@ -36,7 +36,10 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<SortableAttribute>(props.portfolio !== undefined ? "amount" : "totalScore");
   const [sortDesc, setSortDesc] = useState<boolean>(true);
+  const [refetchAllStocksTrigger, setRefetchAllStocksTrigger] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+
+  const triggerRefetchAllStocks = useCallback(() => setRefetchAllStocksTrigger((prev) => !prev), []);
 
   const theme = useTheme();
 
@@ -47,10 +50,17 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
     // process.env.NODE_ENV === "development" ? 1 :
     25 + 25 * +useMediaQuery(theme.breakpoints.up("md"));
 
-  // Get stocks whenever sorting or filtering changes, or when explicitly requested, e.g. after a stock was added.
+  // Get the initial amount of stocks whenever sorting or filtering changes, or when explicitly requested, e.g. after a
+  // stock was added.
   useEffect(() => {
     !props.showSkeletons && getInitialStocks();
-  }, [sortBy, sortDesc, props.filter, props.refetchStocksTrigger, props.showSkeletons]);
+  }, [sortBy, sortDesc, props.filter, props.refetchInitialStocksTrigger, props.showSkeletons]);
+
+  // Get all stocks when explicitly requested, e.g. after a stock was edited.
+  useEffect(() => {
+    // This must not run on initial render, so we check whether stocks exist already.
+    stocks.length && getAllStocks();
+  }, [refetchAllStocksTrigger]);
 
   const sortAndFilterParams = {
     // Sorting
@@ -445,9 +455,9 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <>
                     {stocks.map((stock) => (
                       // Render stock rows
-                      <StockRow
+                      <MemoizedStockRow
                         stock={stock}
-                        getStocks={getAllStocks}
+                        getStocks={triggerRefetchAllStocks}
                         getWatchlist={props.getWatchlist}
                         getPortfolio={props.getPortfolio}
                         key={stock.ticker}
@@ -500,7 +510,7 @@ interface StockTableProps {
   /**
    * A variable that is toggled to trigger a refetch of the stocks.
    */
-  refetchStocksTrigger?: boolean;
+  refetchInitialStocksTrigger?: boolean;
   /**
    * The columns to display. If unset, all columns will be displayed.
    */

@@ -68,7 +68,7 @@ const WatchlistModule = (): JSX.Element => {
       <Container maxWidth={false}>
         <StockTable
           filter={filter}
-          refetchStocksTrigger={refetchStocksTrigger}
+          refetchInitialStocksTrigger={refetchStocksTrigger}
           watchlist={watchlist}
           getWatchlist={() => getWatchlist(Number(id))}
           showSkeletons={!watchlist}
