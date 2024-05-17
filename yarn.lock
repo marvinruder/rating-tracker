@@ -257,12 +257,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.24.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
-  version: 7.24.1
-  resolution: "@babel/runtime@npm:7.24.1"
+"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.24.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+  version: 7.24.5
+  resolution: "@babel/runtime@npm:7.24.5"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: 10c0/500c6a99ddd84f37c7bc5dbc84777af47b1372b20e879941670451d55484faf18a673c5ebee9ca2b0f36208a729417873b35b1b92e76f811620f6adf7b8cb0f1
+  checksum: 10c0/05730e43e8ba6550eae9fd4fb5e7d9d3cb91140379425abcb2a1ff9cebad518a280d82c4c4b0f57ada26a863106ac54a748d90c775790c0e2cd0ddd85ccdf346
   languageName: node
   linkType: hard
 
@@ -1045,11 +1045,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.4.0":
-  version: 7.4.0
-  resolution: "@mui/x-charts@npm:7.4.0"
+"@mui/x-charts@npm:7.5.0":
+  version: 7.5.0
+  resolution: "@mui/x-charts@npm:7.5.0"
   dependencies:
-    "@babel/runtime": "npm:^7.24.0"
+    "@babel/runtime": "npm:^7.24.5"
     "@mui/base": "npm:^5.0.0-beta.40"
     "@mui/system": "npm:^5.15.14"
     "@mui/utils": "npm:^5.15.14"
@@ -1073,7 +1073,7 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/efe1b66814e21fcae546b85fb08f1d18b564a8dc36ff8e575d889ea67419d7b5fe661039264bca9455bc9e5a6bcc8cdf3a4cdb06cb88f12efbdf2c0b5cef4d2a
+  checksum: 10c0/d796e204fbf58ad00341d71d805b42c97e13adf2c90e687f224ad7bcbfb17dbae8d60bd29378786f2b9fc849b411695749d99befa388272c797ee2a94adb8eb6
   languageName: node
   linkType: hard
 
@@ -1532,7 +1532,7 @@ __metadata:
     "@mui/material": "npm:5.15.18"
     "@mui/system": "npm:5.15.15"
     "@mui/utils": "npm:5.15.14"
-    "@mui/x-charts": "npm:7.4.0"
+    "@mui/x-charts": "npm:7.5.0"
     "@nivo/core": "npm:0.87.0"
     "@nivo/sunburst": "npm:0.87.0"
     "@rating-tracker/commons": "workspace:*"
