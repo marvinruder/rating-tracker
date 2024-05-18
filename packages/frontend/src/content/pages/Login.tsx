@@ -20,8 +20,8 @@ export const LoginPage = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
-  const [emailError, setEmailError] = useState<boolean>(false);
-  const [nameError, setNameError] = useState<boolean>(false);
+  const [emailError, setEmailError] = useState<string>(""); // Error message for the email text field.
+  const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
   const { refetchUser } = useUserContextUpdater();
 
@@ -36,9 +36,9 @@ export const LoginPage = (): JSX.Element => {
    */
   const validate = (): boolean => {
     if (action === "register") {
-      setEmailError(!inputEmail.current.reportValidity());
-      setNameError(!inputName.current.reportValidity());
-      return inputEmail.current.reportValidity() && inputName.current.reportValidity();
+      const isEmailValid = inputEmail.current?.checkValidity();
+      const isNameValid = inputName.current?.checkValidity();
+      return isEmailValid && isNameValid;
     }
     return true;
   };
@@ -48,11 +48,11 @@ export const LoginPage = (): JSX.Element => {
    */
   const onButtonClick = () => {
     void (async (): Promise<void> => {
+      // Validate input fields
+      if (!validate()) return;
       setRequestInProgress(true);
       switch (action) {
         case "register":
-          // Validate input fields
-          if (!validate()) return;
           try {
             // Request registration challenge
             const res = await api.get(authAPIPath + registerEndpointSuffix, {
@@ -153,11 +153,14 @@ export const LoginPage = (): JSX.Element => {
                 type="email"
                 label="Email Address"
                 value={email}
-                error={emailError}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                onChange={(event) => {
                   setEmail(event.target.value);
-                  setEmailError(false);
+                  // If in error state, check whether error is resolved. If so, clear the error.
+                  if (emailError && event.target.checkValidity()) setEmailError("");
                 }}
+                onInvalid={(event) => setEmailError((event.target as HTMLInputElement).validationMessage)}
+                error={!!emailError}
+                helperText={emailError}
                 required
               />
             </Grid>
@@ -179,11 +182,14 @@ export const LoginPage = (): JSX.Element => {
                 label="Name"
                 autoComplete="name"
                 value={name}
-                error={nameError}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                onChange={(event) => {
                   setName(event.target.value);
-                  setNameError(false);
+                  // If in error state, check whether error is resolved. If so, clear the error.
+                  if (nameError && event.target.checkValidity()) setNameError("");
                 }}
+                onInvalid={(event) => setNameError((event.target as HTMLInputElement).validationMessage)}
+                error={!!nameError}
+                helperText={nameError}
                 required
               />
             </Grid>
@@ -192,9 +198,8 @@ export const LoginPage = (): JSX.Element => {
                 loading={requestInProgress}
                 startIcon={<FingerprintIcon />}
                 variant="contained"
-                disabled={action === "register" && (emailError || nameError)}
+                disabled={action === "register" && (!!emailError || !!nameError)}
                 fullWidth
-                onMouseOver={validate} // Validate input fields on hover
                 onClick={onButtonClick}
               >
                 {action === "signIn" ? "Sign in" : "Register"}

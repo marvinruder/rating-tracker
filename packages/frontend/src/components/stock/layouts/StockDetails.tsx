@@ -467,7 +467,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock?.analystConsensus !== null && props.stock?.analystRatings !== null && (
                   <MarketScreenerNavigator stock={props.stock}>
-                    <AnalystRatingBar stock={props.stock} />
+                    <AnalystRatingBar stock={props.stock} open />
                   </MarketScreenerNavigator>
                 )}
               </>

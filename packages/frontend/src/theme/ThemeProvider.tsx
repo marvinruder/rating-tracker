@@ -400,16 +400,24 @@ const ThemeProviderWrapper: FC<React.PropsWithChildren> = (props: React.PropsWit
 
   useEffect(() => {
     // Add listener to update styles
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) => setThemeName(e.matches ? "dark" : "light"));
+    const themeListener = (e) => setThemeName(e.matches ? "dark" : "light");
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", themeListener);
+
+    // Add listener to prevent changing number inputs with the mouse wheel
+    const numberListener = () => {
+      if ((document.activeElement as HTMLInputElement)?.type === "number") {
+        (document.activeElement as HTMLInputElement)?.blur();
+      }
+    };
+    document.addEventListener("wheel", numberListener, { passive: true });
 
     // Setup dark/light mode for the first time
     setThemeName(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
 
-    // Remove listener
+    // Remove listeners
     return () => {
-      window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", () => {});
+      window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", themeListener);
+      document.removeEventListener("wheel", numberListener);
     };
   }, []);
 

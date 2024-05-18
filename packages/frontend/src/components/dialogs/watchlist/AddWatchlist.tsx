@@ -2,7 +2,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import { watchlistsAPIPath } from "@rating-tracker/commons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
@@ -15,17 +15,18 @@ import api from "../../../utils/api";
 export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
+  const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   /**
    * Checks for errors in the input fields.
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    // The following fields are required.
-    setNameError(!name);
-    return !!name;
+    const isNameValid = nameInputRef.current?.checkValidity();
+    return isNameValid;
   };
 
   /**
@@ -50,8 +51,16 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
         <Grid container spacing={1} mt={0} maxWidth={600} alignItems="center">
           <Grid item xs={12}>
             <TextField
-              onChange={(event) => (setName(event.target.value), setNameError(false))}
-              error={nameError}
+              onChange={(event) => {
+                setName(event.target.value);
+                // If in error state, check whether error is resolved. If so, clear the error.
+                if (nameError && event.target.checkValidity()) setNameError("");
+              }}
+              onInvalid={(event) => setNameError((event.target as HTMLInputElement).validationMessage)}
+              error={!!nameError}
+              helperText={nameError}
+              inputRef={nameInputRef}
+              required
               label="Watchlist name"
               value={name}
               placeholder="e.g. Noteworthy Stocks"
@@ -68,8 +77,7 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
           loading={requestInProgress}
           variant="contained"
           onClick={putWatchlist}
-          onMouseOver={validate} // Validate input fields on hover
-          disabled={nameError}
+          disabled={!!nameError}
           startIcon={<AddBoxIcon />}
         >
           Create Watchlist

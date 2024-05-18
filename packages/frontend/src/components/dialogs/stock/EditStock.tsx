@@ -26,7 +26,7 @@ import {
   SP_PREMIUM_STOCK_ERROR_MESSAGE,
   fetchAPIPath,
 } from "@rating-tracker/commons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
@@ -40,14 +40,14 @@ import CountryAutocomplete from "../../autocomplete/CountryAutocomplete";
 export const EditStock = (props: EditStockProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [unsafeRequestSent, setUnsafeRequestSent] = useState<boolean>(false); // Whether an unsafe request was sent.
-  const [ticker, setTicker] = useState<string>(props.stock.ticker);
-  const [tickerError, setTickerError] = useState<boolean>(false); // Error in the ticker text field.
   const [name, setName] = useState<string>(props.stock.name);
-  const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
-  const [isin, setIsin] = useState<string>(props.stock.isin);
-  const [isinError, setIsinError] = useState<boolean>(false); // Error in the ISIN text field.
+  const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.
+  const [ticker, setTicker] = useState<string>(props.stock.ticker);
+  const [tickerError, setTickerError] = useState<string>(""); // Error message for the ticker text field.
+  const [isin, setISIN] = useState<string>(props.stock.isin);
+  const [isinError, setISINError] = useState<string>(""); // Error message for the ISIN text field.
   const [country, setCountry] = useState<Country>(props.stock.country);
-  const [countryError, setCountryError] = useState<boolean>(false); // Error in the country input field.
+  const [countryError, setCountryError] = useState<string>(""); // Error message for the country input field.
   // Whether to clear information related to the data provider before fetching
   const [clear, setClear] = useState<boolean>(false);
   const [morningstarID, setMorningstarID] = useState<string>(props.stock.morningstarID ?? "");
@@ -64,17 +64,21 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
   const [sustainalyticsIDRequestInProgress, setSustainalyticsIDRequestInProgress] = useState<boolean>(false);
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const tickerInputRef = useRef<HTMLInputElement>(null);
+  const isinInputRef = useRef<HTMLInputElement>(null);
+  const countryInputRef = useRef<HTMLInputElement>(null);
+
   /**
    * Checks for errors in the input fields.
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    // The following fields are required.
-    setTickerError(!ticker);
-    setNameError(!name);
-    setIsinError(!isin);
-    setCountryError(!country);
-    return !!name && !!isin && !!country;
+    const isNameValid = nameInputRef.current?.checkValidity();
+    const isTickerValid = tickerInputRef.current?.checkValidity();
+    const isISINValid = isinInputRef.current?.checkValidity();
+    const isCountryValid = countryInputRef.current?.checkValidity();
+    return isNameValid && isTickerValid && isISINValid && isCountryValid;
   };
 
   /**
@@ -296,11 +300,19 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
         <Typography variant="h3">Edit Stock “{props.stock.name}”</Typography>
       </DialogTitle>
       <DialogContent>
-        <Grid container spacing={1} mt={0} maxWidth={600} alignItems="center">
+        <Grid container spacing={1} mt={0} maxWidth={600} alignItems="top">
           <Grid item xs={12}>
             <TextField
-              onChange={(event) => (setName(event.target.value), setNameError(false))}
-              error={nameError}
+              onChange={(event) => {
+                setName(event.target.value);
+                // If in error state, check whether error is resolved. If so, clear the error.
+                if (nameError && event.target.checkValidity()) setNameError("");
+              }}
+              onInvalid={(event) => setNameError((event.target as HTMLInputElement).validationMessage)}
+              error={!!nameError}
+              helperText={nameError}
+              inputRef={nameInputRef}
+              required
               label="Stock name"
               value={name}
               placeholder="e.g. Apple Inc."
@@ -309,8 +321,16 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
-              onChange={(event) => (setTicker(event.target.value), setTickerError(false))}
-              error={tickerError}
+              onChange={(event) => {
+                setTicker(event.target.value);
+                // If in error state, check whether error is resolved. If so, clear the error.
+                if (tickerError && event.target.checkValidity()) setTickerError("");
+              }}
+              onInvalid={(event) => setTickerError((event.target as HTMLInputElement).validationMessage)}
+              error={!!tickerError}
+              helperText={tickerError}
+              inputRef={tickerInputRef}
+              required
               label="Ticker"
               value={ticker}
               placeholder="e.g. AAPL"
@@ -319,8 +339,17 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
           </Grid>
           <Grid item xs={12} sm={8}>
             <TextField
-              onChange={(event) => (setIsin(event.target.value), setIsinError(false))}
-              error={isinError}
+              inputProps={{ pattern: "[A-Z]{2}[A-Z0-9]{10}" }}
+              onChange={(event) => {
+                setISIN(event.target.value);
+                // If in error state, check whether error is resolved. If so, clear the error.
+                if (isinError && event.target.checkValidity()) setISINError("");
+              }}
+              onInvalid={(event) => setISINError((event.target as HTMLInputElement).validationMessage)}
+              error={!!isinError}
+              helperText={isinError}
+              inputRef={isinInputRef}
+              required
               label="ISIN"
               value={isin}
               placeholder="e.g. US0378331005"
@@ -330,8 +359,18 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
           <Grid item xs={12}>
             <CountryAutocomplete
               value={country}
-              onChange={(_, value) => isCountry(value) && (setCountry(value), setCountryError(false))}
-              error={countryError}
+              onChange={(_, value) => {
+                if (isCountry(value)) {
+                  setCountry(value);
+                  // If in error state, check whether error is resolved. If so, clear the error.
+                  if (countryError && countryInputRef.current?.checkValidity()) setCountryError("");
+                }
+              }}
+              onInvalid={(event) => setCountryError((event.target as HTMLInputElement).validationMessage)}
+              error={!!countryError}
+              helperText={countryError}
+              inputRef={countryInputRef}
+              required
             />
           </Grid>
           <Grid item xs={12}>
@@ -514,8 +553,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
           loading={requestInProgress}
           variant="contained"
           onClick={updateStock}
-          onMouseOver={validate} // Validate input fields on hover
-          disabled={nameError || isinError || countryError}
+          disabled={!!nameError || !!tickerError || !!isinError || !!countryError}
           startIcon={<PublishedWithChangesIcon />}
         >
           Update Stock

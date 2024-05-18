@@ -124,6 +124,8 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
   const theme = useTheme();
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
+  const amountInputRef = useRef<HTMLInputElement>(null);
+
   const [optionsMenuOpen, setOptionsMenuOpen] = useState<boolean>(false);
   const [optionsMenuPositionEvent, setOptionsMenuPositionEvent] = useState<React.MouseEvent<HTMLElement, MouseEvent>>();
   const [detailsDialogOpen, setDetailsDialogOpen] = useState<boolean>(false);
@@ -140,16 +142,17 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       "amount" in props.stock &&
       props.stock.amount.toFixed(currencyMinorUnits[props.portfolio.currency]),
   );
-  const [amountError, setAmountError] = useState<boolean>(false);
+  const [amountError, setAmountError] = useState<string>(""); // Error message for the amount text field.
 
   /**
    * Checks for errors in the input fields.
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    // The following fields are required.
-    setAmountError(!amountInput || Number.isNaN(+amountInput) || +amountInput <= 0);
-    return !!amountInput && !Number.isNaN(+amountInput) && +amountInput > 0;
+    const isAmountValid = amountInputRef.current.checkValidity();
+    // Focus the text field again so that the error can be cleared when the user leaves the field thereafter
+    if (!isAmountValid) amountInputRef.current.focus();
+    return isAmountValid;
   };
 
   /**
@@ -388,7 +391,8 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             arrow
           >
             <TextField
-              sx={{ width: "id" in props.portfolio ? 150 : 120 }}
+              // This text field is read-only in the Portfolio Builder result list, where the ID is undefined
+              sx={{ width: "id" in props.portfolio ? 150 : 120, ...(amountError ? { mt: "6px" } : {}) }}
               disabled={!("id" in props.portfolio)}
               InputProps={{
                 startAdornment: (
@@ -403,8 +407,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                       ref={updateAmountButtonRef}
                       size="small"
                       onClick={updateStockInPortfolio}
-                      onMouseOver={validate}
-                      disabled={amountError || props.stock.amount === +amountInput}
+                      disabled={!!amountError || props.stock.amount === +amountInput}
                     >
                       <PublishedWithChangesIcon fontSize="small" />
                     </IconButton>
@@ -414,20 +417,29 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               }}
               inputProps={{
                 inputMode: "decimal",
-                pattern: "\\d+(\\.\\d+)?",
+                type: "number",
+                // Amount must be divisible by the currency's minor unit
                 step: Math.pow(10, -1 * currencyMinorUnits[props.portfolio.currency]),
+                min: Math.pow(10, -1 * currencyMinorUnits[props.portfolio.currency]), // Amount must be positive
                 sx: { textAlign: "right" },
               }}
               onChange={(event) => {
-                setAmountInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
-                setAmountError(false);
+                setAmountInput(event.target.value);
+                // If in error state, check whether error is resolved. If so, clear the error.
+                if (amountError && event.target.checkValidity()) setAmountError("");
               }}
-              onBlur={(event) =>
-                "amount" in props.stock &&
-                event.relatedTarget !== updateAmountButtonRef.current &&
-                setAmountInput(props.stock.amount.toFixed(currencyMinorUnits[props.portfolio.currency]))
-              }
-              error={amountError}
+              onInvalid={(event) => setAmountError((event.target as HTMLInputElement).validationMessage)}
+              error={!!amountError}
+              helperText={amountError}
+              onBlur={(event) => {
+                if ("amount" in props.stock && event.relatedTarget !== updateAmountButtonRef.current) {
+                  setAmountInput(props.stock.amount.toFixed(currencyMinorUnits[props.portfolio.currency]));
+                  // Clear the error message if the input is reset to the original value
+                  setAmountError("");
+                }
+              }}
+              inputRef={amountInputRef}
+              required
               label="Amount"
               value={amountInput}
             />
@@ -621,7 +633,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       <TableCell sx={{ display: displayColumn("Analyst Ratings") }}>
         {props.stock.analystConsensus !== null && props.stock.analystRatings && (
           <MarketScreenerNavigator stock={props.stock}>
-            <AnalystRatingBar stock={props.stock} width={120} />
+            <AnalystRatingBar stock={props.stock} width={120} open={displayColumn("Analyst Ratings") !== "none"} />
           </MarketScreenerNavigator>
         )}
       </TableCell>

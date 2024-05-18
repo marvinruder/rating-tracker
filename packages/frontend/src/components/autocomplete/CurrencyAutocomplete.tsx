@@ -27,6 +27,7 @@ const CurrencyAutocomplete = (props: CurrencyAutocompleteProps): JSX.Element => 
       multiple={false}
       value={props.value}
       onChange={props.onChange}
+      onInvalid={props.onInvalid}
       filterOptions={(options) => {
         const currentInputValue = currencyInputValue.trim().toUpperCase();
         // Filter the currency names by the input value.
@@ -42,7 +43,16 @@ const CurrencyAutocomplete = (props: CurrencyAutocompleteProps): JSX.Element => 
       }}
       disableClearable
       selectOnFocus
-      renderInput={(params) => <TextField {...params} label="Currency" error={props.error} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Currency"
+          error={props.error}
+          helperText={props.helperText}
+          inputRef={props.inputRef}
+          required={props.required}
+        />
+      )}
     />
   );
 };
@@ -57,9 +67,25 @@ interface CurrencyAutocompleteProps {
    */
   onChange: (event: React.SyntheticEvent<Element, Event>, value: Currency) => void;
   /**
+   * The invalid handler of the Autocomplete component.
+   */
+  onInvalid?: (event: React.SyntheticEvent<Element, Event>) => void;
+  /**
    * Whether the input value is invalid.
    */
   error: boolean;
+  /**
+   * The helper text of the input element.
+   */
+  helperText: string;
+  /**
+   * The ref of the input element.
+   */
+  inputRef?: React.RefObject<HTMLInputElement>;
+  /**
+   * Whether the field is required.
+   */
+  required?: boolean;
 }
 
 export default CurrencyAutocomplete;

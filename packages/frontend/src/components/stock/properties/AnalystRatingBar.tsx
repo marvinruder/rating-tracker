@@ -46,7 +46,7 @@ export const AnalystRatingBar = ({ stock, ...props }: AnalystRatingBarProps): JS
       }}
       enterDelay={0}
       placement="bottom"
-      open
+      open={props.open}
       arrow
     >
       <Box sx={{ width: props.width, height: 24, background: gradient, borderRadius: 0.5 }} />
@@ -63,4 +63,8 @@ interface AnalystRatingBarProps {
    * The width of the slider.
    */
   width?: number;
+  /**
+   * Whether the tooltip is open.
+   */
+  open: boolean;
 }
