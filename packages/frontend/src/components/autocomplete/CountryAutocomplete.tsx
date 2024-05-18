@@ -21,6 +21,7 @@ const CountryAutocomplete = (props: CountryAutocompleteProps): JSX.Element => {
       multiple={false}
       value={props.value}
       onChange={props.onChange}
+      onInvalid={props.onInvalid}
       filterOptions={(options) => {
         const currentInputValue = countryInputValue.trim().toUpperCase();
         // Filter the country names by the input value.
@@ -36,7 +37,16 @@ const CountryAutocomplete = (props: CountryAutocompleteProps): JSX.Element => {
       }}
       disableClearable
       selectOnFocus
-      renderInput={(params) => <TextField {...params} label="Country" error={props.error} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Country"
+          error={props.error}
+          helperText={props.helperText}
+          inputRef={props.inputRef}
+          required={props.required}
+        />
+      )}
     />
   );
 };
@@ -51,9 +61,25 @@ interface CountryAutocompleteProps {
    */
   onChange: (event: React.SyntheticEvent<Element, Event>, value: Country) => void;
   /**
+   * The invalid handler of the Autocomplete component.
+   */
+  onInvalid?: (event: React.SyntheticEvent<Element, Event>) => void;
+  /**
    * Whether the input value is invalid.
    */
   error: boolean;
+  /**
+   * The helper text of the input element.
+   */
+  helperText: string;
+  /**
+   * The ref of the input element.
+   */
+  inputRef?: React.RefObject<HTMLInputElement>;
+  /**
+   * Whether the field is required.
+   */
+  required?: boolean;
 }
 
 export default CountryAutocomplete;

@@ -9,7 +9,7 @@ import {
   currencyMinorUnits,
   FAVORITES_NAME,
 } from "@rating-tracker/commons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -24,9 +24,11 @@ import SelectStock from "./SelectStock";
  */
 const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => {
   const [amountInput, setAmountInput] = useState<string>("");
-  const [amountError, setAmountError] = useState<boolean>(false);
+  const [amountError, setAmountError] = useState<string>(""); // Error message for the amount text field.
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
   const { refetchFavorites } = useFavoritesContextUpdater();
+
+  const amountInputRef = useRef<HTMLInputElement>(null);
 
   const isPortfolio = "currency" in props.collection;
   const isWatchlist = "subscribed" in props.collection;
@@ -39,10 +41,8 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
    */
   const validate = (): boolean => {
     if (isPortfolio) {
-      // The following fields are required.
-      console.log(amountInput);
-      setAmountError(!amountInput || Number.isNaN(+amountInput) || +amountInput <= 0);
-      return !!amountInput && !Number.isNaN(+amountInput) && +amountInput > 0;
+      const isAmountValid = amountInputRef.current?.checkValidity();
+      return isAmountValid;
     }
     return true;
   };
@@ -86,14 +86,21 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
                     }}
                     inputProps={{
                       inputMode: "decimal",
-                      pattern: "\\d+(\\.\\d+)?",
+                      type: "number",
+                      // Amount must be divisible by the currency's minor unit
                       step: Math.pow(10, -1 * currencyMinorUnits[props.collection.currency]),
+                      min: Math.pow(10, -1 * currencyMinorUnits[props.collection.currency]), // Amount must be positive
                     }}
                     onChange={(event) => {
-                      setAmountInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
-                      setAmountError(false);
+                      setAmountInput(event.target.value);
+                      // If in error state, check whether error is resolved. If so, clear the error.
+                      if (amountError && event.target.checkValidity()) setAmountError("");
                     }}
-                    error={amountError}
+                    onInvalid={(event) => setAmountError((event.target as HTMLInputElement).validationMessage)}
+                    error={!!amountError}
+                    helperText={amountError}
+                    inputRef={amountInputRef}
+                    required
                     label="Amount"
                     value={amountInput}
                     autoFocus

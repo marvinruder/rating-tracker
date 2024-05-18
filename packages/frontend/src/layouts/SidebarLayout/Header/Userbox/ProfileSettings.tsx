@@ -47,11 +47,11 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [email, setEmail] = useState<string>(user.email);
-  const [emailError, setEmailError] = useState<boolean>(false); // Error in the email text field.
+  const [emailError, setEmailError] = useState<string>(""); // Error message for the email text field.
   const [name, setName] = useState<string>(user.name);
-  const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
+  const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.
   const [phone, setPhone] = useState<string>(user.phone);
-  const [phoneError, setPhoneError] = useState<boolean>(false); // Error in the phone text field.
+  const [phoneError, setPhoneError] = useState<string>(""); // Error message for the phone text field.
   const [processingAvatar, setProcessingAvatar] = useState<boolean>(true);
   const [subscriptions, setSubscriptions] = useState<number>(user.subscriptions);
 
@@ -84,13 +84,10 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    // The following fields are required.
-    setEmailError(!inputEmail.current.reportValidity());
-    setNameError(!inputName.current.reportValidity());
-    setPhoneError(!inputPhone.current.reportValidity());
-    return (
-      inputEmail.current.reportValidity() && inputName.current.reportValidity() && inputPhone.current.reportValidity()
-    );
+    const isEmailValid = inputEmail.current?.checkValidity();
+    const isNameValid = inputName.current?.checkValidity();
+    const isPhoneValid = inputPhone.current?.checkValidity();
+    return isEmailValid && isNameValid && isPhoneValid;
   };
 
   /**
@@ -230,9 +227,12 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   type="email"
                   onChange={(event) => {
                     setEmail(event.target.value);
-                    setEmailError(false);
+                    // If in error state, check whether error is resolved. If so, clear the error.
+                    if (emailError && event.target.checkValidity()) setEmailError("");
                   }}
-                  error={emailError}
+                  onInvalid={(event) => setEmailError((event.target as HTMLInputElement).validationMessage)}
+                  error={!!emailError}
+                  helperText={emailError}
                   label="Email address"
                   value={email}
                   placeholder="jane.doe@example.com"
@@ -245,9 +245,12 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   inputRef={inputName}
                   onChange={(event) => {
                     setName(event.target.value);
-                    setNameError(false);
+                    // If in error state, check whether error is resolved. If so, clear the error.
+                    if (nameError && event.target.checkValidity()) setNameError("");
                   }}
-                  error={nameError}
+                  onInvalid={(event) => setNameError((event.target as HTMLInputElement).validationMessage)}
+                  error={!!nameError}
+                  helperText={nameError}
                   label="Name"
                   autoComplete="name"
                   value={name}
@@ -259,13 +262,15 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               <Grid item xs={12}>
                 <TextField
                   inputRef={inputPhone}
-                  type="tel"
-                  inputProps={{ pattern: REGEX_PHONE_NUMBER }}
+                  inputProps={{ inputMode: "tel", type: "tel", pattern: REGEX_PHONE_NUMBER }}
                   onChange={(event) => {
-                    setPhone(event.target.value.replaceAll(/[^0-9+]+/g, "").substring(0, 16));
-                    setPhoneError(false);
+                    setPhone(event.target.value);
+                    // If in error state, check whether error is resolved. If so, clear the error.
+                    if (phoneError && event.target.checkValidity()) setPhoneError("");
                   }}
-                  error={phoneError}
+                  onInvalid={(event) => setPhoneError((event.target as HTMLInputElement).validationMessage)}
+                  error={!!phoneError}
+                  helperText={phoneError}
                   label="Phone number"
                   value={phone}
                   placeholder="+12125550123"
@@ -318,12 +323,11 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
           loading={requestInProgress}
           variant="contained"
           onClick={updateProfile}
-          onMouseOver={validate} // Validate input fields on hover
           disabled={
             // We cannot save if there are errors or if nothing has changed.
-            emailError ||
-            nameError ||
-            phoneError ||
+            !!emailError ||
+            !!nameError ||
+            !!phoneError ||
             (email === user.email && name === user.name && phone === user.phone && subscriptions === user.subscriptions)
           }
           startIcon={<SaveIcon />}

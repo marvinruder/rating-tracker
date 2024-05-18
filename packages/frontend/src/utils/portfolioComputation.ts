@@ -133,7 +133,8 @@ export const computePortfolio = (
     Object.fromEntries(
       stocks.map((stock, index) => [stock.ticker, Math.round((solution.K.get(index, 0) + minWeight) / EPSILON)]),
     ),
-    options.totalAmount / options.tick,
+    // Fix floating point precision errors. We validated before that the tick divides the total amount evenly.
+    Math.round(options.totalAmount / options.tick),
     { draw: true },
   );
 

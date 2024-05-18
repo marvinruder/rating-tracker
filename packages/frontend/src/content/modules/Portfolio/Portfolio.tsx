@@ -422,7 +422,7 @@ const PortfolioModule = (): JSX.Element => {
                       {analystConsensus !== null && analystRatings !== null && (
                         <Box width="100%" display="inline-flex" justifyContent="end">
                           <Box width="100%" display="block">
-                            <AnalystRatingBar stock={{ analystConsensus, analystRatings }} />
+                            <AnalystRatingBar stock={{ analystConsensus, analystRatings }} open />
                           </Box>
                         </Box>
                       )}

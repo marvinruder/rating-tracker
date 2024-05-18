@@ -124,4 +124,24 @@ describe.concurrent("Portfolio Computation", () => {
 
     validateResults(result, options);
   });
+
+  it("handles floating point precision issues properly", () => {
+    expect(() =>
+      computePortfolio(stocks.slice(1, 4) as Stock[], constraints, {
+        minAmount: 0.1,
+        totalAmount: 0.3,
+        tick: 0.1,
+        proportionalRepresentationAlgorithm: "sainteLague",
+      }),
+    ).not.toThrow();
+
+    expect(() =>
+      computePortfolio(stocks.slice(1, 4) as Stock[], constraints, {
+        minAmount: 0.1,
+        totalAmount: 0.3,
+        tick: 0.1,
+        proportionalRepresentationAlgorithm: "hareNiemeyer",
+      }),
+    ).not.toThrow();
+  });
 });

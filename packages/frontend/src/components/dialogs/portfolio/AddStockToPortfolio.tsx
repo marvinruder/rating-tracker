@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import type { Stock, PortfolioSummary, Currency } from "@rating-tracker/commons";
 import { stocksAPIPath, portfoliosAPIPath, currencyMinorUnits } from "@rating-tracker/commons";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
@@ -36,10 +36,12 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
   const [portfolioSummaries, setPortfolioSummaries] = useState<PortfolioSummary[]>([]);
   const [portfolioSummariesFinal, setPortfolioSummariesFinal] = useState<boolean>(false);
   const [amountInput, setAmountInput] = useState<string>("");
-  const [amountError, setAmountError] = useState<boolean>(false);
+  const [amountError, setAmountError] = useState<string>(""); // Error message for the amount text field.
   const [addPortfolioOpen, setAddPortfolioOpen] = useState<boolean>(false);
   const [hoverCurrency, setHoverCurrency] = useState<Currency | "…">("…");
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+
+  const amountInputRef = useRef<HTMLInputElement>(null);
 
   const theme = useTheme();
 
@@ -47,12 +49,19 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
 
   /**
    * Checks for errors in the input fields.
+   * @param id The ID of the portfolio.
    * @returns Whether the input fields are valid.
    */
-  const validate = (): boolean => {
-    // The following fields are required.
-    setAmountError(!amountInput || Number.isNaN(+amountInput) || +amountInput <= 0);
-    return !!amountInput && !Number.isNaN(+amountInput) && +amountInput > 0;
+  const validate = (id: number): boolean => {
+    // For currency minor unit validation, we need to set the minimum value of the input field after the touchend event
+    const currency = portfolioSummaries.find((portfolio) => portfolio.id === id)?.currency;
+    if (!currency) return false;
+    if (!amountInputRef?.current) return false;
+    amountInputRef.current.min = Math.pow(10, -1 * currencyMinorUnits[currency]).toString();
+    amountInputRef.current.step = Math.pow(10, -1 * currencyMinorUnits[currency]).toString();
+
+    const isAmountValid = amountInputRef.current.checkValidity();
+    return isAmountValid;
   };
 
   /**
@@ -78,7 +87,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
    * @param id The ID of the portfolio.
    */
   const addStockToPortfolio = (id: number) => {
-    if (!validate()) return;
+    if (!validate(id)) return;
     api
       .put(`${portfoliosAPIPath}/${id}${stocksAPIPath}/${props.stock.ticker}`, {
         params: { amount: +amountInput },
@@ -105,14 +114,21 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
               }}
               inputProps={{
                 inputMode: "decimal",
-                pattern: "\\d+(\\.\\d+)?",
-                step: Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]) || undefined,
+                type: "number",
+                // Amount must be divisible by the currency's minor unit
+                step: Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]),
+                min: Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]), // Amount must be positive
               }}
               onChange={(event) => {
-                setAmountInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
-                setAmountError(false);
+                setAmountInput(event.target.value);
+                // If in error state, check whether error is resolved. If so, clear the error.
+                if (amountError && event.target.checkValidity()) setAmountError("");
               }}
-              error={amountError}
+              onInvalid={(event) => setAmountError((event.target as HTMLInputElement).validationMessage)}
+              error={!!amountError}
+              helperText={amountError}
+              inputRef={amountInputRef}
+              required
               label="Amount"
               value={amountInput}
               autoFocus
@@ -136,8 +152,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                   >
                     <ListItemButton
                       onClick={() => addStockToPortfolio(portfolioSummary.id)}
-                      onMouseOver={validate}
-                      disabled={portfoliosAlreadyContainingStock.includes(portfolioSummary.id) || amountError}
+                      disabled={portfoliosAlreadyContainingStock.includes(portfolioSummary.id) || !!amountError}
                     >
                       <ListItemText
                         inset

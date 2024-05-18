@@ -76,7 +76,7 @@ import {
   styleArray,
   watchlistsAPIPath,
 } from "@rating-tracker/commons";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import CurrencyAutocomplete from "../../../components/autocomplete/CurrencyAutocomplete";
@@ -147,15 +147,21 @@ const PortfolioBuilderModule = (): JSX.Element => {
     ) as Record<Region | Sector | Size | Style, number>,
   );
   const [currency, setCurrency] = useState<Currency>();
-  const [currencyError, setCurrencyError] = useState<boolean>(false); // Error in the currency input field.
+  const [currencyError, setCurrencyError] = useState<string>(""); // Error message for the currency input field.
   const [totalAmountInput, setTotalAmountInput] = useState<string>("");
-  const [totalAmountError, setTotalAmountError] = useState<boolean>(false);
+  // Error message for the total amount input field.
+  const [totalAmountError, setTotalAmountError] = useState<string>("");
   const [minAmountInput, setMinAmountInput] = useState<string>("1.00");
-  const [minAmountError, setMinAmountError] = useState<boolean>(false);
+  const [minAmountError, setMinAmountError] = useState<string>(""); // Error message for the minimal amount input field.
   const [tickInput, setTickInput] = useState<string>("1.00");
-  const [tickError, setTickError] = useState<boolean>(false);
+  const [tickError, setTickError] = useState<string>(""); // Error message for the tick input field.
   const [proportionalRepresentationAlgorithm, setProportionalRepresentationAlgorithm] =
     useState<ProportionalRepresentationAlgorithm>("sainteLague");
+
+  const currencyInputRef = useRef<HTMLInputElement>(null);
+  const totalAmountInputRef = useRef<HTMLInputElement>(null);
+  const minAmountInputRef = useRef<HTMLInputElement>(null);
+  const tickInputRef = useRef<HTMLInputElement>(null);
 
   const [weightedStocks, setWeightedStocks] = useState<WeightedStock[]>([]);
   const [rse, setRSE] = useState<number>(0);
@@ -309,41 +315,11 @@ const PortfolioBuilderModule = (): JSX.Element => {
    * @returns Whether the input fields are valid.
    */
   const validatePortfolioParameters = (): boolean => {
-    // The following fields are required.
-    // Currency must be set
-    setCurrencyError(!currency);
-    // Total amount must be a positive number
-    setTotalAmountError(!totalAmountInput || Number.isNaN(+totalAmountInput) || +totalAmountInput <= 0);
-    // Smallest amount must be a non-negative number and must fit into the total amount as often as there are stocks
-    setMinAmountError(
-      !minAmountInput ||
-        Number.isNaN(+minAmountInput) ||
-        +minAmountInput < 0 ||
-        +minAmountInput * stocks.length > +totalAmountInput,
-    );
-    // Tick must be a positive number and divide the total amount evenly
-    setTickError(
-      !tickInput ||
-        Number.isNaN(+tickInput) ||
-        +tickInput <= 0 ||
-        +totalAmountInput / +tickInput !== Math.trunc(+totalAmountInput / +tickInput),
-    );
-    return (
-      !!currency &&
-      !(!totalAmountInput || Number.isNaN(+totalAmountInput) || +totalAmountInput <= 0) &&
-      !(
-        !minAmountInput ||
-        Number.isNaN(+minAmountInput) ||
-        +minAmountInput < 0 ||
-        +minAmountInput * stocks.length > +totalAmountInput
-      ) &&
-      !(
-        !tickInput ||
-        Number.isNaN(+tickInput) ||
-        +tickInput <= 0 ||
-        +totalAmountInput / +tickInput !== Math.trunc(+totalAmountInput / +tickInput)
-      )
-    );
+    const isCurrencyValid = currencyInputRef.current?.checkValidity();
+    const isTotalAmountValid = totalAmountInputRef.current?.checkValidity();
+    const isMinAmountValid = minAmountInputRef.current?.checkValidity();
+    const isTickValid = tickInputRef.current?.checkValidity();
+    return isCurrencyValid && isTotalAmountValid && isMinAmountValid && isTickValid;
   };
 
   /**
@@ -638,8 +614,18 @@ const PortfolioBuilderModule = (): JSX.Element => {
               <Grid item xs={12}>
                 <CurrencyAutocomplete
                   value={currency ?? null}
-                  onChange={(_, value) => isCurrency(value) && (setCurrency(value), setCurrencyError(false))}
-                  error={currencyError}
+                  onChange={(_, value) => {
+                    if (isCurrency(value)) {
+                      setCurrency(value);
+                      // If in error state, check whether error is resolved. If so, clear the error.
+                      if (currencyError && currencyInputRef.current?.checkValidity()) setCurrencyError("");
+                    }
+                  }}
+                  onInvalid={(event) => setCurrencyError((event.target as HTMLInputElement).validationMessage)}
+                  error={!!currencyError}
+                  helperText={currencyError}
+                  inputRef={currencyInputRef}
+                  required // Currency must be set
                 />
               </Grid>
               <Grid item xs={12}>
@@ -653,14 +639,43 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   }}
                   inputProps={{
                     inputMode: "decimal",
-                    pattern: "\\d+(\\.\\d+)?",
-                    step: Math.pow(10, -1 * currencyMinorUnits[currency || "…"]) || undefined,
+                    type: "number",
+                    // Smallest amount per stock must fit into the total amount at least as often as there are stocks,
+                    // and must be divisible by the tick
+                    min:
+                      +(
+                        // 6. Multiply with the tick again
+                        (
+                          +tickInput *
+                          // 5. Ceil the result to get a number that is divisibly by the tick
+                          Math.ceil(
+                            // 1. Take the smallest amount per stock,
+                            ((+minAmountInput || Math.pow(10, -1 * currencyMinorUnits[currency || "…"])) *
+                              // 2. multiply it by the number of stocks,
+                              stocks.length *
+                              // 3. Scale it down a tiny bit so that precision errors do not mess with ceiling
+                              (1 - Number.EPSILON)) /
+                              // 4. Divide by the tick
+                              +tickInput,
+                          )
+                        )
+                          // 7. If multiplying with the tick again results in a number with precision errors, we round
+                          //    the result to the nearest value allowed by the currency. Damn you, IEEE 754!
+                          .toFixed(currencyMinorUnits[currency || "…"])
+                      ) || undefined,
+                    // Tick must divide the total amount evenly
+                    step: +tickInput || Math.pow(10, -1 * currencyMinorUnits[currency || "…"]) || undefined,
                   }}
                   onChange={(event) => {
-                    setTotalAmountInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
-                    setTotalAmountError(false);
+                    setTotalAmountInput(event.target.value);
+                    // If in error state, check whether error is resolved. If so, clear the error.
+                    if (totalAmountError && event.target.checkValidity()) setTotalAmountError("");
                   }}
-                  error={totalAmountError}
+                  onInvalid={(event) => setTotalAmountError((event.target as HTMLInputElement).validationMessage)}
+                  error={!!totalAmountError}
+                  helperText={totalAmountError}
+                  inputRef={totalAmountInputRef}
+                  required
                   label="Total Amount"
                   value={totalAmountInput}
                   fullWidth
@@ -677,14 +692,20 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   }}
                   inputProps={{
                     inputMode: "decimal",
-                    pattern: "\\d+(\\.\\d+)?",
+                    type: "number",
+                    min: 0, // Smallest amount per stock must be non-negative
                     step: Math.pow(10, -1 * currencyMinorUnits[currency || "…"]) || undefined,
                   }}
                   onChange={(event) => {
-                    setMinAmountInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
-                    setMinAmountError(false);
+                    setMinAmountInput(event.target.value);
+                    // If in error state, check whether error is resolved. If so, clear the error.
+                    if (minAmountError && event.target.checkValidity()) setMinAmountError("");
                   }}
-                  error={minAmountError}
+                  onInvalid={(event) => setMinAmountError((event.target as HTMLInputElement).validationMessage)}
+                  error={!!minAmountError}
+                  helperText={minAmountError}
+                  inputRef={minAmountInputRef}
+                  required
                   label="Smallest amount per stock"
                   value={minAmountInput}
                   fullWidth
@@ -701,14 +722,20 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   }}
                   inputProps={{
                     inputMode: "decimal",
-                    pattern: "\\d+(\\.\\d+)?",
+                    type: "number",
                     step: Math.pow(10, -1 * currencyMinorUnits[currency || "…"]) || undefined,
+                    min: Math.pow(10, -1 * currencyMinorUnits[currency || "…"]) || undefined, // Tick must be positive
                   }}
                   onChange={(event) => {
-                    setTickInput(event.target.value.replaceAll(/[^0-9.]/g, ""));
-                    setTickError(false);
+                    setTickInput(event.target.value);
+                    // If in error state, check whether error is resolved. If so, clear the error.
+                    if (tickError && event.target.checkValidity()) setTickError("");
                   }}
-                  error={tickError}
+                  onInvalid={(event) => setTickError((event.target as HTMLInputElement).validationMessage)}
+                  error={!!tickError}
+                  helperText={tickError}
+                  inputRef={tickInputRef}
+                  required
                   label="Round amounts to multiples of"
                   value={tickInput}
                   fullWidth
@@ -1149,8 +1176,6 @@ const PortfolioBuilderModule = (): JSX.Element => {
                     }
                     setActiveStep((prevActiveStep) => prevActiveStep + 1);
                   }}
-                  // Validate input fields on hover
-                  onMouseOver={() => activeStep === 1 && validatePortfolioParameters()}
                   disabled={activeStep === maxStep}
                 >
                   Next

@@ -3,7 +3,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { Currency } from "@rating-tracker/commons";
 import { isCurrency, portfoliosAPIPath } from "@rating-tracker/commons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
@@ -18,19 +18,21 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [currency, setCurrency] = useState<Currency>();
-  const [nameError, setNameError] = useState<boolean>(false); // Error in the name text field.
-  const [currencyError, setCurrencyError] = useState<boolean>(false); // Error in the currency input field.
+  const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.
+  const [currencyError, setCurrencyError] = useState<string>(""); // Error message for the currency input field.
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const currencyInputRef = useRef<HTMLInputElement>(null);
 
   /**
    * Checks for errors in the input fields.
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    // The following fields are required.
-    setNameError(!name);
-    setCurrencyError(!currency);
-    return !!name && !!currency;
+    const isNameValid = nameInputRef.current?.checkValidity();
+    const isCurrencyValid = currencyInputRef.current?.checkValidity();
+    return isNameValid && isCurrencyValid;
   };
 
   /**
@@ -55,8 +57,16 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
         <Grid container spacing={1} mt={0} maxWidth={600} alignItems="center">
           <Grid item xs={12}>
             <TextField
-              onChange={(event) => (setName(event.target.value), setNameError(false))}
-              error={nameError}
+              onChange={(event) => {
+                setName(event.target.value);
+                // If in error state, check whether error is resolved. If so, clear the error.
+                if (nameError && event.target.checkValidity()) setNameError("");
+              }}
+              onInvalid={(event) => setNameError((event.target as HTMLInputElement).validationMessage)}
+              error={!!nameError}
+              helperText={nameError}
+              inputRef={nameInputRef}
+              required
               label="Portfolio name"
               value={name}
               placeholder="e.g. Monthly Savings"
@@ -66,8 +76,18 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
           <Grid item xs={12}>
             <CurrencyAutocomplete
               value={currency ?? null}
-              onChange={(_, value) => isCurrency(value) && (setCurrency(value), setCurrencyError(false))}
-              error={currencyError}
+              onChange={(_, value) => {
+                if (isCurrency(value)) {
+                  setCurrency(value);
+                  // If in error state, check whether error is resolved. If so, clear the error.
+                  if (currencyError && currencyInputRef.current?.checkValidity()) setCurrencyError("");
+                }
+              }}
+              onInvalid={(event) => setCurrencyError((event.target as HTMLInputElement).validationMessage)}
+              error={!!currencyError}
+              helperText={currencyError}
+              inputRef={currencyInputRef}
+              required
             />
           </Grid>
         </Grid>
@@ -80,8 +100,7 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
           loading={requestInProgress}
           variant="contained"
           onClick={putPortfolio}
-          onMouseOver={validate} // Validate input fields on hover
-          disabled={nameError || currencyError}
+          disabled={!!nameError || !!currencyError}
           startIcon={<AddBoxIcon />}
         >
           Create Portfolio

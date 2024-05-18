@@ -506,6 +506,19 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          "&[type=number]::-webkit-inner-spin-button, &[type=number]::-webkit-outer-spin-button": {
+            WebkitAppearance: "none",
+            margin: 0,
+          },
+          "&[type=number]": {
+            MozAppearance: "textfield",
+          },
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
@@ -887,6 +900,16 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
         },
       },
     },
+    MuiChartsTooltip: {
+      styleOverrides: {
+        container: {
+          boxShadow: "none",
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: colors.alpha.black[10],
+        },
+      },
+    },
     MuiLink: {
       defaultProps: {
         underline: "hover",
@@ -1059,6 +1082,9 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
         root: {
           ".MuiAutocomplete-inputRoot.MuiOutlinedInput-root .MuiAutocomplete-endAdornment": {
             right: 14,
+          },
+          ".MuiAutocomplete-inputRoot .MuiAutocomplete-input": {
+            minWidth: 45,
           },
         },
         clearIndicator: {
