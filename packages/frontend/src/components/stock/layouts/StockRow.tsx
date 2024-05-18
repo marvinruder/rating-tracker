@@ -460,6 +460,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 theme.palette.mode === "dark"
               }`}
               alt={`Logo of “${props.stock.name}”`}
+              slotProps={{ img: { loading: "lazy" } }}
             />
           </Badge>
           <Box width={8} />

@@ -125,6 +125,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
             sx={{ width: 64, height: 64, m: "4px", background: "none" }}
             src={props.user.avatar}
             alt={props.user.name}
+            slotProps={{ img: { loading: "lazy" } }}
           />
           <Box width={8} />
           <Box>
