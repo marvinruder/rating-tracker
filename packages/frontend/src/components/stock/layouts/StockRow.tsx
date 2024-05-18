@@ -2,7 +2,6 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
-import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
@@ -15,7 +14,6 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import StarsIcon from "@mui/icons-material/Stars";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import type { SlideProps } from "@mui/material";
 import {
   Avatar,
   Badge,
@@ -23,24 +21,19 @@ import {
   Chip,
   darken,
   Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid,
   IconButton,
   InputAdornment,
+  Link,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
   Skeleton,
-  Slide,
   TableCell,
   TableRow,
   TextField,
   Tooltip,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import type {
@@ -107,8 +100,6 @@ import { SectorIcon } from "../properties/SectorIcon";
 import { StarRating } from "../properties/StarRating";
 import { StyleBox } from "../properties/StyleBox";
 
-import { StockDetails } from "./StockDetails";
-
 /**
  * This component displays information about a stock in a table row that is used in the stock list.
  * @param props The properties of the component.
@@ -128,7 +119,6 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
 
   const [optionsMenuOpen, setOptionsMenuOpen] = useState<boolean>(false);
   const [optionsMenuPositionEvent, setOptionsMenuPositionEvent] = useState<React.MouseEvent<HTMLElement, MouseEvent>>();
-  const [detailsDialogOpen, setDetailsDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [addToWatchlistDialogOpen, setAddToWatchlistDialogOpen] = useState<boolean>(false);
@@ -167,8 +157,6 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       .then(() => (props.getPortfolio(), props.getStocks()))
       .catch((e) => setErrorNotificationOrClearSession(e, "editing stock in portfolio"));
   };
-
-  const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
 
   const contextMenuPositionRef = useRef<HTMLElement>(null);
   const updateAmountButtonRef = useRef<HTMLButtonElement>(null);
@@ -221,8 +209,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           !addToPortfolioDialogOpen &&
           !removeFromPortfolioDialogOpen &&
           !editDialogOpen &&
-          !deleteDialogOpen &&
-          !detailsDialogOpen
+          !deleteDialogOpen
         ) {
           e.preventDefault();
           if (optionsMenuOpen) {
@@ -448,13 +435,13 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       )}
       {/* Name and Logo */}
       <TableCell>
-        <Box
-          onClick={() => setDetailsDialogOpen(true)}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-          }}
+        <Link
+          component={NavLink}
+          to={`${stocksAPIPath}/${props.stock.ticker}`}
+          target="_blank"
+          color="inherit"
+          underline="none"
+          sx={{ display: "flex", alignItems: "center" }}
         >
           <Badge
             anchorOrigin={{ vertical: "top", horizontal: "left" }}
@@ -473,6 +460,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
                 theme.palette.mode === "dark"
               }`}
               alt={`Logo of “${props.stock.name}”`}
+              slotProps={{ img: { loading: "lazy" } }}
             />
           </Badge>
           <Box width={8} />
@@ -484,7 +472,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               {props.stock.ticker} | {props.stock.isin}
             </Typography>
           </Box>
-        </Box>
+        </Link>
       </TableCell>
       {/* Country and Region */}
       <TableCell sx={{ display: displayColumn("Country") }}>
@@ -813,56 +801,6 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <Box sx={{ float: "right" }}>{props.stock.marketCap !== null ? formatMarketCap(props.stock) : "–"}</Box>
         </Typography>
       </TableCell>
-      {/* Details Dialog */}
-      <Dialog
-        open={detailsDialogOpen}
-        onClose={() => setDetailsDialogOpen(false)}
-        maxWidth="md"
-        fullScreen={fullScreenDialogs}
-        TransitionComponent={fullScreenDialogs ? Slide : undefined}
-        TransitionProps={{ direction: "up" } as SlideProps}
-      >
-        <DialogTitle>
-          <Grid container justifyContent="space-between">
-            <Grid item display="flex" alignItems="center" maxWidth="calc(100% - 40px)">
-              <Avatar
-                sx={{
-                  width: 112,
-                  height: 112,
-                  m: "-16px",
-                  mr: "-8px",
-                  background: "none",
-                }}
-                src={`${baseURL}${stocksAPIPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
-                  theme.palette.mode === "dark"
-                }`}
-                alt={`Logo of “${props.stock.name}”`}
-              />
-              <Box sx={{ my: 1 }}>
-                <Typography variant="h4" gutterBottom>
-                  {props.stock.name}
-                </Typography>
-                <Typography variant="subtitle2">
-                  {props.stock.ticker} | {props.stock.isin}
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item>
-              <IconButton
-                aria-label={`Close details dialog of “${props.stock.name}”`}
-                onClick={() => setDetailsDialogOpen(false)}
-                sx={{ borderRadius: 20 }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </DialogTitle>
-        <Divider />
-        <DialogContent sx={{ p: 0, pb: 1 }}>
-          <StockDetails stock={props.stock} />
-        </DialogContent>
-      </Dialog>
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen}>
         <EditStock stock={props.stock} onCloseAfterEdit={props.getStocks} onClose={() => setEditDialogOpen(false)} />

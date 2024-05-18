@@ -55,6 +55,7 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
                 }`
           }
           alt={`Logo of “${stock.name}”`}
+          slotProps={{ img: { loading: "lazy" } }}
         />
       </ListItemAvatar>
       <ListItemText primary={stock.name} primaryTypographyProps={{ fontWeight: "bold" }} secondary={stock.ticker} />
