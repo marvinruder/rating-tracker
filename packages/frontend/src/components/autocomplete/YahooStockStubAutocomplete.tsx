@@ -111,6 +111,9 @@ const YahooStockStubAutocomplete = (props: YahooStockStubAutocompleteProps): JSX
   );
 };
 
+/**
+ * Properties for the YahooStockStubAutocomplete component.
+ */
 interface YahooStockStubAutocompleteProps {
   /**
    * The change handler of the autocomplete.

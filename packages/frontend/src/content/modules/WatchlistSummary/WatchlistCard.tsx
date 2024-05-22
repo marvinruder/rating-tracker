@@ -189,6 +189,9 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the WatchlistCard component.
+ */
 interface WatchlistCardProps {
   /**
    * The watchlist to display.

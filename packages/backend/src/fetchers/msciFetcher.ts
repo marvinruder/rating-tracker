@@ -17,8 +17,8 @@ import { getAndParseHTML } from "./fetchHelper";
  * @throws a {@link DataProviderError} in case of a severe error
  */
 const msciFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> => {
-  let msciESGRating: MSCIESGRating = req.query.clear ? null : undefined;
-  let msciTemperature: number = req.query.clear ? null : undefined;
+  let msciESGRating: MSCIESGRating = undefined;
+  let msciTemperature: number = undefined;
 
   const document = await getAndParseHTML(
     "https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool",

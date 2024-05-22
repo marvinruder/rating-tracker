@@ -3,6 +3,10 @@
  */
 export const fetchAPIPath = "/fetch";
 /**
+ * The Yahoo Finance Fetch endpoint suffix.
+ */
+export const fetchYahooEndpointSuffix = "/yahoo";
+/**
  * The Morningstar Fetch endpoint suffix.
  */
 export const fetchMorningstarEndpointSuffix = "/morningstar";

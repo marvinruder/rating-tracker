@@ -57,6 +57,9 @@ const CurrencyAutocomplete = (props: CurrencyAutocompleteProps): JSX.Element => 
   );
 };
 
+/**
+ * Properties for the CurrencyAutocomplete component.
+ */
 interface CurrencyAutocompleteProps {
   /**
    * The value of the autocomplete.

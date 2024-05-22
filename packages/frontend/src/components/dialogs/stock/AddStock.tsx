@@ -31,6 +31,7 @@ import {
   SP_PREMIUM_STOCK_ERROR_MESSAGE,
   stocksAPIPath,
   fetchAPIPath,
+  fetchYahooEndpointSuffix,
 } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
 
@@ -121,21 +122,27 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
     setRequestInProgress(true);
     const { name, isin, country } = stock;
     api
-      .put(stocksAPIPath + `/${stock.ticker.trim()}`, {
+      .put(stocksAPIPath + `/${encodeURIComponent(stock.ticker.trim())}`, {
         params: { name: name.trim(), isin: isin.trim(), country },
       })
-      .then(handleNext)
+      .then(async () => {
+        if (!stock.ticker.trim().startsWith("_"))
+          await api
+            .post(fetchAPIPath + fetchYahooEndpointSuffix, { params: { ticker: stock.ticker.trim(), noSkip: true } })
+            .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Yahoo"));
+        handleNext();
+      })
       .catch((e) => setErrorNotificationOrClearSession(e, "creating new stock"))
       .finally(() => setRequestInProgress(false));
   };
 
   /**
-   * Transmits the Morningstar ID to the server.
+   * Transmits the Morningstar ID to the server and fetches data from Morningstar.
    */
   const patchStockMorningstarID = () => {
     setMorningstarIDRequestInProgress(true);
     api
-      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(stock.ticker.trim())}`, {
         params: { morningstarID: (stock.morningstarID ?? "").trim() },
       })
       .then(() => {
@@ -159,12 +166,12 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the Market Screener ID to the server.
+   * Transmits the Market Screener ID to the server and fetches data from Market Screener.
    */
   const patchStockMarketScreenerID = () => {
     setMarketScreenerIDRequestInProgress(true);
     api
-      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(stock.ticker.trim())}`, {
         params: { marketScreenerID: (stock.marketScreenerID ?? "").trim() },
       })
       .then(() => {
@@ -188,12 +195,12 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the MSCI ID to the server.
+   * Transmits the MSCI ID to the server and fetches data from MSCI.
    */
   const patchStockMSCIID = () => {
     setMSCIIDRequestInProgress(true);
     api
-      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(stock.ticker.trim())}`, {
         params: { msciID: (stock.msciID ?? "").trim() },
       })
       .then(() => {
@@ -215,12 +222,14 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the Reuters IDentifier Code (RIC) to the server.
+   * Transmits the Reuters Identifier Code (RIC) to the server and fetches data from LSEG.
    */
   const patchStockRIC = () => {
     setRICRequestInProgress(true);
     api
-      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, { params: { ric: (stock.ric ?? "").trim() } })
+      .patch(stocksAPIPath + `/${encodeURIComponent(stock.ticker.trim())}`, {
+        params: { ric: (stock.ric ?? "").trim() },
+      })
       .then(() => {
         setRICSet(!!stock.ric); // Whether the RIC was empty
         if (stock.ric) {
@@ -240,12 +249,12 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the Standard & Poor’s ID to the server.
+   * Transmits the S&P ID to the server and fetches data from S&P.
    */
   const patchStockSPID = () => {
     setSPIDRequestInProgress(true);
     api
-      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(stock.ticker.trim())}`, {
         params: { spID: stock.spID === null ? "" : stock.spID },
       })
       .then(() => {
@@ -277,12 +286,12 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the Sustainalytics ID to the server.
+   * Transmits the Sustainalytics ID to the server and fetches data from Sustainalytics.
    */
   const patchStockSustainalyticsID = () => {
     setSustainalyticsIDRequestInProgress(true);
     api
-      .patch(stocksAPIPath + `/${stock.ticker.trim()}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(stock.ticker.trim())}`, {
         params: { sustainalyticsID: (stock.sustainalyticsID ?? "").trim() },
       })
       .then(() => {
@@ -309,7 +318,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
   const getAndShowStock = () => {
     setRequestInProgress(true);
     api
-      .get(stocksAPIPath + `/${stock.ticker.trim()}`)
+      .get(stocksAPIPath + `/${encodeURIComponent(stock.ticker.trim())}`)
       .then((res) => {
         setStock(res.data);
         setFinalStock(res.data);

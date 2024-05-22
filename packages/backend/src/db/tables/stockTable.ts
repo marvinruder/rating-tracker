@@ -88,9 +88,15 @@ export const readStocks = async (args?: Prisma.StockFindManyArgs): Promise<[Stoc
  * @param newValues The new values for the stock.
  * @param forceUpdate Whether new values are written into the database, even if they are equal to the stock’s current
  *                    values. Triggers computation of scores.
+ * @param skipMessage Whether not to send a Signal message.
  * @throws an {@link APIError} if the stock does not exist.
  */
-export const updateStock = async (ticker: string, newValues: Partial<Stock>, forceUpdate?: boolean) => {
+export const updateStock = async (
+  ticker: string,
+  newValues: Partial<Stock>,
+  forceUpdate?: boolean,
+  skipMessage?: boolean,
+) => {
   let k: keyof typeof newValues; // all keys of new values
   const stock = await readStock(ticker); // Read the stock from the database
   let signalMessage = `Updates for ${stock.name} (${ticker}):`;
@@ -98,10 +104,31 @@ export const updateStock = async (ticker: string, newValues: Partial<Stock>, for
   // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
   for (k in newValues) {
     if (newValues[k] !== undefined) {
-      if (stock[k] === undefined) {
-        throw new APIError(400, `Invalid property ${k} for stock ${stock.ticker}.`);
-      }
+      if (stock[k] === undefined) throw new APIError(400, `Invalid property ${k} for stock ${stock.ticker}.`);
       if (newValues[k] === stock[k]) {
+        delete newValues[k];
+        continue;
+      }
+      // Compare scalar arrays by iterating over them and comparing each element
+      if (
+        (k === "prices1y" || k === "prices1mo") &&
+        Array.isArray(stock[k]) &&
+        Array.isArray(newValues[k]) &&
+        stock[k].length === newValues[k].length &&
+        stock[k].every((value, index) => value === newValues[k][index])
+      ) {
+        delete newValues[k];
+        continue;
+      }
+      // Compare records with known keys by iterating over them and comparing each value
+      if (
+        k === "analystRatings" &&
+        typeof stock[k] === "object" &&
+        stock[k] !== null &&
+        typeof newValues[k] === "object" &&
+        newValues[k] !== null &&
+        analystRatingArray.every((rating) => stock[k][rating] === newValues[k][rating])
+      ) {
         delete newValues[k];
         continue;
       }
@@ -120,14 +147,15 @@ export const updateStock = async (ticker: string, newValues: Partial<Stock>, for
           } to ${"★".repeat(newValues[k]) + "☆".repeat(5 - newValues[k])}`;
           break;
         case "morningstarFairValue":
-          const currency = newValues.currency ?? stock.currency ?? "";
-          const lastClose = newValues.lastClose ?? stock.lastClose ?? 0;
+          const oldCurrency = stock.currency ?? "";
+          const newCurrency = newValues.currency ?? oldCurrency;
+          const lastClose = newValues.lastClose ?? stock.lastClose ?? "N/A";
           signalMessage += `\n\t${
             // larger is better
             (newValues[k] ?? 0) > (stock[k] ?? 0) ? SIGNAL_PREFIX_BETTER : SIGNAL_PREFIX_WORSE
-          }Morningstar Fair Value changed from ${currency} ${stock[k] ?? 0} to ${currency} ${
-            newValues[k] ?? 0
-          } (last close ${currency} ${lastClose})`;
+          }Morningstar Fair Value changed from ${oldCurrency} ${stock[k] ?? "N/A"} to ${newCurrency} ${
+            newValues[k] ?? "N/A"
+          } (last close ${newCurrency} ${lastClose})`;
           break;
         case "msciTemperature":
           signalMessage += `\n\t${
@@ -196,17 +224,13 @@ export const updateStock = async (ticker: string, newValues: Partial<Stock>, for
   }
   if (isNewData || forceUpdate) {
     await client.stock.update({
-      where: {
-        ticker: stock.ticker,
-      },
+      where: { ticker: stock.ticker },
       data: { ...newValues, ...dynamicStockAttributes({ ...stock, ...newValues }) },
     });
     logger.info({ prefix: "postgres", newValues }, `Updated stock ${ticker}`);
     // The message string contains a newline character if and only if a parameter changed for which we want to send a
     // message
-    if (signalMessage.includes("\n")) {
-      await signal.sendMessage(signalMessage, "stockUpdate", stock);
-    }
+    if (signalMessage.includes("\n") && !skipMessage) await signal.sendMessage(signalMessage, "stockUpdate", stock);
   } else {
     // No new data was provided
     logger.info({ prefix: "postgres" }, `No updates for stock ${ticker}.`);

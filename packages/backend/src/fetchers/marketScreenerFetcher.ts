@@ -7,14 +7,16 @@ import xpath from "xpath-ts2";
 import type { AnalystRating } from "../../prisma/client";
 import { updateStock } from "../db/tables/stockTable";
 import DataProviderError from "../utils/DataProviderError";
-import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
 
 import type { Fetcher } from "./fetchHelper";
-import { getAndParseHTML } from "./fetchHelper";
+import { getAndParseHTML, getJSON } from "./fetchHelper";
 
 const XPATH_ANALYST_COUNT = xpath.parse(
   "//div[@class='card-content']/div/div/div[contains(text(), 'Number of Analysts')]/following-sibling::div",
+);
+const XPATH_AVERAGE_TARGET_PRICE = xpath.parse(
+  "//div[@class='card-content']/div/div/div[contains(text(), 'Average target price')]/following-sibling::div",
 );
 const XPATH_SPREAD_AVERAGE_TARGET = xpath.parse(
   "//div[@class='card-content']/div/div/div[contains(text(), 'Spread / Average Target')]/following-sibling::div",
@@ -28,23 +30,29 @@ const XPATH_SPREAD_AVERAGE_TARGET = xpath.parse(
  * @throws a {@link DataProviderError} in case of a severe error
  */
 const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> => {
-  let analystConsensus: AnalystRating = req.query.clear ? null : undefined;
-  let analystRatings: Record<AnalystRating, number> = req.query.clear ? null : undefined;
-  let analystCount: number = req.query.clear ? null : undefined;
-  let analystTargetPrice: number = req.query.clear ? null : undefined;
+  let analystConsensus: AnalystRating = undefined;
+  let analystRatings: Record<AnalystRating, number> = undefined;
+  let analystCount: number = undefined;
+  let analystTargetPrice: number = undefined;
 
   const codeZBMatches = stock.marketScreenerID.match(/-([0-9]+)$/);
   assert(codeZBMatches && !Number.isNaN(+codeZBMatches[1]), "Unable to extract ZB code from MarketScreener ID.");
   const codeZB = +codeZBMatches[1];
 
-  const document = await getAndParseHTML(
-    `https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/consensus`,
-    undefined,
-    stock,
-    "marketScreener",
-  );
-  const json = (await performFetchRequest(`https://www.marketscreener.com/async/graph/af/cd?codeZB=${codeZB}&h=0`))
-    .data;
+  const [document, json] = await Promise.all([
+    getAndParseHTML(
+      `https://www.marketscreener.com/quote/stock/${stock.marketScreenerID}/consensus`,
+      {},
+      stock,
+      "marketScreener",
+    ),
+    getJSON("https://www.marketscreener.com/async/graph/af/cd", {
+      params: {
+        codeZB,
+        h: 0,
+      },
+    }),
+  ]);
 
   // Prepare an error message.
   let errorMessage = "";
@@ -54,7 +62,7 @@ const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promi
     const consensusTableDiv = document.getElementById("consensusdetail");
     assert(consensusTableDiv, "Unable to find Analyst Consensus div.");
     assert(json.constructor === Object, "Unable to find Analyst Ratings.");
-    assert(json.error === false, "The server reported an error when fetching Analyst Ratings.");
+    assert("error" in json && json.error === false, "The server reported an error when fetching Analyst Ratings.");
     assert("data" in json && Array.isArray(json.data) && Array.isArray(json.data[0]), "No Analyst Ratings available.");
 
     try {
@@ -76,32 +84,57 @@ const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promi
     }
 
     try {
-      // We need the last close price to calculate the analyst target price.
-      if (!stock.lastClose)
-        throw new DataProviderError("No Last Close price available to compare spread against.", {
-          dataSources: [document, json],
-        });
+      try {
+        // If the currency of the analyst target price matches the stock price currency, we can extract the target price
+        // directly:
+        const avgTargetPriceNode = XPATH_AVERAGE_TARGET_PRICE.select1({ node: consensusTableDiv, isHtml: true });
+        assert(avgTargetPriceNode, "Unable to find Average Target Price node.");
+        const avgTargetPriceMatches = avgTargetPriceNode.textContent.match(/\s*(\d+(\.\d+)?)\s+([A-Z]{3})/);
 
-      const analystTargetPriceNode = XPATH_SPREAD_AVERAGE_TARGET.select1({ node: consensusTableDiv, isHtml: true });
-      assert(analystTargetPriceNode, "Unable to find Analyst Target Price node.");
-      const analystTargetPriceMatches = analystTargetPriceNode.textContent
-        .replaceAll(",", ".")
-        .match(/(\-)?\d+(\.\d+)?/g);
-      if (analystTargetPriceMatches === null)
-        throw new TypeError(
-          `Extracted analyst target price is no valid number (no matches in “${analystTargetPriceNode.textContent}”).`,
-        );
-      if (analystTargetPriceMatches.length !== 1)
-        throw new TypeError(
-          "Extracted analyst target price is no valid number " +
-            `(multiple matches in “${analystTargetPriceNode.textContent}”).`,
-        );
-      if (Number.isNaN(+analystTargetPriceMatches[0]))
-        throw new TypeError(
-          `Extracted analyst target price is no valid number (not a number: “${analystTargetPriceNode.textContent}”).`,
+        if (avgTargetPriceMatches === null || avgTargetPriceMatches.length < 4)
+          throw new TypeError(
+            `Extracted analyst target price is no valid price (no matches in “${avgTargetPriceNode.textContent}”).`,
+          );
+        if (avgTargetPriceMatches[3] !== stock.currency)
+          throw new TypeError(
+            `Currency ${avgTargetPriceMatches[3]} does not match stock price currency ${stock.currency}.`,
+          );
+        if (Number.isNaN(+avgTargetPriceMatches[1]))
+          throw new TypeError(
+            `Extracted analyst target price is no valid number (not a number: “${avgTargetPriceMatches[1]}”).`,
+          );
+
+        analystTargetPrice = +avgTargetPriceMatches[1];
+      } catch (e) {
+        // If the currency of the analyst target price does not match the stock price currency, we need to calculate the
+        // target price based on the percentage difference from the last close price.
+
+        logger.warn(
+          { prefix: "fetch" },
+          `Stock ${stock.ticker}: Unable to extract Analyst Target Price directly (attempting fallback): ${e}`,
         );
 
-      analystTargetPrice = stock.lastClose * (+analystTargetPriceMatches[0] / 100 + 1);
+        // We need the last close price to calculate the analyst target price.
+        if (!stock.lastClose)
+          throw new DataProviderError("No Last Close price available to compare spread against.", {
+            dataSources: [document, json],
+          });
+
+        const spreadAvgTargetNode = XPATH_SPREAD_AVERAGE_TARGET.select1({ node: consensusTableDiv, isHtml: true });
+        assert(spreadAvgTargetNode, "Unable to find Analyst Target Price node.");
+        const spreadAvgTargetMatches = spreadAvgTargetNode.textContent.match(/(\-)?\d+(\.\d+)?/);
+
+        if (spreadAvgTargetMatches === null)
+          throw new TypeError(
+            `Extracted analyst target price is no valid number (no matches in “${spreadAvgTargetNode.textContent}”).`,
+          );
+        if (Number.isNaN(+spreadAvgTargetMatches[0]))
+          throw new TypeError(
+            `Extracted analyst target price is no valid number (not a number: “${spreadAvgTargetNode.textContent}”).`,
+          );
+
+        analystTargetPrice = stock.lastClose * (+spreadAvgTargetMatches[0] / 100 + 1);
+      }
     } catch (e) {
       logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`);
       if (stock.analystTargetPrice !== null) {
@@ -132,7 +165,7 @@ const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promi
       logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Analyst Ratings: ${e}`);
       if (stock.analystConsensus !== null || stock.analystRatings !== null) {
         // If an analyst consensus or analyst ratings are already stored in the database, but we cannot extract them
-        // from the page, we log this as an error and send a message.
+        // from the JSON object, we log this as an error and send a message.
         logger.error(
           { prefix: "fetch", err: e },
           `Stock ${stock.ticker}: Extraction of analyst ratings failed unexpectedly. ` +
@@ -150,7 +183,7 @@ const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promi
       stock.analystRatings !== null
     ) {
       // If any of the analyst-related information is already stored in the database, but we cannot extract it
-      // from the page, we log this as an error and send a message.
+      // from the page or the JSON object, we log this as an error and send a message.
       logger.error(
         { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. ` +

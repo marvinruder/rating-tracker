@@ -705,6 +705,9 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
   );
 };
 
+/**
+ * Properties for the StockTableFilters component.
+ */
 export interface StockTableFiltersProps {
   setFilter: React.Dispatch<React.SetStateAction<StockFilter>>;
   columnFilter: StockListColumn[];

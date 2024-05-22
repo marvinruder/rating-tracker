@@ -68,6 +68,9 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
   );
 };
 
+/**
+ * Properties for the StockListHeader component.
+ */
 interface StockListHeaderProps {
   /**
    * The properties of the stock table filters.

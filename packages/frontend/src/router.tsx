@@ -6,7 +6,7 @@ import {
   usersAPIPath,
   watchlistsAPIPath,
 } from "@rating-tracker/commons";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import type { RouteObject } from "react-router";
 import { useLocation } from "react-router";
 import { Navigate, useSearchParams } from "react-router-dom";
@@ -193,7 +193,9 @@ interface AuthWrapperProps {
  * @returns The component.
  */
 const ForwardToAPI = (): JSX.Element => {
-  document.location = document.location;
+  useEffect(() => {
+    document.location = document.location;
+  }, []);
   return <></>;
 };
 

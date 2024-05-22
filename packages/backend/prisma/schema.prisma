@@ -26,17 +26,20 @@ model Stock {
   financialScore                            Float                @default(0)
   esgScore                                  Float                @default(0)
   totalScore                                Float                @default(0)
+  yahooLastFetch                            DateTime?            @db.Timestamp(6)
+  currency                                  Currency?
+  lastClose                                 Float?
+  low52w                                    Float?
+  high52w                                   Float?
+  prices1y                                  Float[]              @default([])
+  prices1mo                                 Float[]              @default([])
   morningstarID                             String?              @unique @db.VarChar(255)
   morningstarLastFetch                      DateTime?            @db.Timestamp(6)
   starRating                                Int?                 @db.SmallInt
   dividendYieldPercent                      Float?
   priceEarningRatio                         Float?
-  currency                                  Currency?
-  lastClose                                 Float?
   morningstarFairValue                      Float?
   morningstarFairValuePercentageToLastClose Float?
-  low52w                                    Float?
-  high52w                                   Float?
   positionIn52w                             Float?
   marketScreenerID                          String?              @unique @db.VarChar(255)
   marketScreenerLastFetch                   DateTime?            @db.Timestamp(6)

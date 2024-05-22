@@ -17,11 +17,11 @@ import { getAndParseHTML } from "./fetchHelper";
  * @throws a {@link DataProviderError} in case of a severe error
  */
 const spFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> => {
-  let spESGScore: number = req.query.clear ? null : undefined;
+  let spESGScore: number = undefined;
 
   const document = await getAndParseHTML(
-    `https://www.spglobal.com/esg/scores/results?cid=${stock.spID}`,
-    undefined,
+    "https://www.spglobal.com/esg/scores/results",
+    { params: { cid: stock.spID } },
     stock,
     "sp",
   );

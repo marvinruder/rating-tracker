@@ -64,6 +64,9 @@ const DiffProgressBar = (props: DiffProgressBarProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the DiffProgressBar component.
+ */
 interface DiffProgressBarProps {
   /**
    * The name of the property to show the difference for.

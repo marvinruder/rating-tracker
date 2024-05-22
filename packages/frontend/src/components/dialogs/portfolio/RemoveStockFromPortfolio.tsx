@@ -24,7 +24,9 @@ export const RemoveStockFromPortfolio = (props: RemoveStockFromPortfolioProps): 
   const removeStockFromPortfolio = () => {
     setRequestInProgress(true);
     api
-      .delete(portfoliosAPIPath + `/${props.portfolio.id}` + stocksAPIPath + `/${props.stock.ticker}`)
+      .delete(
+        portfoliosAPIPath + `/${props.portfolio.id}` + stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`,
+      )
       .then(() => (props.onRemove(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "removing stock from portfolio"))
       .finally(() => setRequestInProgress(false));

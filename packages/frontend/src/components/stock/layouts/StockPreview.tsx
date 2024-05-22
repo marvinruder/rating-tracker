@@ -31,7 +31,7 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
   return (
     <ListItem
       {...props}
-      {...(navLink ? { component: NavLink, to: `${stocksAPIPath}/${stock.ticker}` } : {})}
+      {...(navLink ? { component: NavLink, to: `${stocksAPIPath}/${encodeURIComponent(stock.ticker)}` } : {})}
       sx={{
         ...props.sx,
         cursor: props.onClick || navLink ? "pointer" : undefined,
@@ -50,7 +50,7 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
           src={
             "logoUrl" in stock
               ? stock.logoUrl
-              : `${baseURL}${stocksAPIPath}/${stock.ticker}${stockLogoEndpointSuffix}?dark=${
+              : `${baseURL}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}${stockLogoEndpointSuffix}?dark=${
                   theme.palette.mode === "dark"
                 }`
           }

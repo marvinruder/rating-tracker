@@ -95,6 +95,9 @@ export const Header = (props: HeaderProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the Header component.
+ */
 interface HeaderProps {
   /**
    * Toggles the sidebar.

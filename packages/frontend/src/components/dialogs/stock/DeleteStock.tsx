@@ -24,7 +24,7 @@ export const DeleteStock = (props: DeleteStockProps): JSX.Element => {
   const deleteStock = () => {
     setRequestInProgress(true);
     api
-      .delete(stocksAPIPath + `/${props.stock.ticker}`)
+      .delete(stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`)
       .then(() => (props.onDelete(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting stock"))
       .finally(() => setRequestInProgress(false));

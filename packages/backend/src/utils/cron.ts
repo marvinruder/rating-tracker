@@ -44,6 +44,7 @@ const performInternalRequest = (
  * A record of options for each data provider.
  */
 const dataProviderParams: Record<DataProvider, Record<string, string>> = {
+  yahoo: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   morningstar: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   marketScreener: { concurrency: process.env.MAX_FETCH_CONCURRENCY },
   // Fetch data from MSCI with only two instances to avoid being rate-limited
@@ -68,10 +69,11 @@ const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, aut
           "lseg",
           "sp",
           "sustainalytics",
-          // Fetch data from Morningstar first
+          // Fetch data from Yahoo first
+          "yahoo",
           "morningstar",
-          // Fetch data from Marketscreener after Morningstar, so Market Screener can use the up-to-date Last Close
-          // price to calculate the analyst target price properly
+          // Fetch data from Marketscreener after Yahoo, so Market Screener can use the up-to-date Last Close price to
+          // calculate the analyst target price properly
           "marketScreener",
         ]) {
           const urlSearchParams = createURLSearchParams(dataProviderParams[dataProvider]);

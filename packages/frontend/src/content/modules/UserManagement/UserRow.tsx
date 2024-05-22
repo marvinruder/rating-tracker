@@ -42,6 +42,69 @@ const accessRightLabel: Record<AccessRight, string> = {
 };
 
 /**
+ * A dropdown menu for the access rights.
+ * @param props The properties of the component.
+ * @returns The component.
+ */
+const AccessRightSelect = (props: UserRowProps): JSX.Element => {
+  const [accessRights, setAccessRights] = useState<number>(props.user.accessRights);
+
+  const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+
+  return (
+    <Select
+      slotProps={{ input: { "aria-label": `Access rights of user “${props.user.name}”` } }}
+      size="small"
+      multiple
+      value={[props.user.accessRights]}
+      onClose={() =>
+        accessRights !== props.user.accessRights && // Only send the request if the access rights have changed
+        api
+          .patch(usersAPIPath + `/${encodeURIComponent(props.user.email)}`, { params: { accessRights } })
+          .then(
+            () => (
+              props.refetchUsers(),
+              setNotification({
+                severity: "success",
+                title: "User access rights updated",
+                message:
+                  `Access rights for the user ${props.user.name} ` +
+                  `(${props.user.email}) have been updated successfully`,
+              })
+            ),
+          ) // Update the user in the table, show a notification, and close the dialog on success.
+          .catch((e) => setErrorNotificationOrClearSession(e, "updating user"))
+      }
+      renderValue={() => (
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+          {accessRightArray
+            .filter((accessRight) => props.user.hasAccessRight(accessRight))
+            .map((accessRight) => (
+              <Chip key={accessRight} label={accessRightLabel[accessRight]} size="small" />
+            ))}
+        </Box>
+      )}
+    >
+      {accessRightArray.map((accessRight) => (
+        <MenuItem
+          key={accessRight}
+          value={accessRightLabel[accessRight]}
+          sx={{ p: 0 }}
+          onClick={() => setAccessRights(accessRights ^ accessRight)}
+        >
+          <Checkbox
+            inputProps={{ "aria-labelledby": `access-right-${accessRight}-label` }}
+            checked={(accessRights & accessRight) === accessRight}
+            disableRipple
+          />
+          <ListItemText id={`access-right-${accessRight}-label`} primary={accessRightLabel[accessRight]} />
+        </MenuItem>
+      ))}
+    </Select>
+  );
+};
+
+/**
  * This component displays information about a user in a table row that is used in the user list.
  * @param props The properties of the component.
  * @returns The component.
@@ -50,70 +113,6 @@ const UserRow = (props: UserRowProps): JSX.Element => {
   const theme = useTheme();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-
-  /**
-   * A dropdown menu for the access rights.
-   * @returns The component.
-   */
-  const AccessRightSelect = (): JSX.Element => {
-    const [accessRights, setAccessRights] = useState<number>(props.user.accessRights);
-
-    const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
-
-    return (
-      <Select
-        slotProps={{ input: { "aria-label": `Access rights of user “${props.user.name}”` } }}
-        size="small"
-        multiple
-        value={[props.user.accessRights]}
-        onClose={() =>
-          accessRights !== props.user.accessRights && // Only send the request if the access rights have changed
-          api
-            .patch(usersAPIPath + `/${props.user.email}`, {
-              params: { accessRights: accessRights },
-            })
-            .then(
-              () => (
-                props.refetchUsers(),
-                setNotification({
-                  severity: "success",
-                  title: "User access rights updated",
-                  message:
-                    `Access rights for the user ${props.user.name} ` +
-                    `(${props.user.email}) have been updated successfully`,
-                })
-              ),
-            ) // Update the user in the table, show a notification, and close the dialog on success.
-            .catch((e) => setErrorNotificationOrClearSession(e, "updating user"))
-        }
-        renderValue={() => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-            {accessRightArray
-              .filter((accessRight) => props.user.hasAccessRight(accessRight))
-              .map((accessRight) => (
-                <Chip key={accessRight} label={accessRightLabel[accessRight]} size="small" />
-              ))}
-          </Box>
-        )}
-      >
-        {accessRightArray.map((accessRight) => (
-          <MenuItem
-            key={accessRight}
-            value={accessRightLabel[accessRight]}
-            sx={{ p: 0 }}
-            onClick={() => setAccessRights(accessRights ^ accessRight)}
-          >
-            <Checkbox
-              inputProps={{ "aria-labelledby": `access-right-${accessRight}-label` }}
-              checked={(accessRights & accessRight) === accessRight}
-              disableRipple
-            />
-            <ListItemText id={`access-right-${accessRight}-label`} primary={accessRightLabel[accessRight]} />
-          </MenuItem>
-        ))}
-      </Select>
-    );
-  };
 
   return props.user ? (
     // Actual user row
@@ -170,7 +169,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
       {/* Access Rights */}
       <TableCell>
         <FormControl sx={{ m: 0, width: 280 }}>
-          <AccessRightSelect />
+          <AccessRightSelect {...props} />
         </FormControl>
       </TableCell>
       {/* Actions */}

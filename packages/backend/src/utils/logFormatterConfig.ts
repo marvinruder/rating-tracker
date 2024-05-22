@@ -321,7 +321,7 @@ export const pinoPrettyConfig: PrettyOptions = process.env.PLAIN_LOG
                   ...req.url
                     .slice(1, req.url.indexOf("?") == -1 ? undefined : req.url.indexOf("?"))
                     .split("/")
-                    .map((rawPrefix) => ({ icon: rawPrefix, color: "grey" })),
+                    .map((rawPrefix) => ({ icon: decodeURIComponent(rawPrefix), color: "grey" })),
                 ],
                 // Cookies
                 Object.entries(req.cookies).length

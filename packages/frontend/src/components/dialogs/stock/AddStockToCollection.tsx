@@ -54,7 +54,7 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
   const addStockToCollection = (ticker: string) => {
     if (!validate()) return;
     api
-      .put(`${collectionsAPIPath}/${props.collection.id}${stocksAPIPath}/${ticker}`, {
+      .put(`${collectionsAPIPath}/${props.collection.id}${stocksAPIPath}/${encodeURIComponent(ticker)}`, {
         params: isPortfolio ? { amount: +amountInput } : {},
       })
       .then(() => {
@@ -130,6 +130,9 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
   );
 };
 
+/**
+ * Properties for the AddStockToCollection component.
+ */
 interface AddStockToCollectionProps {
   /**
    * The collection to add the stock to.

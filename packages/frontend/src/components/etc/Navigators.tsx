@@ -22,6 +22,23 @@ const LinkToDataProvider = (props: React.PropsWithChildren<LinkToDataProviderPro
     <Box>{props.children}</Box>
   );
 };
+
+/**
+ * A component that wraps its children in a link to the Yahoo Finance page of the given stock. If the stock has an
+ * invalid ticker, the children are wrapped in a Box instead.
+ * @param props The properties of the component.
+ * @returns The component.
+ */
+export const YahooNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
+  <LinkToDataProvider
+    href={props.stock?.ticker?.match(/^[^_]/) ? `https://finance.yahoo.com/quote/${props.stock.ticker}` : ""}
+    dataProvider={dataProviderName["yahoo"]}
+    stock={props.stock}
+  >
+    {props.children}
+  </LinkToDataProvider>
+);
+
 /**
  * A component that wraps its children in a link to the Morningstar page of the given stock. If the stock does not have
  * a Morningstar ID, the children are wrapped in a Box instead.

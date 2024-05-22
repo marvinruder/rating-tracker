@@ -26,7 +26,9 @@ export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): 
   const removeStockFromWatchlist = () => {
     setRequestInProgress(true);
     api
-      .delete(watchlistsAPIPath + `/${props.watchlist.id}` + stocksAPIPath + `/${props.stock.ticker}`)
+      .delete(
+        watchlistsAPIPath + `/${props.watchlist.id}` + stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`,
+      )
       .then(() => {
         if (props.watchlist.name === FAVORITES_NAME) refetchFavorites();
         props.onRemove();

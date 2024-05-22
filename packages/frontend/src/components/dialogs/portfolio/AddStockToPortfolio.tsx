@@ -57,8 +57,8 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
     const currency = portfolioSummaries.find((portfolio) => portfolio.id === id)?.currency;
     if (!currency) return false;
     if (!amountInputRef?.current) return false;
-    amountInputRef.current.min = Math.pow(10, -1 * currencyMinorUnits[currency]).toString();
-    amountInputRef.current.step = Math.pow(10, -1 * currencyMinorUnits[currency]).toString();
+    amountInputRef.current.setAttribute("min", Math.pow(10, -1 * currencyMinorUnits[currency]).toString());
+    amountInputRef.current.setAttribute("step", Math.pow(10, -1 * currencyMinorUnits[currency]).toString());
 
     const isAmountValid = amountInputRef.current.checkValidity();
     return isAmountValid;
@@ -89,7 +89,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
   const addStockToPortfolio = (id: number) => {
     if (!validate(id)) return;
     api
-      .put(`${portfoliosAPIPath}/${id}${stocksAPIPath}/${props.stock.ticker}`, {
+      .put(`${portfoliosAPIPath}/${id}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}`, {
         params: { amount: +amountInput },
       })
       .then(() => props.onClose())

@@ -24,43 +24,57 @@ export const AnalystRatingBar = ({ stock, ...props }: AnalystRatingBarProps): JS
     .join(", ")})`;
 
   return (
-    <Tooltip
-      title={stock.analystConsensus}
-      PopperProps={{
-        sx: {
-          width: props.width,
-          position: "static !important",
-          transform: "none !important",
-          ".MuiTooltip-tooltip": {
-            mt: "-4px !important",
-            width: "fit-content",
-            mx: "auto",
-            transition: "none !important",
-          },
-        },
-        disablePortal: true,
-        modifiers: [
-          { name: "flip", enabled: false },
-          { name: "preventOverflow", enabled: false },
-        ],
+    <Box
+      sx={{
+        opacity:
+          "analystCount" in stock && typeof stock.analystCount === "number"
+            ? stock.analystCount < 10
+              ? stock.analystCount / 10
+              : 1
+            : 1,
       }}
-      enterDelay={0}
-      placement="bottom"
-      open={props.open}
-      arrow
     >
-      <Box sx={{ width: props.width, height: 24, background: gradient, borderRadius: 0.5 }} />
-    </Tooltip>
+      <Tooltip
+        title={stock.analystConsensus}
+        PopperProps={{
+          sx: {
+            width: props.width,
+            position: "static !important",
+            transform: "none !important",
+            ".MuiTooltip-tooltip": {
+              mt: "-4px !important",
+              width: "fit-content",
+              mx: "auto",
+              transition: "none !important",
+            },
+          },
+          disablePortal: true,
+          modifiers: [
+            { name: "flip", enabled: false },
+            { name: "preventOverflow", enabled: false },
+          ],
+        }}
+        enterDelay={0}
+        placement="bottom"
+        open={props.open}
+        arrow
+      >
+        <Box sx={{ width: props.width, height: 24, background: gradient, borderRadius: 0.5 }} />
+      </Tooltip>
+    </Box>
   );
 };
 
+/**
+ * Properties for the AnalystRatingBar component.
+ */
 interface AnalystRatingBarProps {
   /**
    * The stock to display the analyst rating for.
    */
   stock: Pick<Stock, "analystConsensus" | "analystRatings">;
   /**
-   * The width of the slider.
+   * The width of the bar.
    */
   width?: number;
   /**

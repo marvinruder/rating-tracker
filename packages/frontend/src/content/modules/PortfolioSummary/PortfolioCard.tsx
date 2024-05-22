@@ -139,6 +139,9 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the PortfolioCard component.
+ */
 interface PortfolioCardProps {
   /**
    * The portfolio to display.

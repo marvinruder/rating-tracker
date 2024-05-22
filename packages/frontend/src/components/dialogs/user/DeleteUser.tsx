@@ -26,7 +26,7 @@ export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
     props.user &&
     (setRequestInProgress(true),
     api
-      .delete(usersAPIPath + `/${props.user.email}`)
+      .delete(usersAPIPath + `/${encodeURIComponent(props.user.email)}`)
       // Update the user list after the user was deleted.
       .then(() => (props.onDelete(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting user"))

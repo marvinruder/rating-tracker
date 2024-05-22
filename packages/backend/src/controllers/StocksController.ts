@@ -16,6 +16,7 @@ import {
   DUMMY_SVG,
   isAnalystRating,
   analystRatingArray,
+  dataProviderProperties,
 } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
 
@@ -690,34 +691,36 @@ class StocksController extends SingletonController {
       name,
       isin,
       country,
+      ...(newTicker?.startsWith("_")
+        ? dataProviderProperties["yahoo"].reduce(
+            (obj, key) => ({ ...obj, [key]: ["prices1y", "prices1mo"].includes(key) ? [] : null }),
+            {},
+          )
+        : {}),
+
       morningstarID: morningstarID === "" ? null : morningstarID,
-      industry: morningstarID === "" ? null : undefined,
-      size: morningstarID === "" ? null : undefined,
-      style: morningstarID === "" ? null : undefined,
-      starRating: morningstarID === "" ? null : undefined,
-      dividendYieldPercent: morningstarID === "" ? null : undefined,
-      priceEarningRatio: morningstarID === "" ? null : undefined,
-      currency: morningstarID === "" ? null : undefined,
-      lastClose: morningstarID === "" ? null : undefined,
-      morningstarFairValue: morningstarID === "" ? null : undefined,
-      marketCap: morningstarID === "" ? null : undefined,
-      low52w: morningstarID === "" ? null : undefined,
-      high52w: morningstarID === "" ? null : undefined,
-      description: morningstarID === "" ? null : undefined,
+      ...(morningstarID === ""
+        ? dataProviderProperties["morningstar"].reduce((obj, key) => ({ ...obj, [key]: null }), {})
+        : {}),
+
       marketScreenerID: marketScreenerID === "" ? null : marketScreenerID,
-      analystConsensus: marketScreenerID === "" ? null : undefined,
-      analystCount: marketScreenerID === "" ? null : undefined,
-      analystTargetPrice: marketScreenerID === "" ? null : undefined,
+      ...(marketScreenerID === ""
+        ? dataProviderProperties["marketScreener"].reduce((obj, key) => ({ ...obj, [key]: null }), {})
+        : {}),
+
       msciID: msciID === "" ? null : msciID,
-      msciESGRating: msciID === "" ? null : undefined,
-      msciTemperature: msciID === "" ? null : undefined,
+      ...(msciID === "" ? dataProviderProperties["msci"].reduce((obj, key) => ({ ...obj, [key]: null }), {}) : {}),
+
       ric: ric === "" ? null : ric,
-      lsegESGScore: ric === "" ? null : undefined,
-      lsegEmissions: ric === "" ? null : undefined,
+      ...(ric === "" ? dataProviderProperties["lseg"].reduce((obj, key) => ({ ...obj, [key]: null }), {}) : {}),
+
       spID: spID === "" ? null : spID,
-      spESGScore: spID === "" ? null : undefined,
+      ...(spID === "" ? dataProviderProperties["sp"].reduce((obj, key) => ({ ...obj, [key]: null }), {}) : {}),
+
       sustainalyticsID: sustainalyticsID === "" ? null : sustainalyticsID,
-      sustainalyticsESGRisk: sustainalyticsID === "" ? null : undefined,
+      ...(sustainalyticsID === ""
+        ? dataProviderProperties["sustainalytics"].reduce((obj, key) => ({ ...obj, [key]: null }), {})
+        : {}),
     });
     res.status(204).end();
   };

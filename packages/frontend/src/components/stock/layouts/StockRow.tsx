@@ -97,6 +97,7 @@ import {
 import { AnalystRatingBar } from "../properties/AnalystRatingBar";
 import { Range52WSlider } from "../properties/Range52WSlider";
 import { SectorIcon } from "../properties/SectorIcon";
+import { Sparkline } from "../properties/Sparkline";
 import { StarRating } from "../properties/StarRating";
 import { StyleBox } from "../properties/StyleBox";
 
@@ -151,7 +152,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
   const updateStockInPortfolio = () => {
     if (!validate() || !("id" in props.portfolio)) return;
     api
-      .patch(`${portfoliosAPIPath}/${props.portfolio.id}${stocksAPIPath}/${props.stock.ticker}`, {
+      .patch(`${portfoliosAPIPath}/${props.portfolio.id}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}`, {
         params: { amount: +amountInput },
       })
       .then(() => (props.getPortfolio(), props.getStocks()))
@@ -250,7 +251,11 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             onClose={() => setOptionsMenuOpen(false)}
             anchorEl={contextMenuPositionRef.current}
           >
-            <MenuItem component={NavLink} to={`${stocksAPIPath}/${props.stock.ticker}`} target="_blank">
+            <MenuItem
+              component={NavLink}
+              to={`${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}`}
+              target="_blank"
+            >
               <ListItemIcon>
                 <OpenInNewIcon fontSize="small" />
               </ListItemIcon>
@@ -262,7 +267,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             {!props.watchlist && !props.portfolio && (
               <MenuItem
                 onClick={() => {
-                  (isFavorite ? api.delete : api.put)(favoritesAPIPath + `/${props.stock.ticker}`)
+                  (isFavorite ? api.delete : api.put)(favoritesAPIPath + `/${encodeURIComponent(props.stock.ticker)}`)
                     .then(refetchFavorites)
                     .catch((e) =>
                       setErrorNotificationOrClearSession(
@@ -437,7 +442,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       <TableCell>
         <Link
           component={NavLink}
-          to={`${stocksAPIPath}/${props.stock.ticker}`}
+          to={`${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}`}
           target="_blank"
           color="inherit"
           underline="none"
@@ -456,9 +461,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           >
             <Avatar
               sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
-              src={`${baseURL}${stocksAPIPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
-                theme.palette.mode === "dark"
-              }`}
+              src={
+                `${baseURL}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}${stockLogoEndpointSuffix}` +
+                `?dark=${theme.palette.mode === "dark"}`
+              }
               alt={`Logo of “${props.stock.name}”`}
               slotProps={{ img: { loading: "lazy" } }}
             />
@@ -645,10 +651,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             sx={{ textAlign: "left", display: "inline-block" }}
             noWrap
           >
-            {props.stock.analystTargetPrice !== null &&
-              props.stock.analystCount !== null &&
-              props.stock.lastClose !== null &&
-              `n\u2009=\u2009${props.stock.analystCount}`}
+            {props.stock.analystCount !== null && `n\u2009=\u2009${props.stock.analystCount}`}
           </Typography>
           <Typography
             variant="body2"
@@ -778,6 +781,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <Range52WSlider stock={props.stock} width={150} />
         )}
       </TableCell>
+      {/* Sparkline */}
+      <TableCell sx={{ display: displayColumn("Sparkline") }}>
+        <Sparkline stock={props.stock} width={120} height={42} />
+      </TableCell>
       {/* Dividend Yield */}
       <TableCell sx={{ display: displayColumn("Dividend Yield (%)") }}>
         <Typography variant="body1" color="text.primary" width={45} sx={{ textAlign: "right" }} noWrap>
@@ -798,7 +805,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               {props.stock.currency ?? ""}
             </Box>
           </Tooltip>
-          <Box sx={{ float: "right" }}>{props.stock.marketCap !== null ? formatMarketCap(props.stock) : "–"}</Box>
+          <Box sx={{ float: "right" }}>{formatMarketCap(props.stock)}</Box>
         </Typography>
       </TableCell>
       {/* Edit Dialog */}
@@ -1007,9 +1014,13 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       <TableCell sx={{ display: displayColumn("Sustainalytics ESG Risk") }}>
         <Skeleton variant="rounded" width={64} height={24} />
       </TableCell>
-      {/* 52W Range */}
+      {/* 52 Week Range */}
       <TableCell sx={{ display: displayColumn("52 Week Range") }}>
         <Skeleton variant="rectangular" width={150} height={42} />
+      </TableCell>
+      {/* Sparkline */}
+      <TableCell sx={{ display: displayColumn("Sparkline") }}>
+        <Skeleton variant="rounded" width={120} height={42} />
       </TableCell>
       {/* Div Yield */}
       <TableCell sx={{ display: displayColumn("Dividend Yield (%)") }}>

@@ -1,11 +1,10 @@
 import { Typography } from "@mui/material";
-import type { FC } from "react";
 
 /**
  * A header for the portfolio builder page.
  * @returns The component.
  */
-export const PortfolioBuilderHeader: FC<PortfolioBuilderHeaderProps> = (): JSX.Element => (
+export const PortfolioBuilderHeader = (): JSX.Element => (
   <>
     <Typography variant="h3" component="h3" gutterBottom>
       Portfolio Builder
@@ -15,5 +14,3 @@ export const PortfolioBuilderHeader: FC<PortfolioBuilderHeaderProps> = (): JSX.E
     </Typography>
   </>
 );
-
-interface PortfolioBuilderHeaderProps {}
