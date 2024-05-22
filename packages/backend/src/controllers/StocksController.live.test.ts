@@ -638,8 +638,18 @@ tests.push({
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toEqual("0P012345678");
 
-    // We can also update a stock’s ticker:
+    // attempting to update a non-existent stock results in an error
     res = await supertest
+      .patch(`${baseURL}${stocksAPIPath}/doesNotExist?morningstarID=0P123456789`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(404);
+  },
+});
+
+tests.push({
+  testName: "[unsafe] updates a stock’s ticker",
+  testFunction: async () => {
+    let res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleALV?ticker=exampleALV.DE`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
@@ -648,31 +658,155 @@ tests.push({
     expect((res.body as Stock).ticker).toEqual("exampleALV.DE");
     expect((res.body as Stock).name).toEqual("Allianz SE");
 
-    // attempting to update a non-existent stock results in an error
+    // Now we indicate with an underscore prefix that no price information is available:
     res = await supertest
-      .patch(`${baseURL}${stocksAPIPath}/doesNotExist?morningstarID=0P123456789`)
+      .patch(`${baseURL}${stocksAPIPath}/exampleALV.DE?ticker=_exampleALV.DE`)
       .set("Cookie", ["authToken=exampleSessionID"]);
-    expect(res.status).toBe(404);
-
-    // updating a unique ID to an empty string results in the ID being null
+    expect(res.status).toBe(204);
     res = await supertest
-      .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?morningstarID=&spID=`)
+      .get(`${baseURL}${stocksAPIPath}/_exampleALV.DE`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).ticker).toEqual("_exampleALV.DE");
+    expect((res.body as Stock).name).toEqual("Allianz SE");
+    expect((res.body as Stock).currency).toBeNull();
+    expect((res.body as Stock).lastClose).toBeNull();
+    expect((res.body as Stock).low52w).toBeNull();
+    expect((res.body as Stock).high52w).toBeNull();
+    expect((res.body as Stock).prices1y).toHaveLength(0);
+    expect((res.body as Stock).prices1mo).toHaveLength(0);
+  },
+});
+
+tests.push({
+  testName: "[unsafe] updates a stock’s Morningstar ID to an empty string",
+  testFunction: async () => {
+    let res = await supertest
+      .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?morningstarID=`)
       .set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(204);
     res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toBeNull();
-    expect((res.body as Stock).spID).toBeNull();
     // Removing a data provider’s ID removes attribute values related to it as well
     expect((res.body as Stock).industry).toBeNull();
     expect((res.body as Stock).size).toBeNull();
     expect((res.body as Stock).style).toBeNull();
     expect((res.body as Stock).starRating).toBeNull();
+    expect((res.body as Stock).dividendYieldPercent).toBeNull();
+    expect((res.body as Stock).priceEarningRatio).toBeNull();
     expect((res.body as Stock).morningstarFairValue).toBeNull();
     expect((res.body as Stock).morningstarFairValuePercentageToLastClose).toBeNull();
     expect((res.body as Stock).marketCap).toBeNull();
+    expect((res.body as Stock).description).toBeNull();
+
+    // Losing information is always bad:
+    expect(sentMessages[0].message).toMatch("🔴");
+    expect(sentMessages[0].message).not.toMatch("🟢");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] updates a stock’s Market Screener ID to an empty string",
+  testFunction: async () => {
+    let res = await supertest
+      .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?marketScreenerID=`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).marketScreenerID).toBeNull();
+    // Removing a data provider’s ID removes attribute values related to it as well
+    expect((res.body as Stock).analystConsensus).toBeNull();
+    expect((res.body as Stock).analystRatings).toBeNull();
+    expect((res.body as Stock).analystCount).toBeNull();
+    expect((res.body as Stock).analystTargetPrice).toBeNull();
+
+    // Losing information is always bad:
+    expect(sentMessages[0].message).toMatch("🔴");
+    expect(sentMessages[0].message).not.toMatch("🟢");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] updates a stock’s MSCI ID to an empty string",
+  testFunction: async () => {
+    let res = await supertest
+      .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?msciID=`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).msciID).toBeNull();
+    // Removing a data provider’s ID removes attribute values related to it as well
+    expect((res.body as Stock).msciESGRating).toBeNull();
+    expect((res.body as Stock).msciTemperature).toBeNull();
+
+    // Losing information is always bad:
+    expect(sentMessages[0].message).toMatch("🔴");
+    expect(sentMessages[0].message).not.toMatch("🟢");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] updates a stock’s RIC to an empty string",
+  testFunction: async () => {
+    let res = await supertest
+      .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?ric=`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).ric).toBeNull();
+    // Removing a data provider’s ID removes attribute values related to it as well
+    expect((res.body as Stock).lsegESGScore).toBeNull();
+    expect((res.body as Stock).lsegEmissions).toBeNull();
+
+    // Losing information is always bad:
+    expect(sentMessages[0].message).toMatch("🔴");
+    expect(sentMessages[0].message).not.toMatch("🟢");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] updates a stock’s S&P ID to an empty string",
+  testFunction: async () => {
+    let res = await supertest
+      .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?spID=`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).spID).toBeNull();
+    // Removing a data provider’s ID removes attribute values related to it as well
     expect((res.body as Stock).spESGScore).toBeNull();
+
+    // Losing information is always bad:
+    expect(sentMessages[0].message).toMatch("🔴");
+    expect(sentMessages[0].message).not.toMatch("🟢");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] updates a stock’s Sustainalytics ID to an empty string",
+  testFunction: async () => {
+    let res = await supertest
+      .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?sustainalyticsID=`)
+      .set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(204);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    expect(res.status).toBe(200);
+    expect((res.body as Stock).name).toEqual("Apple Inc");
+    expect((res.body as Stock).sustainalyticsID).toBeNull();
+    // Removing a data provider’s ID removes attribute values related to it as well
+    expect((res.body as Stock).sustainalyticsESGRisk).toBeNull();
+
+    // Losing information is always bad:
     expect(sentMessages[0].message).toMatch("🔴");
     expect(sentMessages[0].message).not.toMatch("🟢");
   },

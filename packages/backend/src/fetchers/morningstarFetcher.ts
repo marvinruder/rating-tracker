@@ -1,7 +1,7 @@
 import assert from "node:assert";
 
-import type { Industry, Size, Style, Currency, Stock } from "@rating-tracker/commons";
-import { isIndustry, isSize, isStyle, isCurrency } from "@rating-tracker/commons";
+import type { Industry, Size, Style, Stock } from "@rating-tracker/commons";
+import { isIndustry, isSize, isStyle } from "@rating-tracker/commons";
 import type { Request } from "express";
 import xpath from "xpath-ts2";
 
@@ -28,24 +28,26 @@ const XPATH_FAIR_VALUE = xpath.parse("//*/div[@id='FairValueEstimate']/span/data
  * @throws a {@link DataProviderError} in case of a severe error
  */
 const morningstarFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> => {
-  let industry: Industry = req.query.clear ? null : undefined;
-  let size: Size = req.query.clear ? null : undefined;
-  let style: Style = req.query.clear ? null : undefined;
-  let starRating: number = req.query.clear ? null : undefined;
-  let dividendYieldPercent: number = req.query.clear ? null : undefined;
-  let priceEarningRatio: number = req.query.clear ? null : undefined;
-  let currency: Currency = req.query.clear ? null : undefined;
-  let lastClose: number = req.query.clear ? null : undefined;
-  let morningstarFairValue: number = req.query.clear ? null : undefined;
-  let marketCap: number = req.query.clear ? null : undefined;
-  let low52w: number = req.query.clear ? null : undefined;
-  let high52w: number = req.query.clear ? null : undefined;
-  let description: string = req.query.clear ? null : undefined;
+  let industry: Industry = undefined;
+  let size: Size = undefined;
+  let style: Style = undefined;
+  let starRating: number = undefined;
+  let dividendYieldPercent: number = undefined;
+  let priceEarningRatio: number = undefined;
+  let morningstarFairValue: number = undefined;
+  let marketCap: number = undefined;
+  let description: string = undefined;
 
   const document = await getAndParseHTML(
-    `https://tools.morningstar.it/it/stockreport/default.aspx?Site=us&id=${stock.morningstarID}` +
-      `&LanguageId=en-US&SecurityToken=${stock.morningstarID}]3]0]E0WWE$$ALL`,
-    undefined,
+    "https://tools.morningstar.it/it/stockreport/default.aspx",
+    {
+      params: {
+        Site: "us",
+        id: stock.morningstarID,
+        LanguageId: "en-US",
+        SecurityToken: `${stock.morningstarID}]3]0]E0WWE$$ALL`,
+      },
+    },
     stock,
     "morningstar",
   );
@@ -183,51 +185,15 @@ const morningstarFetcher: Fetcher = async (req: Request, stock: Stock): Promise<
   }
 
   try {
+    // Check whether the currency matches the stock price currency first.
     let currencyString = document.getElementById("Col0PriceTime").textContent;
     // Example: "17:35:38 CET | EUR  Minimum 15 Minutes Delay."
     currencyString = currencyString.match(/\s+\|\s+([A-Z]{3})\s+/)[1];
-    if (isCurrency(currencyString)) {
-      currency = currencyString;
-    } else {
-      throw new TypeError(`Extracted currency code “${currencyString}” is no valid currency code.`);
-    }
-  } catch (e) {
-    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract currency: ${e}`);
-    if (stock.currency !== null) {
-      // If a currency for the stock is already stored in the database, but we cannot extract it now from the
-      // page, we log this as an error and send a message.
-      logger.error(
-        { prefix: "fetch", err: e },
-        `Stock ${stock.ticker}: Extraction of currency failed unexpectedly. This incident will be reported.`,
-      );
-      errorMessage += `\n\tUnable to extract currency: ${String(e.message).split(/[\n:{]/)[0]}`;
-    }
-  }
+    assert(
+      currencyString === stock.currency,
+      `Currency ${currencyString} does not match stock price currency ${stock.currency}.`,
+    );
 
-  try {
-    const lastCloseString = document.getElementById("Col0LastClose").textContent.replaceAll(",", "");
-    // Example: "1,000.00", or "-" if there is no last close.
-    if (lastCloseString === "-") {
-      lastClose = null;
-    } else {
-      if (lastCloseString.length === 0 || Number.isNaN(+lastCloseString))
-        throw new TypeError("Extracted last close is no valid number.");
-      lastClose = +lastCloseString;
-    }
-  } catch (e) {
-    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract last close: ${e}`);
-    if (stock.lastClose !== null) {
-      // If a last close for the stock is already stored in the database, but we cannot extract it now from the
-      // page, we log this as an error and send a message.
-      logger.error(
-        { prefix: "fetch", err: e },
-        `Stock ${stock.ticker}: Extraction of last close failed unexpectedly. This incident will be reported.`,
-      );
-      errorMessage += `\n\tUnable to extract last close: ${String(e.message).split(/[\n:{]/)[0]}`;
-    }
-  }
-
-  try {
     const morningstarFairValueNode = XPATH_FAIR_VALUE.select1({ node: document, isHtml: true });
     assert(morningstarFairValueNode, "Unable to find Morningstar Fair Value node.");
     const morningstarFairValueString = morningstarFairValueNode.textContent
@@ -271,7 +237,7 @@ const morningstarFetcher: Fetcher = async (req: Request, stock: Stock): Promise<
         marketCap = +marketCapText;
       }
       if (!marketCapText.match(/\d+/) || Number.isNaN(marketCap)) {
-        marketCap = req.query.clear ? null : undefined;
+        marketCap = undefined;
         throw new TypeError("Extracted market capitalization is no valid number.");
       }
     }
@@ -286,40 +252,6 @@ const morningstarFetcher: Fetcher = async (req: Request, stock: Stock): Promise<
           "This incident will be reported.",
       );
       errorMessage += `\n\tUnable to extract Market Capitalization: ${String(e.message).split(/[\n:{]/)[0]}`;
-    }
-  }
-
-  try {
-    const range52wStrings = document
-      .getElementById("Col0WeekRange")
-      .textContent // Example: "1,000.00 - 2,000.00", or "-" if there is no 52 week price range.
-      .replaceAll(",", "")
-      .split(" - ");
-    if (range52wStrings[0] === "-") {
-      low52w = null;
-      high52w = null;
-    } else {
-      if (
-        range52wStrings.length !== 2 ||
-        range52wStrings[0].length === 0 ||
-        range52wStrings[1].length === 0 ||
-        Number.isNaN(+range52wStrings[0]) ||
-        Number.isNaN(+range52wStrings[1])
-      )
-        throw new TypeError("Extracted 52 week low or high is no valid number.");
-      low52w = +range52wStrings[0];
-      high52w = +range52wStrings[1];
-    }
-  } catch (e) {
-    logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract 52 week price range: ${e}`);
-    if (stock.low52w !== null || stock.high52w !== null) {
-      // If a 52 week price range for the stock is already stored in the database, but we cannot extract it now
-      // from the page, we log this as an error and send a message.
-      logger.error(
-        { prefix: "fetch", err: e },
-        `Stock ${stock.ticker}: Extraction of 52 week price range failed unexpectedly. This incident will be reported.`,
-      );
-      errorMessage += `\n\tUnable to extract 52 week price range: ${String(e.message).split(/[\n:{]/)[0]}`;
     }
   }
 
@@ -349,12 +281,8 @@ const morningstarFetcher: Fetcher = async (req: Request, stock: Stock): Promise<
     starRating,
     dividendYieldPercent,
     priceEarningRatio,
-    currency,
-    lastClose,
     morningstarFairValue,
     marketCap,
-    low52w,
-    high52w,
     description,
   });
   // An error occurred if and only if the error message contains a newline character.

@@ -10,6 +10,7 @@ const stock: OmitDynamicAttributesStock = {
   name: "Example Inc.",
   isin: "US0000000000",
   country: "US",
+  currency: "USD",
 };
 
 describe.concurrent("Market Capitalization Formatter", () => {
@@ -36,6 +37,17 @@ describe.concurrent("Market Capitalization Formatter", () => {
   it("formats other things", () => {
     stock.marketCap = 1.234;
     expect(formatMarketCap(stock)).toBe("1");
+  });
+
+  it("refuses to format when no valid currency is given", () => {
+    stock.marketCap = 1234000000000;
+    stock.currency = null;
+    expect(formatMarketCap(stock)).toBe("–");
+  });
+
+  it("refuses to format when no valid market cap is given", () => {
+    stock.marketCap = null;
+    expect(formatMarketCap(stock)).toBe("–");
   });
 });
 

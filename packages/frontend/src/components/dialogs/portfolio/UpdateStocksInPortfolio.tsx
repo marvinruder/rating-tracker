@@ -97,28 +97,32 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
         setCurrentRequest(
           `Changing currency from ${props.portfolioRawData.currency} to ${selectedPortfolio?.currency}…`,
         );
-        await api.patch(`${portfoliosAPIPath}/${selectedPortfolio?.id}`, {
+        await api.patch(`${portfoliosAPIPath}/${selectedPortfolio.id}`, {
           params: { currency: props.portfolioRawData.currency },
         });
         setDoneRequests((prev) => prev + 1);
       }
       for await (const stock of stocksToAdd) {
         setCurrentRequest(`Adding “${stock.name}” (${stock.ticker})…`);
-        await api.put(`${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${stock.ticker}`, {
-          params: { amount: stock.amount },
-        });
+        await api.put(
+          `${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}`,
+          { params: { amount: stock.amount } },
+        );
         setDoneRequests((prev) => prev + 1);
       }
       for await (const stock of stocksToUpdate) {
         setCurrentRequest(`Updating amount of “${stock.name}” (${stock.ticker})…`);
-        await api.patch(`${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${stock.ticker}`, {
-          params: { amount: stock.amount },
-        });
+        await api.patch(
+          `${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}`,
+          { params: { amount: stock.amount } },
+        );
         setDoneRequests((prev) => prev + 1);
       }
       for await (const stock of stocksToRemove) {
         setCurrentRequest(`Removing “${stock.ticker}”…`);
-        await api.delete(`${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${stock.ticker}`);
+        await api.delete(
+          `${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}`,
+        );
         setDoneRequests((prev) => prev + 1);
       }
       props.onUpdate(selectedPortfolio.id);

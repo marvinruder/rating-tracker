@@ -8,6 +8,7 @@ import { currencyMinorUnits, currencyName } from "@rating-tracker/commons";
  * @returns The formatted market capitalization.
  */
 export const formatMarketCap = (stock: OmitDynamicAttributesStock): string => {
+  if (stock.marketCap === null || stock.currency === null) return "–";
   if (stock.marketCap > 1e12) {
     return (stock.marketCap / 1e12).toPrecision(3) + " T"; // trillion, rounded to 3 significant digits
   } else if (stock.marketCap > 1e9) {
@@ -112,6 +113,9 @@ export const CurrencyWithTooltip = (props: CurrencyWithTooltipProps): JSX.Elemen
  */
 export const pluralize = (number: number): string => (number !== 1 ? "s" : "");
 
+/**
+ * Properties for the CurrencyWithTooltip component.
+ */
 interface CurrencyWithTooltipProps {
   /**
    * The value to format.

@@ -34,7 +34,7 @@ const StockModule = (): JSX.Element => {
    */
   const getStock = (ticker: string): Promise<void> =>
     api
-      .get(stocksAPIPath + `/${ticker}`)
+      .get(stocksAPIPath + `/${encodeURIComponent(ticker)}`)
       .then((res) => setStock(res.data))
       .catch((e) => setErrorNotificationOrClearSession(e, "fetching stock"));
 
@@ -44,7 +44,7 @@ const StockModule = (): JSX.Element => {
 
   // Preload the stock logo
   const stockLogo = new Image();
-  stockLogo.src = `${baseURL}${stocksAPIPath}/${ticker}${stockLogoEndpointSuffix}?dark=${
+  stockLogo.src = `${baseURL}${stocksAPIPath}/${encodeURIComponent(ticker)}${stockLogoEndpointSuffix}?dark=${
     theme.palette.mode === "dark"
   }`;
 

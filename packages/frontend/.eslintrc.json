@@ -2,7 +2,7 @@
   "env": {
     "browser": true
   },
-  "extends": ["plugin:react/recommended", "plugin:jsdoc/recommended-typescript", "plugin:i/recommended", "plugin:i/typescript", "google", "plugin:prettier/recommended"],
+  "extends": ["plugin:react/recommended", "plugin:jsdoc/recommended-typescript", "plugin:import/recommended", "plugin:import/typescript", "google", "plugin:prettier/recommended"],
   "settings": {
     "react": {
       "version": "detect"
@@ -17,12 +17,12 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint", "jsdoc", "i", "prettier"],
+  "plugins": ["react", "@typescript-eslint", "jsdoc", "import", "prettier"],
   "rules": {
     "no-unused-vars": "off",
-    "@typescript-eslint/consistent-type-imports": ["warn"],
-    "@typescript-eslint/no-unused-vars": ["warn"],
-    "@typescript-eslint/no-floating-promises": ["warn"],
+    "@typescript-eslint/consistent-type-imports": ["warn", {}],
+    "@typescript-eslint/no-unused-vars": ["warn", {}],
+    "@typescript-eslint/no-floating-promises": ["warn", {}],
     "@typescript-eslint/await-thenable": ["warn"],
     "react/react-in-jsx-scope": "off",
     "react/jsx-curly-brace-presence": ["warn", "never"],

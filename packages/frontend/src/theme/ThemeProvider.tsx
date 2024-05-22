@@ -158,6 +158,13 @@ declare module "@mui/material/styles" {
         selected: string;
         unselected: string;
       };
+      /**
+       * The colors used for a graph line indicating a trend.
+       */
+      trend: {
+        up: string;
+        down: string;
+      };
     };
     general: {
       reactFrameworkColor: React.CSSProperties["color"];
@@ -335,6 +342,13 @@ declare module "@mui/material/styles" {
       switchSelector: {
         selected: string;
         unselected: string;
+      };
+      /**
+       * The colors used for a graph line indicating a trend.
+       */
+      trend: {
+        up: string;
+        down: string;
       };
     };
 

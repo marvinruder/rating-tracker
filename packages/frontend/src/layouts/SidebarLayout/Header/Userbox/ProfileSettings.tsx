@@ -339,6 +339,9 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the ProfileSettings component.
+ */
 interface ProfileSettingsProps {
   /**
    * A method that is called when the dialog is closed.

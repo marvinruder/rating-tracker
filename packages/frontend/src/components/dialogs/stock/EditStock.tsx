@@ -12,6 +12,8 @@ import {
   FormControlLabel,
   Checkbox,
   Divider,
+  Tooltip,
+  Box,
 } from "@mui/material";
 import type { Country, FetchError, Stock } from "@rating-tracker/commons";
 import {
@@ -25,6 +27,7 @@ import {
   fetchMorningstarEndpointSuffix,
   SP_PREMIUM_STOCK_ERROR_MESSAGE,
   fetchAPIPath,
+  fetchYahooEndpointSuffix,
 } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
 
@@ -50,6 +53,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
   const [countryError, setCountryError] = useState<string>(""); // Error message for the country input field.
   // Whether to clear information related to the data provider before fetching
   const [clear, setClear] = useState<boolean>(false);
+  const [yahooRequestInProgress, setYahooRequestInProgress] = useState<boolean>(false);
   const [morningstarID, setMorningstarID] = useState<string>(props.stock.morningstarID ?? "");
   const [morningstarIDRequestInProgress, setMorningstarIDRequestInProgress] = useState<boolean>(false);
   const [marketScreenerID, setMarketScreenerID] = useState<string>(props.stock.marketScreenerID ?? "");
@@ -89,7 +93,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
     setRequestInProgress(true);
     setUnsafeRequestSent(true);
     api
-      .patch(stocksAPIPath + `/${props.stock.ticker}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`, {
         params: {
           // Only send the parameters that have changed.
           ticker: ticker.trim() !== props.stock.ticker ? ticker.trim() : undefined,
@@ -106,23 +110,42 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
             sustainalyticsID.trim() !== (props.stock.sustainalyticsID ?? "") ? sustainalyticsID.trim() : undefined,
         },
       })
-      .then(
-        () => (
-          props.onCloseAfterEdit(ticker.trim() !== props.stock.ticker ? ticker.trim() : undefined), props.onClose()
-        ),
-      ) // Update the stocks in the parent component.
+      .then(async () => {
+        if (ticker.trim() !== props.stock.ticker && !ticker.trim().startsWith("_"))
+          // Fetch new prices if the ticker was changed and still contains a valid value for fetching prices.
+          await api
+            .post(fetchAPIPath + fetchYahooEndpointSuffix, {
+              params: { ticker: ticker.trim(), noSkip: true, clear: true },
+            })
+            .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Yahoo"));
+        // Update the stocks in the parent component.
+        props.onCloseAfterEdit(ticker.trim() !== props.stock.ticker ? ticker.trim() : undefined);
+        props.onClose();
+      })
       .catch((e) => setErrorNotificationOrClearSession(e, "updating stock"))
       .finally(() => setRequestInProgress(false));
   };
 
   /**
-   * Transmits the Morningstar ID to the server.
+   * Fetches data from Yahoo Finance.
+   */
+  const fetchStockFromYahoo = async () => {
+    setYahooRequestInProgress(true);
+    setUnsafeRequestSent(true);
+    api
+      .post(fetchAPIPath + fetchYahooEndpointSuffix, { params: { ticker: props.stock.ticker, noSkip: true, clear } })
+      .catch((e) => setErrorNotificationOrClearSession(e, "fetching information from Yahoo"))
+      .finally(() => setYahooRequestInProgress(false));
+  };
+
+  /**
+   * Transmits the Morningstar ID to the server and fetches data from Morningstar.
    */
   const patchStockMorningstarID = () => {
     setMorningstarIDRequestInProgress(true);
     setUnsafeRequestSent(true);
     api
-      .patch(stocksAPIPath + `/${props.stock.ticker}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`, {
         params: { morningstarID: morningstarID.trim() },
       })
       .then(() => {
@@ -145,13 +168,13 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the Market Screener ID to the server.
+   * Transmits the Market Screener ID to the server and fetches data from Market Screener.
    */
   const patchStockMarketScreenerID = () => {
     setMarketScreenerIDRequestInProgress(true);
     setUnsafeRequestSent(true);
     api
-      .patch(stocksAPIPath + `/${props.stock.ticker}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`, {
         params: { marketScreenerID: marketScreenerID.trim() },
       })
       .then(() => {
@@ -174,13 +197,13 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the MSCI ID to the server.
+   * Transmits the MSCI ID to the server and fetches data from MSCI.
    */
   const patchStockMSCIID = () => {
     setMSCIIDRequestInProgress(true);
     setUnsafeRequestSent(true);
     api
-      .patch(stocksAPIPath + `/${props.stock.ticker}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`, {
         params: { msciID: msciID.trim() },
       })
       .then(() => {
@@ -203,13 +226,13 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the Reuters IDentifier Code (RIC) to the server.
+   * Transmits the Reuters Identifier Code (RIC) to the server and fetches data from LSEG.
    */
   const patchStockRIC = () => {
     setRICRequestInProgress(true);
     setUnsafeRequestSent(true);
     api
-      .patch(stocksAPIPath + `/${props.stock.ticker}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`, {
         params: { ric: ric.trim() },
       })
       .then(() => {
@@ -232,13 +255,13 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the S&P ID to the server.
+   * Transmits the S&P ID to the server and fetches data from S&P.
    */
   const patchStockSPID = () => {
     setSPIDRequestInProgress(true);
     setUnsafeRequestSent(true);
     api
-      .patch(stocksAPIPath + `/${props.stock.ticker}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`, {
         params: { spID: spID === null ? "" : spID },
       })
       .then(() => {
@@ -269,13 +292,13 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
   };
 
   /**
-   * Transmits the Sustainalytics ID to the server.
+   * Transmits the Sustainalytics ID to the server and fetches data from Sustainalytics.
    */
   const patchStockSustainalyticsID = () => {
     setSustainalyticsIDRequestInProgress(true);
     setUnsafeRequestSent(true);
     api
-      .patch(stocksAPIPath + `/${props.stock.ticker}`, {
+      .patch(stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`, {
         params: { sustainalyticsID: sustainalyticsID.trim() },
       })
       .then(() => {
@@ -394,6 +417,32 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 }
               />
             </FormGroup>
+          </Grid>
+          <Grid item xs={12} container spacing={1} alignItems="center">
+            <Grid item ml="auto">
+              <Tooltip
+                title={
+                  props.stock.ticker === ticker.trim()
+                    ? ""
+                    : "Prices will be fetched automatically after saving the new ticker"
+                }
+                placement="left"
+                arrow
+              >
+                <Box display="inline-block">
+                  <LoadingButton
+                    size="small"
+                    loading={yahooRequestInProgress}
+                    onClick={() => fetchStockFromYahoo()}
+                    disabled={requestInProgress || props.stock.ticker !== ticker.trim()}
+                    variant="contained"
+                    startIcon={<PublishedWithChangesIcon />}
+                  >
+                    Fetch prices
+                  </LoadingButton>
+                </Box>
+              </Tooltip>
+            </Grid>
           </Grid>
           <Grid item xs={12} container spacing={1} alignItems="center">
             <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>

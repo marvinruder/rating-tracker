@@ -19,6 +19,7 @@ export const stockListColumnArray = [
   "S&P ESG Score",
   "Sustainalytics ESG Risk",
   "52 Week Range",
+  "Sparkline",
   "Dividend Yield (%)",
   "P\u2009/\u2009E Ratio",
   "Market Capitalization",

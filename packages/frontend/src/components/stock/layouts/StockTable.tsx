@@ -416,6 +416,12 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
+                  {/* Sparkline */}
+                  <TableCell sx={{ display: displayColumn("Sparkline") }}>
+                    <Tooltip title={<PropertyDescription property="sparkline" />} arrow>
+                      <Box display="inline-block">Sparkline</Box>
+                    </Tooltip>
+                  </TableCell>
                   {/* Dividend Yield */}
                   <TableCell sx={{ display: displayColumn("Dividend Yield (%)") }}>
                     <TableSortLabel

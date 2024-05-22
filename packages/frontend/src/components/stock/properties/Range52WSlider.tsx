@@ -59,6 +59,9 @@ export const Range52WSlider = (props: Range52WSliderProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the Range52WSlider component.
+ */
 interface Range52WSliderProps {
   /**
    * The stock to display the 52-week range for.

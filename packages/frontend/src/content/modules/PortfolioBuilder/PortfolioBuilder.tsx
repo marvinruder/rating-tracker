@@ -948,9 +948,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
                 series={scatterData}
                 xAxis={[
                   {
-                    min: weightedStocks.reduce((min, stock) => Math.min(min, stock.amount), Infinity) - +minAmountInput,
-                    max:
-                      weightedStocks.reduce((max, stock) => Math.max(max, stock.amount), -Infinity) + +minAmountInput,
+                    min: Math.min(...weightedStocks.map((stock) => stock.amount)) - +minAmountInput,
+                    max: Math.max(...weightedStocks.map((stock) => stock.amount)) + +minAmountInput,
                     tickMinStep: +tickInput,
                     valueFormatter: (value) => `${currency} ${value.toFixed(currencyMinorUnits[currency])}`,
                   },

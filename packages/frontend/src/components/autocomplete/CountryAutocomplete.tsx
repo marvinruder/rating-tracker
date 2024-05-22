@@ -51,6 +51,9 @@ const CountryAutocomplete = (props: CountryAutocompleteProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the CountryAutocomplete component.
+ */
 interface CountryAutocompleteProps {
   /**
    * The value of the autocomplete.

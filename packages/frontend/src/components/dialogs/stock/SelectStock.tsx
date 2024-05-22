@@ -59,7 +59,9 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
           )
             return;
           handleSelect();
-          props.onSelect ? props.onSelect(stocks[0]) : navigate(`${stocksAPIPath}/${stocks[0].ticker}`);
+          props.onSelect
+            ? props.onSelect(stocks[0])
+            : navigate(`${stocksAPIPath}/${encodeURIComponent(stocks[0].ticker)}`);
         }
       }
     };
@@ -93,10 +95,6 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
     setSearchValue("");
     setStocks([]);
     setCount(0);
-    // const activeElement = document.activeElement;
-    // if (activeElement instanceof HTMLElement) {
-    //   activeElement.blur();
-    // }
     props.onClose();
   };
 
@@ -258,6 +256,9 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the SelectStock component.
+ */
 interface SelectStockProps {
   /**
    * An element to be shown above the title text.

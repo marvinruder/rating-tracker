@@ -3,7 +3,8 @@ import { baseURL, createURLSearchParams, handleResponse } from "@rating-tracker/
 
 /**
  * Performs a request using the browser’s `fetch` API.
- * @param path The relative API path. The base URL is automatically prepended to this path.
+ * @param path The relative API path. The base URL is automatically prepended to this path. URL components must be
+ *             encoded using the `encodeURIComponent` function.
  * @param config The configuration options of the request.
  * @returns A {@link Promise} that resolves to the response of the request.
  * @throws {FetchError} If the response status code is not in the 2XX range.
@@ -42,7 +43,8 @@ const performFetchRequest = (path: string, config: FetchRequestWithBodyOptions):
 const fetchAPI = {
   /**
    * Performs a GET request using the browser’s `fetch` API.
-   * @param path The relative API path. The base URL is automatically prepended to this path.
+   * @param path The relative API path. The base URL is automatically prepended to this path. URL components must be
+   *             encoded using the `encodeURIComponent` function.
    * @param config The configuration options of the request.
    * @returns A {@link Promise} that resolves to the response of the request.
    */

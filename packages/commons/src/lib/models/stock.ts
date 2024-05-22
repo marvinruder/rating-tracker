@@ -54,6 +54,34 @@ export type Stock = {
    */
   totalScore: number;
   /**
+   * The date and time of the last fetch from Yahoo Finance.
+   */
+  yahooLastFetch: Date | null;
+  /**
+   * The currency the stock is traded in.
+   */
+  currency: Currency | null;
+  /**
+   * The stock’s price at the end of the previous trading day.
+   */
+  lastClose: number | null;
+  /**
+   * The lower bound of the 52-week range of the stock’s price.
+   */
+  low52w: number | null;
+  /**
+   * The upper bound of the 52-week range of the stock’s price.
+   */
+  high52w: number | null;
+  /**
+   * The stock’s historical prices during the last year.
+   */
+  prices1y: number[] | null;
+  /**
+   * The stock’s historical prices during the last month.
+   */
+  prices1mo: number[] | null;
+  /**
    * Morningstar’s identifier for the stock.
    */
   morningstarID: string | null;
@@ -74,14 +102,6 @@ export type Stock = {
    */
   priceEarningRatio: number | null;
   /**
-   * The currency the stock is traded in.
-   */
-  currency: Currency | null;
-  /**
-   * The stock’s price at the end of the previous trading day.
-   */
-  lastClose: number | null;
-  /**
    * Morningstar’s fair value estimate for the stock.
    */
   morningstarFairValue: number | null;
@@ -95,14 +115,6 @@ export type Stock = {
    * The market capitalization of the stock.
    */
   marketCap: number | null;
-  /**
-   * The lower bound of the 52-week range of the stock’s price.
-   */
-  low52w: number | null;
-  /**
-   * The upper bound of the 52-week range of the stock’s price.
-   */
-  high52w: number | null;
   /**
    * The position of the stock’s last close price in the 52-week range.
    *
@@ -236,6 +248,13 @@ export type OmitDynamicAttributesStock = Omit<
 export const optionalStockValuesNull: OmitFunctions<
   Omit<OmitDynamicAttributesStock, "ticker" | "name" | "isin" | "country">
 > = {
+  yahooLastFetch: null,
+  currency: null,
+  lastClose: null,
+  low52w: null,
+  high52w: null,
+  prices1y: [],
+  prices1mo: [],
   industry: null,
   size: null,
   style: null,
@@ -244,12 +263,8 @@ export const optionalStockValuesNull: OmitFunctions<
   starRating: null,
   dividendYieldPercent: null,
   priceEarningRatio: null,
-  currency: null,
-  lastClose: null,
   morningstarFairValue: null,
   marketCap: null,
-  low52w: null,
-  high52w: null,
   marketScreenerID: null,
   marketScreenerLastFetch: null,
   analystConsensus: null,

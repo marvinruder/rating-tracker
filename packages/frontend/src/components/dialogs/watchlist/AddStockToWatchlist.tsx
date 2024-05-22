@@ -67,7 +67,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    */
   const addStockToWatchlist = (id: number) => {
     api
-      .put(`${watchlistsAPIPath}/${id}${stocksAPIPath}/${props.stock.ticker}`)
+      .put(`${watchlistsAPIPath}/${id}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}`)
       .then(() => {
         if (watchlistSummaries.find((watchlistSummary) => watchlistSummary.id === id)?.name === FAVORITES_NAME)
           refetchFavorites();

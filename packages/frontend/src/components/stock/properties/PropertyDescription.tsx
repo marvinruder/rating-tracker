@@ -25,6 +25,7 @@ type DescribedProperty =
   | "spESGScore"
   | "sustainalyticsESGRisk"
   | "positionIn52w"
+  | "sparkline"
   | "dividendYieldPercent"
   | "priceEarningRatio"
   | "marketCap";
@@ -236,6 +237,12 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
         <Typography variant="body1">
           This range represents the lowest and highest price at which the stock has traded in the last 52 weeks, as well
           as the last price at the end of a trading day.
+        </Typography>
+      );
+    case "sparkline":
+      return (
+        <Typography variant="body1">
+          A graph visualizing the price of the stock over the last year or month, depending on the selected interval.
         </Typography>
       );
     case "dividendYieldPercent":

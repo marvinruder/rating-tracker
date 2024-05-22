@@ -54,6 +54,9 @@ export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
   );
 };
 
+/**
+ * Properties for the PortfolioSummaryHeader component.
+ */
 interface PortfolioSummaryHeaderProps {
   /**
    * A method to update the portfolio summaries, e.g. after a new portfolio was created.

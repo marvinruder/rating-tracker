@@ -5,10 +5,9 @@ import type { Request } from "express";
 
 import { updateStock } from "../db/tables/stockTable";
 import DataProviderError from "../utils/DataProviderError";
-import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
 
-import type { Fetcher } from "./fetchHelper";
+import { getJSON, type Fetcher } from "./fetchHelper";
 
 /**
  * Fetches data from LSEG Data & Analytics.
@@ -18,12 +17,12 @@ import type { Fetcher } from "./fetchHelper";
  * @throws a {@link DataProviderError} in case of a severe error
  */
 const lsegFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> => {
-  let lsegESGScore: number = req.query.clear ? null : undefined;
-  let lsegEmissions: number = req.query.clear ? null : undefined;
+  let lsegESGScore: number = undefined;
+  let lsegEmissions: number = undefined;
 
-  const json = (await performFetchRequest(`https://www.lseg.com/bin/esg/esgsearchresult?ricCode=${stock.ric}`)).data;
+  const json = await getJSON("https://www.lseg.com/bin/esg/esgsearchresult", { params: { ricCode: stock.ric } });
 
-  if (Object.keys(json).length === 0 && json.constructor === Object)
+  if (Object.keys(json).length === 0)
     throw new DataProviderError("No LSEG information available.", { dataSources: [json] });
 
   if (
@@ -51,8 +50,8 @@ const lsegFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> =
   } catch (e) {
     logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract LSEG ESG Score: ${e}`);
     if (stock.lsegESGScore !== null) {
-      // If a LSEG ESG Score is already stored in the database, but we cannot extract it from the page, we
-      // log this as an error and send a message.
+      // If a LSEG ESG Score is already stored in the database, but we cannot extract it from the JSON object, we log
+      // this as an error and send a message.
       logger.error(
         { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of LSEG ESG Score failed unexpectedly. ` + "This incident will be reported.",
@@ -75,7 +74,7 @@ const lsegFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> =
     logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract LSEG Emissions: ${e}`);
     if (stock.lsegEmissions !== null) {
       // If a LSEG Emissions Rating is already stored in the database, but we cannot extract it from the
-      // page, we log this as an error and send a message.
+      // JSON object, we log this as an error and send a message.
       logger.error(
         { prefix: "fetch", err: e },
         `Stock ${stock.ticker}: Extraction of LSEG Emissions failed unexpectedly. ` + "This incident will be reported.",

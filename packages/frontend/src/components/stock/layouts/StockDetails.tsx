@@ -38,6 +38,7 @@ import { AnalystRatingBar } from "../properties/AnalystRatingBar";
 import { PropertyDescription } from "../properties/PropertyDescription";
 import { Range52WSlider } from "../properties/Range52WSlider";
 import { SectorIcon } from "../properties/SectorIcon";
+import { Sparkline } from "../properties/Sparkline";
 import { StarRating } from "../properties/StarRating";
 import { StyleBox } from "../properties/StyleBox";
 
@@ -285,7 +286,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                   <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
                     <Box display="inline-block">{props.stock.currency ?? ""}</Box>
                   </Tooltip>{" "}
-                  {props.stock.marketCap !== null ? formatMarketCap(props.stock) : "–"}
+                  {formatMarketCap(props.stock)}
                 </>
               ) : (
                 <Skeleton width={60} sx={{ ml: "auto" }} />
@@ -307,6 +308,19 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               </>
             ) : (
               <Skeleton variant="rectangular" height={42} sx={{ ml: "auto" }} />
+            )}
+          </Grid>
+          {/* Sparkline */}
+          <Grid item xs={3.5} mt="22px">
+            <Tooltip title={<PropertyDescription property="sparkline" />} arrow placement={tooltipPlacement}>
+              <Typography variant="h5">Sparkline</Typography>
+            </Tooltip>
+          </Grid>
+          <Grid item xs={8.5} display="flex" justifyContent="flex-end">
+            {props.stock ? (
+              <Sparkline width={180} height={63} stock={props.stock} />
+            ) : (
+              <Skeleton variant="rounded" width={180} height={63} sx={{ ml: "auto" }} />
             )}
           </Grid>
         </Grid>
@@ -519,13 +533,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
           <Grid item xs={6}>
             <Typography variant="body1" sx={{ textAlign: "right" }}>
               {props.stock ? (
-                <>
-                  {props.stock?.analystTargetPrice !== null &&
-                    props.stock?.analystCount !== null &&
-                    props.stock?.lastClose !== null &&
-                    props.stock?.analystTargetPricePercentageToLastClose !== null &&
-                    `n\u2009=\u2009${props.stock?.analystCount}`}
-                </>
+                <>{props.stock?.analystCount !== null && `n\u2009=\u2009${props.stock?.analystCount}`}</>
               ) : (
                 <Skeleton width={60} sx={{ ml: "auto" }} />
               )}

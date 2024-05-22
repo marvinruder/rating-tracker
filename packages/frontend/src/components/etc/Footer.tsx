@@ -32,6 +32,9 @@ export const Footer = (props: FooterProps) => (
   </>
 );
 
+/**
+ * Properties for the Footer component.
+ */
 interface FooterProps {
   /**
    * The maximum width of the container.

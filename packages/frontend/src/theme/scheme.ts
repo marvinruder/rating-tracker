@@ -289,6 +289,10 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
       selected: light ? themeColors.primary : themeColors.black,
       unselected: themeColors.white,
     },
+    trend: {
+      up: light ? "#10A892" : "#28EBCF",
+      down: light ? "#C7320D" : "#F79880",
+    },
   },
   general: {
     reactFrameworkColor: "#00D8FF",

@@ -1,5 +1,6 @@
 import type { Resource, Stock } from "@rating-tracker/commons";
 import {
+  dataProviderProperties,
   dataProviderTTL,
   fetchAPIPath,
   fetchLSEGEndpointSuffix,
@@ -8,6 +9,7 @@ import {
   fetchMSCIEndpointSuffix,
   fetchSPEndpointSuffix,
   fetchSustainalyticsEndpointSuffix,
+  fetchYahooEndpointSuffix,
   GENERAL_ACCESS,
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
@@ -37,6 +39,46 @@ import SingletonController from "./SingletonController";
 class FetchController extends SingletonController {
   path = fetchAPIPath;
   tags = ["Fetch API"];
+
+  /**
+   * Fetches information from Yahoo Finance API.
+   * @param req Request object
+   * @param res Response object
+   * @throws an {@link APIError} in case of a severe error
+   */
+  @Endpoint({
+    spec: {
+      summary: "Fetch data from Yahoo Finance",
+      description: "Fetches information from Yahoo Finance API.",
+      parameters: [
+        {
+          ...stock.ticker,
+          description:
+            "The ticker of a stock for which information is to be fetched. " +
+            "If not present, all stocks known to the system will be used",
+        },
+        fetch.detach,
+        fetch.noSkip,
+        fetch.clear,
+        fetch.concurrency,
+      ],
+      responses: {
+        "200": okStockList,
+        "202": accepted,
+        "204": noContent,
+        "401": unauthorized,
+        "403": forbidden,
+        "404": notFound,
+        "502": badGateway,
+      },
+    },
+    method: "post",
+    path: fetchYahooEndpointSuffix,
+    accessRights: GENERAL_ACCESS + WRITE_STOCKS_ACCESS,
+  })
+  fetchYahooData: RequestHandler = async (req: Request, res: Response) => {
+    await fetchFromDataProvider(req, res, "yahoo");
+  };
 
   /**
    * Fetches information from Morningstar Italy web page.
@@ -350,8 +392,18 @@ class FetchController extends SingletonController {
 
     const sustainalyticsXMLLines = sustainalyticsXMLResource.content.split("\n");
 
-    for await (const stock of stockList) {
-      let sustainalyticsESGRisk: number = req.query.clear ? null : undefined;
+    for await (let stock of stockList) {
+      if (req.query.clear) {
+        await updateStock(
+          stock.ticker,
+          dataProviderProperties["sustainalytics"].reduce((obj, key) => ({ ...obj, [key]: null }), {}),
+          undefined,
+          true,
+        );
+        stock = await readStock(stock.ticker);
+      }
+
+      let sustainalyticsESGRisk: number = undefined;
 
       try {
         // Look for the Sustainalytics ID in the XML lines.

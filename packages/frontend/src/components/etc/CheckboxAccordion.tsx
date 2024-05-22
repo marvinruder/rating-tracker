@@ -22,6 +22,9 @@ const CheckboxAccordion = (props: React.PropsWithChildren<CheckboxAccordionProps
   </Accordion>
 );
 
+/**
+ * Properties for the CheckboxAccordion component.
+ */
 interface CheckboxAccordionProps {
   /**
    * The summary of the accordion, used as the label of the checkbox.

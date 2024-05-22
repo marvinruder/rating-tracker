@@ -8,7 +8,6 @@ import type { ReactNode } from "react";
  */
 export const HeaderWrapper = (props: HeaderWrapperProps): JSX.Element => {
   const theme = useTheme();
-  if (props.maxWidth === undefined) props.maxWidth = "lg";
 
   return (
     <Box
@@ -29,7 +28,7 @@ export const HeaderWrapper = (props: HeaderWrapperProps): JSX.Element => {
               )}`,
       }}
     >
-      <Container maxWidth={props.maxWidth}>{props.children}</Container>
+      <Container maxWidth={props.maxWidth ?? "lg"}>{props.children}</Container>
     </Box>
   );
 };

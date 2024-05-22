@@ -77,6 +77,9 @@ export const Sidebar = (props: SidebarProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the Sidebar component.
+ */
 interface SidebarProps {
   /**
    * Whether the sidebar is open or not.

@@ -39,6 +39,9 @@ export const WatchlistSummaryHeader: FC<WatchlistSummaryHeaderProps> = (
   );
 };
 
+/**
+ * Properties for the WatchlistSummaryHeader component.
+ */
 interface WatchlistSummaryHeaderProps {
   /**
    * A method to update the watchlist summaries, e.g. after a new watchlist was created.

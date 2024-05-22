@@ -4,15 +4,16 @@ import {
   dataProviderID,
   dataProviderLastFetch,
   dataProviderName,
+  dataProviderProperties,
   dataProviderTTL,
   resourcesAPIPath,
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
-import type { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { DateTime } from "luxon";
 import { Agent } from "undici";
 
-import { readStocks, readStock } from "../db/tables/stockTable";
+import { readStocks, readStock, updateStock } from "../db/tables/stockTable";
 import { createResource } from "../redis/repositories/resourceRepository";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import * as signal from "../signal/signal";
@@ -26,6 +27,7 @@ import marketScreenerFetcher from "./marketScreenerFetcher";
 import morningstarFetcher from "./morningstarFetcher";
 import msciFetcher from "./msciFetcher";
 import spFetcher from "./spFetcher";
+import yahooFetcher from "./yahooFetcher";
 
 /**
  * A shared object holding lists of stocks that multiple fetchers work on.
@@ -111,6 +113,7 @@ export const captureDataProviderError = async (
  * A record of functions that extract data from a data provider.
  */
 const dataProviderFetchers: Record<IndividualDataProvider, Fetcher> = {
+  yahoo: yahooFetcher,
   morningstar: morningstarFetcher,
   marketScreener: marketScreenerFetcher,
   msci: msciFetcher,
@@ -175,14 +178,19 @@ export const fetchFromDataProvider = async (
     const ticker = req.query.ticker;
     if (typeof ticker !== "string") throw new APIError(400, "Invalid query parameters.");
     stockList = [await readStock(ticker)];
-    if (!stockList[0][dataProviderID[dataProvider]]) {
-      // If the only stock to use does not have an ID for the data provider, we throw an error.
-      throw new APIError(404, `Stock ${ticker} does not have a ${dataProviderID[dataProvider]}.`);
-    }
+    if (
+      !stockList[0][dataProviderID[dataProvider]] ||
+      (dataProviderID[dataProvider] === "ticker" && ticker.startsWith("_"))
+    )
+      // If the only stock to use does not have a valid ID for the data provider, we throw an error.
+      throw new APIError(404, `Stock ${ticker} does not have a valid ${dataProviderID[dataProvider]}.`);
   } else {
     // When no specific stock is requested, we fetch all stocks from the database which have an ID for the data provider
     [stockList] = await readStocks({
-      where: { [dataProviderID[dataProvider]]: { not: null } },
+      // The ticker must never be null, so we adjust the filter to exclude examplary ticker values in this case:
+      ...(dataProviderID[dataProvider] === "ticker"
+        ? { where: { [dataProviderID[dataProvider]]: { not: { startsWith: "\\_" } } } }
+        : { where: { [dataProviderID[dataProvider]]: { not: null } } }),
       // Sort stocks by last fetch date, so that we fetch the oldest stocks first.
       orderBy: { [dataProviderLastFetch[dataProvider]]: "asc" },
     });
@@ -210,7 +218,7 @@ export const fetchFromDataProvider = async (
         // Work while stocks are in the queue
         while (stocks.queued.length) {
           // Get the first stock in the queue
-          const stock = stocks.queued.shift();
+          let stock = stocks.queued.shift();
           // If the queue got empty in the meantime, we end.
           if (!stock) break;
 
@@ -234,17 +242,28 @@ export const fetchFromDataProvider = async (
           }
 
           try {
+            if (req.query.clear) {
+              await updateStock(
+                stock.ticker,
+                dataProviderProperties[dataProvider].reduce(
+                  (obj, key) => ({ ...obj, [key]: ["prices1y", "prices1mo"].includes(key) ? [] : null }),
+                  {},
+                ),
+                undefined,
+                true,
+              );
+              stock = await readStock(stock.ticker);
+            }
             await dataProviderFetchers[dataProvider](req, stock);
             stocks.successful.push(await readStock(stock.ticker));
           } catch (e) {
             stocks.failed.push(await readStock(stock.ticker));
-            if (req.query.ticker) {
+            if (req.query.ticker)
               throw new APIError(
                 502,
                 `Stock ${stock.ticker}: Error while fetching ${dataProviderName[dataProvider]} data`,
                 e,
               );
-            }
             logger.error(
               { prefix: "fetch", err: e },
               `Stock ${stock.ticker}: Error while fetching ${dataProviderName[dataProvider]} data`,
@@ -378,4 +397,42 @@ export const getAndParseHTML = async (
       dataSources: [document],
     });
   return document;
+};
+
+/**
+ * Fetches a JSON object from a URL.
+ * @param url The URL to fetch from
+ * @param config The fetch request options
+ * @returns The JSON object
+ */
+export const getJSON = async (url: string, config: FetchRequestOptions): Promise<Object> => {
+  let error: Error;
+  // Fetch the response
+  const responseData = await performFetchRequest(url, {
+    ...config,
+    dispatcher: new Agent({ allowH2: true }),
+    headers: {
+      ...config?.headers,
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+        "AppleWebKit/537.36 (KHTML, like Gecko) " +
+        "Chrome/124.0.0.0 Safari/537.36",
+    },
+  })
+    .then((res) => res.data)
+    .catch((e) => {
+      // If the status code indicates a non-successful fetch, we try to parse the response nonetheless
+      if (e instanceof FetchError) {
+        error = e;
+        return e.response.data;
+      }
+      throw e;
+    });
+  if (!error && responseData.constructor !== Object) error = new TypeError("Response is not JSON.");
+  if (error)
+    throw new DataProviderError(`Error while fetching JSON object: ${error.message}`, {
+      cause: error,
+      dataSources: [responseData],
+    });
+  return responseData;
 };

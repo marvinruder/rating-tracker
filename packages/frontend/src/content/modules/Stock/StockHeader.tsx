@@ -59,9 +59,10 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
             <>
               <Avatar
                 sx={{ width: 112, height: 112, m: "-16px", mr: "-8px", background: "none" }}
-                src={`${baseURL}${stocksAPIPath}/${props.stock.ticker}${stockLogoEndpointSuffix}?dark=${
-                  theme.palette.mode === "dark"
-                }`}
+                src={
+                  `${baseURL}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}${stockLogoEndpointSuffix}` +
+                  `?dark=${theme.palette.mode === "dark"}`
+                }
                 alt={`Logo of “${props.stock.name}”`}
               />
               <Box>
@@ -95,7 +96,9 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                 <IconButton
                   color={props.isFavorite ? "warning" : undefined}
                   onClick={() => {
-                    (props.isFavorite ? api.delete : api.put)(favoritesAPIPath + `/${props.stock.ticker}`)
+                    (props.isFavorite ? api.delete : api.put)(
+                      favoritesAPIPath + `/${encodeURIComponent(props.stock.ticker)}`,
+                    )
                       .then(refetchFavorites)
                       .catch((e) =>
                         setErrorNotificationOrClearSession(
@@ -194,7 +197,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
             <EditStock
               stock={props.stock}
               onCloseAfterEdit={(newTicker) =>
-                newTicker ? navigate(`${stocksAPIPath}/${newTicker}`) : props.getStock()
+                newTicker ? navigate(`${stocksAPIPath}/${encodeURIComponent(newTicker)}`) : props.getStock()
               }
               onClose={() => setEditDialogOpen(false)}
             />

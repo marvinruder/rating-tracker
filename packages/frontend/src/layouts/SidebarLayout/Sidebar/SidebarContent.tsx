@@ -336,6 +336,9 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
   );
 };
 
+/**
+ * Properties for the SidebarContent component.
+ */
 export interface SidebarContentProps {
   /**
    * Closes the sidebar.
