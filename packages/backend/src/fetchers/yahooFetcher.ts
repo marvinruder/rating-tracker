@@ -61,7 +61,7 @@ const yahooFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> 
         "currency" in json.chart.result[0].meta,
       "Currency not found in JSON response.",
     );
-    const currencyValue = json.chart.result[0].meta.currency;
+    const currencyValue = json.chart.result[0].meta.currency.replace("GBp", "GBX");
     if (isCurrency(currencyValue)) {
       currency = currencyValue;
     } else {
