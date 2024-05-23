@@ -93,10 +93,12 @@ const yahooFetcher: Fetcher = async (req: Request, stock: Stock): Promise<void> 
       "Prices not found in JSON response.",
     );
 
-    const adjclose: number[] = json.chart.result[0].indicators.adjclose[0].adjclose.map(
-      // Remove unnecessary precision to reduce future response size:
-      (x: number) => +x.toFixed(currencyMinorUnits[currency]),
-    );
+    const adjclose: number[] = json.chart.result[0].indicators.adjclose[0].adjclose
+      .filter((x: unknown) => typeof x === "number" && !Number.isNaN(x))
+      .map(
+        // Remove unnecessary precision to reduce future response size:
+        (x: number) => +x.toFixed(currencyMinorUnits[currency]),
+      );
     lastClose = adjclose.at(-1);
     low52w = Math.min(...adjclose);
     high52w = Math.max(...adjclose);
