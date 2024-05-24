@@ -88,6 +88,7 @@ class ProxyController extends SingletonController {
       await Promise.allSettled<FetchResponse>(
         equities
           .filter((equity) => "logoUrl" in equity && typeof equity.logoUrl === "string" && URL.canParse(equity.logoUrl))
+          // deepcode ignore Ssrf: false positive (URL comes from Yahoo Finance API response, is validated)
           .map((equity) => performFetchRequest(equity.logoUrl)),
       )
     ).filter((result): result is PromiseFulfilledResult<FetchResponse> => result.status === "fulfilled");

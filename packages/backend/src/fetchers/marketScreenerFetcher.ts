@@ -89,7 +89,9 @@ const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promi
         // directly:
         const avgTargetPriceNode = XPATH_AVERAGE_TARGET_PRICE.select1({ node: consensusTableDiv, isHtml: true });
         assert(avgTargetPriceNode, "Unable to find Average Target Price node.");
-        const avgTargetPriceMatches = avgTargetPriceNode.textContent.match(/\s*(\d+(\.\d+)?)\s+([A-Z]{3})/);
+        const avgTargetPriceMatches = avgTargetPriceNode.textContent
+          .replaceAll(",", "")
+          .match(/\s*(\d+(\.\d+)?)\s+([A-Z]{3})/);
 
         if (avgTargetPriceMatches === null || avgTargetPriceMatches.length < 4)
           throw new TypeError(
@@ -122,7 +124,7 @@ const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promi
 
         const spreadAvgTargetNode = XPATH_SPREAD_AVERAGE_TARGET.select1({ node: consensusTableDiv, isHtml: true });
         assert(spreadAvgTargetNode, "Unable to find Analyst Target Price node.");
-        const spreadAvgTargetMatches = spreadAvgTargetNode.textContent.match(/(\-)?\d+(\.\d+)?/);
+        const spreadAvgTargetMatches = spreadAvgTargetNode.textContent.replaceAll(",", "").match(/(\-)?\d+(\.\d+)?/);
 
         if (spreadAvgTargetMatches === null)
           throw new TypeError(
