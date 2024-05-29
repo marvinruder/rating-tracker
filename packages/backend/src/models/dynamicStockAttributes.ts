@@ -1,9 +1,5 @@
-import {
-  analystRatingArray,
-  msciESGRatingArray,
-  type OmitDynamicAttributesStock,
-  type Stock,
-} from "@rating-tracker/commons";
+import type { OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
+import { analystRatingArray, msciESGRatingArray } from "@rating-tracker/commons";
 
 /**
  * Provides a score for the stock based on its Morningstar star rating.

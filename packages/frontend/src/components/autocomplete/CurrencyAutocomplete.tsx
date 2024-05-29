@@ -1,11 +1,6 @@
 import { Autocomplete, TextField } from "@mui/material";
-import {
-  currencyArray,
-  currencyName,
-  currencyNameWithFlagAndCode,
-  isCurrency,
-  type Currency,
-} from "@rating-tracker/commons";
+import type { Currency } from "@rating-tracker/commons";
+import { currencyArray, currencyName, currencyNameWithFlagAndCode, isCurrency } from "@rating-tracker/commons";
 import { useState } from "react";
 
 /**

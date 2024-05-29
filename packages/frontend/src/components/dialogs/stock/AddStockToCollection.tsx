@@ -1,9 +1,8 @@
 import { Box, Button, DialogActions, Divider, Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import type { PortfolioSummary, WatchlistSummary } from "@rating-tracker/commons";
 import {
   portfoliosAPIPath,
   watchlistsAPIPath,
-  type PortfolioSummary,
-  type WatchlistSummary,
   stocksAPIPath,
   currencyMinorUnits,
   FAVORITES_NAME,
