@@ -9,7 +9,7 @@ import {
   resourcesAPIPath,
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
-import { type Request, type Response } from "express";
+import type { Request, Response } from "express";
 import { DateTime } from "luxon";
 import { Agent } from "undici";
 

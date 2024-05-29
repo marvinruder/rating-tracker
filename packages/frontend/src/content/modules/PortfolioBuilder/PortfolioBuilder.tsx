@@ -91,10 +91,8 @@ import { StockPreview } from "../../../components/stock/layouts/StockPreview";
 import { StockRow } from "../../../components/stock/layouts/StockRow";
 import { PropertyDescription } from "../../../components/stock/properties/PropertyDescription";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import {
-  isProportionalRepresentationAlgorithm,
-  type ProportionalRepresentationAlgorithm,
-} from "../../../types/ProportionalRepresentationAlgorithm";
+import type { ProportionalRepresentationAlgorithm } from "../../../types/ProportionalRepresentationAlgorithm";
+import { isProportionalRepresentationAlgorithm } from "../../../types/ProportionalRepresentationAlgorithm";
 import api from "../../../utils/api";
 import { ExponentialNumber, formatPercentage, pluralize } from "../../../utils/formatters";
 import { computePortfolio } from "../../../utils/portfolioComputation";
