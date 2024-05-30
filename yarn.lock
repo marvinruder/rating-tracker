@@ -258,12 +258,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.24.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
-  version: 7.24.5
-  resolution: "@babel/runtime@npm:7.24.5"
+"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.24.6, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+  version: 7.24.6
+  resolution: "@babel/runtime@npm:7.24.6"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: 10c0/05730e43e8ba6550eae9fd4fb5e7d9d3cb91140379425abcb2a1ff9cebad518a280d82c4c4b0f57ada26a863106ac54a748d90c775790c0e2cd0ddd85ccdf346
+  checksum: 10c0/224ad205de33ea28979baaec89eea4c4d4e9482000dd87d15b97859365511cdd4d06517712504024f5d33a5fb9412f9b91c96f1d923974adf9359e1575cde049
   languageName: node
   linkType: hard
 
@@ -988,7 +988,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/system@npm:^5.15.14, @mui/system@npm:^5.15.15":
+"@mui/system@npm:^5.15.15":
   version: 5.15.15
   resolution: "@mui/system@npm:5.15.15"
   dependencies:
@@ -1046,13 +1046,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.5.1":
-  version: 7.5.1
-  resolution: "@mui/x-charts@npm:7.5.1"
+"@mui/x-charts@npm:7.6.0":
+  version: 7.6.0
+  resolution: "@mui/x-charts@npm:7.6.0"
   dependencies:
-    "@babel/runtime": "npm:^7.24.5"
+    "@babel/runtime": "npm:^7.24.6"
     "@mui/base": "npm:^5.0.0-beta.40"
-    "@mui/system": "npm:^5.15.14"
+    "@mui/system": "npm:^5.15.15"
     "@mui/utils": "npm:^5.15.14"
     "@react-spring/rafz": "npm:^9.7.3"
     "@react-spring/web": "npm:^9.7.3"
@@ -1074,7 +1074,7 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/e396bb4732566dff2521745cc4840ac7988a45661c114c146ab4c9f0d70ab23b246f40fdd361bc974dbfe5a20fdf7da6fa4eca2b9a9f56a97cef7438e7653c22
+  checksum: 10c0/d47211c2ddf6ab6cd66f693281ae47aa3d15530db82fdf29bb3ef61b473c34eadaea80ac020944206552859f9095ba28616bd753a486c03cf1262be0eacb25ec
   languageName: node
   linkType: hard
 
@@ -1529,7 +1529,7 @@ __metadata:
     "@mui/icons-material": "npm:5.15.19"
     "@mui/lab": "npm:5.0.0-alpha.170"
     "@mui/material": "npm:5.15.19"
-    "@mui/x-charts": "npm:7.5.1"
+    "@mui/x-charts": "npm:7.6.0"
     "@nivo/core": "npm:0.87.0"
     "@nivo/sunburst": "npm:0.87.0"
     "@rating-tracker/commons": "workspace:*"
