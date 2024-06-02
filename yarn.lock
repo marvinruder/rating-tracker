@@ -22,15 +22,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/json-schema-ref-parser@npm:^9.1.2":
-  version: 9.1.2
-  resolution: "@apidevtools/json-schema-ref-parser@npm:9.1.2"
+"@apidevtools/json-schema-ref-parser@npm:^11.6.2":
+  version: 11.6.3
+  resolution: "@apidevtools/json-schema-ref-parser@npm:11.6.3"
   dependencies:
     "@jsdevtools/ono": "npm:^7.1.3"
-    "@types/json-schema": "npm:^7.0.6"
-    call-me-maybe: "npm:^1.0.1"
+    "@types/json-schema": "npm:^7.0.15"
     js-yaml: "npm:^4.1.0"
-  checksum: 10c0/ebf952eb2e00bf0919f024e72897e047fd5012f0a9e47ac361873f6de0a733b9334513cdbc73205a6b43ac4a652b8c87f55e489c39b2d60bd0bc1cb2b411e218
+  checksum: 10c0/c6a400e334c011569b8471721fa37ae5cc3ac8444b2a2d8be4ddee9eed5f3bee4ddc4e4c43f9161af9e504c7301c9dffceaf353cdab3ca88cd26aa4de5b5e81c
   languageName: node
   linkType: hard
 
@@ -1475,7 +1474,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.1.3"
     express: "npm:4.19.2"
     express-async-errors: "npm:3.1.1"
-    express-openapi-validator: "npm:5.1.6"
+    express-openapi-validator: "npm:5.2.0"
     express-rate-limit: "npm:7.3.0"
     luxon: "npm:3.4.4"
     pino: "npm:9.1.0"
@@ -2083,7 +2082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.6":
+"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.15":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: 10c0/a996a745e6c5d60292f36731dd41341339d4eeed8180bb09226e5c8d23759067692b1d88e5d91d72ee83dfc00d3aca8e7bd43ea120516c17922cbcb7c3e252db
@@ -2134,7 +2133,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/multer@npm:^1.4.7":
+"@types/multer@npm:^1.4.11":
   version: 1.4.11
   resolution: "@types/multer@npm:1.4.11"
   dependencies:
@@ -2807,15 +2806,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^8.0.0, ajv@npm:^8.11.2":
-  version: 8.12.0
-  resolution: "ajv@npm:8.12.0"
+"ajv@npm:^8.0.0, ajv@npm:^8.14.0":
+  version: 8.14.0
+  resolution: "ajv@npm:8.14.0"
   dependencies:
-    fast-deep-equal: "npm:^3.1.1"
+    fast-deep-equal: "npm:^3.1.3"
     json-schema-traverse: "npm:^1.0.0"
     require-from-string: "npm:^2.0.2"
-    uri-js: "npm:^4.2.2"
-  checksum: 10c0/ac4f72adf727ee425e049bc9d8b31d4a57e1c90da8d28bcd23d60781b12fcd6fc3d68db5df16994c57b78b94eed7988f5a6b482fd376dc5b084125e20a0a622e
+    uri-js: "npm:^4.4.1"
+  checksum: 10c0/89aedf51bc3cd2a98214ef8d4081a9d5c02cedbfd28ada48deb9ae3d456fdfe3dc8899cce44736c80b3965840e32ba8827032df6a60af5671f27f47f8082a3bf
   languageName: node
   linkType: hard
 
@@ -3286,13 +3285,6 @@ __metadata:
     get-intrinsic: "npm:^1.2.4"
     set-function-length: "npm:^1.2.1"
   checksum: 10c0/a3ded2e423b8e2a265983dba81c27e125b48eefb2655e7dfab6be597088da3d47c47976c24bc51b8fd9af1061f8f87b4ab78a314f3c77784b2ae2ba535ad8b8d
-  languageName: node
-  linkType: hard
-
-"call-me-maybe@npm:^1.0.1":
-  version: 1.0.2
-  resolution: "call-me-maybe@npm:1.0.2"
-  checksum: 10c0/8eff5dbb61141ebb236ed71b4e9549e488bcb5451c48c11e5667d5c75b0532303788a1101e6978cafa2d0c8c1a727805599c2741e3e0982855c9f1d78cd06c9f
   languageName: node
   linkType: hard
 
@@ -4854,13 +4846,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-openapi-validator@npm:5.1.6":
-  version: 5.1.6
-  resolution: "express-openapi-validator@npm:5.1.6"
+"express-openapi-validator@npm:5.2.0":
+  version: 5.2.0
+  resolution: "express-openapi-validator@npm:5.2.0"
   dependencies:
-    "@apidevtools/json-schema-ref-parser": "npm:^9.1.2"
-    "@types/multer": "npm:^1.4.7"
-    ajv: "npm:^8.11.2"
+    "@apidevtools/json-schema-ref-parser": "npm:^11.6.2"
+    "@types/multer": "npm:^1.4.11"
+    ajv: "npm:^8.14.0"
     ajv-draft-04: "npm:^1.0.0"
     ajv-formats: "npm:^2.1.1"
     content-type: "npm:^1.0.5"
@@ -4870,8 +4862,10 @@ __metadata:
     media-typer: "npm:^1.1.0"
     multer: "npm:^1.4.5-lts.1"
     ono: "npm:^7.1.3"
-    path-to-regexp: "npm:^6.2.0"
-  checksum: 10c0/92cb7b688bc04d6cc7171b7667a8cc8a3d51fa191236a2e2fcdc3279fb40df3f5a306c2cd8e84219958b184141e583b3326efc127daddb6b392d3492ff06becc
+    path-to-regexp: "npm:^6.2.2"
+  peerDependencies:
+    express: "*"
+  checksum: 10c0/0b34f1e464eacd071f1c991df5b479ca8b04914031bde2b720a76b778b6a56f0b53345f0f91e6fa173e26274c9ab30c95e0972b8f3015954690db9a45b5199cc
   languageName: node
   linkType: hard
 
@@ -7251,10 +7245,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-to-regexp@npm:^6.2.0":
-  version: 6.2.1
-  resolution: "path-to-regexp@npm:6.2.1"
-  checksum: 10c0/7a73811ca703e5c199e5b50b9649ab8f6f7b458a37f7dff9ea338815203f5b1f95fe8cb24d4fdfe2eab5d67ce43562d92534330babca35cdf3231f966adb9360
+"path-to-regexp@npm:^6.2.2":
+  version: 6.2.2
+  resolution: "path-to-regexp@npm:6.2.2"
+  checksum: 10c0/4b60852d3501fd05ca9dd08c70033d73844e5eca14e41f499f069afa8364f780f15c5098002f93bd42af8b3514de62ac6e82a53b5662de881d2b08c9ef21ea6b
   languageName: node
   linkType: hard
 
@@ -9031,7 +9025,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uri-js@npm:^4.2.2":
+"uri-js@npm:^4.2.2, uri-js@npm:^4.4.1":
   version: 4.4.1
   resolution: "uri-js@npm:4.4.1"
   dependencies:
