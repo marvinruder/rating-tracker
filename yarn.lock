@@ -1479,7 +1479,7 @@ __metadata:
     luxon: "npm:3.4.4"
     pino: "npm:9.1.0"
     pino-pretty: "npm:11.1.0"
-    prettier: "npm:3.3.0"
+    prettier: "npm:3.3.1"
     prisma: "npm:5.14.0"
     prisma-json-types-generator: "npm:3.0.4"
     redis: "npm:4.6.14"
@@ -1511,7 +1511,7 @@ __metadata:
     eslint-plugin-import: "npm:2.29.1"
     eslint-plugin-jsdoc: "npm:48.2.7"
     eslint-plugin-prettier: "npm:5.1.3"
-    prettier: "npm:3.3.0"
+    prettier: "npm:3.3.1"
     statuses: "npm:2.0.1"
     typescript: "npm:5.4.5"
     vite: "npm:5.2.12"
@@ -1553,7 +1553,7 @@ __metadata:
     hare-niemeyer: "npm:3.0.0"
     ml-fcnnls: "npm:3.0.0"
     ml-matrix: "npm:6.11.0"
-    prettier: "npm:3.3.0"
+    prettier: "npm:3.3.1"
     prop-types: "npm:15.8.1"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
@@ -1576,7 +1576,7 @@ __metadata:
     "@yarnpkg/sdks": "npm:3.1.2"
     concurrently: "npm:8.2.2"
     eslint: "npm:8.57.0"
-    prettier: "npm:3.3.0"
+    prettier: "npm:3.3.1"
     typescript: "npm:5.4.5"
   dependenciesMeta:
     "@prisma/engines":
@@ -7401,12 +7401,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.3.0":
-  version: 3.3.0
-  resolution: "prettier@npm:3.3.0"
+"prettier@npm:3.3.1":
+  version: 3.3.1
+  resolution: "prettier@npm:3.3.1"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/d033c356320aa2e468bf29c931b094ac730d2f4defd5eb2989d8589313dec901d2fc866e3788f3d161e420b142ea4ec3dda535dbe0169ef4d0026397a68ba9cf
+  checksum: 10c0/c25a709c9f0be670dc6bcb190b622347e1dbeb6c3e7df8b0711724cb64d8647c60b839937a4df4df18e9cfb556c2b08ca9d24d9645eb5488a7fc032a2c4d5cb3
   languageName: node
   linkType: hard
 
