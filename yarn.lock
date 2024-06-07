@@ -1475,7 +1475,7 @@ __metadata:
     express: "npm:4.19.2"
     express-async-errors: "npm:3.1.1"
     express-openapi-validator: "npm:5.2.0"
-    express-rate-limit: "npm:7.3.0"
+    express-rate-limit: "npm:7.3.1"
     luxon: "npm:3.4.4"
     pino: "npm:9.1.0"
     pino-pretty: "npm:11.1.0"
@@ -4869,12 +4869,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-rate-limit@npm:7.3.0":
-  version: 7.3.0
-  resolution: "express-rate-limit@npm:7.3.0"
+"express-rate-limit@npm:7.3.1":
+  version: 7.3.1
+  resolution: "express-rate-limit@npm:7.3.1"
   peerDependencies:
     express: 4 || 5 || ^5.0.0-beta.1
-  checksum: 10c0/ca37754fccd88560d23d46d1a33f3846c19cdc6731230ed16415e12b9c5a56e544aaa28be70a573e809ea66a90306597a49d23ab19fc10b360b1720991e7c936
+  checksum: 10c0/3b6b8f673a75bb525cc5d2d79e3d84b8cb57414458cee5e0692c7f2550888cbd59542fe12f3ffdb8001619122bc3583a8fa5419716c441ccecb8e6e96fcc75f0
   languageName: node
   linkType: hard
 
