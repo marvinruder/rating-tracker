@@ -32,7 +32,7 @@
     "d3-color": "3.1.0",
     "react-switch-selector/react": "18.3.1",
     "react-switch-selector/react-dom": "18.3.1",
-    "vite/esbuild": "0.21.4",
+    "vite/esbuild": "0.21.5",
     "vite-node/vite": "5.2.13",
     "vitest/vite": "5.2.13",
     "whatwg-url": "14.0.0"
