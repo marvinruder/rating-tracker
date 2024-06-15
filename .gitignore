@@ -21,12 +21,8 @@ packages/backend/dev/postgresql
 packages/backend/dev/redis
 packages/backend/dev/signal-cli
 
-# Prisma
+# Prisma Client
 packages/backend/prisma/client
-packages/backend/runtime
-
-# local test environment
-packages/backend/test/*.sql
 
 # Rust
 packages/wasm/*

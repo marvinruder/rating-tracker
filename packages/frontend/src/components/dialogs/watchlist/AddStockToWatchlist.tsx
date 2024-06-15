@@ -17,13 +17,12 @@ import {
   useTheme,
 } from "@mui/material";
 import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
-import { FAVORITES_NAME, stocksAPIPath, watchlistsAPIPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, pluralize, stocksAPIPath, watchlistsAPIPath } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
 import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
-import { pluralize } from "../../../utils/formatters";
 
 import { AddWatchlist } from "./AddWatchlist";
 

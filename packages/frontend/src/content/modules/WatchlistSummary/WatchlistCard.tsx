@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
-import { FAVORITES_NAME, watchlistsAPIPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, pluralize, watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -29,7 +29,6 @@ import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWat
 import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWatchlist";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
-import { pluralize } from "../../../utils/formatters";
 
 /**
  * This component displays information about a watchlist in a card used in the watchlist summary module.

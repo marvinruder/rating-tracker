@@ -5,7 +5,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import type { Watchlist } from "@rating-tracker/commons";
-import { FAVORITES_NAME, watchlistsAPIPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, pluralize, watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -17,7 +17,6 @@ import type { StockTableFiltersProps } from "../../../components/stock/layouts/S
 import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
-import { pluralize } from "../../../utils/formatters";
 
 /**
  * A header for the watchlist details page.

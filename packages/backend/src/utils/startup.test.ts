@@ -32,4 +32,10 @@ describe("startup routine", () => {
     startup();
     expect(mockExit).toHaveBeenCalledWith(1);
   });
+
+  it("fails when Cron schedule is invalid", () => {
+    process.env.AUTO_FETCH_SCHEDULE = "* * * * * * *";
+    startup();
+    expect(mockExit).toHaveBeenCalledWith(1);
+  });
 });

@@ -17,14 +17,13 @@ import {
   CircularProgress,
 } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
-import { stocksAPIPath } from "@rating-tracker/commons";
+import { pluralize, stocksAPIPath } from "@rating-tracker/commons";
 import type { ChangeEvent, ReactNode } from "react";
 import { useState, useEffect, Fragment } from "react";
 import { useNavigate } from "react-router";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
-import { pluralize } from "../../../utils/formatters";
 import { StockPreview } from "../../stock/layouts/StockPreview";
 
 /**

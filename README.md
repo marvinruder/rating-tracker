@@ -143,14 +143,14 @@ When fetching a stock fails, a screenshot of the page the fetch was attempted fr
 
 #### Logging
 
-Logs are printed to `stdout` as well as rotating log files with [`pino-pretty`](https://yarnpkg.com/package/pino-pretty). While the `stdout` log output is already rendered with beautiful colors and icons in a [p10k](https://github.com/romkatv/powerlevel10k)-like fashion (for which a [font supporting all characters](https://github.com/romkatv/powerlevel10k/blob/master/font.md) may be required), the log files are JSON-formatted and can be pretty-printed using [`pino-pretty`](https://yarnpkg.com/package/pino-pretty). A minimal containerized setup can be added to your `.zshrc` or `.bashrc` like this:
+Logs are printed to `stdout` as well as rotating log files with [`pino-pretty`](https://yarnpkg.com/package/pino-pretty). While the `stdout` log output is already rendered with beautiful colors and icons in a [p10k](https://github.com/romkatv/powerlevel10k)-like fashion (for which a [font supporting all characters](https://github.com/romkatv/powerlevel10k/blob/master/font.md) may be required), the log files are JSON-formatted and can be pretty-printed using [`pino-pretty`](https://yarnpkg.com/package/pino-pretty). This tool is included in the Docker image and can be added to your `.zshrc` or `.bashrc` like this:
 
 ```shell
 # ~/.zshrc
-alias pino-pretty="{ (echo -e \"FROM node:alpine\nWORKDIR /home/node\nRUN npm install -g pino-pretty\nUSER node\nCOPY --from=marvinruder/rating-tracker /app/pino-pretty-config.cjs pino-pretty-config.cjs\nENTRYPOINT [ \\\"pino-pretty\\\", \\\"--config\\\", \\\"/home/node/pino-pretty-config.cjs\\\" ]\" | docker build -q - -t pino-pretty > /dev/null) && docker run -i --rm -e FORCE_COLOR=1 pino-pretty -c; }"
+alias pino-pretty="docker exec -e FORCE_COLOR=1 -i $(docker compose -f <path to docker compose file> ps -q <container name>) pino-pretty -c --config /app/pino-pretty-config.cjs"
 
 # To view (and follow) a log file:
-tail -n +1 -f logs/rating-tracker.log | pino-pretty | less -r
+tail -n +1 -f <...>/rating-tracker.log | pino-pretty | less -r
 ```
 
 <picture>
@@ -263,7 +263,7 @@ The port bindings are optional but helpful to connect to the services from the h
 
 #### Initialize database setup
 
-Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. At first startup, Prisma Migrate will automatically create the required tables and indexes.
+Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. At every startup, Prisma Migrate will automatically compare your database with the schema included in the image and create all tables and indexes that are not present yet.
 
 <!-- <div id="create-redis-user-and-password"></div> -->
 

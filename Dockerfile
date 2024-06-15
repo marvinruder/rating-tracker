@@ -36,6 +36,7 @@ RUN \
 
 FROM --platform=$BUILDPLATFORM node:22.3.0-alpine as yarn
 ENV FORCE_COLOR true
+ENV PRISMA_CLI_BINARY_TARGETS linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x
 
 WORKDIR /workdir
 
@@ -51,8 +52,12 @@ RUN \
   --mount=type=bind,source=packages/commons/package.json,target=packages/commons/package.json \
   --mount=type=bind,source=packages/frontend/package.json,target=packages/frontend/package.json \
   --mount=type=bind,source=packages/wasm/package.json,target=packages/wasm/package.json \
+  --mount=type=bind,source=tools/package.json,target=tools/package.json \
+  --mount=type=bind,source=tools/.yarnrc.yml,target=tools/.yarnrc.yml \
+  --mount=type=bind,source=tools/yarn.lock,target=tools/yarn.lock \
   corepack enable && \
-  PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x yarn workspaces focus -A --production
+  yarn workspaces focus -A --production && \
+  yarn tools
 
 
 FROM --platform=$BUILDPLATFORM node:22.3.0-alpine as test-backend
@@ -61,6 +66,8 @@ ENV DOMAIN example.com
 ENV SUBDOMAIN subdomain
 ENV SIGNAL_URL http://127.0.0.1:8080
 ENV SIGNAL_SENDER +493012345678
+
+ENV PATH="/workdir/tools/node_modules/.bin:${PATH}"
 
 WORKDIR /workdir
 
@@ -93,6 +100,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma,target=packages/backend/prisma \
+  --mount=type=bind,from=yarn,source=/workdir/tools,target=tools \
   --network=none \
   (dockerd > /dev/null 2>&1 &) && \
   START_DOCKER_DAEMON_AGAIN=100 && \
@@ -174,7 +182,6 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/dist,target=packages/backend/dist,rw \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma,target=packages/backend/prisma \
-  --mount=type=bind,from=yarn,source=/workdir/packages/backend/runtime,target=packages/backend/runtime \
   --network=none \
   # Bundle backend
   yarn workspace @rating-tracker/backend build && \
@@ -185,8 +192,9 @@ RUN \
   # Create directories for target container and copy only necessary files
   mkdir -p /app/public/api-docs /app/prisma/client && \
   cp -r packages/backend/dist/* /app && \
-  cp -r packages/backend/prisma/migrations packages/backend/runtime /app/prisma && \
-  cp packages/backend/prisma/client/schema.prisma packages/backend/prisma/client/libquery_engine-* /app/prisma/client && \
+  cp -r packages/backend/prisma/migrations /app/prisma && \
+  cp packages/backend/prisma/client/schema.prisma /app/prisma/client && \
+  ln -s ./client/schema.prisma /app/prisma/schema.prisma && \
   cp \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
@@ -257,15 +265,13 @@ RUN \
   apk add --no-cache libgcc libstdc++ && \
   cp -a /mnt/etc/group /etc/group && \
   cp -a /mnt/etc/passwd /etc/passwd && \
-  cp -a /mnt/usr/local/bin/node /usr/local/bin/node && \
-  # Must exist and be parseable for Prisma Migrate to work:
-  echo '{}' > /package.json
+  cp -a /mnt/usr/local/bin/node /usr/local/bin/node
 
 
 FROM deploy-base as deploy
 ARG TARGETARCH
 ENV NODE_ENV production
-ENV PRISMA_SCHEMA_ENGINE_BINARY /app/prisma/runtime/schema-engine
+ENV PATH="/app/tools/node_modules/.bin:${PATH}"
 
 USER node:node
 WORKDIR /app
@@ -287,17 +293,23 @@ LABEL \
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
 RUN \
+  --mount=type=bind,from=yarn,source=/workdir/tools,target=/mnt/app/tools \
+  cp -r /mnt/app/tools /app && \
+  if [ "$TARGETARCH" == "amd64" ]; then \
+  rm /app/tools/node_modules/@prisma/engines/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
+  rm /app/tools/node_modules/@prisma/engines/schema-engine-linux-musl-arm64-openssl-3.0.x; \
+  elif [ "$TARGETARCH" == "arm64" ]; then \
+  rm /app/tools/node_modules/@prisma/engines/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
+  rm /app/tools/node_modules/@prisma/engines/schema-engine-linux-musl-openssl-3.0.x; \
+  fi
+
+RUN \
   --mount=type=bind,from=result,source=app,target=/mnt/app \
   cp -r /mnt/app / && \
-  ln -s client/schema.prisma prisma/schema.prisma && \
   if [ "$TARGETARCH" == "amd64" ]; then \
-  rm /app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
-  rm /app/prisma/runtime/schema-engine-linux-musl-arm64-openssl-3.0.x; \
-  mv /app/prisma/runtime/schema-engine-linux-musl-openssl-3.0.x /app/prisma/runtime/schema-engine; \
+  ln -s /app/tools/node_modules/@prisma/engines/libquery_engine-linux-musl-openssl-3.0.x.so.node /app/prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
   elif [ "$TARGETARCH" == "arm64" ]; then \
-  rm /app/prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
-  rm /app/prisma/runtime/schema-engine-linux-musl-openssl-3.0.x; \
-  mv /app/prisma/runtime/schema-engine-linux-musl-arm64-openssl-3.0.x /app/prisma/runtime/schema-engine; \
+  ln -s /app/tools/node_modules/@prisma/engines/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node /app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
   fi
 
 CMD [ "node", "--enable-source-maps", "server.mjs" ]

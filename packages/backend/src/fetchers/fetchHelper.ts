@@ -10,8 +10,6 @@ import {
 } from "@rating-tracker/commons";
 import { DOMParser } from "@xmldom/xmldom";
 import type { Request, Response } from "express";
-import { DateTime } from "luxon";
-import { Agent } from "undici";
 
 import { readStocks, readStock, updateStock } from "../db/tables/stockTable";
 import { createResource } from "../redis/repositories/resourceRepository";
@@ -21,6 +19,7 @@ import APIError from "../utils/APIError";
 import DataProviderError from "../utils/DataProviderError";
 import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
+import { timeDiffToNow } from "../utils/time";
 
 import lsegFetcher from "./lsegFetcher";
 import marketScreenerFetcher from "./marketScreenerFetcher";
@@ -233,9 +232,7 @@ export const fetchFromDataProvider = async (
               { prefix: "fetch" },
               `Stock ${stock.ticker}: Skipping ${
                 dataProviderName[dataProvider]
-              } fetch since last successful fetch was ${DateTime.fromJSDate(
-                stock[dataProviderLastFetch[dataProvider]],
-              ).toRelative()}`,
+              } fetch since last successful fetch was ${timeDiffToNow(stock[dataProviderLastFetch[dataProvider]])}`,
             );
             stocks.skipped.push(stock);
             continue;
@@ -360,7 +357,6 @@ export const getAndParseHTML = async (
   // Fetch the response
   const responseData = await performFetchRequest(url, {
     ...config,
-    dispatcher: new Agent({ allowH2: true }),
     headers: {
       ...config?.headers,
       "User-Agent":
@@ -410,7 +406,6 @@ export const getJSON = async (url: string, config: FetchRequestOptions): Promise
   // Fetch the response
   const responseData = await performFetchRequest(url, {
     ...config,
-    dispatcher: new Agent({ allowH2: true }),
     headers: {
       ...config?.headers,
       "User-Agent":

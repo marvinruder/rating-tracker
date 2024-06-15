@@ -1,8 +1,8 @@
 import fs from "node:fs";
 
 import { baseURL, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
-import cron from "cron";
 import type { Request, Response } from "express";
+import cron from "node-cron";
 import pino from "pino";
 import pretty from "pino-pretty";
 
@@ -62,16 +62,11 @@ const logger = pino(
 );
 
 // Rotate the log file every day
-new cron.CronJob(
-  "0 0 0 * * *",
-  () => {
-    fileStream.end();
-    fileStream = getNewFileStream();
-    multistream.streams.find((stream) => stream.stream instanceof fs.WriteStream).stream = fileStream;
-  },
-  null,
-  true,
-);
+cron.schedule("0 0 * * *", () => {
+  fileStream.end();
+  fileStream = getNewFileStream();
+  multistream.streams.find((stream) => stream.stream instanceof fs.WriteStream).stream = fileStream;
+});
 
 /**
  * A function logging API requests.

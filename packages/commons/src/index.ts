@@ -37,6 +37,8 @@ export * from "./lib/ratings/MSCI";
 export * from "./lib/stylebox/Size";
 export * from "./lib/stylebox/Style";
 
+export * from "./lib/utils/formatters";
+
 export * from "./lib/Currency";
 
 export * from "./lib/DataProvider";

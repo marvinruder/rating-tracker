@@ -14,7 +14,6 @@ import {
   WRITE_STOCKS_ACCESS,
 } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
-import { DateTime } from "luxon";
 
 import { readStocks, readStock, updateStock } from "../db/tables/stockTable";
 import { fetchFromDataProvider } from "../fetchers/fetchHelper";
@@ -30,6 +29,7 @@ import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
 import { performFetchRequest } from "../utils/fetchRequest";
 import logger from "../utils/logger";
+import { timeDiffToNow } from "../utils/time";
 
 import SingletonController from "./SingletonController";
 
@@ -351,9 +351,9 @@ class FetchController extends SingletonController {
         sustainalyticsXMLResource = await readResource(URL_SUSTAINALYTICS);
         logger.info(
           { prefix: "fetch" },
-          `Using cached Sustainalytics data because last fetch was ${DateTime.fromJSDate(
+          `Using cached Sustainalytics data because last fetch was ${timeDiffToNow(
             sustainalyticsXMLResource.fetchDate,
-          ).toRelative()}.`,
+          )}.`,
         );
       } catch (e) {
         // If the cached data is not available, we fetch it freshly from the web.

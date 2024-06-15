@@ -107,13 +107,6 @@ export const CurrencyWithTooltip = (props: CurrencyWithTooltipProps): JSX.Elemen
 /* c8 ignore stop */
 
 /**
- * Returns the letter `s` if the number is not 1, otherwise an empty string.
- * @param number The number to check.
- * @returns The pluralization suffix.
- */
-export const pluralize = (number: number): string => (number !== 1 ? "s" : "");
-
-/**
  * Properties for the CurrencyWithTooltip component.
  */
 interface CurrencyWithTooltipProps {
