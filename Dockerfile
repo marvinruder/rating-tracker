@@ -243,7 +243,6 @@ WORKDIR /coverage
 # Add build artifacts
 COPY --from=build-backend /app /app
 COPY --from=build-frontend /app/public/. /app/public
-COPY --from=yarn /workdir/tools/. /app/tools
 
 # Copy coverage reports from test stages
 COPY --from=test-backend /coverage/backend /coverage/backend
@@ -294,15 +293,22 @@ LABEL \
 HEALTHCHECK CMD wget -qO /dev/null http://localhost:$PORT/api/status || exit 1
 
 RUN \
-  --mount=type=bind,from=result,source=app,target=/mnt/app \
-  cp -r /mnt/app / && \
+  --mount=type=bind,from=yarn,source=/workdir/tools,target=/mnt/app/tools \
+  cp -r /mnt/app/tools /app && \
   if [ "$TARGETARCH" == "amd64" ]; then \
   rm /app/tools/node_modules/@prisma/engines/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
   rm /app/tools/node_modules/@prisma/engines/schema-engine-linux-musl-arm64-openssl-3.0.x; \
-  ln -s /app/tools/node_modules/@prisma/engines/libquery_engine-linux-musl-openssl-3.0.x.so.node /app/prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
   elif [ "$TARGETARCH" == "arm64" ]; then \
   rm /app/tools/node_modules/@prisma/engines/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
   rm /app/tools/node_modules/@prisma/engines/schema-engine-linux-musl-openssl-3.0.x; \
+  fi
+
+RUN \
+  --mount=type=bind,from=result,source=app,target=/mnt/app \
+  cp -r /mnt/app / && \
+  if [ "$TARGETARCH" == "amd64" ]; then \
+  ln -s /app/tools/node_modules/@prisma/engines/libquery_engine-linux-musl-openssl-3.0.x.so.node /app/prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node; \
+  elif [ "$TARGETARCH" == "arm64" ]; then \
   ln -s /app/tools/node_modules/@prisma/engines/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node /app/prisma/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node; \
   fi
 
