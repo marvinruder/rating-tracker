@@ -194,6 +194,7 @@ RUN \
   cp -r packages/backend/dist/* /app && \
   cp -r packages/backend/prisma/migrations /app/prisma && \
   cp packages/backend/prisma/client/schema.prisma /app/prisma/client && \
+  ln -s ./client/schema.prisma /app/prisma/schema.prisma && \
   cp \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui.css \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-bundle.js \
