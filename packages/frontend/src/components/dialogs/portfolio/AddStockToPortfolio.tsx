@@ -18,12 +18,11 @@ import {
   useTheme,
 } from "@mui/material";
 import type { Stock, PortfolioSummary, Currency } from "@rating-tracker/commons";
-import { stocksAPIPath, portfoliosAPIPath, currencyMinorUnits } from "@rating-tracker/commons";
+import { stocksAPIPath, portfoliosAPIPath, currencyMinorUnits, pluralize } from "@rating-tracker/commons";
 import { Fragment, useEffect, useRef, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
-import { pluralize } from "../../../utils/formatters";
 
 import { AddPortfolio } from "./AddPortfolio";
 

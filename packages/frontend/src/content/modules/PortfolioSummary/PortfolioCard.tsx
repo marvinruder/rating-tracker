@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import type { PortfolioSummary } from "@rating-tracker/commons";
-import { currencyMinorUnits, getTotalAmount, portfoliosAPIPath } from "@rating-tracker/commons";
+import { currencyMinorUnits, getTotalAmount, pluralize, portfoliosAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -23,7 +23,6 @@ import PinnedDialog from "../../../components/dialogs/PinnedDialog";
 import { DeletePortfolio } from "../../../components/dialogs/portfolio/DeletePortfolio";
 import { EditPortfolio } from "../../../components/dialogs/portfolio/EditPortfolio";
 import AddStockToCollection from "../../../components/dialogs/stock/AddStockToCollection";
-import { pluralize } from "../../../utils/formatters";
 
 /**
  * This component displays information about a portfolio in a card used in the portfolio summary module.

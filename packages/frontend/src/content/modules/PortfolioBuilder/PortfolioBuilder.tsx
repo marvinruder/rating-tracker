@@ -65,6 +65,7 @@ import {
   currencyMinorUnits,
   groupOfIndustry,
   isCurrency,
+  pluralize,
   portfoliosAPIPath,
   regionArray,
   regionName,
@@ -94,7 +95,7 @@ import { useNotificationContextUpdater } from "../../../contexts/NotificationCon
 import type { ProportionalRepresentationAlgorithm } from "../../../types/ProportionalRepresentationAlgorithm";
 import { isProportionalRepresentationAlgorithm } from "../../../types/ProportionalRepresentationAlgorithm";
 import api from "../../../utils/api";
-import { ExponentialNumber, formatPercentage, pluralize } from "../../../utils/formatters";
+import { ExponentialNumber, formatPercentage } from "../../../utils/formatters";
 import { computePortfolio } from "../../../utils/portfolioComputation";
 
 import { PortfolioBuilderHeader } from "./PortfolioBuilderHeader";

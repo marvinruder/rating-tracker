@@ -1,0 +1,15 @@
+{
+  "packageManager": "yarn@4.3.0",
+  "dependencies": {
+    "pino-pretty": "11.2.1",
+    "prisma": "5.14.0"
+  },
+  "dependenciesMeta": {
+    "@prisma/engines": {
+      "built": true
+    },
+    "prisma": {
+      "built": true
+    }
+  }
+}

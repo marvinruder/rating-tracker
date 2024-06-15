@@ -20,12 +20,12 @@ import {
   useTheme,
 } from "@mui/material";
 import type { PortfolioSummary, PortfolioRawData, WeightedStock } from "@rating-tracker/commons";
-import { portfoliosAPIPath, stocksAPIPath } from "@rating-tracker/commons";
+import { pluralize, portfoliosAPIPath, stocksAPIPath } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import api from "../../../utils/api";
-import { CurrencyWithTooltip, pluralize } from "../../../utils/formatters";
+import { CurrencyWithTooltip } from "../../../utils/formatters";
 
 import { AddPortfolio } from "./AddPortfolio";
 

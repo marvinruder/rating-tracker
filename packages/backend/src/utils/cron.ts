@@ -8,7 +8,7 @@ import {
   createURLSearchParams,
   fetchAPIPath,
 } from "@rating-tracker/commons";
-import * as cron from "cron";
+import cron from "node-cron";
 
 import { sendMessage, SIGNAL_PREFIX_ERROR } from "../signal/signal";
 
@@ -60,63 +60,58 @@ const dataProviderParams: Record<DataProvider, Record<string, string>> = {
  * @param autoFetchSchedule A cron-like schedule description.
  */
 const setupCronJobs = (bypassAuthenticationForInternalRequestsToken: string, autoFetchSchedule: string) => {
-  new cron.CronJob(
-    autoFetchSchedule,
-    () => {
-      void (async (): Promise<void> => {
-        for await (const dataProvider of [
-          "msci",
-          "lseg",
-          "sp",
-          "sustainalytics",
-          // Fetch data from Yahoo first
-          "yahoo",
-          "morningstar",
-          // Fetch data from Marketscreener after Yahoo, so Market Screener can use the up-to-date Last Close price to
-          // calculate the analyst target price properly
-          "marketScreener",
-        ]) {
-          const urlSearchParams = createURLSearchParams(dataProviderParams[dataProvider]);
-          await performInternalRequest({
-            path:
-              baseURL +
-              fetchAPIPath +
-              dataProviderEndpoints[dataProvider] +
-              (urlSearchParams.toString() ? "?" + urlSearchParams : ""),
-            method: "POST",
-            headers: {
-              Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
-            },
+  cron.schedule(autoFetchSchedule, () => {
+    void (async (): Promise<void> => {
+      for await (const dataProvider of [
+        "msci",
+        "lseg",
+        "sp",
+        "sustainalytics",
+        // Fetch data from Yahoo first
+        "yahoo",
+        "morningstar",
+        // Fetch data from Marketscreener after Yahoo, so Market Screener can use the up-to-date Last Close price to
+        // calculate the analyst target price properly
+        "marketScreener",
+      ]) {
+        const urlSearchParams = createURLSearchParams(dataProviderParams[dataProvider]);
+        await performInternalRequest({
+          path:
+            baseURL +
+            fetchAPIPath +
+            dataProviderEndpoints[dataProvider] +
+            (urlSearchParams.toString() ? "?" + urlSearchParams : ""),
+          method: "POST",
+          headers: {
+            Cookie: `bypassAuthenticationForInternalRequestsToken=${bypassAuthenticationForInternalRequestsToken};`,
+          },
+        })
+          .then((res) => {
+            if (res.statusCode < 200 || res.statusCode >= 300)
+              throw new Error(
+                typeof res.data === "object" && "message" in res.data && typeof res.data.message === "string"
+                  ? res.data.message
+                  : typeof res.data === "string"
+                    ? res.data
+                    : `Request failed with status code ${res.statusCode}`,
+              );
           })
-            .then((res) => {
-              if (res.statusCode < 200 || res.statusCode >= 300)
-                throw new Error(
-                  typeof res.data === "object" && "message" in res.data && typeof res.data.message === "string"
-                    ? res.data.message
-                    : typeof res.data === "string"
-                      ? res.data
-                      : `Request failed with status code ${res.statusCode}`,
-                );
-            })
-            .catch(async (e: Error) => {
-              logger.error(
-                { prefix: "cron", err: e },
-                `An error occurred during the ${dataProviderName[dataProvider]} Cron Job`,
-              );
-              await sendMessage(
-                SIGNAL_PREFIX_ERROR +
-                  `An error occurred during the ${dataProviderName[dataProvider]} Cron Job: ${
-                    String(e.message).split(/[\n:{]/)[0]
-                  }`,
-                "fetchError",
-              );
-            });
-        }
-      })();
-    },
-    null,
-    true,
-  );
+          .catch(async (e: Error) => {
+            logger.error(
+              { prefix: "cron", err: e },
+              `An error occurred during the ${dataProviderName[dataProvider]} Cron Job`,
+            );
+            await sendMessage(
+              SIGNAL_PREFIX_ERROR +
+                `An error occurred during the ${dataProviderName[dataProvider]} Cron Job: ${
+                  String(e.message).split(/[\n:{]/)[0]
+                }`,
+              "fetchError",
+            );
+          });
+      }
+    })();
+  });
 
   // If we have an auto fetch schedule, log a message
   logger.info(

@@ -1,4 +1,7 @@
+import assert from "node:assert";
+
 import chalk from "chalk";
+import cron from "node-cron";
 
 import packageInfo from "../../package.json" with { type: "json" };
 
@@ -82,6 +85,8 @@ export const startup = () => {
       /* c8 ignore next */ // This should never occur, since always Errors are thrown.
     } else throw e; // if something else than an error was thrown
   }
+
+  if (process.env.AUTO_FETCH_SCHEDULE) assert(cron.validate(process.env.AUTO_FETCH_SCHEDULE), "Invalid cron schedule");
 };
 
 // Run the startup method, so it is executed before all other imports.

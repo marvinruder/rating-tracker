@@ -1,20 +1,11 @@
-import { createLogger } from "vite";
 import { defineConfig } from "vitest/config";
 
 import "./test/env";
 
-const customLogger = createLogger();
-const customLoggerError = customLogger.error;
-customLogger.error = (msg, options) => {
-  // vitejs/vite#14328
-  if (msg.includes("WebSocket server error: Port is already in use")) return;
-  customLoggerError(msg, options);
-};
-
 export default defineConfig({
-  customLogger,
   cacheDir: ".vite",
   esbuild: { target: `node${process.versions.node}` },
+  server: { ws: false },
   test: {
     coverage: {
       enabled: true,
