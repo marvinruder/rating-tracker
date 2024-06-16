@@ -57,7 +57,7 @@ export const Sparkline = (props: SparklineProps): JSX.Element => {
       </Grid>
       <Grid item width="calc(100% - 30px)">
         <YahooNavigator stock={props.stock}>
-          <SparkLineChart data={data} colors={[color]} height={props.height} />
+          <SparkLineChart data={data} colors={[color]} height={props.height} yAxis={{ min, max }} />
         </YahooNavigator>
       </Grid>
     </Grid>
