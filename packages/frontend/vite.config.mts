@@ -44,7 +44,7 @@ export default mergeConfig(
     worker: { format: "es", plugins: () => [wasm()] },
   }),
   defineVitestConfig({
-    server: { ws: false },
+    server: { ws: process.env.NODE_ENV === "test" ? false : undefined },
     test: {
       coverage: { all: false, enabled: true, provider: "v8" },
       poolOptions: { threads: { useAtomics: true } },
