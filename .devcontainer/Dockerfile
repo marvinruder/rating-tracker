@@ -1,4 +1,4 @@
-FROM alpine:3.20.0
+FROM alpine:3.20.1
 
 COPY --from=node:22.3.0-alpine / /
 COPY --from=rust:1.79.0-alpine / /
