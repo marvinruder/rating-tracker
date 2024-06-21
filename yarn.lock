@@ -1045,14 +1045,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.7.0":
-  version: 7.7.0
-  resolution: "@mui/x-charts@npm:7.7.0"
+"@mui/x-charts@npm:7.7.1":
+  version: 7.7.1
+  resolution: "@mui/x-charts@npm:7.7.1"
   dependencies:
     "@babel/runtime": "npm:^7.24.7"
     "@mui/base": "npm:^5.0.0-beta.40"
-    "@mui/system": "npm:^5.15.15"
-    "@mui/utils": "npm:^5.15.14"
+    "@mui/system": "npm:^5.15.20"
+    "@mui/utils": "npm:^5.15.20"
     "@react-spring/rafz": "npm:^9.7.3"
     "@react-spring/web": "npm:^9.7.3"
     clsx: "npm:^2.1.1"
@@ -1073,7 +1073,7 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/2969264f97e4f1f1e9fa150e78f6f7cb18bb5561f12bf0ecfd3455f7b5bc414aec5089fc136d813baef10dbe634240f519d05d45cdca904b28abf8b3c3e0ce8c
+  checksum: 10c0/8d028d851645da2c97e227a10a383dcb57055964dbda5ef14c35d2e0282036c279c5492662f9489e7729ad82bb4d070308c6b4e5525b7c01e0fbda035ac22c31
   languageName: node
   linkType: hard
 
@@ -1458,7 +1458,7 @@ __metadata:
     "@mui/icons-material": "npm:5.15.20"
     "@mui/lab": "npm:5.0.0-alpha.170"
     "@mui/material": "npm:5.15.20"
-    "@mui/x-charts": "npm:7.7.0"
+    "@mui/x-charts": "npm:7.7.1"
     "@nivo/core": "npm:0.87.0"
     "@nivo/sunburst": "npm:0.87.0"
     "@rating-tracker/commons": "workspace:*"
