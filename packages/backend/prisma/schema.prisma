@@ -650,7 +650,6 @@ enum Currency {
   SGD
   SHP
   SLE
-  SLL
   SOS
   SRD
   SSP
@@ -687,6 +686,7 @@ enum Currency {
   YER
   ZAR
   ZMW
+  ZWG
   ZWL
 }
 
