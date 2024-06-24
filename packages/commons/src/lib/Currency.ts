@@ -133,7 +133,6 @@ export const currencyArray = [
   "SGD",
   "SHP",
   "SLE",
-  "SLL", // Ceases to be legal tender effective 1 January 2024
   "SOS",
   "SRD",
   "SSP",
@@ -170,7 +169,8 @@ export const currencyArray = [
   "YER",
   "ZAR",
   "ZMW",
-  "ZWL",
+  "ZWG",
+  "ZWL", // Will expire effective 1 September 2024
 ] as const;
 
 /**
@@ -319,7 +319,6 @@ export const currencyName: Record<Currency, string> = {
   SGD: "Singapore Dollar",
   SHP: "Saint Helena Pound",
   SLE: "Leone",
-  SLL: "Leone", // Ceases to be legal tender effective 1 January 2024
   SOS: "Somali Shilling",
   SRD: "Surinam Dollar",
   SSP: "South Sudanese Pound",
@@ -356,7 +355,8 @@ export const currencyName: Record<Currency, string> = {
   YER: "Yemeni Rial",
   ZAR: "Rand",
   ZMW: "Zambian Kwacha",
-  ZWL: "Zimbabwe Dollar",
+  ZWG: "Zimbabwe Gold",
+  ZWL: "Zimbabwe Dollar", // Will expire effective 1 September 2024
 };
 
 /**
@@ -491,7 +491,6 @@ export const countryOfCurrency: Record<Currency, Country | "EU"> = {
   SGD: "SG",
   SHP: "SH",
   SLE: "SL",
-  SLL: "SL", // Ceases to be legal tender effective 1 January 2024
   SOS: "SO",
   SRD: "SR",
   SSP: "SS",
@@ -528,7 +527,8 @@ export const countryOfCurrency: Record<Currency, Country | "EU"> = {
   YER: "YE",
   ZAR: "ZA",
   ZMW: "ZM",
-  ZWL: "ZW",
+  ZWG: "ZW",
+  ZWL: "ZW", // Will expire effective 1 September 2024
 };
 
 /**
@@ -663,7 +663,6 @@ export const currencyMinorUnits: Record<Currency, 0 | 2 | 3 | 4> = {
   SGD: 2,
   SHP: 2,
   SLE: 2,
-  SLL: 2,
   SOS: 2,
   SRD: 2,
   SSP: 2,
@@ -700,7 +699,8 @@ export const currencyMinorUnits: Record<Currency, 0 | 2 | 3 | 4> = {
   YER: 2,
   ZAR: 2,
   ZMW: 2,
-  ZWL: 2,
+  ZWG: 2,
+  ZWL: 2, // Will expire effective 1 September 2024
 };
 
 /**
