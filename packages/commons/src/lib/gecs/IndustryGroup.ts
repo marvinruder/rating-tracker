@@ -294,5 +294,5 @@ export const groupOfIndustry: Record<Industry, IndustryGroup> = {
  * @returns The array of industries in the industry group.
  */
 export const getIndustriesInGroup = (industryGroup: IndustryGroup): Industry[] => {
-  return industryArray.filter((industry) => groupOfIndustry[industry] == industryGroup);
+  return industryArray.filter((industry) => groupOfIndustry[industry] === industryGroup);
 };

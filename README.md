@@ -192,8 +192,6 @@ Docker Compose is the preferred way to run Rating Tracker together with all the 
 <summary>View Docker Compose configuration</summary>
 
 ```yml
-version: "3.8"
-
 services:
   postgres:
     image: postgres:alpine

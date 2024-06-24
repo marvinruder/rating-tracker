@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1-labs
 
-FROM --platform=$BUILDPLATFORM rust:1.79.0-alpine as wasm
+FROM --platform=$BUILDPLATFORM rust:1.79.0-alpine AS wasm
 
 WORKDIR /workdir
 
@@ -34,9 +34,9 @@ RUN \
   rm pkg/package.json.bak
 
 
-FROM --platform=$BUILDPLATFORM node:22.3.0-alpine as yarn
-ENV FORCE_COLOR true
-ENV PRISMA_CLI_BINARY_TARGETS linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x
+FROM --platform=$BUILDPLATFORM node:22.3.0-alpine AS yarn
+ENV FORCE_COLOR=true
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x
 
 WORKDIR /workdir
 
@@ -60,12 +60,12 @@ RUN \
   yarn tools
 
 
-FROM --platform=$BUILDPLATFORM node:22.3.0-alpine as test-backend
-ENV FORCE_COLOR true
-ENV DOMAIN example.com
-ENV SUBDOMAIN subdomain
-ENV SIGNAL_URL http://127.0.0.1:8080
-ENV SIGNAL_SENDER +493012345678
+FROM --platform=$BUILDPLATFORM node:22.3.0-alpine AS test-backend
+ENV FORCE_COLOR=true
+ENV DOMAIN=example.com
+ENV SUBDOMAIN=subdomain
+ENV SIGNAL_URL=http://127.0.0.1:8080
+ENV SIGNAL_SENDER=+493012345678
 
 ENV PATH="/workdir/tools/node_modules/.bin:${PATH}"
 
@@ -113,8 +113,8 @@ RUN \
   mv packages/backend/coverage /coverage/backend
 
 
-FROM --platform=$BUILDPLATFORM node:22.3.0-alpine as test-commons
-ENV FORCE_COLOR true
+FROM --platform=$BUILDPLATFORM node:22.3.0-alpine AS test-commons
+ENV FORCE_COLOR=true
 
 WORKDIR /workdir
 
@@ -136,8 +136,8 @@ RUN \
   mv packages/commons/coverage /coverage/commons
 
 
-FROM --platform=$BUILDPLATFORM node:22.3.0-alpine as test-frontend
-ENV FORCE_COLOR true
+FROM --platform=$BUILDPLATFORM node:22.3.0-alpine AS test-frontend
+ENV FORCE_COLOR=true
 
 WORKDIR /workdir
 
@@ -161,9 +161,9 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM --platform=$BUILDPLATFORM node:22.3.0-alpine as build-backend
-ENV NODE_ENV production
-ENV FORCE_COLOR true
+FROM --platform=$BUILDPLATFORM node:22.3.0-alpine AS build-backend
+ENV NODE_ENV=production
+ENV FORCE_COLOR=true
 
 WORKDIR /workdir
 
@@ -201,9 +201,9 @@ RUN \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /app/public/api-docs/
 
-FROM --platform=$BUILDPLATFORM node:22.3.0-alpine as build-frontend
-ENV NODE_ENV production
-ENV FORCE_COLOR true
+FROM --platform=$BUILDPLATFORM node:22.3.0-alpine AS build-frontend
+ENV NODE_ENV=production
+ENV FORCE_COLOR=true
 
 WORKDIR /workdir
 
@@ -229,7 +229,7 @@ RUN \
   cp -r packages/frontend/dist/* /app/public
 
 
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.3_9-jre-alpine as result
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.3_9-jre-alpine AS result
 
 # Install bash and download and extract Codacy coverage reporter
 RUN \
@@ -253,9 +253,9 @@ ENTRYPOINT [ "codacy-coverage" ]
 
 
 # required for Renovate to update the base image:
-FROM node:22.3.0-alpine as node
+FROM node:22.3.0-alpine AS node
 
-FROM alpine:3.20.1 as deploy-base
+FROM alpine:3.20.1 AS deploy-base
 ARG TARGETARCH
 
 # Install standard libraries and copy Node.js binary
@@ -268,9 +268,9 @@ RUN \
   cp -a /mnt/usr/local/bin/node /usr/local/bin/node
 
 
-FROM deploy-base as deploy
+FROM deploy-base AS deploy
 ARG TARGETARCH
-ENV NODE_ENV production
+ENV NODE_ENV=production
 ENV PATH="/app/tools/node_modules/.bin:${PATH}"
 
 USER node:node

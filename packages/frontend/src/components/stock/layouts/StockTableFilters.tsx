@@ -607,8 +607,8 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                                 xs={2}
                                 sx={{
                                   backgroundColor:
-                                    (styleboxInput.size == size || !styleboxInput.size) &&
-                                    (styleboxInput.style == style || !styleboxInput.style) &&
+                                    (styleboxInput.size === size || !styleboxInput.size) &&
+                                    (styleboxInput.style === style || !styleboxInput.style) &&
                                     (styleboxInput.size || styleboxInput.style)
                                       ? theme.colors.alpha.black[100]
                                       : theme.colors.alpha.white[100],

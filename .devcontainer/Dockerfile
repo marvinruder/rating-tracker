@@ -8,7 +8,7 @@ ENV CARGO_HOME="/usr/local/cargo"
 ENV RUSTUP_HOME="/usr/local/rustup"
 
 ENV PATH="/rating-tracker/tools/node_modules/.bin:${PATH}"
-ENV PRISMA_CLI_BINARY_TARGETS linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x
 
 RUN \
   --mount=type=cache,target=/var/cache/apk \

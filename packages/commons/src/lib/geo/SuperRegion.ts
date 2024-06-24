@@ -52,7 +52,7 @@ export const superRegionOfRegion: Record<Region, SuperRegion> = {
  * @returns The array of regions in the super given region.
  */
 export const getRegionsInSuperRegion = (superRegion: SuperRegion): Region[] => {
-  return regionArray.filter((region) => superRegionOfRegion[region] == superRegion);
+  return regionArray.filter((region) => superRegionOfRegion[region] === superRegion);
 };
 
 /**

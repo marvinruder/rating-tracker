@@ -310,5 +310,5 @@ export const regionOfCountry: Record<Country, Region> = {
  * @returns The array of countries in the given region.
  */
 export const getCountriesInRegion = (region: Region): Country[] => {
-  return countryArray.filter((country) => regionOfCountry[country] == region);
+  return countryArray.filter((country) => regionOfCountry[country] === region);
 };
