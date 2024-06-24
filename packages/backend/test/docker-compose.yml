@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   postgres-test:
     container_name: postgres-test

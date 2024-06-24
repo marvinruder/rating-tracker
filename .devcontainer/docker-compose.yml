@@ -1,5 +1,3 @@
-version: "3.9"
-
 include:
   - path: ../packages/backend/dev/docker-compose.yml
   - path: ../packages/backend/test/docker-compose.yml

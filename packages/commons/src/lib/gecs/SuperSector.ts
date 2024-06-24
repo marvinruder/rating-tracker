@@ -65,5 +65,5 @@ export const superSectorOfSector: Record<Sector, SuperSector> = {
  * @returns The array of sectors in the super sector.
  */
 export const getSectorsInSuperSector = (superSector: SuperSector): Sector[] => {
-  return sectorArray.filter((sector) => superSectorOfSector[sector] == superSector);
+  return sectorArray.filter((sector) => superSectorOfSector[sector] === superSector);
 };

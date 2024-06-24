@@ -319,7 +319,7 @@ export const pinoPrettyConfig: PrettyOptions = process.env.PLAIN_LOG
                   { icon: req.method, color: prefixColors[req.method] ?? "grey" },
                   // URL path
                   ...req.url
-                    .slice(1, req.url.indexOf("?") == -1 ? undefined : req.url.indexOf("?"))
+                    .slice(1, req.url.indexOf("?") === -1 ? undefined : req.url.indexOf("?"))
                     .split("/")
                     .map((rawPrefix) => ({ icon: decodeURIComponent(rawPrefix), color: "grey" })),
                 ],
