@@ -32,7 +32,7 @@
   "resolutions": {
     "react-switch-selector/react": "18.3.1",
     "react-switch-selector/react-dom": "18.3.1",
-    "vite/esbuild": "0.21.5",
+    "vite/esbuild": "0.22.0",
     "whatwg-url": "14.0.0"
   },
   "dependenciesMeta": {
