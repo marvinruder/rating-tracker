@@ -1,5 +1,5 @@
 import { Buffer } from "node:buffer";
-import { randomUUID } from "node:crypto";
+import { randomBytes } from "node:crypto";
 
 import {
   ALREADY_REGISTERED_ERROR_MESSAGE,
@@ -257,7 +257,10 @@ class AuthController extends SingletonController {
       await updateUserWithCredentials(user.email, { counter: newCounter });
 
       // We create and store a session cookie for the user.
-      const authToken = randomUUID();
+      // The token consists of 256 bits of random data converted to a base 36 string.
+      const authToken = BigInt("0x" + randomBytes(32).toString("hex"))
+        .toString(36)
+        .padStart(50, "0");
       await createSession({ sessionID: authToken, email: user.email });
       res.cookie("authToken", authToken, {
         maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
