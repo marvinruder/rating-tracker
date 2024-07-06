@@ -2,13 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; img-src 'self' data:; style-src-elem 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; form-action 'self'; base-uri 'none';" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta id="meta-theme-color-light" name="theme-color" content="#F5F5F5" media="(prefers-color-scheme: light)">
     <meta id="meta-theme-color-dark" name="theme-color" content="#171717" media="(prefers-color-scheme: dark)">
     <meta name="description" content="A web service fetching and providing financial and ESG ratings for stocks.">
-    <link rel="preconnect" href="https://rsms.me/">
-    <link rel="preload" href="https://rsms.me/inter/inter.css" as="style" crossorigin referrerpolicy="no-referrer">
-    <link rel="preload" href="https://rsms.me/inter/font-files/InterVariable.woff2?v=4.0" as="font" type="font/woff2" crossorigin referrerpolicy="no-referrer">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/<%- faviconPath %>/favicon-180.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/<%- faviconPath %>/favicon-192.png">
     <link rel="icon" type="image/png" sizes="128x128" href="/assets/images/<%- faviconPath %>/favicon-128.png">
@@ -17,7 +15,15 @@
   </head>
 
   <body>
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" crossorigin referrerpolicy="no-referrer">
+    <style>
+      @font-face {
+        font-family: InterVariable;
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+        src: url('/assets/fonts/InterVariable.woff2?v=4.0') format('woff2');
+      }
+    </style>
     <noscript>Seriously?</noscript>
     <div id="root"></div>
   </body>
