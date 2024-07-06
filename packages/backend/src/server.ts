@@ -3,7 +3,7 @@ import "./utils/startup";
 // eslint-disable-next-line import/order
 import "./db/migrate";
 
-import { randomUUID } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import path from "path";
 
 import { baseURL } from "@rating-tracker/commons";
@@ -37,7 +37,9 @@ import logger, { logRequest } from "./utils/logger";
  * A token that is used to bypass authentication for requests sent by Cron jobs. It is generated randomly and changes on
  * every server restart.
  */
-const bypassAuthenticationForInternalRequestsToken = randomUUID();
+const bypassAuthenticationForInternalRequestsToken = BigInt("0x" + randomBytes(64).toString("hex"))
+  .toString(36)
+  .padStart(100, "0");
 
 /**
  * A server, powered by Express.js. Responsible for serving static content and routing requests through various
