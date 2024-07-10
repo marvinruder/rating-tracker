@@ -47,6 +47,7 @@ export default mergeConfig(
     server: { ws: process.env.NODE_ENV === "test" ? false : undefined },
     test: {
       coverage: { all: false, enabled: true, provider: "v8" },
+      pool: "threads",
       poolOptions: { threads: { useAtomics: true } },
     },
   }),
