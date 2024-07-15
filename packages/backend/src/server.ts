@@ -131,9 +131,8 @@ server.app.use(async (req, res, next) => {
     }
   }
   /* c8 ignore start */ // We do not test Cron jobs
-  if (req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken) {
+  if (req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken)
     res.locals.userIsCron = true;
-  }
   /* c8 ignore stop */
   next();
 });

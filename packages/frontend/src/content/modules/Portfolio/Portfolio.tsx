@@ -662,7 +662,7 @@ const PortfolioModule = (): JSX.Element => {
                         backgroundColor:
                           theme.colors.primary.main +
                           // Add transparency to the background color based on the value of the style box.
-                          Math.round(255 * (styleBox ? styleBox[`${size}-${style}`] ?? 0 : 0))
+                          Math.round(255 * (styleBox ? (styleBox[`${size}-${style}`] ?? 0) : 0))
                             .toString(16)
                             .padStart(2, "0"),
                       }}

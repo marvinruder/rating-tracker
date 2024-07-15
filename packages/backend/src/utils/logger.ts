@@ -45,7 +45,6 @@ let fileStream = getNewFileStream();
  * A multistream which writes to both the standard output and the log file.
  */
 const multistream = pino.multistream([
-  // { level: LOG_LEVEL, stream: uglyStream },
   { level: LOG_LEVEL, stream: prettyStream },
   { level: "trace", stream: fileStream },
 ]);
@@ -53,13 +52,7 @@ const multistream = pino.multistream([
 /**
  * The logger used to log messages to both the standard output and the log file.
  */
-const logger = pino(
-  {
-    level: LOG_LEVEL,
-    base: { pid: undefined, hostname: undefined },
-  },
-  multistream,
-);
+const logger = pino({ level: "trace", base: { pid: undefined, hostname: undefined } }, multistream);
 
 // Rotate the log file every day
 cron.schedule("0 0 * * *", () => {
