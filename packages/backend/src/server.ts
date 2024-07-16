@@ -66,7 +66,7 @@ server.app.set("trust proxy", 1);
  */
 const staticContentPath = path.join(__dirname, "public");
 
-/* c8 ignore next */ // This is not tested because it is only used in development servers
+/* c8 ignore start */ // This is not tested because it is only used in development servers
 if (process.env.NODE_ENV === "development")
   server.app.use(
     "/assets/images/favicon",
@@ -78,7 +78,7 @@ if (process.env.NODE_ENV === "development")
     }),
   );
 
-/* c8 ignore start */ // We do not have static resources in tests, so this middleware is not tested
+// We do not have static resources in tests, so this middleware is not tested
 server.app.use(
   express.static(staticContentPath, {
     dotfiles: "ignore",
