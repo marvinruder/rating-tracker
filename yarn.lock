@@ -1409,7 +1409,7 @@ __metadata:
     prisma: "npm:5.17.0"
     prisma-json-types-generator: "npm:3.0.4"
     redis: "npm:4.6.15"
-    redis-om: "npm:0.4.4"
+    redis-om: "npm:0.4.6"
     response-time: "npm:2.3.2"
     supertest: "npm:7.0.0"
     swagger-ui-dist: "npm:5.17.14"
@@ -7545,15 +7545,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis-om@npm:0.4.4":
-  version: 0.4.4
-  resolution: "redis-om@npm:0.4.4"
+"redis-om@npm:0.4.6":
+  version: 0.4.6
+  resolution: "redis-om@npm:0.4.6"
   dependencies:
     jsonpath-plus: "npm:^7.2.0"
     just-clone: "npm:^6.1.1"
     redis: "npm:^4.6.4"
     ulid: "npm:^2.3.0"
-  checksum: 10c0/2e0d77fd55f6a5923a075118913da4fa8ff2bdbb7a1b7db6c6476e545a0cd7e0c8c6967c58011226c7369daff09ab9abe35483eebb4482bfd327d7ad9c9455aa
+  checksum: 10c0/b2ba64a3f5dc0f0f8ea33ef839fb16563501fa718b28db9159a796c5db51daeb4772400a4353105dfa18c70cf27f07c2c5c131e2a14ac2f1f3e486b6ebcc7c93
   languageName: node
   linkType: hard
 
