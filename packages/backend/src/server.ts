@@ -66,8 +66,8 @@ server.app.set("trust proxy", 1);
  */
 const staticContentPath = path.join(__dirname, "public");
 
-/* c8 ignore next */ // This is not tested because it is only used in development servers
-if (!process.env.AUTO_FETCH_SCHEDULE || process.env.NODE_ENV === "development") {
+/* c8 ignore start */ // This is not tested because it is only used in development servers
+if (process.env.NODE_ENV === "development")
   server.app.use(
     "/assets/images/favicon",
     // Serve different favicons to easily distinguish between development and production servers.
@@ -77,9 +77,8 @@ if (!process.env.AUTO_FETCH_SCHEDULE || process.env.NODE_ENV === "development") 
       maxAge: "1 year",
     }),
   );
-}
 
-/* c8 ignore start */ // We do not have static resources in tests, so this middleware is not tested
+// We do not have static resources in tests, so this middleware is not tested
 server.app.use(
   express.static(staticContentPath, {
     dotfiles: "ignore",
