@@ -257,12 +257,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.24.7, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
-  version: 7.24.7
-  resolution: "@babel/runtime@npm:7.24.7"
+"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.24.8, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+  version: 7.24.8
+  resolution: "@babel/runtime@npm:7.24.8"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: 10c0/b6fa3ec61a53402f3c1d75f4d808f48b35e0dfae0ec8e2bb5c6fc79fb95935da75766e0ca534d0f1c84871f6ae0d2ebdd950727cfadb745a2cdbef13faef5513
+  checksum: 10c0/f24b30af6b3ecae19165b3b032f9bc37b2d1769677bd63b69a6f81061967cfc847aa822518402ea6616b1d301d7eb46986b99c9f69cdb5880834fca2e6b34881
   languageName: node
   linkType: hard
 
@@ -982,7 +982,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/system@npm:^5.16.0, @mui/system@npm:^5.16.1, @mui/system@npm:^5.16.4":
+"@mui/system@npm:^5.16.1, @mui/system@npm:^5.16.2, @mui/system@npm:^5.16.4":
   version: 5.16.4
   resolution: "@mui/system@npm:5.16.4"
   dependencies:
@@ -1022,7 +1022,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.15.14, @mui/utils@npm:^5.16.0, @mui/utils@npm:^5.16.1, @mui/utils@npm:^5.16.4":
+"@mui/utils@npm:^5.15.14, @mui/utils@npm:^5.16.1, @mui/utils@npm:^5.16.2, @mui/utils@npm:^5.16.4":
   version: 5.16.4
   resolution: "@mui/utils@npm:5.16.4"
   dependencies:
@@ -1041,14 +1041,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.10.0":
-  version: 7.10.0
-  resolution: "@mui/x-charts@npm:7.10.0"
+"@mui/x-charts@npm:7.11.0":
+  version: 7.11.0
+  resolution: "@mui/x-charts@npm:7.11.0"
   dependencies:
-    "@babel/runtime": "npm:^7.24.7"
+    "@babel/runtime": "npm:^7.24.8"
     "@mui/base": "npm:^5.0.0-beta.40"
-    "@mui/system": "npm:^5.16.0"
-    "@mui/utils": "npm:^5.16.0"
+    "@mui/system": "npm:^5.16.2"
+    "@mui/utils": "npm:^5.16.2"
     "@react-spring/rafz": "npm:^9.7.3"
     "@react-spring/web": "npm:^9.7.3"
     clsx: "npm:^2.1.1"
@@ -1069,7 +1069,7 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/2815e6754d7e485fa2792e5c54402317bc24c391aaee5525a5ec64783c2bb42f56c9462e6c352077744c56fd19cecb49c4da08e68f6d1af2e62185b7082644bd
+  checksum: 10c0/1cc240d5ba40e6c8fb8702936645f53c2e9ca5b1de05f499eccf26be988c646d5069b9987b36e14a75fda2f70728261ea359b479807d04bed92620e4b7899c33
   languageName: node
   linkType: hard
 
@@ -1454,7 +1454,7 @@ __metadata:
     "@mui/icons-material": "npm:5.16.4"
     "@mui/lab": "npm:5.0.0-alpha.172"
     "@mui/material": "npm:5.16.4"
-    "@mui/x-charts": "npm:7.10.0"
+    "@mui/x-charts": "npm:7.11.0"
     "@nivo/core": "npm:0.87.0"
     "@nivo/sunburst": "npm:0.87.0"
     "@rating-tracker/commons": "workspace:*"
