@@ -1397,7 +1397,7 @@ __metadata:
     eslint-config-google: "npm:0.14.0"
     eslint-config-prettier: "npm:9.1.0"
     eslint-plugin-import: "npm:2.29.1"
-    eslint-plugin-jsdoc: "npm:48.8.1"
+    eslint-plugin-jsdoc: "npm:48.8.3"
     eslint-plugin-prettier: "npm:5.2.1"
     express: "npm:4.19.2"
     express-async-errors: "npm:3.1.1"
@@ -1435,7 +1435,7 @@ __metadata:
     eslint-config-google: "npm:0.14.0"
     eslint-config-prettier: "npm:9.1.0"
     eslint-plugin-import: "npm:2.29.1"
-    eslint-plugin-jsdoc: "npm:48.8.1"
+    eslint-plugin-jsdoc: "npm:48.8.3"
     eslint-plugin-prettier: "npm:5.2.1"
     prettier: "npm:3.3.3"
     statuses: "npm:2.0.1"
@@ -1473,7 +1473,7 @@ __metadata:
     eslint-config-google: "npm:0.14.0"
     eslint-config-prettier: "npm:9.1.0"
     eslint-plugin-import: "npm:2.29.1"
-    eslint-plugin-jsdoc: "npm:48.8.1"
+    eslint-plugin-jsdoc: "npm:48.8.3"
     eslint-plugin-prettier: "npm:5.2.1"
     eslint-plugin-react: "npm:7.35.0"
     hare-niemeyer: "npm:3.0.0"
@@ -4464,9 +4464,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:48.8.1":
-  version: 48.8.1
-  resolution: "eslint-plugin-jsdoc@npm:48.8.1"
+"eslint-plugin-jsdoc@npm:48.8.3":
+  version: 48.8.3
+  resolution: "eslint-plugin-jsdoc@npm:48.8.3"
   dependencies:
     "@es-joy/jsdoccomment": "npm:~0.46.0"
     are-docs-informative: "npm:^0.0.2"
@@ -4480,7 +4480,7 @@ __metadata:
     synckit: "npm:^0.9.1"
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
-  checksum: 10c0/4fd0baa7bca3efa62c3018bc9b47ec00e3e7d01104ec32f5f2d3137882988b5759d787c8d3c8cea8352c606d1a4c73acccb0f75e15b47454f617d1835be02875
+  checksum: 10c0/78d893614b188617de5a03d8163406455e3b739fd7b86192eb05a29cf8e7f06909a6f6a1b9dc2acd31e5ae2bccd94600eaea247d277f58c3c946c0fdb36a57f7
   languageName: node
   linkType: hard
 
