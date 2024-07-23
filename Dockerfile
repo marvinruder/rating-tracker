@@ -229,7 +229,7 @@ RUN \
   cp -r packages/frontend/dist/* /app/public
 
 
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.3_9-jre-alpine AS result
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21.0.4_7-jre-alpine AS result
 
 # Install bash and download and extract Codacy coverage reporter
 RUN \
