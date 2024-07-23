@@ -28,7 +28,7 @@
   "dependencies": {
     "@prisma/client": "5.17.0",
     "@rating-tracker/commons": "workspace:*",
-    "@simplewebauthn/server": "10.0.0",
+    "@simplewebauthn/server": "10.0.1",
     "@vitest/coverage-v8": "2.0.4",
     "@xmldom/xmldom": "0.8.10",
     "@yarnpkg/pnpify": "4.1.0",
