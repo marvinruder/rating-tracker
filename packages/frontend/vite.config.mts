@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/no-nodejs-modules
 import fs from "node:fs";
+// eslint-disable-next-line import/no-nodejs-modules
+import type { ServerOptions } from "node:https";
 
 import react from "@vitejs/plugin-react";
 import proxy from "http2-proxy";
@@ -8,6 +10,12 @@ import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 import wasm from "vite-plugin-wasm";
 import { defineConfig as defineVitestConfig } from "vitest/config";
+
+let https: ServerOptions | undefined;
+
+try {
+  https = { cert: fs.readFileSync("./certs/fullchain.pem"), key: fs.readFileSync("./certs/privkey.pem") };
+} catch {}
 
 export default mergeConfig(
   defineViteConfig({
@@ -72,12 +80,7 @@ export default mergeConfig(
       wasm(),
     ],
     preview: { port: 443, strictPort: true },
-    server: {
-      host: true,
-      https: { cert: fs.readFileSync("./certs/fullchain.pem"), key: fs.readFileSync("./certs/privkey.pem") },
-      port: 443,
-      strictPort: true,
-    },
+    server: { host: true, https, port: 443, strictPort: true },
     worker: { format: "es", plugins: () => [wasm()] },
   }),
   defineVitestConfig({
