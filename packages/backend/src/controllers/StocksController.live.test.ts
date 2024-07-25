@@ -46,7 +46,7 @@ tests.push({
   testName: "returns a list of stocks",
   testFunction: async () => {
     await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}`);
-    const res = await supertest.get(`${baseURL}${stocksAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    const res = await supertest.get(`${baseURL}${stocksAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(11);
     expect(res.body.stocks).toHaveLength(11);
@@ -62,18 +62,16 @@ tests.push({
     // Write incorrect score directly into the database
     await client.stock.update({ where: { ticker: "exampleAAPL" }, data: { totalScore: 0 } });
 
-    let res = await supertest
-      .get(`${baseURL}${stocksAPIPath}/exampleAAPL`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).totalScore).toBe(0);
 
     // Fix the incorrect score by recomputing
-    res = await supertest.patch(`${baseURL}${stocksAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.patch(`${baseURL}${stocksAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Now the score does not hold an incorrect value
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).totalScore).not.toBe(0);
   },
@@ -85,7 +83,7 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?size=Large&style=Growth&sortBy=name&sortDesc=true`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Ørsted A/S", "Taiwan Semiconductor Manufacturing Co Ltd", "Novo Nordisk", "MercadoLibre", "Apple"],
     );
   },
@@ -95,9 +93,7 @@ tests.push({
   testName: "filters and sorts stock list – example 2",
   testFunction: async () => {
     expectStocksToBePresent(
-      await supertest
-        .get(`${baseURL}${stocksAPIPath}?country=US&sortBy=size`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+      await supertest.get(`${baseURL}${stocksAPIPath}?country=US&sortBy=size`).set("Cookie", ["id=exampleSessionID"]),
       ["Newmont", "Apple"],
     );
   },
@@ -109,7 +105,7 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?country=US&sortBy=style&sortDesc=true`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Apple", "Newmont"],
     );
   },
@@ -121,7 +117,7 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?industry=Semiconductors&name=Semiconductor`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Taiwan Semiconductor Manufacturing Co Ltd"],
     );
   },
@@ -133,7 +129,7 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?starRatingMin=3&starRatingMax=4&sortBy=name`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Allianz", "Danone", "Iberdrola", "MercadoLibre"],
     );
   },
@@ -145,7 +141,7 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?dividendYieldPercentMin=1.5&dividendYieldPercentMax=5&sortBy=name`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Danone", "Iberdrola", "Newmont", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
     );
   },
@@ -157,7 +153,7 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?priceEarningRatioMin=10&priceEarningRatioMax=20&sortBy=name`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Allianz", "Iberdrola", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
     );
   },
@@ -171,7 +167,7 @@ tests.push({
         .get(
           `${baseURL}${stocksAPIPath}` + "?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name",
         )
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Allianz", "Apple", "Danone", "Iberdrola", "MercadoLibre", "Newmont", "Ørsted A/S"],
     );
   },
@@ -186,7 +182,7 @@ tests.push({
           `${baseURL}${stocksAPIPath}?analystConsensusMin=Outperform&analystConsensusMax=Outperform` +
             "&analystCountMin=25&analystCountMax=40&sortBy=name",
         )
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Novo Nordisk"],
     );
   },
@@ -198,7 +194,7 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?analystTargetDiffMin=-20&analystTargetDiffMax=10&sortBy=name`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Allianz", "Danone", "Iberdrola", "Newmont", "Novo Nordisk"],
     );
   },
@@ -210,7 +206,7 @@ tests.push({
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?msciESGRatingMin=AA&msciESGRatingMax=A&sortBy=name`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Allianz", "MercadoLibre", "Newmont"],
     );
   },
@@ -225,7 +221,7 @@ tests.push({
           `${baseURL}${stocksAPIPath}` +
             "?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name",
         )
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Iberdrola", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
     );
   },
@@ -240,7 +236,7 @@ tests.push({
           `${baseURL}${stocksAPIPath}?lsegESGScoreMin=70&lsegESGScoreMax=80&` +
             "lsegEmissionsMin=80&lsegEmissionsMax=90&sortBy=name",
         )
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Ørsted A/S"],
     );
   },
@@ -255,7 +251,7 @@ tests.push({
           `${baseURL}${stocksAPIPath}?spESGScoreMin=50&spESGScoreMax=85` +
             "&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name",
         )
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Newmont", "Novo Nordisk"],
     );
   },
@@ -270,7 +266,7 @@ tests.push({
           `${baseURL}${stocksAPIPath}?financialScoreMin=0&financialScoreMax=50&esgScoreMin=40&esgScoreMax=60` +
             "&sortBy=name",
         )
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Danone", "Newmont"],
     );
   },
@@ -281,7 +277,7 @@ tests.push({
   testFunction: async () => {
     const res = await supertest
       .get(`${baseURL}${stocksAPIPath}?totalScoreMin=30&totalScoreMax=60&sortBy=name`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(5);
     expect(res.body.stocks).toHaveLength(5);
@@ -298,7 +294,7 @@ tests.push({
   testFunction: async () => {
     const res = await supertest
       .get(`${baseURL}${stocksAPIPath}?name=US0378331005`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(1);
     expect(res.body.stocks).toHaveLength(1);
@@ -311,7 +307,7 @@ tests.push({
   testFunction: async () => {
     const res = await supertest
       .get(`${baseURL}${stocksAPIPath}?isin=US0378331005`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.count).toBe(1);
     expect(res.body.stocks).toHaveLength(1);
@@ -323,21 +319,21 @@ tests.push({
   testName: "filters and sorts stock list – stocks in watchlist",
   testFunction: async () => {
     // Get the ID of the watchlist from the summary
-    let res = await supertest.get(`${baseURL}${watchlistsAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest.get(`${baseURL}${watchlistsAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     const { id } = res.body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites");
 
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?watchlist=${id}&sortBy=name`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Novo Nordisk A/S", "Ørsted A/S"],
     );
 
     // Attempting to read a watchlist of a different user returns an error
     res = await supertest
       .get(`${baseURL}${stocksAPIPath}?watchlist=${id}`)
-      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+      .set("Cookie", ["id=anotherExampleSessionID"]);
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("does not belong to user with email address john.doe");
   },
@@ -347,26 +343,26 @@ tests.push({
   testName: "filters and sorts stock list – stocks in portfolio",
   testFunction: async () => {
     // Get the ID of the portfolio from the summary
-    let res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     const { id } = res.body.find((portfolioSummary: PortfolioSummary) => portfolioSummary.name === "My Portfolio");
 
     expectStocksToBePresent(
       await supertest
         .get(`${baseURL}${stocksAPIPath}?portfolio=${id}&sortBy=amount&sortDesc=true`)
-        .set("Cookie", ["authToken=exampleSessionID"]),
+        .set("Cookie", ["id=exampleSessionID"]),
       ["Apple Inc", "Taiwan Semiconductor Manufacturing Co Ltd"],
     );
 
     // Attempting to sort by amount without specifying a portfolio returns an error
-    res = await supertest.get(`${baseURL}${stocksAPIPath}?sortBy=amount`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}?sortBy=amount`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch("Cannot sort by amount without specifying a portfolio");
 
     // Attempting to read a portfolio of a different user returns an error
     res = await supertest
       .get(`${baseURL}${stocksAPIPath}?portfolio=${id}`)
-      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+      .set("Cookie", ["id=anotherExampleSessionID"]);
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("does not belong to user with email address john.doe");
   },
@@ -381,7 +377,7 @@ tests.push({
         testFunction: async () => {
           const res = await supertest
             .get(`${baseURL}${stocksAPIPath}?sortBy=${sortCriterion}&sortDesc=${sortDesc}`)
-            .set("Cookie", ["authToken=exampleSessionID"]);
+            .set("Cookie", ["id=exampleSessionID"]);
           expect(res.status).toBe(200);
           let sortCriterionArray: readonly string[];
           switch (sortCriterion) {
@@ -448,13 +444,13 @@ tests.push({
   testFunction: async () => {
     const resAllStocks = await supertest
       .get(`${baseURL}${stocksAPIPath}?sortBy=name`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(resAllStocks.status).toBe(200);
     expect(resAllStocks.body.count).toBe(11);
     expect(resAllStocks.body.stocks).toHaveLength(11);
     const resPagination = await supertest
       .get(`${baseURL}${stocksAPIPath}?sortBy=name&offset=5&count=5`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(resPagination.body.stocks[0].name).toBe(resAllStocks.body.stocks[5].name);
     expect(resPagination.body.stocks[4].name).toBe(resAllStocks.body.stocks[9].name);
     expect(resPagination.body.stocks).toHaveLength(5);
@@ -467,12 +463,12 @@ tests.push({
     await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}/exampleAAPL${stockLogoEndpointSuffix}`);
     let res = await supertest
       .get(`${baseURL}${stocksAPIPath}/exampleAAPL${stockLogoEndpointSuffix}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
-    // Check max-age header, should be smaller than 1 day
+    // Check max-age header, should be approximately 1 month
     expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
-    expect(Number(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1"))).toBeLessThanOrEqual(86400);
+    expect(Number(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1"))).toBeCloseTo(2592000, -1);
     expect(res.body.toString()).toMatch(
       '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
     );
@@ -482,12 +478,12 @@ tests.push({
     // This stock’s logo response is mocked to not include a Cache-Control header
     res = await supertest
       .get(`${baseURL}${stocksAPIPath}/exampleTSM${stockLogoEndpointSuffix}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
-    // Check max-age header, should be exactly 1 day
+    // Check max-age header, should be approximately 1 week
     expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
-    expect(Number(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1"))).toEqual(86400);
+    expect(Number(res.headers["cache-control"].replace(/max-age=(\d+)/, "$1"))).toBeCloseTo(604800, -1);
     expect(res.body.toString()).toMatch(
       '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">',
     );
@@ -497,7 +493,7 @@ tests.push({
     // attempting to read the logo of a stock for which no logo exists returns an empty SVG file
     res = await supertest
       .get(`${baseURL}${stocksAPIPath}/exampleNULL${stockLogoEndpointSuffix}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch("image/svg+xml");
     // Check max-age header, should be close to 1 hour
@@ -510,7 +506,7 @@ tests.push({
     // attempting to read a non-existent stock’s logo results in an error
     res = await supertest
       .get(`${baseURL}${stocksAPIPath}/doesNotExist${stockLogoEndpointSuffix}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
   },
 });
@@ -518,7 +514,7 @@ tests.push({
 tests.push({
   testName: "[unsafe] provides stock logos for background",
   testFunction: async () => {
-    let res = await supertest.get(`${baseURL}${logoBackgroundAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest.get(`${baseURL}${logoBackgroundAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     // Check max-age header, should be close to 1 day
     expect(res.headers["cache-control"]).toMatch(/max-age=\d+/);
@@ -533,9 +529,7 @@ tests.push({
     });
 
     // We can request a different number of logos
-    res = await supertest
-      .get(`${baseURL}${logoBackgroundAPIPath}?count=10`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${logoBackgroundAPIPath}?count=10`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     // 10 logos are returned
     expect(res.body).toHaveLength(10);
@@ -561,12 +555,10 @@ tests.push({
     );
     let res = await supertest
       .put(`${baseURL}${stocksAPIPath}/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(201);
     await expectStockListLengthToBe(12);
-    res = await supertest
-      .get(`${baseURL}${stocksAPIPath}?name=New%20Stock`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}?name=New%20Stock`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.body.stocks).toHaveLength(1);
     expect(res.body.stocks[0].ticker).toBe("NEWSTOCK");
     expect(res.body.stocks[0].name).toBe("New Stock");
@@ -575,7 +567,7 @@ tests.push({
     // attempting to create the same stock again results in an error
     res = await supertest
       .put(`${baseURL}${stocksAPIPath}/NEWSTOCK?name=New%20Stock&country=GB&isin=GB0987654321`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(409);
     await expectStockListLengthToBe(12);
   },
@@ -585,9 +577,7 @@ tests.push({
   testName: "reads a stock",
   testFunction: async () => {
     await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}/exampleAAPL`);
-    let res = await supertest
-      .get(`${baseURL}${stocksAPIPath}/exampleAAPL`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
 
@@ -596,12 +586,12 @@ tests.push({
     const eTag = res.header.etag;
     res = await supertest
       .get(`${baseURL}${stocksAPIPath}/exampleAAPL`)
-      .set("Cookie", ["authToken=exampleSessionID"])
+      .set("Cookie", ["id=exampleSessionID"])
       .set("If-None-Match", eTag);
     expect(res.status).toBe(304);
 
     // attempting to read a non-existent stock results in an error
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/doesNotExist`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/doesNotExist`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
   },
 });
@@ -613,9 +603,9 @@ tests.push({
     await expectSpecialAccessRightsToBeRequired(`${baseURL}${stocksAPIPath}/exampleAAPL`, supertest.patch);
     let res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?morningstarID=0P012345678&name=Apple%20Inc`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toEqual("0P012345678");
@@ -623,17 +613,17 @@ tests.push({
     // sending an update with the same information results in no changes
     res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?morningstarID=0P012345678`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toEqual("0P012345678");
 
     // sending an update without anything results in no changes
-    res = await supertest.patch(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.patch(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toEqual("0P012345678");
@@ -641,7 +631,7 @@ tests.push({
     // attempting to update a non-existent stock results in an error
     res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/doesNotExist?morningstarID=0P123456789`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
   },
 });
@@ -651,9 +641,9 @@ tests.push({
   testFunction: async () => {
     let res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleALV?ticker=exampleALV.DE`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleALV.DE`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleALV.DE`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).ticker).toEqual("exampleALV.DE");
     expect((res.body as Stock).name).toEqual("Allianz SE");
@@ -661,11 +651,9 @@ tests.push({
     // Now we indicate with an underscore prefix that no price information is available:
     res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleALV.DE?ticker=_exampleALV.DE`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest
-      .get(`${baseURL}${stocksAPIPath}/_exampleALV.DE`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/_exampleALV.DE`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).ticker).toEqual("_exampleALV.DE");
     expect((res.body as Stock).name).toEqual("Allianz SE");
@@ -683,9 +671,9 @@ tests.push({
   testFunction: async () => {
     let res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?morningstarID=`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).morningstarID).toBeNull();
@@ -712,9 +700,9 @@ tests.push({
   testFunction: async () => {
     let res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?marketScreenerID=`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).marketScreenerID).toBeNull();
@@ -735,9 +723,9 @@ tests.push({
   testFunction: async () => {
     let res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?msciID=`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).msciID).toBeNull();
@@ -756,9 +744,9 @@ tests.push({
   testFunction: async () => {
     let res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?ric=`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).ric).toBeNull();
@@ -777,9 +765,9 @@ tests.push({
   testFunction: async () => {
     let res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?spID=`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).spID).toBeNull();
@@ -797,9 +785,9 @@ tests.push({
   testFunction: async () => {
     let res = await supertest
       .patch(`${baseURL}${stocksAPIPath}/exampleAAPL?sustainalyticsID=`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
-    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect((res.body as Stock).name).toEqual("Apple Inc");
     expect((res.body as Stock).sustainalyticsID).toBeNull();
@@ -817,17 +805,13 @@ tests.push({
   testFunction: async () => {
     await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}/exampleAAPL`, supertest.delete);
     await expectSpecialAccessRightsToBeRequired(`${baseURL}${stocksAPIPath}/exampleAAPL`, supertest.delete);
-    let res = await supertest
-      .delete(`${baseURL}${stocksAPIPath}/exampleAAPL`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest.delete(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
     const stocks = await expectStockListLengthToBe(10);
     expect(stocks.find((stock) => stock.ticker === "exampleAAPL")).toBeUndefined();
 
     // attempting to delete a non-existent stock returns an error
-    res = await supertest
-      .delete(`${baseURL}${stocksAPIPath}/exampleAAPL`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.delete(`${baseURL}${stocksAPIPath}/exampleAAPL`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Stock exampleAAPL not found.");
   },

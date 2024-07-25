@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { pluralize } from "./formatters";
 
-describe("Formatters", () => {
+describe.concurrent("Formatters", () => {
   it("should format in singular when input is ±1", () => {
     expect(pluralize(1)).toBe("");
     expect(pluralize(-1)).toBe("");

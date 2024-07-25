@@ -158,7 +158,7 @@ tests.push({
     // Activate user account
     await supertest
       .patch(`${baseURL}${usersAPIPath}/jim.doe%40example.com?accessRights=1`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
 
     res = await supertest.post(`${baseURL}${authAPIPath}${signInEndpointSuffix}`).send({
       id: BASE_64_ID,
@@ -169,8 +169,8 @@ tests.push({
     expect(res.status).toBe(204);
 
     // Check that session cookie works
-    const authTokenCookieHeader = res.headers["set-cookie"][0].split(";")[0];
-    res = await supertest.get(`${baseURL}${accountAPIPath}`).set("Cookie", [authTokenCookieHeader]);
+    const idCookieHeader = res.headers["set-cookie"][0].split(";")[0];
+    res = await supertest.get(`${baseURL}${accountAPIPath}`).set("Cookie", [idCookieHeader]);
     expect(res.status).toBe(200);
     expect(res.body.email).toBe("jim.doe@example.com");
     expect(res.body.name).toBe("Jim Doe");

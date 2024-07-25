@@ -5,7 +5,6 @@ import type { Request, RequestHandler, Response } from "express";
 import { prismaIsReady } from "../db/client";
 import { internalServerErrorServerUnhealthy } from "../openapi/responses/serverError";
 import { okHealthy } from "../openapi/responses/success";
-import { redisIsReady } from "../redis/redis";
 import { signalIsReadyOrUnused } from "../signal/signalBase";
 import Endpoint from "../utils/Endpoint";
 
@@ -40,7 +39,6 @@ class StatusController extends SingletonController {
       await Promise.allSettled([
         // The order is important here and must match the order in `serviceArray`.
         prismaIsReady(),
-        redisIsReady(),
         signalIsReadyOrUnused(),
       ])
     ).forEach((result, index) => {

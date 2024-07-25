@@ -1,6 +1,6 @@
 import { timeDiffToNow } from "./time";
 
-describe("Time Formatting", () => {
+describe.concurrent("Time Formatting", () => {
   it("formats time differences", () => {
     expect(timeDiffToNow(new Date(Date.now()))).toBe("0 seconds ago");
     expect(timeDiffToNow(new Date(Date.now() - 1000))).toBe("1 second ago");

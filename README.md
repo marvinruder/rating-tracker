@@ -178,9 +178,8 @@ Rating Tracker is built to be deployed using Docker or a similar container platf
 To run Rating Tracker, the following services must be available:
 
 -   [PostgreSQL](https://hub.docker.com/_/postgres), storing information related to stocks and users
--   [Redis](https://hub.docker.com/_/redis), caching session IDs, stock logos and other resources
 -   [Signal Messenger REST API](https://hub.docker.com/r/bbernhard/signal-cli-rest-api), sending notifications via the Signal messenger
--   [nginx](https://hub.docker.com/_/nginx), set up as a reverse proxy to provide SSL encryption (required for most WebAuthn clients)
+-   [nginx](https://hub.docker.com/_/nginx) or a different reverse proxy, providing SSL encryption (required for most WebAuthn clients)
 
 <!-- <div id="minimal-example-setup-using-docker-compose"></div> -->
 
@@ -206,15 +205,6 @@ services:
       - ./postgresql/data:/var/lib/postgresql/data
     shm_size: '256mb'
 
-  redis:
-    image: redis:alpine
-    ports:
-      - "127.0.0.1:6379:6379"
-    command: redis-server --save 60 1 --activedefrag yes --aclfile /etc/redis/users.acl
-    volumes:
-      - ./redis/data:/data
-      - ./redis/config:/etc/redis # the ACL file with the user and password must be created in this folder
-
   signal:
     image: bbernhard/signal-cli-rest-api
     environment:
@@ -234,20 +224,16 @@ services:
       SUBDOMAIN: "ratingtracker"
       LOG_FILE: "/app/logs/rating-tracker-log-(DATE).log" # (DATE) is replaced by the current date to support log rotation
       DATABASE_URL: "postgresql://rating-tracker:********@postgres:5432/rating-tracker?schema=rating-tracker"
-      REDIS_URL: "redis://redis:6379"
-      REDIS_USER: "rating-tracker"
-      REDIS_PASS: "********"
       MAX_FETCH_CONCURRENCY: 4
       AUTO_FETCH_SCHEDULE: "0 0 0 * * *" # this format includes seconds
       SIGNAL_URL: "http://signal:8080"
       SIGNAL_SENDER: "+12345678900"
     ports:
-      - "127.0.0.1:443:21076" # optional if nginx runs in same Docker Compose setup
+      - "127.0.0.1:443:21076" # not required if nginx runs in same Docker Compose setup
     volumes:
       - ./logs/rating-tracker:/app/logs
     depends_on:
       - postgres
-      - redis
       - signal
     restart: unless-stopped
 ```
@@ -262,28 +248,6 @@ The port bindings are optional but helpful to connect to the services from the h
 #### Initialize database setup
 
 Rating Tracker uses [Prisma](https://www.prisma.io) to interact with the PostgreSQL database. At every startup, Prisma Migrate will automatically compare your database with the schema included in the image and create all tables and indexes that are not present yet.
-
-<!-- <div id="create-redis-user-and-password"></div> -->
-
-#### Create Redis user and password
-
-Create the file `users.acl`  with the following content: 
-
-```ACL
-user default off
-user rating-tracker allcommands allkeys allchannels on >********
-```
-
-Refer to the [exemplary Docker Compose setup](#minimal-example-setup-using-docker-compose) for information on where to place the ACL file.
-
-To use a password hash, first create the file above and start up Redis, then connect, authenticate and run `ACL GETUSER rating-tracker`. The output shows the hash of the password, which can then be used in the ACL file:
-
-```ACL
-user default off
-user rating-tracker allcommands allkeys allchannels on #07ab59f4[…]072e07fb
-```
-
-More info on ACL files in Redis can be found [here](https://redis.io/docs/management/security/acl/).
 
 <!-- <div id="create-signal-account"></div> -->
 
@@ -338,8 +302,6 @@ Variable | Example Value | Explanation
 **`DOMAIN`** | `example.com` | The domain Rating Tracker will be available at. This is especially important for WebAuthn, since credentials will only be offered to the user by their client when the domain provided as part of the registration or authentication challence matches the domain of the URL the user navigated to.
 `SUBDOMAIN` | `ratingtracker` | An optional subdomain. Credentials created for one domain can be used to authenticate to different Rating Tracker instances served on all subdomains of that domain, making it easy to use multiple deployment stages, development servers etc.
 **`DATABASE_URL`** | `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker` | The connection URL of the PostgreSQL instance, specifying username, password, host, port, database and schema. Can also use the PostgreSQL service name (e.g. `postgres` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file.
-**`REDIS_URL`** | `redis://127.0.0.1:6379` | The URL of the Redis instance. Can also use the Redis service name (e.g. `redis` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file.
-`REDIS_USER`, `REDIS_PASS`,  | `rating-tracker`, `********` | The username and password to connect to the Redis instance. Read more [here](#create-redis-user-and-password) on how to set up a password-protected Redis user. If unset, the Redis instance must grant write access to the default user.
 `LOG_FILE` | `/var/log/rating-tracker-(DATE).log` | A file path for storing Rating Tracker log files. The string `(DATE)` will be replaced by the current date. If unset, logs are stored in the `/tmp` directory.
 `LOG_LEVEL` | `debug` | The level for the log output to `stdout`. Can be one of `fatal`, `error`, `warn`, `info`, `debug`, `trace`. If unset, `info` will be used. 
 `PLAIN_LOG` | `1` | If set to a truthy value, the log output to `stdout` will not be rendered with colors and icons.
@@ -361,7 +323,7 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 An environment with all tools required for developing Rating Tracker and the services it depends on can quickly be created using the VS Code development container configuration included in this repository. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
 -   Clone the repository and open it in Visual Studio Code. When prompted, select “Reopen in Container”. This will create a Docker container with all required tools, recommended extensions and dependencies installed.
--   Check your environment. SSL Certificates and the Redis ACL file must be provided beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details). The NGINX configuration might require adjustment to your situation.
+-   Check your environment. SSL Certificates must be provided to Vite beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details).
 -   Run `yarn prisma:migrate:deploy` to initialize the PostgreSQL database.
 -   Run `yarn dev` to start the backend server as well as the Vite frontend development server.
 
@@ -374,13 +336,10 @@ Environment variables not included in the development container configuration ca
 # .env
 # # Those variables are already defined in the development container configuration. You only need to define them here if you want to override them.
 # DATABASE_URL="postgresql://rating-tracker:rating-tracker@postgres:5432/rating-tracker?schema=rating-tracker"
-# REDIS_URL="redis://redis:6379"
 # SIGNAL_URL="http://signal:8080"
 # NODE_ENV="development"
 # PORT="3001"
 # MAX_FETCH_CONCURRENCY="4"
-# REDIS_USER="rating-tracker"
-# REDIS_PASS="rating-tracker"
 # POSTGRES_USER="rating-tracker"
 # POSTGRES_PASS="rating-tracker"
 # LOG_LEVEL="trace"
@@ -394,7 +353,7 @@ SIGNAL_SENDER="+12345678900"
 
 ### Run tests
 
-The VS Code development container configuration includes additional PostgreSQL and Redis instances for running tests. To use them, configure your development environment as described above and run `yarn test` to run all tests from all packages. Additionally, the packages’ `package.json` configurations contain a `test:watch` script to run tests in watch mode.
+The VS Code development container configuration includes an additional PostgreSQL instance for running tests. To use them, configure your development environment as described above and run `yarn test` to run all tests from all packages. Additionally, the packages’ `package.json` configurations contain a `test:watch` script to run tests in watch mode.
 
 ### Contribute
 

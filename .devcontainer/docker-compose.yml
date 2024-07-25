@@ -11,12 +11,9 @@ services:
       dockerfile: .devcontainer/Dockerfile
     environment:
       DATABASE_URL: postgresql://rating-tracker:rating-tracker@postgres:5432/rating-tracker?schema=rating-tracker
-      REDIS_URL: redis://redis:6379
       SIGNAL_URL: http://signal:8080
       PORT: 3001
       MAX_FETCH_CONCURRENCY: 4
-      REDIS_USER: rating-tracker
-      REDIS_PASS: rating-tracker
       POSTGRES_USER: rating-tracker
       POSTGRES_PASS: rating-tracker
       LOG_LEVEL: trace
@@ -25,6 +22,8 @@ services:
       PGHOST: postgres
       PGUSER: rating-tracker
       PGPASSWORD: rating-tracker
+    ports:
+      - "443:443"
     volumes:
       - ..:/rating-tracker
       - ./motd:/etc/motd

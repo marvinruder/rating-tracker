@@ -9,7 +9,7 @@ import {
 import type { Request, RequestHandler, Response } from "express";
 import express from "express";
 
-import { deleteUser, readAllUsers, readUser, readUserAvatar, updateUserWithCredentials } from "../db/tables/userTable";
+import { deleteUser, readAllUsers, readUser, readUserAvatar, updateUser } from "../db/tables/userTable";
 import * as user from "../openapi/parameters/user";
 import { forbidden, notFound, unauthorized, unsupportedMediaType } from "../openapi/responses/clientError";
 import { internalServerError, notImplemented } from "../openapi/responses/serverError";
@@ -154,7 +154,7 @@ class UsersController extends SingletonController {
       (typeof subscriptions !== "number" && typeof subscriptions !== "undefined")
     )
       throw new APIError(400, "Invalid query parameters.");
-    await updateUserWithCredentials(email, { email: newEmail, name, phone, accessRights, subscriptions });
+    await updateUser(email, { email: newEmail, name, phone, accessRights, subscriptions });
     res.status(204).end();
   };
 
@@ -187,7 +187,7 @@ class UsersController extends SingletonController {
     if (!avatarBody) throw new APIError(400, "Invalid request body.");
     switch (req.headers["content-type"]) {
       case "image/avif":
-        await updateUserWithCredentials(req.params.email, {
+        await updateUser(req.params.email, {
           avatar: `data:${req.headers["content-type"]};base64,${avatarBody}`,
         });
         res.status(201).end();
@@ -242,7 +242,7 @@ class UsersController extends SingletonController {
     accessRights: GENERAL_ACCESS + ADMINISTRATIVE_ACCESS,
   })
   deleteAvatar: RequestHandler = async (req: Request, res: Response) => {
-    await updateUserWithCredentials(req.params.email, { avatar: null });
+    await updateUser(req.params.email, { avatar: null });
     res.status(204).end();
   };
 }

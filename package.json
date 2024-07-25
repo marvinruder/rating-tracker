@@ -39,6 +39,9 @@
     "@prisma/engines": {
       "built": true
     },
+    "node-gyp": {
+      "unplugged": false
+    },
     "prisma": {
       "built": true
     },

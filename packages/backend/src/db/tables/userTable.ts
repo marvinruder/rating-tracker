@@ -1,18 +1,18 @@
-import { User, UserWithCredentials } from "@rating-tracker/commons";
+import type { WebAuthnCredential } from "@rating-tracker/commons";
+import { User } from "@rating-tracker/commons";
 
 import * as signal from "../../signal/signal";
 import APIError from "../../utils/APIError";
 import logger from "../../utils/logger";
 import client from "../client";
 
-const OMIT_CREDENTIALS = { credentialID: true, credentialPublicKey: true, counter: true } as const;
-
 /**
- * Create a user with credentials.
+ * Create a user with WebAuthn credentials.
  * @param user The user to create.
+ * @param credential The WebAuthn credential of the user.
  * @returns Whether the user was created or existed already.
  */
-export const createUser = async (user: UserWithCredentials): Promise<boolean> => {
+export const createUser = async (user: User, credential: WebAuthnCredential): Promise<boolean> => {
   // Attempt to find an existing user with the same email address
   try {
     const existingUser = await client.user.findUniqueOrThrow({ where: { email: user.email } });
@@ -24,7 +24,16 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
     return false;
   } catch {
     await client.user.create({
-      data: { ...user },
+      data: {
+        ...user,
+        webAuthnCredentials: {
+          create: {
+            id: Buffer.from(credential.id),
+            publicKey: Buffer.from(credential.publicKey),
+            counter: credential.counter,
+          },
+        },
+      },
     });
     logger.info({ prefix: "postgres" }, `Created user “${user.name}” with email address ${user.email}.`);
     // Inform the admin of the new user via Signal messenger
@@ -41,7 +50,7 @@ export const createUser = async (user: UserWithCredentials): Promise<boolean> =>
  */
 export const readUser = async (email: string): Promise<User> => {
   try {
-    const user = await client.user.findUniqueOrThrow({ where: { email }, omit: OMIT_CREDENTIALS });
+    const user = await client.user.findUniqueOrThrow({ where: { email } });
     return new User(user);
   } catch {
     throw new APIError(404, `User ${email} not found.`);
@@ -69,32 +78,20 @@ export const readUserAvatar = async (email: string): Promise<{ mimeType: string;
 };
 
 /**
- * Read a user and include credentials.
- * @param email The email address of the user.
- * @returns The user.
- * @throws an {@link APIError} if the user does not exist.
- */
-export const readUserWithCredentials = async (email: string): Promise<UserWithCredentials> => {
-  try {
-    const user = await client.user.findUniqueOrThrow({ where: { email } });
-    return new UserWithCredentials(user);
-  } catch {
-    throw new APIError(404, `User ${email} not found.`);
-  }
-};
-
-/**
  * Read a user, identified by their credential ID, and include credentials.
- * @param credentialID The ID of the credential of the user.
+ * @param credentialID The base64url-encoded ID of the credential of the user.
  * @returns The user.
  * @throws an {@link APIError} if the user does not exist.
  */
-export const readUserByCredentialID = async (credentialID: string): Promise<UserWithCredentials> => {
-  // Convert base64url (as specified in https://www.w3.org/TR/webauthn-2/) to base64 (which we store in database)
-  const credentialIDWithPadding = Buffer.from(credentialID, "base64url").toString("base64");
+export const readCredentialWithUser = async (credentialID: string): Promise<WebAuthnCredential & { user: User }> => {
+  // Decode base64url (as specified in https://www.w3.org/TR/webauthn-2/)
+  const credentialIDBuffer = Buffer.from(credentialID, "base64url");
   try {
-    const user = await client.user.findUniqueOrThrow({ where: { credentialID: credentialIDWithPadding } });
-    return new UserWithCredentials(user);
+    const credential = await client.webAuthnCredential.findUniqueOrThrow({
+      where: { id: credentialIDBuffer },
+      select: { id: true, publicKey: true, counter: true, user: true },
+    });
+    return { ...credential, user: new User(credential.user) };
   } catch {
     throw new APIError(404, `User with credential ${credentialID} not found.`);
   }
@@ -105,7 +102,7 @@ export const readUserByCredentialID = async (credentialID: string): Promise<User
  * @returns A list of all users.
  */
 export const readAllUsers = async (): Promise<User[]> => {
-  return (await client.user.findMany({ omit: OMIT_CREDENTIALS })).map((user) => new User(user));
+  return (await client.user.findMany()).map((user) => new User(user));
 };
 
 /**
@@ -115,10 +112,7 @@ export const readAllUsers = async (): Promise<User[]> => {
  */
 export const readUsersWithStockOnSubscribedWatchlist = async (ticker: string): Promise<User[]> => {
   return (
-    await client.user.findMany({
-      where: { watchlists: { some: { subscribed: true, stocks: { some: { ticker } } } } },
-      omit: OMIT_CREDENTIALS,
-    })
+    await client.user.findMany({ where: { watchlists: { some: { subscribed: true, stocks: { some: { ticker } } } } } })
   ).map((user) => new User(user));
 };
 
@@ -142,9 +136,9 @@ export const userExists = async (email: string): Promise<boolean> => {
  * @param newValues The new values for the user.
  * @throws an {@link APIError} if the user does not exist.
  */
-export const updateUserWithCredentials = async (email: string, newValues: Partial<UserWithCredentials>) => {
+export const updateUser = async (email: string, newValues: Partial<User>) => {
   let k: keyof typeof newValues; // all keys of new values
-  const user = await readUserWithCredentials(email); // Read the user from the database
+  const user = await readUser(email); // Read the user from the database
   let isNewData = false;
   // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
   for (k in newValues) {
@@ -182,18 +176,26 @@ export const updateUserWithCredentials = async (email: string, newValues: Partia
 };
 
 /**
+ * Set the counter of a credential.
+ * @param credentialID The ID of the credential.
+ * @param counter The new counter.
+ */
+export const setCredentialCounter = async (credentialID: Uint8Array, counter: number) => {
+  await client.webAuthnCredential.update({ where: { id: Buffer.from(credentialID) }, data: { counter } });
+};
+
+/**
  * Delete a user.
  * @param email The email address of the user to delete.
  * @throws an {@link APIError} if the user does not exist.
  */
 export const deleteUser = async (email: string) => {
-  // Attempt to find a user with the given email address
   try {
-    const existingUser = await client.user.findUniqueOrThrow({ where: { email } });
-    // If that worked, we can delete the existing user
+    // Attempt to delete a user with the given email address
     await client.user.delete({ where: { email } });
-    logger.info({ prefix: "postgres" }, `Deleted user “${existingUser.name}” (email address ${email}).`);
+    logger.info({ prefix: "postgres" }, `Deleted user ${email}.`);
   } catch {
+    // If deletion failed, the user does not exist
     throw new APIError(404, `User ${email} not found.`);
   }
 };

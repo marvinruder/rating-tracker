@@ -6,6 +6,6 @@ export default defineConfig({
   test: {
     coverage: { all: false, enabled: true, provider: "v8" },
     pool: "threads",
-    poolOptions: { threads: { useAtomics: true } }
+    poolOptions: { threads: { useAtomics: true } },
   },
 });

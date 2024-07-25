@@ -208,10 +208,9 @@ export const removeStockFromWatchlist = async (id: number, email: string, ticker
  * @throws an {@link APIError} if the watchlist or the stock do not exist.
  */
 export const deleteWatchlist = async (id: number, email: string) => {
+  // Attempt to read the watchlist as the current user
   await checkWatchlistExistenceAndOwner(id, email);
-  // Attempt to find a watchlist with the given ID
-  const existingWatchlist = await client.watchlist.findUniqueOrThrow({ where: { id } });
-  // If that worked, we can delete the existing watchlist
+  // Delete the watchlist with the given ID
   await client.watchlist.delete({ where: { id } });
-  logger.info({ prefix: "postgres" }, `Deleted watchlist “${existingWatchlist.name}” (ID ${id}).`);
+  logger.info({ prefix: "postgres" }, `Deleted watchlist ${id}.`);
 };

@@ -11,8 +11,8 @@ import {
 import { DOMParser } from "@xmldom/xmldom";
 import type { Request, Response } from "express";
 
+import { createResource } from "../db/tables/resourceTable";
 import { readStocks, readStock, updateStock } from "../db/tables/stockTable";
-import { createResource } from "../redis/repositories/resourceRepository";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import * as signal from "../signal/signal";
 import APIError from "../utils/APIError";
@@ -48,8 +48,8 @@ export type FetcherWorkspace<T> = {
 export type Fetcher = (req: Request, stock: Stock) => Promise<void>;
 
 /**
- * Captures the fetched resource of a fetcher in case of an error and stores it in Redis. Based on the fetcher type, the
- * resource can either be a {@link Document} or a {@link Object}.
+ * Captures the fetched resource of a fetcher in case of an error and stores it in the database. Based on the fetcher
+ * type, the resource can either be a {@link Document} or a {@link Object}.
  * @param stock the affected stock
  * @param dataProvider the name of the data provider
  * @param e The error that occurred during fetching, holding fetched resources if available
@@ -68,29 +68,31 @@ export const captureDataProviderError = async (
       case "documentElement" in dataSource && dataSource.documentElement?.toString().length > 0: {
         // HTML documents
         const resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString(16)}.html`;
-        const success = await createResource(
+        await createResource(
           {
-            url: resourceID,
-            fetchDate: new Date(),
-            content: dataSource.documentElement.toString(),
+            uri: resourceID,
+            lastModifiedAt: new Date(),
+            content: Buffer.from(dataSource.documentElement.toString()),
+            contentType: "text/html; charset=utf-8",
           },
-          60 * 60 * 48, // We only store the screenshot for 48 hours.
+          60 * 60 * 48, // We only store the resource for 48 hours.
         );
-        if (success) resourceIDs.push(resourceID);
+        resourceIDs.push(resourceID);
         break;
       }
       default: {
         // All other objects (usually parsed from JSON)
         const resourceID = `error-${dataProvider}-${stock.ticker}-${new Date().getTime().toString(16)}.json`;
-        const success = await createResource(
+        await createResource(
           {
-            url: resourceID,
-            fetchDate: new Date(),
-            content: JSON.stringify(dataSource),
+            uri: resourceID,
+            lastModifiedAt: new Date(),
+            content: Buffer.from(JSON.stringify(dataSource)),
+            contentType: "application/json; charset=utf-8",
           },
           60 * 60 * 48, // We only store the resource for 48 hours.
         );
-        if (success) resourceIDs.push(resourceID);
+        resourceIDs.push(resourceID);
         break;
       }
     }
@@ -102,7 +104,7 @@ export const captureDataProviderError = async (
             `https://${process.env.SUBDOMAIN ? process.env.SUBDOMAIN + "." : ""}${
               process.env.DOMAIN
               // Ensure the user is logged in before accessing the resource API endpoint.
-            }/login?redirect=${encodeURIComponent(`/api${resourcesAPIPath}/${resourceID}`)}`,
+            }/login?redirect=${encodeURIComponent(`/api${resourcesAPIPath}/${encodeURIComponent(resourceID)}`)}`,
         )
         .join(", ")}.`
     : "No additional information available.";

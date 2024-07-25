@@ -3,6 +3,8 @@ import type { OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons"
 import { GENERAL_ACCESS, optionalStockValuesNull, STOCK_UPDATE_MESSAGE } from "@rating-tracker/commons";
 
 import client from "../../src/db/client";
+import { cleanupResources } from "../../src/db/tables/resourceTable";
+import { cleanupSessions, SESSION_MAX_VALIDITY, SESSION_TTL } from "../../src/db/tables/sessionTable";
 import { addDynamicAttributesToStockData } from "../../src/models/dynamicStockAttributes";
 
 const stockData: Stock[] = [
@@ -540,31 +542,38 @@ const applyStockSeed = async (): Promise<void> => {
  * Writes example user data into the user table in the database. Must only be used in tests.
  */
 const applyUserSeed = async (): Promise<void> => {
-  await client.user.createMany({
-    data: [
-      {
-        email: "jane.doe@example.com",
-        name: "Jane Doe",
-        avatar: "data:image/jpeg;base64,U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U=",
-        phone: "+123456789",
-        accessRights: 255,
-        subscriptions: 0,
-        credentialID: "exampleCredentialID",
-        credentialPublicKey: "exampleCredentialPublicKey",
-        counter: 0,
+  await client.user.create({
+    data: {
+      email: "jane.doe@example.com",
+      name: "Jane Doe",
+      avatar: "data:image/jpeg;base64,U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U=",
+      phone: "+123456789",
+      accessRights: 255,
+      subscriptions: 0,
+      webAuthnCredentials: {
+        create: {
+          id: Buffer.from("exampleCredentialID", "base64url"),
+          publicKey: Buffer.from("exampleCredentialPublicKey", "base64url"),
+          counter: 0,
+        },
       },
-
-      {
-        email: "john.doe@example.com",
-        name: "John Doe",
-        phone: "+234567890",
-        accessRights: GENERAL_ACCESS,
-        subscriptions: STOCK_UPDATE_MESSAGE,
-        credentialID: "anotherExampleCredentialID",
-        credentialPublicKey: "anotherExampleCredentialPublicKey",
-        counter: 0,
+    },
+  });
+  await client.user.create({
+    data: {
+      email: "john.doe@example.com",
+      name: "John Doe",
+      phone: "+234567890",
+      accessRights: GENERAL_ACCESS,
+      subscriptions: STOCK_UPDATE_MESSAGE,
+      webAuthnCredentials: {
+        create: {
+          id: Buffer.from("anotherExampleCredentialID", "base64url"),
+          publicKey: Buffer.from("anotherExampleCredentialPublicKey", "base64url"),
+          counter: 0,
+        },
       },
-    ],
+    },
   });
 };
 
@@ -626,6 +635,55 @@ const applyPortfolioSeed = async (): Promise<void> => {
 };
 
 /**
+ * Writes example resource data into the resource table in the database. Must only be used in tests.
+ */
+const applyResourceSeed = async (): Promise<void> => {
+  await client.resource.createMany({
+    data: [
+      { uri: "image.png", content: Buffer.from("U2FtcGxlIFBORyBpbWFnZQ==", "base64"), contentType: "image/png" },
+      {
+        uri: "page.html",
+        content: Buffer.from('<html><body><p id="hello">Hello World!</p></body></html>'),
+        contentType: "text/html; charset=utf-8",
+      },
+      {
+        uri: "data.json",
+        content: Buffer.from(JSON.stringify({ foo: "bar" })),
+        contentType: "application/json; charset=utf-8",
+      },
+      {
+        uri: "expired.json",
+        content: Buffer.from(JSON.stringify({ expired: true })),
+        expiresAt: new Date(Date.now() - 1000),
+        contentType: "application/json; charset=utf-8",
+      },
+    ],
+  });
+};
+
+/**
+ * Writes example session data into the session table in the database. Must only be used in tests.
+ */
+const applySessionSeed = async (): Promise<void> => {
+  await client.session.createMany({
+    data: [
+      { id: Buffer.from("exampleSessionID", "base64url"), email: "jane.doe@example.com" },
+      { id: Buffer.from("anotherExampleSessionID", "base64url"), email: "john.doe@example.com" },
+      {
+        id: Buffer.from("expiredSessionID", "base64url"),
+        email: "jane.doe@example.com",
+        expiresAt: new Date(Date.now() - 1000),
+      },
+      {
+        id: Buffer.from("eolSessionID", "base64url"),
+        email: "jane.doe@example.com",
+        createdAt: new Date(Date.now() - 1000 * (SESSION_MAX_VALIDITY - SESSION_TTL + 1)),
+      },
+    ],
+  });
+};
+
+/**
  * Clears and writes example data into the tables in the database. Must only be used in tests.
  */
 const applyPostgresSeeds = async (): Promise<void> => {
@@ -633,12 +691,11 @@ const applyPostgresSeeds = async (): Promise<void> => {
     throw new Error("Refusing to apply seed when not in a test environment");
   }
 
-  await client.$queryRaw`TRUNCATE TABLE "Stock", "User", "Watchlist", "_StockToWatchlist", "Portfolio", "StocksInPortfolios" RESTART IDENTITY CASCADE`;
+  await client.$queryRaw`TRUNCATE TABLE "Stock", "User", "WebAuthnCredential", "Watchlist", "_StockToWatchlist", "Portfolio", "StocksInPortfolios", "Session", "Resource" RESTART IDENTITY CASCADE`;
 
-  await applyStockSeed();
-  await applyUserSeed();
-  await applyWatchlistSeed();
-  await applyPortfolioSeed();
+  await Promise.all([applyStockSeed(), applyUserSeed(), applyResourceSeed()]);
+  await Promise.all([applyWatchlistSeed(), applyPortfolioSeed(), applySessionSeed()]);
+  await Promise.all([cleanupResources(), cleanupSessions()]);
 };
 
 export default applyPostgresSeeds;

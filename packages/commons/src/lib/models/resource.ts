@@ -3,15 +3,19 @@
  */
 export type Resource = {
   /**
-   * The URL of the resource, used as a unique identifier.
+   * The URI of the resource.
    */
-  url: string;
+  uri: string;
   /**
    * The date and time of the last fetch.
    */
-  fetchDate: Date;
+  lastModifiedAt: Date;
   /**
    * The content of the resource.
    */
-  content: string;
+  content: Uint8Array;
+  /**
+   * The MIME type of the resource.
+   */
+  contentType: string;
 };

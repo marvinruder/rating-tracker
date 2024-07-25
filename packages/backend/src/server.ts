@@ -26,8 +26,8 @@ import "./controllers/StatusController";
 import "./controllers/StocksController";
 import "./controllers/UsersController";
 import "./controllers/WatchlistsController";
+import { refreshSessionAndGetUser, SESSION_TTL } from "./db/tables/sessionTable";
 import OpenAPIDocumentation from "./openapi";
-import { refreshSessionAndFetchUser, sessionTTLInSeconds } from "./redis/repositories/sessionRepository";
 import setupCronJobs from "./utils/cron";
 import { router } from "./utils/Endpoint";
 import errorHandler from "./utils/errorHandler";
@@ -104,7 +104,7 @@ logger.info({ prefix: "nodejs" }, `Serving static content from ${staticContentPa
 
 server.app.use((_, res, next) => {
   // Do not cache API responses
-  res.set("Cache-Control", "no-cache");
+  res.setHeader("Cache-Control", "no-cache");
   next();
 });
 
@@ -113,20 +113,23 @@ server.app.use(cookieParser());
 
 // Checks for user authentication via session cookie
 server.app.use(async (req, res, next) => {
-  if (req.cookies.authToken) {
+  if (req.cookies.id) {
     // If a session cookie is present
     try {
       // Refresh the cookie on the server and append the user to the response
-      res.locals.user = await refreshSessionAndFetchUser(req.cookies.authToken);
-      res.cookie("authToken", req.cookies.authToken, {
-        maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
-        httpOnly: true,
-        secure: true,
-        sameSite: true,
-      });
+      const { eol, user } = await refreshSessionAndGetUser(req.cookies.id);
+      res.locals.user = user;
+      if (!eol)
+        // Refresh the cookie on the client only if it is not at the end of its life
+        res.cookie("id", req.cookies.id, {
+          maxAge: 1000 * SESSION_TTL,
+          httpOnly: true,
+          secure: true,
+          sameSite: true,
+        });
     } catch (e) {
       // If we encountered an error, the token was invalid, so we delete the cookie
-      res.clearCookie("authToken");
+      res.clearCookie("id");
     }
   }
   /* c8 ignore start */ // We do not test Cron jobs
@@ -173,9 +176,7 @@ server.app.use(baseURL, server.router);
 server.app.use(errorHandler);
 
 // Setup Cron Jobs
-process.env.AUTO_FETCH_SCHEDULE &&
-  /* c8 ignore next */ // We do not test Cron jobs
-  setupCronJobs(bypassAuthenticationForInternalRequestsToken, process.env.AUTO_FETCH_SCHEDULE);
+setupCronJobs(bypassAuthenticationForInternalRequestsToken, process.env.AUTO_FETCH_SCHEDULE);
 
 export const listener = server.app.listen(Number(process.env.PORT), () => {
   logger.info({ prefix: ["nodejs", { port: process.env.PORT }] }, "Listening…");

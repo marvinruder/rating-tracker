@@ -15,12 +15,12 @@ tests.push({
     // The `q` parameter is required.
     let res = await supertest
       .get(`${baseURL}${proxyAPIPath}${yahooFinanceEndpointSuffix}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(400);
 
     res = await supertest
       .get(`${baseURL}${proxyAPIPath}${yahooFinanceEndpointSuffix}?q=app`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(6);
     expect(res.body).toContainEqual({
@@ -38,7 +38,7 @@ tests.push({
 
     res = await supertest
       .get(`${baseURL}${proxyAPIPath}${yahooFinanceEndpointSuffix}?q=aaaaaaaa`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(0);
   },
