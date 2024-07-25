@@ -982,7 +982,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/system@npm:^5.16.2, @mui/system@npm:^5.16.5":
+"@mui/system@npm:^5.16.5":
   version: 5.16.5
   resolution: "@mui/system@npm:5.16.5"
   dependencies:
@@ -1022,7 +1022,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.15.14, @mui/utils@npm:^5.16.2, @mui/utils@npm:^5.16.5":
+"@mui/utils@npm:^5.15.14, @mui/utils@npm:^5.16.5":
   version: 5.16.5
   resolution: "@mui/utils@npm:5.16.5"
   dependencies:
@@ -1042,14 +1042,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.11.0":
-  version: 7.11.0
-  resolution: "@mui/x-charts@npm:7.11.0"
+"@mui/x-charts@npm:7.11.1":
+  version: 7.11.1
+  resolution: "@mui/x-charts@npm:7.11.1"
   dependencies:
     "@babel/runtime": "npm:^7.24.8"
     "@mui/base": "npm:^5.0.0-beta.40"
-    "@mui/system": "npm:^5.16.2"
-    "@mui/utils": "npm:^5.16.2"
+    "@mui/system": "npm:^5.16.5"
+    "@mui/utils": "npm:^5.16.5"
     "@react-spring/rafz": "npm:^9.7.3"
     "@react-spring/web": "npm:^9.7.3"
     clsx: "npm:^2.1.1"
@@ -1070,7 +1070,7 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/1cc240d5ba40e6c8fb8702936645f53c2e9ca5b1de05f499eccf26be988c646d5069b9987b36e14a75fda2f70728261ea359b479807d04bed92620e4b7899c33
+  checksum: 10c0/cea8592d7099bf4588e6d4dd619d8874f6e27f8413e83901bc8ce4c1ac96454c1252cbdd8631093ff13e40ad01b30e1daf89b06375b3be2a84a1ceada432c217
   languageName: node
   linkType: hard
 
@@ -1455,7 +1455,7 @@ __metadata:
     "@mui/icons-material": "npm:5.16.5"
     "@mui/lab": "npm:5.0.0-alpha.173"
     "@mui/material": "npm:5.16.5"
-    "@mui/x-charts": "npm:7.11.0"
+    "@mui/x-charts": "npm:7.11.1"
     "@nivo/core": "npm:0.87.0"
     "@nivo/sunburst": "npm:0.87.0"
     "@rating-tracker/commons": "workspace:*"
