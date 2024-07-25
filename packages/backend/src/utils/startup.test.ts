@@ -8,7 +8,7 @@ vi.hoisted(() => {
 
 const mockExit = vi.spyOn(process, "exit").mockImplementation((() => {}) as () => never);
 
-describe("startup routine", () => {
+describe.concurrent("startup routine", () => {
   it("fails when mandatory environment variable is unset", () => {
     process.env.PORT = "";
     startup();

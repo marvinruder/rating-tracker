@@ -3,12 +3,11 @@ import { GENERAL_ACCESS, accountAvatarEndpointSuffix, accountAPIPath, baseURL } 
 import type { Request, RequestHandler, Response } from "express";
 import express from "express";
 
-import { updateUserWithCredentials, deleteUser, readUser, readUserAvatar } from "../db/tables/userTable";
+import { updateUser, deleteUser, readUserAvatar } from "../db/tables/userTable";
 import * as user from "../openapi/parameters/user";
 import { notFound, unauthorized, unsupportedMediaType } from "../openapi/responses/clientError";
 import { internalServerError, notImplemented } from "../openapi/responses/serverError";
 import { created, noContent, okAvatar, okUser } from "../openapi/responses/success";
-import { updateSession } from "../redis/repositories/sessionRepository";
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
 
@@ -118,12 +117,7 @@ class AccountController extends SingletonController {
       (typeof subscriptions !== "number" && typeof subscriptions !== "undefined")
     )
       throw new APIError(400, "Invalid query parameters.");
-    await updateUserWithCredentials(user.email, { email, name, phone, subscriptions });
-    if (email) {
-      // If the user’s email changed, the session needs to be updated.
-      res.locals.user = await readUser(email);
-      await updateSession(req.cookies.authToken, res.locals.user.email);
-    }
+    await updateUser(user.email, { email, name, phone, subscriptions });
     res.status(204).end();
   };
 
@@ -149,7 +143,7 @@ class AccountController extends SingletonController {
     if (!avatarBody) throw new APIError(400, "Invalid request body.");
     switch (req.headers["content-type"]) {
       case "image/avif":
-        await updateUserWithCredentials(res.locals.user.email, {
+        await updateUser(res.locals.user.email, {
           avatar: `data:${req.headers["content-type"]};base64,${avatarBody}`,
         });
         res.status(201).end();
@@ -196,7 +190,7 @@ class AccountController extends SingletonController {
     accessRights: GENERAL_ACCESS,
   })
   deleteAvatar: RequestHandler = async (_: Request, res: Response) => {
-    await updateUserWithCredentials(res.locals.user.email, { avatar: null });
+    await updateUser(res.locals.user.email, { avatar: null });
     res.status(204).end();
   };
 }

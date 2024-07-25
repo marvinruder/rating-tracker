@@ -1,8 +1,21 @@
+// eslint-disable-next-line import/no-nodejs-modules
+import fs from "node:fs";
+// eslint-disable-next-line import/no-nodejs-modules
+import type { ServerOptions } from "node:https";
+
 import react from "@vitejs/plugin-react";
+import proxy from "http2-proxy";
+import type { ViteDevServer } from "vite";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 import wasm from "vite-plugin-wasm";
 import { defineConfig as defineVitestConfig } from "vitest/config";
+
+let https: ServerOptions | undefined;
+
+try {
+  https = { cert: fs.readFileSync("./certs/fullchain.pem"), key: fs.readFileSync("./certs/privkey.pem") };
+} catch {}
 
 export default mergeConfig(
   defineViteConfig({
@@ -24,6 +37,33 @@ export default mergeConfig(
     cacheDir: ".vite",
     esbuild: { supported: { "top-level-await": true } },
     plugins: [
+      (() => {
+        const configure = (server: ViteDevServer) => {
+          server.middlewares.use((req, res, next) => {
+            if (req.url?.startsWith("/api"))
+              void proxy.web(
+                req,
+                res,
+                {
+                  hostname: "localhost",
+                  port: Number(process.env.PORT ?? 3001),
+                  onReq: async (incomingMessage, options) => {
+                    options.headers["X-Forwarded-For"] = incomingMessage.headers["x-forwarded-for"]
+                      ? incomingMessage.headers["x-forwarded-for"] + ", " + incomingMessage.socket.remoteAddress
+                      : incomingMessage.socket.remoteAddress;
+                  },
+                },
+                (err) => err && next(err),
+              );
+            else next();
+          });
+        };
+        return {
+          enforce: "pre",
+          configureServer: configure,
+          configurePreviewServer: configure,
+        };
+      })(),
       react(),
       createHtmlPlugin({
         minify: true,
@@ -39,8 +79,8 @@ export default mergeConfig(
       }),
       wasm(),
     ],
-    preview: { port: 5173 },
-    server: { host: true },
+    preview: { port: 443, strictPort: true },
+    server: { host: true, https, port: 443, strictPort: true },
     worker: { format: "es", plugins: () => [wasm()] },
   }),
   defineVitestConfig({

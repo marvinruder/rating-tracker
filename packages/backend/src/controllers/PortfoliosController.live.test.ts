@@ -10,7 +10,7 @@ export const tests: LiveTestSuite = [];
 
 const getPortfolioID = async (name: string): Promise<number> => {
   // Get the ID of the portfolio from the summary
-  const res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+  const res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
   expect(res.status).toBe(200);
   const { id } = res.body.find((portfolioSummary: PortfolioSummary) => portfolioSummary.name === name);
   return id;
@@ -19,7 +19,7 @@ const getPortfolioID = async (name: string): Promise<number> => {
 tests.push({
   testName: "reads a summary of all portfolios",
   testFunction: async () => {
-    const res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    const res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.length).toBe(2);
     expect(res.body[0].name).toBe("My Portfolio");
@@ -40,7 +40,7 @@ tests.push({
     // Get the ID of the portfolio from the summary
     const id = await getPortfolioID("Min portefølje");
 
-    let res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Min portefølje");
     expect(res.body.stocks.length).toBe(2);
@@ -51,9 +51,7 @@ tests.push({
     expect(res.body.stocks[0].portfolioID).toBeUndefined();
 
     // Attempting to read a list of a different user returns an error
-    res = await supertest
-      .get(`${baseURL}${portfoliosAPIPath}/${id}`)
-      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=anotherExampleSessionID"]);
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("does not belong to user with email address john.doe");
   },
@@ -65,16 +63,16 @@ tests.push({
     // We cannot create a portfolio without a currency
     let res = await supertest
       .put(`${baseURL}${portfoliosAPIPath}?name=${encodeURIComponent("Mon Portefeuille")}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(400);
 
     res = await supertest
       .put(`${baseURL}${portfoliosAPIPath}?name=${encodeURIComponent("Mon Portefeuille")}&currency=EUR`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(201);
     const { id } = res.body;
 
-    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Mon Portefeuille");
     expect(res.body.currency).toBe("EUR");
@@ -86,7 +84,7 @@ tests.push({
   testName: "[unsafe] updates a portfolio",
   testFunction: async () => {
     // Get the ID of the portfolio from the summary
-    let res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     const { id, subscribed } = res.body.find(
       (portfolioSummary: PortfolioSummary) => portfolioSummary.name === "Min portefølje",
@@ -96,21 +94,21 @@ tests.push({
     // Update the portfolio
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/${id}?name=Mein%20Portfolio&currency=EUR`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Updating the portfolio again does not return an error
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/${id}?name=Mein%20Portfolio&currency=EUR`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Not sending any update information is meaningless but valid
-    res = await supertest.patch(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.patch(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Check that the portfolio has been updated
-    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("Mein Portfolio");
     expect(res.body.currency).toBe("EUR");
@@ -118,14 +116,14 @@ tests.push({
     // Attempting to update a list of a different user returns an error
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/${id}?name=This%20should%20not%20work`)
-      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+      .set("Cookie", ["id=anotherExampleSessionID"]);
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("does not belong to user with email address john.doe");
 
     // Attempting to update a non-existent list returns an error
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/-1?name=This%20should%20not%20work`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Portfolio -1 not found.");
   },
@@ -140,23 +138,23 @@ tests.push({
     // Stocks in portfolios must have an amount
     let res = await supertest
       .put(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleALV`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(400);
 
     // Add a stock to the portfolio
     res = await supertest
       .put(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleALV?amount=2000`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Adding the same stock again results in a conflict
     res = await supertest
       .put(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleALV?amount=2000`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(409);
 
     // Check that the stock has been added
-    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.stocks.length).toBe(3);
     expect(res.body.stocks[0].name).toBe("Allianz SE");
@@ -166,21 +164,21 @@ tests.push({
     // Attempting to update a list of a different user returns an error
     res = await supertest
       .put(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleALV?amount=2000`)
-      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+      .set("Cookie", ["id=anotherExampleSessionID"]);
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("does not belong to user with email address john.doe");
 
     // Attempting to add a stock to a non-existent list returns an error
     res = await supertest
       .put(`${baseURL}${portfoliosAPIPath}/-1${stocksAPIPath}/exampleALV?amount=2000`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Portfolio -1 not found.");
 
     // Attempting to add a non-existent stock returns an error
     res = await supertest
       .put(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/doesNotExist?amount=1234`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Stock doesNotExist not found.");
   },
@@ -195,51 +193,51 @@ tests.push({
     // Update a stock in the portfolio
     let res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleTSM?amount=180`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Updating the stock in the portfolio again does not return an error
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleTSM?amount=180`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Not sending any update information is meaningless but valid
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleTSM`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Check that the stock in the portfolio has been updated
-    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.stocks.find((stock: Stock) => stock.ticker === "exampleTSM").amount).toBe(180);
 
     // Attempting to update a portfolio of a different user returns an error
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleTSM?amount=180`)
-      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+      .set("Cookie", ["id=anotherExampleSessionID"]);
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("does not belong to user with email address john.doe");
 
     // Attempting to update a stock in a non-existent portfolio returns an error
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/-1${stocksAPIPath}/exampleTSM?amount=180`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Portfolio -1 not found.");
 
     // Attempting to update an existing stock that is not in the portfolio returns an error
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleMELI?amount=1200`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Stock exampleMELI is not in portfolio My Portfolio.");
 
     // Attempting to update a non-existent stock returns an error
     res = await supertest
       .patch(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/doesNotExist?amount=180`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Stock doesNotExist not found.");
   },
@@ -254,17 +252,17 @@ tests.push({
     // Remove a stock from the portfolio
     let res = await supertest
       .delete(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleNOVO%20B`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Removing the same stock again results in an error
     res = await supertest
       .delete(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleNOVO%20B`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
 
     // Check that the stock has been removed
-    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(res.body.stocks.length).toBe(1);
     expect(res.body.stocks[0].name).toBe("Ørsted A/S");
@@ -272,21 +270,21 @@ tests.push({
     // Attempting to update a list of a different user returns an error
     res = await supertest
       .delete(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/exampleNOVO%20B`)
-      .set("Cookie", ["authToken=anotherExampleSessionID"]);
+      .set("Cookie", ["id=anotherExampleSessionID"]);
     expect(res.status).toBe(403);
     expect(res.body.message).toMatch("does not belong to user with email address john.doe");
 
     // Attempting to remove a stock from a non-existent list returns an error
     res = await supertest
       .delete(`${baseURL}${portfoliosAPIPath}/-1${stocksAPIPath}/exampleNOVO%20B`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Portfolio -1 not found.");
 
     // Attempting to remove a non-existent stock returns an error
     res = await supertest
       .delete(`${baseURL}${portfoliosAPIPath}/${id}${stocksAPIPath}/doesNotExist`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+      .set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
     expect(res.body.message).toMatch("Stock doesNotExist is not in portfolio Min portefølje.");
   },
@@ -299,17 +297,15 @@ tests.push({
     const id = await getPortfolioID("Min portefølje");
 
     // Delete the portfolio
-    let res = await supertest
-      .delete(`${baseURL}${portfoliosAPIPath}/${id}`)
-      .set("Cookie", ["authToken=exampleSessionID"]);
+    let res = await supertest.delete(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(204);
 
     // Attempting to read the deleted portfolio returns an error
-    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${portfoliosAPIPath}/${id}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(404);
 
     // A portfolio witht that name is no longer in the summary
-    res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+    res = await supertest.get(`${baseURL}${portfoliosAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
     expect(res.status).toBe(200);
     expect(
       res.body.find((portfolioSummary: PortfolioSummary) => portfolioSummary.name === "Min portefølje"),

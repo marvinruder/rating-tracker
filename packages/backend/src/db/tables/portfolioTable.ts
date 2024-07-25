@@ -300,12 +300,9 @@ export const removeStockFromPortfolio = async (id: number, email: string, ticker
  * @throws an {@link APIError} if the portfolio does not exist or belong to the user.
  */
 export const deletePortfolio = async (id: number, email: string) => {
+  // Attempt to read the portfolio as the current user
   await checkPortfolioExistenceAndOwner(id, email);
-  // Attempt to find a portfolio with the given ID
-  const existingPortfolio = await client.portfolio.findUniqueOrThrow({ where: { id } });
-  // If that worked, we can delete the existing portfolio
-  await client.portfolio.delete({
-    where: { id },
-  });
-  logger.info({ prefix: "postgres" }, `Deleted portfolio “${existingPortfolio.name}” (ID ${id}).`);
+  // Delete the portfolio with the given ID
+  await client.portfolio.delete({ where: { id } });
+  logger.info({ prefix: "postgres" }, `Deleted portfolio ${id}.`);
 };

@@ -243,15 +243,12 @@ export const updateStock = async (
  * @throws an {@link APIError} if the stock does not exist.
  */
 export const deleteStock = async (ticker: string) => {
-  // Attempt to find a stock with the given ticker
   try {
-    const existingStock = await client.stock.findUniqueOrThrow({ where: { ticker } });
-    // If that worked, we can delete the existing stock
-    await client.stock.delete({
-      where: { ticker },
-    });
-    logger.info({ prefix: "postgres" }, `Deleted stock “${existingStock.name}” (ticker ${ticker}).`);
+    // Attempt to delete the stock with the given ticker
+    await client.stock.delete({ where: { ticker } });
+    logger.info({ prefix: "postgres" }, `Deleted stock ${ticker}.`);
   } catch {
+    // If deletion failed, the stock does not exist
     throw new APIError(404, `Stock ${ticker} not found.`);
   }
 };

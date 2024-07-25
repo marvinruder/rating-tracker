@@ -16,7 +16,6 @@ tests.push({
 
     // Available during live tests:
     expect(res.body.services).not.toHaveProperty("PostgreSQL");
-    expect(res.body.services).not.toHaveProperty("Redis");
 
     // Mocked to be not ready during live tests:
     expect(res.body.services).toHaveProperty("Signal");

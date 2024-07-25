@@ -15,7 +15,7 @@ export const supertest = initSupertest(`http://localhost:${process.env.PORT}`);
  * @returns The list of stocks returned by the server.
  */
 export const expectStockListLengthToBe = async (length: number): Promise<Stock[]> => {
-  const res = await supertest.get(`${baseURL}${stocksAPIPath}`).set("Cookie", ["authToken=exampleSessionID"]);
+  const res = await supertest.get(`${baseURL}${stocksAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
   expect(res.status).toBe(200);
   expect(res.body.count).toBe(length);
   expect(res.body.stocks).toHaveLength(length);
@@ -52,7 +52,7 @@ export const expectSpecialAccessRightsToBeRequired = async (
 ): Promise<void> => {
   method = method ?? supertest.get;
   const res = await (contentType ? method(route).set("Content-Type", contentType) : method(route)).set("Cookie", [
-    "authToken=anotherExampleSessionID",
+    "id=anotherExampleSessionID",
   ]);
   expect(res.status).toBe(403);
   expect(res.body.message).toMatch(
@@ -61,7 +61,7 @@ export const expectSpecialAccessRightsToBeRequired = async (
 };
 
 /**
- * An array of tests requiring the presence of a PostgreSQL and/or Redis instance.
+ * An array of tests requiring the presence of a PostgreSQL instance.
  */
 export type LiveTestSuite = {
   /**

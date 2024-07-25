@@ -2,7 +2,7 @@ generator client {
   provider        = "prisma-client-js"
   output          = "./client"
   binaryTargets   = ["native", "linux-musl-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
-  previewFeatures = ["omitApi"]
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 generator json {
@@ -11,8 +11,9 @@ generator json {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgcrypto]
 }
 
 model Stock {
@@ -69,17 +70,24 @@ model Stock {
 }
 
 model User {
-  email               String      @id @db.VarChar(255)
-  name                String      @db.VarChar(255)
+  email               String               @id @db.VarChar(255)
+  name                String               @db.VarChar(255)
   avatar              String?
-  phone               String?     @db.VarChar(16)
-  accessRights        Int         @default(0) @db.SmallInt
-  subscriptions       Int?        @db.SmallInt
-  credentialID        String      @unique @db.VarChar(255)
-  credentialPublicKey String      @db.VarChar(8192)
-  counter             Int         @default(0)
+  phone               String?              @db.VarChar(16)
+  accessRights        Int                  @default(0) @db.SmallInt
+  subscriptions       Int?                 @db.SmallInt
+  webAuthnCredentials WebAuthnCredential[]
   watchlists          Watchlist[]
   portfolios          Portfolio[]
+  Session             Session[]
+}
+
+model WebAuthnCredential {
+  id        Bytes  @id
+  publicKey Bytes
+  counter   Int    @default(0)
+  user      User   @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
+  email     String @db.VarChar(255)
 }
 
 model Watchlist {
@@ -108,6 +116,22 @@ model StocksInPortfolios {
   amount      Float
 
   @@id([portfolioID, ticker])
+}
+
+model Session {
+  id        Bytes    @id @default(dbgenerated("gen_random_bytes(32)"))
+  user      User     @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
+  email     String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  expiresAt DateTime @default(dbgenerated("date_add(now(), '1 hour')")) @db.Timestamp(6)
+}
+
+model Resource {
+  uri            String   @id
+  content        Bytes
+  contentType    String   @db.VarChar(255)
+  lastModifiedAt DateTime @default(now()) @db.Timestamp(6)
+  expiresAt      DateTime @default(dbgenerated("date_add(now(), '1 day')")) @db.Timestamp(6)
 }
 
 enum Country {

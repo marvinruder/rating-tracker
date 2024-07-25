@@ -15,6 +15,7 @@ import {
 } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
 
+import { createResource, readResource } from "../db/tables/resourceTable";
 import { readStocks, readStock, updateStock } from "../db/tables/stockTable";
 import { fetchFromDataProvider } from "../fetchers/fetchHelper";
 import * as fetch from "../openapi/parameters/fetch";
@@ -22,7 +23,6 @@ import * as stock from "../openapi/parameters/stock";
 import { unauthorized, forbidden, notFound, tooManyRequestsJSONError } from "../openapi/responses/clientError";
 import { badGateway, internalServerError } from "../openapi/responses/serverError";
 import { accepted, noContent, okStockList } from "../openapi/responses/success";
-import { createResource, readResource } from "../redis/repositories/resourceRepository";
 import * as signal from "../signal/signal";
 import { SIGNAL_PREFIX_ERROR } from "../signal/signal";
 import APIError from "../utils/APIError";
@@ -352,7 +352,7 @@ class FetchController extends SingletonController {
         logger.info(
           { prefix: "fetch" },
           `Using cached Sustainalytics data because last fetch was ${timeDiffToNow(
-            sustainalyticsXMLResource.fetchDate,
+            sustainalyticsXMLResource.lastModifiedAt,
           )}.`,
         );
       } catch (e) {
@@ -374,9 +374,10 @@ class FetchController extends SingletonController {
             // We cache the data for 7 days.
             await createResource(
               {
-                url: URL_SUSTAINALYTICS,
-                fetchDate: new Date(response.headers.get("Date")),
-                content: sustainalyticsXMLLines.join("\n"),
+                uri: URL_SUSTAINALYTICS,
+                lastModifiedAt: new Date(response.headers.get("Date")),
+                content: Buffer.from(sustainalyticsXMLLines.join("\n")),
+                contentType: "text/xml; charset=utf-8",
               },
               dataProviderTTL["sustainalytics"],
             );
@@ -390,7 +391,7 @@ class FetchController extends SingletonController {
       throw new APIError(502, "Unable to fetch Sustainalytics information", e);
     }
 
-    const sustainalyticsXMLLines = sustainalyticsXMLResource.content.split("\n");
+    const sustainalyticsXMLLines = sustainalyticsXMLResource.content.toString().split("\n");
 
     for await (let stock of stockList) {
       if (req.query.clear) {

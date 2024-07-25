@@ -1,9 +1,9 @@
 import { GENERAL_ACCESS, sessionAPIPath } from "@rating-tracker/commons";
 import type { Request, RequestHandler, Response } from "express";
 
+import { deleteSession } from "../db/tables/sessionTable";
 import { notFound, unauthorized } from "../openapi/responses/clientError";
 import { noContent } from "../openapi/responses/success";
-import { deleteSession } from "../redis/repositories/sessionRepository";
 import Endpoint from "../utils/Endpoint";
 
 import SingletonController from "./SingletonController";
@@ -55,8 +55,8 @@ class SessionController extends SingletonController {
     accessRights: GENERAL_ACCESS,
   })
   delete: RequestHandler = async (req: Request, res: Response) => {
-    await deleteSession(req.cookies.authToken);
-    res.clearCookie("authToken", { httpOnly: true, secure: true, sameSite: true }); // Clears the session cookie.
+    await deleteSession(req.cookies.id);
+    res.clearCookie("id", { httpOnly: true, secure: true, sameSite: true }); // Clears the session cookie.
     res.status(204).end();
   };
 }

@@ -64,21 +64,11 @@ export class User {
   subscriptions: number | null;
 
   /**
-   * Creates a new user from user information and remove credentials, if present.
-   * @param user The user information, possibly containing credentials.
+   * Creates a new user from user information.
+   * @param user The user information.
    */
-  constructor(user: OmitFunctions<User | UserWithCredentials>) {
-    const userWithPossibleCredentials = { ...user };
-    if ("credentialID" in userWithPossibleCredentials) {
-      delete userWithPossibleCredentials.credentialID;
-    }
-    if ("credentialPublicKey" in userWithPossibleCredentials) {
-      delete userWithPossibleCredentials.credentialPublicKey;
-    }
-    if ("counter" in userWithPossibleCredentials) {
-      delete userWithPossibleCredentials.counter;
-    }
-    Object.assign(this, userWithPossibleCredentials);
+  constructor(user: OmitFunctions<User>) {
+    Object.assign(this, user);
   }
 
   /**
@@ -145,33 +135,6 @@ export class User {
       case "stockUpdate":
         return this.hasAccessRight(GENERAL_ACCESS);
     }
-  }
-}
-
-/**
- * A user of the application with WebAuthn credentials.
- */
-export class UserWithCredentials extends User {
-  /**
-   * The ID of the WebAuthn credential.
-   */
-  credentialID: string;
-  /**
-   * The public key of the WebAuthn credential.
-   */
-  credentialPublicKey: string;
-  /**
-   * The counter of the WebAuthn credential, indicating the number of times it has been used.
-   */
-  counter: number;
-
-  /**
-   * Creates a new user from user information.
-   * @param user The user information.
-   */
-  constructor(user: OmitFunctions<User | UserWithCredentials>) {
-    super(user);
-    Object.assign(this, user);
   }
 }
 

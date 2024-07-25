@@ -1,5 +1,4 @@
 import { Buffer } from "node:buffer";
-import { randomBytes } from "node:crypto";
 
 import {
   ALREADY_REGISTERED_ERROR_MESSAGE,
@@ -8,18 +7,18 @@ import {
   optionalUserValuesNull,
   registerEndpointSuffix,
   signInEndpointSuffix,
-  UserWithCredentials,
+  User,
 } from "@rating-tracker/commons";
 import * as SimpleWebAuthnServer from "@simplewebauthn/server";
 import type { Request, RequestHandler, Response } from "express";
 import express from "express";
 
-import { createUser, readUserByCredentialID, updateUserWithCredentials, userExists } from "../db/tables/userTable";
+import { createSession, SESSION_TTL } from "../db/tables/sessionTable";
+import { createUser, readCredentialWithUser, setCredentialCounter, userExists } from "../db/tables/userTable";
 import * as user from "../openapi/parameters/user";
 import { badRequest, forbidden, notFound, tooManyRequestsHTML } from "../openapi/responses/clientError";
 import { internalServerError } from "../openapi/responses/serverError";
 import { created, noContent, okObject } from "../openapi/responses/success";
-import { createSession, sessionTTLInSeconds } from "../redis/repositories/sessionRepository";
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
 
@@ -77,7 +76,7 @@ class AuthController extends SingletonController {
       rpName: this.#rpName,
       rpID: this.#rpID,
       userName: name, // This will be displayed to the user when they authenticate.
-      attestationType: "none", // Do not prompt users for additional information about the authenticator
+      attestationType: "none", // Do not require attestation, as we do not need to verify the authenticator.
       authenticatorSelection: {
         // Require the user to verify their identity with a PIN or biometric sensor, thereby using 2FA.
         userVerification: "required",
@@ -133,8 +132,8 @@ class AuthController extends SingletonController {
         expectedRPID: this.#rpID,
         requireUserVerification: true, // Require the user to verify their identity with a PIN or biometric sensor.
       });
-    } catch (error) {
-      throw new APIError(500, error.message);
+    } catch (e) {
+      throw new APIError(500, e.message);
     }
 
     const { verified, registrationInfo } = verification;
@@ -146,17 +145,10 @@ class AuthController extends SingletonController {
       // We attempt to create a new user with the provided information.
       // If the user already exists, createUser(…)  will return false and we throw an error.
       !(await createUser(
-        new UserWithCredentials({
-          ...optionalUserValuesNull,
-          email,
-          name,
-          accessRights: 0, // Users need to be manually approved before they can access the app.
-          // Convert base64url (as specified in https://www.w3.org/TR/webauthn-2/) to base64 (which we want to store
-          // in database)
-          credentialID: Buffer.from(credentialID, "base64url").toString("base64"),
-          credentialPublicKey: Buffer.from(credentialPublicKey).toString("base64"),
-          counter,
-        }),
+        // Users need to be manually approved before they can access the app.
+        new User({ ...optionalUserValuesNull, email, name, accessRights: 0 }),
+        // Decode base64url (as specified in https://www.w3.org/TR/webauthn-2/)
+        { id: Buffer.from(credentialID, "base64url"), publicKey: credentialPublicKey, counter },
       ))
     ) {
       throw new APIError(403, ALREADY_REGISTERED_ERROR_MESSAGE);
@@ -222,7 +214,8 @@ class AuthController extends SingletonController {
   postAuthenticationResponse: RequestHandler = async (req: Request, res: Response) => {
     // We retrieve the user from the database, who we identified by the email address in the challenge response.
     const credentialID: string = req.body.id;
-    const user = await readUserByCredentialID(credentialID);
+    const credential = await readCredentialWithUser(credentialID);
+    const { user } = credential;
 
     let verification: SimpleWebAuthnServer.VerifiedAuthenticationResponse;
     try {
@@ -234,14 +227,14 @@ class AuthController extends SingletonController {
         expectedRPID: this.#rpID,
         authenticator: {
           // This information is stored for each user in the database.
-          credentialID: user.credentialID,
-          credentialPublicKey: Buffer.from(user.credentialPublicKey, "base64"),
-          counter: user.counter,
+          credentialID: Buffer.from(credential.id).toString("base64"),
+          credentialPublicKey: credential.publicKey,
+          counter: credential.counter,
         },
         requireUserVerification: true, // Require the user to verify their identity with a PIN or biometric sensor.
       });
-    } catch (error) {
-      throw new APIError(500, error.message);
+    } catch (e) {
+      throw new APIError(500, e.message);
     }
 
     const { verified, authenticationInfo } = verification;
@@ -254,16 +247,11 @@ class AuthController extends SingletonController {
       }
       // The counter variable will increment if the client’s authenticator tracks the number of authentications.
       // Not supported by all authenticators.
-      await updateUserWithCredentials(user.email, { counter: newCounter });
+      await setCredentialCounter(credential.id, newCounter);
 
       // We create and store a session cookie for the user.
-      // The token consists of 256 bits of random data converted to a base 36 string.
-      const authToken = BigInt("0x" + randomBytes(32).toString("hex"))
-        .toString(36)
-        .padStart(50, "0");
-      await createSession({ sessionID: authToken, email: user.email });
-      res.cookie("authToken", authToken, {
-        maxAge: 1000 * sessionTTLInSeconds, // Refresh the cookie on the client
+      res.cookie("id", await createSession(user.email), {
+        maxAge: 1000 * SESSION_TTL, // Refresh the cookie on the client
         httpOnly: true,
         secure: true,
         sameSite: true,

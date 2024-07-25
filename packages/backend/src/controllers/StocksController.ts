@@ -1,4 +1,4 @@
-import type { Country, Industry, Resource, WeightedStock, Stock } from "@rating-tracker/commons";
+import type { Country, Industry, WeightedStock, Stock } from "@rating-tracker/commons";
 import {
   GENERAL_ACCESS,
   isCountry,
@@ -22,6 +22,8 @@ import type { Request, RequestHandler, Response } from "express";
 
 import type { Prisma } from "../../prisma/client";
 import { readStocksInPortfolio } from "../db/tables/portfolioTable";
+import type { ResourceWithExpire } from "../db/tables/resourceTable";
+import { createResource, readResource } from "../db/tables/resourceTable";
 import { createStock, deleteStock, readStocks, updateStock, readStock } from "../db/tables/stockTable";
 import { readWatchlist } from "../db/tables/watchlistTable";
 import * as portfolio from "../openapi/parameters/portfolio";
@@ -37,7 +39,6 @@ import {
   okStockListWithCount,
   okSVG,
 } from "../openapi/responses/success";
-import { createResource, readResource, readResourceTTL } from "../redis/repositories/resourceRepository";
 import APIError from "../utils/APIError";
 import Endpoint from "../utils/Endpoint";
 import { performFetchRequest } from "../utils/fetchRequest";
@@ -52,20 +53,20 @@ class StocksController extends SingletonController {
   tags = ["Stocks API"];
 
   /**
-   * Retrieves the logo of a stock from Redis cache or TradeRepublic.
+   * Retrieves the logo of a stock from the database or TradeRepublic.
    * @param ticker the ticker of the stock
    * @param dark whether to use the dark or light version of the logo
    * @returns the logo as a Resource object
    */
-  #getLogoOfStock = async (ticker: string, dark: boolean): Promise<Resource> => {
+  #getLogoOfStock = async (ticker: string, dark: boolean): Promise<ResourceWithExpire> => {
     const stock = await readStock(ticker);
-    let logoResource: Resource;
+    let logoResource: ResourceWithExpire;
     const url = `https://assets.traderepublic.com/img/logos/${stock.isin}/${dark ? "dark" : "light"}.svg`;
     try {
-      // Try to read the logo from Redis cache first.
+      // Try to read the logo from the database first.
       logoResource = await readResource(url);
     } catch (e) {
-      // If the logo is not in the cache, fetch it from TradeRepublic and store it in the cache.
+      // If the logo is not in the database, fetch it from TradeRepublic and store it in the database.
       await performFetchRequest(url)
         .then(async (response) => {
           let maxAge: number;
@@ -76,9 +77,16 @@ class StocksController extends SingletonController {
           } catch (_) {
             maxAge = 60 * 60 * 24;
           }
+          // Store the logo for at least one week
+          maxAge = Math.max(maxAge, 60 * 60 * 24 * 7);
           // Store the logo in the cache
           await createResource(
-            { url, fetchDate: new Date(response.headers.get("Date")), content: response.data },
+            {
+              uri: url,
+              lastModifiedAt: new Date(response.headers.get("Date")),
+              content: response.data,
+              contentType: response.headers.get("content-type") || "image/svg+xml",
+            },
             maxAge,
           );
           // Read the logo as a Resource object
@@ -87,7 +95,7 @@ class StocksController extends SingletonController {
         .catch(async () => {
           // If the logo could not be fetched from TradeRepublic, use an empty SVG as a placeholder.
           await createResource(
-            { url, fetchDate: new Date(), content: DUMMY_SVG },
+            { uri: url, lastModifiedAt: new Date(), content: Buffer.from(DUMMY_SVG), contentType: "image/svg+xml" },
             60 * 60, // Let’s try again after one hour
           );
           logoResource = await readResource(url);
@@ -508,15 +516,13 @@ class StocksController extends SingletonController {
   })
   getLogo: RequestHandler = async (req: Request, res: Response) => {
     const logoResource = await this.#getLogoOfStock(req.params.ticker, String(req.query.dark) === "true");
-    res.set("Content-Type", "image/svg+xml");
-    res.set(
-      "Cache-Control",
-      `max-age=${
-        // Allow client-side caching as long as the logo is valid in the cache
-        await readResourceTTL(logoResource.url)
-      }`,
-    );
-    res.status(200).send(logoResource.content).end();
+    res
+      .setHeader("Content-Type", logoResource.contentType)
+      // Allow client-side caching as long as the logo is valid in the cache
+      .setHeader("Cache-Control", `max-age=${Math.trunc((logoResource.expiresAt.getTime() - Date.now()) / 1000)}`)
+      .status(200)
+      .send(logoResource.content)
+      .end();
   };
 
   /**
@@ -552,34 +558,41 @@ class StocksController extends SingletonController {
   })
   getLogoBackground: RequestHandler = async (req: Request, res: Response) => {
     const count = Math.min(50, Number(req.query.count) || 50);
-    let logoBundleResource: Resource;
+    let logoBundleResource: ResourceWithExpire;
     const url = logoBackgroundAPIPath + (req.query.dark ? "_dark" : "_light") + count;
     try {
-      // Try to read the logos from Redis cache first.
+      // Try to read the logos from the database first.
       logoBundleResource = await readResource(url);
     } catch (e) {
-      // If the logos are not in the cache, fetch them one by one and store them in the cache as one bundled resource.
+      // If the logos are not in the database, fetch them one by one and store them in the database as one bundled
+      // resource.
       const [stocks] = await readStocks({ orderBy: { totalScore: "desc" }, take: count });
       const logos: string[] = new Array(count).fill(DUMMY_SVG);
       await Promise.allSettled(
         stocks.map(async (stock, index) => {
           const { content } = await this.#getLogoOfStock(stock.ticker, String(req.query.dark) === "true");
           // We do not want the response to be too large, so we limit the size of the logos to 128 kB each.
-          logos[index] = content.length > 128 * 1024 ? DUMMY_SVG : content;
+          logos[index] = content.length > 128 * 1024 ? DUMMY_SVG : content.toString();
         }),
       );
       await createResource(
-        { url, fetchDate: new Date(), content: JSON.stringify(logos) },
+        {
+          uri: url,
+          lastModifiedAt: new Date(),
+          content: Buffer.from(JSON.stringify(logos)),
+          contentType: "application/json; charset=utf-8",
+        },
         60 * 60 * 24 * 7, // Cache for one week
       );
       logoBundleResource = await readResource(url);
     }
-    res.set(
-      "Cache-Control",
+    res
       // Allow client-side caching as long as the logo bundle is valid in the cache
-      `max-age=${await readResourceTTL(url)}`,
-    );
-    res.status(200).send(JSON.parse(logoBundleResource.content)).end();
+      .setHeader("Cache-Control", `max-age=${Math.trunc((logoBundleResource.expiresAt.getTime() - Date.now()) / 1000)}`)
+      .setHeader("content-type", logoBundleResource.contentType)
+      .status(200)
+      .send(logoBundleResource.content)
+      .end();
   };
 
   /**

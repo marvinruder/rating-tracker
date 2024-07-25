@@ -9,6 +9,7 @@ export * from "./lib/gecs/SuperSector";
 
 export * from "./lib/math/Record";
 
+export * from "./lib/models/webAuthnCredential";
 export * from "./lib/models/portfolio";
 export * from "./lib/models/resource";
 export * from "./lib/models/session";

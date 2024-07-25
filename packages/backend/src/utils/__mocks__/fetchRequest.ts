@@ -59,7 +59,7 @@ export const performFetchRequest = async (
               headers: new Headers({
                 "Content-Type": "image/svg+xml",
                 Age: "23596",
-                ...(url.includes("US8740391003") ? { "Cache-Control": "public, max-age=86400" } : {}),
+                ...(url.includes("US8740391003") ? {} : { "Cache-Control": "public, max-age=2592000" }),
               }),
             },
           ),
@@ -71,7 +71,6 @@ export const performFetchRequest = async (
             { status: 403, statusText: "Forbidden", headers: new Headers({ "Content-Type": "application/xml" }) },
           ),
         );
-  // console.error(`A fetch request for the URL ${url} has not been mocked yet.`);
   throw new FetchError(
     await handleResponse(
       new Response(null, {

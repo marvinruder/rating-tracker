@@ -2,25 +2,12 @@ services:
   postgres-test:
     container_name: postgres-test
     image: postgres:alpine
-    user: 70:70
-    cap_drop:
-      - all
-    cap_add:
-      - CHOWN
-    security_opt:
-      - no-new-privileges
+    user: 0:0
+    tmpfs: /tmp/postgresql/data
     environment:
+      PGDATA: /tmp/postgresql/data
       POSTGRES_DB: "rating-tracker-test"
       POSTGRES_USER: "rating-tracker-test"
       POSTGRES_PASSWORD: "rating-tracker-test"
     shm_size: "256mb"
-
-  redis-test:
-    container_name: redis-test
-    image: redis:alpine
-    user: 1000:1000
-    cap_drop:
-      - all
-    security_opt:
-      - no-new-privileges
-    command: 'redis-server --appendonly no --save ""'
+    command: -c fsync=off -c synchronous_commit=off -c full_page_writes=off

@@ -2,7 +2,7 @@ import { optionalStockValuesNull } from "@rating-tracker/commons";
 
 import { addDynamicAttributesToStockData, dynamicStockAttributes } from "./dynamicStockAttributes";
 
-describe("Stock Scores", () => {
+describe.concurrent("Stock Scores", () => {
   it("has score when empty", () => {
     const emptyStock = addDynamicAttributesToStockData({
       ...optionalStockValuesNull,
@@ -183,7 +183,7 @@ describe("Stock Scores", () => {
   });
 });
 
-describe("Stock Percentages", () => {
+describe.concurrent("Stock Percentages", () => {
   it("has percentage to last close", () => {
     const stock = addDynamicAttributesToStockData({
       ...optionalStockValuesNull,

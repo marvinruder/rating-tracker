@@ -8,7 +8,6 @@ import {
   ADMINISTRATIVE_MESSAGE,
   WRITE_STOCKS_ACCESS,
   optionalUserValuesNull,
-  UserWithCredentials,
 } from "./user";
 
 const root = new User({
@@ -45,25 +44,6 @@ const userWhoDoesNotGiveAFuckAboutAnything = new User({
   name: "Example User",
   accessRights: 255,
   subscriptions: 0,
-});
-
-describe.concurrent("User Constructor", () => {
-  it("removes credentials", () => {
-    const userWithCredentials: UserWithCredentials = new UserWithCredentials({
-      ...regularUser,
-      credentialID: "Credential ID",
-      credentialPublicKey: "Credential Public Key",
-      counter: 1,
-    });
-    expect(userWithCredentials.credentialID).toBe("Credential ID");
-    expect(userWithCredentials.credentialPublicKey).toBe("Credential Public Key");
-    expect(userWithCredentials.counter).toBe(1);
-
-    const userWithoutCredentials = new User(userWithCredentials);
-    expect((userWithoutCredentials as any).credentialID).toBeUndefined();
-    expect((userWithoutCredentials as any).credentialPublicKey).toBeUndefined();
-    expect((userWithoutCredentials as any).counter).toBeUndefined();
-  });
 });
 
 describe.concurrent("User Access Rights", () => {
