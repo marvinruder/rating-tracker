@@ -1406,7 +1406,7 @@ __metadata:
     express-rate-limit: "npm:7.4.0"
     node-cron: "npm:3.0.3"
     pino: "npm:9.3.2"
-    pino-pretty: "npm:11.2.1"
+    pino-pretty: "npm:11.2.2"
     prettier: "npm:3.3.3"
     prisma: "npm:5.17.0"
     prisma-json-types-generator: "npm:3.0.4"
@@ -7125,9 +7125,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-pretty@npm:11.2.1":
-  version: 11.2.1
-  resolution: "pino-pretty@npm:11.2.1"
+"pino-pretty@npm:11.2.2":
+  version: 11.2.2
+  resolution: "pino-pretty@npm:11.2.2"
   dependencies:
     colorette: "npm:^2.0.7"
     dateformat: "npm:^4.6.3"
@@ -7145,7 +7145,7 @@ __metadata:
     strip-json-comments: "npm:^3.1.1"
   bin:
     pino-pretty: bin.js
-  checksum: 10c0/6c7f15b5bf8a007c8b7157eae445675b13cd95097ffa512d5ebd661f9e7abd328fa27592b25708756a09f098f87cb03ca81837518cd725c16e3f801129b941d4
+  checksum: 10c0/3ce1769907886a5584f6c8123d9bc987712ad10a375797733a0fe95a238df587dac8e2b709bab291c4e30d41b0cf65808c708c96f8eb98b2778b6df60afa7e66
   languageName: node
   linkType: hard
 
