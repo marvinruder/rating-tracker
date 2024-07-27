@@ -69,25 +69,20 @@ ENV SIGNAL_SENDER=+493012345678
 
 ENV PATH="/workdir/tools/node_modules/.bin:${PATH}"
 
+ENV PGDATA=/tmp/postgresql/data
+ENV POSTGRES_HOST=127.0.0.1
+
 WORKDIR /workdir
 
-# Install Docker in Docker and create test containers
+# Install PostgreSQL and initialize database
 RUN \
-  --security=insecure \
-  --mount=type=tmpfs,target=/var/run \
-  --mount=type=bind,source=packages/backend/test/docker-compose.yml,target=packages/backend/test/docker-compose.yml \
-  apk add --no-cache docker docker-compose fuse-overlayfs && \
-  mkdir -p /etc/docker && \
-  echo '{"storage-driver": "fuse-overlayfs"}' > /etc/docker/daemon.json && \
-  (dockerd > /dev/null 2>&1 &) && \
-  START_DOCKER_DAEMON_AGAIN=100 && \
-  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
-  docker compose -f packages/backend/test/docker-compose.yml up --quiet-pull --no-start
+  apk add --no-cache postgresql-contrib && \
+  mkdir -p /run/postgresql && \
+  chown -R postgres:postgres /run/postgresql && \
+  su postgres -c 'initdb'
 
 # Run backend tests
 RUN \
-  --security=insecure \
-  --mount=type=tmpfs,target=/var/run \
   --mount=type=bind,source=packages/backend,target=packages/backend,rw \
   --mount=type=bind,source=packages/commons,target=packages/commons \
   --mount=type=bind,source=.yarnrc.yml,target=.yarnrc.yml \
@@ -102,11 +97,7 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma,target=packages/backend/prisma \
   --mount=type=bind,from=yarn,source=/workdir/tools,target=tools \
   --network=none \
-  (dockerd > /dev/null 2>&1 &) && \
-  START_DOCKER_DAEMON_AGAIN=100 && \
-  until docker system info > /dev/null 2>&1; do echo Waiting for Docker Daemon to start…; sleep 0.1; if [ $((START_DOCKER_DAEMON_AGAIN--)) -eq 0 ]; then (dockerd > /dev/null 2>&1 &) && START_DOCKER_DAEMON_AGAIN=100; fi; done && \
-  docker compose -f packages/backend/test/docker-compose.yml up -d && \
-  POSTGRES_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres-test) \
+  su postgres -c 'postgres -c fsync=off -c synchronous_commit=off -c full_page_writes=off &' && \
   yarn workspace @rating-tracker/backend test && \
   mkdir -p /coverage && \
   mv packages/backend/coverage /coverage/backend

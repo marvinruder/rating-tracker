@@ -6,7 +6,7 @@ node('rating-tracker-build') {
     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
       // Use random job identifier to avoid image tag collisions
       def JOB_ID = sh (script: "#!/bin/bash\nprintf \"%04d\" \$((1 + RANDOM % 4096))", returnStdout: true)
-      def DOCKER_BUILD_FLAGS = sh (script: "#!/bin/bash\necho -n \"--allow security.insecure --build-arg BUILD_DATE='\$(date -u +'%Y-%m-%dT%H:%M:%SZ')'\"", returnStdout: true)
+      def DOCKER_BUILD_FLAGS = sh (script: "#!/bin/bash\necho -n \"--build-arg BUILD_DATE='\$(date -u +'%Y-%m-%dT%H:%M:%SZ')'\"", returnStdout: true)
 
       try {
         parallel(
@@ -21,7 +21,7 @@ node('rating-tracker-build') {
               sh('echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin')
 
               // Create builder instance
-              sh("docker builder create --name rating-tracker --node rating-tracker --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure' --bootstrap")
+              sh("docker builder create --name rating-tracker --node rating-tracker --driver docker-container --bootstrap")
             }
           }
         )
