@@ -59,7 +59,7 @@ const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promi
 
   try {
     // Check for the presence of the div and JSON properties containing all relevant analyst-related information.
-    const consensusTableDiv = document.getElementById("consensusdetail");
+    const consensusTableDiv = document.getElementById("consensus-analysts");
     assert(consensusTableDiv, "Unable to find Analyst Consensus div.");
     assert(json.constructor === Object, "Unable to find Analyst Ratings.");
     assert("error" in json && json.error === false, "The server reported an error when fetching Analyst Ratings.");
@@ -91,7 +91,7 @@ const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promi
         assert(avgTargetPriceNode, "Unable to find Average Target Price node.");
         const avgTargetPriceMatches = avgTargetPriceNode.textContent
           .replaceAll(",", "")
-          .match(/\s*(\d+(\.\d+)?)\s+([A-Z]{3})/);
+          .match(/\s*(\d+(\.\d+)?)\s*([A-Z]{3})/);
 
         if (avgTargetPriceMatches === null || avgTargetPriceMatches.length < 4)
           throw new TypeError(
