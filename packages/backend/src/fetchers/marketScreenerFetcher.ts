@@ -59,7 +59,7 @@ const marketScreenerFetcher: Fetcher = async (req: Request, stock: Stock): Promi
 
   try {
     // Check for the presence of the div and JSON properties containing all relevant analyst-related information.
-    const consensusTableDiv = document.getElementById("consensusdetail");
+    const consensusTableDiv = document.getElementById("consensus-analysts");
     assert(consensusTableDiv, "Unable to find Analyst Consensus div.");
     assert(json.constructor === Object, "Unable to find Analyst Ratings.");
     assert("error" in json && json.error === false, "The server reported an error when fetching Analyst Ratings.");
