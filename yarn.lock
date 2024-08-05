@@ -22,14 +22,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/json-schema-ref-parser@npm:^11.6.2":
-  version: 11.6.3
-  resolution: "@apidevtools/json-schema-ref-parser@npm:11.6.3"
+"@apidevtools/json-schema-ref-parser@npm:^11.6.4":
+  version: 11.7.0
+  resolution: "@apidevtools/json-schema-ref-parser@npm:11.7.0"
   dependencies:
     "@jsdevtools/ono": "npm:^7.1.3"
     "@types/json-schema": "npm:^7.0.15"
     js-yaml: "npm:^4.1.0"
-  checksum: 10c0/c6a400e334c011569b8471721fa37ae5cc3ac8444b2a2d8be4ddee9eed5f3bee4ddc4e4c43f9161af9e504c7301c9dffceaf353cdab3ca88cd26aa4de5b5e81c
+  checksum: 10c0/0ae9ced2953918a14b17874dc0515d3367a95197d58d869f44e756223e23eb9996283e21cb7ef1c7e016ae94467920b4aca705e0ea3d61a61455431572ad4ab5
   languageName: node
   linkType: hard
 
@@ -1420,7 +1420,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.2.1"
     express: "npm:4.19.2"
     express-async-errors: "npm:3.1.1"
-    express-openapi-validator: "npm:5.2.0"
+    express-openapi-validator: "npm:5.3.1"
     express-rate-limit: "npm:7.4.0"
     node-cron: "npm:3.0.3"
     pino: "npm:9.3.2"
@@ -2697,15 +2697,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^8.0.0, ajv@npm:^8.14.0":
-  version: 8.14.0
-  resolution: "ajv@npm:8.14.0"
+"ajv@npm:^8.0.0, ajv@npm:^8.15.0":
+  version: 8.17.1
+  resolution: "ajv@npm:8.17.1"
   dependencies:
     fast-deep-equal: "npm:^3.1.3"
+    fast-uri: "npm:^3.0.1"
     json-schema-traverse: "npm:^1.0.0"
     require-from-string: "npm:^2.0.2"
-    uri-js: "npm:^4.4.1"
-  checksum: 10c0/89aedf51bc3cd2a98214ef8d4081a9d5c02cedbfd28ada48deb9ae3d456fdfe3dc8899cce44736c80b3965840e32ba8827032df6a60af5671f27f47f8082a3bf
+  checksum: 10c0/ec3ba10a573c6b60f94639ffc53526275917a2df6810e4ab5a6b959d87459f9ef3f00d5e7865b82677cb7d21590355b34da14d1d0b9c32d75f95a187e76fff35
   languageName: node
   linkType: hard
 
@@ -4712,13 +4712,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-openapi-validator@npm:5.2.0":
-  version: 5.2.0
-  resolution: "express-openapi-validator@npm:5.2.0"
+"express-openapi-validator@npm:5.3.1":
+  version: 5.3.1
+  resolution: "express-openapi-validator@npm:5.3.1"
   dependencies:
-    "@apidevtools/json-schema-ref-parser": "npm:^11.6.2"
+    "@apidevtools/json-schema-ref-parser": "npm:^11.6.4"
     "@types/multer": "npm:^1.4.11"
-    ajv: "npm:^8.14.0"
+    ajv: "npm:^8.15.0"
     ajv-draft-04: "npm:^1.0.0"
     ajv-formats: "npm:^2.1.1"
     content-type: "npm:^1.0.5"
@@ -4731,7 +4731,7 @@ __metadata:
     path-to-regexp: "npm:^6.2.2"
   peerDependencies:
     express: "*"
-  checksum: 10c0/0b34f1e464eacd071f1c991df5b479ca8b04914031bde2b720a76b778b6a56f0b53345f0f91e6fa173e26274c9ab30c95e0972b8f3015954690db9a45b5199cc
+  checksum: 10c0/464692992c06ec47ad98be786230bb4662d31a94bc50c0590e42e70d7675f46156d1884a1621d36441ebeaabac5e55046c32683c5463b6fef4545c5786398171
   languageName: node
   linkType: hard
 
@@ -4842,6 +4842,13 @@ __metadata:
   version: 2.1.1
   resolution: "fast-safe-stringify@npm:2.1.1"
   checksum: 10c0/d90ec1c963394919828872f21edaa3ad6f1dddd288d2bd4e977027afff09f5db40f94e39536d4646f7e01761d704d72d51dce5af1b93717f3489ef808f5f4e4d
+  languageName: node
+  linkType: hard
+
+"fast-uri@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "fast-uri@npm:3.0.1"
+  checksum: 10c0/3cd46d6006083b14ca61ffe9a05b8eef75ef87e9574b6f68f2e17ecf4daa7aaadeff44e3f0f7a0ef4e0f7e7c20fc07beec49ff14dc72d0b500f00386592f2d10
   languageName: node
   linkType: hard
 
@@ -8743,7 +8750,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uri-js@npm:^4.2.2, uri-js@npm:^4.4.1":
+"uri-js@npm:^4.2.2":
   version: 4.4.1
   resolution: "uri-js@npm:4.4.1"
   dependencies:
