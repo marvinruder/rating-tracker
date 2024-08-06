@@ -27,7 +27,7 @@
     "postinstall": "yarn prisma:generate && yarn fix:bundle"
   },
   "dependencies": {
-    "@prisma/client": "5.17.0",
+    "@prisma/client": "5.18.0",
     "@rating-tracker/commons": "workspace:*",
     "@simplewebauthn/server": "10.0.1",
     "@vitest/coverage-v8": "2.0.5",

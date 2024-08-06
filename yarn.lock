@@ -1271,15 +1271,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:5.17.0":
-  version: 5.17.0
-  resolution: "@prisma/client@npm:5.17.0"
+"@prisma/client@npm:5.18.0":
+  version: 5.18.0
+  resolution: "@prisma/client@npm:5.18.0"
   peerDependencies:
     prisma: "*"
   peerDependenciesMeta:
     prisma:
       optional: true
-  checksum: 10c0/cc6c5e9bfbc2f9a01fdf73e009c42298b8a9fea8c9b19db0089cad84a9ee94c3bb6f66f53f1e2f4b32b3506706bf16d23a8e3bcb4619a8bc76d0812a8382ae63
+  checksum: 10c0/2031e0521671e8d922abefbe24e0e37d38dfda38a0069206c928491e570afceb25630ea322536c6c16f24e73e162ce84062e8735e373e1659d8cdf849251a47b
   languageName: node
   linkType: hard
 
@@ -1349,7 +1349,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@rating-tracker/backend@workspace:packages/backend"
   dependencies:
-    "@prisma/client": "npm:5.17.0"
+    "@prisma/client": "npm:5.18.0"
     "@rating-tracker/commons": "workspace:*"
     "@simplewebauthn/server": "npm:10.0.1"
     "@types/cookie-parser": "npm:1.4.7"
