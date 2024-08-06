@@ -24,7 +24,7 @@
     "@typescript-eslint/consistent-type-imports": ["warn", {}],
     "@typescript-eslint/no-import-type-side-effects": ["warn"],
     "@typescript-eslint/no-floating-promises": ["warn", {}],
-    "@typescript-eslint/no-unused-vars": ["warn", {}],
+    "@typescript-eslint/no-unused-vars": ["warn", { "caughtErrors": "none" }],
     "react/react-in-jsx-scope": "off",
     "react/jsx-curly-brace-presence": ["warn", "never"],
     "require-jsdoc": "off",
