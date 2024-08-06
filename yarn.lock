@@ -1503,7 +1503,7 @@ __metadata:
     react-dom: "npm:18.3.1"
     react-router: "npm:6.26.0"
     react-router-dom: "npm:6.26.0"
-    react-switch-selector: "npm:2.2.1"
+    react-switch-selector: "npm:2.3.0"
     sainte-lague: "npm:3.0.0"
     typescript: "npm:5.5.4"
     vite: "npm:5.3.5"
@@ -5229,12 +5229,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"goober@npm:2.1.8":
-  version: 2.1.8
-  resolution: "goober@npm:2.1.8"
+"goober@npm:2.1.14":
+  version: 2.1.14
+  resolution: "goober@npm:2.1.14"
   peerDependencies:
     csstype: ^3.0.10
-  checksum: 10c0/bcc8df7cb06921955cbd484ba47b1729de5e918cca2ea85c57613cf9faf1123823856d7d58d3f3794f7c647591c6b87c3eb93632c048e7cb947e5c68c9e0808c
+  checksum: 10c0/184eda787a9a14cffbaa8284e98dc127095e538b4acab2a84b81babca84253bb883e16208822e02584f27c7a69f3ec47341e5060dfa40a0e07c32ac1f79b2714
   languageName: node
   linkType: hard
 
@@ -7437,18 +7437,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-switch-selector@npm:2.2.1":
-  version: 2.2.1
-  resolution: "react-switch-selector@npm:2.2.1"
+"react-switch-selector@npm:2.3.0":
+  version: 2.3.0
+  resolution: "react-switch-selector@npm:2.3.0"
   dependencies:
-    goober: "npm:2.1.8"
-    react: "npm:17.0.2"
-    react-dom: "npm:17.0.2"
+    goober: "npm:2.1.14"
   peerDependencies:
-    goober: ^2.1.1
+    goober: ^2.1.14
     react: ^16 || ^17 || ^18
     react-dom: ^16 || ^17 || ^18
-  checksum: 10c0/0ecc639620a06df2da2275fba73af4b16f984a492ee6e947755c1f3e4d8443dcbf691b724b4d4612c25d8728c7cbe9b637e416ac98de31e3f9a178df1df8b462
+  checksum: 10c0/2a0c9d6f33ff9d7afc9b29b45880e5a7e3e8395b3c9a4aa5b62cc7612063ee05fb6936702044fbaa38b66aef7919877c5303569c2cdf2484cd6699831883aece
   languageName: node
   linkType: hard
 
