@@ -1354,7 +1354,7 @@ __metadata:
     "@simplewebauthn/server": "npm:10.0.1"
     "@types/cookie-parser": "npm:1.4.7"
     "@types/express": "npm:4.17.21"
-    "@types/node": "npm:20.14.15"
+    "@types/node": "npm:22.2.0"
     "@types/node-cron": "npm:3.0.11"
     "@types/response-time": "npm:2.3.8"
     "@types/supertest": "npm:6.0.2"
@@ -1390,6 +1390,7 @@ __metadata:
     swagger-ui-dist: "npm:5.17.14"
     swagger-ui-express: "npm:5.0.1"
     typescript: "npm:5.5.4"
+    undici-types: "npm:6.19.6"
     vite: "npm:5.4.0"
     vitest: "npm:2.0.5"
     xpath-ts2: "npm:1.4.2"
@@ -1435,7 +1436,7 @@ __metadata:
     "@rating-tracker/wasm": "workspace:*"
     "@react-spring/web": "npm:9.7.4"
     "@simplewebauthn/browser": "npm:10.0.0"
-    "@types/node": "npm:20.14.15"
+    "@types/node": "npm:22.2.0"
     "@types/react": "npm:18.3.3"
     "@types/react-dom": "npm:18.3.0"
     "@typescript-eslint/eslint-plugin": "npm:8.0.1"
@@ -2003,21 +2004,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
-  version: 22.1.0
-  resolution: "@types/node@npm:22.1.0"
+"@types/node@npm:*, @types/node@npm:22.2.0":
+  version: 22.2.0
+  resolution: "@types/node@npm:22.2.0"
   dependencies:
     undici-types: "npm:~6.13.0"
-  checksum: 10c0/553dafcb842b889c036d43b390d464e8ffcf3ca455ddd5b1a1ef98396381eafbeb0c112a15cc6bf9662b72bc25fc45efc4b6f604760e1e84c410f1b7936c488b
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:20.14.15":
-  version: 20.14.15
-  resolution: "@types/node@npm:20.14.15"
-  dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: 10c0/093713db52dc544f3931a3dec9d7d8ef661f323e57becd083a7918c778cef1eb6ec32d1017bf5ade06bb06dc5c7551f4f4d749a14e40868cce44d51e54acd8ed
+  checksum: 10c0/c17900b34faecfec204f72970bd658d0c217aaf739c1bf7690c969465b6b26b77a8be1cd9ba735aadbd1dd20b5c3e4f406ec33528bf7c6eec90744886c5d5608
   languageName: node
   linkType: hard
 
@@ -8667,6 +8659,13 @@ __metadata:
     has-symbols: "npm:^1.0.3"
     which-boxed-primitive: "npm:^1.0.2"
   checksum: 10c0/81ca2e81134167cc8f75fa79fbcc8a94379d6c61de67090986a2273850989dd3bae8440c163121b77434b68263e34787a675cbdcb34bb2f764c6b9c843a11b66
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:6.19.6":
+  version: 6.19.6
+  resolution: "undici-types@npm:6.19.6"
+  checksum: 10c0/9b2264c5700e7169c6c62c643aac56cd8984c5fd7e18ed31ff11780260e137f6340dee8317a2e6e0ae3c49f5e5ef6fa577ea07193cbaa535265cba76a267cae9
   languageName: node
   linkType: hard
 

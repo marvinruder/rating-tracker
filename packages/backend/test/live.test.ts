@@ -96,9 +96,7 @@ const testSuites: { [key: string]: LiveTestSuite } = {};
 const unsafeTestSuites: { [key: string]: LiveTestSuite } = {};
 
 // Get all test suites
-// Expect error until `@types/node` provides types for Node.js 22:
-// @ts-expect-error
-for await (const path of await fs.promises.glob("../**/*.live.test.ts")) {
+for await (const path of fs.promises.glob("../**/*.live.test.ts")) {
   const { tests, suiteName }: { tests: LiveTestSuite; suiteName: string } = await import(
     /* @vite-ignore */ "../" + path
   );
