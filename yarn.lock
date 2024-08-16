@@ -999,9 +999,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts-vendor@npm:7.12.1":
-  version: 7.12.1
-  resolution: "@mui/x-charts-vendor@npm:7.12.1"
+"@mui/x-charts-vendor@npm:7.13.0":
+  version: 7.13.0
+  resolution: "@mui/x-charts-vendor@npm:7.13.0"
   dependencies:
     "@babel/runtime": "npm:^7.25.0"
     "@types/d3-color": "npm:^3.1.3"
@@ -1018,18 +1018,18 @@ __metadata:
     d3-time: "npm:^3.1.0"
     delaunator: "npm:^5.0.1"
     robust-predicates: "npm:^3.0.2"
-  checksum: 10c0/4f431f1c9400e21614bfd920b8981596cb465b6adebc92a7bace00d56e6929c29598646b07f6d669370ed3bfa6eccdde6f67fd429c61b3458a537ad439055ee9
+  checksum: 10c0/2ea2fd62c668f11ca713bed714af9b7fc7109132cf7d0d607e80f403b26099fdd9a2326d90c7280d6ff95a99475f2d5c33398f38ac7f5d2daf803ddb913fea0f
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.12.1":
-  version: 7.12.1
-  resolution: "@mui/x-charts@npm:7.12.1"
+"@mui/x-charts@npm:7.13.0":
+  version: 7.13.0
+  resolution: "@mui/x-charts@npm:7.13.0"
   dependencies:
     "@babel/runtime": "npm:^7.25.0"
     "@mui/system": "npm:^5.16.5"
     "@mui/utils": "npm:^5.16.5"
-    "@mui/x-charts-vendor": "npm:7.12.1"
+    "@mui/x-charts-vendor": "npm:7.13.0"
     "@react-spring/rafz": "npm:^9.7.4"
     "@react-spring/web": "npm:^9.7.4"
     clsx: "npm:^2.1.1"
@@ -1045,7 +1045,7 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/7b71c4f267762d8c3a2d0455376ee322d9d5e124839c8da717c44583aa00c8a8c8b2127346d56f54185fe86143671759dab1886213438c2ec141fc25619b51f7
+  checksum: 10c0/4d185e4d3b1a3c9d3ece9703b9532a0f6285226128c9a2782a22a63f24173f29b383a04e74f571ef38142bcd89cc72176b8c0505ed214ba63681f318b66d63bd
   languageName: node
   linkType: hard
 
@@ -1429,7 +1429,7 @@ __metadata:
     "@mui/icons-material": "npm:5.16.7"
     "@mui/lab": "npm:5.0.0-alpha.173"
     "@mui/material": "npm:5.16.7"
-    "@mui/x-charts": "npm:7.12.1"
+    "@mui/x-charts": "npm:7.13.0"
     "@nivo/core": "npm:0.87.0"
     "@nivo/sunburst": "npm:0.87.0"
     "@rating-tracker/commons": "workspace:*"
