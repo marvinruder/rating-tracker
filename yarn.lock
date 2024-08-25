@@ -15,7 +15,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/json-schema-ref-parser@npm:^11.6.4":
+"@apidevtools/json-schema-ref-parser@npm:^11.7.0":
   version: 11.7.0
   resolution: "@apidevtools/json-schema-ref-parser@npm:11.7.0"
   dependencies:
@@ -1377,7 +1377,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.2.1"
     express: "npm:4.19.2"
     express-async-errors: "npm:3.1.1"
-    express-openapi-validator: "npm:5.3.1"
+    express-openapi-validator: "npm:5.3.3"
     express-rate-limit: "npm:7.4.0"
     node-cron: "npm:3.0.3"
     pino: "npm:9.3.2"
@@ -2668,7 +2668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^8.0.0, ajv@npm:^8.15.0":
+"ajv@npm:^8.0.0, ajv@npm:^8.17.1":
   version: 8.17.1
   resolution: "ajv@npm:8.17.1"
   dependencies:
@@ -4664,13 +4664,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-openapi-validator@npm:5.3.1":
-  version: 5.3.1
-  resolution: "express-openapi-validator@npm:5.3.1"
+"express-openapi-validator@npm:5.3.3":
+  version: 5.3.3
+  resolution: "express-openapi-validator@npm:5.3.3"
   dependencies:
-    "@apidevtools/json-schema-ref-parser": "npm:^11.6.4"
+    "@apidevtools/json-schema-ref-parser": "npm:^11.7.0"
     "@types/multer": "npm:^1.4.11"
-    ajv: "npm:^8.15.0"
+    ajv: "npm:^8.17.1"
     ajv-draft-04: "npm:^1.0.0"
     ajv-formats: "npm:^2.1.1"
     content-type: "npm:^1.0.5"
@@ -4683,7 +4683,7 @@ __metadata:
     path-to-regexp: "npm:^6.2.2"
   peerDependencies:
     express: "*"
-  checksum: 10c0/464692992c06ec47ad98be786230bb4662d31a94bc50c0590e42e70d7675f46156d1884a1621d36441ebeaabac5e55046c32683c5463b6fef4545c5786398171
+  checksum: 10c0/860ed48edfa2a3ddc75bd3554135989650337279fc55ff48decb492664f60df6169e965c146d9d9dd9e6433389edd26546b7ad1d55f560ca2c064a8e5328fbcb
   languageName: node
   linkType: hard
 
