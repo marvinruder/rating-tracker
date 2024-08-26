@@ -34,7 +34,7 @@ RUN \
   rm pkg/package.json.bak
 
 
-FROM --platform=$BUILDPLATFORM node:22.6.0-alpine AS yarn
+FROM --platform=$BUILDPLATFORM node:22.7.0-alpine AS yarn
 ENV FORCE_COLOR=true
 ENV PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x
 
@@ -60,7 +60,7 @@ RUN \
   yarn tools
 
 
-FROM --platform=$BUILDPLATFORM node:22.6.0-alpine AS test-backend
+FROM --platform=$BUILDPLATFORM node:22.7.0-alpine AS test-backend
 ENV FORCE_COLOR=true
 ENV DOMAIN=example.com
 ENV SUBDOMAIN=subdomain
@@ -103,7 +103,7 @@ RUN \
   mv packages/backend/coverage /coverage/backend
 
 
-FROM --platform=$BUILDPLATFORM node:22.6.0-alpine AS test-commons
+FROM --platform=$BUILDPLATFORM node:22.7.0-alpine AS test-commons
 ENV FORCE_COLOR=true
 
 WORKDIR /workdir
@@ -126,7 +126,7 @@ RUN \
   mv packages/commons/coverage /coverage/commons
 
 
-FROM --platform=$BUILDPLATFORM node:22.6.0-alpine AS test-frontend
+FROM --platform=$BUILDPLATFORM node:22.7.0-alpine AS test-frontend
 ENV FORCE_COLOR=true
 
 WORKDIR /workdir
@@ -151,7 +151,7 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM --platform=$BUILDPLATFORM node:22.6.0-alpine AS build-backend
+FROM --platform=$BUILDPLATFORM node:22.7.0-alpine AS build-backend
 ENV NODE_ENV=production
 ENV FORCE_COLOR=true
 
@@ -191,7 +191,7 @@ RUN \
   .yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js \
   /app/public/api-docs/
 
-FROM --platform=$BUILDPLATFORM node:22.6.0-alpine AS build-frontend
+FROM --platform=$BUILDPLATFORM node:22.7.0-alpine AS build-frontend
 ENV NODE_ENV=production
 ENV FORCE_COLOR=true
 
@@ -243,7 +243,7 @@ ENTRYPOINT [ "codacy-coverage" ]
 
 
 # required for Renovate to update the base image:
-FROM node:22.6.0-alpine AS node
+FROM node:22.7.0-alpine AS node
 
 FROM alpine:3.20.2 AS deploy-base
 ARG TARGETARCH
