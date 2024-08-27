@@ -21,9 +21,9 @@
   "dependencies": {
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
-    "@mui/icons-material": "5.16.7",
+    "@mui/icons-material": "6.0.0",
     "@mui/lab": "5.0.0-alpha.173",
-    "@mui/material": "5.16.7",
+    "@mui/material": "6.0.0",
     "@mui/x-charts": "7.14.0",
     "@nivo/core": "0.87.0",
     "@nivo/sunburst": "0.87.0",
