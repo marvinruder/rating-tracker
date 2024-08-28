@@ -170,7 +170,6 @@ RUN \
   --mount=type=bind,from=yarn,source=/workdir/.yarn,target=.yarn \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.cjs,target=.pnp.cjs \
   --mount=type=bind,from=yarn,source=/workdir/.pnp.loader.mjs,target=.pnp.loader.mjs \
-  --mount=type=bind,from=yarn,source=/workdir/packages/backend/dist,target=packages/backend/dist,rw \
   --mount=type=bind,from=yarn,source=/workdir/packages/backend/prisma,target=packages/backend/prisma \
   --network=none \
   # Bundle backend
