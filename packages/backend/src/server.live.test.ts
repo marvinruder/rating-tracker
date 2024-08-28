@@ -19,7 +19,9 @@ tests.push({
   testName: "provides Swagger UI",
   testFunction: async () => {
     const res = await app.request("/api-docs");
+    const body = await res.text();
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toMatch("text/html");
+    expect(body).toContain("https://cdn.jsdelivr.net/npm/swagger-ui-dist/");
   },
 });

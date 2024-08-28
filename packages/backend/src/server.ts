@@ -107,9 +107,9 @@ app.use("/api-docs", async (c, next) => {
       "Content-Security-Policy",
       csp
         .replace("img-src ", "img-src blob: ")
-        .replace("script-src ", "script-src https://unpkg.com/swagger-ui-dist/ 'unsafe-inline' ")
-        .replace("style-src ", "style-src https://unpkg.com/swagger-ui-dist/ ")
-        .replace("style-src-elem ", "style-src-elem https://unpkg.com/swagger-ui-dist/ "),
+        .replace("script-src ", "script-src https://cdn.jsdelivr.net/npm/swagger-ui-dist/ 'unsafe-inline' ")
+        .replace("style-src ", "style-src https://cdn.jsdelivr.net/npm/swagger-ui-dist/ ")
+        .replace("style-src-elem ", "style-src-elem https://cdn.jsdelivr.net/npm/swagger-ui-dist/ "),
     );
   c.res.headers.set("Cross-Origin-Embedder-Policy", "unsafe-none");
   c.res.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
