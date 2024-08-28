@@ -307,7 +307,7 @@ Variable | Example Value | Explanation
 
 ## API Reference
 
-Any Rating Tracker instance’s API is self-documented, its OpenAPI web interface is hosted at [`/api-docs`](https://ratingtracker.mruder.dev/api-docs/). The complete OpenAPI specification document can be downloaded at [`/api-spec/v3`](https://ratingtracker.mruder.dev/api-spec/v3).
+Any Rating Tracker instance’s API is self-documented, its OpenAPI web interface is hosted at [`/api-docs`](https://ratingtracker.mruder.dev/api-docs). The complete OpenAPI specification document can be downloaded at [`/api-spec/v3.1`](https://ratingtracker.mruder.dev/api-spec/v3.1).
 
 ## Development
 
