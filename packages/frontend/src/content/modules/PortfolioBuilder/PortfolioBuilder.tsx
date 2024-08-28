@@ -64,7 +64,10 @@ import {
   RecordMath,
   currencyMinorUnits,
   groupOfIndustry,
+  handleResponse,
   isCurrency,
+  parseStock,
+  parseWeightedStock,
   pluralize,
   portfoliosAPIPath,
   regionArray,
@@ -75,11 +78,12 @@ import {
   sectorOfIndustryGroup,
   sizeArray,
   styleArray,
-  watchlistsAPIPath,
 } from "@rating-tracker/commons";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
+import portfolioClient from "../../../api/portfolio";
+import watchlistClient from "../../../api/watchlist";
 import CurrencyAutocomplete from "../../../components/autocomplete/CurrencyAutocomplete";
 import PinnedDialog from "../../../components/dialogs/PinnedDialog";
 import { UpdateStocksInPortfolio } from "../../../components/dialogs/portfolio/UpdateStocksInPortfolio";
@@ -94,7 +98,6 @@ import { PropertyDescription } from "../../../components/stock/properties/Proper
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import type { ProportionalRepresentationAlgorithm } from "../../../types/ProportionalRepresentationAlgorithm";
 import { isProportionalRepresentationAlgorithm } from "../../../types/ProportionalRepresentationAlgorithm";
-import api from "../../../utils/api";
 import { ExponentialNumber, formatPercentage } from "../../../utils/formatters";
 import { computePortfolio } from "../../../utils/portfolioComputation";
 
@@ -221,15 +224,16 @@ const PortfolioBuilderModule = (): JSX.Element => {
     stocks.forEach((stock) => {
       // Enable all controls that have a stock with that property
       newDisabledControls[regionOfCountry[stock.country]] = false;
-      newDisabledControls[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] = false;
-      newDisabledControls[stock.size] = false;
-      newDisabledControls[stock.style] = false;
+      if (stock.industry) newDisabledControls[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] = false;
+      if (stock.size) newDisabledControls[stock.size] = false;
+      if (stock.style) newDisabledControls[stock.style] = false;
 
       // Reset the constraints to the distribution that would occur with equal weights
       newRegionConstraints[regionOfCountry[stock.country]] += 1 / stocks.length;
-      newSectorConstraints[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] += 1 / stocks.length;
-      newSizeConstraints[stock.size] += 1 / stocks.length;
-      newStyleConstraints[stock.style] += 1 / stocks.length;
+      if (stock.industry)
+        newSectorConstraints[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] += 1 / stocks.length;
+      if (stock.size) newSizeConstraints[stock.size] += 1 / stocks.length;
+      if (stock.style) newStyleConstraints[stock.style] += 1 / stocks.length;
     });
 
     setDisabledControls(newDisabledControls);
@@ -256,9 +260,9 @@ const PortfolioBuilderModule = (): JSX.Element => {
 
     stocks.forEach((stock) => {
       newMinControlValues[regionOfCountry[stock.country]] += minWeight;
-      newMinControlValues[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] += minWeight;
-      newMinControlValues[stock.size] += minWeight;
-      newMinControlValues[stock.style] += minWeight;
+      if (stock.industry) newMinControlValues[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] += minWeight;
+      if (stock.size) newMinControlValues[stock.size] += minWeight;
+      if (stock.style) newMinControlValues[stock.style] += minWeight;
     });
 
     setMinControlValues(newMinControlValues);
@@ -282,11 +286,11 @@ const PortfolioBuilderModule = (): JSX.Element => {
             highlightScope: { highlighted: "series" },
             type: "scatter",
             id: stock.amount,
-            label: `${currency} ${stock.amount.toFixed(currencyMinorUnits[currency])}`,
+            label: currency ? `${currency} ${stock.amount.toFixed(currencyMinorUnits[currency])}` : "",
             data: [],
             color: theme.palette.primary.main,
             markerSize: 5,
-            valueFormatter: (value) => ("count" in value ? `# of stocks: ${value.count.toString()}` : ""),
+            valueFormatter: (value) => ("count" in value ? `# of stocks: ${String(value.count)}` : ""),
           });
         const index = newScatterData.findIndex((series) => series.id === stock.amount);
         newScatterData[index].data.push({
@@ -297,9 +301,10 @@ const PortfolioBuilderModule = (): JSX.Element => {
         });
 
         newRegionResults[regionOfCountry[stock.country]] += stock.amount / totalAmount;
-        newSectorResults[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] += stock.amount / totalAmount;
-        newSizeResults[stock.size] += stock.amount / totalAmount;
-        newStyleResults[stock.style] += stock.amount / totalAmount;
+        if (stock.industry)
+          newSectorResults[sectorOfIndustryGroup[groupOfIndustry[stock.industry]]] += stock.amount / totalAmount;
+        if (stock.size) newSizeResults[stock.size] += stock.amount / totalAmount;
+        if (stock.style) newStyleResults[stock.style] += stock.amount / totalAmount;
       });
 
     setScatterData(newScatterData);
@@ -314,10 +319,10 @@ const PortfolioBuilderModule = (): JSX.Element => {
    * @returns Whether the input fields are valid.
    */
   const validatePortfolioParameters = (): boolean => {
-    const isCurrencyValid = currencyInputRef.current?.checkValidity();
-    const isTotalAmountValid = totalAmountInputRef.current?.checkValidity();
-    const isMinAmountValid = minAmountInputRef.current?.checkValidity();
-    const isTickValid = tickInputRef.current?.checkValidity();
+    const isCurrencyValid = currencyInputRef.current?.checkValidity() ?? false;
+    const isTotalAmountValid = totalAmountInputRef.current?.checkValidity() ?? false;
+    const isMinAmountValid = minAmountInputRef.current?.checkValidity() ?? false;
+    const isTickValid = tickInputRef.current?.checkValidity() ?? false;
     return isCurrencyValid && isTotalAmountValid && isMinAmountValid && isTickValid;
   };
 
@@ -339,7 +344,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
     stocks.length
       ? // Allow navigation to View Results:
         // - no disabled control must have a value greater than 0
-        Object.entries(activeConstraints)
+        (Object.entries(activeConstraints) as [Region | Sector | Size | Style, number][])
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           .filter(([_, value]) => value > 0)
           .every(([key]) => !disabledControls[key]) &&
@@ -386,8 +391,9 @@ const PortfolioBuilderModule = (): JSX.Element => {
    * Get the portfolios from the backend.
    */
   const getPortfolios = () => {
-    api
-      .get(portfoliosAPIPath)
+    portfolioClient.index
+      .$get()
+      .then(handleResponse)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching portfolios");
@@ -400,8 +406,9 @@ const PortfolioBuilderModule = (): JSX.Element => {
    * Get the watchlists from the backend.
    */
   const getWatchlists = () => {
-    api
-      .get(watchlistsAPIPath)
+    watchlistClient.index
+      .$get()
+      .then(handleResponse)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching watchlists");
@@ -442,8 +449,16 @@ const PortfolioBuilderModule = (): JSX.Element => {
                           <ListItem key={portfolioSummary.id} disablePadding disableGutters>
                             <ListItemButton
                               onClick={() =>
-                                api
-                                  .get(portfoliosAPIPath + `/${portfolioSummary.id}`)
+                                portfolioClient[":id"]
+                                  .$get({ param: { id: String(portfolioSummary.id) } })
+                                  .then(handleResponse)
+                                  .then((res) => ({
+                                    ...res,
+                                    data: {
+                                      ...res.data,
+                                      stocks: res.data.stocks.map((stock) => parseWeightedStock(stock)),
+                                    },
+                                  }))
                                   .then((res) => addToSelection(res.data))
                                   .catch((e) =>
                                     setErrorNotificationOrClearSession(e, "adding stocks from portfolio to selection"),
@@ -453,10 +468,9 @@ const PortfolioBuilderModule = (): JSX.Element => {
                               <ListItemText
                                 primary={portfolioSummary.name}
                                 primaryTypographyProps={{ fontWeight: "bold" }}
-                                secondary={
-                                  (portfolioSummary.stocks.length || "No") +
-                                  ` stock${pluralize(portfolioSummary.stocks.length)}`
-                                }
+                                secondary={`${
+                                  portfolioSummary.stocks.length || "No"
+                                } stock${pluralize(portfolioSummary.stocks.length)}`}
                               />
                             </ListItemButton>
                           </ListItem>
@@ -493,8 +507,16 @@ const PortfolioBuilderModule = (): JSX.Element => {
                           <ListItem key={watchlistSummary.id} disablePadding disableGutters>
                             <ListItemButton
                               onClick={() =>
-                                api
-                                  .get(watchlistsAPIPath + `/${watchlistSummary.id}`)
+                                watchlistClient[":id"]
+                                  .$get({ param: { id: String(watchlistSummary.id) } })
+                                  .then(handleResponse)
+                                  .then((res) => ({
+                                    ...res,
+                                    data: {
+                                      ...res.data,
+                                      stocks: res.data.stocks.map((stock) => parseStock(stock)),
+                                    },
+                                  }))
                                   .then((res) => addToSelection(res.data))
                                   .catch((e) =>
                                     setErrorNotificationOrClearSession(e, "adding stocks from watchlist to selection"),
@@ -512,10 +534,9 @@ const PortfolioBuilderModule = (): JSX.Element => {
                                 inset={watchlistSummary?.name !== FAVORITES_NAME}
                                 primary={watchlistSummary.name}
                                 primaryTypographyProps={{ fontWeight: "bold" }}
-                                secondary={
-                                  (watchlistSummary.stocks.length || "No") +
-                                  ` stock${pluralize(watchlistSummary.stocks.length)}`
-                                }
+                                secondary={`${
+                                  watchlistSummary.stocks.length || "No"
+                                } stock${pluralize(watchlistSummary.stocks.length)}`}
                               />
                             </ListItemButton>
                           </ListItem>
@@ -641,29 +662,32 @@ const PortfolioBuilderModule = (): JSX.Element => {
                     type: "number",
                     // Smallest amount per stock must fit into the total amount at least as often as there are stocks,
                     // and must be divisible by the tick
-                    min:
-                      +(
-                        // 6. Multiply with the tick again
-                        (
-                          +tickInput *
-                          // 5. Ceil the result to get a number that is divisibly by the tick
-                          Math.ceil(
-                            // 1. Take the smallest amount per stock,
-                            ((+minAmountInput || Math.pow(10, -1 * currencyMinorUnits[currency || "…"])) *
-                              // 2. multiply it by the number of stocks,
-                              stocks.length *
-                              // 3. Scale it down a tiny bit so that precision errors do not mess with ceiling
-                              (1 - Number.EPSILON)) /
-                              // 4. Divide by the tick
-                              +tickInput,
+                    min: currency
+                      ? +(
+                          // 6. Multiply with the tick again
+                          (
+                            +tickInput *
+                            // 5. Ceil the result to get a number that is divisibly by the tick
+                            Math.ceil(
+                              // 1. Take the smallest amount per stock,
+                              ((+minAmountInput || Math.pow(10, -1 * currencyMinorUnits[currency])) *
+                                // 2. multiply it by the number of stocks,
+                                stocks.length *
+                                // 3. Scale it down a tiny bit so that precision errors do not mess with ceiling
+                                (1 - Number.EPSILON)) /
+                                // 4. Divide by the tick
+                                +tickInput,
+                            )
                           )
-                        )
-                          // 7. If multiplying with the tick again results in a number with precision errors, we round
-                          //    the result to the nearest value allowed by the currency. Damn you, IEEE 754!
-                          .toFixed(currencyMinorUnits[currency || "…"])
-                      ) || undefined,
+                            // 7. If multiplying with the tick again results in a number with precision errors, we round
+                            //    the result to the nearest value allowed by the currency. Damn you, IEEE 754!
+                            .toFixed(currencyMinorUnits[currency])
+                        ) || undefined
+                      : undefined,
                     // Tick must divide the total amount evenly
-                    step: +tickInput || Math.pow(10, -1 * currencyMinorUnits[currency || "…"]) || undefined,
+                    step: currency
+                      ? +tickInput || Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined
+                      : undefined,
                   }}
                   onChange={(event) => {
                     setTotalAmountInput(event.target.value);
@@ -693,7 +717,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                     inputMode: "decimal",
                     type: "number",
                     min: 0, // Smallest amount per stock must be non-negative
-                    step: Math.pow(10, -1 * currencyMinorUnits[currency || "…"]) || undefined,
+                    step: currency ? Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined : undefined,
                   }}
                   onChange={(event) => {
                     setMinAmountInput(event.target.value);
@@ -722,8 +746,9 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   inputProps={{
                     inputMode: "decimal",
                     type: "number",
-                    step: Math.pow(10, -1 * currencyMinorUnits[currency || "…"]) || undefined,
-                    min: Math.pow(10, -1 * currencyMinorUnits[currency || "…"]) || undefined, // Tick must be positive
+                    step: currency ? Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined : undefined,
+                    // Tick must be positive
+                    min: currency ? Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined : undefined,
                   }}
                   onChange={(event) => {
                     setTickInput(event.target.value);
@@ -789,7 +814,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
                           min={0}
                           max={1}
                           step={0.005}
-                          onChange={(_, value: number) => {
+                          onChange={(_, value) => {
+                            if (typeof value !== "number") return;
                             if (value < minControlValues[region]) value = minControlValues[region];
                             if (value !== regionConstraints[region])
                               setRegionConstraints((prevConstraints) => ({ ...prevConstraints, [region]: value }));
@@ -808,13 +834,11 @@ const PortfolioBuilderModule = (): JSX.Element => {
                     setNotification({
                       title: "Missing sector information",
                       message:
-                        "Some stocks in the selection are missing sector information. " +
-                        "You cannot configure sector distribution with these stocks selected: " +
-                        stocks
+                        `Some stocks in the selection are missing sector information. ` +
+                        `You cannot configure sector distribution with these stocks selected: ${stocks
                           .filter((stock) => stock.industry === null)
                           .map((stock) => `${stock.name} (${stock.ticker})`)
-                          .join(", ") +
-                        ".",
+                          .join(", ")}.`,
                       severity: "error",
                     });
                   } else setSectorConstraintOpen(isExpanded);
@@ -839,7 +863,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
                           min={0}
                           max={1}
                           step={0.005}
-                          onChange={(_, value: number) => {
+                          onChange={(_, value) => {
+                            if (typeof value !== "number") return;
                             if (value < minControlValues[sector]) value = minControlValues[sector];
                             if (value !== sectorConstraints[sector])
                               setSectorConstraints((prevConstraints) => ({ ...prevConstraints, [sector]: value }));
@@ -872,7 +897,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
                           min={0}
                           max={1}
                           step={0.005}
-                          onChange={(_, value: number) => {
+                          onChange={(_, value) => {
+                            if (typeof value !== "number") return;
                             if (value < minControlValues[size]) value = minControlValues[size];
                             if (value !== sizeConstraints[size])
                               setSizeConstraints((prevConstraints) => ({ ...prevConstraints, [size]: value }));
@@ -905,7 +931,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
                           min={0}
                           max={1}
                           step={0.005}
-                          onChange={(_, value: number) => {
+                          onChange={(_, value) => {
+                            if (typeof value !== "number") return;
                             if (value < minControlValues[style]) value = minControlValues[style];
                             if (value !== styleConstraints[style])
                               setStyleConstraints((prevConstraints) => ({ ...prevConstraints, [style]: value }));
@@ -950,7 +977,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
                     min: Math.min(...weightedStocks.map((stock) => stock.amount)) - +minAmountInput,
                     max: Math.max(...weightedStocks.map((stock) => stock.amount)) + +minAmountInput,
                     tickMinStep: +tickInput,
-                    valueFormatter: (value) => `${currency} ${value.toFixed(currencyMinorUnits[currency])}`,
+                    valueFormatter: (value) =>
+                      currency ? `${currency} ${value.toFixed(currencyMinorUnits[currency])}` : "",
                   },
                 ]}
                 yAxis={[{ min: 0 }]}
@@ -1103,7 +1131,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                           "Financial Score",
                           "ESG Score",
                         ]}
-                        portfolio={{ currency, stocks: weightedStocks }}
+                        portfolio={{ currency: currency!, stocks: weightedStocks }}
                         hideActionsMenu
                       />
                     ))}
@@ -1192,7 +1220,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
           >
             {!fullScreenDialogs && <Box width={444} />}
             <UpdateStocksInPortfolio
-              portfolioRawData={{ currency, stocks: weightedStocks }}
+              portfolioRawData={{ currency: currency!, stocks: weightedStocks }}
               onClose={() => setUpdatePortfolioDialogOpen(false)}
               onUpdate={(id) => navigate(`${portfoliosAPIPath}/${id}`)}
             />

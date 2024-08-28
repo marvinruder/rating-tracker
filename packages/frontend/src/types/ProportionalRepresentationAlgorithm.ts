@@ -9,10 +9,10 @@ export const proportionalRepresentationAlgorithmArray = ["sainteLague", "hareNie
 export type ProportionalRepresentationAlgorithm = "sainteLague" | "hareNiemeyer";
 
 /**
- * Checks if a string is a valid algorithm to use for proportional representation.
- * @param s The string to check.
- * @returns True if the string is a valid algorithm to use for proportional representation.
+ * Checks if an entity is a valid algorithm to use for proportional representation.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid algorithm to use for proportional representation.
  */
-export function isProportionalRepresentationAlgorithm(s: string): s is ProportionalRepresentationAlgorithm {
-  return proportionalRepresentationAlgorithmArray.includes(s as ProportionalRepresentationAlgorithm);
+export function isProportionalRepresentationAlgorithm(entity: unknown): entity is ProportionalRepresentationAlgorithm {
+  return proportionalRepresentationAlgorithmArray.includes(entity as ProportionalRepresentationAlgorithm);
 }

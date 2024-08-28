@@ -23,16 +23,16 @@ type Interval = (typeof intervalArray)[number];
 export const Sparkline = (props: SparklineProps): JSX.Element => {
   const [interval, setInterval] = useState<Interval>("1y");
 
-  const toggleInterval = () => setInterval((prev) => intervalArray.at(intervalArray.indexOf(prev) - 1));
+  const toggleInterval = () => setInterval((prev) => intervalArray.at(intervalArray.indexOf(prev) - 1)!);
 
   const theme = useTheme();
 
   /**
    * The price data for the selected interval.
    */
-  const data = props.stock["prices" + interval];
+  const data = props.stock[`prices${interval}`] ?? [];
 
-  const [start, min, max, end]: number[] = [data.at(0), Math.min(...data), Math.max(...data), data.at(-1)];
+  const [start, min, max, end]: number[] = [data.at(0)!, Math.min(...data), Math.max(...data), data.at(-1)!];
   const trend = (end - start) / (max - min) || 0; // 1: largest possible increase, -1: largest possible decrease
   const color = `color-mix(in srgb, ${theme.colors.alpha.black[50]}, ${
     theme.colors.trend[trend > 0 ? "up" : "down"]

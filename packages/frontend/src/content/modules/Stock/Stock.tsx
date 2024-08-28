@@ -1,15 +1,15 @@
 import { Card, Container, useTheme } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
-import { baseURL, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
+import { baseURL, handleResponse, parseStock, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
+import stockClient from "../../../api/stock";
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { StockDetails } from "../../../components/stock/layouts/StockDetails";
 import { useFavoritesContextState } from "../../../contexts/FavoritesContext";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 import { StockHeader } from "./StockHeader";
 
@@ -21,7 +21,7 @@ const StockModule = (): JSX.Element => {
   const [stock, setStock] = useState<Stock>();
 
   const { favorites } = useFavoritesContextState();
-  const isFavorite = favorites?.includes(stock?.ticker);
+  const isFavorite = favorites?.includes(stock?.ticker!);
 
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
@@ -33,25 +33,28 @@ const StockModule = (): JSX.Element => {
    * @returns A {@link Promise} that resolves when the stock has been fetched and set.
    */
   const getStock = (ticker: string): Promise<void> =>
-    api
-      .get(stocksAPIPath + `/${encodeURIComponent(ticker)}`)
+    stockClient[":ticker"]
+      .$get({ param: { ticker } })
+      .then(handleResponse)
+      .then((res) => ({ ...res, data: parseStock(res.data) }))
       .then((res) => setStock(res.data))
       .catch((e) => setErrorNotificationOrClearSession(e, "fetching stock"));
 
   const { ticker } = useParams();
 
-  useEffect(() => void getStock(ticker), [ticker]);
+  useEffect(() => (ticker ? void getStock(ticker) : () => {}), [ticker]);
 
   // Preload the stock logo
   const stockLogo = new Image();
-  stockLogo.src = `${baseURL}${stocksAPIPath}/${encodeURIComponent(ticker)}${stockLogoEndpointSuffix}?dark=${
-    theme.palette.mode === "dark"
-  }`;
+  if (ticker)
+    stockLogo.src =
+      `${baseURL}${stocksAPIPath}/${encodeURIComponent(ticker)}${stockLogoEndpointSuffix}` +
+      `?variant=${theme.palette.mode}`;
 
   return (
     <>
       <HeaderWrapper maxWidth={false}>
-        <StockHeader stock={stock} getStock={() => getStock(ticker)} isFavorite={isFavorite} />
+        <StockHeader stock={stock} getStock={() => ticker && getStock(ticker)} isFavorite={isFavorite} />
       </HeaderWrapper>
       <Container maxWidth={false}>
         <Card sx={{ m: "auto", maxWidth: "lg" }}>

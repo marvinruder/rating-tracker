@@ -11,7 +11,7 @@ import type { Status } from "../../types/Status";
  */
 export const StatusIndicator: FC<StatusIndicatorProps> = (props: StatusIndicatorProps): JSX.Element => {
   const theme = useTheme();
-  const color = theme.colors[props.status]?.main ?? theme.colors.secondary.main;
+  const color = props.status === "N/A" ? theme.colors.secondary.main : theme.colors[props.status].main;
 
   return (
     <Box

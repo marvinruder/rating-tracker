@@ -49,10 +49,11 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
           }
           src={
             "logoUrl" in stock
-              ? stock.logoUrl
-              : `${baseURL}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}${stockLogoEndpointSuffix}?dark=${
-                  theme.palette.mode === "dark"
-                }`
+              ? stock.logoUrl === null
+                ? undefined
+                : stock.logoUrl
+              : `${baseURL}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}${stockLogoEndpointSuffix}` +
+                `?variant=${theme.palette.mode}`
           }
           alt={`Logo of “${stock.name}”`}
           slotProps={{ img: { loading: "lazy" } }}

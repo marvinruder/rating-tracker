@@ -2,6 +2,11 @@ import type { FetchRequestWithBodyOptions, FetchResponse } from "@rating-tracker
 import { FetchError, handleResponse } from "@rating-tracker/commons";
 
 /**
+ * A mock storage of sent Signal messages.
+ */
+export const sentMessages: { message: string; recipients: string[] }[] = [];
+
+/**
  * A mock of the `fetch` API wrapper. Returns predefined responses or a 501 Not Implemented error for any other request.
  * @param url The URL of the request.
  * @param config The configuration options of the request.
@@ -12,6 +17,32 @@ export const performFetchRequest = async (
   url: string,
   config?: FetchRequestWithBodyOptions,
 ): Promise<FetchResponse> => {
+  if (url === "http://signal/v2/send" && config?.method === "POST") {
+    if (
+      typeof config?.body === "object" &&
+      "message" in config?.body &&
+      typeof config?.body?.message === "string" &&
+      "recipients" in config?.body &&
+      Array.isArray(config?.body?.recipients)
+    ) {
+      sentMessages.push({ message: config.body.message, recipients: config.body.recipients });
+      return handleResponse(
+        new Response(JSON.stringify({ timestamp: Date.now() }), { status: 201, statusText: "Created" }),
+      );
+    }
+    return handleResponse(
+      new Response(JSON.stringify({ error: "Malformatted request body" }), { status: 400, statusText: "Bad Request" }),
+    );
+  }
+
+  if (url === "http://signal/v1/accounts")
+    return handleResponse(
+      new Response(JSON.stringify({ error: "Service unavailable" }), {
+        status: 503,
+        statusText: "Service Unavailable",
+      }),
+    );
+
   if (url === "https://query1.finance.yahoo.com/v1/finance/search")
     return handleResponse(
       new Response(

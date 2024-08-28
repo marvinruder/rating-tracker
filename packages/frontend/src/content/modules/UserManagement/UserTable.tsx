@@ -1,11 +1,10 @@
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TableContainer } from "@mui/material";
-import type { OmitFunctions } from "@rating-tracker/commons";
-import { User, usersAPIPath } from "@rating-tracker/commons";
+import { handleResponse, User } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 
+import userClient from "../../../api/user";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 import UserRow from "./UserRow";
 
@@ -24,10 +23,12 @@ const UserTable: FC = (): JSX.Element => {
    */
   const getUsers = () => {
     setUsersFinal(false);
-    api
-      .get(usersAPIPath)
+    userClient.index
+      .$get()
+      .then(handleResponse)
+      .then((res) => ({ ...res, data: res.data.map((user) => new User(user)) }))
       .then((res) => {
-        setUsers(res.data.map((user: OmitFunctions<User>) => new User(user)));
+        setUsers(res.data);
         setCount(res.data.length);
       })
       .catch((e) => {

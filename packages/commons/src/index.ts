@@ -50,8 +50,6 @@ export * from "./lib/ErrorMessages";
 
 export * from "./lib/Fetch";
 
-export * from "./lib/HTTPMethod";
-
 export * from "./lib/MessageType";
 
 export * from "./lib/OmitFunctions";
@@ -59,5 +57,7 @@ export * from "./lib/OmitFunctions";
 export * from "./lib/Service";
 
 export * from "./lib/SortableAttribute";
+
+export * from "./lib/StockFilter";
 
 export * from "./lib/StockListColumn";

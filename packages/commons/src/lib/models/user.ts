@@ -59,7 +59,7 @@ export class User {
    */
   accessRights: number;
   /**
-   * The subscriptions of the user to message types, encoded as a bitfield.
+   * The subscriptions of the user to different types of messages, encoded as a bitfield.
    */
   subscriptions: number | null;
 
@@ -68,7 +68,12 @@ export class User {
    * @param user The user information.
    */
   constructor(user: OmitFunctions<User>) {
-    Object.assign(this, user);
+    this.email = user.email;
+    this.name = user.name;
+    this.avatar = user.avatar;
+    this.phone = user.phone;
+    this.accessRights = user.accessRights;
+    this.subscriptions = user.subscriptions;
   }
 
   /**
@@ -108,7 +113,7 @@ export class User {
             return this.hasSubscribedTo(STOCK_UPDATE_MESSAGE);
         }
       case "number":
-        return (this.subscriptions & subscription) === subscription;
+        return ((this.subscriptions ?? 0) & subscription) === subscription;
     }
   }
 

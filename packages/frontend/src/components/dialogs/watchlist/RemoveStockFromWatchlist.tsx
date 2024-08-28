@@ -2,12 +2,12 @@ import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
-import { FAVORITES_NAME, stocksAPIPath, watchlistsAPIPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, handleResponse } from "@rating-tracker/commons";
 import { useState } from "react";
 
+import watchlistClient from "../../../api/watchlist";
 import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 /**
  * A dialog to remove a stock from a watchlist.
@@ -25,10 +25,9 @@ export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): 
    */
   const removeStockFromWatchlist = () => {
     setRequestInProgress(true);
-    api
-      .delete(
-        watchlistsAPIPath + `/${props.watchlist.id}` + stocksAPIPath + `/${encodeURIComponent(props.stock.ticker)}`,
-      )
+    watchlistClient[":id"].stocks[":ticker"]
+      .$delete({ param: { id: String(props.watchlist.id), ticker: props.stock.ticker } })
+      .then(handleResponse)
       .then(() => {
         if (props.watchlist.name === FAVORITES_NAME) refetchFavorites();
         props.onRemove();

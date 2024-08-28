@@ -1,8 +1,8 @@
 import type { Stock } from "@rating-tracker/commons";
-import { favoritesAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-import api from "../utils/api";
+import favoriteClient from "../api/favorite";
 
 import { useUserContextState } from "./UserContext";
 
@@ -47,9 +47,10 @@ export const FavoritesProvider = (props: React.PropsWithChildren): JSX.Element =
 
   const fetchFavorites = () => {
     if (user) {
-      api
-        .get(favoritesAPIPath)
-        .then((res) => setFavorites((res.data.stocks as Stock[]).map((stock) => stock.ticker)))
+      favoriteClient.index
+        .$get()
+        .then(handleResponse)
+        .then((res) => setFavorites(res.data.stocks.map((stock) => stock.ticker)))
         .catch(() => setFavorites([]));
     } else {
       setFavorites([]);

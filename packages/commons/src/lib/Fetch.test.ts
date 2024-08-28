@@ -28,11 +28,11 @@ const mockedResponse: Pick<
   url: "http://localhost",
   body: null,
   bodyUsed: false,
-  arrayBuffer: () => undefined,
-  blob: () => undefined,
-  formData: () => undefined,
-  json: () => undefined,
-  text: () => undefined,
+  arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+  blob: () => Promise.resolve(new Blob()),
+  formData: () => Promise.resolve(new FormData()),
+  json: () => Promise.resolve({}),
+  text: () => Promise.resolve(""),
 };
 
 describe.concurrent("URL Search Parameters", () => {
@@ -41,8 +41,6 @@ describe.concurrent("URL Search Parameters", () => {
       string: "string with symbols?",
       number: 1,
       boolean: true,
-      undefined: undefined,
-      null: null,
     };
     const urlSearchParams = createURLSearchParams(params);
     expect(urlSearchParams.toString()).toBe("string=string+with+symbols%3F&number=1&boolean=true");
@@ -109,7 +107,7 @@ describe.concurrent("Response handler", () => {
     } catch (e) {
       expect(e).toBeInstanceOf(FetchError);
       expect(e).toHaveProperty("response", response);
-      expect(e.response.data).toBe("Not found"); // The response body was still parsed.
+      expect((e as FetchError).response.data).toBe("Not found"); // The response body was still parsed.
     }
   });
 });

@@ -72,22 +72,26 @@ export const createURLSearchParams = (params: FetchRequestOptions["params"]): UR
   return urlSearchParams;
 };
 
+type SuccessfulFetchResponse<D extends Response = Response> = FetchResponse<
+  Awaited<ReturnType<Extract<D, { ok: true }>["json"]>>
+>;
+
 /**
  * Parses the response data and adds it to the response object. Throws a {@link FetchError} if the response status code
  * is not in the 2XX range.
  * @param res The response from the fetch request.
  * @returns The response with the parsed data.
  */
-export const handleResponse = async (res: Response): Promise<FetchResponse> => {
+export const handleResponse = async <D extends Response = Response>(res: D): Promise<SuccessfulFetchResponse<D>> => {
   // Parse the response data and add it to the response object.
   const contentType = res.headers.get("Content-Type")?.split(";")[0];
   let data: unknown;
   switch (true) {
-    case contentType?.match(/(\/|\+)json$/)?.length > 0:
+    case contentType?.match(/(\/|\+)json$/)?.length! > 0:
       data = await res.json();
       break;
-    case contentType?.match(/^text\//)?.length > 0:
-    case contentType?.match(/(\/|\+)xml$/)?.length > 0:
+    case contentType?.match(/^text\//)?.length! > 0:
+    case contentType?.match(/(\/|\+)xml$/)?.length! > 0:
       data = await res.text();
       break;
     default:
@@ -95,9 +99,9 @@ export const handleResponse = async (res: Response): Promise<FetchResponse> => {
       break;
   }
 
-  const resWithData: FetchResponse = res as unknown as FetchResponse;
+  const resWithData: SuccessfulFetchResponse<D> = res as unknown as SuccessfulFetchResponse<D>;
   resWithData.statusDescription = res.statusText;
-  resWithData.data = data;
+  resWithData.data = data as SuccessfulFetchResponse<D>["data"];
 
   // Throw an error if the response status code is not in the 2XX range.
   if (!res.ok) throw new FetchError(resWithData);

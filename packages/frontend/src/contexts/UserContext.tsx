@@ -1,7 +1,7 @@
-import { User, accountAPIPath } from "@rating-tracker/commons";
+import { User, handleResponse } from "@rating-tracker/commons";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-import api from "../utils/api";
+import accountClient from "../api/account";
 
 import {
   SESSION_EXPIRED_MESSAGE,
@@ -52,11 +52,11 @@ const UserUpdaterContext = createContext<UserUpdaterContextType>({} as UserUpdat
  * @returns The component.
  */
 export const UserProvider = (props: React.PropsWithChildren): JSX.Element => {
-  const [user, setUser] = useState<User>(undefined);
+  const [user, setUser] = useState<User>(undefined as unknown as User);
   const { notification } = useNotificationContextState();
   const { setNotification } = useNotificationContextUpdater();
 
-  const clearUser = useCallback(() => setUser(null), []);
+  const clearUser = useCallback(() => setUser(null as unknown as User), []);
 
   /**
    * Fetches the user information from the server.
@@ -66,11 +66,12 @@ export const UserProvider = (props: React.PropsWithChildren): JSX.Element => {
    */
   const fetchUser = (version?: number): Promise<void> =>
     // Check if the user is authenticated
-    api
-      .get(accountAPIPath)
-      .then((response) => {
-        if (Object.keys(response.data).length) {
-          const newUser = new User(response.data);
+    accountClient.index
+      .$get()
+      .then(handleResponse)
+      .then((res) => {
+        if (Object.keys(res.data).length) {
+          const newUser = new User(res.data);
           if (newUser.avatar) {
             if (version) newUser.avatar += `?v=${version}`;
             // Preload the avatar image

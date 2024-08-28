@@ -55,30 +55,30 @@ export type IndividualDataProvider = (typeof individualDataProviderArray)[number
 export type BulkDataProvider = (typeof bulkDataProviderArray)[number];
 
 /**
- * Checks if a string is a valid data provider.
- * @param dataProvider The data provider to check.
- * @returns True if the string is a valid data provider.
+ * Checks if an entity is a valid data provider.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid data provider.
  */
-export function isDataProvider(dataProvider: string): dataProvider is DataProvider {
-  return dataProviderArray.includes(dataProvider as DataProvider);
+export function isDataProvider(entity: unknown): entity is DataProvider {
+  return dataProviderArray.includes(entity as DataProvider);
 }
 
 /**
- * Checks if a data provider is a valid individual data provider.
- * @param dataProvider The data provider to check.
- * @returns True if the data provider is a valid individual data provider.
+ * Checks if an entity is a valid individual data provider.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid individual data provider.
  */
-export function isIndividualDataProvider(dataProvider: DataProvider): dataProvider is IndividualDataProvider {
-  return individualDataProviderArray.includes(dataProvider as IndividualDataProvider);
+export function isIndividualDataProvider(entity: unknown): entity is IndividualDataProvider {
+  return individualDataProviderArray.includes(entity as IndividualDataProvider);
 }
 
 /**
- * Checks if a data provider is a valid bulk data provider.
- * @param dataProvider The data provider to check.
- * @returns True if the data provider is a valid bulk data provider.
+ * Checks if an entity is a valid bulk data provider.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid bulk data provider.
  */
-export function isBulkDataProvider(dataProvider: DataProvider): dataProvider is BulkDataProvider {
-  return bulkDataProviderArray.includes(dataProvider as BulkDataProvider);
+export function isBulkDataProvider(entity: unknown): entity is BulkDataProvider {
+  return bulkDataProviderArray.includes(entity as BulkDataProvider);
 }
 
 /**
@@ -112,7 +112,7 @@ export const dataProviderID: Record<DataProvider, keyof Stock> = {
  */
 export const dataProviderLastFetch: Record<
   IndividualDataProvider,
-  { [K in keyof Stock]: Stock[K] extends Date ? K : never }[keyof Stock]
+  { [K in keyof Stock]: Stock[K] extends Date | null ? K : never }[keyof Stock]
 > = {
   yahoo: "yahooLastFetch",
   morningstar: "morningstarLastFetch",

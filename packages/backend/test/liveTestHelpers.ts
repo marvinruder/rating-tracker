@@ -1,13 +1,10 @@
+import assert from "node:assert";
+
 import type { Stock } from "@rating-tracker/commons";
-import { UNAUTHORIZED_ERROR_MESSAGE, baseURL, stocksAPIPath } from "@rating-tracker/commons";
-import type { CallbackHandler, Test } from "supertest";
-import initSupertest from "supertest";
+import { FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE, baseURL, stocksAPIPath } from "@rating-tracker/commons";
 import type { TestFunction } from "vitest";
 
-/**
- * A supertest instance. Used to direct requests to the server running on the port specified in the test environment.
- */
-export const supertest = initSupertest(`http://localhost:${process.env.PORT}`);
+import { app } from "../src/server";
 
 /**
  * Requests the full list of stocks from the server and tests that it has the expected length.
@@ -15,49 +12,41 @@ export const supertest = initSupertest(`http://localhost:${process.env.PORT}`);
  * @returns The list of stocks returned by the server.
  */
 export const expectStockListLengthToBe = async (length: number): Promise<Stock[]> => {
-  const res = await supertest.get(`${baseURL}${stocksAPIPath}`).set("Cookie", ["id=exampleSessionID"]);
+  const res = await app.request(`${baseURL}${stocksAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+  const body = await res.json();
   expect(res.status).toBe(200);
-  expect(res.body.count).toBe(length);
-  expect(res.body.stocks).toHaveLength(length);
-  return res.body.stocks;
+  assert(!("message" in body));
+  expect(body.count).toBe(length);
+  expect(body.stocks).toHaveLength(length);
+  return body.stocks;
 };
 
 /**
  * Tests that the given route is only available to authenticated clients.
  * @param route The route to test.
  * @param method The HTTP request method to use.
- * @param contentType The content type to use. Used to circumvent the OpenAPI validator.
  */
 export const expectRouteToBePrivate = async (
   route: string,
-  method?: (url: string, callback?: CallbackHandler) => Test,
-  contentType?: string,
+  method?: "GET" | "HEAD" | "POST" | "PUT" | "PATCH" | "DELETE",
 ): Promise<void> => {
-  method = method ?? supertest.get;
-  const res = contentType ? await method(route).set("Content-Type", contentType) : await method(route);
+  const res = await app.request(route, { method: method ?? "GET" });
   expect(res.status).toBe(401);
-  expect(res.body.message).toMatch(UNAUTHORIZED_ERROR_MESSAGE);
+  expect((await res.json()).message).toMatch(UNAUTHORIZED_ERROR_MESSAGE);
 };
 
 /**
  * Tests that the given route is only available to users having special access rights.
  * @param route The route to test.
  * @param method The HTTP request method to use.
- * @param contentType The content type to use. Used to circumvent the OpenAPI validator.
  */
 export const expectSpecialAccessRightsToBeRequired = async (
   route: string,
-  method?: (url: string, callback?: CallbackHandler) => Test,
-  contentType?: string,
+  method?: "GET" | "HEAD" | "POST" | "PUT" | "PATCH" | "DELETE",
 ): Promise<void> => {
-  method = method ?? supertest.get;
-  const res = await (contentType ? method(route).set("Content-Type", contentType) : method(route)).set("Cookie", [
-    "id=anotherExampleSessionID",
-  ]);
+  const res = await app.request(route, { method: method ?? "get", headers: { Cookie: "id=anotherExampleSessionID" } });
   expect(res.status).toBe(403);
-  expect(res.body.message).toMatch(
-    "The authenticated user account does not have the rights necessary to access this endpoint",
-  );
+  expect((await res.json()).message).toMatch(FORBIDDEN_ERROR_MESSAGE);
 };
 
 /**

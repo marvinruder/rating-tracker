@@ -9,6 +9,50 @@
   },
   "license": "MIT",
   "type": "module",
+  "exports": {
+    "./api/account": {
+      "types": "./src/account/account.controller.ts"
+    },
+    "./api/auth": {
+      "types": "./src/auth/auth.controller.ts"
+    },
+    "./api/favorites": {
+      "types": "./src/favorite/favorite.controller.ts"
+    },
+    "./api/fetch": {
+      "types": "./src/fetch/fetch.controller.ts"
+    },
+    "./api/logobackground": {
+      "types": "./src/stock/logobackground.controller.ts"
+    },
+    "./api/portfolios": {
+      "types": "./src/portfolio/portfolio.controller.ts"
+    },
+    "./api/proxy": {
+      "types": "./src/proxy/proxy.controller.ts"
+    },
+    "./api/resources": {
+      "types": "./src/resource/resource.controller.ts"
+    },
+    "./api/session": {
+      "types": "./src/session/session.controller.ts"
+    },
+    "./api/status": {
+      "types": "./src/status/status.controller.ts"
+    },
+    "./api/stocks": {
+      "types": "./src/stock/stock.controller.ts"
+    },
+    "./api/users": {
+      "types": "./src/user/user.controller.ts"
+    },
+    "./api/watchlists": {
+      "types": "./src/watchlist/watchlist.controller.ts"
+    },
+    "./types": {
+      "types": "./src/types/index.d.ts"
+    }
+  },
   "scripts": {
     "dev:run": "node --env-file=.env --watch --enable-source-maps dist/server.mjs",
     "dev:watch": "yarn build --watch",
@@ -18,15 +62,17 @@
     "prisma:generate": "pnpify prisma generate",
     "prisma:migrate:dev": "pnpify prisma migrate dev",
     "prisma:migrate:diff": "pnpify prisma migrate diff --from-schema-datasource ./prisma/schema.prisma --to-schema-datamodel ./prisma/schema.prisma --script",
-    "fix:bundle": "mkdir -p dist/public/api-docs && cp ../../.yarn/unplugged/swagger-ui-dist-*/node_modules/swagger-ui-dist/swagger-ui{.css,-bundle.js,-standalone-preset.js} dist/public/api-docs/",
-    "build": "esbuild --color=true src/server.ts --bundle --platform=node --packages=bundle --format=esm --inject:./src/utils/cjs-shim.ts --inject:./src/utils/h2-shim.ts --target=node$(node -v | sed 's/^v//') --sourcemap=linked --sources-content=false --log-override:commonjs-variable-in-esm=silent --outfile=dist/server.mjs",
+    "build": "esbuild --color=true src/server.ts --bundle --platform=node --packages=bundle --format=esm --inject:./src/utils/cjs-shim.ts --target=node$(node -v | sed 's/^v//') --sourcemap=linked --sources-content=false --log-override:commonjs-variable-in-esm=silent --outfile=dist/server.mjs",
     "build:logFormatterConfig": "esbuild src/utils/logFormatterConfig.ts --bundle --minify --platform=node --packages=bundle --format=cjs --log-override:commonjs-variable-in-esm=silent --outfile=dist/pino-pretty-config.cjs",
     "typecheck": "tsc --noEmit --tsBuildInfoFile $HOME/.cache/rating-tracker/backend.tsbuildinfo",
     "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/backend.eslintcache --cache-strategy content --max-warnings 0 --ext .ts src/ test/",
     "lint:fix": "yarn lint --fix",
-    "postinstall": "yarn prisma:generate && yarn fix:bundle"
+    "postinstall": "yarn prisma:generate"
   },
   "dependencies": {
+    "@hono/node-server": "1.12.2",
+    "@hono/swagger-ui": "0.4.0",
+    "@hono/zod-openapi": "0.15.3",
     "@prisma/client": "5.19.0",
     "@rating-tracker/commons": "workspace:*",
     "@simplewebauthn/server": "10.0.1",
@@ -34,35 +80,24 @@
     "@xmldom/xmldom": "0.8.10",
     "@yarnpkg/pnpify": "4.1.1",
     "chalk": "5.3.0",
-    "concurrently": "8.2.2",
-    "cookie-parser": "1.4.6",
     "esbuild": "0.23.1",
-    "express": "4.19.2",
-    "express-async-errors": "3.1.1",
-    "express-openapi-validator": "5.3.3",
-    "express-rate-limit": "7.4.0",
+    "hono": "4.5.9",
+    "hono-rate-limiter": "0.4.0",
     "node-cron": "3.0.3",
     "pino": "9.3.2",
     "pino-pretty": "11.2.2",
     "prisma": "5.19.0",
     "prisma-json-types-generator": "3.0.4",
-    "response-time": "2.3.2",
-    "supertest": "7.0.0",
-    "swagger-ui-dist": "5.17.14",
-    "swagger-ui-express": "5.0.1",
     "typescript": "5.5.4",
     "vite": "5.4.2",
     "vitest": "2.0.5",
-    "xpath-ts2": "1.4.2"
+    "xpath-ts2": "1.4.2",
+    "zod": "3.23.8",
+    "zod-validation-error": "3.3.1"
   },
   "devDependencies": {
-    "@types/cookie-parser": "1.4.7",
-    "@types/express": "4.17.21",
     "@types/node": "22.5.1",
     "@types/node-cron": "3.0.11",
-    "@types/response-time": "2.3.8",
-    "@types/supertest": "6.0.2",
-    "@types/swagger-ui-express": "4.1.6",
     "@typescript-eslint/eslint-plugin": "8.3.0",
     "@typescript-eslint/parser": "8.3.0",
     "@vitest/ui": "2.0.5",

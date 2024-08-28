@@ -64,7 +64,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
       // The screen is at least 664px, but less than 964px wide.
       columns = props.maxColumns && props.maxColumns < 2 ? props.maxColumns : 2;
       break;
-    case 0:
+    default:
       // The screen is less than 664px wide.
       columns = props.maxColumns && props.maxColumns < 1 ? props.maxColumns : 1;
       break;
@@ -481,7 +481,13 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
               <>
                 {props.stock?.analystConsensus !== null && props.stock?.analystRatings !== null && (
                   <MarketScreenerNavigator stock={props.stock}>
-                    <AnalystRatingBar stock={props.stock} open />
+                    <AnalystRatingBar
+                      stock={{
+                        analystConsensus: props.stock.analystConsensus,
+                        analystRatings: props.stock.analystRatings,
+                      }}
+                      open
+                    />
                   </MarketScreenerNavigator>
                 )}
               </>
@@ -501,7 +507,15 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
             <MarketScreenerNavigator stock={props.stock}>
               <Typography
                 variant="body1"
-                sx={{ opacity: props.stock?.analystCount < 10 ? props.stock?.analystCount / 10 : 1, float: "right" }}
+                sx={{
+                  opacity:
+                    typeof props.stock?.analystCount === "number"
+                      ? props.stock?.analystCount < 10
+                        ? props.stock?.analystCount / 10
+                        : 1
+                      : 1,
+                  float: "right",
+                }}
               >
                 {props.stock ? (
                   <CurrencyWithTooltip value={props.stock.analystTargetPrice} currency={props.stock.currency} />
@@ -602,7 +616,7 @@ export const StockDetails = (props: StockDetailsProps): JSX.Element => {
                       <TemperatureChip
                         msciTemperature={props.stock.msciTemperature}
                         icon={<ThermostatIcon />}
-                        label={<strong>{props.stock.msciTemperature + "\u2009℃"}</strong>}
+                        label={<strong>{`${props.stock.msciTemperature}\u2009℃`}</strong>}
                         size="small"
                         sx={{ width: 75, mt: "4px" }}
                         style={{ cursor: "inherit" }}

@@ -10,7 +10,7 @@ import { Box } from "@mui/material";
  */
 export const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps): JSX.Element => {
   let value: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
-  switch (Math.round(2 * props.value) / 2) {
+  switch (Math.round(2 * (props.value ?? 0)) / 2) {
     case 0.5:
       value = 0.5;
       break;
@@ -69,7 +69,7 @@ interface StarRatingProps {
   /**
    * The rating value.
    */
-  value?: number;
+  value: number | null;
   /**
    * The size of the stars.
    */

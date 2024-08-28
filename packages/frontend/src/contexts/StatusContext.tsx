@@ -1,9 +1,9 @@
 import type { Service } from "@rating-tracker/commons";
-import { FetchError, serviceArray, statusAPIPath } from "@rating-tracker/commons";
+import { FetchError, handleResponse, serviceArray } from "@rating-tracker/commons";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
+import statusClient from "../api/status";
 import type { DetailedStatus, SystemStatus } from "../types/Status";
-import api from "../utils/api";
 
 type StatusStateContextType = {
   /**
@@ -60,7 +60,7 @@ export const StatusProvider = (props: React.PropsWithChildren): JSX.Element => {
 
   const [systemStatus, setSystemStatus] = useState<SystemStatus>(UNKNOWN_STATUS);
 
-  const getSystemStatusFromResponseData = (data: object): SystemStatus => ({
+  const getSystemStatusFromResponseData = (data: { services?: Partial<Record<Service, string>> }): SystemStatus => ({
     status: {
       status: "status" in data && data.status === "healthy" ? "success" : "warning",
       details: "status" in data && data.status === "healthy" ? "Operational" : "Degraded Service",
@@ -70,7 +70,7 @@ export const StatusProvider = (props: React.PropsWithChildren): JSX.Element => {
         ...object,
         [key]: {
           status:
-            "services" in data
+            "services" in data && data.services !== undefined
               ? data.services[key] === undefined
                 ? "success"
                 : (data.services[key] as string).includes("not configured")
@@ -78,7 +78,7 @@ export const StatusProvider = (props: React.PropsWithChildren): JSX.Element => {
                   : "error"
               : "N/A",
           details:
-            "services" in data
+            "services" in data && data.services !== undefined
               ? data.services[key] === undefined
                 ? "Operational"
                 : data.services[key]
@@ -91,8 +91,9 @@ export const StatusProvider = (props: React.PropsWithChildren): JSX.Element => {
 
   const refreshSystemStatus = (): void => (
     setSystemStatusLoading(true),
-    void api
-      .get(statusAPIPath)
+    void statusClient.index
+      .$get()
+      .then(handleResponse)
       .then((res) => setSystemStatus(getSystemStatusFromResponseData(res.data)))
       .catch((e) =>
         e instanceof FetchError &&

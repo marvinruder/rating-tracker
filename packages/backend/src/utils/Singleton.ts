@@ -11,12 +11,12 @@ export default abstract class Singleton {
    */
   constructor() {
     const name = this.constructor.name;
-    if (Singleton.#instances[name]) return Singleton.#instances[name];
-    Singleton.#instances[name] = this;
+    if (Singleton.instances[name]) return Singleton.instances[name];
+    Singleton.instances[name] = this;
   }
 
   /**
-   * The singleton instance of the class.
+   * The singleton instances.
    */
-  static #instances: Record<string, Singleton> = {};
+  private static instances: Record<string, Singleton> = {};
 }

@@ -1,17 +1,12 @@
 import { Box, Button, DialogActions, Divider, Grid, InputAdornment, TextField, Typography } from "@mui/material";
 import type { PortfolioSummary, WatchlistSummary } from "@rating-tracker/commons";
-import {
-  portfoliosAPIPath,
-  watchlistsAPIPath,
-  stocksAPIPath,
-  currencyMinorUnits,
-  FAVORITES_NAME,
-} from "@rating-tracker/commons";
+import { FAVORITES_NAME, currencyMinorUnits, handleResponse } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
 
+import portfolioClient from "../../../api/portfolio";
+import watchlistClient from "../../../api/watchlist";
 import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 import SelectStock from "./SelectStock";
 
@@ -31,7 +26,6 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
   const isPortfolio = "currency" in props.collection;
   const isWatchlist = "subscribed" in props.collection;
   const collectionLabel = isPortfolio ? "Portfolio" : "Watchlist";
-  const collectionsAPIPath = isPortfolio ? portfoliosAPIPath : watchlistsAPIPath;
 
   /**
    * Checks for errors in the input fields.
@@ -39,7 +33,7 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
    */
   const validate = (): boolean => {
     if (isPortfolio) {
-      const isAmountValid = amountInputRef.current?.checkValidity();
+      const isAmountValid = amountInputRef.current?.checkValidity() ?? false;
       return isAmountValid;
     }
     return true;
@@ -51,10 +45,14 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
    */
   const addStockToCollection = (ticker: string) => {
     if (!validate()) return;
-    api
-      .put(`${collectionsAPIPath}/${props.collection.id}${stocksAPIPath}/${encodeURIComponent(ticker)}`, {
-        params: isPortfolio ? { amount: +amountInput } : {},
-      })
+    (isPortfolio
+      ? portfolioClient[":id"].stocks[":ticker"].$put({
+          param: { id: String(props.collection.id), ticker },
+          json: { amount: +amountInput },
+        })
+      : watchlistClient[":id"].stocks[":ticker"].$put({ param: { id: String(props.collection.id), ticker } })
+    )
+      .then(handleResponse)
       .then(() => {
         props.onAdd();
         if (isWatchlist && props.collection.name === FAVORITES_NAME) refetchFavorites();

@@ -17,7 +17,7 @@ const DiffProgressBar = (props: DiffProgressBarProps): JSX.Element => {
       <Typography variant="subtitle1" sx={{ display: "flex", justifyContent: "space-between" }}>
         <span>
           <span style={{ fontWeight: "bold" }}>{props.name}</span>
-          {"\u2002" + formatPercentage(props.actual, { fixed: 1 })}
+          {`\u2002${formatPercentage(props.actual, { fixed: 1 })}`}
         </span>
         <span>Target: {formatPercentage(props.target, { fixed: 1 })}</span>
       </Typography>
@@ -54,7 +54,7 @@ const DiffProgressBar = (props: DiffProgressBarProps): JSX.Element => {
                 ) : (
                   <KeyboardArrowDownIcon color="error" fontSize="inherit" />
                 )}
-                {" " + formatPercentage(props.actual - props.target, { fixed: 1, forceSign: true })}
+                {` ${formatPercentage(props.actual - props.target, { fixed: 1, forceSign: true })}`}
               </>
             )}
           </Typography>

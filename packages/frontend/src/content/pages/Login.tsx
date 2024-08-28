@@ -2,14 +2,15 @@ import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Box, Card, CardContent, Grid, TextField, Typography, useTheme } from "@mui/material";
-import { authAPIPath, registerEndpointSuffix, signInEndpointSuffix } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
+import type { Dispatch, SetStateAction } from "react";
 import { useRef, useState } from "react";
 
+import authClient from "../../api/auth";
 import { SwitchSelector } from "../../components/etc/SwitchSelector";
 import { useNotificationContextUpdater } from "../../contexts/NotificationContext";
 import { useUserContextUpdater } from "../../contexts/UserContext";
-import api from "../../utils/api";
 
 /**
  * This component renders the login page.
@@ -36,8 +37,8 @@ export const LoginPage = (): JSX.Element => {
    */
   const validate = (): boolean => {
     if (action === "register") {
-      const isEmailValid = inputEmail.current?.checkValidity();
-      const isNameValid = inputName.current?.checkValidity();
+      const isEmailValid = inputEmail.current?.checkValidity() ?? false;
+      const isNameValid = inputName.current?.checkValidity() ?? false;
       return isEmailValid && isNameValid;
     }
     return true;
@@ -55,17 +56,16 @@ export const LoginPage = (): JSX.Element => {
         case "register":
           try {
             // Request registration challenge
-            const res = await api.get(authAPIPath + registerEndpointSuffix, {
-              params: { email: email.trim(), name: name.trim() },
-            });
+            const res = await authClient.register
+              .$get({ query: { email: email.trim(), name: name.trim() } })
+              .then(handleResponse);
             // Ask the browser to perform the WebAuthn registration and store a corresponding credential
             const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
             try {
               // Send the registration challenge response to the server
-              await api.post(authAPIPath + registerEndpointSuffix, {
-                body: authRes,
-                params: { email: email.trim(), name: name.trim() },
-              });
+              await authClient.register
+                .$post({ json: authRes, query: { email: email.trim(), name: name.trim() } })
+                .then(handleResponse);
               // This is only reached if the registration was successful
               setNotification({
                 severity: "success",
@@ -86,14 +86,12 @@ export const LoginPage = (): JSX.Element => {
         case "signIn":
           try {
             // Request authentication challenge
-            const res = await api.get(authAPIPath + signInEndpointSuffix);
+            const res = await authClient.signIn.$get().then(handleResponse);
             // Ask the browser to perform the WebAuthn authentication
             const authRes = await SimpleWebAuthnBrowser.startAuthentication(res.data);
             try {
               // Send the authentication challenge response to the server
-              await api.post(authAPIPath + signInEndpointSuffix, {
-                body: { ...authRes, challenge: res.data.challenge },
-              });
+              await authClient.signIn.$post({ json: authRes }).then(handleResponse);
               // This is only reached if the authentication was successful
               setNotification(undefined);
               await refetchUser(); // After refetching, the user is redirected automatically
@@ -127,7 +125,7 @@ export const LoginPage = (): JSX.Element => {
           <Grid item>
             <SwitchSelector
               value={action}
-              setValue={setAction}
+              setValue={setAction as Dispatch<SetStateAction<string>>}
               leftValue="signIn"
               leftLabel="Sign in"
               rightValue="register"
@@ -142,7 +140,7 @@ export const LoginPage = (): JSX.Element => {
                 opacity: action === "register" ? 1 : 0,
                 transitionProperty: "max-height,opacity",
                 transitionDuration: ".4s,.2s",
-                transitionDelay: action === "register" && "0s,.2s",
+                transitionDelay: action === "register" ? "0s,.2s" : undefined,
                 transitionTimingFunction: `ease`,
               }}
             >
@@ -171,7 +169,7 @@ export const LoginPage = (): JSX.Element => {
                 opacity: action === "register" ? 1 : 0,
                 transitionProperty: "max-height,opacity",
                 transitionDuration: ".4s,.2s",
-                transitionDelay: action === "register" && "0s,.2s",
+                transitionDelay: action === "register" ? "0s,.2s" : undefined,
                 transitionTimingFunction: `ease`,
               }}
             >

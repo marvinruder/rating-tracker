@@ -19,10 +19,20 @@ import {
 } from "@mui/material";
 import type { ComputedDatum, DatumId } from "@nivo/sunburst";
 import { Sunburst } from "@nivo/sunburst";
-import type { StockListColumn, Portfolio, SunburstNode, Country, Sector, SuperSector } from "@rating-tracker/commons";
+import type {
+  StockFilter,
+  StockListColumn,
+  Portfolio,
+  SunburstNode,
+  Country,
+  Sector,
+  SuperSector,
+  SuperRegion,
+  IndustryGroup,
+} from "@rating-tracker/commons";
 import {
   stockListColumnArray,
-  portfoliosAPIPath,
+  handleResponse,
   getWeightedAverage,
   getEstimateValue,
   getPercentageToTotalAmount,
@@ -49,11 +59,13 @@ import {
   stripPrefixFromSunburstID,
   getAnalystRatingDistribution,
   getWeightedMeanAnalystConsensus,
+  parseWeightedStock,
 } from "@rating-tracker/commons";
 import { animated } from "@react-spring/web";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
+import portfolioClient from "../../../api/portfolio";
 import { BlueIconChip } from "../../../components/chips/BlueIconChip";
 import { GreenIconChip } from "../../../components/chips/GreenIconChip";
 import { TemperatureChip } from "../../../components/chips/TemperatureChip";
@@ -65,8 +77,6 @@ import { AnalystRatingBar } from "../../../components/stock/properties/AnalystRa
 import { getSectorIconPaths } from "../../../components/stock/properties/SectorIcon";
 import { StarRating } from "../../../components/stock/properties/StarRating";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import type { StockFilter } from "../../../types/StockFilter";
-import api from "../../../utils/api";
 import { CurrencyWithTooltip, formatPercentage } from "../../../utils/formatters";
 
 import { PortfolioHeader } from "./PortfolioHeader";
@@ -97,8 +107,13 @@ const PortfolioModule = (): JSX.Element => {
    * @param id The ID of the portfolio to fetch.
    */
   const getPortfolio = (id: number) => {
-    api
-      .get(portfoliosAPIPath + `/${id}`)
+    portfolioClient[":id"]
+      .$get({ param: { id: String(id) } })
+      .then(handleResponse)
+      .then((res) => ({
+        ...res,
+        data: { ...res.data, stocks: res.data.stocks.map((stock) => parseWeightedStock(stock)) },
+      }))
       .then((res) => {
         setPortfolio(res.data);
         setCountrySunburstData(getCountrySunburstData(res.data));
@@ -147,9 +162,9 @@ const PortfolioModule = (): JSX.Element => {
    * The colors to use in the country sunburst chart based on the current selection.
    */
   const countryColors =
-    countrySunburstData?.id === "root"
+    countrySunburstData?.id === "root" && "children" in countrySunburstData
       ? // If everything is shown, use the region colors
-        "children" in countrySunburstData && countrySunburstData.children.map((child) => theme.colors.region[child.id])
+        countrySunburstData.children.map((child) => theme.colors.region[child.id as SuperRegion])
       : isSuperRegion(countrySunburstData?.id)
         ? // If a super region is selected, use its color
           theme.colors.region[countrySunburstData.id]
@@ -163,20 +178,23 @@ const PortfolioModule = (): JSX.Element => {
    * The colors to use in the industry sunburst chart based on the current selection.
    */
   const industryColors =
-    industrySunburstData?.id === "root"
+    industrySunburstData?.id === "root" && "children" in industrySunburstData
       ? // If everything is shown, use the sector colors
-        "children" in industrySunburstData &&
-        industrySunburstData.children.map((child) => theme.colors.sector[stripPrefixFromSunburstID(child.id)])
+        industrySunburstData.children.map(
+          (child) => theme.colors.sector[stripPrefixFromSunburstID(child.id) as SuperSector],
+        )
       : isSuperSector(stripPrefixFromSunburstID(industrySunburstData?.id))
         ? // If a super sector is selected, use its color
-          theme.colors.sector[stripPrefixFromSunburstID(industrySunburstData.id)]
+          theme.colors.sector[stripPrefixFromSunburstID(industrySunburstData!.id) as SuperSector]
         : isSector(stripPrefixFromSunburstID(industrySunburstData?.id))
           ? // If a sector is selected, use the color of its super sector
-            theme.colors.sector[superSectorOfSector[stripPrefixFromSunburstID(industrySunburstData.id)]]
+            theme.colors.sector[superSectorOfSector[stripPrefixFromSunburstID(industrySunburstData!.id) as Sector]]
           : isIndustryGroup(stripPrefixFromSunburstID(industrySunburstData?.id))
             ? // If an industry group is selected, use the color of the super sector of its sector
               theme.colors.sector[
-                superSectorOfSector[sectorOfIndustryGroup[stripPrefixFromSunburstID(industrySunburstData.id)]]
+                superSectorOfSector[
+                  sectorOfIndustryGroup[stripPrefixFromSunburstID(industrySunburstData!.id) as IndustryGroup]
+                ]
               ]
             : // If something goes wrong, use a default color
               theme.palette.divider;
@@ -201,7 +219,7 @@ const PortfolioModule = (): JSX.Element => {
         sunburstDataUnderInspection.children.find((child) => child.id === segment)
       ) {
         // If the current node has a child with the current segment as name, go to that child.
-        sunburstDataUnderInspection = sunburstDataUnderInspection.children.find((child) => child.id === segment);
+        sunburstDataUnderInspection = sunburstDataUnderInspection.children.find((child) => child.id === segment)!;
       } else {
         // If not, we conclude that not the entire path is in the sunburst data.
         // If an arc label expires because a corresponding stock is removed from the portfolio, its children no longer
@@ -225,13 +243,13 @@ const PortfolioModule = (): JSX.Element => {
     <Paper sx={{ px: 0.75, py: 0.5 }}>
       <Typography variant="body1" whiteSpace="nowrap">
         <span style={{ color }}>{"\u25cf"}</span>
-        {"\u2002" + getSunburstDatumName(id.toString())}
+        {`\u2002${getSunburstDatumName(id.toString())}`}
       </Typography>
       <Typography variant="body2" color="text.secondary">
         <span style={{ visibility: "hidden" }}>{"\u25cf"}</span>
-        {"\u2002" + formatPercentage(value, { total: totalAmount })}
+        {`\u2002${formatPercentage(value, { total: totalAmount! })}`}
         {"\u2002·\u2002"}
-        <CurrencyWithTooltip value={value} currency={portfolio.currency} />
+        <CurrencyWithTooltip value={value} currency={portfolio!.currency} />
       </Typography>
     </Paper>
   );
@@ -279,7 +297,7 @@ const PortfolioModule = (): JSX.Element => {
                     <Box width="100%" display="inline-flex" justifyContent="end">
                       <BlueIconChip
                         icon={<VerifiedIcon />}
-                        label={<strong>{Math.round(Math.max(0, 100 * totalScore))}</strong>}
+                        label={<strong>{Math.round(Math.max(0, 100 * totalScore!))}</strong>}
                         sx={{ width: 84, fontSize: 18 }}
                       />
                     </Box>
@@ -298,7 +316,7 @@ const PortfolioModule = (): JSX.Element => {
                     <Box width="100%" display="inline-flex" justifyContent="end">
                       <YellowIconChip
                         icon={<PriceCheckIcon />}
-                        label={<strong>{Math.round(Math.max(0, 100 * financialScore))}</strong>}
+                        label={<strong>{Math.round(Math.max(0, 100 * financialScore!))}</strong>}
                         sx={{ width: 84, fontSize: 18 }}
                       />
                     </Box>
@@ -317,7 +335,7 @@ const PortfolioModule = (): JSX.Element => {
                     <Box width="100%" display="inline-flex" justifyContent="end">
                       <GreenIconChip
                         icon={<NaturePeopleIcon />}
-                        label={<strong>{Math.round(Math.max(0, 100 * esgScore))}</strong>}
+                        label={<strong>{Math.round(Math.max(0, 100 * esgScore!))}</strong>}
                         sx={{ width: 84, fontSize: 18 }}
                       />
                     </Box>
@@ -515,7 +533,7 @@ const PortfolioModule = (): JSX.Element => {
                           <TemperatureChip
                             msciTemperature={msciTemperature}
                             icon={<ThermostatIcon />}
-                            label={<strong>{Number(msciTemperature.toFixed(1)) + "\u2009℃"}</strong>}
+                            label={<strong>{`${Number(msciTemperature.toFixed(1))}\u2009℃`}</strong>}
                             size="small"
                             sx={{ width: 75, mt: "4px" }}
                             style={{ cursor: "inherit" }}
@@ -685,7 +703,7 @@ const PortfolioModule = (): JSX.Element => {
               </Typography>
               <IconButton
                 color="primary"
-                onClick={() => setCountrySunburstData(getCountrySunburstData(portfolio))}
+                onClick={() => portfolio && setCountrySunburstData(getCountrySunburstData(portfolio))}
                 sx={{
                   mx: "24px",
                   visibility: countrySunburstData && countrySunburstData.id !== "root" ? "visible" : "hidden",
@@ -741,19 +759,19 @@ const PortfolioModule = (): JSX.Element => {
                   <Grid item>
                     <Typography variant="body2">
                       <span style={{ color: theme.colors.region["Americas"] }}>{"\u25cf"}</span>
-                      {" " + superRegionName["Americas"]}
+                      {` ${superRegionName["Americas"]}`}
                     </Typography>
                   </Grid>
                   <Grid item>
                     <Typography variant="body2">
                       <span style={{ color: theme.colors.region["EMEA"] }}>{"\u25cf"}</span>
-                      {" " + superRegionName["EMEA"]}
+                      {` ${superRegionName["EMEA"]}`}
                     </Typography>
                   </Grid>
                   <Grid item>
                     <Typography variant="body2">
                       <span style={{ color: theme.colors.region["Asia"] }}>{"\u25cf"}</span>
-                      {" " + superRegionName["Asia"]}
+                      {` ${superRegionName["Asia"]}`}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -768,7 +786,7 @@ const PortfolioModule = (): JSX.Element => {
               </Typography>
               <IconButton
                 color="primary"
-                onClick={() => setIndustrySunburstData(getIndustrySunburstData(portfolio))}
+                onClick={() => portfolio && setIndustrySunburstData(getIndustrySunburstData(portfolio))}
                 sx={{
                   mx: "24px",
                   visibility: industrySunburstData && industrySunburstData.id !== "root" ? "visible" : "hidden",
@@ -847,19 +865,19 @@ const PortfolioModule = (): JSX.Element => {
                   <Grid item>
                     <Typography variant="body2">
                       <span style={{ color: theme.colors.sector["Cyclical"] }}>{"\u25cf"}</span>
-                      {" " + superSectorName["Cyclical"]}
+                      {` ${superSectorName["Cyclical"]}`}
                     </Typography>
                   </Grid>
                   <Grid item>
                     <Typography variant="body2">
                       <span style={{ color: theme.colors.sector["Defensive"] }}>{"\u25cf"}</span>
-                      {" " + superSectorName["Defensive"]}
+                      {` ${superSectorName["Defensive"]}`}
                     </Typography>
                   </Grid>
                   <Grid item>
                     <Typography variant="body2">
                       <span style={{ color: theme.colors.sector["Sensitive"] }}>{"\u25cf"}</span>
-                      {" " + superSectorName["Sensitive"]}
+                      {` ${superSectorName["Sensitive"]}`}
                     </Typography>
                   </Grid>
                 </Grid>

@@ -1,15 +1,14 @@
 import { Container } from "@mui/material";
-import type { StockListColumn, Watchlist } from "@rating-tracker/commons";
-import { stockListColumnArray, watchlistsAPIPath } from "@rating-tracker/commons";
+import type { StockFilter, StockListColumn, Watchlist } from "@rating-tracker/commons";
+import { handleResponse, parseStock, stockListColumnArray } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
+import watchlistClient from "../../../api/watchlist";
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { StockTable } from "../../../components/stock/layouts/StockTable";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import type { StockFilter } from "../../../types/StockFilter";
-import api from "../../../utils/api";
 
 import { WatchlistHeader } from "./WatchlistHeader";
 
@@ -32,8 +31,10 @@ const WatchlistModule = (): JSX.Element => {
    * @param id The ID of the watchlist to fetch.
    */
   const getWatchlist = (id: number) => {
-    api
-      .get(watchlistsAPIPath + `/${id}`)
+    watchlistClient[":id"]
+      .$get({ param: { id: String(id) } })
+      .then(handleResponse)
+      .then((res) => ({ ...res, data: { ...res.data, stocks: res.data.stocks.map((stock) => parseStock(stock)) } }))
       .then((res) => setWatchlist(res.data))
       .catch((e) => setErrorNotificationOrClearSession(e, "fetching watchlist"));
   };

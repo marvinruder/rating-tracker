@@ -9,10 +9,10 @@ export const analystRatingArray = ["Sell", "Underperform", "Hold", "Outperform",
 export type AnalystRating = (typeof analystRatingArray)[number];
 
 /**
- * Checks if a string is a valid Analyst Rating value.
- * @param value The string to check.
- * @returns True if the string is a valid Analyst Rating value.
+ * Checks if an entity is a valid Analyst Rating value.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid Analyst Rating value.
  */
-export function isAnalystRating(value: string): value is AnalystRating {
-  return analystRatingArray.includes(value as AnalystRating);
+export function isAnalystRating(entity: unknown): entity is AnalystRating {
+  return analystRatingArray.includes(entity as AnalystRating);
 }

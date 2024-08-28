@@ -11,7 +11,7 @@ import {
   ListItemText,
   useTheme,
 } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 
 /**
  * The state of a checkbox that can be either checked, unchecked or indeterminate.
@@ -48,11 +48,10 @@ export const NestedCheckboxList = <
     if (props.getFourthLevelElements) {
       // The fourth level is the last level of nesting
       // Get all fourth-level elements that are children of the first-level element
-      const fourthLevelElements: FourthLevelType[] = props
-        .getSecondLevelElements(firstLevelElement)
-        .flatMap((secondLevelElement) => props.getThirdLevelElements(secondLevelElement))
-        .flatMap((thirdLevelElement) => props.getFourthLevelElements(thirdLevelElement));
-      props.setSelectedLastLevelElements((prev) =>
+      const fourthLevelElements: FourthLevelType[] = props.getSecondLevelElements!(firstLevelElement)
+        .flatMap((secondLevelElement) => props.getThirdLevelElements!(secondLevelElement))
+        .flatMap((thirdLevelElement) => props.getFourthLevelElements!(thirdLevelElement));
+      (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<FourthLevelType[]>>)((prev) =>
         getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked" // Previous state of the first-level element
           ? // Check all fourth-level elements that are children of the first-level element
             [...prev, ...fourthLevelElements]
@@ -62,10 +61,10 @@ export const NestedCheckboxList = <
     } else if (props.getThirdLevelElements) {
       // The third level is the last level of nesting
       // Get all third-level elements that are children of the first-level element
-      const thirdLevelElements: ThirdLevelType[] = props
-        .getSecondLevelElements(firstLevelElement)
-        .flatMap((secondLevelElement) => props.getThirdLevelElements(secondLevelElement));
-      props.setSelectedLastLevelElements((prev) =>
+      const thirdLevelElements: ThirdLevelType[] = props.getSecondLevelElements!(firstLevelElement).flatMap(
+        (secondLevelElement) => props.getThirdLevelElements!(secondLevelElement),
+      );
+      (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<ThirdLevelType[]>>)((prev) =>
         getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked" // Previous state of the first-level element
           ? // Check all third-level elements that are children of the first-level element
             [...prev, ...thirdLevelElements]
@@ -75,18 +74,18 @@ export const NestedCheckboxList = <
     } else if (props.getSecondLevelElements) {
       // The second level is the last level of nesting
       // Use all second-level elements that are children of the first-level element
-      props.setSelectedLastLevelElements((prev) =>
+      (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<SecondLevelType[]>>)((prev) =>
         getFirstLevelCheckboxStatus(firstLevelElement) === "unchecked" // Previous state of the first-level element
           ? // Check all second-level elements that are children of the first-level element
-            [...prev, ...props.getSecondLevelElements(firstLevelElement)]
+            [...prev, ...props.getSecondLevelElements!(firstLevelElement)]
           : prev.filter(
               // Uncheck all second-level elements that are children of the first-level element
-              (p) => !props.getSecondLevelElements(firstLevelElement).includes(p),
+              (p) => !props.getSecondLevelElements!(firstLevelElement).includes(p),
             ),
       );
     } else {
       // The first level is the last level of nesting (= we have no nesting in the list)
-      props.setSelectedLastLevelElements(
+      (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<FirstLevelType[]>>)(
         (prev) =>
           prev.includes(firstLevelElement) // Previous state of the first-level element
             ? prev.filter((p) => p != firstLevelElement) // Uncheck the first-level element
@@ -128,10 +127,10 @@ export const NestedCheckboxList = <
     if (props.getFourthLevelElements) {
       // The fourth level is the last level of nesting
       // Get all fourth-level elements that are children of the second-level element
-      const fourthLevelElements: FourthLevelType[] = props
-        .getThirdLevelElements(secondLevelElement)
-        .flatMap((thirdLevelElement) => props.getFourthLevelElements(thirdLevelElement));
-      props.setSelectedLastLevelElements((prev) =>
+      const fourthLevelElements: FourthLevelType[] = props.getThirdLevelElements!(secondLevelElement).flatMap(
+        (thirdLevelElement) => props.getFourthLevelElements!(thirdLevelElement),
+      );
+      (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<FourthLevelType[]>>)((prev) =>
         getSecondLevelCheckboxStatus(secondLevelElement) === "unchecked" // Previous state of the second-level element
           ? // Check all fourth-level elements that are children of the second-level element
             [...prev, ...fourthLevelElements]
@@ -141,18 +140,18 @@ export const NestedCheckboxList = <
     } else if (props.getThirdLevelElements) {
       // The third level is the last level of nesting
       // Use all third-level elements that are children of the second-level element
-      props.setSelectedLastLevelElements((prev) =>
+      (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<ThirdLevelType[]>>)((prev) =>
         getSecondLevelCheckboxStatus(secondLevelElement) === "unchecked" // Previous state of the second-level element
           ? // Check all third-level elements that are children of the second-level element
-            [...prev, ...props.getThirdLevelElements(secondLevelElement)]
+            [...prev, ...props.getThirdLevelElements!(secondLevelElement)]
           : prev.filter(
               // Uncheck all third-level elements that are children of the second-level element
-              (p) => !props.getThirdLevelElements(secondLevelElement).includes(p),
+              (p) => !props.getThirdLevelElements!(secondLevelElement).includes(p),
             ),
       );
     } else {
       // The second level is the last level of nesting (= we have no further nesting in the list)
-      props.setSelectedLastLevelElements(
+      (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<SecondLevelType[]>>)(
         (prev) =>
           prev.includes(secondLevelElement) // Previous state of the second-level element
             ? prev.filter((p) => p != secondLevelElement) // Uncheck the second-level element
@@ -194,18 +193,18 @@ export const NestedCheckboxList = <
     if (props.getFourthLevelElements) {
       // The fourth level is the last level of nesting
       // Use all fourth-level elements that are children of the third-level element
-      props.setSelectedLastLevelElements((prev) =>
+      (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<FourthLevelType[]>>)((prev) =>
         getThirdLevelCheckboxStatus(thirdLevelElement) === "unchecked" // Previous state of the third-level element
           ? // Check all fourth-level elements that are children of the third-level element
-            [...prev, ...props.getFourthLevelElements(thirdLevelElement)]
+            [...prev, ...props.getFourthLevelElements!(thirdLevelElement)]
           : prev.filter(
               // Uncheck all fourth-level elements that are children of the third-level element
-              (p) => !props.getFourthLevelElements(thirdLevelElement).includes(p),
+              (p) => !props.getFourthLevelElements!(thirdLevelElement).includes(p),
             ),
       );
     } else {
       // The third level is the last level of nesting (= we have no further nesting in the list)
-      props.setSelectedLastLevelElements(
+      (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<ThirdLevelType[]>>)(
         (prev) =>
           prev.includes(thirdLevelElement) // Previous state of the third-level element
             ? prev.filter((p) => p != thirdLevelElement) // Uncheck the third-level element
@@ -244,7 +243,7 @@ export const NestedCheckboxList = <
    */
   const clickFourthLevelCheckbox = (fourthLevelElement: FourthLevelType) => {
     // The fourth level is always the last level of nesting
-    props.setSelectedLastLevelElements(
+    (props.setSelectedLastLevelElements as React.Dispatch<React.SetStateAction<FourthLevelType[]>>)(
       (prev) =>
         prev.includes(fourthLevelElement) // Previous state of the fourth-level element
           ? prev.filter((p) => p != fourthLevelElement) // Uncheck the fourth-level element

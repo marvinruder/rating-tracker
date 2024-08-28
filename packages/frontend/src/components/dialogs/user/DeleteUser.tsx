@@ -2,11 +2,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { User } from "@rating-tracker/commons";
-import { usersAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { useState } from "react";
 
+import userClient from "../../../api/user";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 /**
  * A dialog to delete a user from the backend.
@@ -25,10 +25,11 @@ export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
   const deleteUser = (): Promise<void> =>
     props.user &&
     (setRequestInProgress(true),
-    api
-      .delete(usersAPIPath + `/${encodeURIComponent(props.user.email)}`)
+    userClient[":email"]
+      .$delete({ param: { email: props.user.email } })
+      .then(handleResponse)
       // Update the user list after the user was deleted.
-      .then(() => (props.onDelete(), props.onClose()))
+      .then(() => (props.onDelete && props.onDelete(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting user"))
       .finally(() => setRequestInProgress(false)));
 
@@ -69,7 +70,7 @@ interface DeleteUserProps {
   /**
    * A method that is called after the user was deleted successfully.
    */
-  onDelete: () => void;
+  onDelete?: () => void;
   /**
    * A method that is called when the dialog is closed.
    */

@@ -17,12 +17,12 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { sessionAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { useState } from "react";
 
+import sessionClient from "../../../../api/session";
 import { useNotificationContextUpdater } from "../../../../contexts/NotificationContext";
 import { useUserContextState, useUserContextUpdater } from "../../../../contexts/UserContext";
-import api from "../../../../utils/api";
 
 import { ProfileSettings } from "./ProfileSettings";
 
@@ -40,8 +40,9 @@ export const HeaderUserbox = (): JSX.Element => {
    */
   const signOut = () => {
     // Delete the session
-    api
-      .delete(sessionAPIPath)
+    sessionClient.index
+      .$delete()
+      .then(handleResponse)
       .then(() => {
         setNotification({
           severity: "success",
@@ -73,7 +74,7 @@ export const HeaderUserbox = (): JSX.Element => {
             disabled={!user}
           >
             {user ? (
-              <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+              <Avatar variant="rounded" alt={user.name} src={user.avatar ?? undefined} />
             ) : (
               <Skeleton variant="rounded" width={40} height={40} />
             )}

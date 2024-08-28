@@ -1,8 +1,6 @@
-import { randomUUID } from "crypto";
-
 import type * as SimpleWebAuthnServer from "@simplewebauthn/server";
 
-const randomCredential = randomUUID();
+const randomCredential = crypto.randomUUID();
 
 export const { generateRegistrationOptions, generateAuthenticationOptions } =
   await vi.importActual<typeof SimpleWebAuthnServer>("@simplewebauthn/server");
@@ -14,11 +12,12 @@ export const verifyRegistrationResponse = (options: SimpleWebAuthnServer.VerifyR
   }
   return Promise.resolve({
     verified:
-      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).challenge ===
+      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).challenge ===
         options.expectedChallenge &&
-      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).origin ===
+      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).origin ===
         options.expectedOrigin &&
       options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
+      options.expectedRPID !== undefined &&
       options.expectedRPID.includes(process.env.DOMAIN) &&
       options.requireUserVerification,
     registrationInfo: {
@@ -36,15 +35,15 @@ export const verifyAuthenticationResponse = (options: SimpleWebAuthnServer.Verif
   }
   return Promise.resolve({
     verified:
-      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).challenge ===
+      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).challenge ===
         options.expectedChallenge &&
-      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64").toString("ascii")).origin ===
+      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).origin ===
         options.expectedOrigin &&
       // options.response.challenge === options.expectedChallenge &&
       options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
       options.expectedRPID.includes(process.env.DOMAIN) &&
       options.requireUserVerification &&
-      options.authenticator.credentialID === Buffer.from(options.response.id, "base64url").toString("base64") &&
+      options.authenticator.credentialID === options.response.id &&
       options.authenticator.credentialPublicKey.toString() === `${randomCredential}`,
     authenticationInfo: {
       newCounter: options.authenticator.counter + 1,

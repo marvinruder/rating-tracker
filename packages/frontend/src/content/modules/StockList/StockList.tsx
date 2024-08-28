@@ -1,12 +1,11 @@
 import { Container } from "@mui/material";
-import type { StockListColumn } from "@rating-tracker/commons";
+import type { StockFilter, StockListColumn } from "@rating-tracker/commons";
 import { stockListColumnArray } from "@rating-tracker/commons";
 import { useState } from "react";
 
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { StockTable } from "../../../components/stock/layouts/StockTable";
-import type { StockFilter } from "../../../types/StockFilter";
 
 import StockListHeader from "./StockListHeader";
 

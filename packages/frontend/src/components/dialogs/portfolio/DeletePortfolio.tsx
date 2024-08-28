@@ -2,11 +2,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { PortfolioSummary } from "@rating-tracker/commons";
-import { portfoliosAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { useState } from "react";
 
+import portfolioClient from "../../../api/portfolio";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 /**
  * A dialog to delete a portfolio from the backend.
@@ -23,8 +23,9 @@ export const DeletePortfolio = (props: DeletePortfolioProps): JSX.Element => {
    */
   const deletePortfolio = () => {
     setRequestInProgress(true);
-    api
-      .delete(portfoliosAPIPath + `/${props.portfolio.id}`)
+    portfolioClient[":id"]
+      .$delete({ param: { id: String(props.portfolio.id) } })
+      .then(handleResponse)
       .then(() => (props.onDelete(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting portfolio"))
       .finally(() => setRequestInProgress(false));

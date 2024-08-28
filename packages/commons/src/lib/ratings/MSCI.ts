@@ -9,10 +9,10 @@ export const msciESGRatingArray = ["AAA", "AA", "A", "BBB", "BB", "B", "CCC"] as
 export type MSCIESGRating = (typeof msciESGRatingArray)[number];
 
 /**
- * Checks if a string is a valid MSCI ESG Rating value.
- * @param value The string to check.
- * @returns True if the string is a valid MSCI ESG Rating value.
+ * Checks if an entity is a valid MSCI ESG Rating value.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid MSCI ESG Rating value.
  */
-export function isMSCIESGRating(value: string): value is MSCIESGRating {
-  return msciESGRatingArray.includes(value as MSCIESGRating);
+export function isMSCIESGRating(entity: unknown): entity is MSCIESGRating {
+  return msciESGRatingArray.includes(entity as MSCIESGRating);
 }

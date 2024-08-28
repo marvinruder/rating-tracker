@@ -68,12 +68,12 @@ export const industryGroupArray = [
 export type IndustryGroup = (typeof industryGroupArray)[number];
 
 /**
- * Checks if a string is a valid industry group.
- * @param s The string to check.
- * @returns True if the string is a valid industry group.
+ * Checks if an entity is a valid industry group.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid industry group.
  */
-export function isIndustryGroup(s: string): s is IndustryGroup {
-  return industryGroupArray.includes(s as IndustryGroup);
+export function isIndustryGroup(entity: unknown): entity is IndustryGroup {
+  return industryGroupArray.includes(entity as IndustryGroup);
 }
 
 /**

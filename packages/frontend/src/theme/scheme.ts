@@ -7,19 +7,20 @@ import { alpha, lighten, darken, createTheme } from "@mui/material";
  * @param light Whether the theme is light or not.
  * @returns The main colors used in the theme.
  */
-const generateThemeColors = (light: boolean) => ({
-  primary: "#2971D6",
-  secondary: light ? "#878787" : "#B0B0B0",
-  success: light ? "#57CA22" : "#54AB2B",
-  warning: "#FFA319",
-  error: "#FF1943",
-  info: "#33C2FF",
-  black: light ? "#3B3B3B" : "#CFCFCF",
-  white: light ? "#ffffff" : "#212121",
-  primaryAlt: light ? "#2B2B2B" : "#212121",
-  trueWhite: "#ffffff",
-  trueBlack: "#000000",
-});
+const generateThemeColors = (light: boolean) =>
+  ({
+    primary: "#2971D6",
+    secondary: light ? "#878787" : "#B0B0B0",
+    success: light ? "#57CA22" : "#54AB2B",
+    warning: "#FFA319",
+    error: "#FF1943",
+    info: "#33C2FF",
+    black: light ? "#3B3B3B" : "#CFCFCF",
+    white: light ? "#ffffff" : "#212121",
+    primaryAlt: light ? "#2B2B2B" : "#212121",
+    trueWhite: "#ffffff",
+    trueBlack: "#000000",
+  }) as const;
 
 /**
  * A variety of colors used in both themes.
@@ -27,134 +28,135 @@ const generateThemeColors = (light: boolean) => ({
  * @param themeColors The main colors used in the theme.
  * @returns A variety of colors used in the theme.
  */
-const generateColors = (light: boolean, themeColors) => ({
-  gradients: {
-    blue1: "linear-gradient(135deg, #6B73FF 0%, #000DFF 100%)",
-    blue2: "linear-gradient(135deg, #ABDCFF 0%, #0396FF 100%)",
-    blue3: "linear-gradient(127.55deg, #141E30 3.73%, #243B55 92.26%)",
-    blue4: "linear-gradient(-20deg, #2b5876 0%, #4e4376 100%)",
-    blue5: "linear-gradient(135deg, #97ABFF 10%, #123597 100%)",
-    orange1: "linear-gradient(135deg, #FCCF31 0%, #F55555 100%)",
-    orange2: "linear-gradient(135deg, #FFD3A5 0%, #FD6585 100%)",
-    orange3: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
-    purple1: "linear-gradient(135deg, #43CBFF 0%, #9708CC 100%)",
-    purple3: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    pink1: "linear-gradient(135deg, #F6CEEC 0%, #D939CD 100%)",
-    pink2: "linear-gradient(135deg, #F761A1 0%, #8C1BAB 100%)",
-    green1: "linear-gradient(135deg, #FFF720 0%, #3CD500 100%)",
-    green2: "linear-gradient(to bottom, #00b09b, #96c93d)",
-    black1: "linear-gradient(100.66deg, #434343 6.56%, #000000 93.57%)",
-    black2: "linear-gradient(60deg, #29323c 0%, #485563 100%)",
-  },
-  shadows: {
-    success: "0px 1px 4px rgba(68, 214, 0, 0.25), 0px 3px 12px 2px rgba(68, 214, 0, 0.35)",
-    error: "0px 1px 4px rgba(255, 25, 67, 0.25), 0px 3px 12px 2px rgba(255, 25, 67, 0.35)",
-    info: "0px 1px 4px rgba(51, 194, 255, 0.25), 0px 3px 12px 2px rgba(51, 194, 255, 0.35)",
-    primary: light
-      ? "0px 1px 4px rgba(36, 122, 242, 0.25), 0px 3px 12px 2px rgba(36, 122, 242, 0.35)"
-      : "0px 1px 4px rgba(112, 99, 192, 0.25), 0px 3px 12px 2px rgba(61, 99, 153, 0.35)",
-    warning: "0px 1px 4px rgba(255, 163, 25, 0.25), 0px 3px 12px 2px rgba(255, 163, 25, 0.35)",
-    card: light
-      ? "0px 9px 16px rgba(176, 176, 176, .18), 0px 2px 2px rgba(176, 176, 176, 0.32)"
-      : "0px 0px 2px #828282",
-    cardSm: light
-      ? "0px 2px 3px rgba(176, 176, 176, .18), 0px 1px 1px rgba(176, 176, 176, 0.32)"
-      : "0px 0px 2px #828282",
-    cardMd: light ? "0 5rem 14rem 0 rgb(255 255 255 / 30%), 0 0.2rem 0.4rem rgb(0 0 0 / 35%)" : "0px 0px 2px #828282",
-    cardLg: light
-      ? "0 5rem 14rem 0 rgb(255 255 255 / 30%), 0 0.8rem 2.3rem rgb(0 0 0 / 60%), 0 0.2rem 0.3rem rgb(0 0 0 / 45%)"
-      : "0 0rem 14rem 0 rgb(255 255 255 / 10%), " +
-        "0 0.8rem 2.3rem rgb(133 133 133 / 3%), " +
-        "0 0.2rem 0.7rem rgb(38 38 38 / 15%)",
-  },
-  layout: {
-    general: {
-      bodyBg: light ? "#F5F5F5" : "#171717",
+const generateColors = (light: boolean, themeColors: ReturnType<typeof generateThemeColors>) =>
+  ({
+    gradients: {
+      blue1: "linear-gradient(135deg, #6B73FF 0%, #000DFF 100%)",
+      blue2: "linear-gradient(135deg, #ABDCFF 0%, #0396FF 100%)",
+      blue3: "linear-gradient(127.55deg, #141E30 3.73%, #243B55 92.26%)",
+      blue4: "linear-gradient(-20deg, #2b5876 0%, #4e4376 100%)",
+      blue5: "linear-gradient(135deg, #97ABFF 10%, #123597 100%)",
+      orange1: "linear-gradient(135deg, #FCCF31 0%, #F55555 100%)",
+      orange2: "linear-gradient(135deg, #FFD3A5 0%, #FD6585 100%)",
+      orange3: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
+      purple1: "linear-gradient(135deg, #43CBFF 0%, #9708CC 100%)",
+      purple3: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      pink1: "linear-gradient(135deg, #F6CEEC 0%, #D939CD 100%)",
+      pink2: "linear-gradient(135deg, #F761A1 0%, #8C1BAB 100%)",
+      green1: "linear-gradient(135deg, #FFF720 0%, #3CD500 100%)",
+      green2: "linear-gradient(to bottom, #00b09b, #96c93d)",
+      black1: "linear-gradient(100.66deg, #434343 6.56%, #000000 93.57%)",
+      black2: "linear-gradient(60deg, #29323c 0%, #485563 100%)",
     },
-    sidebar: {
-      background: light ? themeColors.white : themeColors.primaryAlt,
-      textColor: themeColors.secondary,
-      dividerBg: light ? "#F5F5F5" : "#383838",
-      menuItemColor: light ? "#4A4A4A" : themeColors.secondary,
-      menuItemColorActive: light ? themeColors.primary : themeColors.trueWhite,
-      menuItemBg: light ? themeColors.white : themeColors.primaryAlt,
-      menuItemBgActive: light ? "#F5F5F5" : "rgba(61, 61, 61, .6)",
-      menuItemIconColor: light ? lighten(themeColors.secondary, 0.3) : "#575757",
-      menuItemIconColorActive: light ? themeColors.primary : themeColors.trueWhite,
-      menuItemHeadingColor: darken(themeColors.secondary, 0.3),
+    shadows: {
+      success: "0px 1px 4px rgba(68, 214, 0, 0.25), 0px 3px 12px 2px rgba(68, 214, 0, 0.35)",
+      error: "0px 1px 4px rgba(255, 25, 67, 0.25), 0px 3px 12px 2px rgba(255, 25, 67, 0.35)",
+      info: "0px 1px 4px rgba(51, 194, 255, 0.25), 0px 3px 12px 2px rgba(51, 194, 255, 0.35)",
+      primary: light
+        ? "0px 1px 4px rgba(36, 122, 242, 0.25), 0px 3px 12px 2px rgba(36, 122, 242, 0.35)"
+        : "0px 1px 4px rgba(112, 99, 192, 0.25), 0px 3px 12px 2px rgba(61, 99, 153, 0.35)",
+      warning: "0px 1px 4px rgba(255, 163, 25, 0.25), 0px 3px 12px 2px rgba(255, 163, 25, 0.35)",
+      card: light
+        ? "0px 9px 16px rgba(176, 176, 176, .18), 0px 2px 2px rgba(176, 176, 176, 0.32)"
+        : "0px 0px 2px #828282",
+      cardSm: light
+        ? "0px 2px 3px rgba(176, 176, 176, .18), 0px 1px 1px rgba(176, 176, 176, 0.32)"
+        : "0px 0px 2px #828282",
+      cardMd: light ? "0 5rem 14rem 0 rgb(255 255 255 / 30%), 0 0.2rem 0.4rem rgb(0 0 0 / 35%)" : "0px 0px 2px #828282",
+      cardLg: light
+        ? "0 5rem 14rem 0 rgb(255 255 255 / 30%), 0 0.8rem 2.3rem rgb(0 0 0 / 60%), 0 0.2rem 0.3rem rgb(0 0 0 / 45%)"
+        : "0 0rem 14rem 0 rgb(255 255 255 / 10%), " +
+          "0 0.8rem 2.3rem rgb(133 133 133 / 3%), " +
+          "0 0.2rem 0.7rem rgb(38 38 38 / 15%)",
     },
-  },
-  alpha: {
-    white: {
-      5: alpha(themeColors.white, 0.02),
-      10: alpha(themeColors.white, 0.1),
-      30: alpha(themeColors.white, 0.3),
-      50: alpha(themeColors.white, 0.5),
-      70: alpha(themeColors.white, light ? 0.75 : 0.65),
-      100: themeColors.white,
+    layout: {
+      general: {
+        bodyBg: light ? "#F5F5F5" : "#171717",
+      },
+      sidebar: {
+        background: light ? themeColors.white : themeColors.primaryAlt,
+        textColor: themeColors.secondary,
+        dividerBg: light ? "#F5F5F5" : "#383838",
+        menuItemColor: light ? "#4A4A4A" : themeColors.secondary,
+        menuItemColorActive: light ? themeColors.primary : themeColors.trueWhite,
+        menuItemBg: light ? themeColors.white : themeColors.primaryAlt,
+        menuItemBgActive: light ? "#F5F5F5" : "rgba(61, 61, 61, .6)",
+        menuItemIconColor: light ? lighten(themeColors.secondary, 0.3) : "#575757",
+        menuItemIconColorActive: light ? themeColors.primary : themeColors.trueWhite,
+        menuItemHeadingColor: darken(themeColors.secondary, 0.3),
+      },
     },
-    trueWhite: {
-      5: alpha(themeColors.trueWhite, 0.02),
-      10: alpha(themeColors.trueWhite, 0.1),
-      30: alpha(themeColors.trueWhite, 0.3),
-      50: alpha(themeColors.trueWhite, 0.5),
-      70: alpha(themeColors.trueWhite, 0.7),
-      100: themeColors.trueWhite,
+    alpha: {
+      white: {
+        5: alpha(themeColors.white, 0.02),
+        10: alpha(themeColors.white, 0.1),
+        30: alpha(themeColors.white, 0.3),
+        50: alpha(themeColors.white, 0.5),
+        70: alpha(themeColors.white, light ? 0.75 : 0.65),
+        100: themeColors.white,
+      },
+      trueWhite: {
+        5: alpha(themeColors.trueWhite, 0.02),
+        10: alpha(themeColors.trueWhite, 0.1),
+        30: alpha(themeColors.trueWhite, 0.3),
+        50: alpha(themeColors.trueWhite, 0.5),
+        70: alpha(themeColors.trueWhite, 0.7),
+        100: themeColors.trueWhite,
+      },
+      black: {
+        5: alpha(themeColors.black, 0.02),
+        10: alpha(themeColors.black, 0.1),
+        30: alpha(themeColors.black, 0.3),
+        50: alpha(themeColors.black, 0.5),
+        70: alpha(themeColors.black, light ? 0.75 : 0.65),
+        100: themeColors.black,
+      },
+      trueBlack: {
+        5: alpha(themeColors.trueBlack, 0.02),
+        10: alpha(themeColors.trueBlack, 0.1),
+        30: alpha(themeColors.trueBlack, 0.3),
+        50: alpha(themeColors.trueBlack, 0.5),
+        70: alpha(themeColors.trueBlack, 0.7),
+        100: themeColors.trueBlack,
+      },
     },
-    black: {
-      5: alpha(themeColors.black, 0.02),
-      10: alpha(themeColors.black, 0.1),
-      30: alpha(themeColors.black, 0.3),
-      50: alpha(themeColors.black, 0.5),
-      70: alpha(themeColors.black, light ? 0.75 : 0.65),
-      100: themeColors.black,
+    secondary: {
+      lighter: light ? lighten(themeColors.secondary, 0.85) : alpha(themeColors.secondary, 0.85),
+      light: light ? lighten(themeColors.secondary, 0.25) : alpha(themeColors.secondary, 0.8),
+      main: themeColors.secondary,
+      dark: darken(themeColors.secondary, 0.2),
     },
-    trueBlack: {
-      5: alpha(themeColors.trueBlack, 0.02),
-      10: alpha(themeColors.trueBlack, 0.1),
-      30: alpha(themeColors.trueBlack, 0.3),
-      50: alpha(themeColors.trueBlack, 0.5),
-      70: alpha(themeColors.trueBlack, 0.7),
-      100: themeColors.trueBlack,
+    primary: {
+      lighter: light ? lighten(themeColors.primary, 0.85) : alpha(themeColors.primary, 0.85),
+      light: light ? lighten(themeColors.primary, 0.3) : alpha(themeColors.primary, 0.8),
+      main: themeColors.primary,
+      dark: darken(themeColors.primary, 0.2),
     },
-  },
-  secondary: {
-    lighter: light ? lighten(themeColors.secondary, 0.85) : alpha(themeColors.secondary, 0.85),
-    light: light ? lighten(themeColors.secondary, 0.25) : alpha(themeColors.secondary, 0.8),
-    main: themeColors.secondary,
-    dark: darken(themeColors.secondary, 0.2),
-  },
-  primary: {
-    lighter: light ? lighten(themeColors.primary, 0.85) : alpha(themeColors.primary, 0.85),
-    light: light ? lighten(themeColors.primary, 0.3) : alpha(themeColors.primary, 0.8),
-    main: themeColors.primary,
-    dark: darken(themeColors.primary, 0.2),
-  },
-  success: {
-    lighter: light ? lighten(themeColors.success, 0.85) : alpha(themeColors.success, 0.85),
-    light: light ? lighten(themeColors.success, 0.3) : alpha(themeColors.success, 0.8),
-    main: themeColors.success,
-    dark: darken(themeColors.success, 0.2),
-  },
-  warning: {
-    lighter: light ? lighten(themeColors.warning, 0.85) : alpha(themeColors.warning, 0.85),
-    light: light ? lighten(themeColors.warning, 0.3) : alpha(themeColors.warning, 0.8),
-    main: themeColors.warning,
-    dark: darken(themeColors.warning, 0.2),
-  },
-  error: {
-    lighter: light ? lighten(themeColors.error, 0.85) : alpha(themeColors.error, 0.85),
-    light: light ? lighten(themeColors.error, 0.3) : alpha(themeColors.error, 0.8),
-    main: themeColors.error,
-    dark: darken(themeColors.error, 0.2),
-  },
-  info: {
-    lighter: light ? lighten(themeColors.info, 0.85) : alpha(themeColors.info, 0.85),
-    light: light ? lighten(themeColors.info, 0.3) : alpha(themeColors.info, 0.8),
-    main: themeColors.info,
-    dark: darken(themeColors.info, 0.2),
-  },
-});
+    success: {
+      lighter: light ? lighten(themeColors.success, 0.85) : alpha(themeColors.success, 0.85),
+      light: light ? lighten(themeColors.success, 0.3) : alpha(themeColors.success, 0.8),
+      main: themeColors.success,
+      dark: darken(themeColors.success, 0.2),
+    },
+    warning: {
+      lighter: light ? lighten(themeColors.warning, 0.85) : alpha(themeColors.warning, 0.85),
+      light: light ? lighten(themeColors.warning, 0.3) : alpha(themeColors.warning, 0.8),
+      main: themeColors.warning,
+      dark: darken(themeColors.warning, 0.2),
+    },
+    error: {
+      lighter: light ? lighten(themeColors.error, 0.85) : alpha(themeColors.error, 0.85),
+      light: light ? lighten(themeColors.error, 0.3) : alpha(themeColors.error, 0.8),
+      main: themeColors.error,
+      dark: darken(themeColors.error, 0.2),
+    },
+    info: {
+      lighter: light ? lighten(themeColors.info, 0.85) : alpha(themeColors.info, 0.85),
+      light: light ? lighten(themeColors.info, 0.3) : alpha(themeColors.info, 0.8),
+      main: themeColors.info,
+      dark: darken(themeColors.info, 0.2),
+    },
+  }) as const;
 
 /**
  * The scheme for both themes
@@ -163,7 +165,11 @@ const generateColors = (light: boolean, themeColors) => ({
  * @param colors A variety of colors used in the theme.
  * @returns The scheme for both themes.
  */
-const generateScheme = (light: boolean, themeColors, colors) => ({
+const generateScheme = (
+  light: boolean,
+  themeColors: ReturnType<typeof generateThemeColors>,
+  colors: ReturnType<typeof generateColors>,
+) => ({
   colors: {
     gradients: {
       blue1: colors.gradients.blue1,
@@ -988,8 +994,8 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
           height: 38,
           minHeight: 38,
           borderRadius: 6,
-          border: "1px solid " + colors.primary.dark,
-          boxShadow: "0px 2px 10px " + colors.primary.light,
+          border: `1px solid ${colors.primary.dark}`,
+          boxShadow: `0px 2px 10px ${colors.primary.light}`,
         },
         scrollableX: {
           overflow: "visible !important",
@@ -1187,11 +1193,11 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
         },
         outlined: {
           backgroundColor: colors.alpha.white[100],
-          boxShadow: "0 0 0 6px " + colors.alpha.white[100],
+          boxShadow: `0 0 0 6px ${colors.alpha.white[100]}`,
         },
         outlinedPrimary: {
           backgroundColor: colors.alpha.white[100],
-          boxShadow: "0 0 0 6px " + colors.alpha.white[100],
+          boxShadow: `0 0 0 6px ${colors.alpha.white[100]}`,
         },
       },
     },
@@ -1256,13 +1262,13 @@ const generateScheme = (light: boolean, themeColors, colors) => ({
           },
         },
         thumb: {
-          border: "1px solid " + colors.alpha.black[30],
-          boxShadow: "0px 9px 14px " + colors.alpha.black[10] + ", 0px 2px 2px " + colors.alpha.black[10],
+          border: `1px solid ${colors.alpha.black[30]}`,
+          boxShadow: `0px 9px 14px ${colors.alpha.black[10]}, 0px 2px 2px ${colors.alpha.black[10]}`,
         },
         track: {
           backgroundColor: colors.alpha.black[5],
-          border: "1px solid " + colors.alpha.black[10],
-          boxShadow: "inset 0px 1px 1px " + colors.alpha.black[10],
+          border: `1px solid ${colors.alpha.black[10]}`,
+          boxShadow: `inset 0px 1px 1px ${colors.alpha.black[10]}`,
           opacity: 1,
         },
         colorPrimary: {

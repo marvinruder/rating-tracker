@@ -10,9 +10,8 @@ import React from "react";
  */
 export const Range52WSlider = (props: Range52WSliderProps): JSX.Element => {
   const theme = useTheme();
-  return (
+  return props.stock.lastClose !== null && props.stock.low52w !== null && props.stock.high52w !== null ? (
     <Slider
-      {...props}
       aria-label={`52 Week Range of “${props.stock.name}”`}
       size="small"
       sx={{
@@ -31,17 +30,11 @@ export const Range52WSlider = (props: Range52WSliderProps): JSX.Element => {
       min={props.stock.low52w}
       max={props.stock.high52w}
       marks={[
-        {
-          value: props.stock.low52w,
-          label: props.stock.low52w?.toFixed(currencyMinorUnits[props.stock.currency]),
-        },
-        {
-          value: props.stock.high52w,
-          label: props.stock.high52w?.toFixed(currencyMinorUnits[props.stock.currency]),
-        },
+        { value: props.stock.low52w, label: props.stock.low52w?.toFixed(currencyMinorUnits[props.stock.currency!]) },
+        { value: props.stock.high52w, label: props.stock.high52w?.toFixed(currencyMinorUnits[props.stock.currency!]) },
       ]}
       valueLabelDisplay="on"
-      valueLabelFormat={(value) => value.toFixed(currencyMinorUnits[props.stock.currency])}
+      valueLabelFormat={(value) => value.toFixed(currencyMinorUnits[props.stock.currency!])}
       disabled
       slots={{
         mark: () => undefined, // no marks
@@ -49,13 +42,15 @@ export const Range52WSlider = (props: Range52WSliderProps): JSX.Element => {
           const style = props.style ?? {};
           style.top = 18;
           // Align the labels based directly on the value
-          const position = Number(props.style.left.toString().replace("%", ""));
+          const position = Number(props.style.left!.toString().replace("%", ""));
           if (position <= Number.EPSILON) style.transform = "translateX(0%)";
           if (position >= 100 * (1 - Number.EPSILON)) style.transform = "translateX(-100%)";
           return <SliderMarkLabel {...props} style={style} />;
         },
       }}
     />
+  ) : (
+    <></>
   );
 };
 

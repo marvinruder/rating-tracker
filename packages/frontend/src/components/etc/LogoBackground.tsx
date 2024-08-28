@@ -1,8 +1,8 @@
 import { useMediaQuery, useTheme } from "@mui/material";
-import { logoBackgroundAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { useEffect, useRef } from "react";
 
-import api from "../../utils/api";
+import logoBackgroundClient from "../../api/logobackground";
 
 /**
  * The maximum number of logos to show.
@@ -20,8 +20,9 @@ export const LogoBackground = (): JSX.Element => {
   const count = 25 + 25 * +useMediaQuery(theme.breakpoints.up("md"));
 
   useEffect(() => {
-    api
-      .get(logoBackgroundAPIPath, { params: { dark: theme.palette.mode === "dark", count } })
+    logoBackgroundClient.index
+      .$get({ query: { variant: theme.palette.mode, count: String(count) } })
+      .then(handleResponse)
       .then((res) => {
         const logos = res.data as string[];
         Array.from(document.getElementsByClassName("backgroundlogo")).forEach((logoDiv, i) => {

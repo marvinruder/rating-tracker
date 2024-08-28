@@ -5,10 +5,11 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import type { Watchlist } from "@rating-tracker/commons";
-import { FAVORITES_NAME, pluralize, watchlistsAPIPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, handleResponse, pluralize, watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
+import watchlistClient from "../../../api/watchlist";
 import PinnedDialog from "../../../components/dialogs/PinnedDialog";
 import AddStockToCollection from "../../../components/dialogs/stock/AddStockToCollection";
 import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWatchlist";
@@ -16,7 +17,6 @@ import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWat
 import type { StockTableFiltersProps } from "../../../components/stock/layouts/StockTableFilters";
 import { StockTableFilters } from "../../../components/stock/layouts/StockTableFilters";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 /**
  * A header for the watchlist details page.
@@ -42,7 +42,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
             </Typography>
             <Typography variant="subtitle2">
               {props.watchlist ? (
-                (props.watchlist.stocks.length || "No") + ` stock${pluralize(props.watchlist.stocks.length)}`
+                `${props.watchlist.stocks.length || "No"} stock${pluralize(props.watchlist.stocks.length)}`
               ) : (
                 <Skeleton width="48px" />
               )}
@@ -60,17 +60,19 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
                   aria-labelledby="subscribe-to-watchlist-label"
                   color={props.watchlist.subscribed ? "primary" : undefined}
                   onClick={() => {
-                    api
-                      .patch(watchlistsAPIPath + `/${props.watchlist.id}`, {
-                        params: { subscribed: !props.watchlist.subscribed },
+                    watchlistClient[":id"]
+                      .$patch({
+                        param: { id: String(props.watchlist!.id) },
+                        json: { subscribed: !props.watchlist!.subscribed },
                       })
+                      .then(handleResponse)
                       .then(props.getWatchlist)
                       .catch((e) =>
                         setErrorNotificationOrClearSession(
                           e,
-                          props.watchlist.subscribed
-                            ? `unsubscribing from watchlist “${props.watchlist.name}”`
-                            : `subscribing to watchlist “${props.watchlist.name}”`,
+                          props.watchlist!.subscribed
+                            ? `unsubscribing from watchlist “${props.watchlist!.name}”`
+                            : `subscribing to watchlist “${props.watchlist!.name}”`,
                         ),
                       );
                   }}

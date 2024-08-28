@@ -17,13 +17,13 @@ import {
   CircularProgress,
 } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
-import { pluralize, stocksAPIPath } from "@rating-tracker/commons";
+import { handleResponse, parseStock, pluralize, stocksAPIPath } from "@rating-tracker/commons";
 import type { ChangeEvent, ReactNode } from "react";
 import { useState, useEffect, Fragment } from "react";
 import { useNavigate } from "react-router";
 
+import stockClient from "../../../api/stock";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 import { StockPreview } from "../../stock/layouts/StockPreview";
 
 /**
@@ -111,19 +111,21 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
    * @param currentSearchValue The current search value.
    */
   const getStocks = (currentSearchValue: string) => {
-    api
-      .get(stocksAPIPath, { params: { name: currentSearchValue.trim(), sortBy: "ticker" } })
+    stockClient.index
+      .$get({ query: { q: currentSearchValue.trim(), sortBy: "ticker" } })
+      .then(handleResponse)
       .then((res) => {
         const upperCaseSearchValue = currentSearchValue.toLocaleUpperCase();
         setStocks(
           res.data.stocks
             .sort(
               // Sort stocks to the top if their ticker starts with the search value (case-insensitive)
-              (a: Stock, b: Stock) =>
+              (a, b) =>
                 +b.ticker.toLocaleUpperCase().startsWith(upperCaseSearchValue) -
                 +a.ticker.toLocaleUpperCase().startsWith(upperCaseSearchValue),
             )
-            .slice(0, 10), // Only display the first 10 results
+            .slice(0, 10) // Only display the first 10 results
+            .map((stock) => parseStock(stock)),
         );
         setCount(res.data.count);
       })
@@ -222,7 +224,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
                               onClick: () => {
                                 if (props.validate && !props.validate()) return;
                                 handleSelect();
-                                props.onSelect(stock);
+                                props.onSelect!(stock);
                               },
                             }
                           : { onClick: handleSelect, navLink: true })}

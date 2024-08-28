@@ -9,10 +9,10 @@ export const sizeArray = ["Small", "Mid", "Large"] as const;
 export type Size = (typeof sizeArray)[number];
 
 /**
- * Checks if a string is a valid size in the Morningstar Style Box.
- * @param s The string to check.
- * @returns True if the string is a valid size in the Morningstar Style Box.
+ * Checks if an entity is a valid size in the Morningstar Style Box.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid size in the Morningstar Style Box.
  */
-export function isSize(s: string): s is Size {
-  return sizeArray.includes(s as Size);
+export function isSize(entity: unknown): entity is Size {
+  return sizeArray.includes(entity as Size);
 }

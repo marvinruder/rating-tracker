@@ -1,12 +1,12 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import type { PortfolioSummary } from "@rating-tracker/commons";
-import { portfoliosAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 
+import portfolioClient from "../../../api/portfolio";
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 import PortfolioCard from "./PortfolioCard";
 import { PortfolioSummaryHeader } from "./PortfolioSummaryHeader";
@@ -24,8 +24,9 @@ const PortfolioSummaryModule = (): JSX.Element => {
    * Get the portfolios from the backend.
    */
   const getPortfolios = () => {
-    api
-      .get(portfoliosAPIPath)
+    portfolioClient.index
+      .$get()
+      .then(handleResponse)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching portfolios");

@@ -2,11 +2,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
-import { watchlistsAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { useState } from "react";
 
+import watchlistClient from "../../../api/watchlist";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 /**
  * A dialog to delete a watchlist from the backend.
@@ -23,8 +23,9 @@ export const DeleteWatchlist = (props: DeleteWatchlistProps): JSX.Element => {
    */
   const deleteWatchlist = () => {
     setRequestInProgress(true);
-    api
-      .delete(watchlistsAPIPath + `/${props.watchlist.id}`)
+    watchlistClient[":id"]
+      .$delete({ param: { id: String(props.watchlist.id) } })
+      .then(handleResponse)
       .then(() => (props.onDelete(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting watchlist"))
       .finally(() => setRequestInProgress(false));

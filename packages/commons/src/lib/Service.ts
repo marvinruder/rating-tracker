@@ -9,10 +9,10 @@ export const serviceArray = ["PostgreSQL", "Signal"] as const;
 export type Service = (typeof serviceArray)[number];
 
 /**
- * Checks if a string is a valid service Rating Tracker depends on.
- * @param s The string to check.
- * @returns True if the string is a valid service Rating Tracker depends on.
+ * Checks if an entity is a valid service Rating Tracker depends on.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid service Rating Tracker depends on.
  */
-export function isService(s: string): s is Service {
-  return serviceArray.includes(s as Service);
+export function isService(entity: unknown): entity is Service {
+  return serviceArray.includes(entity as Service);
 }
