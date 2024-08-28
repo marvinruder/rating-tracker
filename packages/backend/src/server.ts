@@ -94,8 +94,8 @@ export const app = new OpenAPIHono();
 // Log all API requests
 app.use(`${baseURL}/*`, Logger.logRequest);
 
-// Add ETag support
-app.use(etag());
+// Add ETag support. Use weak ETags because Reverse Proxys may change the ETag when compressing the response
+app.use(etag({ weak: true }));
 
 // Add security-related headers
 app.use("/api-docs", async (c, next) => {
