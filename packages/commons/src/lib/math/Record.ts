@@ -16,5 +16,7 @@ export class RecordMath {
    * @returns The mean of the record.
    */
   static mean = <K extends string | number | symbol>(record: Record<K, number>): K =>
-    Object.keys(record).flatMap((key) => Array(record[key]).fill(key))[Math.floor(RecordMath.sum(record) / 2)];
+    (Object.keys(record) as (keyof typeof record)[]).flatMap((key) => Array(record[key]).fill(key))[
+      Math.floor(RecordMath.sum(record) / 2)
+    ];
 }

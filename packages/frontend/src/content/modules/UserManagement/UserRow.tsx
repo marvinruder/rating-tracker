@@ -19,18 +19,18 @@ import {
 } from "@mui/material";
 import type { User } from "@rating-tracker/commons";
 import {
+  handleResponse,
   messageTypeArray,
   messageTypeName,
   GENERAL_ACCESS,
   WRITE_STOCKS_ACCESS,
   ADMINISTRATIVE_ACCESS,
-  usersAPIPath,
 } from "@rating-tracker/commons";
 import { useState } from "react";
 
+import userClient from "../../../api/user";
 import { DeleteUser } from "../../../components/dialogs/user/DeleteUser";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 const accessRightArray = [GENERAL_ACCESS, WRITE_STOCKS_ACCESS, ADMINISTRATIVE_ACCESS] as const;
 type AccessRight = (typeof accessRightArray)[number];
@@ -44,9 +44,14 @@ const accessRightLabel: Record<AccessRight, string> = {
 /**
  * A dropdown menu for the access rights.
  * @param props The properties of the component.
+ * @param props.user The user to display.
+ * @param props.refetchUsers A method to update the user list, e.g. after a user was modified or deleted.
  * @returns The component.
  */
-const AccessRightSelect = (props: UserRowProps): JSX.Element => {
+const AccessRightSelect = (props: {
+  user: NonNullable<UserRowProps["user"]>;
+  refetchUsers: NonNullable<UserRowProps["refetchUsers"]>;
+}): JSX.Element => {
   const [accessRights, setAccessRights] = useState<number>(props.user.accessRights);
 
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
@@ -59,8 +64,9 @@ const AccessRightSelect = (props: UserRowProps): JSX.Element => {
       value={[props.user.accessRights]}
       onClose={() =>
         accessRights !== props.user.accessRights && // Only send the request if the access rights have changed
-        api
-          .patch(usersAPIPath + `/${encodeURIComponent(props.user.email)}`, { params: { accessRights } })
+        userClient[":email"]
+          .$patch({ param: { email: props.user.email }, json: { accessRights } })
+          .then(handleResponse)
           .then(
             () => (
               props.refetchUsers(),
@@ -122,7 +128,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Avatar
             sx={{ width: 64, height: 64, m: "4px", background: "none" }}
-            src={props.user.avatar}
+            src={props.user.avatar ?? undefined}
             alt={props.user.name}
             slotProps={{ img: { loading: "lazy" } }}
           />
@@ -158,7 +164,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
           component="ul"
         >
           {messageTypeArray
-            .filter((messageType) => props.user.hasSubscribedTo(messageType))
+            .filter((messageType) => props.user!.hasSubscribedTo(messageType))
             .map((messageType) => (
               <li key={messageType} style={{ margin: 0, padding: theme.spacing(0.5) }}>
                 <Chip key={messageType} label={messageTypeName[messageType]} size="small" />
@@ -169,7 +175,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
       {/* Access Rights */}
       <TableCell>
         <FormControl sx={{ m: 0, width: 280 }}>
-          <AccessRightSelect {...props} />
+          <AccessRightSelect user={props.user!} refetchUsers={props.refetchUsers!} />
         </FormControl>
       </TableCell>
       {/* Actions */}

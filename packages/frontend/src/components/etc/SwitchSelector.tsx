@@ -1,5 +1,6 @@
 import { Typography, useTheme } from "@mui/material";
 import type { Dispatch, SetStateAction } from "react";
+// @ts-expect-error
 import { default as SwitchSelectorBase } from "react-switch-selector";
 
 /**

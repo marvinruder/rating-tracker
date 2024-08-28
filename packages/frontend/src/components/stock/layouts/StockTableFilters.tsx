@@ -37,6 +37,7 @@ import type {
   Region,
   Sector,
   Size,
+  StockFilter,
   StockListColumn,
   Style,
   SuperRegion,
@@ -66,7 +67,6 @@ import {
 import type { FC } from "react";
 import React, { Fragment, useState } from "react";
 
-import type { StockFilter } from "../../../types/StockFilter";
 import { formatPercentage } from "../../../utils/formatters";
 import { NestedCheckboxList } from "../../etc/NestedCheckboxList";
 import { StarRating } from "../properties/StarRating";
@@ -120,7 +120,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
       // The screen is at least 664px, but less than 964px wide.
       filterContainerWidth = 600;
       break;
-    case 0:
+    default:
       // The screen is less than 664px wide.
       filterContainerWidth = 300;
       break;
@@ -132,12 +132,12 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
    */
   const applyFilters = () => {
     props.setFilter({
-      totalScoreMin: totalScoreInput[0] !== 0 ? totalScoreInput[0] : undefined,
-      totalScoreMax: totalScoreInput[1] !== 100 ? totalScoreInput[1] : undefined,
-      financialScoreMin: financialScoreInput[0] !== 0 ? financialScoreInput[0] : undefined,
-      financialScoreMax: financialScoreInput[1] !== 100 ? financialScoreInput[1] : undefined,
-      esgScoreMin: esgScoreInput[0] !== 0 ? esgScoreInput[0] : undefined,
-      esgScoreMax: esgScoreInput[1] !== 100 ? esgScoreInput[1] : undefined,
+      totalScoreMin: totalScoreInput[0] !== 0 ? 0.01 * totalScoreInput[0] : undefined,
+      totalScoreMax: totalScoreInput[1] !== 100 ? 0.01 * totalScoreInput[1] : undefined,
+      financialScoreMin: financialScoreInput[0] !== 0 ? 0.01 * financialScoreInput[0] : undefined,
+      financialScoreMax: financialScoreInput[1] !== 100 ? 0.01 * financialScoreInput[1] : undefined,
+      esgScoreMin: esgScoreInput[0] !== 0 ? 0.01 * esgScoreInput[0] : undefined,
+      esgScoreMax: esgScoreInput[1] !== 100 ? 0.01 * esgScoreInput[1] : undefined,
       dividendYieldPercentMin: dividendYieldPercentInput[0] !== 0 ? dividendYieldPercentInput[0] : undefined,
       dividendYieldPercentMax: dividendYieldPercentInput[1] !== 20 ? dividendYieldPercentInput[1] : undefined,
       priceEarningRatioMin: priceEarningRatioInput[0] !== 0 ? priceEarningRatioInput[0] : undefined,
@@ -197,7 +197,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
         <Box id="clear-filters-label" display="inline-block" ml={props.filtersInUse ? 1 : 0}>
           <IconButton
             aria-labelledby="clear-filters-label"
-            sx={{ display: !props.filtersInUse && "none" }}
+            sx={{ display: !props.filtersInUse ? "none" : undefined }}
             color="error"
             onClick={() => {
               // Reset all filters to their default values
@@ -251,7 +251,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={totalScoreInput}
                   min={0}
                   max={100}
-                  onChange={(_, newValue: number[]) => setTotalScoreInput(newValue)}
+                  onChange={(_, newValue) => setTotalScoreInput(newValue as number[])}
                   valueLabelDisplay="auto"
                 />
                 {/* Financial Score */}
@@ -264,7 +264,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={financialScoreInput}
                   min={0}
                   max={100}
-                  onChange={(_, newValue: number[]) => setFinancialScoreInput(newValue)}
+                  onChange={(_, newValue) => setFinancialScoreInput(newValue as number[])}
                   valueLabelDisplay="auto"
                 />
                 {/* ESG Score */}
@@ -277,7 +277,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={esgScoreInput}
                   min={0}
                   max={100}
-                  onChange={(_, newValue: number[]) => setEsgScoreInput(newValue)}
+                  onChange={(_, newValue) => setEsgScoreInput(newValue as number[])}
                   valueLabelDisplay="auto"
                 />
               </Box>
@@ -297,7 +297,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   min={0}
                   max={20}
                   step={0.5}
-                  onChange={(_, newValue: number[]) => setDividendYieldPercentInput(newValue)}
+                  onChange={(_, newValue) => setDividendYieldPercentInput(newValue as number[])}
                   valueLabelDisplay="auto"
                   valueLabelFormat={(value) => formatPercentage(value, { total: 100, precision: 2 })}
                 />
@@ -311,7 +311,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={priceEarningRatioInput}
                   min={0}
                   max={100}
-                  onChange={(_, newValue: number[]) => setPriceEarningRatioInput(newValue)}
+                  onChange={(_, newValue) => setPriceEarningRatioInput(newValue as number[])}
                   valueLabelDisplay="auto"
                 />
               </Box>
@@ -334,7 +334,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   max={5}
                   step={1}
                   marks
-                  onChange={(_, newValue: number[]) => setStarRatingInput(newValue)}
+                  onChange={(_, newValue) => setStarRatingInput(newValue as number[])}
                   valueLabelDisplay="auto"
                   valueLabelFormat={(value) => (
                     <Box sx={{ fontSize: 12 }}>
@@ -352,7 +352,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={morningstarFairValueDiffInput}
                   min={-50}
                   max={50}
-                  onChange={(_, newValue: number[]) => setMorningstarFairValueDiffInput(newValue)}
+                  onChange={(_, newValue) => setMorningstarFairValueDiffInput(newValue as number[])}
                   valueLabelDisplay="auto"
                   valueLabelFormat={(value) =>
                     formatPercentage(value, { total: 100, precision: 2, forceSign: true, fallbackString: "0\u2009%" })
@@ -372,9 +372,9 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   max={4}
                   step={1}
                   marks
-                  onChange={(_, newValue: number[]) =>
+                  onChange={(_, newValue) =>
                     setAnalystConsensusInput(
-                      newValue.map((value) => (value === -1 ? "None" : analystRatingArray[value])),
+                      (newValue as number[]).map((value) => (value === -1 ? "None" : analystRatingArray[value])),
                     )
                   }
                   valueLabelDisplay="auto"
@@ -390,7 +390,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={analystCountInput}
                   min={0}
                   max={60}
-                  onChange={(_, newValue: number[]) => setAnalystCountInput(newValue)}
+                  onChange={(_, newValue) => setAnalystCountInput(newValue as number[])}
                   valueLabelDisplay="auto"
                 />
                 {/* Analyst Target Difference */}
@@ -403,7 +403,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={analystTargetDiffInput}
                   min={-50}
                   max={50}
-                  onChange={(_, newValue: number[]) => setAnalystTargetDiffInput(newValue)}
+                  onChange={(_, newValue) => setAnalystTargetDiffInput(newValue as number[])}
                   valueLabelDisplay="auto"
                   valueLabelFormat={(value) =>
                     formatPercentage(value, { total: 100, precision: 2, forceSign: true, fallbackString: "0\u2009%" })
@@ -431,8 +431,10 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   max={7}
                   step={1}
                   marks
-                  onChange={(_, newValue: number[]) =>
-                    setMSCIESGRatingInput(newValue.map((value) => (value === 7 ? "None" : msciESGRatingArray[value])))
+                  onChange={(_, newValue) =>
+                    setMSCIESGRatingInput(
+                      (newValue as number[]).map((value) => (value === 7 ? "None" : msciESGRatingArray[value])),
+                    )
                   }
                   valueLabelDisplay="auto"
                   valueLabelFormat={(value) => (value === 7 ? "None" : msciESGRatingArray[value])}
@@ -448,7 +450,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   min={1}
                   max={4}
                   step={0.1}
-                  onChange={(_, newValue: number[]) => setMSCITemperatureInput(newValue)}
+                  onChange={(_, newValue) => setMSCITemperatureInput(newValue as number[])}
                   valueLabelDisplay="auto"
                   valueLabelFormat={(value) => `${value}\u2009℃`}
                 />
@@ -462,7 +464,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={lsegESGScoreInput}
                   min={0}
                   max={100}
-                  onChange={(_, newValue: number[]) => setLSEGESGScoreInput(newValue)}
+                  onChange={(_, newValue) => setLSEGESGScoreInput(newValue as number[])}
                   valueLabelDisplay="auto"
                 />
                 {/* LSEG Emissions Rating */}
@@ -475,7 +477,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={lsegEmissionsInput}
                   min={0}
                   max={100}
-                  onChange={(_, newValue: number[]) => setLSEGEmissionsInput(newValue)}
+                  onChange={(_, newValue) => setLSEGEmissionsInput(newValue as number[])}
                   valueLabelDisplay="auto"
                 />
                 {/* S&P ESG Score */}
@@ -488,7 +490,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={spESGScoreInput}
                   min={0}
                   max={100}
-                  onChange={(_, newValue: number[]) => setSPESGScoreInput(newValue)}
+                  onChange={(_, newValue) => setSPESGScoreInput(newValue as number[])}
                   valueLabelDisplay="auto"
                 />
                 {/* Sustainalytics ESG Risk */}
@@ -501,7 +503,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   value={sustainalyticsESGRiskInput}
                   min={0}
                   max={50}
-                  onChange={(_, newValue: number[]) => setSustainalyticsESGRiskInput(newValue)}
+                  onChange={(_, newValue) => setSustainalyticsESGRiskInput(newValue as number[])}
                   valueLabelDisplay="auto"
                 />
               </Box>
@@ -583,7 +585,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                     .reverse()
                     .map((size) => {
                       return (
-                        <Fragment key={"fragment" + size}>
+                        <Fragment key={`fragment${size}`}>
                           <Grid key={size} xs={1} item>
                             <Tooltip title={`All ${size}`} arrow>
                               <IconButton

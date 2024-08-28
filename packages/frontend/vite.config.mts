@@ -48,10 +48,12 @@ export default mergeConfig(
                   hostname: "localhost",
                   port: Number(process.env.PORT ?? 3001),
                   onReq: async (incomingMessage, options) => {
+                    if (!options.headers) options.headers = {};
                     options.headers["X-Forwarded-For"] = incomingMessage.headers["x-forwarded-for"]
-                      ? incomingMessage.headers["x-forwarded-for"] + ", " + incomingMessage.socket.remoteAddress
+                      ? `${incomingMessage.headers["x-forwarded-for"]}, ${incomingMessage.socket.remoteAddress}`
                       : incomingMessage.socket.remoteAddress;
                   },
+                  proxyTimeout: 3600000,
                 },
                 (err) => err && next(err),
               );
@@ -71,8 +73,8 @@ export default mergeConfig(
         template: "src/index.html",
         inject: {
           data: {
-            title: (process.env.NODE_ENV === "development" ? "Development Preview – " : "") + "Rating Tracker",
-            faviconPath: "favicon" + (process.env.NODE_ENV === "development" ? "-dev" : ""),
+            title: `${process.env.NODE_ENV === "development" ? "Development Preview – " : ""}Rating Tracker`,
+            faviconPath: `favicon${process.env.NODE_ENV === "development" ? "-dev" : ""}`,
           },
         },
         verbose: process.env.NODE_ENV === "development",

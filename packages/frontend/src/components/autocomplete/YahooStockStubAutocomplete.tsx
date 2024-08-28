@@ -1,11 +1,11 @@
 import type { ListItemProps } from "@mui/material";
 import { Autocomplete, CircularProgress, InputAdornment, TextField } from "@mui/material";
 import type { Stock, YahooStockStub } from "@rating-tracker/commons";
-import { isCountry, proxyAPIPath, yahooFinanceEndpointSuffix } from "@rating-tracker/commons";
+import { handleResponse, isCountry } from "@rating-tracker/commons";
 import type { SyntheticEvent } from "react";
 import React, { useEffect, useState } from "react";
 
-import api from "../../utils/api";
+import proxyClient from "../../api/proxy";
 import { StockPreview } from "../stock/layouts/StockPreview";
 
 /**
@@ -56,8 +56,9 @@ const YahooStockStubAutocomplete = (props: YahooStockStubAutocompleteProps): JSX
    * @param currentQueryInput The current query input.
    */
   const getStockStubs = (currentQueryInput: string) => {
-    api
-      .get(proxyAPIPath + yahooFinanceEndpointSuffix, { params: { q: currentQueryInput.trim() } })
+    proxyClient.yahoofinance
+      .$get({ query: { q: currentQueryInput.trim() } })
+      .then(handleResponse)
       .then((res) => setStockStubs(res.data))
       .catch(() => setStockStubs([]))
       .finally(() => setStockStubsFinal(true));
@@ -81,6 +82,7 @@ const YahooStockStubAutocomplete = (props: YahooStockStubAutocompleteProps): JSX
       onInputChange={handleQueryInputChange}
       multiple={false}
       onChange={(event, value) => {
+        if (!value) return;
         handleSelect();
         const stockStubWithISIN: YahooStockStub & { isin?: Stock["isin"] } = { ...value };
         if (

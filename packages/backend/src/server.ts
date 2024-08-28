@@ -1,184 +1,201 @@
 // eslint-disable-next-line import/order
 import "./utils/startup";
-// eslint-disable-next-line import/order
-import "./db/migrate";
 
-import { randomBytes } from "node:crypto";
-import path from "path";
+import { isIPv6 } from "node:net";
 
-import { baseURL } from "@rating-tracker/commons";
-import cookieParser from "cookie-parser";
-import express from "express";
-import * as OpenApiValidator from "express-openapi-validator";
-import responseTime from "response-time";
-import SwaggerUI from "swagger-ui-express";
+import { serve } from "@hono/node-server";
+import { swaggerUI } from "@hono/swagger-ui";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import {
+  accountAPIPath,
+  authAPIPath,
+  baseURL,
+  favoritesAPIPath,
+  fetchAPIPath,
+  logoBackgroundAPIPath,
+  portfoliosAPIPath,
+  proxyAPIPath,
+  resourcesAPIPath,
+  sessionAPIPath,
+  statusAPIPath,
+  stocksAPIPath,
+  usersAPIPath,
+  watchlistsAPIPath,
+} from "@rating-tracker/commons";
+import { getRuntimeKey } from "hono/adapter";
+import { etag } from "hono/etag";
+import { secureHeaders } from "hono/secure-headers";
 
-// Import all controllers
-import "./controllers/AccountController";
-import "./controllers/AuthController";
-import "./controllers/FavoritesController";
-import "./controllers/FetchController";
-import "./controllers/PortfoliosController";
-import "./controllers/ProxyController";
-import "./controllers/ResourcesController";
-import "./controllers/SessionController";
-import "./controllers/StatusController";
-import "./controllers/StocksController";
-import "./controllers/UsersController";
-import "./controllers/WatchlistsController";
-import { refreshSessionAndGetUser, SESSION_TTL } from "./db/tables/sessionTable";
-import OpenAPIDocumentation from "./openapi";
-import setupCronJobs from "./utils/cron";
-import { router } from "./utils/Endpoint";
-import errorHandler from "./utils/errorHandler";
-import logger, { logRequest } from "./utils/logger";
+import packageInfo from "../package.json" with { type: "json" };
+
+import AccountController from "./account/account.controller";
+import AccountService from "./account/account.service";
+import AuthController from "./auth/auth.controller";
+import WebAuthnService from "./auth/webauthn.service";
+import DBService from "./db/db.service";
+import FavoriteController from "./favorite/favorite.controller";
+import FavoriteService from "./favorite/favorite.service";
+import FetchController from "./fetch/fetch.controller";
+import FetchService from "./fetch/fetch.service";
+import PortfolioController from "./portfolio/portfolio.controller";
+import PortfolioService from "./portfolio/portfolio.service";
+import ProxyController from "./proxy/proxy.controller";
+import ProxyService from "./proxy/proxy.service";
+import ResourceController from "./resource/resource.controller";
+import ResourceService from "./resource/resource.service";
+import SessionController from "./session/session.controller";
+import SessionService from "./session/session.service";
+import SignalService from "./signal/signal.service";
+import StatusController from "./status/status.controller";
+import StatusService from "./status/status.service";
+import LogoBackgroundController from "./stock/logobackground.controller";
+import StockController from "./stock/stock.controller";
+import StockService from "./stock/stock.service";
+import UserController from "./user/user.controller";
+import UserService from "./user/user.service";
+import CronScheduler from "./utils/CronScheduler";
+import ErrorHelper from "./utils/error/errorHelper";
+import Logger from "./utils/logger";
+import { ipExtractor, sessionValidator, staticFileHandler } from "./utils/middlewares";
+import WatchlistController from "./watchlist/watchlist.controller";
+import WatchlistService from "./watchlist/watchlist.service";
+
+// Initialize services
+const dbService: DBService = new DBService();
+await dbService.migrate();
+
+const proxyService: ProxyService = new ProxyService();
+const portfolioService: PortfolioService = new PortfolioService(dbService);
+const resourceService: ResourceService = new ResourceService(dbService);
+const sessionService: SessionService = new SessionService(dbService);
+const signalService: SignalService = new SignalService();
+const statusService: StatusService = new StatusService(dbService, signalService);
+const watchlistService: WatchlistService = new WatchlistService(dbService);
+const userService: UserService = new UserService(dbService, signalService);
+const accountService: AccountService = new AccountService(userService);
+const favoriteService: FavoriteService = new FavoriteService(dbService, watchlistService);
+const webauthnService: WebAuthnService = new WebAuthnService(dbService, sessionService, userService);
+const stockService: StockService = new StockService(
+  dbService,
+  portfolioService,
+  resourceService,
+  signalService,
+  userService,
+  watchlistService,
+);
+const fetchService: FetchService = new FetchService(resourceService, signalService, stockService, userService);
 
 /**
- * A token that is used to bypass authentication for requests sent by Cron jobs. It is generated randomly and changes on
- * every server restart.
+ * A server, powered by Hono. Responsible for serving static content and routing requests through various middlewares
+ * and to routers.
  */
-const bypassAuthenticationForInternalRequestsToken = BigInt("0x" + randomBytes(64).toString("hex"))
-  .toString(36)
-  .padStart(100, "0");
+export const app = new OpenAPIHono();
 
-/**
- * A server, powered by Express.js. Responsible for serving static content and routing requests through various
- * middlewares and to routers.
- */
-class Server {
-  public app = express();
-  public router = router;
-}
+// Log all API requests
+app.use(`${baseURL}/*`, Logger.logRequest);
 
-/**
- * The server instance.
- */
-const server = new Server();
+// Add ETag support. Use weak ETags because Reverse Proxys may change the ETag when compressing the response
+app.use(etag({ weak: true }));
 
-// Do not send information regarding the server's software and version for security reasons.
-server.app.disable("x-powered-by");
-
-// Trust the X-Forwarded-* headers set by exactly one reverse proxy.
-server.app.set("trust proxy", 1);
-
-/**
- * The static content path, where the compiled and minified frontend and static resources are stored.
- */
-const staticContentPath = path.join(__dirname, "public");
-
-/* c8 ignore start */ // This is not tested because it is only used in development servers
-if (process.env.NODE_ENV === "development")
-  server.app.use(
-    "/assets/images/favicon",
-    // Serve different favicons to easily distinguish between development and production servers.
-    express.static(path.join(staticContentPath, "assets", "images", "favicon-dev"), {
-      dotfiles: "ignore",
-      lastModified: false,
-      maxAge: "1 year",
-    }),
-  );
-
-// We do not have static resources in tests, so this middleware is not tested
-server.app.use(
-  express.static(staticContentPath, {
-    dotfiles: "ignore",
-    lastModified: false,
-    maxAge: "1 year", // Cache static resources for 1 year
-    setHeaders: (res, filepath) => {
-      // Do not cache frontend files generated by Vite
-      !filepath.startsWith(path.join(staticContentPath, "assets")) &&
-        res.setHeader("Cache-Control", "public, max-age=0");
+// Add security-related headers
+app.use("/api-docs", async (c, next) => {
+  await next();
+  // Override CSP, COEP, CORP for the Swagger UI
+  const csp = c.res.headers.get("Content-Security-Policy");
+  if (csp)
+    c.res.headers.set(
+      "Content-Security-Policy",
+      csp
+        .replace("img-src ", "img-src blob: ")
+        .replace("script-src ", "script-src https://unpkg.com/swagger-ui-dist/ 'unsafe-inline' ")
+        .replace("style-src ", "style-src https://unpkg.com/swagger-ui-dist/ ")
+        .replace("style-src-elem ", "style-src-elem https://unpkg.com/swagger-ui-dist/ "),
+    );
+  c.res.headers.set("Cross-Origin-Embedder-Policy", "unsafe-none");
+  c.res.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
+});
+app.use(
+  secureHeaders({
+    contentSecurityPolicy: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'wasm-unsafe-eval'"],
+      workerSrc: ["'self'", "blob:"],
+      imgSrc: ["'self'", "data:"],
+      styleSrcElem: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      fontSrc: ["'self'"],
+      formAction: ["'self'"],
+      frameAncestors: ["'none'"],
+      baseUri: ["'none'"],
     },
+    crossOriginEmbedderPolicy: "require-corp",
+    xDnsPrefetchControl: false,
+    xDownloadOptions: false,
+    xFrameOptions: false,
+    xPermittedCrossDomainPolicies: false,
+    xXssProtection: false,
   }),
 );
-/* c8 ignore stop */
 
-// Serve the SPA to any route not belonging to the API and not matching an existing file.
-/* c8 ignore start */ // The SPA index file does not exist during tests
-server.app.get(/^(?!\/api).+/, (_, res) => {
-  res.setHeader("Cache-Control", "public, max-age=0").sendFile(path.join(staticContentPath, "index.html"));
-});
-/* c8 ignore stop */
+// Extract the IP address from the request and set it as a context variable
+app.use(ipExtractor);
 
-logger.info({ prefix: "nodejs" }, `Serving static content from ${staticContentPath}`);
+// Serve the static files of the SPA and sets the correct cache control headers.
+app.use(...staticFileHandler);
 
-server.app.use((_, res, next) => {
-  // Do not cache API responses
-  res.setHeader("Cache-Control", "no-cache");
-  next();
-});
-
-// Parses cookies and stores them in req.cookies
-server.app.use(cookieParser());
-
-// Checks for user authentication via session cookie
-server.app.use(async (req, res, next) => {
-  if (req.cookies.id) {
-    // If a session cookie is present
-    try {
-      // Refresh the cookie on the server and append the user to the response
-      const { eol, user } = await refreshSessionAndGetUser(req.cookies.id);
-      res.locals.user = user;
-      if (!eol)
-        // Refresh the cookie on the client only if it is not at the end of its life
-        res.cookie("id", req.cookies.id, {
-          maxAge: 1000 * SESSION_TTL,
-          httpOnly: true,
-          secure: true,
-          sameSite: true,
-        });
-    } catch (e) {
-      // If we encountered an error, the token was invalid, so we delete the cookie
-      res.clearCookie("id");
-    }
-  }
-  /* c8 ignore start */ // We do not test Cron jobs
-  if (req.cookies.bypassAuthenticationForInternalRequestsToken === bypassAuthenticationForInternalRequestsToken)
-    res.locals.userIsCron = true;
-  /* c8 ignore stop */
-  next();
-});
+// Check for user authentication via session cookie
+app.use(sessionValidator(sessionService));
 
 // Host the OpenAPI UI
-server.app.use(
-  "/api-docs",
-  SwaggerUI.serve,
-  SwaggerUI.setup(
-    OpenAPIDocumentation.openAPIDocument,
-    undefined,
-    undefined,
-    undefined,
-    "/assets/images/favicon-dev/favicon-192.png",
-    undefined,
-    "Rating Tracker API",
-  ),
-);
+app.get("/api-docs", swaggerUI({ url: "/api-spec/v3.1" }));
 
 // Host the OpenAPI JSON configuration
-server.app.get("/api-spec/v3", (_, res) => res.json(OpenAPIDocumentation.openAPIDocument));
+app.doc31("/api-spec/v3.1", {
+  openapi: "3.1.0",
+  info: {
+    title: packageInfo.title,
+    version: packageInfo.version,
+    contact: packageInfo.author,
+    license: { name: packageInfo.license, url: `https://opensource.org/licenses/${packageInfo.license}` },
+    description: "Specification JSONs: [v3.1](/api-spec/v3.1).",
+  },
+  servers: [{ url: `https://${process.env.SUBDOMAIN ? `${process.env.SUBDOMAIN}.` : ""}${process.env.DOMAIN}` }],
+});
 
-// Log all requests
-server.app.use(responseTime(logRequest));
-
-// Validate requests and responses against the OpenAPI specification
-server.app.use(
-  OpenApiValidator.middleware({
-    apiSpec: OpenAPIDocumentation.openAPIDocument,
-    validateRequests: true,
-    validateResponses: true,
-  }),
+// Initialize controllers and attach API routers
+app.route(
+  baseURL,
+  new OpenAPIHono()
+    .route(accountAPIPath, new AccountController(accountService).router)
+    .route(authAPIPath, new AuthController(webauthnService).router)
+    .route(favoritesAPIPath, new FavoriteController(favoriteService).router)
+    .route(fetchAPIPath, new FetchController(fetchService).router)
+    .route(logoBackgroundAPIPath, new LogoBackgroundController(stockService).router)
+    .route(portfoliosAPIPath, new PortfolioController(portfolioService).router)
+    .route(proxyAPIPath, new ProxyController(proxyService).router)
+    .route(resourcesAPIPath, new ResourceController(resourceService).router)
+    .route(sessionAPIPath, new SessionController(sessionService).router)
+    .route(statusAPIPath, new StatusController(statusService).router)
+    .route(stocksAPIPath, new StockController(stockService).router)
+    .route(usersAPIPath, new UserController(userService).router)
+    .route(watchlistsAPIPath, new WatchlistController(watchlistService).router),
 );
 
-// Route requests to controllers
-server.app.use(baseURL, server.router);
-
-// Handle errors
-server.app.use(errorHandler);
-
 // Setup Cron Jobs
-setupCronJobs(bypassAuthenticationForInternalRequestsToken, process.env.AUTO_FETCH_SCHEDULE);
+new CronScheduler(fetchService, resourceService, sessionService, signalService, userService);
 
-export const listener = server.app.listen(Number(process.env.PORT), () => {
-  logger.info({ prefix: ["nodejs", { port: process.env.PORT }] }, "Listening…");
+app.onError(ErrorHelper.errorHandler);
+
+export const server = serve({ fetch: app.fetch, hostname: "::", port: process.env.PORT }, (info) => {
+  Logger.info(
+    {
+      prefix: [
+        getRuntimeKey(),
+        "hono",
+        { socket: `${isIPv6(info.address) ? `[${info.address}]` : info.address}:${info.port}` },
+      ],
+    },
+    "Listening…",
+  );
   process.env.EXIT_AFTER_READY && process.exit(0);
 });

@@ -42,9 +42,6 @@
     },
     "prisma": {
       "built": true
-    },
-    "swagger-ui-dist": {
-      "unplugged": true
     }
   }
 }

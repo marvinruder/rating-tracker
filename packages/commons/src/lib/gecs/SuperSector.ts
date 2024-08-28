@@ -13,12 +13,12 @@ export const superSectorArray = ["Cyclical", "Defensive", "Sensitive"] as const;
 export type SuperSector = (typeof superSectorArray)[number];
 
 /**
- * Checks if a string is a valid super sector.
- * @param s The string to check.
- * @returns True if the string is a valid super sector.
+ * Checks if an entity is a valid super sector.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid super sector.
  */
-export function isSuperSector(s: string): s is SuperSector {
-  return superSectorArray.includes(s as SuperSector);
+export function isSuperSector(entity: unknown): entity is SuperSector {
+  return superSectorArray.includes(entity as SuperSector);
 }
 
 /**

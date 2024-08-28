@@ -2,11 +2,11 @@ import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
-import { watchlistsAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
 
+import watchlistClient from "../../../api/watchlist";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 /**
  * A dialog to rename a watchlist in the backend.
@@ -26,7 +26,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    const isNameValid = nameInputRef.current?.checkValidity();
+    const isNameValid = nameInputRef.current?.checkValidity() ?? false;
     return isNameValid;
   };
 
@@ -36,11 +36,13 @@ export const RenameWatchlist = (props: RenameWatchlistProps): JSX.Element => {
   const updateWatchlist = () => {
     if (!validate()) return;
     setRequestInProgress(true);
-    api
-      .patch(watchlistsAPIPath + `/${props.watchlist.id}`, {
+    watchlistClient[":id"]
+      .$patch({
+        param: { id: String(props.watchlist.id) },
         // Only send the parameters that have changed.
-        params: { name: name !== props.watchlist.name ? name.trim() : undefined },
+        json: { ...(name !== props.watchlist.name ? { name: name.trim() } : {}) },
       })
+      .then(handleResponse)
       .then(() => (props.onRename(), props.onClose())) // Update the watchlists in the parent component.
       .catch((e) => setErrorNotificationOrClearSession(e, "updating watchlist"))
       .finally(() => setRequestInProgress(false));

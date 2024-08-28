@@ -12,8 +12,8 @@ export const TemperatureChip: FC<ChipProps & { msciTemperature: number }> = (
   props: ChipProps & { msciTemperature: number },
 ): JSX.Element => {
   const theme = useTheme();
-  const chipProps = { ...props };
-  delete chipProps.msciTemperature;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { msciTemperature, ...chipProps } = props;
 
   return (
     <Chip

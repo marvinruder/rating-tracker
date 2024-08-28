@@ -47,7 +47,7 @@ const NotificationUpdaterContext = createContext<NotificationUpdaterContextType>
 export const NotificationProvider = (props: React.PropsWithChildren): JSX.Element => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
 
-  const setErrorNotificationOrClearSession = useCallback((e: FetchError | Error, actionDescription: string) => {
+  const setErrorNotificationOrClearSession = useCallback((e: unknown, actionDescription: string) => {
     setNotification({
       severity: "error",
       title: `Error while ${actionDescription}`,
@@ -56,7 +56,7 @@ export const NotificationProvider = (props: React.PropsWithChildren): JSX.Elemen
           ? e.response?.status === 401 && e.response?.data?.message === UNAUTHORIZED_ERROR_MESSAGE
             ? SESSION_EXPIRED_MESSAGE
             : `${e.response.data.message} (${e.response.status} ${e.response.statusDescription})`
-          : (e.message ?? "No additional information available."),
+          : ((e instanceof Error ? e.message : String(e)) ?? "No additional information available."),
     });
   }, []);
 

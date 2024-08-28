@@ -17,12 +17,12 @@ import {
   useTheme,
 } from "@mui/material";
 import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
-import { FAVORITES_NAME, pluralize, stocksAPIPath, watchlistsAPIPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, handleResponse, pluralize } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
+import watchlistClient from "../../../api/watchlist";
 import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 import { AddWatchlist } from "./AddWatchlist";
 
@@ -46,8 +46,9 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    * Get the watchlists from the backend.
    */
   const getWatchlists = () => {
-    api
-      .get(watchlistsAPIPath)
+    watchlistClient.index
+      .$get()
+      .then(handleResponse)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching watchlists");
@@ -65,8 +66,9 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
    * @param id The ID of the watchlist.
    */
   const addStockToWatchlist = (id: number) => {
-    api
-      .put(`${watchlistsAPIPath}/${id}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}`)
+    watchlistClient[":id"].stocks[":ticker"]
+      .$put({ param: { id: String(id), ticker: props.stock.ticker } })
+      .then(handleResponse)
       .then(() => {
         if (watchlistSummaries.find((watchlistSummary) => watchlistSummary.id === id)?.name === FAVORITES_NAME)
           refetchFavorites();
@@ -113,8 +115,9 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
                         secondary={
                           watchlistsAlreadyContainingStock.includes(watchlistSummary.id)
                             ? `This watchlist already contains “${props.stock.name}”.`
-                            : (watchlistSummary.stocks.length || "No") +
-                              ` stock${pluralize(watchlistSummary.stocks.length)}`
+                            : `${
+                                watchlistSummary.stocks.length || "No"
+                              } stock${pluralize(watchlistSummary.stocks.length)}`
                         }
                       />
                     </ListItemButton>

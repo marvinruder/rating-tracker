@@ -20,11 +20,11 @@ import {
   useTheme,
 } from "@mui/material";
 import type { PortfolioSummary, PortfolioRawData, WeightedStock } from "@rating-tracker/commons";
-import { pluralize, portfoliosAPIPath, stocksAPIPath } from "@rating-tracker/commons";
+import { handleResponse, pluralize } from "@rating-tracker/commons";
 import { Fragment, useEffect, useState } from "react";
 
+import portfolioClient from "../../../api/portfolio";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 import { CurrencyWithTooltip } from "../../../utils/formatters";
 
 import { AddPortfolio } from "./AddPortfolio";
@@ -77,8 +77,9 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
    * Get the portfolios from the backend.
    */
   const getPortfolios = () => {
-    api
-      .get(portfoliosAPIPath)
+    portfolioClient.index
+      .$get()
+      .then(handleResponse)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching portfolios");
@@ -91,38 +92,37 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
    * Update the stocks in the portfolio.
    */
   const updateStocksInPortfolio = async () => {
+    if (!selectedPortfolio) return;
     setRequestsInProgress(true);
     try {
       if (currencyToUpdate) {
         setCurrentRequest(
           `Changing currency from ${props.portfolioRawData.currency} to ${selectedPortfolio?.currency}…`,
         );
-        await api.patch(`${portfoliosAPIPath}/${selectedPortfolio.id}`, {
-          params: { currency: props.portfolioRawData.currency },
-        });
+        await portfolioClient[":id"]
+          .$patch({ param: { id: String(selectedPortfolio.id) }, json: { currency: props.portfolioRawData.currency } })
+          .then(handleResponse);
         setDoneRequests((prev) => prev + 1);
       }
       for await (const stock of stocksToAdd) {
         setCurrentRequest(`Adding “${stock.name}” (${stock.ticker})…`);
-        await api.put(
-          `${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}`,
-          { params: { amount: stock.amount } },
-        );
+        await portfolioClient[":id"].stocks[":ticker"]
+          .$put({ param: { id: String(selectedPortfolio.id), ticker: stock.ticker }, json: { amount: stock.amount } })
+          .then(handleResponse);
         setDoneRequests((prev) => prev + 1);
       }
       for await (const stock of stocksToUpdate) {
         setCurrentRequest(`Updating amount of “${stock.name}” (${stock.ticker})…`);
-        await api.patch(
-          `${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}`,
-          { params: { amount: stock.amount } },
-        );
+        await portfolioClient[":id"].stocks[":ticker"]
+          .$patch({ param: { id: String(selectedPortfolio.id), ticker: stock.ticker }, json: { amount: stock.amount } })
+          .then(handleResponse);
         setDoneRequests((prev) => prev + 1);
       }
-      for await (const stock of stocksToRemove) {
+      for await (const stock of stocksToRemove!) {
         setCurrentRequest(`Removing “${stock.ticker}”…`);
-        await api.delete(
-          `${portfoliosAPIPath}/${selectedPortfolio.id}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}`,
-        );
+        await portfolioClient[":id"].stocks[":ticker"]
+          .$delete({ param: { id: String(selectedPortfolio.id), ticker: stock.ticker } })
+          .then(handleResponse);
         setDoneRequests((prev) => prev + 1);
       }
       props.onUpdate(selectedPortfolio.id);
@@ -163,10 +163,9 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
                         inset
                         primary={portfolioSummary.name}
                         primaryTypographyProps={{ fontWeight: "bold" }}
-                        secondary={
-                          (portfolioSummary.stocks.length || "No") +
-                          ` stock${pluralize(portfolioSummary.stocks.length)}`
-                        }
+                        secondary={`${
+                          portfolioSummary.stocks.length || "No"
+                        } stock${pluralize(portfolioSummary.stocks.length)}`}
                       />
                     </ListItemButton>
                   </ListItem>
@@ -210,7 +209,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
                       Change the currency from {props.portfolioRawData.currency} to {selectedPortfolio?.currency}
                     </li>
                   )}
-                  {stocksToAdd.length > 0 && (
+                  {stocksToAdd.length ? (
                     <li>
                       Add {stocksToAdd.length} new stock{pluralize(stocksToAdd.length)}:
                       <ul>
@@ -221,8 +220,10 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
                         ))}
                       </ul>
                     </li>
+                  ) : (
+                    <></>
                   )}
-                  {stocksToUpdate.length > 0 && (
+                  {stocksToUpdate.length ? (
                     <li>
                       Update the amount{pluralize(stocksToUpdate.length)} of {stocksToUpdate.length} stock
                       {pluralize(stocksToUpdate.length)}:
@@ -242,8 +243,10 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
                         ))}
                       </ul>
                     </li>
+                  ) : (
+                    <></>
                   )}
-                  {stocksToRemove.length > 0 && (
+                  {stocksToRemove?.length ? (
                     <li>
                       Remove {stocksToRemove.length} stock{pluralize(stocksToRemove.length)}:
                       <ul>
@@ -252,6 +255,8 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
                         ))}
                       </ul>
                     </li>
+                  ) : (
+                    <></>
                   )}
                 </ul>
               </>

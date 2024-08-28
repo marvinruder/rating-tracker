@@ -1,7 +1,7 @@
 /* eslint-disable import/no-nodejs-modules */
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import "@vitest/web-worker";
 import { assert, describe, expect, it, vi } from "vitest";

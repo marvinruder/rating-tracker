@@ -8,7 +8,7 @@ import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, 
 import type { Stock } from "@rating-tracker/commons";
 import {
   baseURL,
-  favoritesAPIPath,
+  handleResponse,
   stockLogoEndpointSuffix,
   stocksAPIPath,
   WRITE_STOCKS_ACCESS,
@@ -16,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
+import favoriteClient from "../../../api/favorite";
 import { AddStockToPortfolio } from "../../../components/dialogs/portfolio/AddStockToPortfolio";
 import { DeleteStock } from "../../../components/dialogs/stock/DeleteStock";
 import { EditStock } from "../../../components/dialogs/stock/EditStock";
@@ -23,7 +24,6 @@ import { AddStockToWatchlist } from "../../../components/dialogs/watchlist/AddSt
 import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import { useUserContextState } from "../../../contexts/UserContext";
-import api from "../../../utils/api";
 
 /**
  * A header for the stock details page.
@@ -61,7 +61,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                 sx={{ width: 112, height: 112, m: "-16px", mr: "-8px", background: "none" }}
                 src={
                   `${baseURL}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}${stockLogoEndpointSuffix}` +
-                  `?dark=${theme.palette.mode === "dark"}`
+                  `?variant=${theme.palette.mode}`
                 }
                 alt={`Logo of “${props.stock.name}”`}
               />
@@ -96,16 +96,19 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                 <IconButton
                   color={props.isFavorite ? "warning" : undefined}
                   onClick={() => {
-                    (props.isFavorite ? api.delete : api.put)(
-                      favoritesAPIPath + `/${encodeURIComponent(props.stock.ticker)}`,
+                    (props.isFavorite
+                      ? favoriteClient[":ticker"]
+                          .$delete({ param: { ticker: props.stock!.ticker } })
+                          .then(handleResponse)
+                      : favoriteClient[":ticker"].$put({ param: { ticker: props.stock!.ticker } }).then(handleResponse)
                     )
                       .then(refetchFavorites)
                       .catch((e) =>
                         setErrorNotificationOrClearSession(
                           e,
                           props.isFavorite
-                            ? `removing “${props.stock.name}” from favorites`
-                            : `adding “${props.stock.name}” to favorites`,
+                            ? `removing “${props.stock!.name}” from favorites`
+                            : `adding “${props.stock!.name}” to favorites`,
                         ),
                       );
                   }}
@@ -230,5 +233,5 @@ interface StockHeaderProps {
   /**
    * A method to update the stock, e.g. after editing.
    */
-  getStock?: () => void;
+  getStock: () => void;
 }

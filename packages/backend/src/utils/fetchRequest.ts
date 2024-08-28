@@ -1,5 +1,6 @@
 import type { FetchRequestWithBodyOptions, FetchResponse } from "@rating-tracker/commons";
 import { createURLSearchParams, handleResponse } from "@rating-tracker/commons";
+import type { Dispatcher } from "undici-types";
 
 /**
  * Performs a request using the NodeJS’s `fetch` API.
@@ -8,12 +9,15 @@ import { createURLSearchParams, handleResponse } from "@rating-tracker/commons";
  * @returns A {@link Promise} that resolves to the response of the request.
  * @throws a {@link FetchError} if the response status code is not in the 2XX range.
  */
-export const performFetchRequest = (url: string, config?: FetchRequestWithBodyOptions): Promise<FetchResponse> => {
+export const performFetchRequest = (
+  url: string,
+  config?: FetchRequestWithBodyOptions & { dispatcher?: Dispatcher },
+): Promise<FetchResponse> => {
   const { body, params, ...init } = config ?? {};
 
   const urlSearchParams = createURLSearchParams(params);
 
-  let bodyInit: BodyInit | undefined = undefined;
+  let bodyInit: BodyInit | undefined;
 
   /* c8 ignore start */ // Bodys are only sent to data providers, which are not tested
   if (body) {
@@ -26,10 +30,7 @@ export const performFetchRequest = (url: string, config?: FetchRequestWithBodyOp
   }
   /* c8 ignore stop */
 
-  return fetch(url + (params ? "?" + urlSearchParams : ""), {
-    ...init,
-    body: bodyInit,
-  })
+  return fetch(url + (params ? `?${urlSearchParams}` : ""), { ...init, body: bodyInit })
     .then(handleResponse)
     .catch((e) => {
       throw e;

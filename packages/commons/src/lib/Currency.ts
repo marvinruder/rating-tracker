@@ -179,12 +179,12 @@ export const currencyArray = [
 export type Currency = (typeof currencyArray)[number];
 
 /**
- * Checks if a string is a valid ISO 4217 currency code.
- * @param s The string to check.
- * @returns True if the string is a valid ISO 4217 currency code.
+ * Checks if an entity is a valid ISO 4217 currency code.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid ISO 4217 currency code.
  */
-export function isCurrency(s: string): s is Currency {
-  return currencyArray.includes(s as Currency);
+export function isCurrency(entity: unknown): entity is Currency {
+  return currencyArray.includes(entity as Currency);
 }
 
 /**
@@ -707,6 +707,6 @@ export const currencyMinorUnits: Record<Currency, 0 | 2 | 3 | 4> = {
  * A record of currency names and codes with emoji flags for each currency.
  */
 export const currencyNameWithFlagAndCode: Record<Currency, string> = { ...currencyName };
-Object.entries(currencyName).forEach(([key, value]) => {
+(Object.entries(currencyName) as [Currency, string][]).forEach(([key, value]) => {
   currencyNameWithFlagAndCode[key] = `${emojiFlag(countryOfCurrency[key])} ${value} (${key})`;
 });

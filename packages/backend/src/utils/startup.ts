@@ -1,7 +1,10 @@
 import assert from "node:assert";
+import { availableParallelism } from "node:os";
 
+import { REGEX_PHONE_NUMBER } from "@rating-tracker/commons";
 import chalk from "chalk";
 import cron from "node-cron";
+import { z } from "zod";
 
 import packageInfo from "../../package.json" with { type: "json" };
 
@@ -51,9 +54,26 @@ const logo = chalk.bold(
 );
 
 /**
- * Mandatory environment variables. If not set, Rating Tracker cannot run.
+ * A schema for the environment variables.
  */
-const mandatoryEnvVars: readonly string[] = ["PORT", "DOMAIN", "DATABASE_URL"] as const;
+export const envSchema = z
+  .object({
+    NODE_ENV: z.enum(["production", "development", "test"]),
+    PORT: z.coerce.number().int().min(1).max(65535),
+    DOMAIN: z.string(),
+    SUBDOMAIN: z.string().optional(),
+    TRUSTWORTHY_PROXY_COUNT: z.coerce.number().int().min(0).optional().default(0),
+    DATABASE_URL: z.string().url(),
+    LOG_FILE: z.string().optional().default("/tmp/rating-tracker-log-(DATE).log"),
+    LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).optional().default("info"),
+    PLAIN_LOG: z.coerce.boolean().optional(),
+    AUTO_FETCH_SCHEDULE: z.custom<string>((autoFetchSchedule) => cron.validate(autoFetchSchedule)).optional(),
+    MAX_FETCH_CONCURRENCY: z.coerce.number().int().min(1).max(availableParallelism()).optional().default(1),
+    SIGNAL_URL: z.string().url().optional(),
+    SIGNAL_SENDER: z.string().regex(new RegExp(REGEX_PHONE_NUMBER)).optional(),
+    EXIT_AFTER_READY: z.coerce.boolean().optional(),
+  })
+  .passthrough();
 
 /**
  * The startup method prints a welcome message and checks whether all mandatory environment variables are set. If not,
@@ -65,22 +85,11 @@ export const startup = () => {
 
   try {
     // Check whether all mandatory environment variables are set
-    mandatoryEnvVars.forEach((name: string) => {
-      if (!process.env[name]) {
-        throw new Error(`Environment variable ${name} not set. Exiting.`);
-      }
-    });
-    if (
-      Number(process.env.PORT) < 1 ||
-      Number(process.env.PORT) > 65535 ||
-      !Number.isInteger(Number(process.env.PORT))
-    ) {
-      throw new Error(`Invalid PORT number: ${process.env.PORT}. Exiting.`);
-    }
+    process.env = envSchema.parse(process.env) as typeof process.env;
   } catch (e) {
     if (e instanceof Error) {
       // Print error message and exit
-      console.error("\x07" + chalk.red(` \uf658 ${e.message}`));
+      console.error(`\x07${chalk.red(` \uf658 ${e.message}`)}`);
       process.exit(1);
       /* c8 ignore next */ // This should never occur, since always Errors are thrown.
     } else throw e; // if something else than an error was thrown

@@ -38,7 +38,7 @@ export const AnalystRatingBar = ({ stock, ...props }: AnalystRatingBarProps): JS
         title={stock.analystConsensus}
         PopperProps={{
           sx: {
-            width: props.width,
+            ...(props.width ? { width: props.width } : {}),
             position: "static !important",
             transform: "none !important",
             ".MuiTooltip-tooltip": {
@@ -72,7 +72,10 @@ interface AnalystRatingBarProps {
   /**
    * The stock to display the analyst rating for.
    */
-  stock: Pick<Stock, "analystConsensus" | "analystRatings">;
+  stock: {
+    analystConsensus: NonNullable<Stock["analystConsensus"]>;
+    analystRatings: NonNullable<Stock["analystRatings"]>;
+  };
   /**
    * The width of the bar.
    */

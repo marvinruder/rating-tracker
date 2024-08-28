@@ -13,14 +13,20 @@ import {
   useMediaQuery,
   Card,
 } from "@mui/material";
-import type { Portfolio, SortableAttribute, Stock, StockListColumn, Watchlist } from "@rating-tracker/commons";
-import { stocksAPIPath } from "@rating-tracker/commons";
+import type {
+  Portfolio,
+  SortableAttribute,
+  Stock,
+  StockFilter,
+  StockListColumn,
+  Watchlist,
+} from "@rating-tracker/commons";
+import { handleResponse, parseStock } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useCallback, useEffect, useState } from "react";
 
+import stockClient from "../../../api/stock";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import type { StockFilter } from "../../../types/StockFilter";
-import api from "../../../utils/api";
 import { PropertyDescription } from "../properties/PropertyDescription";
 
 import { MemoizedStockRow, StockRow } from "./StockRow";
@@ -35,7 +41,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<SortableAttribute>(props.portfolio !== undefined ? "amount" : "totalScore");
-  const [sortDesc, setSortDesc] = useState<boolean>(true);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [refetchAllStocksTrigger, setRefetchAllStocksTrigger] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
@@ -46,15 +52,13 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
   /**
    * The number of stock to fetch on each request, depending on the user’s screen size.
    */
-  const fetchCount =
-    // process.env.NODE_ENV === "development" ? 1 :
-    25 + 25 * +useMediaQuery(theme.breakpoints.up("md"));
+  const fetchCount = 25 + 25 * +useMediaQuery(theme.breakpoints.up("md"));
 
   // Get the initial amount of stocks whenever sorting or filtering changes, or when explicitly requested, e.g. after a
   // stock was added.
   useEffect(() => {
     !props.showSkeletons && getInitialStocks();
-  }, [sortBy, sortDesc, props.filter, props.refetchInitialStocksTrigger, props.showSkeletons]);
+  }, [sortBy, sortOrder, props.filter, props.refetchInitialStocksTrigger, props.showSkeletons]);
 
   // Get all stocks when explicitly requested, e.g. after a stock was edited.
   useEffect(() => {
@@ -64,14 +68,10 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
 
   const sortAndFilterParams = {
     // Sorting
-    sortBy: sortBy,
-    sortDesc: sortDesc,
+    sortBy,
+    sortOrder,
     // Filtering
-    // Do not include raw country and industry arrays in the request:
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ...(({ countries, industries, ...filter }) => filter)(props.filter),
-    ...(props.filter.countries?.length > 0 ? { country: props.filter.countries.join(",") } : {}),
-    ...(props.filter.industries?.length > 0 ? { industry: props.filter.industries.join(",") } : {}),
+    ...props.filter,
     ...(props.watchlist?.id ? { watchlist: props.watchlist.id } : {}),
     ...(props.portfolio?.id ? { portfolio: props.portfolio.id } : {}),
   };
@@ -85,8 +85,25 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
    */
   const getStocks = (options?: { count?: number; offset?: number; append?: boolean }) => {
     const { count = fetchCount, offset = 0, append = false } = options ?? {};
-    api
-      .get(stocksAPIPath, { params: { count, offset, ...sortAndFilterParams } })
+    stockClient.index
+      .$get({
+        query: {
+          count: String(count),
+          offset: String(offset),
+          ...(Object.fromEntries(
+            Object.entries(sortAndFilterParams).map(([key, value]) => [
+              key,
+              typeof value === "number" ? String(value) : value,
+            ]),
+          ) as {
+            [K in keyof typeof sortAndFilterParams]: (typeof sortAndFilterParams)[K] extends number | undefined
+              ? string | undefined
+              : (typeof sortAndFilterParams)[K];
+          }),
+        },
+      })
+      .then(handleResponse)
+      .then((res) => ({ ...res, data: { ...res.data, stocks: res.data.stocks.map((stock) => parseStock(stock)) } }))
       .then((res) => {
         setStocks((prev) => (append ? [...prev, ...res.data.stocks] : res.data.stocks));
         setTotalCount(res.data.count);
@@ -133,10 +150,10 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
     (attribute: SortableAttribute): (() => void) =>
     () => {
       if (sortBy === attribute) {
-        setSortDesc(!sortDesc);
+        setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
       } else {
         setSortBy(attribute);
-        setSortDesc(
+        setSortOrder(
           [
             "size",
             "totalScore",
@@ -149,7 +166,9 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
             "spESGScore",
             "dividendYieldPercent",
             "amount",
-          ].includes(attribute),
+          ].includes(attribute)
+            ? "desc"
+            : "asc",
         );
       }
     };
@@ -190,7 +209,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                     <TableCell>
                       <TableSortLabel
                         active={sortBy === "amount"}
-                        direction={sortBy !== "amount" || sortDesc ? "desc" : "asc"}
+                        direction={sortBy === "amount" ? sortOrder : "desc"}
                         onClick={handleSortLabelClicked("amount")}
                       >
                         <Tooltip title={<PropertyDescription property="amount" />} arrow>
@@ -203,7 +222,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell>
                     <TableSortLabel
                       active={sortBy === "name"}
-                      direction={sortBy === "name" && sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "name" ? sortOrder : "asc"}
                       onClick={handleSortLabelClicked("name")}
                     >
                       Stock
@@ -219,7 +238,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("Size and Style") }}>
                     <TableSortLabel
                       active={sortBy === "size"}
-                      direction={sortBy !== "size" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "size" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("size")}
                     >
                       <Tooltip title={<PropertyDescription property="size" />} arrow placement="top">
@@ -229,7 +248,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                     <br />
                     <TableSortLabel
                       active={sortBy === "style"}
-                      direction={sortBy === "style" && sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "style" ? sortOrder : "asc"}
                       onClick={handleSortLabelClicked("style")}
                     >
                       <Tooltip title={<PropertyDescription property="style" />} arrow placement="bottom">
@@ -253,7 +272,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("Total Score") }}>
                     <TableSortLabel
                       active={sortBy === "totalScore"}
-                      direction={sortBy !== "totalScore" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "totalScore" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("totalScore")}
                     >
                       <Tooltip title={<PropertyDescription property="totalScore" />} arrow>
@@ -265,7 +284,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("Financial Score") }}>
                     <TableSortLabel
                       active={sortBy === "financialScore"}
-                      direction={sortBy !== "financialScore" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "financialScore" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("financialScore")}
                     >
                       <Tooltip title={<PropertyDescription property="financialScore" />} arrow>
@@ -277,7 +296,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("ESG Score") }}>
                     <TableSortLabel
                       active={sortBy === "esgScore"}
-                      direction={sortBy !== "esgScore" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "esgScore" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("esgScore")}
                     >
                       <Tooltip title={<PropertyDescription property="esgScore" />} arrow>
@@ -289,7 +308,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("Star Rating") }}>
                     <TableSortLabel
                       active={sortBy === "starRating"}
-                      direction={sortBy !== "starRating" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "starRating" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("starRating")}
                     >
                       <Tooltip title={<PropertyDescription property="starRating" />} arrow>
@@ -301,7 +320,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("Morningstar Fair Value") }}>
                     <TableSortLabel
                       active={sortBy === "morningstarFairValuePercentageToLastClose"}
-                      direction={sortBy === "morningstarFairValuePercentageToLastClose" && sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "morningstarFairValuePercentageToLastClose" ? sortOrder : "asc"}
                       onClick={handleSortLabelClicked("morningstarFairValuePercentageToLastClose")}
                     >
                       <Tooltip title={<PropertyDescription property="morningstarFairValue" />} arrow>
@@ -313,7 +332,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("Analyst Ratings") }}>
                     <TableSortLabel
                       active={sortBy === "analystConsensus"}
-                      direction={sortBy !== "analystConsensus" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "analystConsensus" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("analystConsensus")}
                     >
                       <Tooltip title={<PropertyDescription property="analystRatings" />} arrow>
@@ -325,7 +344,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("Analyst Target Price") }}>
                     <TableSortLabel
                       active={sortBy === "analystTargetPricePercentageToLastClose"}
-                      direction={sortBy === "analystTargetPricePercentageToLastClose" && sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "analystTargetPricePercentageToLastClose" ? sortOrder : "asc"}
                       onClick={handleSortLabelClicked("analystTargetPricePercentageToLastClose")}
                     >
                       <Tooltip title={<PropertyDescription property="analystTargetPrice" />} arrow>
@@ -337,7 +356,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("MSCI ESG Rating") }}>
                     <TableSortLabel
                       active={sortBy === "msciESGRating"}
-                      direction={sortBy === "msciESGRating" && sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "msciESGRating" ? sortOrder : "asc"}
                       onClick={handleSortLabelClicked("msciESGRating")}
                     >
                       <Tooltip title={<PropertyDescription property="msciESGRating" />} arrow>
@@ -349,7 +368,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("MSCI Implied Temperature Rise") }}>
                     <TableSortLabel
                       active={sortBy === "msciTemperature"}
-                      direction={sortBy === "msciTemperature" && sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "msciTemperature" ? sortOrder : "asc"}
                       onClick={handleSortLabelClicked("msciTemperature")}
                     >
                       <Tooltip title={<PropertyDescription property="msciTemperature" />} arrow>
@@ -361,7 +380,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("LSEG ESG Information") }}>
                     <TableSortLabel
                       active={sortBy === "lsegESGScore"}
-                      direction={sortBy !== "lsegESGScore" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "lsegESGScore" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("lsegESGScore")}
                     >
                       <Tooltip title={<PropertyDescription property="lsegESGScore" />} arrow placement="top">
@@ -371,7 +390,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                     <br />
                     <TableSortLabel
                       active={sortBy === "lsegEmissions"}
-                      direction={sortBy !== "lsegEmissions" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "lsegEmissions" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("lsegEmissions")}
                       sx={{ flexDirection: "row-reverse" }}
                     >
@@ -384,7 +403,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("S&P ESG Score") }}>
                     <TableSortLabel
                       active={sortBy === "spESGScore"}
-                      direction={sortBy !== "spESGScore" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "spESGScore" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("spESGScore")}
                     >
                       <Tooltip title={<PropertyDescription property="spESGScore" />} arrow>
@@ -396,7 +415,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("Sustainalytics ESG Risk") }}>
                     <TableSortLabel
                       active={sortBy === "sustainalyticsESGRisk"}
-                      direction={sortBy === "sustainalyticsESGRisk" && sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "sustainalyticsESGRisk" ? sortOrder : "asc"}
                       onClick={handleSortLabelClicked("sustainalyticsESGRisk")}
                     >
                       <Tooltip title={<PropertyDescription property="sustainalyticsESGRisk" />} arrow>
@@ -408,7 +427,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("52 Week Range") }}>
                     <TableSortLabel
                       active={sortBy === "positionIn52w"}
-                      direction={sortBy === "positionIn52w" && sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "positionIn52w" ? sortOrder : "asc"}
                       onClick={handleSortLabelClicked("positionIn52w")}
                     >
                       <Tooltip title={<PropertyDescription property="positionIn52w" />} arrow>
@@ -426,7 +445,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("Dividend Yield (%)") }}>
                     <TableSortLabel
                       active={sortBy === "dividendYieldPercent"}
-                      direction={sortBy !== "dividendYieldPercent" || sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "dividendYieldPercent" ? sortOrder : "desc"}
                       onClick={handleSortLabelClicked("dividendYieldPercent")}
                     >
                       <Tooltip title={<PropertyDescription property="dividendYieldPercent" />} arrow>
@@ -438,7 +457,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   <TableCell sx={{ display: displayColumn("P / E Ratio") }}>
                     <TableSortLabel
                       active={sortBy === "priceEarningRatio"}
-                      direction={sortBy === "priceEarningRatio" && sortDesc ? "desc" : "asc"}
+                      direction={sortBy === "priceEarningRatio" ? sortOrder : "asc"}
                       onClick={handleSortLabelClicked("priceEarningRatio")}
                     >
                       <Tooltip title={<PropertyDescription property="priceEarningRatio" />} arrow>
@@ -469,7 +488,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                         key={stock.ticker}
                         columns={props.columns}
                         watchlist={props.watchlist}
-                        portfolio={props.portfolio}
+                        portfolio={props.portfolio ?? undefined}
                       />
                     ))}
                     {stocks.length < totalCount && (
@@ -477,7 +496,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                         key={crypto.randomUUID()} // Never reuse instances of this component when rerendering
                         getStocks={getMoreStocks}
                         columns={props.columns}
-                        portfolio={props.portfolio}
+                        portfolio={props.portfolio ?? undefined}
                         isInfiniteLoadingTrigger
                       />
                     )}
@@ -494,7 +513,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
               ) : (
                 [...Array(Math.max(fetchCount, stocks.length))].map(
                   // Render skeleton rows,
-                  (_, key) => <StockRow key={key} columns={props.columns} portfolio={props.portfolio} />,
+                  (_, key) => <StockRow key={key} columns={props.columns} portfolio={props.portfolio ?? undefined} />,
                 )
               )}
             </TableBody>

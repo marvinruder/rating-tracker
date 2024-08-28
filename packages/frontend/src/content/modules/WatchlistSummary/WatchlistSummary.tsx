@@ -1,12 +1,12 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
-import { watchlistsAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 
+import watchlistClient from "../../../api/watchlist";
 import { Footer } from "../../../components/etc/Footer";
 import { HeaderWrapper } from "../../../components/etc/HeaderWrapper";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 import WatchlistCard from "./WatchlistCard";
 import { WatchlistSummaryHeader } from "./WatchlistSummaryHeader";
@@ -24,8 +24,9 @@ const WatchlistSummaryModule = (): JSX.Element => {
    * Get the watchlists from the backend.
    */
   const getWatchlists = () => {
-    api
-      .get(watchlistsAPIPath)
+    watchlistClient.index
+      .$get()
+      .then(handleResponse)
       .then((res) => setWatchlistSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching watchlists");

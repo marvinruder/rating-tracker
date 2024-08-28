@@ -10,13 +10,13 @@ import { currencyMinorUnits, currencyName } from "@rating-tracker/commons";
 export const formatMarketCap = (stock: OmitDynamicAttributesStock): string => {
   if (stock.marketCap === null || stock.currency === null) return "–";
   if (stock.marketCap >= 1e12) {
-    return (stock.marketCap / 1e12).toPrecision(3) + " T"; // trillion, rounded to 3 significant digits
+    return `${(stock.marketCap / 1e12).toPrecision(3)} T`; // trillion, rounded to 3 significant digits
   } else if (stock.marketCap >= 1e9) {
-    return (stock.marketCap / 1e9).toPrecision(3) + " B"; // billion, rounded to 3 significant digits
+    return `${(stock.marketCap / 1e9).toPrecision(3)} B`; // billion, rounded to 3 significant digits
   } else if (stock.marketCap >= 1e6) {
-    return (stock.marketCap / 1e6).toPrecision(3) + " M"; // million, rounded to 3 significant digits
+    return `${(stock.marketCap / 1e6).toPrecision(3)} M`; // million, rounded to 3 significant digits
   } else if (stock.marketCap >= 1e3) {
-    return (stock.marketCap / 1e3).toPrecision(3) + " k"; // thousand, rounded to 3 significant digits
+    return `${(stock.marketCap / 1e3).toPrecision(3)} k`; // thousand, rounded to 3 significant digits
   } else {
     return stock.marketCap.toFixed(0); // rounded to 0 decimal places
   }
@@ -42,12 +42,13 @@ export const formatPercentage = (
   const { total = 1, forceSign = false, fallbackString = "–" } = options || {};
   const precision =
     options && "precision" in options ? options.precision : options && "fixed" in options ? undefined : 3;
-  const fixed = precision === undefined && "fixed" in options ? options.fixed : undefined;
+  const fixed = precision === undefined && options !== undefined && "fixed" in options ? options.fixed : undefined;
 
   return decimal
-    ? (forceSign && decimal > 0 ? "+" : "") +
-        Number(((100 * decimal) / total)[precision !== undefined ? "toPrecision" : "toFixed"](precision ?? fixed)) +
-        "\u2009%"
+    ? `${
+        (forceSign && decimal > 0 ? "+" : "") +
+        Number(((100 * decimal) / total)[precision !== undefined ? "toPrecision" : "toFixed"](precision ?? fixed))
+      }\u2009%`
     : fallbackString;
 };
 
@@ -117,7 +118,7 @@ interface CurrencyWithTooltipProps {
   /**
    * The currency to use for formatting.
    */
-  currency: Currency;
+  currency: Currency | null;
   /**
    * Whether to use `float: left` and `float: right` to align the currency and value to the left and right respectively.
    */

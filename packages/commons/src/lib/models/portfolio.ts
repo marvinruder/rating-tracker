@@ -18,17 +18,7 @@ import { msciESGRatingArray } from "../ratings/MSCI";
 import type { Size } from "../stylebox/Size";
 import type { Style } from "../stylebox/Style";
 
-import type { Stock } from "./stock";
-
-/**
- * A stock associated with an amount of a specified currency.
- */
-export type WeightedStock = Stock & {
-  /**
-   * The amount of currency associated with the stock.
-   */
-  amount: number;
-};
+import type { Stock, WeightedStock } from "./stock";
 
 /**
  * A named collection of stocks, each associated with an amount of a specified currency.
@@ -76,7 +66,9 @@ export type PortfolioRawData = Omit<Portfolio, "id" | "name">;
  * @returns The total currency amount of the stocks in the portfolio.
  */
 export const getTotalAmount = (portfolio: Pick<PortfolioSummary, "stocks">, attribute?: keyof Stock): number =>
-  portfolio.stocks.filter((stock) => stock[attribute] !== null).reduce((sum, stock) => sum + stock.amount, 0);
+  portfolio.stocks
+    .filter((stock) => stock[attribute as keyof typeof stock] !== null)
+    .reduce((sum, stock) => sum + stock.amount, 0);
 
 /**
  * Computes the weighted average value of a numeric attribute of the stocks in a portfolio. Stocks with a null value for
@@ -87,7 +79,7 @@ export const getTotalAmount = (portfolio: Pick<PortfolioSummary, "stocks">, attr
  */
 export const getWeightedAverage = <
   T extends {
-    [K in keyof Stock]: Stock[K] extends number ? K : never;
+    [K in keyof Stock]: Stock[K] extends number | null ? K : never;
   }[keyof Stock],
 >(
   portfolio: Portfolio,
@@ -100,7 +92,7 @@ export const getWeightedAverage = <
   return (
     portfolio.stocks
       .filter((stock) => stock[attribute] !== null)
-      .reduce((sum, stock) => sum + stock[attribute] * stock.amount, 0) / totalAmount
+      .reduce((sum, stock) => sum + stock[attribute]! * stock.amount, 0) / totalAmount
   );
 };
 
@@ -159,8 +151,8 @@ export const getAnalystRatingDistribution = (portfolio: Portfolio): Record<Analy
     .filter((stock) => stock.analystRatings)
     .reduce<Record<AnalystRating, number>>(
       (distribution, stock) => {
-        const sum = RecordMath.sum(stock.analystRatings);
-        Object.entries(stock.analystRatings).forEach(
+        const sum = RecordMath.sum(stock.analystRatings!);
+        (Object.entries(stock.analystRatings!) as [AnalystRating, number][]).forEach(
           ([rating, value]) => (distribution[rating] += (Number(value) * stock.amount) / (totalAmount * sum)),
         );
         return distribution;
@@ -185,7 +177,9 @@ export const getWeightedMeanAnalystConsensus = (portfolio: Portfolio): AnalystRa
     cumulativeSum += analystRatingDistribution[analystRating];
     if (cumulativeSum >= 0.5 * sum) return analystRating;
   }
-  /* c8 ignore next */ // Unreachable, since we compare against the distribution’s sum, so the loop will always return.
+  // Unreachable, since we compare against the distribution’s sum, so the loop will always return.
+  /* c8 ignore next 2 */
+  return null;
 };
 
 /**
@@ -202,7 +196,7 @@ export const getWeightedAverageMSCIESGRating = (portfolio: Portfolio): MSCIESGRa
     Math.round(
       portfolio.stocks
         .filter((stock) => stock.msciESGRating !== null)
-        .reduce((sum, stock) => sum + msciESGRatingArray.indexOf(stock.msciESGRating) * stock.amount, 0) / totalAmount,
+        .reduce((sum, stock) => sum + msciESGRatingArray.indexOf(stock.msciESGRating!) * stock.amount, 0) / totalAmount,
     )
   ];
 };
@@ -219,7 +213,7 @@ export const getWeightedStylebox = (portfolio: Portfolio): Record<`${Size}-${Sty
     .reduce<Record<`${Size}-${Style}`, number>>(
       (sums, stock) => ({
         ...sums,
-        [`${stock.size}-${stock.style}`]: sums[`${stock.size}-${stock.style}`] + stock.amount / totalAmount,
+        [`${stock.size}-${stock.style}`]: sums[`${stock.size!}-${stock.style!}`] + stock.amount / totalAmount,
       }),
       {
         "Large-Value": 0,
@@ -342,16 +336,16 @@ export const getIndustrySunburstData = (portfolio: Portfolio): SunburstNode => {
     .filter((stock) => stock.industry)
     .forEach((stock) => {
       const { industry } = stock;
-      const industryGroup = groupOfIndustry[industry];
+      const industryGroup = groupOfIndustry[industry!];
       const sector = sectorOfIndustryGroup[industryGroup];
       const superSector = superSectorOfSector[sector];
 
       let superSectorNode: SunburstNode | undefined;
       do {
-        superSectorNode = data.children.find((node) => node.id === "SuperSector" + superSector);
+        superSectorNode = data.children.find((node) => node.id === `SuperSector${superSector}`);
         // Check if a child node for the super sector already exists. If not, create and add it in the correct order.
         if (superSectorNode === undefined) {
-          data.children.push({ id: "SuperSector" + superSector, name: superSectorName[superSector], children: [] });
+          data.children.push({ id: `SuperSector${superSector}`, name: superSectorName[superSector], children: [] });
           data.children.sort((a, b) => a.id.localeCompare(b.id));
         }
         // If the super sector node was newly created, we go through the loop again to find it in the children array.
@@ -360,10 +354,10 @@ export const getIndustrySunburstData = (portfolio: Portfolio): SunburstNode => {
 
       let sectorNode: SunburstNode | undefined;
       do {
-        sectorNode = superSectorNode.children.find((node) => node.id === "Sector" + sector);
+        sectorNode = superSectorNode.children.find((node) => node.id === `Sector${sector}`);
         // Check if a child node for the sector already exists. If not, create and add it in the correct order.
         if (sectorNode === undefined) {
-          superSectorNode.children.push({ id: "Sector" + sector, name: sectorName[sector], children: [] });
+          superSectorNode.children.push({ id: `Sector${sector}`, name: sectorName[sector], children: [] });
           superSectorNode.children.sort((a, b) => a.id.localeCompare(b.id));
         }
         // If the sector node was newly created, we go through the loop again to find it in the children array.
@@ -372,11 +366,11 @@ export const getIndustrySunburstData = (portfolio: Portfolio): SunburstNode => {
 
       let industryGroupNode: SunburstNode | undefined;
       do {
-        industryGroupNode = sectorNode.children.find((node) => node.id === "IndustryGroup" + industryGroup);
+        industryGroupNode = sectorNode.children.find((node) => node.id === `IndustryGroup${industryGroup}`);
         // Check if a child node for the industry group already exists. If not, create and add it in the correct order.
         if (industryGroupNode === undefined) {
           sectorNode.children.push({
-            id: "IndustryGroup" + industryGroup,
+            id: `IndustryGroup${industryGroup}`,
             name: industryGroupName[industryGroup],
             children: [],
           });
@@ -388,10 +382,10 @@ export const getIndustrySunburstData = (portfolio: Portfolio): SunburstNode => {
 
       let industryNode: SunburstNode | undefined;
       do {
-        industryNode = industryGroupNode.children.find((node) => node.id === "Industry" + industry);
+        industryNode = industryGroupNode.children.find((node) => node.id === `Industry${industry}`);
         // Check if a child node for the industry already exists. If not, create and add it in the correct order.
         if (industryNode === undefined) {
-          industryGroupNode.children.push({ id: "Industry" + industry, name: industryName[industry], value: 0 });
+          industryGroupNode.children.push({ id: `Industry${industry}`, name: industryName[industry!], value: 0 });
           industryGroupNode.children.sort((a, b) => a.id.localeCompare(b.id));
         }
         // If the industry node was newly created, we go through the loop again to find it in the children array.

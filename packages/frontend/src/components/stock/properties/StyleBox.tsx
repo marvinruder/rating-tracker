@@ -13,7 +13,7 @@ export const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
    * @param style The style of the company, to be represented by the square.
    * @returns The path for the square.
    */
-  const getSquare = (size: Size, style: Style): JSX.Element => {
+  const getSquare = (size: Size | null, style: Style | null): JSX.Element => {
     switch (size) {
       case "Small":
         switch (style) {
@@ -23,6 +23,8 @@ export const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
             return <path d="M5.5,9.5h4v4H5.5v-4Z" vectorEffect="non-scaling-stroke" />;
           case "Growth":
             return <path d="M9.5,9.5h4v4h-4v-4Z" vectorEffect="non-scaling-stroke" />;
+          default:
+            return <></>;
         }
 
       case "Mid":
@@ -33,6 +35,8 @@ export const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
             return <path d="M5.5,5.5h4v4H5.5V5.5Z" vectorEffect="non-scaling-stroke" />;
           case "Growth":
             return <path d="M9.5,5.5h4v4h-4V5.5Z" vectorEffect="non-scaling-stroke" />;
+          default:
+            return <></>;
         }
 
       case "Large":
@@ -43,7 +47,12 @@ export const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
             return <path d="M5.5,1.5h4V5.5H5.5V1.5Z" vectorEffect="non-scaling-stroke" />;
           case "Growth":
             return <path d="M9.5,1.5h4V5.5h-4V1.5Z" vectorEffect="non-scaling-stroke" />;
+          default:
+            return <></>;
         }
+
+      default:
+        return <></>;
     }
   };
 
@@ -74,11 +83,11 @@ interface StyleBoxProps {
   /**
    * The size of the company, to be represented in the StyleBox.
    */
-  size: Size;
+  size: Size | null;
   /**
    * The style of the company, to be represented in the StyleBox.
    */
-  style: Style;
+  style: Style | null;
   /**
    * The color to fill the StyleBox with.
    */

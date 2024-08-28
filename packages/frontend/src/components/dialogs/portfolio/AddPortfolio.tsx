@@ -2,11 +2,11 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { Currency } from "@rating-tracker/commons";
-import { isCurrency, portfoliosAPIPath } from "@rating-tracker/commons";
+import { handleResponse, isCurrency } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
 
+import portfolioClient from "../../../api/portfolio";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 import CurrencyAutocomplete from "../../autocomplete/CurrencyAutocomplete";
 
 /**
@@ -30,8 +30,8 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    const isNameValid = nameInputRef.current?.checkValidity();
-    const isCurrencyValid = currencyInputRef.current?.checkValidity();
+    const isNameValid = nameInputRef.current?.checkValidity() ?? false;
+    const isCurrencyValid = currencyInputRef.current?.checkValidity() ?? false;
     return isNameValid && isCurrencyValid;
   };
 
@@ -41,8 +41,9 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
   const putPortfolio = () => {
     if (!validate()) return;
     setRequestInProgress(true);
-    api
-      .put(portfoliosAPIPath, { params: { name: name.trim(), currency } })
+    portfolioClient.index
+      .$put({ json: { name: name.trim(), currency: currency! } })
+      .then(handleResponse)
       .then(() => (props.onAdd(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "creating new portfolio"))
       .finally(() => setRequestInProgress(false));

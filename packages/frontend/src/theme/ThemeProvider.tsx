@@ -189,7 +189,7 @@ declare module "@mui/material/styles" {
     };
     header: {
       height: string;
-      background: React.CSSProperties["color"];
+      background: NonNullable<React.CSSProperties["color"]>;
       boxShadow: React.CSSProperties["color"];
       textColor: React.CSSProperties["color"];
     };
@@ -414,7 +414,7 @@ const ThemeProviderWrapper: FC<React.PropsWithChildren> = (props: React.PropsWit
 
   useEffect(() => {
     // Add listener to update styles
-    const themeListener = (e) => setThemeName(e.matches ? "dark" : "light");
+    const themeListener = (e: MediaQueryListEvent) => setThemeName(e.matches ? "dark" : "light");
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", themeListener);
 
     // Add listener to prevent changing number inputs with the mouse wheel

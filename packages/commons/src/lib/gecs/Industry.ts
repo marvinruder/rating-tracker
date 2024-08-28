@@ -156,12 +156,12 @@ export const industryArray = [
 export type Industry = (typeof industryArray)[number];
 
 /**
- * Checks if a string is a valid industry.
- * @param s The string to check.
- * @returns True if the string is a valid industry.
+ * Checks if an entity is a valid industry.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid industry.
  */
-export function isIndustry(s: string): s is Industry {
-  return industryArray.includes(s as Industry);
+export function isIndustry(entity: unknown): entity is Industry {
+  return industryArray.includes(entity as Industry);
 }
 
 /**

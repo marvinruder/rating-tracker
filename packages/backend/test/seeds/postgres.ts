@@ -1,663 +1,101 @@
 /* eslint-disable max-len */
-import type { OmitDynamicAttributesStock, Stock } from "@rating-tracker/commons";
-import { GENERAL_ACCESS, optionalStockValuesNull, STOCK_UPDATE_MESSAGE } from "@rating-tracker/commons";
+import type { Prisma } from "../../prisma/client";
+import DBService from "../../src/db/db.service";
+import ResourceService from "../../src/resource/resource.service";
+import SessionService from "../../src/session/session.service";
+import {
+  portfolioExamples,
+  resourceExamples,
+  stockExamples,
+  userExamples,
+  watchlistExamples,
+  webAuthnCredentialExamples,
+} from "../../src/utils/examples";
 
-import client from "../../src/db/client";
-import { cleanupResources } from "../../src/db/tables/resourceTable";
-import { cleanupSessions, SESSION_MAX_VALIDITY, SESSION_TTL } from "../../src/db/tables/sessionTable";
-import { addDynamicAttributesToStockData } from "../../src/models/dynamicStockAttributes";
+const dbService: DBService = new DBService();
 
-const stockData: Stock[] = [
-  {
-    ticker: "exampleALV",
-    name: "Allianz SE",
-    isin: "DE0008404005",
-    country: "DE",
-    industry: "InsuranceDiversified",
-    size: "Large",
-    style: "Value",
-    yahooLastFetch: new Date("2024-05-20T15:53:41.398Z"),
-    prices1y: [
-      196.9, 199.51, 197.42, 199.65, 198.56, 202.4, 193.67, 199.7, 203.73, 208.19, 203.16, 211.94, 209.95, 210.85,
-      212.89, 210.99, 221.63, 220.39, 214.27, 212.94, 211.52, 206.39, 207.53, 209.81, 210.76, 216.93, 220.92, 223.34,
-      231.45, 228.04, 230.31, 230.27, 229.93, 232.45, 235.92, 235.25, 232.83, 232.21, 238, 235.96, 241.71, 252.01,
-      257.28, 263.4, 255.19, 248.73, 249.87, 252.05, 255.57, 266.1, 267.8,
-    ],
-    prices1mo: [
-      248.73, 249.87, 253.19, 256.8, 253.19, 249.4, 252.05, 252.81, 253.1, 253.86, 250.82, 255.57, 258.7, 259.74, 263.3,
-      265.5, 266.1, 265.4, 263.3, 266.3, 267.4, 267.8,
-    ],
-    morningstarID: "0P00009QNO",
-    morningstarLastFetch: new Date("2022-12-15T20:12:27.908Z"),
-    starRating: 4,
-    dividendYieldPercent: 5.26,
-    priceEarningRatio: 12.27,
-    currency: "EUR",
-    lastClose: 204,
-    morningstarFairValue: 230,
-    marketCap: 82280000000,
-    low52w: 156.22,
-    high52w: 232.5,
-    marketScreenerID: "ALLIANZ-SE-436843",
-    marketScreenerLastFetch: new Date("2022-12-18T16:46:11.120Z"),
-    analystConsensus: "Buy",
-    analystRatings: { Buy: 9, Hold: 3, Sell: 0, Outperform: 3, Underperform: 1 },
-    analystCount: 16,
-    analystTargetPrice: 241.74,
-    msciID: "IID000000002156841",
-    msciLastFetch: new Date("2022-12-14T21:19:47.194Z"),
-    msciESGRating: "AA",
-    msciTemperature: 1.4,
-    ric: "ALVG.DE",
-    lsegLastFetch: new Date("2022-12-18T16:46:12.974Z"),
-    lsegESGScore: 92,
-    lsegEmissions: 91,
-    spID: 4174043,
-    spLastFetch: new Date("2022-12-18T16:46:23.261Z"),
-    spESGScore: 89,
-    sustainalyticsID: "allianz-se/1008477053",
-    sustainalyticsESGRisk: 13.3,
-    description:
-      "Allianz is a composite insurer with global operations. It sells motor, home, travel, and personal liability insurance through its property and casualty division. This unit also houses Allianz Partners, Allianz Direct, Allianz Global Corporate & Specialty, reinsurance, and Euler Hermes. Allianz's largest P&C markets are Germany, France, the United Kingdom, and Australia. The life and health business sells health, disability, and life insurance, pensions, annuities, long-term savings, and reinsurance. Savings products include traditional with guarantees, unit-linked with no guarantees, and capital-efficient with some guarantees. Life and health’s largest markets are Germany, Italy, the United States, and France. Allianz also holds asset-management units Allianz Global Investors and Pimco.",
-  },
-  {
-    ticker: "exampleAAPL",
-    name: "Apple Inc",
-    isin: "US0378331005",
-    country: "US",
-    industry: "ConsumerElectronics",
-    size: "Large",
-    style: "Growth",
-    yahooLastFetch: new Date("2024-05-20T15:47:03.547Z"),
-    prices1y: [
-      173.28, 176.36, 178.26, 182.34, 182.99, 188.25, 190.8, 189.53, 192.11, 192.2, 190.16, 177.03, 173.31, 175.69,
-      187.13, 177.48, 174.32, 174.1, 170.54, 176.79, 178.15, 172.2, 167.56, 175.95, 185.91, 189.19, 189.29, 188.93,
-      192.67, 195.38, 192.54, 183.77, 185.7, 188.13, 193.66, 186.37, 187.83, 183.61, 182.27, 179.42, 170.5, 172.39,
-      172.05, 169.8, 168.22, 172.46, 165.62, 173.26, 181.46, 186.28, 191.33,
-    ],
-    prices1mo: [
-      164.78, 165.62, 166.67, 168.79, 169.66, 169.07, 173.26, 170.1, 169.07, 172.8, 183.13, 181.46, 182.15, 182.49,
-      184.32, 183.05, 186.28, 187.43, 189.72, 189.84, 189.87, 191.33,
-    ],
-    morningstarID: "0P000000GY",
-    morningstarLastFetch: new Date("2022-12-16T21:58:54.979Z"),
-    starRating: 2,
-    dividendYieldPercent: 0.67,
-    priceEarningRatio: 22.32,
-    currency: "USD",
-    lastClose: 136.5,
-    morningstarFairValue: 130,
-    marketCap: 2171000000000,
-    low52w: 129.04,
-    high52w: 182.94,
-    marketScreenerID: "APPLE-INC-4849",
-    marketScreenerLastFetch: new Date("2022-12-18T16:46:56.697Z"),
-    analystConsensus: "Outperform",
-    analystRatings: { Buy: 20, Hold: 12, Sell: 1, Outperform: 8, Underperform: 1 },
-    analystCount: 42,
-    analystTargetPrice: 175.12949999999998,
-    msciID: "IID000000002157615",
-    msciLastFetch: new Date("2022-12-14T21:29:55.242Z"),
-    msciESGRating: "BBB",
-    msciTemperature: 1.3,
-    ric: "AAPL.O",
-    lsegLastFetch: new Date("2022-12-18T16:46:57.835Z"),
-    lsegESGScore: 80,
-    lsegEmissions: 97,
-    spID: 4004205,
-    spLastFetch: new Date("2022-12-18T21:14:17.177Z"),
-    spESGScore: 40,
-    sustainalyticsID: "apple-inc/1007903183",
-    sustainalyticsESGRisk: 16.7,
-    description:
-      "Apple designs a wide variety of consumer electronic devices, including smartphones (iPhone), tablets (iPad), PCs (Mac), smartwatches (Apple Watch), and AirPods. The iPhone makes up most of Apple’s total revenue. In addition, Apple offers its customers a variety of services such as Apple Music, iCloud, Apple Care, Apple TV+, Apple Arcade, Apple Fitness, Apple Card, and Apple Pay, among others. Apple's products include internally developed software and semiconductors, and the firm is well known for its integration of hardware, software, semiconductors, and services. Apple's products are distributed online as well as through company-owned stores and third-party retailers. The company generates roughly 40% of its revenue from the Americas, with the remainder earned internationally.",
-  },
-  {
-    ticker: "exampleBN",
-    name: "Danone SA",
-    isin: "FR0000120644",
-    country: "FR",
-    industry: "PackagedFoods",
-    size: "Large",
-    style: "Blend",
-    yahooLastFetch: "2024-05-20T15:53:41.582Z",
-    prices1y: [
-      55.14, 54.08, 51.73, 53.35, 54.11, 54.16, 53.31, 53.67, 54.58, 54.44, 52.29, 52.6, 51.31, 51.62, 51.86, 51.68,
-      51.89, 51.15, 50.41, 49.5, 52.09, 52.19, 53.22, 55.04, 55.34, 55.51, 57.03, 56.52, 57.13, 55.93, 56.26, 58.42,
-      58.9, 59.33, 59.18, 59.56, 59.37, 58.58, 59.52, 57.61, 56.66, 57.44, 57.28, 57.62, 55.93, 55.74, 57.34, 56.24,
-      58.1, 60, 59.94,
-    ],
-    prices1mo: [
-      56.97, 57.34, 57.82, 57.5, 57.65, 57.21, 56.24, 56.59, 56.59, 57.36, 57.74, 58.1, 58.72, 59.32, 59.28, 59.5, 60,
-      59.4, 59.62, 59.86, 59.94, 59.94,
-    ],
-    morningstarID: "0P00009WEL",
-    morningstarLastFetch: new Date("2022-12-15T20:12:18.404Z"),
-    starRating: 4,
-    dividendYieldPercent: 3.9,
-    priceEarningRatio: 20.28,
-    currency: "EUR",
-    lastClose: 49.73,
-    morningstarFairValue: 56,
-    marketCap: 31810000000,
-    low52w: 46.48,
-    high52w: 58.24,
-    marketScreenerID: "DANONE-4634",
-    marketScreenerLastFetch: new Date("2022-12-18T16:47:25.201Z"),
-    analystConsensus: "Outperform",
-    analystRatings: { Buy: 7, Hold: 8, Sell: 0, Outperform: 5, Underperform: 2 },
-    analystCount: 22,
-    analystTargetPrice: 57.63707,
-    msciID: "IID000000002168368",
-    msciLastFetch: new Date("2022-12-14T21:19:52.010Z"),
-    msciESGRating: "AAA",
-    msciTemperature: 1.9,
-    ric: "DANO.PA",
-    lsegLastFetch: new Date("2022-12-18T16:47:30.346Z"),
-    lsegESGScore: 84,
-    lsegEmissions: 95,
-    spID: 4307022,
-    spLastFetch: new Date("2022-12-18T16:47:35.704Z"),
-    spESGScore: 45,
-    sustainalyticsID: "danone-sa/1008007595",
-    sustainalyticsESGRisk: 19.9,
-    description:
-      "Following the acquisition of WhiteWave, Danone restructured the firm into three broad segments: essential dairy and plant-based products, which represents just over half of group revenue; specialised nutrition; and bottled water. The firm's portfolio includes well-known brands such as Danone/Dannon dairy products, Nutrilon and Cow & Gate infant nutrition, and Evian and Volvic bottled water. Danone derives about 60% of its annual sales outside Western Europe, up from about just one third in 2001.",
-  },
-  {
-    ticker: "exampleIBE",
-    name: "Iberdrola SA",
-    isin: "ES0144580Y14",
-    country: "ES",
-    industry: "UtilitiesDiversified",
-    size: "Large",
-    style: "Blend",
-    yahooLastFetch: "2024-05-20T15:53:41.472Z",
-    prices1y: [
-      10.99, 11.07, 10.99, 11.3, 11.16, 11.43, 10.99, 11.12, 11.33, 11.24, 10.6, 10.75, 10.44, 10.78, 10.65, 10.72,
-      10.89, 10.77, 10.41, 9.97, 10.38, 10.19, 10.19, 10.5, 10.47, 10.88, 11, 11.23, 11.59, 11.56, 11.66, 11.63, 11.6,
-      11.45, 11.12, 11.17, 10.67, 10.78, 10.93, 10.48, 10.81, 10.96, 11.07, 11.61, 11.25, 11.25, 11.34, 11.61, 11.65,
-      12.15, 12.28,
-    ],
-    prices1mo: [
-      11.29, 11.34, 11.45, 11.54, 11.53, 11.46, 11.61, 11.65, 11.51, 11.57, 11.57, 11.65, 11.89, 11.97, 12, 12.21,
-      12.15, 12.19, 12.35, 12.36, 12.31, 12.28,
-    ],
-    morningstarID: "0P0000A4Z3",
-    morningstarLastFetch: new Date("2022-12-15T20:12:33.975Z"),
-    starRating: 3,
-    dividendYieldPercent: 4.02,
-    priceEarningRatio: 16.08,
-    currency: "EUR",
-    lastClose: 11.06,
-    morningstarFairValue: 10.6,
-    marketCap: 66630000000,
-    low52w: 8.47,
-    high52w: 11.49,
-    marketScreenerID: "IBERDROLA-S-A-355153",
-    marketScreenerLastFetch: new Date("2022-12-18T16:48:15.345Z"),
-    analystConsensus: "Hold",
-    analystRatings: { Buy: 6, Hold: 11, Sell: 1, Outperform: 4, Underperform: 0 },
-    analystCount: 22,
-    analystTargetPrice: 12.074202,
-    msciID: "IID000000002126836",
-    msciLastFetch: new Date("2022-12-14T21:19:42.232Z"),
-    msciESGRating: "AAA",
-    msciTemperature: 1.6,
-    ric: "IBE.MC",
-    lsegLastFetch: new Date("2022-12-18T16:48:18.230Z"),
-    lsegESGScore: 88,
-    lsegEmissions: 97,
-    spID: 4102079,
-    spLastFetch: new Date("2022-12-18T16:48:23.641Z"),
-    spESGScore: 89,
-    sustainalyticsID: "iberdrola-sa/1008395546",
-    sustainalyticsESGRisk: 24.8,
-    description:
-      "Iberdrola is one of the largest utilities in the world with electric utility operations in nearly 40 countries. The company has a 52-gigawatt portfolio of hydro, wind, natural gas, and nuclear power plants. It is the largest owner of wind farms in the world, representing nearly 40% of its portfolio. Although the company has recently developed or acquired distribution and power generation assets in other geographic areas, Spain is still home to around 50% of its power generation capacity. Iberdrola also owns and operates electricity and distribution networks in Spain, the U.K., Brazil, and the U.S.",
-  },
-  {
-    ticker: "exampleKGX",
-    name: "Kion Group AG",
-    isin: "DE000KGX8881",
-    country: "DE",
-    industry: "FarmHeavyConstructionMachinery",
-    size: "Mid",
-    style: "Value",
-    yahooLastFetch: "2024-05-20T15:53:42.038Z",
-    prices1y: [
-      33.77, 34.12, 34.19, 32.95, 31.39, 36.86, 33, 35.46, 35.38, 38.49, 38.22, 36.85, 35.76, 34.3, 38.1, 37.91, 38.15,
-      35.83, 36.39, 33.54, 34.05, 33.58, 28.15, 31.2, 31.66, 33.3, 32.6, 34.56, 33.95, 38.75, 38.69, 36.9, 38.33, 37.46,
-      42.16, 42.6, 41.47, 42.25, 41.71, 43.75, 47.02, 49.14, 48.54, 49.21, 47.99, 48.15, 47.13, 43.81, 44.46, 45.85,
-      45.47,
-    ],
-    prices1mo: [
-      47.95, 47.13, 46.85, 47.14, 47.37, 44.14, 43.81, 44.26, 43.38, 42.5, 42.98, 44.46, 44.54, 44.67, 44.96, 46.01,
-      45.85, 45.6, 46.57, 45.62, 45.04, 45.47,
-    ],
-    morningstarID: "0P0000Z3A6",
-    morningstarLastFetch: new Date("2022-12-15T20:12:06.763Z"),
-    starRating: 5,
-    dividendYieldPercent: 5.18,
-    priceEarningRatio: 8.76,
-    currency: "EUR",
-    lastClose: 29.19,
-    morningstarFairValue: 50,
-    marketCap: 3830000000,
-    low52w: 18.66,
-    high52w: 98.82,
-    marketScreenerID: "KION-GROUP-AG-13495387",
-    marketScreenerLastFetch: new Date("2022-12-18T16:48:49.606Z"),
-    analystConsensus: "Buy",
-    analystRatings: { Buy: 10, Hold: 7, Sell: 0, Outperform: 1, Underperform: 0 },
-    analystCount: 18,
-    analystTargetPrice: 39.49407,
-    ric: "KGX.DE",
-    lsegLastFetch: new Date("2022-12-18T16:48:59.322Z"),
-    lsegESGScore: 80,
-    lsegEmissions: 77,
-    spID: 4996040,
-    spLastFetch: new Date("2022-12-18T16:49:02.506Z"),
-    spESGScore: 62,
-    sustainalyticsID: "kion-group-ag/1037107109",
-    sustainalyticsESGRisk: 26.6,
-    description:
-      "Kion Group is the number-two forklift truck manufacturer globally, after Toyota, and the number-one global warehouse automation equipment supplier. The Germany-headquartered company gets 70% of its revenue from the sale of new forklifts and maintenance services. Another roughly 30%, and growing portion, comes from warehouse automation equipment under the Dematic division, which caters to sectors such as e-commerce, third-party logistics, and supermarkets. Kion's forklift trucks and warehouse equipment service the same end markets.",
-  },
-  {
-    ticker: "exampleMELI",
-    name: "MercadoLibre Inc",
-    isin: "US58733R1023",
-    country: "UY",
-    industry: "InternetRetail",
-    size: "Large",
-    style: "Growth",
-    yahooLastFetch: "2024-05-20T15:53:41.846Z",
-    prices1y: [
-      1339.62, 1249.72, 1254.45, 1209.52, 1210.9, 1207.69, 1153.59, 1146.72, 1198.34, 1169.9, 1323.11, 1387.06, 1196.56,
-      1215.31, 1372.36, 1428.19, 1396.66, 1276.96, 1267.88, 1237.53, 1223.5, 1169.67, 1200.45, 1387.79, 1374.39, 1448,
-      1599.21, 1599.63, 1614.7, 1619.57, 1576.64, 1500, 1598.16, 1661.98, 1738.8, 1748.28, 1732.83, 1771.83, 1629.32,
-      1612.75, 1512.5, 1499.51, 1571.99, 1528.95, 1488.58, 1415.88, 1368.23, 1438.36, 1653.85, 1677.34, 1770,
-    ],
-    prices1mo: [
-      1356.43, 1368.23, 1395, 1370, 1363.83, 1406, 1438.36, 1458.7, 1456.51, 1505.99, 1630.56, 1653.85, 1688.69,
-      1716.78, 1695.4, 1693.97, 1677.34, 1683.91, 1718.5, 1739.15, 1749.17, 1770,
-    ],
-    morningstarID: "0P00009FL7",
-    morningstarLastFetch: new Date("2022-12-15T20:12:38.930Z"),
-    starRating: 4,
-    dividendYieldPercent: 0,
-    priceEarningRatio: 161.29,
-    currency: "USD",
-    lastClose: 867.3,
-    morningstarFairValue: 1140,
-    marketCap: 43620000000,
-    low52w: 600.69,
-    high52w: 1359.61,
-    marketScreenerID: "MERCADOLIBRE-INC-58469",
-    marketScreenerLastFetch: new Date("2022-12-18T16:49:27.283Z"),
-    analystConsensus: "Buy",
-    analystRatings: { Buy: 14, Hold: 3, Sell: 0, Outperform: 6, Underperform: 0 },
-    analystCount: 23,
-    analystTargetPrice: 1307.0211,
-    msciID: "IID000000002153488",
-    msciLastFetch: new Date("2022-12-14T21:19:55.885Z"),
-    msciESGRating: "A",
-    msciTemperature: 1.7,
-    ric: "MELI.O",
-    lsegLastFetch: new Date("2022-12-18T16:49:28.657Z"),
-    lsegESGScore: 69,
-    lsegEmissions: 66,
-    spID: 4160258,
-    sustainalyticsID: "mercadolibre-inc/1042200630",
-    sustainalyticsESGRisk: 22.1,
-    description:
-      "MercadoLibre runs the largest e-commerce marketplace in Latin America, connecting a network of more than 148 million active users and 1 million active sellers as of the end of 2022 across an 18-country footprint. The company also operates a host of complementary businesses, with shipping solutions (Mercado Envios), a payment and financing operation (Mercado Pago and Mercado Credito), advertisements (Mercado Clics), classifieds, and a turnkey e-commerce solution (Mercado Shops) rounding out its arsenal. MercadoLibre generates revenue from final value fees, advertising royalties, payment processing, insertion fees, subscription fees, and interest income from consumer and small-business lending.",
-  },
-  {
-    ticker: "exampleNEM",
-    name: "Newmont Corp",
-    isin: "US6516391066",
-    country: "US",
-    industry: "Gold",
-    size: "Mid",
-    style: "Value",
-    yahooLastFetch: "2024-05-20T15:53:41.648Z",
-    prices1y: [
-      41.71, 38.89, 40.83, 41.26, 41.4, 40.04, 40.39, 44.21, 41.27, 40.94, 39.32, 38.74, 37.59, 37.98, 38.33, 38.05,
-      39.62, 40.02, 36.3, 37.13, 38.74, 38.12, 38.28, 38.33, 33.6, 35.71, 37.51, 40.22, 38.57, 40.77, 41.58, 39.69,
-      37.65, 34.35, 34.22, 35.33, 33.08, 32.82, 31.04, 31.69, 33.91, 33.88, 33.77, 36.43, 39.4, 38.44, 37.46, 42.26,
-      41.39, 42.46, 44.46,
-    ],
-    prices1mo: [
-      39.02, 37.46, 37.71, 38.6, 43.41, 42.73, 42.26, 40.64, 40.58, 41.05, 40.66, 41.39, 41.44, 41.54, 42.84, 42.49,
-      42.46, 42.57, 43.19, 42.84, 43.74, 44.46,
-    ],
-    morningstarID: "0P000003WE",
-    morningstarLastFetch: new Date("2022-12-15T20:12:47.926Z"),
-    dividendYieldPercent: 4.67,
-    priceEarningRatio: 38.61,
-    currency: "USD",
-    lastClose: 47.11,
-    morningstarFairValue: 46,
-    marketCap: 37390000000,
-    low52w: 37.45,
-    high52w: 86.37,
-    marketScreenerID: "NEWMONT-CORPORATION-13711",
-    marketScreenerLastFetch: new Date("2022-12-18T16:57:18.564Z"),
-    analystConsensus: "Outperform",
-    analystRatings: { Buy: 7, Hold: 9, Sell: 0, Outperform: 5, Underperform: 2 },
-    analystCount: 23,
-    analystTargetPrice: 54.27072,
-    msciID: "IID000000002177254",
-    msciLastFetch: new Date("2022-12-14T21:19:27.773Z"),
-    msciESGRating: "AA",
-    msciTemperature: 1.5,
-    ric: "NEM",
-    lsegLastFetch: new Date("2022-12-18T16:57:22.367Z"),
-    lsegESGScore: 87,
-    lsegEmissions: 94,
-    spID: 4075105,
-    spLastFetch: new Date("2022-12-18T16:57:28.318Z"),
-    spESGScore: 83,
-    sustainalyticsID: "newmont-corp/1008170041",
-    sustainalyticsESGRisk: 20.3,
-    description:
-      "Newmont Corp is primarily a gold producer with operations and/or assets in the United States, Canada, Mexico, Dominican Republic, Peru, Suriname, Argentina, Chile, Australia, and Ghana. It is also engaged in the production of copper, silver, lead and zinc. The company's operations are organized in five geographic regions: North America, South America, Australia, Africa and Nevada.",
-  },
-  {
-    ticker: "exampleNOVO B",
-    name: "Novo Nordisk A/S",
-    isin: "DK0060534915",
-    country: "DK",
-    industry: "Biotechnology",
-    size: "Large",
-    style: "Growth",
-    yahooLastFetch: "2024-05-20T15:53:41.305Z",
-    prices1y: [
-      568.2, 562.07, 556.14, 539.14, 538.65, 519.78, 533.51, 511.18, 525.8, 539.64, 543.59, 632.33, 615.83, 630.45,
-      642.86, 657.06, 676.62, 642.37, 645.45, 621.22, 645.45, 707.9, 677.02, 672.15, 700.65, 677.91, 695.68, 682.97,
-      682.18, 656.27, 677.41, 693.2, 720.6, 720.4, 727.16, 726.76, 775.81, 825.94, 844.81, 842.92, 844.81, 898.52,
-      897.53, 887.2, 878.8, 866, 871.3, 878.7, 897.7, 883.2, 903.3,
-    ],
-    prices1mo: [
-      867.5, 871.3, 862.7, 866.2, 875.3, 891.3, 878.7, 866.8, 886.6, 884.8, 902.6, 897.7, 873.1, 850.6, 851.4, 882.6,
-      883.2, 909.9, 910, 917.1, 912.9, 903.3,
-    ],
-    morningstarID: "0P0000A5BQ",
-    morningstarLastFetch: new Date("2022-12-15T20:12:13.131Z"),
-    starRating: 2,
-    dividendYieldPercent: 1.19,
-    priceEarningRatio: 40.49,
-    currency: "DKK",
-    lastClose: 937.5,
-    morningstarFairValue: 760,
-    marketCap: 2110000000000,
-    low52w: 604.4,
-    high52w: 940,
-    marketScreenerID: "NOVO-NORDISK-A-S-1412980",
-    marketScreenerLastFetch: new Date("2022-12-18T16:57:43.959Z"),
-    analystConsensus: "Outperform",
-    analystRatings: { Buy: 12, Hold: 5, Sell: 1, Outperform: 5, Underperform: 2 },
-    analystCount: 25,
-    analystTargetPrice: 904.875,
-    msciID: "IID000000002135404",
-    msciLastFetch: new Date("2022-12-14T21:19:33.088Z"),
-    msciESGRating: "AAA",
-    msciTemperature: 1.3,
-    ric: "NOVOb.CO",
-    lsegLastFetch: new Date("2022-12-18T16:57:46.094Z"),
-    lsegESGScore: 85,
-    lsegEmissions: 89,
-    spID: 4194544,
-    spLastFetch: new Date("2022-12-18T16:57:50.516Z"),
-    spESGScore: 58,
-    sustainalyticsID: "novo-nordisk-a-s/1008201698",
-    sustainalyticsESGRisk: 24,
-    description:
-      "With almost 50% market share by volume of the global insulin market, Novo Nordisk is the leading provider of diabetes-care products in the world. Based in Denmark, the company manufactures and markets a variety of human and modern insulins, injectable diabetes treatments, oral antidiabetic agents, and obesity treatments. Novo also has a biopharmaceutical segment (constituting roughly 15% of revenue) that specializes in protein therapies for hemophilia and other disorders.",
-  },
-  {
-    ...optionalStockValuesNull,
-    ticker: "exampleNULL",
-    name: "Null Inc.",
-    isin: "XX0000000000",
-    country: "AX",
-  },
-  {
-    ticker: "exampleORSTED",
-    name: "Ørsted A/S",
-    isin: "DK0060094928",
-    country: "DK",
-    industry: "UtilitiesRenewable",
-    size: "Large",
-    style: "Growth",
-    yahooLastFetch: "2024-05-20T15:53:41.796Z",
-    prices1y: [
-      637.6, 614, 620.2, 643, 669, 629.8, 642.6, 609.8, 627, 617.8, 588.2, 575.4, 538, 533.2, 559.4, 395.7, 381, 407.4,
-      380, 336.8, 370, 327.1, 338.5, 339.8, 276.8, 311, 311.5, 304.4, 343.2, 335.4, 360.1, 375.9, 375, 392.4, 387.8,
-      382.3, 384.3, 389.3, 397.2, 377.1, 387.2, 372.5, 348.6, 380.9, 378.9, 381.8, 375.9, 382.2, 381.5, 431.1, 419.5,
-    ],
-    prices1mo: [
-      383.4, 375.9, 389.4, 385.1, 379.6, 389.3, 382.2, 380, 388.9, 392.5, 385.7, 381.5, 391.8, 406.4, 413.6, 433, 431.1,
-      415.1, 410, 431.3, 432.4, 419.5,
-    ],
-    morningstarID: "0P0001846T",
-    morningstarLastFetch: new Date("2022-12-15T20:12:22.891Z"),
-    starRating: 5,
-    dividendYieldPercent: 1.88,
-    priceEarningRatio: 15.31,
-    currency: "DKK",
-    lastClose: 663.6,
-    morningstarFairValue: 920,
-    marketCap: 279000000000,
-    low52w: 567,
-    high52w: 918.4,
-    marketScreenerID: "ORSTED-A-S-28607554",
-    marketScreenerLastFetch: new Date("2022-12-18T16:58:13.295Z"),
-    analystConsensus: "Hold",
-    analystRatings: { Buy: 9, Hold: 14, Sell: 0, Outperform: 3, Underperform: 0 },
-    analystCount: 26,
-    analystTargetPrice: 838.1268,
-    msciID: "IID000000002226401",
-    msciLastFetch: new Date("2022-12-14T21:19:37.853Z"),
-    msciESGRating: "AAA",
-    msciTemperature: 1.7,
-    ric: "ORSTED.CO",
-    lsegLastFetch: new Date("2022-12-18T16:58:14.680Z"),
-    lsegESGScore: 72,
-    lsegEmissions: 85,
-    spID: 4554125,
-    spLastFetch: new Date("2022-12-18T16:58:18.720Z"),
-    spESGScore: 35,
-    sustainalyticsID: "-rsted-a-s/1014371079",
-    sustainalyticsESGRisk: 16.4,
-    description:
-      "Danish company Orsted was named Dong Energy until the sale of all its oil and gas fields to Ineos in 2017, soon after the May 2016 initial public offering. Orsted is now focused on renewable assets, especially offshore wind farms. It operated 8.9 GW of offshore wind farms at the end of 2022. The United Kingdom is the biggest country of operation, ahead of Germany and Denmark. The group intends to develop its footprint outside Europe with projects in Taiwan and in the U.S. Orsted is also involved in more traditional utilities business like conventional power plants and gas supply, but these activities are noncore. Orsted intends to phase out coal by 2023.",
-  },
-  {
-    ticker: "exampleTSM",
-    name: "Taiwan Semiconductor Manufacturing Co Ltd",
-    isin: "US8740391003",
-    country: "TW",
-    industry: "Semiconductors",
-    size: "Large",
-    style: "Growth",
-    yahooLastFetch: "2024-05-20T15:53:41.721Z",
-    prices1y: [
-      90.07, 100.15, 98.03, 104.88, 100.23, 99.52, 98.03, 104.11, 96.51, 97.98, 93.67, 93.49, 90.37, 91.25, 92.28, 88.4,
-      88.47, 84.89, 86.14, 88.51, 89.67, 90.51, 85.24, 90.99, 96.59, 98.71, 96.36, 96.16, 100.07, 102.51, 104.03, 99.76,
-      100.39, 112.57, 116.09, 112.93, 133.19, 128.51, 129.01, 133.36, 145.78, 136.43, 140.54, 141.49, 142.79, 140.14,
-      129.75, 138.5, 142.83, 146.41, 153.35,
-    ],
-    prices1mo: [
-      127.7, 129.75, 133.43, 132.97, 136.58, 138.3, 138.5, 137.34, 134.94, 136.23, 141.56, 142.83, 141.11, 143.6,
-      142.79, 149.26, 146.41, 151.95, 155.58, 152.23, 151.68, 153.35,
-    ],
-    morningstarID: "0P000005AR",
-    morningstarLastFetch: new Date("2022-12-15T20:12:43.350Z"),
-    starRating: 5,
-    dividendYieldPercent: 2.34,
-    priceEarningRatio: 14.43,
-    currency: "USD",
-    lastClose: 79.57,
-    morningstarFairValue: 133,
-    marketCap: 406800000000,
-    low52w: 59.43,
-    high52w: 128.66,
-    marketScreenerID: "TAIWAN-SEMICONDUCTOR-MANU-40246786",
-    marketScreenerLastFetch: new Date("2022-12-18T16:58:48.518Z"),
-    analystConsensus: "Buy",
-    analystRatings: { Buy: 20, Hold: 1, Sell: 0, Outperform: 10, Underperform: 0 },
-    analystCount: 31,
-    analystTargetPrice: 105.66895999999998,
-    msciID: "IID000000002186091",
-    msciLastFetch: new Date("2022-12-14T21:19:59.951Z"),
-    msciESGRating: "AAA",
-    msciTemperature: 1.5,
-    ric: "2330.TW",
-    lsegLastFetch: new Date("2022-12-18T16:58:50.302Z"),
-    lsegESGScore: 77,
-    lsegEmissions: 96,
-    spID: 4589256,
-    spLastFetch: new Date("2022-12-18T16:58:55.111Z"),
-    spESGScore: 84,
-    sustainalyticsID: "taiwan-semiconductor-manufacturing-co-ltd/1008258321",
-    sustainalyticsESGRisk: 13.6,
-    description:
-      "Taiwan Semiconductor Manufacturing Co. is the world's largest dedicated chip foundry, with over 57% market share in 2021 per Gartner. TSMC was founded in 1987 as a joint venture of Philips, the government of Taiwan, and private investors. It went public as an ADR in the U.S. in 1997. TSMC's scale and high-quality technology allow the firm to generate solid operating margins, even in the highly competitive foundry business. Furthermore, the shift to the fabless business model has created tailwinds for TSMC. The foundry leader has an illustrious customer base, including Apple, AMD, and Nvidia, that looks to apply cutting-edge process technologies to its semiconductor designs.",
-  },
-].map((stock: OmitDynamicAttributesStock) => addDynamicAttributesToStockData({ ...optionalStockValuesNull, ...stock }));
+const resourceService: ResourceService = new ResourceService(dbService);
+const sessionService: SessionService = new SessionService(dbService);
 
 /**
  * Writes example stock data into the stock table in the database. Must only be used in tests.
  */
 const applyStockSeed = async (): Promise<void> => {
-  await client.stock.createMany({
-    data: stockData,
-  });
+  await dbService.stock.createMany({ data: stockExamples as Prisma.StockCreateManyInput[] });
 };
 
 /**
  * Writes example user data into the user table in the database. Must only be used in tests.
  */
 const applyUserSeed = async (): Promise<void> => {
-  await client.user.create({
-    data: {
-      email: "jane.doe@example.com",
-      name: "Jane Doe",
-      avatar: "data:image/jpeg;base64,U29tZSBmYW5jeSBhdmF0YXIgaW1hZ2U=",
-      phone: "+123456789",
-      accessRights: 255,
-      subscriptions: 0,
-      webAuthnCredentials: {
-        create: {
-          id: Buffer.from("exampleCredentialID", "base64url"),
-          publicKey: Buffer.from("exampleCredentialPublicKey", "base64url"),
-          counter: 0,
-        },
-      },
-    },
-  });
-  await client.user.create({
-    data: {
-      email: "john.doe@example.com",
-      name: "John Doe",
-      phone: "+234567890",
-      accessRights: GENERAL_ACCESS,
-      subscriptions: STOCK_UPDATE_MESSAGE,
-      webAuthnCredentials: {
-        create: {
-          id: Buffer.from("anotherExampleCredentialID", "base64url"),
-          publicKey: Buffer.from("anotherExampleCredentialPublicKey", "base64url"),
-          counter: 0,
-        },
-      },
-    },
-  });
+  await Promise.all(
+    userExamples.map(
+      async (user, index) =>
+        await dbService.user.create({
+          data: {
+            ...user,
+            webAuthnCredentials: {
+              create: {
+                ...webAuthnCredentialExamples[index],
+                id: Buffer.from(webAuthnCredentialExamples[index].id),
+                publicKey: Buffer.from(webAuthnCredentialExamples[index].publicKey),
+              },
+            },
+          },
+        }),
+    ),
+  );
 };
 
 /**
  * Writes example watchlist data into the watchlist table in the database. Must only be used in tests.
  */
 const applyWatchlistSeed = async (): Promise<void> => {
-  await client.watchlist.create({
-    data: {
-      name: "Favorites",
-      email: "jane.doe@example.com",
-      stocks: {
-        connect: [{ ticker: "exampleAAPL" }, { ticker: "exampleTSM" }],
+  for await (const watchlist of watchlistExamples) {
+    await dbService.watchlist.create({
+      data: {
+        ...watchlist,
+        id: undefined,
+        email: "jane.doe@example.com",
+        stocks: {
+          connect: watchlist.stocks.map((stock) => ({ ticker: stock.ticker })),
+        },
       },
-      subscribed: true,
-    },
-  });
-  await client.watchlist.create({
-    data: {
-      name: "Fævørites",
-      email: "jane.doe@example.com",
-      stocks: {
-        connect: [{ ticker: "exampleNOVO B" }, { ticker: "exampleORSTED" }],
-      },
-    },
-  });
+    });
+  }
 };
 
 /**
  * Writes example portfolio data into the portfolio table in the database. Must only be used in tests.
  */
 const applyPortfolioSeed = async (): Promise<void> => {
-  await client.portfolio.create({
-    data: {
-      name: "My Portfolio",
-      email: "jane.doe@example.com",
-      currency: "USD",
-      stocks: {
-        create: [
-          { amount: 120, stock: { connect: { ticker: "exampleAAPL" } } },
-          { amount: 90, stock: { connect: { ticker: "exampleTSM" } } },
-        ],
+  for await (const portfolio of portfolioExamples) {
+    await dbService.portfolio.create({
+      data: {
+        ...portfolio,
+        id: undefined,
+        email: "jane.doe@example.com",
+        stocks: {
+          create: portfolio.stocks.map((stock) => ({
+            amount: stock.amount,
+            stock: { connect: { ticker: stock.ticker } },
+          })),
+        },
       },
-    },
-  });
-  await client.portfolio.create({
-    data: {
-      name: "Min portefølje",
-      email: "jane.doe@example.com",
-      currency: "DKK",
-      stocks: {
-        create: [
-          { amount: 800, stock: { connect: { ticker: "exampleNOVO B" } } },
-          { amount: 100, stock: { connect: { ticker: "exampleORSTED" } } },
-        ],
-      },
-    },
-  });
+    });
+  }
 };
 
 /**
  * Writes example resource data into the resource table in the database. Must only be used in tests.
  */
 const applyResourceSeed = async (): Promise<void> => {
-  await client.resource.createMany({
-    data: [
-      { uri: "image.png", content: Buffer.from("U2FtcGxlIFBORyBpbWFnZQ==", "base64"), contentType: "image/png" },
-      {
-        uri: "page.html",
-        content: Buffer.from('<html><body><p id="hello">Hello World!</p></body></html>'),
-        contentType: "text/html; charset=utf-8",
-      },
-      {
-        uri: "data.json",
-        content: Buffer.from(JSON.stringify({ foo: "bar" })),
-        contentType: "application/json; charset=utf-8",
-      },
-      {
-        uri: "expired.json",
-        content: Buffer.from(JSON.stringify({ expired: true })),
-        expiresAt: new Date(Date.now() - 1000),
-        contentType: "application/json; charset=utf-8",
-      },
-    ],
+  await dbService.resource.createMany({
+    data: resourceExamples.map((resource) => ({
+      ...resource,
+      content: Buffer.from(resource.content),
+      ...(resource.uri.startsWith("expired") ? { expiresAt: new Date(Date.now() - 1000) } : {}),
+    })),
   });
 };
 
@@ -665,7 +103,7 @@ const applyResourceSeed = async (): Promise<void> => {
  * Writes example session data into the session table in the database. Must only be used in tests.
  */
 const applySessionSeed = async (): Promise<void> => {
-  await client.session.createMany({
+  await dbService.session.createMany({
     data: [
       { id: Buffer.from("exampleSessionID", "base64url"), email: "jane.doe@example.com" },
       { id: Buffer.from("anotherExampleSessionID", "base64url"), email: "john.doe@example.com" },
@@ -677,7 +115,7 @@ const applySessionSeed = async (): Promise<void> => {
       {
         id: Buffer.from("eolSessionID", "base64url"),
         email: "jane.doe@example.com",
-        createdAt: new Date(Date.now() - 1000 * (SESSION_MAX_VALIDITY - SESSION_TTL + 1)),
+        createdAt: new Date(Date.now() - 1000 * (SessionService.SESSION_MAX_VALIDITY - SessionService.SESSION_TTL + 1)),
       },
     ],
   });
@@ -687,15 +125,13 @@ const applySessionSeed = async (): Promise<void> => {
  * Clears and writes example data into the tables in the database. Must only be used in tests.
  */
 const applyPostgresSeeds = async (): Promise<void> => {
-  if (process.env.NODE_ENV !== "test") {
-    throw new Error("Refusing to apply seed when not in a test environment");
-  }
+  if (process.env.NODE_ENV !== "test") throw new Error("Refusing to apply seed when not in a test environment");
 
-  await client.$queryRaw`TRUNCATE TABLE "Stock", "User", "WebAuthnCredential", "Watchlist", "_StockToWatchlist", "Portfolio", "StocksInPortfolios", "Session", "Resource" RESTART IDENTITY CASCADE`;
+  await dbService.$queryRaw`TRUNCATE TABLE "Stock", "User", "WebAuthnCredential", "Watchlist", "_StockToWatchlist", "Portfolio", "StocksInPortfolios", "Session", "Resource" RESTART IDENTITY CASCADE`;
 
   await Promise.all([applyStockSeed(), applyUserSeed(), applyResourceSeed()]);
   await Promise.all([applyWatchlistSeed(), applyPortfolioSeed(), applySessionSeed()]);
-  await Promise.all([cleanupResources(), cleanupSessions()]);
+  await Promise.all([resourceService.cleanup(), sessionService.cleanup()]);
 };
 
 export default applyPostgresSeeds;

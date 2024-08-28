@@ -30,7 +30,7 @@ export type Stock = {
    */
   isin: string;
   /**
-   * The stock’s industry as part of the Morningstar Global Equity Classification Structure.
+   * The main industry the company operates in, as part of the Morningstar Global Equity Classification Structure.
    */
   industry: Industry | null;
   /**
@@ -210,6 +210,16 @@ export type Stock = {
 };
 
 /**
+ * A stock associated with an amount of a specified currency.
+ */
+export type WeightedStock = Stock & {
+  /**
+   * The amount of currency associated with the stock.
+   */
+  amount: number;
+};
+
+/**
  * A stub of a stock, provided by the Yahoo Finance API.
  */
 export type YahooStockStub = {
@@ -286,3 +296,56 @@ export const optionalStockValuesNull: OmitFunctions<
   sustainalyticsESGRisk: null,
   description: null,
 };
+
+/**
+ * Parses a stock from a JSON object.
+ * @param stock The stock JSON object to parse.
+ * @returns The parsed stock.
+ */
+export const parseStock = (
+  stock: Omit<
+    Stock,
+    { [K in keyof Stock]: Stock[K] extends Date | null ? K : never }[keyof Stock] | "analystRatings"
+  > & {
+    [K in { [K in keyof Stock]: Stock[K] extends Date | null ? K : never }[keyof Stock]]: string | null;
+  } & {
+    analystRatings: Partial<Record<AnalystRating, number>> | null; // colinhacks/zod#3334
+  },
+): Stock => ({
+  ...stock,
+  analystRatings: stock.analystRatings as Stock["analystRatings"],
+  yahooLastFetch: stock.yahooLastFetch ? new Date(stock.yahooLastFetch) : null,
+  morningstarLastFetch: stock.morningstarLastFetch ? new Date(stock.morningstarLastFetch) : null,
+  marketScreenerLastFetch: stock.marketScreenerLastFetch ? new Date(stock.marketScreenerLastFetch) : null,
+  msciLastFetch: stock.msciLastFetch ? new Date(stock.msciLastFetch) : null,
+  lsegLastFetch: stock.lsegLastFetch ? new Date(stock.lsegLastFetch) : null,
+  spLastFetch: stock.spLastFetch ? new Date(stock.spLastFetch) : null,
+});
+
+/**
+ * Parses a stock from a JSON object.
+ * @param stock The stock JSON object to parse.
+ * @returns The parsed stock.
+ */
+export const parseWeightedStock = (
+  stock: Omit<
+    WeightedStock,
+    | { [K in keyof WeightedStock]: WeightedStock[K] extends Date | null ? K : never }[keyof WeightedStock]
+    | "analystRatings"
+  > & {
+    [K in { [K in keyof WeightedStock]: WeightedStock[K] extends Date | null ? K : never }[keyof WeightedStock]]:
+      | string
+      | null;
+  } & {
+    analystRatings: Partial<Record<AnalystRating, number>> | null; // colinhacks/zod#3334
+  },
+): WeightedStock => ({
+  ...stock,
+  analystRatings: stock.analystRatings as WeightedStock["analystRatings"],
+  yahooLastFetch: stock.yahooLastFetch ? new Date(stock.yahooLastFetch) : null,
+  morningstarLastFetch: stock.morningstarLastFetch ? new Date(stock.morningstarLastFetch) : null,
+  marketScreenerLastFetch: stock.marketScreenerLastFetch ? new Date(stock.marketScreenerLastFetch) : null,
+  msciLastFetch: stock.msciLastFetch ? new Date(stock.msciLastFetch) : null,
+  lsegLastFetch: stock.lsegLastFetch ? new Date(stock.lsegLastFetch) : null,
+  spLastFetch: stock.spLastFetch ? new Date(stock.spLastFetch) : null,
+});

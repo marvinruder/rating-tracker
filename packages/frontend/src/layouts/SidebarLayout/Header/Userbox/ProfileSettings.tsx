@@ -20,19 +20,18 @@ import {
   Typography,
 } from "@mui/material";
 import {
+  handleResponse,
   messageTypesAllowedWithGivenAccessRight,
   messageTypeDescription,
   messageTypeName,
   REGEX_PHONE_NUMBER,
   subscriptionOfMessageType,
-  accountAPIPath,
-  accountAvatarEndpointSuffix,
 } from "@rating-tracker/commons";
 import { useEffect, useRef, useState } from "react";
 
+import accountClient from "../../../../api/account";
 import { useNotificationContextUpdater } from "../../../../contexts/NotificationContext";
 import { useUserContextState, useUserContextUpdater } from "../../../../contexts/UserContext";
-import api from "../../../../utils/api";
 import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
 
 /**
@@ -50,10 +49,10 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const [emailError, setEmailError] = useState<string>(""); // Error message for the email text field.
   const [name, setName] = useState<string>(user.name);
   const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.
-  const [phone, setPhone] = useState<string>(user.phone);
+  const [phone, setPhone] = useState<string | null>(user.phone);
   const [phoneError, setPhoneError] = useState<string>(""); // Error message for the phone text field.
   const [processingAvatar, setProcessingAvatar] = useState<boolean>(true);
-  const [subscriptions, setSubscriptions] = useState<number>(user.subscriptions);
+  const [subscriptions, setSubscriptions] = useState<number | null>(user.subscriptions);
 
   const inputEmail = useRef<HTMLInputElement>(null);
   const inputName = useRef<HTMLInputElement>(null);
@@ -84,9 +83,9 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    const isEmailValid = inputEmail.current?.checkValidity();
-    const isNameValid = inputName.current?.checkValidity();
-    const isPhoneValid = inputPhone.current?.checkValidity();
+    const isEmailValid = inputEmail.current?.checkValidity() ?? false;
+    const isNameValid = inputName.current?.checkValidity() ?? false;
+    const isPhoneValid = inputPhone.current?.checkValidity() ?? false;
     return isEmailValid && isNameValid && isPhoneValid;
   };
 
@@ -96,16 +95,17 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   const updateProfile = () => {
     if (!validate()) return;
     setRequestInProgress(true);
-    api
-      .patch(accountAPIPath, {
-        params: {
+    accountClient.index
+      .$patch({
+        json: {
           // Only send the parameters that have changed.
-          email: email !== user.email ? email.trim() : undefined,
-          name: name !== user.name ? name.trim() : undefined,
-          phone: phone !== user.phone ? phone.trim() : undefined,
-          subscriptions: subscriptions !== user.subscriptions ? subscriptions : undefined,
+          ...(email !== user.email ? { email: email.trim() } : {}),
+          ...(name !== user.name ? { name: name.trim() } : {}),
+          ...(phone !== user.phone ? { phone: phone?.trim() || null } : {}),
+          ...(subscriptions !== user.subscriptions ? { subscriptions } : {}),
         },
       })
+      .then(handleResponse)
       .then(
         () => (
           refetchUser(),
@@ -150,11 +150,9 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
         });
         setProcessingAvatar(false);
       } else {
-        api
-          .put(accountAPIPath + accountAvatarEndpointSuffix, {
-            body: message.data.result,
-            headers: { "Content-Type": "image/avif" },
-          })
+        accountClient.avatar
+          .$put({ header: { "content-type": "image/avif" } }, { init: { body: message.data.result } })
+          .then(handleResponse)
           .then(() => refetchUser(Date.now()))
           .catch((e) => setErrorNotificationOrClearSession(e, "uploading account avatar"))
           .finally(() => setProcessingAvatar(false));
@@ -170,8 +168,9 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
    * @returns a {@link Promise} that resolves when the avatar has been deleted and the user refetch has been triggered.
    */
   const deleteAvatar = (): Promise<void> =>
-    api
-      .delete(accountAPIPath + accountAvatarEndpointSuffix)
+    accountClient.avatar
+      .$delete()
+      .then(handleResponse)
       .then(() => refetchUser())
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting account avatar"));
 
@@ -185,7 +184,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                 <CircularProgress />
               </Avatar>
             ) : (
-              <Avatar sx={{ width: 120, height: 120, margin: "auto" }} alt={user.name} src={user.avatar} />
+              <Avatar sx={{ width: 120, height: 120, margin: "auto" }} alt={user.name} src={user.avatar ?? undefined} />
             )}
             <Box width="100%" display="flex" justifyContent="center" mt={1}>
               <Tooltip title={user.avatar ? "Change your avatar" : "Upload an avatar"} arrow>
@@ -209,7 +208,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   <IconButton
                     aria-labelledby="delete-avatar-label"
                     color="error"
-                    sx={{ ml: 1, display: !user.avatar && "none" }}
+                    sx={{ ml: 1, display: !user.avatar ? "none" : undefined }}
                     onClick={deleteAvatar}
                     disabled={processingAvatar}
                   >
@@ -291,8 +290,10 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   key={subscriptionSwitch.name}
                   control={
                     <Checkbox
-                      checked={(subscriptions & subscriptionSwitch.subscription) === subscriptionSwitch.subscription}
-                      onChange={() => setSubscriptions(subscriptions ^ subscriptionSwitch.subscription)}
+                      checked={
+                        ((subscriptions ?? 0) & subscriptionSwitch.subscription) === subscriptionSwitch.subscription
+                      }
+                      onChange={() => setSubscriptions((subscriptions ?? 0) ^ subscriptionSwitch.subscription)}
                     />
                   }
                   label={

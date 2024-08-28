@@ -128,18 +128,20 @@ export const getSectorIconPaths = (superSectorOrSector: SuperSector | Sector): J
  */
 export const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps): JSX.Element => {
   const theme = useTheme();
-  const color: React.CSSProperties["color"] =
-    theme.colors.sector[superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.industry]]]];
-  let superSectorOrSector: SuperSector | Sector;
+  const color: React.CSSProperties["color"] = props.industry
+    ? theme.colors.sector[superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.industry]]]]
+    : "transparent";
+  let superSectorOrSector: SuperSector | Sector | undefined;
 
-  switch (props.type) {
-    case "SuperSector":
-      superSectorOrSector = superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.industry]]];
-      break;
-    case "Sector":
-      superSectorOrSector = sectorOfIndustryGroup[groupOfIndustry[props.industry]];
-      break;
-  }
+  if (props.industry)
+    switch (props.type) {
+      case "SuperSector":
+        superSectorOrSector = superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.industry]]];
+        break;
+      case "Sector":
+        superSectorOrSector = sectorOfIndustryGroup[groupOfIndustry[props.industry]];
+        break;
+    }
 
   return (
     <svg
@@ -150,7 +152,7 @@ export const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps): JSX.Ele
       width={props.length}
       height={props.length}
     >
-      {getSectorIconPaths(superSectorOrSector)}
+      {superSectorOrSector ? getSectorIconPaths(superSectorOrSector) : <></>}
     </svg>
   );
 };
@@ -162,7 +164,7 @@ interface SectorIconProps {
   /**
    * The industry from which to derive the sector or super sector.
    */
-  industry: Industry;
+  industry: Industry | null;
   /**
    * The width and height of the icon.
    */

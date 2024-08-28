@@ -18,11 +18,11 @@ import {
   useTheme,
 } from "@mui/material";
 import type { Stock, PortfolioSummary, Currency } from "@rating-tracker/commons";
-import { stocksAPIPath, portfoliosAPIPath, currencyMinorUnits, pluralize } from "@rating-tracker/commons";
+import { currencyMinorUnits, pluralize, isCurrency, handleResponse } from "@rating-tracker/commons";
 import { Fragment, useEffect, useRef, useState } from "react";
 
+import portfolioClient from "../../../api/portfolio";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 import { AddPortfolio } from "./AddPortfolio";
 
@@ -67,8 +67,9 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
    * Get the portfolios from the backend.
    */
   const getPortfolios = () => {
-    api
-      .get(portfoliosAPIPath)
+    portfolioClient.index
+      .$get()
+      .then(handleResponse)
       .then((res) => setPortfolioSummaries(res.data))
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "fetching portfolios");
@@ -87,10 +88,9 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
    */
   const addStockToPortfolio = (id: number) => {
     if (!validate(id)) return;
-    api
-      .put(`${portfoliosAPIPath}/${id}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}`, {
-        params: { amount: +amountInput },
-      })
+    portfolioClient[":id"].stocks[":ticker"]
+      .$put({ param: { id: String(id), ticker: props.stock.ticker }, json: { amount: +amountInput } })
+      .then(handleResponse)
       .then(() => props.onClose())
       .catch((e) => setErrorNotificationOrClearSession(e, "adding stock to portfolio"));
   };
@@ -115,8 +115,9 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                 inputMode: "decimal",
                 type: "number",
                 // Amount must be divisible by the currency's minor unit
-                step: Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]),
-                min: Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]), // Amount must be positive
+                step: isCurrency(hoverCurrency) ? Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]) : undefined,
+                // Amount must be positive
+                min: isCurrency(hoverCurrency) ? Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]) : 0,
               }}
               onChange={(event) => {
                 setAmountInput(event.target.value);
@@ -160,8 +161,9 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                         secondary={
                           portfoliosAlreadyContainingStock.includes(portfolioSummary.id)
                             ? `This portfolio already contains “${props.stock.name}”.`
-                            : (portfolioSummary.stocks.length || "No") +
-                              ` stock${pluralize(portfolioSummary.stocks.length)}`
+                            : `${
+                                portfolioSummary.stocks.length || "No"
+                              } stock${pluralize(portfolioSummary.stocks.length)}`
                         }
                       />
                     </ListItemButton>

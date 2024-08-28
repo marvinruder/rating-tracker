@@ -24,12 +24,12 @@ export const regionArray = [
 export type Region = (typeof regionArray)[number];
 
 /**
- * Checks if a string is a valid region.
- * @param s The string to check.
- * @returns True if the string is a valid region.
+ * Checks if an entity is a valid region.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid region.
  */
-export function isRegion(s: string): s is Region {
-  return regionArray.includes(s as Region);
+export function isRegion(entity: unknown): entity is Region {
+  return regionArray.includes(entity as Region);
 }
 
 /**

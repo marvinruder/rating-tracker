@@ -1,11 +1,11 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
-import { watchlistsAPIPath } from "@rating-tracker/commons";
+import { handleResponse } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
 
+import watchlistClient from "../../../api/watchlist";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 /**
  * A dialog to add a new watchlist in the backend.
@@ -25,7 +25,7 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    const isNameValid = nameInputRef.current?.checkValidity();
+    const isNameValid = nameInputRef.current?.checkValidity() ?? false;
     return isNameValid;
   };
 
@@ -35,8 +35,9 @@ export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
   const putWatchlist = () => {
     if (!validate()) return;
     setRequestInProgress(true);
-    api
-      .put(watchlistsAPIPath, { params: { name: name.trim() } })
+    watchlistClient.index
+      .$put({ json: { name: name.trim() } })
+      .then(handleResponse)
       .then(() => (props.onAdd(), props.onClose()))
       .catch((e) => setErrorNotificationOrClearSession(e, "creating new watchlist"))
       .finally(() => setRequestInProgress(false));

@@ -43,13 +43,13 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
               <Typography variant="h3">{props.portfolio?.name ?? <Skeleton width="160px" />}</Typography>
               <Typography variant="subtitle1" color="text.secondary">
                 {props.portfolio ? (
-                  (props.portfolio.stocks.length || "No") +
-                  ` stock${pluralize(props.portfolio.stocks.length)}` +
-                  (props.portfolio.stocks.length
-                    ? `\u2002·\u2002${props.portfolio.currency} ${getTotalAmount(props.portfolio).toFixed(
-                        currencyMinorUnits[props.portfolio.currency],
-                      )} total`
-                    : "")
+                  `${props.portfolio.stocks.length || "No"} stock${pluralize(props.portfolio.stocks.length)}${
+                    props.portfolio.stocks.length
+                      ? `\u2002·\u2002${props.portfolio.currency} ${getTotalAmount(props.portfolio).toFixed(
+                          currencyMinorUnits[props.portfolio.currency],
+                        )} total`
+                      : ""
+                  }`
                 ) : (
                   <Skeleton width="48px" />
                 )}
@@ -104,35 +104,41 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
         ) : (
           <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
         )}
-        {/* Add Stock to Collection Dialog */}
-        <PinnedDialog
-          maxWidth="xs"
-          fullWidth
-          open={addStockToCollectionDialogOpen}
-          onClose={() => setAddStockToCollectionDialogOpen(false)}
-        >
-          <AddStockToCollection
-            collection={props.portfolio}
-            onAdd={props.getPortfolios}
-            onClose={() => setAddStockToCollectionDialogOpen(false)}
-          />
-        </PinnedDialog>
-        {/* Edit Dialog */}
-        <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
-          <EditPortfolio
-            portfolio={props.portfolio}
-            onEdit={props.getPortfolios}
-            onClose={() => setEditDialogOpen(false)}
-          />
-        </Dialog>
-        {/* Delete Dialog */}
-        <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-          <DeletePortfolio
-            portfolio={props.portfolio}
-            onClose={() => setDeleteDialogOpen(false)}
-            onDelete={props.getPortfolios}
-          />
-        </Dialog>
+        {props.portfolio && props.getPortfolios ? (
+          <>
+            {/* Add Stock to Collection Dialog */}
+            <PinnedDialog
+              maxWidth="xs"
+              fullWidth
+              open={addStockToCollectionDialogOpen}
+              onClose={() => setAddStockToCollectionDialogOpen(false)}
+            >
+              <AddStockToCollection
+                collection={props.portfolio}
+                onAdd={props.getPortfolios}
+                onClose={() => setAddStockToCollectionDialogOpen(false)}
+              />
+            </PinnedDialog>
+            {/* Edit Dialog */}
+            <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+              <EditPortfolio
+                portfolio={props.portfolio}
+                onEdit={props.getPortfolios}
+                onClose={() => setEditDialogOpen(false)}
+              />
+            </Dialog>
+            {/* Delete Dialog */}
+            <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+              <DeletePortfolio
+                portfolio={props.portfolio}
+                onClose={() => setDeleteDialogOpen(false)}
+                onDelete={props.getPortfolios}
+              />
+            </Dialog>
+          </>
+        ) : (
+          <></>
+        )}
       </CardActions>
     </Card>
   );

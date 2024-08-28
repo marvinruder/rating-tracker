@@ -20,7 +20,7 @@ const CurrencyAutocomplete = (props: CurrencyAutocompleteProps): JSX.Element => 
       inputValue={currencyInputValue}
       onInputChange={(_, value) => setCurrencyInputValue(value)}
       multiple={false}
-      value={props.value}
+      value={props.value as Currency}
       onChange={props.onChange}
       onInvalid={props.onInvalid}
       filterOptions={(options) => {
@@ -33,7 +33,8 @@ const CurrencyAutocomplete = (props: CurrencyAutocompleteProps): JSX.Element => 
         isCurrency(currentInputValue) && filteredOptions.unshift(currentInputValue);
         // If the text input is identical to a complete option label (this happens when opening the dropdown for the
         // first time), we show it as the first option.
-        currencyNameWithFlagAndCode[props.value] === currencyInputValue.trim() && filteredOptions.unshift(props.value);
+        currencyNameWithFlagAndCode[props.value!] === currencyInputValue.trim() &&
+          filteredOptions.unshift(props.value!);
         return filteredOptions;
       }}
       disableClearable
@@ -59,7 +60,7 @@ interface CurrencyAutocompleteProps {
   /**
    * The value of the autocomplete.
    */
-  value: Currency;
+  value: Currency | null;
   /**
    * The change handler of the autocomplete.
    */

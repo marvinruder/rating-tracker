@@ -54,10 +54,10 @@ export const messageTypeDescription: Record<MessageType, string> = {
 };
 
 /**
- * Checks if a string is a valid type of message that can be sent to a user.
- * @param s The string to check.
- * @returns True if the string is a valid type of message that can be sent to a user.
+ * Checks if an entity is a valid type of message that can be sent to a user.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid type of message that can be sent to a user.
  */
-export function isMessageType(s: string): s is MessageType {
-  return messageTypeArray.includes(s as MessageType);
+export function isMessageType(entity: unknown): entity is MessageType {
+  return messageTypeArray.includes(entity as MessageType);
 }

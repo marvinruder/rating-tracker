@@ -32,7 +32,7 @@ const hasProperty = (stock: Stock, property: string): boolean => {
       return regionOfCountry[stock.country] === property;
     case isSector(property):
       /* c8 ignore next */ // We only test some properties of the stock object.
-      return sectorOfIndustryGroup[groupOfIndustry[stock.industry]] === property;
+      return sectorOfIndustryGroup[groupOfIndustry[stock.industry!]] === property;
     case isSize(property):
       return stock.size === property;
     case isStyle(property):

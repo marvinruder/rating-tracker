@@ -12,12 +12,12 @@ export const superRegionArray = ["Americas", "EMEA", "Asia"] as const;
 export type SuperRegion = (typeof superRegionArray)[number];
 
 /**
- * Checks if a string is a valid super region.
- * @param s The string to check.
- * @returns True if the string is a valid super region.
+ * Checks if an entity is a valid super region.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid super region.
  */
-export function isSuperRegion(s: string): s is SuperRegion {
-  return superRegionArray.includes(s as SuperRegion);
+export function isSuperRegion(entity: unknown): entity is SuperRegion {
+  return superRegionArray.includes(entity as SuperRegion);
 }
 
 /**

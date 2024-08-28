@@ -8,7 +8,7 @@ import { dataProviderName, type Stock } from "@rating-tracker/commons";
  * @returns The component.
  */
 const LinkToDataProvider = (props: React.PropsWithChildren<LinkToDataProviderProps>): JSX.Element => {
-  return props.href ? (
+  return props.href && props.stock ? (
     <Link
       aria-label={`Open “${props.stock.name}” on ${props.dataProvider} in a new tab.`}
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
@@ -90,8 +90,9 @@ export const MSCINavigator = (props: React.PropsWithChildren<NavigatorProps>): J
   <LinkToDataProvider
     href={
       props.stock?.msciID
-        ? "https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/" +
-          props.stock.msciID
+        ? `https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool/issuer/${
+            props.stock.msciID
+          }`
         : ""
     }
     dataProvider={dataProviderName["msci"]}
@@ -113,8 +114,9 @@ export const LSEGNavigator = (props: React.PropsWithChildren<NavigatorProps>): J
   <LinkToDataProvider
     href={
       props.stock?.ric
-        ? "https://www.lseg.com/en/data-analytics/sustainable-finance/esg-scores?esg=" +
-          encodeURIComponent(props.stock?.name)
+        ? `https://www.lseg.com/en/data-analytics/sustainable-finance/esg-scores?esg=${encodeURIComponent(
+            props.stock?.name,
+          )}`
         : ""
     }
     dataProvider={dataProviderName["lseg"]}
@@ -165,7 +167,7 @@ interface NavigatorProps {
   /**
    * The stock containing the IDs that the navigators use.
    */
-  stock: Stock;
+  stock?: Stock;
 }
 
 /**
@@ -179,7 +181,7 @@ interface LinkToDataProviderProps {
   /**
    * The stock containing the name to use in ARIA labels.
    */
-  stock: Stock;
+  stock?: Stock;
   /**
    * The name of the data provider to use in ARIA labels.
    */

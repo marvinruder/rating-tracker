@@ -25,12 +25,12 @@ export const sectorArray = [
 export type Sector = (typeof sectorArray)[number];
 
 /**
- * Checks if a string is a valid sector.
- * @param s The string to check.
- * @returns True if the string is a valid sector.
+ * Checks if an entity is a valid sector.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid sector.
  */
-export function isSector(s: string): s is Sector {
-  return sectorArray.includes(s as Sector);
+export function isSector(entity: unknown): entity is Sector {
+  return sectorArray.includes(entity as Sector);
 }
 
 /**

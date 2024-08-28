@@ -36,13 +36,13 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
             </Typography>
             <Typography variant="subtitle2">
               {props.portfolio ? (
-                (props.portfolio.stocks.length || "No") +
-                ` stock${pluralize(props.portfolio.stocks.length)}` +
-                (props.portfolio.stocks.length
-                  ? `\u2002·\u2002${props.portfolio.currency} ${getTotalAmount(props.portfolio).toFixed(
-                      currencyMinorUnits[props.portfolio.currency],
-                    )} total`
-                  : "")
+                `${props.portfolio.stocks.length || "No"} stock${pluralize(props.portfolio.stocks.length)}${
+                  props.portfolio.stocks.length
+                    ? `\u2002·\u2002${props.portfolio.currency} ${getTotalAmount(props.portfolio).toFixed(
+                        currencyMinorUnits[props.portfolio.currency],
+                      )} total`
+                    : ""
+                }`
               ) : (
                 <Skeleton width="48px" />
               )}

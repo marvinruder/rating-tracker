@@ -10,24 +10,26 @@ const mockExit = vi.spyOn(process, "exit").mockImplementation((() => {}) as () =
 
 describe.concurrent("startup routine", () => {
   it("fails when mandatory environment variable is unset", () => {
+    // @ts-expect-error
     process.env.PORT = "";
     startup();
     expect(mockExit).toHaveBeenCalledWith(1);
   });
 
   it("fails when port is out of range", () => {
-    process.env.PORT = "65536";
+    process.env.PORT = 65536;
     startup();
     expect(mockExit).toHaveBeenCalledWith(1);
   });
 
   it("fails when port is not an integer", () => {
-    process.env.PORT = "30.01";
+    process.env.PORT = 30.01;
     startup();
     expect(mockExit).toHaveBeenCalledWith(1);
   });
 
   it("fails when port is not a number", () => {
+    // @ts-expect-error
     process.env.PORT = "port";
     startup();
     expect(mockExit).toHaveBeenCalledWith(1);

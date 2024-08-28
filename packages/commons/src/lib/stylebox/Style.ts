@@ -9,10 +9,10 @@ export const styleArray = ["Value", "Blend", "Growth"] as const;
 export type Style = (typeof styleArray)[number];
 
 /**
- * Checks if a string is a valid style in the Morningstar Style Box.
- * @param s The string to check.
- * @returns True if the string is a valid style in the Morningstar Style Box.
+ * Checks if an entity is a valid style in the Morningstar Style Box.
+ * @param entity The entity to check.
+ * @returns True if the entity is a valid style in the Morningstar Style Box.
  */
-export function isStyle(s: string): s is Style {
-  return styleArray.includes(s as Style);
+export function isStyle(entity: unknown): entity is Style {
+  return styleArray.includes(entity as Style);
 }

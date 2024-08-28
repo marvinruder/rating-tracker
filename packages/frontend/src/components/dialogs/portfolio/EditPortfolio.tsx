@@ -2,11 +2,11 @@ import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { Currency, PortfolioSummary } from "@rating-tracker/commons";
-import { isCurrency, portfoliosAPIPath } from "@rating-tracker/commons";
+import { handleResponse, isCurrency } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
 
+import portfolioClient from "../../../api/portfolio";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 import CurrencyAutocomplete from "../../autocomplete/CurrencyAutocomplete";
 
 /**
@@ -30,8 +30,8 @@ export const EditPortfolio = (props: EditPortfolioProps): JSX.Element => {
    * @returns Whether the input fields are valid.
    */
   const validate = (): boolean => {
-    const isNameValid = nameInputRef.current?.checkValidity();
-    const isCurrencyValid = currencyInputRef.current?.checkValidity();
+    const isNameValid = nameInputRef.current?.checkValidity() ?? false;
+    const isCurrencyValid = currencyInputRef.current?.checkValidity() ?? false;
     return isNameValid && isCurrencyValid;
   };
 
@@ -41,14 +41,16 @@ export const EditPortfolio = (props: EditPortfolioProps): JSX.Element => {
   const updatePortfolio = () => {
     if (!validate()) return;
     setRequestInProgress(true);
-    api
-      .patch(portfoliosAPIPath + `/${props.portfolio.id}`, {
-        params: {
+    portfolioClient[":id"]
+      .$patch({
+        param: { id: String(props.portfolio.id) },
+        json: {
           // Only send the parameters that have changed.
-          name: name !== props.portfolio.name ? name.trim() : undefined,
-          currency: currency !== props.portfolio.currency ? currency : undefined,
+          ...(name !== props.portfolio.name ? { name: name.trim() } : {}),
+          ...(currency !== props.portfolio.currency ? { currency } : {}),
         },
       })
+      .then(handleResponse)
       .then(() => (props.onEdit(), props.onClose())) // Update the portfolios in the parent component.
       .catch((e) => setErrorNotificationOrClearSession(e, "updating portfolio"))
       .finally(() => setRequestInProgress(false));

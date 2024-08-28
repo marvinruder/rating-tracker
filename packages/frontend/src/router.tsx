@@ -217,14 +217,14 @@ const routes: RouteObject[] = [
       </AuthWrapper>
     ),
     children: [
-      { path: portfoliosAPIPath + "/:id", element: <Portfolio /> },
+      { path: `${portfoliosAPIPath}/:id`, element: <Portfolio /> },
       { path: portfoliosAPIPath + portfolioBuilderEndpointSuffix, element: <PortfolioBuilder /> },
       { path: portfoliosAPIPath, element: <PortfolioSummary /> },
       { path: stocksAPIPath, element: <StockList /> },
-      { path: stocksAPIPath + "/:ticker", element: <Stock /> },
+      { path: `${stocksAPIPath}/:ticker`, element: <Stock /> },
       { path: usersAPIPath, element: <UserManagement /> },
       { path: watchlistsAPIPath, element: <WatchlistSummary /> },
-      { path: watchlistsAPIPath + "/:id", element: <Watchlist /> },
+      { path: `${watchlistsAPIPath}/:id`, element: <Watchlist /> },
     ],
   },
   {

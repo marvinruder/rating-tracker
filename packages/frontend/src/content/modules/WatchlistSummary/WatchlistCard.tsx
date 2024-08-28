@@ -19,16 +19,16 @@ import {
   Typography,
 } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
-import { FAVORITES_NAME, pluralize, watchlistsAPIPath } from "@rating-tracker/commons";
+import { FAVORITES_NAME, handleResponse, pluralize, watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
+import watchlistClient from "../../../api/watchlist";
 import PinnedDialog from "../../../components/dialogs/PinnedDialog";
 import AddStockToCollection from "../../../components/dialogs/stock/AddStockToCollection";
 import { DeleteWatchlist } from "../../../components/dialogs/watchlist/DeleteWatchlist";
 import { RenameWatchlist } from "../../../components/dialogs/watchlist/RenameWatchlist";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import api from "../../../utils/api";
 
 /**
  * This component displays information about a watchlist in a card used in the watchlist summary module.
@@ -54,7 +54,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
                   <Typography variant="h3">{props.watchlist?.name ?? <Skeleton width="160px" />}</Typography>
                   <Typography variant="subtitle1" color="text.secondary">
                     {props.watchlist ? (
-                      (props.watchlist.stocks.length || "No") + ` stock${pluralize(props.watchlist.stocks.length)}`
+                      `${props.watchlist.stocks.length || "No"} stock${pluralize(props.watchlist.stocks.length)}`
                     ) : (
                       <Skeleton width="48px" />
                     )}
@@ -85,17 +85,19 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
                 } stock updates for watchlist “${props.watchlist.name}”`}
                 color={props.watchlist.subscribed ? "primary" : undefined}
                 onClick={() => {
-                  api
-                    .patch(watchlistsAPIPath + `/${props.watchlist.id}`, {
-                      params: { subscribed: !props.watchlist.subscribed },
+                  watchlistClient[":id"]
+                    .$patch({
+                      param: { id: String(props.watchlist!.id) },
+                      json: { subscribed: !props.watchlist!.subscribed },
                     })
+                    .then(handleResponse)
                     .then(() => props.getWatchlists && props.getWatchlists())
                     .catch((e) =>
                       setErrorNotificationOrClearSession(
                         e,
-                        props.watchlist.subscribed
-                          ? `unsubscribing from watchlist “${props.watchlist.name}”`
-                          : `subscribing to watchlist “${props.watchlist.name}”`,
+                        props.watchlist!.subscribed
+                          ? `unsubscribing from watchlist “${props.watchlist!.name}”`
+                          : `subscribing to watchlist “${props.watchlist!.name}”`,
                       ),
                     );
                 }}
@@ -154,35 +156,41 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
         ) : (
           <Skeleton variant="rounded" width={40} height={40} sx={{ display: "inline-block", ml: 1 }} />
         )}
-        {/* Add Stock to Collection Dialog */}
-        <PinnedDialog
-          maxWidth="xs"
-          fullWidth
-          open={addStockToCollectionDialogOpen}
-          onClose={() => setAddStockToCollectionDialogOpen(false)}
-        >
-          <AddStockToCollection
-            collection={props.watchlist}
-            onAdd={props.getWatchlists}
-            onClose={() => setAddStockToCollectionDialogOpen(false)}
-          />
-        </PinnedDialog>
-        {/* Rename Dialog */}
-        <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
-          <RenameWatchlist
-            watchlist={props.watchlist}
-            onRename={props.getWatchlists}
-            onClose={() => setRenameDialogOpen(false)}
-          />
-        </Dialog>
-        {/* Delete Dialog */}
-        <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-          <DeleteWatchlist
-            watchlist={props.watchlist}
-            onClose={() => setDeleteDialogOpen(false)}
-            onDelete={props.getWatchlists}
-          />
-        </Dialog>
+        {props.watchlist && props.getWatchlists ? (
+          <>
+            {/* Add Stock to Collection Dialog */}
+            <PinnedDialog
+              maxWidth="xs"
+              fullWidth
+              open={addStockToCollectionDialogOpen}
+              onClose={() => setAddStockToCollectionDialogOpen(false)}
+            >
+              <AddStockToCollection
+                collection={props.watchlist}
+                onAdd={props.getWatchlists}
+                onClose={() => setAddStockToCollectionDialogOpen(false)}
+              />
+            </PinnedDialog>
+            {/* Rename Dialog */}
+            <Dialog open={renameDialogOpen} onClose={() => setRenameDialogOpen(false)}>
+              <RenameWatchlist
+                watchlist={props.watchlist}
+                onRename={props.getWatchlists}
+                onClose={() => setRenameDialogOpen(false)}
+              />
+            </Dialog>
+            {/* Delete Dialog */}
+            <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+              <DeleteWatchlist
+                watchlist={props.watchlist}
+                onClose={() => setDeleteDialogOpen(false)}
+                onDelete={props.getWatchlists}
+              />
+            </Dialog>
+          </>
+        ) : (
+          <></>
+        )}
       </CardActions>
     </Card>
   );
