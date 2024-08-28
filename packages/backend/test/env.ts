@@ -1,3 +1,4 @@
+// @ts-ignore
 process.env = {
   ...process.env,
   DATABASE_URL: `postgresql://postgres:postgres@${process.env.POSTGRES_HOST ?? "postgres-test"}:5432/postgres`,
@@ -9,4 +10,4 @@ process.env = {
   LOG_FILE: "/dev/null",
   SIGNAL_URL: "http://signal",
   SIGNAL_SENDER: "+493012345678",
-} as typeof process.env;
+};
