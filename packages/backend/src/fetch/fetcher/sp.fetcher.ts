@@ -48,8 +48,6 @@ class SPFetcher extends IndividualFetcher {
       ) {
         // If the content is available for premium subscribers only, we throw an error.
         // Sadly, we are not a premium subscriber :(
-        // We will still count this as a successful fetch
-        await this.stockService.update(stock.ticker, { spLastFetch: new Date() });
         throw new DataProviderError(SP_PREMIUM_STOCK_ERROR_MESSAGE, { dataSources: [document] });
       }
       spESGScore = Number(document.getElementsByClassName("scoreModule__score")[0].textContent);
@@ -73,7 +71,8 @@ class SPFetcher extends IndividualFetcher {
 
     // Update the stock in the database.
     await this.stockService.update(stock.ticker, {
-      spLastFetch: errorMessage.includes("\n") ? undefined : new Date(),
+      spLastFetch:
+        errorMessage.includes("\n") && !errorMessage.includes(SP_PREMIUM_STOCK_ERROR_MESSAGE) ? undefined : new Date(),
       spESGScore,
     });
     // An error occurred if and only if the error message contains a newline character.

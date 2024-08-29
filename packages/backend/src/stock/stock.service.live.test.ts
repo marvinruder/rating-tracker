@@ -172,6 +172,33 @@ tests.push({
 });
 
 tests.push({
+  testName: "[unsafe] updates a stock with an undefined property",
+  testFunction: async () => {
+    await stockService.create({
+      ...optionalStockValuesNull,
+      ticker: "NEWSTOCK",
+      name: "New Stock Inc.",
+      isin: "US123456789",
+      country: "US",
+    });
+    await stockService.update("NEWSTOCK", { spLastFetch: new Date(), spESGScore: 80 });
+    const stock = await stockService.read("NEWSTOCK");
+    expect(stock.spESGScore).toBe(80);
+    expect(stock.esgScore).toBeTypeOf("number");
+    expect(stock.totalScore).toBeTypeOf("number");
+    expect(stock.esgScore).toBeGreaterThan(0);
+    expect(stock.totalScore).toBeGreaterThanOrEqual(0);
+
+    await stockService.update("NEWSTOCK", { spLastFetch: new Date(), spESGScore: undefined });
+    const updatedStock = await stockService.read("NEWSTOCK");
+    // `undefined` properties must be ignored, so we expect the values to be the same as before
+    expect(updatedStock.spESGScore).toBe(80);
+    expect(updatedStock.esgScore).toBe(stock.esgScore);
+    expect(updatedStock.totalScore).toBe(stock.totalScore);
+  },
+});
+
+tests.push({
   testName: "reads stocks fetchable from a given data provider",
   testFunction: async () => {
     let stocks = await stockService.readFetchable("yahoo");
