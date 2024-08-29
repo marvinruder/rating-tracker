@@ -546,6 +546,10 @@ class StockService {
           default:
             break;
         }
+      } else {
+        // If a value is undefined, i.e. has not been set in the fetch controller, we delete it from the object to not
+        // overwrite existing values or interfere with the dynamic stock attribute computation.
+        delete newValues[k];
       }
     }
     if (isNewData || forceUpdate) {
