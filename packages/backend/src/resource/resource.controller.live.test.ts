@@ -1,5 +1,5 @@
 import { baseURL, resourcesAPIPath } from "@rating-tracker/commons";
-import { DOMParser } from "@xmldom/xmldom";
+import { DOMParser, MIME_TYPE } from "@xmldom/xmldom";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import { expectRouteToBePrivate } from "../../test/liveTestHelpers";
@@ -31,10 +31,9 @@ tests.push({
     });
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toMatch("text/html");
-    expect(
-      new DOMParser().parseFromString(await res.text(), res.headers.get("content-type")!).getElementById("hello")!
-        .textContent,
-    ).toBe("Hello World!");
+    expect(new DOMParser().parseFromString(await res.text(), MIME_TYPE.HTML).getElementById("hello")!.textContent).toBe(
+      "Hello World!",
+    );
   },
 });
 

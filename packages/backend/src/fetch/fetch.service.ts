@@ -9,7 +9,7 @@ import {
   isIndividualDataProvider,
   resourcesAPIPath,
 } from "@rating-tracker/commons";
-import { DOMParser } from "@xmldom/xmldom";
+import { DOMParser, MIME_TYPE } from "@xmldom/xmldom";
 
 import type ResourceService from "../resource/resource.service";
 import SignalService from "../signal/signal.service";
@@ -106,15 +106,39 @@ class FetchService {
   /**
    * Apply data-provider-specific patches to the HTML document.
    * @param html The HTML document to patch
+   * @param dataProvider The data provider to apply patches for
    * @returns The patched HTML document
    */
-  static #patchHTML(html: string): string {
-    // This patch is required for malformatted Morningstar pages
-    html = html.replaceAll("</P>", "</p>");
-    return html.trim().startsWith("<div")
-      ? // This patch is required as the MSCI response does not contain a complete HTML page
-        `<html><body>${html}</body></html>`
-      : html;
+  static #patchHTML(html: string, dataProvider: IndividualDataProvider): string {
+    // Measure runtime:
+    switch (dataProvider) {
+      case "morningstar":
+        // The following patches are required for malformatted Morningstar pages
+        return html.replaceAll("</P>", "</p>").replaceAll("xlink:href", "href");
+      case "marketScreener":
+        // The following patches are required for malformatted MarketScreener pages
+        return html
+          .replace(/<header\b[\s\S]*<\/header>/gm, "")
+          .replace(/<aside\b[\s\S]*<\/aside>/gm, "")
+          .replace(/<footer>[\s\S]*/gm, "</body></html>")
+          .replaceAll('<td class="is__realtime px-5">', "")
+          .replaceAll("media--1610", "media-1610");
+      case "msci":
+        // This patch is required as the MSCI response does not contain a complete HTML page
+        return `<html><body>${html}</body></html>`;
+      case "sp":
+        // The following patches are required for malformatted S&P pages
+        return html
+          .replaceAll("href=/esg/", 'href="/esg/"')
+          .replaceAll("</br>", "<br>")
+          .replace(
+            "<div></span>S&P Global CSA Score =</span> </span>",
+            "<div><span>S&P Global CSA Score =</span> <span>",
+          )
+          .replace("<div></span>Modeled Scores = </span> </span>", "<div><span>Modeled Scores = </span> <span>");
+      default:
+        return html;
+    }
   }
 
   /**
@@ -371,28 +395,25 @@ class FetchService {
           "Chrome/124.0.0.0 Safari/537.36",
       },
     })
-      .then((res) => this.#patchHTML(res.data))
+      .then((res) => this.#patchHTML(res.data, dataProvider))
       .catch((e) => {
         // If the status code indicates a non-successful fetch, we try to parse the response nonetheless
         if (e instanceof FetchError) {
           error = e;
-          return this.#patchHTML(e.response.data);
+          return this.#patchHTML(e.response.data, dataProvider);
         }
         throw e;
       });
     const parser = new DOMParser({
-      errorHandler: {
-        warning: () => undefined,
-        error: () => undefined,
-        fatalError: (e) => {
+      onError: (level, msg) => {
+        if (level === "fatalError")
           Logger.warn(
-            { prefix: "fetch", err: e instanceof Error ? e : new DataProviderError(e) },
-            `Stock ${stock.ticker}: Error while parsing ${dataProviderName[dataProvider]} information: ${e}`,
+            { prefix: "fetch", err: new DataProviderError(msg) },
+            `Stock ${stock.ticker}: Error while parsing ${dataProviderName[dataProvider]} information: ${msg}`,
           );
-        },
       },
     });
-    const document = parser.parseFromString(responseData, "text/html");
+    const document = parser.parseFromString(responseData, MIME_TYPE.HTML);
     if (error)
       throw new DataProviderError(`Error while fetching HTML page: ${error.message}`, {
         cause: error,
