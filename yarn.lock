@@ -1478,7 +1478,7 @@ __metadata:
     "@prisma/client": "npm:5.19.0"
     "@rating-tracker/commons": "workspace:*"
     "@simplewebauthn/server": "npm:10.0.1"
-    "@types/node": "npm:22.5.1"
+    "@types/node": "npm:22.5.2"
     "@types/node-cron": "npm:3.0.11"
     "@typescript-eslint/eslint-plugin": "npm:8.3.0"
     "@typescript-eslint/parser": "npm:8.3.0"
@@ -1553,7 +1553,7 @@ __metadata:
     "@rating-tracker/wasm": "workspace:*"
     "@react-spring/web": "npm:9.7.4"
     "@simplewebauthn/browser": "npm:10.0.0"
-    "@types/node": "npm:22.5.1"
+    "@types/node": "npm:22.5.2"
     "@types/react": "npm:18.3.5"
     "@types/react-dom": "npm:18.3.0"
     "@typescript-eslint/eslint-plugin": "npm:8.3.0"
@@ -2024,12 +2024,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:22.5.1":
-  version: 22.5.1
-  resolution: "@types/node@npm:22.5.1"
+"@types/node@npm:*, @types/node@npm:22.5.2":
+  version: 22.5.2
+  resolution: "@types/node@npm:22.5.2"
   dependencies:
     undici-types: "npm:~6.19.2"
-  checksum: 10c0/35373176d8a1d4e16004a1ed303e68d39e4c6341024dc056f2577982df98c1a045a6b677f12ed557796f09bbf7d621f428f6874cc37ed28f7b336fa604b5f6a6
+  checksum: 10c0/624a7fd76229eacc6c158eb3b9afd55b811d7f01976c5f92c630d5b9d47047cc218928c343988484a165ac400e5eb6fe70ea300fc7242deeb0e920c7724290f6
   languageName: node
   linkType: hard
 
