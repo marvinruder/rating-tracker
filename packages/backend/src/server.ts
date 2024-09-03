@@ -54,6 +54,7 @@ import StockService from "./stock/stock.service";
 import UserController from "./user/user.controller";
 import UserService from "./user/user.service";
 import CronScheduler from "./utils/CronScheduler";
+import NotFoundError from "./utils/error/api/NotFoundError";
 import ErrorHelper from "./utils/error/errorHelper";
 import Logger from "./utils/logger";
 import { ipExtractor, sessionValidator, staticFileHandler } from "./utils/middlewares";
@@ -181,10 +182,14 @@ app.route(
     .route(watchlistsAPIPath, new WatchlistController(watchlistService).router),
 );
 
-// Setup Cron Jobs
-new CronScheduler(fetchService, resourceService, sessionService, signalService, userService);
+app.notFound((c) => {
+  throw new NotFoundError(`Endpoint ${c.req.path} not found.`);
+});
 
 app.onError(ErrorHelper.errorHandler);
+
+// Setup Cron Jobs
+new CronScheduler(fetchService, resourceService, sessionService, signalService, userService);
 
 export const server = serve({ fetch: app.fetch, hostname: "::", port: process.env.PORT }, (info) => {
   Logger.info(
