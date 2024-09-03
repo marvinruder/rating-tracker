@@ -1497,7 +1497,7 @@ __metadata:
     hono: "npm:4.5.11"
     hono-rate-limiter: "npm:0.4.0"
     node-cron: "npm:3.0.3"
-    pino: "npm:9.3.2"
+    pino: "npm:9.4.0"
     pino-pretty: "npm:11.2.2"
     prettier: "npm:3.3.3"
     prisma: "npm:5.19.1"
@@ -6426,9 +6426,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:9.3.2":
-  version: 9.3.2
-  resolution: "pino@npm:9.3.2"
+"pino@npm:9.4.0":
+  version: 9.4.0
+  resolution: "pino@npm:9.4.0"
   dependencies:
     atomic-sleep: "npm:^1.0.0"
     fast-redact: "npm:^3.1.1"
@@ -6443,7 +6443,7 @@ __metadata:
     thread-stream: "npm:^3.0.0"
   bin:
     pino: bin.js
-  checksum: 10c0/698eb2ebfcc4252da9d035fcf9c999bf27615b66ebc47f9b3d7e942750e50ebe38429e6457abcf8014d70125964ddf114e696cb8225b480d9930271708e3fb52
+  checksum: 10c0/12a3d74968964d92b18ca7d6095a3c5b86478dc22264a37486d64e102085ed08820fcbe75e640acc3542fdf2937a34e5050b624f98e6ac62dd10f5e1328058a2
   languageName: node
   linkType: hard
 
