@@ -25,3 +25,13 @@ tests.push({
     expect(body).toContain("https://cdn.jsdelivr.net/npm/swagger-ui-dist/");
   },
 });
+
+tests.push({
+  testName: "sends 404 Not Found error response for unknown endpoints",
+  testFunction: async () => {
+    const res = await app.request("/api/hello");
+    const body = await res.json();
+    expect(res.status).toBe(404);
+    expect(body.message).toMatch("Endpoint /api/hello not found");
+  },
+});
