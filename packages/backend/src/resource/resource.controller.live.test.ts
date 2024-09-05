@@ -31,9 +31,11 @@ tests.push({
     });
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toMatch("text/html");
-    expect(new DOMParser().parseFromString(await res.text(), MIME_TYPE.HTML).getElementById("hello")!.textContent).toBe(
-      "Hello World!",
-    );
+    expect(
+      (new DOMParser().parseFromString(await res.text(), MIME_TYPE.HTML) as unknown as Document).getElementById(
+        "hello",
+      )!.textContent,
+    ).toBe("Hello World!");
   },
 });
 

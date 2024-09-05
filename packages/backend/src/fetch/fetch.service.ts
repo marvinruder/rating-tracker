@@ -413,7 +413,8 @@ class FetchService {
           );
       },
     });
-    const document = parser.parseFromString(responseData, MIME_TYPE.HTML);
+    // We are expecting an HTML document here, so we can safely cast the result to a `Document`
+    const document = parser.parseFromString(responseData, MIME_TYPE.HTML) as unknown as Document;
     if (error)
       throw new DataProviderError(`Error while fetching HTML page: ${error.message}`, {
         cause: error,
