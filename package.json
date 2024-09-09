@@ -27,7 +27,7 @@
     "@yarnpkg/sdks": "3.2.0",
     "eslint": "8.57.0",
     "prettier": "3.3.3",
-    "typescript": "5.5.4"
+    "typescript": "5.6.2"
   },
   "resolutions": {
     "vite/esbuild": "0.23.1",
