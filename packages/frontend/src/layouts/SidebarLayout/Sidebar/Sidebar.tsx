@@ -12,20 +12,22 @@ import { SidebarContent } from "./SidebarContent";
 const SidebarWrapper: FC<React.PropsWithChildren<BoxProps>> = (
   props: React.PropsWithChildren<BoxProps>,
 ): JSX.Element => {
-  const theme = useTheme();
-
   return (
     <Box
-      width={theme.sidebar.width}
-      color={theme.colors.alpha.trueWhite[70]}
-      position="relative"
-      zIndex={7}
-      display="flex"
-      flexDirection="column"
-      height="100dvh"
-      overflow="scroll"
-      boxShadow={theme.palette.mode === "dark" ? theme.sidebar.boxShadow : "none"}
       {...props}
+      sx={(theme) => ({
+        ...(props.sx as object),
+        width: theme.sidebar.width,
+        color: theme.palette.trueWhite.alpha70,
+        position: "relative",
+        zIndex: 7,
+        display: "flex",
+        flexDirection: "column",
+        height: "100dvh",
+        overflow: "scroll",
+        ...theme.applyStyles("light", { boxShadow: "none" }),
+        ...theme.applyStyles("dark", { boxShadow: theme.palette.sidebar.boxShadow }),
+      })}
     >
       {props.children}
     </Box>
@@ -39,23 +41,20 @@ const SidebarWrapper: FC<React.PropsWithChildren<BoxProps>> = (
  */
 export const Sidebar = (props: SidebarProps): JSX.Element => {
   const theme = useTheme();
-
   return (
-    <Box position="fixed" height="100dvh">
+    <Box sx={{ position: "fixed", height: "100dvh" }}>
       {useMediaQuery(theme.breakpoints.up("lg")) ? (
         <SidebarWrapper
           sx={{
-            background:
-              theme.palette.mode === "dark"
-                ? alpha(lighten(theme.header.background, 0.1), 0.5)
-                : alpha(darken(theme.colors.alpha.black[100], 0.5), 0.85),
+            ...theme.applyStyles("light", { background: alpha(darken(theme.palette.black.main, 0.5), 0.85) }),
+            ...theme.applyStyles("dark", { background: alpha(lighten(theme.palette.white.main, 0.1), 0.5) }),
           }}
         >
           <SidebarContent closeSidebar={props.closeSidebar} />
         </SidebarWrapper>
       ) : (
         <Drawer
-          sx={{ boxShadow: `${theme.sidebar.boxShadow}` }}
+          sx={(theme) => ({ boxShadow: `${theme.palette.sidebar.boxShadow}` })}
           open={props.sidebarToggle}
           onClose={props.closeSidebar}
           variant="temporary"
@@ -63,10 +62,8 @@ export const Sidebar = (props: SidebarProps): JSX.Element => {
         >
           <SidebarWrapper
             sx={{
-              background:
-                theme.palette.mode === "dark"
-                  ? theme.colors.alpha.white[100]
-                  : alpha(darken(theme.colors.alpha.black[100], 0.5), 0.85),
+              ...theme.applyStyles("light", { background: alpha(darken(theme.palette.black.main, 0.5), 0.85) }),
+              ...theme.applyStyles("dark", { background: theme.palette.white.main }),
             }}
           >
             <SidebarContent closeSidebar={props.closeSidebar} />

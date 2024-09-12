@@ -14,7 +14,6 @@ import {
   Tooltip,
   Skeleton,
   Dialog,
-  useTheme,
 } from "@mui/material";
 import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
 import { FAVORITES_NAME, handleResponse, pluralize } from "@rating-tracker/commons";
@@ -37,8 +36,6 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
   const { refetchFavorites } = useFavoritesContextUpdater();
-
-  const theme = useTheme();
 
   useEffect(() => getWatchlists(), []);
 
@@ -83,15 +80,15 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
         <Typography variant="h3">Add Stock “{props.stock.name}” to Watchlist</Typography>
       </DialogTitle>
       <DialogContent>
-        <Typography variant="body1" mb={1}>
+        <Typography variant="body1" sx={{ mb: 1 }}>
           Select the watchlist you want to add the stock to:
         </Typography>
         <List
           disablePadding
-          sx={{
-            " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
-            " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
-          }}
+          sx={(theme) => ({
+            " > .MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+            " > .MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+          })}
         >
           {watchlistSummariesFinal
             ? watchlistSummaries.map((watchlistSummary) => (

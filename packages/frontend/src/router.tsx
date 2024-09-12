@@ -27,14 +27,16 @@ import { useUserContextState } from "./contexts/UserContext";
  */
 const SuspenseLoader = (): JSX.Element => (
   <Box
-    position="fixed"
-    left={0}
-    top={0}
-    width="100%"
-    height="100%"
-    display="flex"
-    alignItems="center"
-    justifyContent="center"
+    sx={{
+      position: "fixed",
+      left: 0,
+      top: 0,
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
   >
     {/* Loading modules typically blocks the main thread, so we need to use disableShrink */}
     <CircularProgress size={64} thickness={3} disableShrink />

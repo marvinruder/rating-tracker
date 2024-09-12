@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import type { SlideProps } from "@mui/material";
-import { Box, Typography, Grid, Tooltip, Dialog, IconButton, useMediaQuery, Slide } from "@mui/material";
+import { Box, Typography, Grid2 as Grid, Tooltip, Dialog, IconButton, useMediaQuery, Slide } from "@mui/material";
 import { WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useState } from "react";
@@ -23,8 +23,8 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
   const fullScreenDialogs = !useMediaQuery("(min-width:664px)");
 
   return (
-    <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
-      <Grid item>
+    <Grid container sx={{ justifyContent: "space-between", alignItems: "center", rowGap: 1 }}>
+      <Grid>
         <Typography variant="h3" component="h3" gutterBottom>
           Stock List
         </Typography>
@@ -32,7 +32,7 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
           This list shows all stocks currently available in the Rating Tracker.
         </Typography>
       </Grid>
-      <Grid item ml="auto">
+      <Grid sx={{ ml: "auto" }}>
         <Tooltip
           arrow
           title={
@@ -41,7 +41,7 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
               : "You do not have the necessary access rights to create stocks."
           }
         >
-          <Box id="add-stock-label" display="inline-block" ml={1}>
+          <Box id="add-stock-label" sx={{ display: "inline-block", ml: 1 }}>
             <IconButton
               aria-labelledby="add-stock-label"
               color="primary"

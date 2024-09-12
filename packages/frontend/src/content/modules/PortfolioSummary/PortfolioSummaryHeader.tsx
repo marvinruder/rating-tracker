@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
-import { Box, Dialog, Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Dialog, Grid2 as Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { portfolioBuilderEndpointSuffix, portfoliosAPIPath } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useState } from "react";
@@ -20,23 +20,23 @@ export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
   const navigate = useNavigate();
 
   return (
-    <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
-      <Grid item>
+    <Grid container sx={{ justifyContent: "space-between", alignItems: "center", rowGap: 1 }}>
+      <Grid>
         <Typography variant="h3" component="h3" gutterBottom>
           Your Portfolios
         </Typography>
         <Typography variant="subtitle2">Create and analyze your plan for a one-time or monthly investment.</Typography>
       </Grid>
-      <Grid item ml="auto">
+      <Grid sx={{ ml: "auto" }}>
         <Tooltip arrow title="Create a new portfolio">
-          <Box id="add-portfolio-label" display="inline-block" ml={1}>
+          <Box id="add-portfolio-label" sx={{ display: "inline-block", ml: 1 }}>
             <IconButton aria-labelledby="add-portfolio-label" color="primary" onClick={() => setAddPortfolioOpen(true)}>
               <AddIcon />
             </IconButton>
           </Box>
         </Tooltip>
         <Tooltip arrow title="Start Portfolio Builder">
-          <Box id="start-portfolio-builder-label" display="inline-block" ml={1}>
+          <Box id="start-portfolio-builder-label" sx={{ display: "inline-block", ml: 1 }}>
             <IconButton
               aria-labelledby="start-portfolio-builder-label"
               color="primary"

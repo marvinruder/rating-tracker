@@ -47,7 +47,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "size":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             The Size of a company based on its market capitalization and geographic area.
           </Typography>
           <Typography variant="body2">
@@ -69,7 +69,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "totalScore":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             An overall score that combines the financial and ESG scores, computed as the harmonic mean of both, so that
             a stock has to perform well in both financial and ESG ratings to obtain a good total score.
           </Typography>
@@ -82,7 +82,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "financialScore":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             A score that measures the financial strength of a company.
           </Typography>
           <Typography variant="body2">
@@ -94,7 +94,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "esgScore":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             A score that measures the environmental, social, and governance (ESG) behavior of a company.
           </Typography>
           <Typography variant="body2">
@@ -106,7 +106,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "starRating":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             The Morningstar star rating is determined by a stock’s current price, Morningstar’s estimate of the stock’s
             fair value, and the uncertainty rating of the fair value. The bigger the discount, the higher the star
             rating.
@@ -121,7 +121,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "morningstarFairValue":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             The Morningstar Fair Value Estimate tells investors what the long-term intrinsic value of a stock is. It is
             calculated using a proprietary model that combines the company’s financial statements, analyst estimates,
             and other factors to determine the company’s fair value.
@@ -145,7 +145,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "analystTargetPrice":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             The average analyst target price is the average of the estimated price targets of analysts who cover a
             stock.
           </Typography>
@@ -162,7 +162,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "msciESGRating":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             The MSCI ESG Rating aims to measure a company’s management of financially relevant ESG risks and
             opportunities. MSCI uses a rules-based methodology to identify industry leaders and laggards according to
             their exposure to ESG risks and how well they manage those risks relative to peers.
@@ -182,7 +182,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "lsegESGScore":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             The LSEG ESG Score measures a company’s ESG performance based on verifiable reported data in the public
             domain.
           </Typography>
@@ -195,7 +195,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "lsegEmissions":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             The LSEG ESG emissions reduction score measures a company’s commitment and effectiveness towards reducing
             environmental emissions in its production and operational processes.
           </Typography>
@@ -208,7 +208,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "spESGScore":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             The S&P Global ESG Score measures a companies’ exposure to and performance on key ESG risks and
             opportunities, the quality and completeness of their public disclosures, and their awareness of emerging but
             underreported ESG issues.
@@ -222,7 +222,7 @@ export const PropertyDescription = (props: { property: DescribedProperty }): JSX
     case "sustainalyticsESGRisk":
       return (
         <>
-          <Typography variant="body1" paddingBottom={1}>
+          <Typography variant="body1" sx={{ paddingBottom: 1 }}>
             The Sustainalytics ESG Risk Rating measures the degree to which a company’s economic value is at risk driven
             by ESG factors.
           </Typography>

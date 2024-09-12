@@ -1,6 +1,6 @@
 import { useMediaQuery, useTheme } from "@mui/material";
 import { handleResponse } from "@rating-tracker/commons";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import logoBackgroundClient from "../../api/logobackground";
 
@@ -14,36 +14,41 @@ const MAX_COUNT = 50;
  * @returns The component.
  */
 export const LogoBackground = (): JSX.Element => {
+  const [logos, setLogos] = useState<string[]>([]);
+
   const theme = useTheme();
+
   const backgroundContainerRef = useRef<HTMLDivElement>(null);
 
   const count = 25 + 25 * +useMediaQuery(theme.breakpoints.up("md"));
 
   useEffect(() => {
-    logoBackgroundClient.index
-      .$get({ query: { variant: theme.palette.mode, count: String(count) } })
-      .then(handleResponse)
-      .then((res) => {
-        const logos = res.data as string[];
-        Array.from(document.getElementsByClassName("backgroundlogo")).forEach((logoDiv, i) => {
-          if (logoDiv instanceof HTMLElement && logos[i]) {
-            logoDiv.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa(logos[i])}')`;
-            logoDiv.animate(
-              {
-                transform: [
-                  `translate(${Math.random() * 100}vw, ${Math.random() * 100}dvh)`,
-                  `translate(${Math.random() * 100}vw, ${Math.random() * 100}dvh)`,
-                ],
-                opacity: [0, 0.4, 0.4, 0.4, 0],
-              },
-              { delay: Math.random() * -60000, duration: 60000, easing: "ease-in-out", iterations: Infinity },
-            );
-          }
-        });
-        if (backgroundContainerRef.current) backgroundContainerRef.current.style.opacity = "1";
-      })
-      .catch(() => undefined); // Ignore errors since the background is not that important
+    Array.from(document.getElementsByClassName("backgroundlogo")).forEach((logoDiv) => {
+      if (logoDiv instanceof HTMLElement)
+        logoDiv.animate(
+          {
+            transform: [
+              `translate(${Math.random() * 100}vw, ${Math.random() * 100}dvh)`,
+              `translate(${Math.random() * 100}vw, ${Math.random() * 100}dvh)`,
+            ],
+            opacity: [0, 0.4, 0.4, 0.4, 0],
+          },
+          { delay: Math.random() * -60000, duration: 60000, easing: "ease-in-out", iterations: Infinity },
+        );
+    });
   }, []);
+
+  useEffect(() => {
+    if (theme.palette.mode)
+      logoBackgroundClient.index
+        .$get({ query: { variant: theme.palette.mode, count: String(count) } })
+        .then(handleResponse)
+        .then((res) => {
+          setLogos(res.data);
+          if (backgroundContainerRef.current) backgroundContainerRef.current.style.opacity = "1";
+        })
+        .catch(() => undefined); // Ignore errors since the background is not that important
+  }, [theme.palette.mode]);
 
   return (
     <div
@@ -66,6 +71,7 @@ export const LogoBackground = (): JSX.Element => {
           className="backgroundlogo"
           style={{
             ...(i > count ? { display: "none" } : {}),
+            ...(logos[i] ? { backgroundImage: `url('data:image/svg+xml;base64,${btoa(logos[i])}')` } : {}),
             position: "absolute",
             height: `${80 - (30 * i) / count}px`,
             width: `${80 - (30 * i) / count}px`,

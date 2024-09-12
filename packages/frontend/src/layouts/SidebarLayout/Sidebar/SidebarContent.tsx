@@ -17,7 +17,7 @@ import {
   Card,
   Typography,
   Tooltip,
-  Grid,
+  Grid2 as Grid,
   Skeleton,
 } from "@mui/material";
 import {
@@ -53,7 +53,7 @@ const MenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (props: React.PropsWi
           textTransform: "uppercase",
           fontWeight: "bold",
           fontSize: 12,
-          color: theme.colors.alpha.trueWhite[50],
+          color: theme.palette.trueWhite.alpha50,
           padding: theme.spacing(0, 2.5),
           lineHeight: 1.4,
         },
@@ -83,7 +83,7 @@ const SubMenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
               position: "absolute",
               right: theme.spacing(3.2),
               ".MuiBadge-standard": {
-                background: theme.colors.primary.main,
+                background: theme.palette.primary.main,
                 fontSize: 10,
                 fontWeight: "bold",
                 textTransform: "uppercase",
@@ -92,7 +92,7 @@ const SubMenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
             },
             ".MuiButton-root": {
               display: "flex",
-              color: theme.colors.alpha.trueWhite[70],
+              color: theme.palette.trueWhite.alpha70,
               backgroundColor: "transparent",
               width: "100%",
               justifyContent: "flex-start",
@@ -101,12 +101,12 @@ const SubMenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
                 transition: theme.transitions.create(["color"]),
                 ".MuiSvgIcon-root": { fontSize: "inherit", transition: "none" },
               },
-              ".MuiButton-startIcon": { color: theme.colors.alpha.trueWhite[30], fontSize: 20, mr: 1 },
-              ".MuiButton-endIcon": { color: theme.colors.alpha.trueWhite[50], ml: "auto", opacity: 0.8, fontSize: 20 },
+              ".MuiButton-startIcon": { color: theme.palette.trueWhite.alpha30, fontSize: 20, mr: 1 },
+              ".MuiButton-endIcon": { color: theme.palette.trueWhite.alpha50, ml: "auto", opacity: 0.8, fontSize: 20 },
               "&.active:not(.notActive), &:hover": {
-                backgroundColor: alpha(theme.colors.alpha.trueWhite[100], 0.06),
-                color: theme.colors.alpha.trueWhite[100],
-                ".MuiButton-startIcon, .MuiButton-endIcon": { color: theme.colors.alpha.trueWhite[100] },
+                backgroundColor: alpha(theme.palette.trueWhite.main, 0.06),
+                color: theme.palette.trueWhite.main,
+                ".MuiButton-startIcon, .MuiButton-endIcon": { color: theme.palette.trueWhite.main },
               },
             },
             "&.Mui-children": {
@@ -123,7 +123,7 @@ const SubMenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
                   ".MuiBadge-root": { right: theme.spacing(3.2) },
                   "&:before": {
                     content: '" "',
-                    background: theme.colors.alpha.trueWhite[100],
+                    background: theme.palette.trueWhite.main,
                     opacity: 0,
                     transition: theme.transitions.create(["transform", "opacity"]),
                     width: 6,
@@ -164,17 +164,17 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
 
   return (
     <>
-      <Box mt={1} mx={2}>
+      <Box sx={{ mt: 1, mx: 2 }}>
         <Logo />
       </Box>
-      <Divider sx={{ mt: 3, mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
+      <Divider sx={{ mt: 3, mx: 2, background: theme.palette.trueWhite.alpha10 }} />
       <MenuWrapper>
         <List component="div">
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
                 <Button
-                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
+                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.palette.trueWhite.alpha30 } }}
                   component={NavLink}
                   onClick={props.closeSidebar}
                   to={stocksAPIPath}
@@ -185,7 +185,7 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
               </ListItem>
               <ListItem component="div">
                 <Button
-                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
+                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.palette.trueWhite.alpha30 } }}
                   component={NavLink}
                   onClick={props.closeSidebar}
                   to={watchlistsAPIPath}
@@ -196,7 +196,7 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
               </ListItem>
               <ListItem component="div">
                 <Button
-                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
+                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.palette.trueWhite.alpha30 } }}
                   component={NavLink}
                   {...(location.pathname === portfoliosAPIPath + portfolioBuilderEndpointSuffix
                     ? { className: "notActive" }
@@ -210,12 +210,12 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
               </ListItem>
             </List>
           </SubMenuWrapper>
-          <Divider sx={{ mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
+          <Divider sx={{ mx: 2, background: theme.palette.trueWhite.alpha10 }} />
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
                 <Button
-                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
+                  sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.palette.trueWhite.alpha30 } }}
                   component={NavLink}
                   onClick={props.closeSidebar}
                   to={portfoliosAPIPath + portfolioBuilderEndpointSuffix}
@@ -228,12 +228,12 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
           </SubMenuWrapper>
           {user.hasAccessRight(ADMINISTRATIVE_ACCESS) && (
             <>
-              <Divider sx={{ mx: 2, background: theme.colors.alpha.trueWhite[10] }} />
+              <Divider sx={{ mx: 2, background: theme.palette.trueWhite.alpha10 }} />
               <SubMenuWrapper>
                 <List component="div">
                   <ListItem component="div">
                     <Button
-                      sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] } }}
+                      sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.palette.trueWhite.alpha30 } }}
                       component={NavLink}
                       onClick={props.closeSidebar}
                       to={usersAPIPath}
@@ -249,11 +249,11 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
         </List>
       </MenuWrapper>
       <Box sx={{ flexGrow: 1 }} />
-      <Box width="100%">
-        <Divider sx={{ background: theme.colors.alpha.trueWhite[10] }} />
+      <Box sx={{ width: "100%" }}>
+        <Divider sx={{ background: theme.palette.trueWhite.alpha10 }} />
         <Tooltip
-          components={{ Tooltip: Card }}
-          componentsProps={{
+          slots={{ tooltip: Card }}
+          slotProps={{
             tooltip: {
               sx: {
                 width: `calc(${theme.sidebar.width} - ${theme.spacing(2)})`,
@@ -278,23 +278,23 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
             ) && setStatusTooltipOpen(false)
           }
           title={
-            <Grid container p={1} alignItems="flex-start" rowSpacing={0.5}>
+            <Grid container columns={5} rowSpacing={0.5} sx={{ p: 1, alignItems: "flex-start" }}>
               {Object.entries(systemStatus.services).map(([service, status]) => (
                 <Fragment key={service}>
-                  <Grid item xs={4.8} display="flex" columnGap={1}>
+                  <Grid size={2} sx={{ display: "flex", columnGap: 1 }}>
                     <StatusIndicator status={systemStatusLoading ? "N/A" : status.status} />
-                    <Typography variant="body1" fontWeight="bold">
+                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                       {service}
                     </Typography>
                   </Grid>
-                  <Grid item xs={7.2}>
+                  <Grid size={3}>
                     <Typography variant="body2">
                       {systemStatusLoading ? <Skeleton width="100%" /> : status.details}
                     </Typography>
                   </Grid>
                 </Fragment>
               ))}
-              <Grid item xs={12} mt={1}>
+              <Grid size={5} sx={{ mt: 1 }}>
                 <LoadingButton
                   id="refresh-system-status-button"
                   onClick={refreshSystemStatus}
@@ -312,21 +312,24 @@ export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
           }
         >
           <Card
-            sx={{
+            sx={(theme) => ({
               m: 1,
               p: 1,
               width: `calc(100% - ${theme.spacing(2)})`,
               boxShadow: "none",
               background: "transparent",
-              border: `1px solid ${theme.colors.alpha.trueWhite[10]}`,
+              border: `1px solid ${theme.palette.trueWhite.alpha10}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: theme.spacing(1),
-            }}
+            })}
           >
             <StatusIndicator status={systemStatusLoading ? "N/A" : systemStatus.status.status} />
-            <Typography variant="body1" fontWeight="bold" textAlign="center" color={theme.colors.alpha.trueWhite[70]}>
+            <Typography
+              variant="body1"
+              sx={{ fontWeight: "bold", textAlign: "center", color: theme.palette.trueWhite.alpha70 }}
+            >
               {systemStatusLoading ? "Loading…" : systemStatus.status.details}
             </Typography>
           </Card>

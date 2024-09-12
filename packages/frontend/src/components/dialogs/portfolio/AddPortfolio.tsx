@@ -1,6 +1,6 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
+import { DialogTitle, Typography, DialogContent, Grid2 as Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { Currency } from "@rating-tracker/commons";
 import { handleResponse, isCurrency } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
@@ -55,8 +55,8 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
         <Typography variant="h3">Create a new Portfolio</Typography>
       </DialogTitle>
       <DialogContent>
-        <Grid container spacing={1} mt={0} maxWidth={600} alignItems="center">
-          <Grid item xs={12}>
+        <Grid container spacing={1} sx={{ mt: 1, maxWidth: 600, alignItems: "center" }}>
+          <Grid size={12}>
             <TextField
               onChange={(event) => {
                 setName(event.target.value);
@@ -74,7 +74,7 @@ export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <CurrencyAutocomplete
               value={currency ?? null}
               onChange={(_, value) => {

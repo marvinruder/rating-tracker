@@ -1,4 +1,4 @@
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import type { FC } from "react";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
@@ -11,8 +11,6 @@ import { Sidebar } from "./Sidebar/Sidebar";
  * @returns The component.
  */
 const SidebarLayout: FC = (): JSX.Element => {
-  const theme = useTheme();
-
   const [sidebarToggle, setSidebarToggle] = useState(false);
 
   /**
@@ -35,14 +33,14 @@ const SidebarLayout: FC = (): JSX.Element => {
         <Header toggleSidebar={toggleSidebar} />
         <Sidebar sidebarToggle={sidebarToggle} closeSidebar={closeSidebar} />
         <Box
-          sx={{
+          sx={(theme) => ({
             position: "relative",
             zIndex: 5,
             display: "flex",
             flexDirection: "column",
             minHeight: "100dvh",
             [theme.breakpoints.up("lg")]: { ml: `${theme.sidebar.width}` },
-          }}
+          })}
         >
           <Outlet />
         </Box>

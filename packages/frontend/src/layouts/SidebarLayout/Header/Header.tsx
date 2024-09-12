@@ -17,7 +17,9 @@ export const Header = (props: HeaderProps): JSX.Element => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    document.getElementById(`meta-theme-color-${theme.palette.mode}`)?.setAttribute("content", theme.header.background);
+    document
+      .getElementById(`meta-theme-color-${theme.palette.mode}`)
+      ?.setAttribute("content", theme.palette.white.main);
     return () => {
       document
         .getElementById(`meta-theme-color-${theme.palette.mode}`)
@@ -27,32 +29,29 @@ export const Header = (props: HeaderProps): JSX.Element => {
 
   return (
     <Box
-      display="flex"
-      alignItems="center"
       sx={{
+        display: "flex",
+        alignItems: "center",
         px: 1,
-        boxShadow:
-          theme.palette.mode === "dark"
-            ? `0 1px 0 ${alpha(
-                lighten(theme.colors.primary.main, 0.7),
-                0.15,
-              )}, 0px 2px 8px -3px rgba(0, 0, 0, 0.2), 0px 5px 22px -4px rgba(0, 0, 0, .1)`
-            : `0px 2px 8px -3px ${alpha(theme.colors.alpha.black[100], 0.2)}, 0px 5px 22px -4px ${alpha(
-                theme.colors.alpha.black[100],
-                0.1,
-              )}`,
-        color: theme.header.textColor,
+        color: theme.palette.secondary.main,
         right: 0,
         zIndex: 6,
-        backgroundColor: alpha(theme.header.background, 0.95),
+        backgroundColor: alpha(theme.palette.white.main, 0.95),
         backdropFilter: "blur(3px)",
         position: "fixed",
         justifyContent: "space-between",
         width: "100%",
-        [theme.breakpoints.up("lg")]: {
-          left: theme.sidebar.width,
-          width: "auto",
-        },
+        [theme.breakpoints.up("lg")]: { left: theme.sidebar.width, width: "auto" },
+        ...theme.applyStyles("light", {
+          boxShadow:
+            `0px 2px 8px -3px ${alpha(theme.palette.black.main, 0.2)}, ` +
+            `0px 5px 22px -4px ${alpha(theme.palette.black.main, 0.1)}`,
+        }),
+        ...theme.applyStyles("dark", {
+          boxShadow:
+            `0 1px 0 ${alpha(lighten(theme.palette.primary.main, 0.7), 0.15)}, ` +
+            `0px 2px 8px -3px rgb(0 0 0 / 20%), 0px 5px 22px -4px rgb(0 0 0 / 10%)`,
+        }),
       }}
     >
       <Box
@@ -86,7 +85,7 @@ export const Header = (props: HeaderProps): JSX.Element => {
           </Tooltip>
         </Box>
       </Box>
-      <Box display="flex" alignItems="center">
+      <Box sx={{ display: "flex", alignItems: "center" }}>
         <HeaderButtons />
         <Divider orientation="vertical" flexItem sx={{ m: 1 }} />
         <HeaderUserbox />

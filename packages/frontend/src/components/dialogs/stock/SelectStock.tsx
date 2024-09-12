@@ -13,13 +13,12 @@ import {
   Skeleton,
   ListItemText,
   Tooltip,
-  useTheme,
   CircularProgress,
 } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
 import { handleResponse, parseStock, pluralize, stocksAPIPath } from "@rating-tracker/commons";
 import type { ChangeEvent, ReactNode } from "react";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import stockClient from "../../../api/stock";
@@ -39,8 +38,6 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
   const [didFocus, setDidFocus] = useState(false);
 
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
-
-  const theme = useTheme();
 
   const navigate = useNavigate();
 
@@ -141,41 +138,44 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
     <>
       <DialogTitle sx={props.disablePadding ? { px: 0, pt: 0 } : {}} component="div">
         {props.titleElement}
-        <Typography variant="h4" pb={2.5}>
+        <Typography variant="h4" sx={{ pb: 2.5 }}>
           {props.title}
         </Typography>
         <TextField
           value={searchValue}
           inputRef={(input) => {
             if (input !== null && !didFocus) {
+              if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
               input.focus();
               setDidFocus(true);
             }
           }}
           onChange={handleSearchChange}
-          inputProps={{ inputMode: "search", autoCapitalize: "characters" }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon fontSize="small" />
-              </InputAdornment>
-            ),
-            endAdornment: stocksFinal ? null : (
-              <InputAdornment position="end">
-                <CircularProgress color="inherit" size={16} aria-label="Loading results…" />
-              </InputAdornment>
-            ),
-          }}
           placeholder="Enter a stock name, ISIN or ticker symbol…"
           fullWidth
           label="Search"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+              endAdornment: stocksFinal ? null : (
+                <InputAdornment position="end">
+                  <CircularProgress color="inherit" size={16} aria-label="Loading results…" />
+                </InputAdornment>
+              ),
+            },
+            htmlInput: { inputMode: "search", autoCapitalize: "characters" },
+          }}
         />
       </DialogTitle>
       {searchValue && (
         <>
           <Divider />
           <DialogContent sx={props.disablePadding ? { px: 0, pb: 0 } : {}}>
-            <Box sx={{ pt: 0, pb: 1 }} display="flex" justifyContent="space-between">
+            <Box sx={{ display: "flex", justifyContent: "space-between", pt: 0, pb: 1 }}>
               <Typography variant="body2" component="span">
                 {stocksFinal ? (
                   <>
@@ -196,10 +196,10 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
             </Box>
             <List
               disablePadding
-              sx={{
-                " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
-                " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
-              }}
+              sx={(theme) => ({
+                " > .MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+                " > .MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+              })}
             >
               {stocksFinal
                 ? stocks.map((stock) =>
@@ -246,7 +246,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
                   ))}
             </List>
             {stocksFinal && count > 10 && (
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
                 Only the first 10 results are shown. Refine your search parameter to show additional results.
               </Typography>
             )}

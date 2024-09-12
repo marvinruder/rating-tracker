@@ -140,15 +140,15 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
         <Typography variant="h3">Update Stocks in Portfolio</Typography>
       </DialogTitle>
       <DialogContent>
-        <Typography variant="body1" mb={1}>
+        <Typography variant="body1" sx={{ mb: 1 }}>
           Select the portfolio you want to update the stocks of:
         </Typography>
         <List
           disablePadding
-          sx={{
-            " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
-            " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
-          }}
+          sx={(theme) => ({
+            " > .MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+            " > .MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+          })}
         >
           {portfolioSummariesFinal
             ? portfolioSummaries.map((portfolioSummary) => (
@@ -197,7 +197,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
           </ListItem>
         </List>
         {selectedPortfolio && (
-          <Typography variant="body1" mt={2}>
+          <Typography variant="body1" sx={{ mt: 2 }}>
             {portfolioIsUpToDate ? (
               "The portfolio is already up to date."
             ) : (
@@ -271,7 +271,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
         <Divider sx={{ mb: 1, width: "100%" }} />
         {requestsInProgress && (
           <>
-            <Typography variant="subtitle1" mb={1} width="100%">
+            <Typography variant="subtitle1" sx={{ mb: 1, width: "100%" }}>
               {currentRequest}
             </Typography>
             <LinearProgress
@@ -282,7 +282,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
             />
           </>
         )}
-        <Box width="100%" display="flex" alignItems="center" justifyContent="flex-end">
+        <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
           <Button onClick={props.onClose} sx={{ mr: "auto" }}>
             Cancel
           </Button>

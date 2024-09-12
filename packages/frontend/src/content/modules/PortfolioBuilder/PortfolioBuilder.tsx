@@ -17,7 +17,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  Grid,
+  Grid2 as Grid,
   InputAdornment,
   List,
   ListItem,
@@ -427,8 +427,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
       title: "Select stocks",
       content: (
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h4" pb={2}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Typography variant="h4" sx={{ pb: 2 }}>
               Add stocks to selection:
             </Typography>
             <Card elevation={0}>
@@ -439,10 +439,10 @@ const PortfolioBuilderModule = (): JSX.Element => {
                 <AccordionDetails>
                   <List
                     disablePadding
-                    sx={{
-                      " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
-                      " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
-                    }}
+                    sx={(theme) => ({
+                      " > .MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+                      " > .MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+                    })}
                   >
                     {portfolioSummariesFinal
                       ? portfolioSummaries.map((portfolioSummary) => (
@@ -497,10 +497,10 @@ const PortfolioBuilderModule = (): JSX.Element => {
                 <AccordionDetails>
                   <List
                     disablePadding
-                    sx={{
-                      " > li.MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
-                      " > li.MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
-                    }}
+                    sx={(theme) => ({
+                      " > .MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+                      " > .MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+                    })}
                   >
                     {watchlistSummariesFinal
                       ? watchlistSummaries.map((watchlistSummary) => (
@@ -582,19 +582,19 @@ const PortfolioBuilderModule = (): JSX.Element => {
               </Accordion>
             </Card>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h4" pb={2}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Typography variant="h4" sx={{ pb: 2 }}>
               Selected stocks
             </Typography>
             {stocks.length ? (
               <>
                 <List
                   disablePadding
-                  sx={{
+                  sx={(theme) => ({
                     pb: 1,
-                    " > li.MuiListItem-container": { borderTop: `1px solid ${theme.palette.divider}` },
-                    " > li.MuiListItem-container:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
-                  }}
+                    " > .MuiListItem-root": { borderTop: `1px solid ${theme.palette.divider}` },
+                    " > .MuiListItem-root:last-child": { borderBottom: `1px solid ${theme.palette.divider}` },
+                  })}
                 >
                   {stocks.map((stock) => (
                     <StockPreview
@@ -614,7 +614,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                 </Typography>
               </>
             ) : (
-              <Typography textAlign="center" variant="subtitle1" py={3}>
+              <Typography variant="subtitle1" sx={{ textAlign: "center", py: 3 }}>
                 No Stocks
               </Typography>
             )}
@@ -626,12 +626,12 @@ const PortfolioBuilderModule = (): JSX.Element => {
       title: "Configure portfolio",
       content: (
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h4" pb={2}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Typography variant="h4" sx={{ pb: 2 }}>
               Define portfolio parameters:
             </Typography>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12}>
+            <Grid container columns={12} spacing={2} sx={{ alignItems: "center" }}>
+              <Grid size={12}>
                 <CurrencyAutocomplete
                   value={currency ?? null}
                   onChange={(_, value) => {
@@ -648,47 +648,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   required // Currency must be set
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <TextField
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
-                        {currency || "…"}
-                      </InputAdornment>
-                    ),
-                  }}
-                  inputProps={{
-                    inputMode: "decimal",
-                    type: "number",
-                    // Smallest amount per stock must fit into the total amount at least as often as there are stocks,
-                    // and must be divisible by the tick
-                    min: currency
-                      ? +(
-                          // 6. Multiply with the tick again
-                          (
-                            +tickInput *
-                            // 5. Ceil the result to get a number that is divisibly by the tick
-                            Math.ceil(
-                              // 1. Take the smallest amount per stock,
-                              ((+minAmountInput || Math.pow(10, -1 * currencyMinorUnits[currency])) *
-                                // 2. multiply it by the number of stocks,
-                                stocks.length *
-                                // 3. Scale it down a tiny bit so that precision errors do not mess with ceiling
-                                (1 - Number.EPSILON)) /
-                                // 4. Divide by the tick
-                                +tickInput,
-                            )
-                          )
-                            // 7. If multiplying with the tick again results in a number with precision errors, we round
-                            //    the result to the nearest value allowed by the currency. Damn you, IEEE 754!
-                            .toFixed(currencyMinorUnits[currency])
-                        ) || undefined
-                      : undefined,
-                    // Tick must divide the total amount evenly
-                    step: currency
-                      ? +tickInput || Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined
-                      : undefined,
-                  }}
                   onChange={(event) => {
                     setTotalAmountInput(event.target.value);
                     // If in error state, check whether error is resolved. If so, clear the error.
@@ -702,23 +663,51 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   label="Total Amount"
                   value={totalAmountInput}
                   fullWidth
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
+                          {currency || "…"}
+                        </InputAdornment>
+                      ),
+                    },
+                    htmlInput: {
+                      inputMode: "decimal",
+                      type: "number",
+                      // Smallest amount per stock must fit into the total amount at least as often as there are stocks,
+                      // and must be divisible by the tick
+                      min: currency
+                        ? +(
+                            // 6. Multiply with the tick again
+                            (
+                              +tickInput *
+                              // 5. Ceil the result to get a number that is divisibly by the tick
+                              Math.ceil(
+                                // 1. Take the smallest amount per stock,
+                                ((+minAmountInput || Math.pow(10, -1 * currencyMinorUnits[currency])) *
+                                  // 2. multiply it by the number of stocks,
+                                  stocks.length *
+                                  // 3. Scale it down a tiny bit so that precision errors do not mess with ceiling
+                                  (1 - Number.EPSILON)) /
+                                  // 4. Divide by the tick
+                                  +tickInput,
+                              )
+                            )
+                              // 7. If multiplying with the tick again results in a number with precision errors, we
+                              //    round the result to the nearest value allowed by the currency. Damn you, IEEE 754!
+                              .toFixed(currencyMinorUnits[currency])
+                          ) || undefined
+                        : undefined,
+                      // Tick must divide the total amount evenly
+                      step: currency
+                        ? +tickInput || Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined
+                        : undefined,
+                    },
+                  }}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <TextField
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
-                        {currency || "…"}
-                      </InputAdornment>
-                    ),
-                  }}
-                  inputProps={{
-                    inputMode: "decimal",
-                    type: "number",
-                    min: 0, // Smallest amount per stock must be non-negative
-                    step: currency ? Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined : undefined,
-                  }}
                   onChange={(event) => {
                     setMinAmountInput(event.target.value);
                     // If in error state, check whether error is resolved. If so, clear the error.
@@ -732,24 +721,25 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   label="Smallest amount per stock"
                   value={minAmountInput}
                   fullWidth
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
+                          {currency || "…"}
+                        </InputAdornment>
+                      ),
+                    },
+                    htmlInput: {
+                      inputMode: "decimal",
+                      type: "number",
+                      min: 0, // Smallest amount per stock must be non-negative
+                      step: currency ? Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined : undefined,
+                    },
+                  }}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <TextField
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
-                        {currency || "…"}
-                      </InputAdornment>
-                    ),
-                  }}
-                  inputProps={{
-                    inputMode: "decimal",
-                    type: "number",
-                    step: currency ? Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined : undefined,
-                    // Tick must be positive
-                    min: currency ? Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined : undefined,
-                  }}
                   onChange={(event) => {
                     setTickInput(event.target.value);
                     // If in error state, check whether error is resolved. If so, clear the error.
@@ -763,9 +753,25 @@ const PortfolioBuilderModule = (): JSX.Element => {
                   label="Round amounts to multiples of"
                   value={tickInput}
                   fullWidth
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
+                          {currency || "…"}
+                        </InputAdornment>
+                      ),
+                    },
+                    htmlInput: {
+                      inputMode: "decimal",
+                      type: "number",
+                      step: currency ? Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined : undefined,
+                      // Tick must be positive
+                      min: currency ? Math.pow(10, -1 * currencyMinorUnits[currency]) || undefined : undefined,
+                    },
+                  }}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <FormControl>
                   <FormLabel id="proportional-representation-algoritm-radio-buttons-group">
                     Proportional Representation Algorithm
@@ -785,8 +791,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h4" pb={2}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Typography variant="h4" sx={{ pb: 2 }}>
               Add constraints:
             </Typography>
             <Card elevation={0}>
@@ -807,7 +813,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                         {regionName[region]}:{" "}
                         <strong>{formatPercentage(regionConstraints[region], { fixed: 1 })}</strong>
                       </Typography>
-                      <Box px={1}>
+                      <Box sx={{ px: 1 }}>
                         <Slider
                           slotProps={{ input: { "aria-label": `Set target of region “${regionName[region]}”` } }}
                           value={regionConstraints[region]}
@@ -856,7 +862,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                         {sectorName[sector]}:{" "}
                         <strong>{formatPercentage(sectorConstraints[sector], { fixed: 1 })}</strong>
                       </Typography>
-                      <Box px={1}>
+                      <Box sx={{ px: 1 }}>
                         <Slider
                           slotProps={{ input: { "aria-label": `Set target of sector “${sectorName[sector]}”` } }}
                           value={sectorConstraints[sector]}
@@ -890,7 +896,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       <Typography variant="subtitle1">
                         {size}: <strong>{formatPercentage(sizeConstraints[size], { fixed: 1 })}</strong>
                       </Typography>
-                      <Box px={1}>
+                      <Box sx={{ px: 1 }}>
                         <Slider
                           slotProps={{ input: { "aria-label": `Set target of size “${size}”` } }}
                           value={sizeConstraints[size]}
@@ -924,7 +930,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       <Typography variant="subtitle1">
                         {style}: <strong>{formatPercentage(styleConstraints[style], { fixed: 1 })}</strong>
                       </Typography>
-                      <Box px={1}>
+                      <Box sx={{ px: 1 }}>
                         <Slider
                           slotProps={{ input: { "aria-label": `Set target of style “${style}”` } }}
                           value={styleConstraints[style]}
@@ -951,8 +957,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
       title: "View results",
       content: (
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h4" pb={2}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Typography variant="h4" sx={{ pb: 2 }}>
               Computation results
             </Typography>
             <Alert severity={rse ? "warning" : "success"} sx={{ mb: 2 }}>
@@ -967,7 +973,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
               )}
             </Alert>
             <Box>
-              <Typography variant="h5" mb={-3}>
+              <Typography variant="h5" sx={{ mb: -3 }}>
                 Amount distribution
               </Typography>
               <ScatterChart
@@ -987,8 +993,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
               />
             </Box>
             {regionConstraintOpen && (
-              <Box pb={1}>
-                <Typography variant="h5" pb={0.5}>
+              <Box sx={{ pb: 1 }}>
+                <Typography variant="h5" sx={{ pb: 0.5 }}>
                   Region distribution
                 </Typography>
                 {regionArray
@@ -1004,8 +1010,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
               </Box>
             )}
             {sectorConstraintOpen && (
-              <Box pb={1}>
-                <Typography variant="h5" pb={0.5}>
+              <Box sx={{ pb: 1 }}>
+                <Typography variant="h5" sx={{ pb: 0.5 }}>
                   Sector distribution
                 </Typography>
                 {sectorArray
@@ -1021,8 +1027,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
               </Box>
             )}
             {sizeConstraintOpen && (
-              <Box pb={1}>
-                <Typography variant="h5" pb={0.5}>
+              <Box sx={{ pb: 1 }}>
+                <Typography variant="h5" sx={{ pb: 0.5 }}>
                   Size distribution
                 </Typography>
                 {sizeArray
@@ -1033,8 +1039,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
               </Box>
             )}
             {styleConstraintOpen && (
-              <Box pb={1}>
-                <Typography variant="h5" pb={0.5}>
+              <Box sx={{ pb: 1 }}>
+                <Typography variant="h5" sx={{ pb: 0.5 }}>
                   Style distribution
                 </Typography>
                 {styleArray
@@ -1050,8 +1056,8 @@ const PortfolioBuilderModule = (): JSX.Element => {
               </Box>
             )}
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h4" pb={2}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Typography variant="h4" sx={{ pb: 2 }}>
               Portfolio
             </Typography>
             <Card elevation={0}>
@@ -1064,7 +1070,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       {/* Amount in Portfolio */}
                       <TableCell>
                         <Tooltip title={<PropertyDescription property="amount" />} arrow>
-                          <Box display="inline-block">Amount</Box>
+                          <Box sx={{ display: "inline-block" }}>Amount</Box>
                         </Tooltip>
                       </TableCell>
                       {/* Name and Logo */}
@@ -1072,47 +1078,47 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       {/* Country and Region */}
                       <TableCell>
                         <Tooltip title={<PropertyDescription property="country" />} arrow>
-                          <Box display="inline-block">Country</Box>
+                          <Box sx={{ display: "inline-block" }}>Country</Box>
                         </Tooltip>
                       </TableCell>
                       {/* StyleBox */}
                       <TableCell>
                         <Tooltip title={<PropertyDescription property="size" />} arrow placement="top">
-                          <Box display="inline-block">Size</Box>
+                          <Box sx={{ display: "inline-block" }}>Size</Box>
                         </Tooltip>
                         <br />
                         <Tooltip title={<PropertyDescription property="style" />} arrow placement="bottom">
-                          <Box display="inline-block">Style</Box>
+                          <Box sx={{ display: "inline-block" }}>Style</Box>
                         </Tooltip>
                       </TableCell>
                       {/* Sector */}
                       <TableCell>
                         <Tooltip title={<PropertyDescription property="sector" />} arrow>
-                          <Box display="inline-block">Sector</Box>
+                          <Box sx={{ display: "inline-block" }}>Sector</Box>
                         </Tooltip>
                       </TableCell>
                       {/* Industry */}
                       <TableCell>
                         <Tooltip title={<PropertyDescription property="industry" />} arrow>
-                          <Box display="inline-block">Industry</Box>
+                          <Box sx={{ display: "inline-block" }}>Industry</Box>
                         </Tooltip>
                       </TableCell>
                       {/* Total Score */}
                       <TableCell>
                         <Tooltip title={<PropertyDescription property="totalScore" />} arrow>
-                          <Box display="inline-block">Total</Box>
+                          <Box sx={{ display: "inline-block" }}>Total</Box>
                         </Tooltip>
                       </TableCell>
                       {/* Financial Score */}
                       <TableCell>
                         <Tooltip title={<PropertyDescription property="financialScore" />} arrow>
-                          <Box display="inline-block">Financial</Box>
+                          <Box sx={{ display: "inline-block" }}>Financial</Box>
                         </Tooltip>
                       </TableCell>
                       {/* ESG Score */}
                       <TableCell>
                         <Tooltip title={<PropertyDescription property="esgScore" />} arrow>
-                          <Box display="inline-block">ESG</Box>
+                          <Box sx={{ display: "inline-block" }}>ESG</Box>
                         </Tooltip>
                       </TableCell>
                     </TableRow>
@@ -1163,13 +1169,13 @@ const PortfolioBuilderModule = (): JSX.Element => {
               </Step>
             ))}
           </Stepper>
-          <Grid container pb={2} justifyContent="space-between">
-            <Grid item>
+          <Grid container sx={{ pb: 2, justifyContent: "space-between" }}>
+            <Grid>
               {activeStep > 0 && (
                 <Button onClick={() => setActiveStep((prevActiveStep) => prevActiveStep - 1)}>Back</Button>
               )}
             </Grid>
-            <Grid item>
+            <Grid>
               {activeStep === 0 && (
                 <Button
                   onClick={() => setStocks([])}
@@ -1218,7 +1224,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
             TransitionProps={{ direction: "up" } as SlideProps}
             fullScreen={fullScreenDialogs}
           >
-            {!fullScreenDialogs && <Box width={444} />}
+            {!fullScreenDialogs && <Box sx={{ width: 444 }} />}
             <UpdateStocksInPortfolio
               portfolioRawData={{ currency: currency!, stocks: weightedStocks }}
               onClose={() => setUpdatePortfolioDialogOpen(false)}

@@ -12,10 +12,9 @@ import {
   ListItemIcon,
   Skeleton,
   Dialog,
-  Grid,
+  Grid2 as Grid,
   TextField,
   InputAdornment,
-  useTheme,
 } from "@mui/material";
 import type { Stock, PortfolioSummary, Currency } from "@rating-tracker/commons";
 import { currencyMinorUnits, pluralize, isCurrency, handleResponse } from "@rating-tracker/commons";
@@ -41,8 +40,6 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   const amountInputRef = useRef<HTMLInputElement>(null);
-
-  const theme = useTheme();
 
   useEffect(() => getPortfolios(), []);
 
@@ -101,23 +98,25 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
         <Typography variant="h3">Add Stock “{props.stock.name}” to Portfolio</Typography>
       </DialogTitle>
       <DialogContent>
-        <Grid container spacing={1} mt={0} mb={1} maxWidth={600} alignItems="center">
-          <Grid item xs={12}>
+        <Grid container spacing={1} sx={{ my: 1, maxWidth: 600, alignItems: "center" }}>
+          <Grid size={12}>
             <TextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
-                    {hoverCurrency}
-                  </InputAdornment>
-                ),
-              }}
-              inputProps={{
-                inputMode: "decimal",
-                type: "number",
-                // Amount must be divisible by the currency's minor unit
-                step: isCurrency(hoverCurrency) ? Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]) : undefined,
-                // Amount must be positive
-                min: isCurrency(hoverCurrency) ? Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]) : 0,
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
+                      {hoverCurrency}
+                    </InputAdornment>
+                  ),
+                },
+                htmlInput: {
+                  inputMode: "decimal",
+                  type: "number",
+                  // Amount must be divisible by the currency's minor unit
+                  step: isCurrency(hoverCurrency) ? Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]) : undefined,
+                  // Amount must be positive
+                  min: isCurrency(hoverCurrency) ? Math.pow(10, -1 * currencyMinorUnits[hoverCurrency]) : 0,
+                },
               }}
               onChange={(event) => {
                 setAmountInput(event.target.value);
@@ -136,7 +135,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
             />
           </Grid>
         </Grid>
-        <Typography variant="body1" mb={1}>
+        <Typography variant="body1" sx={{ mb: 1 }}>
           Select the portfolio you want to add the stock to:
         </Typography>
         <List onMouseLeave={() => setHoverCurrency("…")} onTouchEnd={() => setHoverCurrency("…")} disablePadding>
@@ -146,7 +145,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                   <ListItem
                     onMouseEnter={() => setHoverCurrency(portfolioSummary.currency)}
                     onTouchStart={() => setHoverCurrency(portfolioSummary.currency)}
-                    sx={{ borderTop: `1px solid ${theme.palette.divider}` }}
+                    sx={(theme) => ({ borderTop: `1px solid ${theme.palette.divider}` })}
                     disablePadding
                     disableGutters
                   >
@@ -176,7 +175,11 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
                   key, // Render skeleton rows
                 ) => (
                   <Fragment key={key}>
-                    <ListItem disablePadding disableGutters sx={{ borderTop: `1px solid ${theme.palette.divider}` }}>
+                    <ListItem
+                      disablePadding
+                      disableGutters
+                      sx={(theme) => ({ borderTop: `1px solid ${theme.palette.divider}` })}
+                    >
                       <ListItemButton>
                         <ListItemText
                           inset
@@ -191,7 +194,10 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
           <ListItem
             disablePadding
             disableGutters
-            sx={{ borderTop: `1px solid ${theme.palette.divider}`, borderBottom: `1px solid ${theme.palette.divider}` }}
+            sx={(theme) => ({
+              borderTop: `1px solid ${theme.palette.divider}`,
+              borderBottom: `1px solid ${theme.palette.divider}`,
+            })}
           >
             <ListItemButton onClick={() => setAddPortfolioOpen(true)}>
               <ListItemIcon>

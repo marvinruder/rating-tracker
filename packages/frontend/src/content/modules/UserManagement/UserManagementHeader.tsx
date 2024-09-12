@@ -1,4 +1,4 @@
-import { Typography, Grid } from "@mui/material";
+import { Typography, Grid2 as Grid } from "@mui/material";
 import type { FC } from "react";
 
 /**
@@ -7,8 +7,8 @@ import type { FC } from "react";
  */
 const UserManagementHeader: FC = (): JSX.Element => {
   return (
-    <Grid container justifyContent="space-between" alignItems="center">
-      <Grid item>
+    <Grid container sx={{ justifyContent: "space-between", alignItems: "center" }}>
+      <Grid>
         <Typography variant="h3" component="h3" gutterBottom>
           User Management
         </Typography>

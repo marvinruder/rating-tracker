@@ -10,7 +10,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
+  Grid2 as Grid,
   Step,
   StepContent,
   StepLabel,
@@ -338,8 +338,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
           <Typography variant="h4" sx={{ mb: 2 }}>
             Let’s start by adding some basic information:
           </Typography>
-          <Grid container spacing={1} alignItems="top">
-            <Grid item xs={12}>
+          <Grid container spacing={1} sx={{ alignItems: "top" }}>
+            <Grid size={12}>
               <YahooStockStubAutocomplete
                 onChange={(_, value) => {
                   const isin = value?.isin ?? "";
@@ -364,12 +364,12 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            <Grid size={12}>
+              <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
                 …or fill in the information manually:
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => ({ ...prevStock, name: event.target.value }));
@@ -387,7 +387,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <TextField
                 onChange={(event) => {
                   setStock((prevStock) => ({ ...prevStock, ticker: event.target.value }));
@@ -405,9 +405,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={8}>
+            <Grid size={{ xs: 12, sm: 8 }}>
               <TextField
-                inputProps={{ pattern: "[A-Z]{2}[A-Z0-9]{10}" }}
                 onChange={(event) => {
                   setStock((prevStock) => ({ ...prevStock, isin: event.target.value }));
                   if (!stock.country && event.target.value.length >= 2) {
@@ -431,9 +430,10 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 value={stock.isin}
                 placeholder="e.g. US0378331005"
                 fullWidth
+                slotProps={{ htmlInput: { pattern: "[A-Z]{2}[A-Z0-9]{10}" } }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <CountryAutocomplete
                 value={stock.country ?? null}
                 onChange={(_, value) => {
@@ -473,8 +473,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
           <Typography variant="h4" sx={{ mb: 2 }}>
             Alright, now connect some data providers:
           </Typography>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: `calc(100% - ${morningstarIDSet ? 112 : 91}px)` }}>
+          <Grid container spacing={1} sx={{ alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: morningstarIDSet ? `calc(100% - 112px)` : `calc(100% - 91px)` } }}>
               <TextField
                 onChange={(event) => setStock((prevStock) => ({ ...prevStock, morningstarID: event.target.value }))}
                 label="Morningstar ID"
@@ -483,7 +483,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={morningstarIDRequestInProgress}
@@ -496,8 +496,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: `calc(100% - ${marketScreenerIDSet ? 112 : 91}px)` }}>
+          <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: marketScreenerIDSet ? `calc(100% - 112px)` : `calc(100% - 91px)` } }}>
               <TextField
                 onChange={(event) => setStock((prevStock) => ({ ...prevStock, marketScreenerID: event.target.value }))}
                 label="Market Screener ID"
@@ -506,7 +506,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={marketScreenerIDRequestInProgress}
@@ -519,8 +519,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: `calc(100% - ${msciIDSet ? 112 : 91}px)` }}>
+          <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: msciIDSet ? `calc(100% - 112px)` : `calc(100% - 91px)` } }}>
               <TextField
                 onChange={(event) => setStock((prevStock) => ({ ...prevStock, msciID: event.target.value }))}
                 label="MSCI ID"
@@ -529,7 +529,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={msciIDRequestInProgress}
@@ -542,8 +542,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: `calc(100% - ${ricSet ? 112 : 91}px)` }}>
+          <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: ricSet ? `calc(100% - 112px)` : `calc(100% - 91px)` } }}>
               <TextField
                 onChange={(event) => setStock((prevStock) => ({ ...prevStock, ric: event.target.value }))}
                 label="RIC"
@@ -552,7 +552,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={ricRequestInProgress}
@@ -565,10 +565,9 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: `calc(100% - ${spIDSet ? 112 : 91}px)` }}>
+          <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: spIDSet ? `calc(100% - 112px)` : `calc(100% - 91px)` } }}>
               <TextField
-                inputProps={{ inputMode: "numeric", pattern: "\\d*" }}
                 onChange={(event) => {
                   const value = event.target.value.replaceAll(/\D+/g, "");
                   setStock((prevStock) => ({ ...prevStock, spID: value ? +value : null }));
@@ -577,9 +576,10 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 value={stock.spID === null ? "" : stock.spID}
                 placeholder="e.g. 4004205"
                 fullWidth
+                slotProps={{ htmlInput: { inputMode: "numeric", pattern: "\\d*" } }}
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={spIDRequestInProgress}
@@ -592,8 +592,8 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid container spacing={1} marginTop={0} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: `calc(100% - ${sustainalyticsIDSet ? 112 : 91}px)` }}>
+          <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: sustainalyticsIDSet ? `calc(100% - 112px)` : `calc(100% - 91px)` } }}>
               <TextField
                 onChange={(event) => setStock((prevStock) => ({ ...prevStock, sustainalyticsID: event.target.value }))}
                 label="Sustainalytics ID"
@@ -602,7 +602,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={sustainalyticsIDRequestInProgress}
@@ -615,7 +615,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
             You can always add more data providers later.
           </Typography>
         </>
@@ -653,7 +653,7 @@ export const AddStock = (props: AddStockProps): JSX.Element => {
           <Box sx={{ ml: "-24px", width: "calc(100% + 48px)", mr: "-32px" }}>
             <StockDetails stock={finalStock} maxColumns={2} />
           </Box>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
             Please check whether all expected fields are filled. If a field is not filled, an alert will not be raised
             when the information cannot be extracted at a later time.
           </Typography>

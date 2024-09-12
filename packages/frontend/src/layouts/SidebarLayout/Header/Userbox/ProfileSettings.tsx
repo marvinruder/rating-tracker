@@ -13,7 +13,7 @@ import {
   Divider,
   FormControlLabel,
   FormGroup,
-  Grid,
+  Grid2 as Grid,
   IconButton,
   TextField,
   Tooltip,
@@ -177,8 +177,8 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
   return (
     <>
       <DialogContent sx={{ p: 0, pb: 2 }}>
-        <Grid container mt={2} maxWidth="sm">
-          <Grid item xs={12} sm={6} md={4}>
+        <Grid container sx={{ mt: 2, maxWidth: "sm" }}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             {processingAvatar ? (
               <Avatar sx={{ width: 120, height: 120, margin: "auto" }}>
                 <CircularProgress />
@@ -186,7 +186,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
             ) : (
               <Avatar sx={{ width: 120, height: 120, margin: "auto" }} alt={user.name} src={user.avatar ?? undefined} />
             )}
-            <Box width="100%" display="flex" justifyContent="center" mt={1}>
+            <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mt: 1 }}>
               <Tooltip title={user.avatar ? "Change your avatar" : "Upload an avatar"} arrow>
                 <Box id="upload-avatar-label">
                   <IconButton
@@ -218,69 +218,72 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
               </Tooltip>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} md={8}>
-            <Grid container spacing={2} mt={0} pl={{ xs: "24px", sm: 0 }} pr="24px">
-              <Grid item xs={12}>
-                <TextField
-                  inputRef={inputEmail}
-                  type="email"
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                    // If in error state, check whether error is resolved. If so, clear the error.
-                    if (emailError && event.target.checkValidity()) setEmailError("");
-                  }}
-                  onInvalid={(event) => setEmailError((event.target as HTMLInputElement).validationMessage)}
-                  error={!!emailError}
-                  helperText={emailError}
-                  label="Email address"
-                  value={email}
-                  placeholder="jane.doe@example.com"
-                  fullWidth
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  inputRef={inputName}
-                  onChange={(event) => {
-                    setName(event.target.value);
-                    // If in error state, check whether error is resolved. If so, clear the error.
-                    if (nameError && event.target.checkValidity()) setNameError("");
-                  }}
-                  onInvalid={(event) => setNameError((event.target as HTMLInputElement).validationMessage)}
-                  error={!!nameError}
-                  helperText={nameError}
-                  label="Name"
-                  autoComplete="name"
-                  value={name}
-                  placeholder="Jane Doe"
-                  fullWidth
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  inputRef={inputPhone}
-                  inputProps={{ inputMode: "tel", type: "tel", pattern: REGEX_PHONE_NUMBER }}
-                  onChange={(event) => {
-                    setPhone(event.target.value);
-                    // If in error state, check whether error is resolved. If so, clear the error.
-                    if (phoneError && event.target.checkValidity()) setPhoneError("");
-                  }}
-                  onInvalid={(event) => setPhoneError((event.target as HTMLInputElement).validationMessage)}
-                  error={!!phoneError}
-                  helperText={phoneError}
-                  label="Phone number"
-                  value={phone}
-                  placeholder="+12125550123"
-                  fullWidth
-                />
-              </Grid>
+          <Grid
+            container
+            size={{ xs: 12, sm: 6, md: 8 }}
+            spacing={2}
+            sx={{ alignContent: "center", pl: { xs: "24px", sm: 0 }, pr: "24px" }}
+          >
+            <Grid size={12}>
+              <TextField
+                inputRef={inputEmail}
+                type="email"
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  // If in error state, check whether error is resolved. If so, clear the error.
+                  if (emailError && event.target.checkValidity()) setEmailError("");
+                }}
+                onInvalid={(event) => setEmailError((event.target as HTMLInputElement).validationMessage)}
+                error={!!emailError}
+                helperText={emailError}
+                label="Email address"
+                value={email}
+                placeholder="jane.doe@example.com"
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                inputRef={inputName}
+                onChange={(event) => {
+                  setName(event.target.value);
+                  // If in error state, check whether error is resolved. If so, clear the error.
+                  if (nameError && event.target.checkValidity()) setNameError("");
+                }}
+                onInvalid={(event) => setNameError((event.target as HTMLInputElement).validationMessage)}
+                error={!!nameError}
+                helperText={nameError}
+                label="Name"
+                autoComplete="name"
+                value={name}
+                placeholder="Jane Doe"
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                inputRef={inputPhone}
+                onChange={(event) => {
+                  setPhone(event.target.value);
+                  // If in error state, check whether error is resolved. If so, clear the error.
+                  if (phoneError && event.target.checkValidity()) setPhoneError("");
+                }}
+                onInvalid={(event) => setPhoneError((event.target as HTMLInputElement).validationMessage)}
+                error={!!phoneError}
+                helperText={phoneError}
+                label="Phone number"
+                value={phone}
+                placeholder="+12125550123"
+                fullWidth
+                slotProps={{ htmlInput: { inputMode: "tel", type: "tel", pattern: REGEX_PHONE_NUMBER } }}
+              />
             </Grid>
           </Grid>
-          <Grid item xs={12} px="24px">
+          <Grid size={12} sx={{ px: "24px" }}>
             <Divider orientation="horizontal" sx={{ my: 2 }} />
-            <Typography variant="h4" pb={0.5}>
+            <Typography variant="h4" sx={{ pb: 0.5 }}>
               Subscribe to notifications
             </Typography>
             <FormGroup>
@@ -298,10 +301,10 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                   }
                   label={
                     <>
-                      <Typography variant="body1" fontWeight="bold" color="text.primary">
+                      <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.primary" }}>
                         {subscriptionSwitch.name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
                         {subscriptionSwitch.description}
                       </Typography>
                     </>
@@ -309,7 +312,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                 />
               ))}
             </FormGroup>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
               Notifications are sent via the instant messenger Signal. Be sure to enter the phone number of your Signal
               account in the field above.
             </Typography>

@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
-import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
+import { Box, Grid2 as Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
 import {
   baseURL,
@@ -53,8 +53,8 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
-        <Grid item sx={{ display: "flex", alignItems: "center" }}>
+      <Grid container sx={{ justifyContent: "space-between", alignItems: "center", rowGap: 1 }}>
+        <Grid sx={{ display: "flex", alignItems: "center" }}>
           {props.stock ? ( // Actual header with logo and name
             <>
               <Avatar
@@ -89,10 +89,10 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
             </>
           )}
         </Grid>
-        <Grid item ml="auto" height={40}>
+        <Grid sx={{ ml: "auto", height: 40 }}>
           {props.stock ? (
             <Tooltip arrow title={props.isFavorite ? "Remove from favorites" : "Add to favorites"}>
-              <Box display="inline-block" ml={1}>
+              <Box sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   color={props.isFavorite ? "warning" : undefined}
                   onClick={() => {
@@ -122,7 +122,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
           )}
           {props.stock ? (
             <Tooltip arrow title="Add to watchlist">
-              <Box display="inline-block" ml={1}>
+              <Box sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton color="success" onClick={() => setAddToWatchlistDialogOpen(true)}>
                   <BookmarkAddIcon />
                 </IconButton>
@@ -133,7 +133,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
           )}
           {props.stock ? (
             <Tooltip arrow title="Add to portfolio">
-              <Box display="inline-block" ml={1}>
+              <Box sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton color="success" onClick={() => setAddToPortfolioDialogOpen(true)}>
                   <AddShoppingCartIcon />
                 </IconButton>
@@ -151,7 +151,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                   : "You do not have the necessary access rights to update stocks."
               }
             >
-              <Box display="inline-block" ml={1}>
+              <Box sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   color="primary"
                   onClick={() => setEditDialogOpen(true)}
@@ -173,7 +173,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
                   : "You do not have the necessary access rights to delete stocks."
               }
             >
-              <Box display="inline-block" ml={1}>
+              <Box sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   color="error"
                   onClick={() => setDeleteDialogOpen(true)}

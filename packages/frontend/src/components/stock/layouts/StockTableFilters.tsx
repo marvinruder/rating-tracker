@@ -9,7 +9,7 @@ import {
   Box,
   Typography,
   Button,
-  Grid,
+  Grid2 as Grid,
   Tooltip,
   DialogTitle,
   IconButton,
@@ -24,7 +24,6 @@ import {
   DialogActions,
   Divider,
   Drawer,
-  useTheme,
   useMediaQuery,
   FormControlLabel,
 } from "@mui/material";
@@ -104,8 +103,6 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
     style?: Style;
   }>({});
 
-  const theme = useTheme();
-
   /**
    * Possible widths for the filter container.
    */
@@ -180,21 +177,21 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
   return (
     <>
       <Tooltip arrow title="Filter stocks">
-        <Box id="filter-stocks-label" display="inline-block" ml={1}>
+        <Box id="filter-stocks-label" sx={{ display: "inline-block", ml: 1 }}>
           <IconButton aria-labelledby="filter-stocks-label" color="primary" onClick={() => setFilterOpen(true)}>
             <TuneIcon />
           </IconButton>
         </Box>
       </Tooltip>
       <Tooltip arrow title="Filter columns">
-        <Box id="filter-columns-label" display="inline-block" ml={1}>
+        <Box id="filter-columns-label" sx={{ display: "inline-block", ml: 1 }}>
           <IconButton aria-labelledby="filter-columns-label" color="primary" onClick={() => setColumnFilterOpen(true)}>
             <FilterListIcon />
           </IconButton>
         </Box>
       </Tooltip>
       <Tooltip arrow title="Clear all filters">
-        <Box id="clear-filters-label" display="inline-block" ml={props.filtersInUse ? 1 : 0}>
+        <Box id="clear-filters-label" sx={{ display: "inline-block", ml: props.filtersInUse ? 1 : 0 }}>
           <IconButton
             aria-labelledby="clear-filters-label"
             sx={{ display: !props.filtersInUse ? "none" : undefined }}
@@ -234,10 +231,10 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ p: 0 }}>
-          <Grid container width={filterContainerWidth} mb={2}>
-            <Grid item width={300} order={1}>
+          <Grid container sx={{ width: filterContainerWidth, mb: 2 }}>
+            <Grid sx={{ width: 300, order: 1 }}>
               {/* Overall Scores */}
-              <Typography variant="h4" px="24px" py="16px">
+              <Typography variant="h4" sx={{ px: "24px", py: "16px" }}>
                 Overall Scores
               </Typography>
               <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
@@ -282,7 +279,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                 />
               </Box>
               {/* Core Financials */}
-              <Typography variant="h4" px="24px" py="16px" pt="0px">
+              <Typography variant="h4" sx={{ px: "24px", py: "16px", pt: "0px" }}>
                 Core Financials
               </Typography>
               <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
@@ -316,9 +313,9 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                 />
               </Box>
             </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 3 : 2}>
+            <Grid sx={filterContainerWidth === 600 ? { order: 3 } : { order: 2 }}>
               {/* Financial Ratings */}
-              <Typography variant="h4" px="24px" py="16px">
+              <Typography variant="h4" sx={{ px: "24px", py: "16px" }}>
                 Financial Ratings
               </Typography>
               <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
@@ -411,9 +408,9 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                 />
               </Box>
             </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 4 : 3}>
+            <Grid sx={filterContainerWidth === 600 ? { order: 4 } : { order: 3 }}>
               {/* ESG Ratings */}
-              <Typography variant="h4" px="24px" py="16px">
+              <Typography variant="h4" sx={{ px: "24px", py: "16px" }}>
                 ESG Ratings
               </Typography>
               <Box sx={{ width: 300, px: "24px", pb: "20px" }}>
@@ -508,7 +505,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                 />
               </Box>
             </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 5 : 4}>
+            <Grid sx={filterContainerWidth === 600 ? { order: 5 } : { order: 4 }}>
               {/* Region */}
               <DialogTitle>
                 <Typography variant="h4">Region</Typography>
@@ -525,7 +522,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                 setSelectedLastLevelElements={setCountryInput}
               />
             </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 6 : 5}>
+            <Grid sx={filterContainerWidth === 600 ? { order: 6 } : { order: 5 }}>
               {/* Industry */}
               <DialogTitle>
                 <Typography variant="h4">Industry</Typography>
@@ -544,14 +541,14 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                 setSelectedLastLevelElements={setIndustryInput}
               />
             </Grid>
-            <Grid item order={filterContainerWidth === 600 ? 2 : 6}>
+            <Grid sx={filterContainerWidth === 600 ? { order: 2 } : { order: 6 }}>
               {/* StyleBox */}
               <DialogTitle>
                 <Typography variant="h4">Style</Typography>
               </DialogTitle>
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Grid container columns={7} width="175px" ml="51.5px" mr="71.5px">
-                  <Grid xs={1} item>
+                <Grid container columns={7} sx={{ width: "175px", ml: "51.5px", mr: "71.5px" }}>
+                  <Grid size={1}>
                     <Tooltip title="Clear selection" arrow>
                       <IconButton
                         sx={{
@@ -570,7 +567,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                     </Tooltip>
                   </Grid>
                   {styleArray.map((style) => (
-                    <Grid key={style} xs={2} item>
+                    <Grid key={style} size={2}>
                       <Tooltip title={`All ${style}`} arrow>
                         <IconButton
                           sx={{ ml: "15px", mr: "15px", mb: "5px", width: "20px", height: "20px", borderRadius: 20 }}
@@ -586,7 +583,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                     .map((size) => {
                       return (
                         <Fragment key={`fragment${size}`}>
-                          <Grid key={size} xs={1} item>
+                          <Grid key={size} size={1}>
                             <Tooltip title={`All ${size}`} arrow>
                               <IconButton
                                 sx={{
@@ -606,19 +603,18 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                           {styleArray.map((style) => (
                             <Tooltip title={`${size}-${style}`} key={`${size}-${style}`} arrow>
                               <Grid
-                                xs={2}
-                                sx={{
+                                size={2}
+                                sx={(theme) => ({
                                   backgroundColor:
                                     (styleboxInput.size === size || !styleboxInput.size) &&
                                     (styleboxInput.style === style || !styleboxInput.style) &&
                                     (styleboxInput.size || styleboxInput.style)
-                                      ? theme.colors.alpha.black[100]
-                                      : theme.colors.alpha.white[100],
+                                      ? theme.palette.black.main
+                                      : theme.palette.white.main,
                                   height: "50px",
-                                  outline: `1px solid ${theme.colors.alpha.black[100]}`,
-                                }}
+                                  outline: `1px solid ${theme.palette.black.main}`,
+                                })}
                                 onClick={() => setStyleboxInput({ size, style })}
-                                item
                               />
                             </Tooltip>
                           ))}
@@ -647,7 +643,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
       </Drawer>
       <Drawer anchor="right" onClose={() => setColumnFilterOpen(false)} open={columnFilterOpen}>
         <DialogTitle minWidth={300}>
-          <Typography variant="h3" pb={2}>
+          <Typography variant="h3" sx={{ pb: 2 }}>
             Filter Columns
           </Typography>
           <FormControlLabel

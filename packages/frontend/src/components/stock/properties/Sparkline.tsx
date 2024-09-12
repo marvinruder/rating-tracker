@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Grid, useTheme } from "@mui/material";
+import { Button, ButtonGroup, Grid2 as Grid, useTheme } from "@mui/material";
 import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
 import type { Stock } from "@rating-tracker/commons";
 import { useState } from "react";
@@ -34,13 +34,13 @@ export const Sparkline = (props: SparklineProps): JSX.Element => {
 
   const [start, min, max, end]: number[] = [data.at(0)!, Math.min(...data), Math.max(...data), data.at(-1)!];
   const trend = (end - start) / (max - min) || 0; // 1: largest possible increase, -1: largest possible decrease
-  const color = `color-mix(in srgb, ${theme.colors.alpha.black[50]}, ${
-    theme.colors.trend[trend > 0 ? "up" : "down"]
+  const color = `color-mix(in srgb, ${theme.palette.black.alpha50}, ${
+    theme.palette.trend[trend > 0 ? "up" : "down"]
   } ${100 * Math.abs(trend)}%)`; // chooses a color from red (down) to grey (steady) to green (up) based on the trend
 
   return (
-    <Grid container direction="row-reverse" width={props.width} height={props.height}>
-      <Grid item width={30}>
+    <Grid container direction="row-reverse" sx={{ width: props.width, height: props.height }}>
+      <Grid sx={{ width: 30 }}>
         <ButtonGroup orientation="vertical" size="small" sx={{ height: "100%" }} fullWidth>
           {intervalArray.map((buttonInterval) => (
             <Button
@@ -55,7 +55,7 @@ export const Sparkline = (props: SparklineProps): JSX.Element => {
           ))}
         </ButtonGroup>
       </Grid>
-      <Grid item width="calc(100% - 30px)">
+      <Grid sx={{ width: "calc(100% - 30px)" }}>
         <YahooNavigator stock={props.stock}>
           <SparkLineChart data={data} colors={[color]} height={props.height} yAxis={{ min, max }} />
         </YahooNavigator>

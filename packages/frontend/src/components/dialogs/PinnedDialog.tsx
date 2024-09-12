@@ -1,5 +1,5 @@
 import type { DialogProps } from "@mui/material";
-import { Dialog, useTheme } from "@mui/material";
+import { Dialog } from "@mui/material";
 
 /**
  * A MUI Dialog that is pinned to the top of the screen.
@@ -7,7 +7,6 @@ import { Dialog, useTheme } from "@mui/material";
  * @returns The component.
  */
 const PinnedDialog = (props: DialogProps): JSX.Element => {
-  const theme = useTheme();
   return (
     <Dialog
       {...props}
@@ -18,9 +17,6 @@ const PinnedDialog = (props: DialogProps): JSX.Element => {
               ...props.sx,
               ".MuiDialog-container": { height: "auto" },
               ".MuiDialog-paperScrollPaper": { maxHeight: "calc(100dvh - 64px)" },
-              ".MuiDialogTitle-root": {
-                background: theme.palette.mode === "dark" ? theme.colors.alpha.black[5] : undefined,
-              },
               ".MuiDialogContent-root": { maxHeight: "calc(100dvh - 256px)" },
             },
           })}

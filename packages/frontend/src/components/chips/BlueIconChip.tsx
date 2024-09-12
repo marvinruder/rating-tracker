@@ -9,5 +9,5 @@ import type { FC } from "react";
  */
 export const BlueIconChip: FC<ChipProps> = (props: ChipProps): JSX.Element => {
   const theme = useTheme();
-  return <Chip {...props} sx={{ ...props.sx, ".MuiChip-icon": { color: theme.colors.primary.main } }} />;
+  return <Chip {...props} sx={{ ...props.sx, ".MuiChip-icon": { color: theme.palette.primary.main } }} />;
 };

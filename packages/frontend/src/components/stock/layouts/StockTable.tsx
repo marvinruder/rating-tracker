@@ -190,9 +190,8 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
 
   return (
     <>
-      <Typography mb={2} visibility={stocks.length && totalCount ? "visible" : "hidden"}>
-        Showing <span style={{ fontWeight: "bold" }}>{stocks.length}</span> of{" "}
-        <span style={{ fontWeight: "bold" }}>{totalCount}</span> stocks.
+      <Typography sx={{ mb: 2, visibility: stocks.length && totalCount ? "visible" : "hidden" }}>
+        Showing <strong>{stocks.length}</strong> of <strong>{totalCount}</strong> stocks.
       </Typography>
       <Card>
         <TableContainer sx={{ overscrollBehaviorX: "none" }}>
@@ -213,7 +212,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                         onClick={handleSortLabelClicked("amount")}
                       >
                         <Tooltip title={<PropertyDescription property="amount" />} arrow>
-                          <Box display="inline-block">Amount</Box>
+                          <Box sx={{ display: "inline-block" }}>Amount</Box>
                         </Tooltip>
                       </TableSortLabel>
                     </TableCell>
@@ -231,7 +230,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                   {/* Country and Region */}
                   <TableCell sx={{ display: displayColumn("Country") }}>
                     <Tooltip title={<PropertyDescription property="country" />} arrow>
-                      <Box display="inline-block">Country</Box>
+                      <Box sx={{ display: "inline-block" }}>Country</Box>
                     </Tooltip>
                   </TableCell>
                   {/* StyleBox */}
@@ -242,7 +241,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("size")}
                     >
                       <Tooltip title={<PropertyDescription property="size" />} arrow placement="top">
-                        <Box display="inline-block">Size</Box>
+                        <Box sx={{ display: "inline-block" }}>Size</Box>
                       </Tooltip>
                     </TableSortLabel>
                     <br />
@@ -252,20 +251,20 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("style")}
                     >
                       <Tooltip title={<PropertyDescription property="style" />} arrow placement="bottom">
-                        <Box display="inline-block">Style</Box>
+                        <Box sx={{ display: "inline-block" }}>Style</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
                   {/* Sector */}
                   <TableCell sx={{ display: displayColumn("Sector") }}>
                     <Tooltip title={<PropertyDescription property="sector" />} arrow>
-                      <Box display="inline-block">Sector</Box>
+                      <Box sx={{ display: "inline-block" }}>Sector</Box>
                     </Tooltip>
                   </TableCell>
                   {/* Industry */}
                   <TableCell sx={{ display: displayColumn("Industry") }}>
                     <Tooltip title={<PropertyDescription property="industry" />} arrow>
-                      <Box display="inline-block">Industry</Box>
+                      <Box sx={{ display: "inline-block" }}>Industry</Box>
                     </Tooltip>
                   </TableCell>
                   {/* Total Score */}
@@ -276,7 +275,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("totalScore")}
                     >
                       <Tooltip title={<PropertyDescription property="totalScore" />} arrow>
-                        <Box display="inline-block">Total</Box>
+                        <Box sx={{ display: "inline-block" }}>Total</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -288,7 +287,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("financialScore")}
                     >
                       <Tooltip title={<PropertyDescription property="financialScore" />} arrow>
-                        <Box display="inline-block">Financial</Box>
+                        <Box sx={{ display: "inline-block" }}>Financial</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -300,7 +299,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("esgScore")}
                     >
                       <Tooltip title={<PropertyDescription property="esgScore" />} arrow>
-                        <Box display="inline-block">ESG</Box>
+                        <Box sx={{ display: "inline-block" }}>ESG</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -312,7 +311,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("starRating")}
                     >
                       <Tooltip title={<PropertyDescription property="starRating" />} arrow>
-                        <Box display="inline-block">Star Rating</Box>
+                        <Box sx={{ display: "inline-block" }}>Star Rating</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -324,7 +323,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("morningstarFairValuePercentageToLastClose")}
                     >
                       <Tooltip title={<PropertyDescription property="morningstarFairValue" />} arrow>
-                        <Box display="inline-block">Fair Value</Box>
+                        <Box sx={{ display: "inline-block" }}>Fair Value</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -336,7 +335,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("analystConsensus")}
                     >
                       <Tooltip title={<PropertyDescription property="analystRatings" />} arrow>
-                        <Box display="inline-block">Analyst Ratings</Box>
+                        <Box sx={{ display: "inline-block" }}>Analyst Ratings</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -348,7 +347,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("analystTargetPricePercentageToLastClose")}
                     >
                       <Tooltip title={<PropertyDescription property="analystTargetPrice" />} arrow>
-                        <Box display="inline-block">Analyst Target</Box>
+                        <Box sx={{ display: "inline-block" }}>Analyst Target</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -360,7 +359,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("msciESGRating")}
                     >
                       <Tooltip title={<PropertyDescription property="msciESGRating" />} arrow>
-                        <Box display="inline-block">MSCI ESG</Box>
+                        <Box sx={{ display: "inline-block" }}>MSCI ESG</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -372,7 +371,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("msciTemperature")}
                     >
                       <Tooltip title={<PropertyDescription property="msciTemperature" />} arrow>
-                        <Box display="inline-block">MSCI Temp</Box>
+                        <Box sx={{ display: "inline-block" }}>MSCI Temp</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -384,7 +383,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("lsegESGScore")}
                     >
                       <Tooltip title={<PropertyDescription property="lsegESGScore" />} arrow placement="top">
-                        <Box display="inline-block">LSEG</Box>
+                        <Box sx={{ display: "inline-block" }}>LSEG</Box>
                       </Tooltip>
                     </TableSortLabel>
                     <br />
@@ -395,7 +394,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       sx={{ flexDirection: "row-reverse" }}
                     >
                       <Tooltip title={<PropertyDescription property="lsegEmissions" />} arrow placement="bottom">
-                        <Box display="inline-block">Emissions</Box>
+                        <Box sx={{ display: "inline-block" }}>Emissions</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -407,7 +406,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("spESGScore")}
                     >
                       <Tooltip title={<PropertyDescription property="spESGScore" />} arrow>
-                        <Box display="inline-block">S&P</Box>
+                        <Box sx={{ display: "inline-block" }}>S&P</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -419,7 +418,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("sustainalyticsESGRisk")}
                     >
                       <Tooltip title={<PropertyDescription property="sustainalyticsESGRisk" />} arrow>
-                        <Box display="inline-block">Sustain-alytics</Box>
+                        <Box sx={{ display: "inline-block" }}>Sustain-alytics</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -431,14 +430,14 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("positionIn52w")}
                     >
                       <Tooltip title={<PropertyDescription property="positionIn52w" />} arrow>
-                        <Box display="inline-block">52W Range</Box>
+                        <Box sx={{ display: "inline-block" }}>52W Range</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
                   {/* Sparkline */}
                   <TableCell sx={{ display: displayColumn("Sparkline") }}>
                     <Tooltip title={<PropertyDescription property="sparkline" />} arrow>
-                      <Box display="inline-block">Sparkline</Box>
+                      <Box sx={{ display: "inline-block" }}>Sparkline</Box>
                     </Tooltip>
                   </TableCell>
                   {/* Dividend Yield */}
@@ -449,7 +448,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("dividendYieldPercent")}
                     >
                       <Tooltip title={<PropertyDescription property="dividendYieldPercent" />} arrow>
-                        <Box display="inline-block">Div Yield</Box>
+                        <Box sx={{ display: "inline-block" }}>Div Yield</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
@@ -461,14 +460,14 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                       onClick={handleSortLabelClicked("priceEarningRatio")}
                     >
                       <Tooltip title={<PropertyDescription property="priceEarningRatio" />} arrow>
-                        <Box display="inline-block">P/E</Box>
+                        <Box sx={{ display: "inline-block" }}>P/E</Box>
                       </Tooltip>
                     </TableSortLabel>
                   </TableCell>
                   {/* Market Cap */}
                   <TableCell sx={{ display: displayColumn("Market Capitalization") }}>
                     <Tooltip title={<PropertyDescription property="marketCap" />} arrow>
-                      <Box display="inline-block">Market Cap</Box>
+                      <Box sx={{ display: "inline-block" }}>Market Cap</Box>
                     </Tooltip>
                   </TableCell>
                 </TableRow>
@@ -504,7 +503,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Ele
                 ) : (
                   <TableRow>
                     <TableCell>
-                      <Typography textAlign="center" variant="subtitle1">
+                      <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
                         No Stocks
                       </Typography>
                     </TableCell>

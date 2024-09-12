@@ -1,16 +1,6 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import type { ListItemProps } from "@mui/material";
-import {
-  IconButton,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  Box,
-  Typography,
-  useTheme,
-  ListItemSecondaryAction,
-  ListItemText,
-} from "@mui/material";
+import { IconButton, ListItem, ListItemAvatar, Avatar, Box, Typography, useTheme, ListItemText } from "@mui/material";
 import type { Stock, YahooStockStub } from "@rating-tracker/commons";
 import { baseURL, emojiFlag, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
 import { NavLink } from "react-router-dom";
@@ -38,7 +28,17 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
         py: 1.5,
         color: "inherit",
         "&:hover": props.onClick || navLink ? { background: theme.palette.action.hover } : {},
+        "> .MuiListItemSecondaryAction-root": { right: 9 },
       }}
+      {...(onDelete
+        ? {
+            secondaryAction: (
+              <IconButton aria-label={`Delete stock “${stock.name}”`} color="error" onClick={onDelete}>
+                <ClearIcon />
+              </IconButton>
+            ),
+          }
+        : {})}
     >
       <ListItemAvatar>
         <Avatar
@@ -60,19 +60,10 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
         />
       </ListItemAvatar>
       <ListItemText primary={stock.name} primaryTypographyProps={{ fontWeight: "bold" }} secondary={stock.ticker} />
-      <Typography sx={{ ml: 1 }} fontSize={18}>
-        {"country" in stock ? emojiFlag(stock.country) : ""}
-      </Typography>
-      <Box width={24} height={24} ml={1} mr={onDelete && 1}>
+      <Typography sx={{ fontSize: 18, ml: 1 }}>{"country" in stock ? emojiFlag(stock.country) : ""}</Typography>
+      <Box sx={{ width: 24, height: 24, ml: 1, mr: onDelete && 1 }}>
         <SectorIcon industry={stock.industry} length={24} type="Sector" />
       </Box>
-      {onDelete && (
-        <ListItemSecondaryAction sx={{ right: 9 }}>
-          <IconButton aria-label={`Delete stock “${stock.name}”`} color="error" onClick={onDelete}>
-            <ClearIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
-      )}
     </ListItem>
   );
 };

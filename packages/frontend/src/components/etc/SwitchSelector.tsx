@@ -18,11 +18,14 @@ export const SwitchSelector = (props: SwitchSelectorProps): JSX.Element => {
     return {
       label: (
         <Typography
-          padding={0.5}
           variant="button"
-          color={
-            props.value === option.value ? theme.colors.switchSelector.selected : theme.colors.switchSelector.unselected
-          }
+          sx={{
+            padding: 0.5,
+            color:
+              props.value === option.value
+                ? theme.palette.switchSelector.selected
+                : theme.palette.switchSelector.unselected,
+          }}
         >
           {option.label}
         </Typography>
@@ -35,7 +38,7 @@ export const SwitchSelector = (props: SwitchSelectorProps): JSX.Element => {
     <SwitchSelectorBase
       options={switchOptions}
       backgroundColor={theme.palette.primary.main}
-      selectedBackgroundColor={theme.colors.alpha.white[100]}
+      selectedBackgroundColor={theme.palette.white.main}
       onChange={props.setValue}
     />
   );
