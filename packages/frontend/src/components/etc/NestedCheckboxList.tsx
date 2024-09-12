@@ -9,7 +9,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
 
@@ -33,8 +32,6 @@ export const NestedCheckboxList = <
 >(
   props: NestedCheckboxListProps<FirstLevelType, SecondLevelType, ThirdLevelType, FourthLevelType>,
 ): JSX.Element => {
-  const theme = useTheme();
-
   const [openFirstLevel, setOpenFirstLevel] = useState<FirstLevelType[]>([]);
   const [openSecondLevel, setOpenSecondLevel] = useState<SecondLevelType[]>([]);
   const [openThirdLevel, setOpenThirdLevel] = useState<ThirdLevelType[]>([]);
@@ -256,27 +253,26 @@ export const NestedCheckboxList = <
    * @param fourthLevelElement The fourth-level element whose state is to be determined
    * @returns The state of the fourth-level checkbox
    */
-  const getFourthLevelCheckboxStatus = (fourthLevelElement: FourthLevelType): CheckboxState => {
+  const getFourthLevelCheckboxStatus = (fourthLevelElement: FourthLevelType): CheckboxState =>
     // Fourth-level elements never have children
-    return props.selectedLastLevelElements.includes(fourthLevelElement) ? "checked" : "unchecked";
-  };
+    props.selectedLastLevelElements.includes(fourthLevelElement) ? "checked" : "unchecked";
 
   return (
     <List
       dense
       disablePadding
-      sx={{
+      sx={(theme) => ({
         ml: "24px",
         mr: "24px",
         width: "250px",
         height: props.height,
         overflow: "auto",
-        border: `1px solid ${theme.colors.alpha.black[30]}`,
+        border: `1px solid ${theme.palette.black.alpha30}`,
         borderRadius: "10px",
         ".MuiListItem-root": {
           display: "block",
         },
-      }}
+      })}
     >
       {props.firstLevelElements.map((firstLevelElement) => (
         <ListItem disablePadding disableGutters key={firstLevelElement}>

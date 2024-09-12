@@ -1,4 +1,13 @@
-import { Box, Button, DialogActions, Divider, Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  DialogActions,
+  Divider,
+  Grid2 as Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import type { PortfolioSummary, WatchlistSummary } from "@rating-tracker/commons";
 import { FAVORITES_NAME, currencyMinorUnits, handleResponse } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
@@ -65,28 +74,14 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
     <>
       <SelectStock
         titleElement={
-          <Box pb={1}>
+          <Box sx={{ pb: 1 }}>
             <Typography variant="h3">
               Add Stock to {collectionLabel} “{props.collection.name}”
             </Typography>
             {"currency" in props.collection && ( // Required for type narrowing
-              <Grid container spacing={1} my={1} maxWidth={600} alignItems="center">
-                <Grid item xs={12}>
+              <Grid container spacing={1} sx={{ my: 1, maxWidth: 600, alignItems: "center" }}>
+                <Grid size={12}>
                   <TextField
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
-                          {props.collection.currency}
-                        </InputAdornment>
-                      ),
-                    }}
-                    inputProps={{
-                      inputMode: "decimal",
-                      type: "number",
-                      // Amount must be divisible by the currency's minor unit
-                      step: Math.pow(10, -1 * currencyMinorUnits[props.collection.currency]),
-                      min: Math.pow(10, -1 * currencyMinorUnits[props.collection.currency]), // Amount must be positive
-                    }}
                     onChange={(event) => {
                       setAmountInput(event.target.value);
                       // If in error state, check whether error is resolved. If so, clear the error.
@@ -101,6 +96,23 @@ const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => 
                     value={amountInput}
                     autoFocus
                     fullWidth
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
+                            {props.collection.currency}
+                          </InputAdornment>
+                        ),
+                      },
+                      htmlInput: {
+                        inputMode: "decimal",
+                        type: "number",
+                        // Amount must be divisible by the currency's minor unit
+                        step: Math.pow(10, -1 * currencyMinorUnits[props.collection.currency]),
+                        // Amount must be positive
+                        min: Math.pow(10, -1 * currencyMinorUnits[props.collection.currency]),
+                      },
+                    }}
                   />
                 </Grid>
               </Grid>

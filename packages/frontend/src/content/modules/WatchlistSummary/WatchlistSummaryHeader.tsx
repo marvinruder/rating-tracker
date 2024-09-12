@@ -1,5 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Box, Dialog, Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Dialog, Grid2 as Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import type { FC } from "react";
 import { useState } from "react";
 
@@ -16,16 +16,16 @@ export const WatchlistSummaryHeader: FC<WatchlistSummaryHeaderProps> = (
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
 
   return (
-    <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
-      <Grid item>
+    <Grid container sx={{ justifyContent: "space-between", alignItems: "center", rowGap: 1 }}>
+      <Grid>
         <Typography variant="h3" component="h3" gutterBottom>
           Your Watchlists
         </Typography>
         <Typography variant="subtitle2">View and organize your favorite or otherwise noteworthy stocks.</Typography>
       </Grid>
-      <Grid item ml="auto">
+      <Grid sx={{ ml: "auto" }}>
         <Tooltip arrow title="Create a new watchlist">
-          <Box id="add-watchlist-label" display="inline-block" ml={1}>
+          <Box id="add-watchlist-label" sx={{ display: "inline-block", ml: 1 }}>
             <IconButton aria-labelledby="add-watchlist-label" color="primary" onClick={() => setAddWatchlistOpen(true)}>
               <AddIcon />
             </IconButton>

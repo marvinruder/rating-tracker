@@ -132,12 +132,12 @@ const UserRow = (props: UserRowProps): JSX.Element => {
             alt={props.user.name}
             slotProps={{ img: { loading: "lazy" } }}
           />
-          <Box width={8} />
+          <Box sx={{ width: 8 }} />
           <Box>
-            <Typography variant="body1" fontWeight="bold" color="text.primary" width={160} noWrap>
+            <Typography variant="body1" noWrap sx={{ fontWeight: "bold", color: "text.primary", width: 160 }}>
               {props.user.name}
             </Typography>
-            <Typography variant="body2" color="text.secondary" width={160} noWrap>
+            <Typography variant="body2" noWrap sx={{ color: "text.secondary", width: 160 }}>
               {props.user.email}
             </Typography>
           </Box>
@@ -145,7 +145,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
       </TableCell>
       {/* Phone Number */}
       <TableCell>
-        <Typography variant="body1" color="text.primary" width={135} noWrap>
+        <Typography variant="body1" noWrap sx={{ color: "text.primary", width: 135 }}>
           {props.user.phone}
         </Typography>
       </TableCell>
@@ -180,9 +180,9 @@ const UserRow = (props: UserRowProps): JSX.Element => {
       </TableCell>
       {/* Actions */}
       {props.refetchUsers && (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>
           <Tooltip title="Delete User" arrow>
-            <Box display="inline-block">
+            <Box sx={{ display: "inline-block" }}>
               <IconButton
                 aria-label={`Delete user “${props.user.name}”`}
                 color="error"
@@ -205,9 +205,9 @@ const UserRow = (props: UserRowProps): JSX.Element => {
     <TableRow hover sx={{ height: 89 }}>
       {/* User */}
       <TableCell>
-        <Box style={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Skeleton variant="circular" width={64} height={64} sx={{ m: "4px" }} />
-          <Box width={8} />
+          <Box sx={{ width: 8 }} />
           <Box>
             <Typography variant="body1">
               <Skeleton width={135} />
@@ -254,7 +254,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
         <Skeleton width={280} height={69} />
       </TableCell>
       {/* Actions */}
-      <TableCell style={{ whiteSpace: "nowrap" }}>
+      <TableCell sx={{ whiteSpace: "nowrap" }}>
         <Skeleton
           sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
           variant="circular"

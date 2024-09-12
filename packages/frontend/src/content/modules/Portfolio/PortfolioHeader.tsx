@@ -1,7 +1,7 @@
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
+import { Box, Grid2 as Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import type { Portfolio } from "@rating-tracker/commons";
 import { currencyMinorUnits, getTotalAmount, pluralize, portfoliosAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
@@ -28,8 +28,8 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
-        <Grid item sx={{ display: "flex", alignItems: "center" }}>
+      <Grid container sx={{ justifyContent: "space-between", alignItems: "center", rowGap: 1 }}>
+        <Grid sx={{ display: "flex", alignItems: "center" }}>
           <Box>
             <Typography variant="h3" component="h3" gutterBottom>
               {props.portfolio ? props.portfolio.name : <Skeleton width={160} />}
@@ -49,10 +49,10 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
             </Typography>
           </Box>
         </Grid>
-        <Grid item ml="auto" height={40} display="inline-flex">
+        <Grid sx={{ ml: "auto", height: 40, display: "inline-flex" }}>
           {props.portfolio ? (
             <Tooltip arrow title="Add stock">
-              <Box id="add-stock-to-portfolio-label" display="inline-block" ml={1}>
+              <Box id="add-stock-to-portfolio-label" sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   aria-labelledby="add-stock-to-portfolio-label"
                   color="success"
@@ -67,7 +67,7 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
           )}
           {props.portfolio ? (
             <Tooltip arrow title="Edit portfolio">
-              <Box id="edit-portfolio-label" display="inline-block" ml={1}>
+              <Box id="edit-portfolio-label" sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   aria-labelledby="edit-portfolio-label"
                   color="primary"
@@ -82,7 +82,7 @@ export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
           )}
           {props.portfolio ? (
             <Tooltip arrow title="Delete portfolio">
-              <Box id="delete-portfolio-label" display="inline-block" ml={1}>
+              <Box id="delete-portfolio-label" sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   aria-labelledby="delete-portfolio-label"
                   color="error"

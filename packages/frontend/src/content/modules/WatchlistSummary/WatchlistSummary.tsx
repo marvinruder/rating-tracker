@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid2 as Grid, Typography } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
 import { handleResponse } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
@@ -47,22 +47,20 @@ const WatchlistSummaryModule = (): JSX.Element => {
           {watchlistSummariesFinal ? (
             watchlistSummaries.length ? (
               watchlistSummaries.map((watchlistSummary) => (
-                <Grid item xs={12} sm={6} md={4} xl={3} key={watchlistSummary.id}>
+                <Grid size={{ xs: 12, sm: 6, md: 4, xl: 3 }} key={watchlistSummary.id}>
                   <WatchlistCard watchlist={watchlistSummary} getWatchlists={getWatchlists} />
                 </Grid>
               ))
             ) : (
-              <Box mx="auto" my={4}>
+              <Box sx={{ mx: "auto", my: 4 }}>
                 <Typography variant="subtitle1">No Watchlists</Typography>
               </Box>
             )
           ) : (
             [...Array(3)].map(
-              (
-                _,
-                key, // Render skeleton cards
-              ) => (
-                <Grid item xs={12} sm={6} md={4} key={key}>
+              // Render skeleton cards
+              (_, key) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4, xl: 3 }} key={key}>
                   <WatchlistCard />
                 </Grid>
               ),

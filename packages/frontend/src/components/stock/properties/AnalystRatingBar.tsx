@@ -15,9 +15,9 @@ export const AnalystRatingBar = ({ stock, ...props }: AnalystRatingBarProps): JS
   let processedCount = 0;
   const gradient = `linear-gradient(to right, ${analystRatingArray
     .map((rating) => {
-      const colorStart = `${theme.colors.consensus[rating]} ${(processedCount / sum) * 100}%`;
+      const colorStart = `${theme.palette.consensus[rating]} ${(processedCount / sum) * 100}%`;
       const count = stock.analystRatings[rating];
-      const colorEnd = `${theme.colors.consensus[rating]} ${((processedCount + count) / sum) * 100}%`;
+      const colorEnd = `${theme.palette.consensus[rating]} ${((processedCount + count) / sum) * 100}%`;
       processedCount += count;
       return `${colorStart}, ${colorEnd}`;
     })

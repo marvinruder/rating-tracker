@@ -18,7 +18,7 @@ const Status404 = (): JSX.Element => {
       }}
     >
       <Container maxWidth="md">
-        <Box textAlign="center">
+        <Box sx={{ textAlign: "center" }}>
           <img alt="404" height={180} src="/assets/images/status/404.svg" />
           <Typography variant="h2" sx={{ my: 2 }}>
             The page you were looking for does not exist.

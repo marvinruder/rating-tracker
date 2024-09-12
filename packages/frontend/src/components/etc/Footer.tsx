@@ -8,6 +8,7 @@ export const Footer = (props: FooterProps) => (
     <Container maxWidth={false}>
       <Box
         sx={{
+          maxWidth: props.maxWidth,
           m: "auto",
           mt: 2,
           pb: 2,
@@ -16,7 +17,6 @@ export const Footer = (props: FooterProps) => (
           justifyContent: "space-between",
           textAlign: { xs: "center", md: "left" },
         }}
-        maxWidth={props.maxWidth}
       >
         <Typography sx={{ ml: { md: "auto" }, mr: { md: 0.5 }, pt: { xs: 2, md: 0 } }} variant="subtitle1">
           Something&nbsp;missing&nbsp;or&nbsp;not&nbsp;working&nbsp;correctly? Report&nbsp;it&nbsp;on&nbsp;GitHub:

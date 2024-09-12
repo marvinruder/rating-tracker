@@ -4,7 +4,7 @@ import {
   DialogTitle,
   Typography,
   DialogContent,
-  Grid,
+  Grid2 as Grid,
   TextField,
   DialogActions,
   Button,
@@ -310,8 +310,8 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
         <Typography variant="h3">Edit Stock “{props.stock.name}”</Typography>
       </DialogTitle>
       <DialogContent>
-        <Grid container spacing={1} mt={0} maxWidth={600} alignItems="top">
-          <Grid item xs={12}>
+        <Grid container spacing={1} sx={{ mt: 1, maxWidth: 600, alignItems: "top" }}>
+          <Grid size={12}>
             <TextField
               onChange={(event) => {
                 setName(event.target.value);
@@ -329,7 +329,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
               onChange={(event) => {
                 setTicker(event.target.value);
@@ -347,9 +347,8 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12} sm={8}>
+          <Grid size={{ xs: 12, sm: 8 }}>
             <TextField
-              inputProps={{ pattern: "[A-Z]{2}[A-Z0-9]{10}" }}
               onChange={(event) => {
                 setISIN(event.target.value);
                 // If in error state, check whether error is resolved. If so, clear the error.
@@ -364,9 +363,10 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               value={isin}
               placeholder="e.g. US0378331005"
               fullWidth
+              slotProps={{ htmlInput: { pattern: "[A-Z]{2}[A-Z0-9]{10}" } }}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <CountryAutocomplete
               value={country}
               onChange={(_, value) => {
@@ -383,20 +383,20 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               required
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Divider sx={{ my: 1, width: "100%" }} />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <FormGroup>
               <FormControlLabel
                 sx={{ pb: 2 }}
                 control={<Checkbox checked={clear} onChange={() => setClear((prev) => !prev)} />}
                 label={
                   <>
-                    <Typography variant="body1" fontWeight="bold" color="text.primary">
+                    <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.primary" }}>
                       Clear saved values
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
                       If an certain attribute value is no longer available, check this option before refetching to clear
                       all attribute values available from the selected data provider.
                     </Typography>
@@ -405,8 +405,8 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               />
             </FormGroup>
           </Grid>
-          <Grid item xs={12} container spacing={1} alignItems="center">
-            <Grid item ml="auto">
+          <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
+            <Grid sx={{ ml: "auto" }}>
               <Tooltip
                 title={
                   props.stock.ticker === ticker.trim()
@@ -416,7 +416,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 placement="left"
                 arrow
               >
-                <Box display="inline-block">
+                <Box sx={{ display: "inline-block" }}>
                   <LoadingButton
                     size="small"
                     loading={yahooRequestInProgress}
@@ -431,8 +431,8 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               </Tooltip>
             </Grid>
           </Grid>
-          <Grid item xs={12} container spacing={1} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
+          <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: "calc(100% - 175px)" } }}>
               <TextField
                 onChange={(event) => setMorningstarID(event.target.value)}
                 label="Morningstar ID"
@@ -441,7 +441,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={morningstarIDRequestInProgress}
@@ -454,8 +454,8 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid item xs={12} container spacing={1} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
+          <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: "calc(100% - 175px)" } }}>
               <TextField
                 onChange={(event) => setMarketScreenerID(event.target.value)}
                 label="MarketScreener ID"
@@ -464,7 +464,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={marketScreenerIDRequestInProgress}
@@ -477,8 +477,8 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid item xs={12} container spacing={1} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
+          <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: "calc(100% - 175px)" } }}>
               <TextField
                 onChange={(event) => setMSCIID(event.target.value)}
                 label="MSCI ID"
@@ -487,7 +487,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={msciIDRequestInProgress}
@@ -500,8 +500,8 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid item xs={12} container spacing={1} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
+          <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: "calc(100% - 175px)" } }}>
               <TextField
                 onChange={(event) => setRIC(event.target.value)}
                 label="RIC"
@@ -510,7 +510,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={ricRequestInProgress}
@@ -523,10 +523,9 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid item xs={12} container spacing={1} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
+          <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: "calc(100% - 175px)" } }}>
               <TextField
-                inputProps={{ inputMode: "numeric", pattern: "\\d*" }}
                 onChange={(event) => {
                   const value = event.target.value.replaceAll(/\D+/g, "");
                   setSPID(value ? +value : null);
@@ -535,9 +534,10 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 value={spID === null ? "" : spID}
                 placeholder="e.g. 4004205"
                 fullWidth
+                slotProps={{ htmlInput: { inputMode: "numeric", pattern: "\\d*" } }}
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={spIDRequestInProgress}
@@ -550,8 +550,8 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
               </LoadingButton>
             </Grid>
           </Grid>
-          <Grid item xs={12} container spacing={1} alignItems="center">
-            <Grid item width={{ xs: "100%", sm: "calc(100% - 175px)" }}>
+          <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
+            <Grid sx={{ width: { xs: "100%", sm: "calc(100% - 175px)" } }}>
               <TextField
                 onChange={(event) => setSustainalyticsID(event.target.value)}
                 label="Sustainalytics ID"
@@ -560,7 +560,7 @@ export const EditStock = (props: EditStockProps): JSX.Element => {
                 fullWidth
               />
             </Grid>
-            <Grid item ml="auto">
+            <Grid sx={{ ml: "auto" }}>
               <LoadingButton
                 size="small"
                 loading={sustainalyticsIDRequestInProgress}

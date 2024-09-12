@@ -14,7 +14,7 @@ export const Logo = (): JSX.Element => {
     <NavLink
       to="/"
       style={{
-        color: theme.colors.alpha.trueWhite[70],
+        color: theme.palette.trueWhite.alpha70,
         display: "flex",
         justifyContent: "space-between",
         alignItems: "end",
@@ -22,10 +22,10 @@ export const Logo = (): JSX.Element => {
         fontWeight: "bold",
       }}
     >
-      <Typography variant="h2" fontSize={18}>
+      <Typography variant="h2" sx={{ fontSize: 18 }}>
         Rating Tracker
       </Typography>
-      <Box sx={{ height: 52, transform: "scale(0.83)", fontSize: 52, color: theme.colors.alpha.trueWhite[30] }}>
+      <Box sx={{ height: 52, transform: "scale(0.83)", fontSize: 52, color: theme.palette.trueWhite.alpha30 }}>
         <Badge
           badgeContent={packageInfo.version}
           color="primary"

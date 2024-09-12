@@ -11,7 +11,7 @@ import {
   CardActions,
   CardContent,
   Dialog,
-  Grid,
+  Grid2 as Grid,
   IconButton,
   Link,
   Skeleton,
@@ -46,13 +46,19 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
   return (
     <Card>
       <CardActionArea>
-        <Link to={`${watchlistsAPIPath}/${props.watchlist?.id}`} component={NavLink} color="inherit" underline="none">
+        <Link to={`${watchlistsAPIPath}/${props.watchlist?.id}`} component={NavLink} sx={{ color: "inherit" }}>
           <CardContent>
-            <Grid container justifyContent="space-between">
-              <Grid item display="flex" alignItems="center" maxWidth={isFavorites ? "calc(100% - 36px)" : undefined}>
+            <Grid container sx={{ justifyContent: "space-between" }}>
+              <Grid
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  ...(isFavorites ? { maxWidth: "calc(100% - 36px)" } : {}),
+                }}
+              >
                 <Box>
                   <Typography variant="h3">{props.watchlist?.name ?? <Skeleton width="160px" />}</Typography>
-                  <Typography variant="subtitle1" color="text.secondary">
+                  <Typography variant="subtitle1" sx={{ color: "text.secondary" }}>
                     {props.watchlist ? (
                       `${props.watchlist.stocks.length || "No"} stock${pluralize(props.watchlist.stocks.length)}`
                     ) : (
@@ -62,7 +68,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
                 </Box>
               </Grid>
               {isFavorites && (
-                <Grid item sx={{ fontSize: 28 }}>
+                <Grid sx={{ fontSize: 28 }}>
                   <Tooltip title="This is your Favorites watchlist." arrow>
                     <StarsIcon fontSize="inherit" color="warning" />
                   </Tooltip>
@@ -78,7 +84,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
             arrow
             title={props.watchlist.subscribed ? "Unsubscribe from stock updates" : "Subscribe to stock updates"}
           >
-            <Box display="inline-block" ml={1}>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
               <IconButton
                 aria-label={`${
                   props.watchlist.subscribed ? "Unsubscribe from" : "Subscribe to"
@@ -111,7 +117,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
         )}
         {props.watchlist ? (
           <Tooltip arrow title="Add stock">
-            <Box display="inline-block" ml={1}>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
               <IconButton
                 aria-label={`Add stock to watchlist “${props.watchlist.name}”`}
                 color="success"
@@ -126,7 +132,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
         )}
         {props.watchlist ? (
           <Tooltip arrow title={isFavorites ? "You cannot rename the Favorites watchlist" : "Rename watchlist"}>
-            <Box display="inline-block" ml={1}>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
               <IconButton
                 aria-label={`Rename watchlist “${props.watchlist.name}”`}
                 color="primary"
@@ -142,7 +148,7 @@ const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
         )}
         {props.watchlist ? (
           <Tooltip arrow title={isFavorites ? "You cannot delete the Favorites watchlist" : "Delete watchlist"}>
-            <Box display="inline-block" ml={1}>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
               <IconButton
                 aria-label={`Delete watchlist “${props.watchlist.name}”`}
                 color="error"

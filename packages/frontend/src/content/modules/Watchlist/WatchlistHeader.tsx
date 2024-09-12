@@ -3,7 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
+import { Box, Grid2 as Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import type { Watchlist } from "@rating-tracker/commons";
 import { FAVORITES_NAME, handleResponse, pluralize, watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
@@ -34,8 +34,8 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center" rowGap={1}>
-        <Grid item sx={{ display: "flex", alignItems: "center" }}>
+      <Grid container sx={{ justifyContent: "space-between", alignItems: "center", rowGap: 1 }}>
+        <Grid sx={{ display: "flex", alignItems: "center" }}>
           <Box>
             <Typography variant="h3" component="h3" gutterBottom>
               {props.watchlist ? props.watchlist.name : <Skeleton width={160} />}
@@ -49,13 +49,13 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
             </Typography>
           </Box>
         </Grid>
-        <Grid item ml="auto" height={40} display="inline-flex">
+        <Grid sx={{ ml: "auto", height: 40, display: "inline-flex" }}>
           {props.watchlist ? (
             <Tooltip
               arrow
               title={props.watchlist.subscribed ? "Unsubscribe from stock updates" : "Subscribe to stock updates"}
             >
-              <Box id="subscribe-to-watchlist-label" display="inline-block" ml={1}>
+              <Box id="subscribe-to-watchlist-label" sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   aria-labelledby="subscribe-to-watchlist-label"
                   color={props.watchlist.subscribed ? "primary" : undefined}
@@ -86,7 +86,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
           )}
           {props.watchlist ? (
             <Tooltip arrow title="Add stock">
-              <Box id="add-stock-to-watchlist-label" display="inline-block" ml={1}>
+              <Box id="add-stock-to-watchlist-label" sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   aria-labelledby="add-stock-to-watchlist-label"
                   color="success"
@@ -101,7 +101,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
           )}
           {props.watchlist ? (
             <Tooltip arrow title={isFavorites ? "You cannot rename the Favorites watchlist" : "Rename watchlist"}>
-              <Box id="rename-watchlist-label" display="inline-block" ml={1}>
+              <Box id="rename-watchlist-label" sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   aria-labelledby="rename-watchlist-label"
                   color="primary"
@@ -117,7 +117,7 @@ export const WatchlistHeader = (props: WatchlistHeaderProps): JSX.Element => {
           )}
           {props.watchlist ? (
             <Tooltip arrow title={isFavorites ? "You cannot delete the Favorites watchlist" : "Delete watchlist"}>
-              <Box id="delete-watchlist-label" display="inline-block" ml={1}>
+              <Box id="delete-watchlist-label" sx={{ display: "inline-block", ml: 1 }}>
                 <IconButton
                   aria-labelledby="delete-watchlist-label"
                   color="error"

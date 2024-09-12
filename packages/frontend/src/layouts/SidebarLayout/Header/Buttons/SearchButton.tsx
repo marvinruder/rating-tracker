@@ -2,7 +2,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { IconButton, Tooltip, Slide } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
 import type { Ref, ReactElement } from "react";
-import { forwardRef, useState, useEffect, Fragment } from "react";
+import { forwardRef, useState, useEffect } from "react";
 
 import PinnedDialog from "../../../../components/dialogs/PinnedDialog";
 import SelectStock from "../../../../components/dialogs/stock/SelectStock";

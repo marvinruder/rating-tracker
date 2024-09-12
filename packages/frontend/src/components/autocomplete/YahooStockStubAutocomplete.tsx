@@ -95,14 +95,16 @@ const YahooStockStubAutocomplete = (props: YahooStockStubAutocompleteProps): JSX
       renderInput={(params) => (
         <TextField
           {...params}
-          inputProps={{ ...params.inputProps, inputMode: "search" }}
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: isLoading ? (
-              <InputAdornment position="end">
-                <CircularProgress color="inherit" size={16} aria-label="Loading results…" />
-              </InputAdornment>
-            ) : null,
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              endAdornment: isLoading ? (
+                <InputAdornment position="end">
+                  <CircularProgress color="inherit" size={16} aria-label="Loading results…" />
+                </InputAdornment>
+              ) : null,
+            },
+            htmlInput: { ...params.inputProps, inputMode: "search" },
           }}
           label="Search for a stock by name, ISIN or ticker symbol…"
         />

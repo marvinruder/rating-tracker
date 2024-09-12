@@ -8,7 +8,7 @@ import {
   Card,
   Chip,
   Container,
-  Grid,
+  Grid2 as Grid,
   IconButton,
   Paper,
   Skeleton,
@@ -77,6 +77,7 @@ import { AnalystRatingBar } from "../../../components/stock/properties/AnalystRa
 import { getSectorIconPaths } from "../../../components/stock/properties/SectorIcon";
 import { StarRating } from "../../../components/stock/properties/StarRating";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
+import { getMSCIESGRatingColorIndex, getSustainalyticsESGRiskColorIndex } from "../../../utils/colorResolvers";
 import { CurrencyWithTooltip, formatPercentage } from "../../../utils/formatters";
 
 import { PortfolioHeader } from "./PortfolioHeader";
@@ -164,13 +165,13 @@ const PortfolioModule = (): JSX.Element => {
   const countryColors =
     countrySunburstData?.id === "root" && "children" in countrySunburstData
       ? // If everything is shown, use the region colors
-        countrySunburstData.children.map((child) => theme.colors.region[child.id as SuperRegion])
+        countrySunburstData.children.map((child) => theme.palette.region[child.id as SuperRegion]!)
       : isSuperRegion(countrySunburstData?.id)
         ? // If a super region is selected, use its color
-          theme.colors.region[countrySunburstData.id]
+          theme.palette.region[countrySunburstData.id]!
         : isRegion(countrySunburstData?.id)
           ? // If a region is selected, use the color of its super region
-            theme.colors.region[superRegionOfRegion[countrySunburstData.id]]
+            theme.palette.region[superRegionOfRegion[countrySunburstData.id]]!
           : // If something goes wrong, use a default color
             theme.palette.divider;
 
@@ -181,21 +182,21 @@ const PortfolioModule = (): JSX.Element => {
     industrySunburstData?.id === "root" && "children" in industrySunburstData
       ? // If everything is shown, use the sector colors
         industrySunburstData.children.map(
-          (child) => theme.colors.sector[stripPrefixFromSunburstID(child.id) as SuperSector],
+          (child) => theme.palette.sector[stripPrefixFromSunburstID(child.id) as SuperSector]!,
         )
       : isSuperSector(stripPrefixFromSunburstID(industrySunburstData?.id))
         ? // If a super sector is selected, use its color
-          theme.colors.sector[stripPrefixFromSunburstID(industrySunburstData!.id) as SuperSector]
+          theme.palette.sector[stripPrefixFromSunburstID(industrySunburstData!.id) as SuperSector]!
         : isSector(stripPrefixFromSunburstID(industrySunburstData?.id))
           ? // If a sector is selected, use the color of its super sector
-            theme.colors.sector[superSectorOfSector[stripPrefixFromSunburstID(industrySunburstData!.id) as Sector]]
+            theme.palette.sector[superSectorOfSector[stripPrefixFromSunburstID(industrySunburstData!.id) as Sector]]!
           : isIndustryGroup(stripPrefixFromSunburstID(industrySunburstData?.id))
             ? // If an industry group is selected, use the color of the super sector of its sector
-              theme.colors.sector[
+              theme.palette.sector[
                 superSectorOfSector[
                   sectorOfIndustryGroup[stripPrefixFromSunburstID(industrySunburstData!.id) as IndustryGroup]
                 ]
-              ]
+              ]!
             : // If something goes wrong, use a default color
               theme.palette.divider;
 
@@ -241,11 +242,11 @@ const PortfolioModule = (): JSX.Element => {
    */
   const SunburstTooltip = ({ id, value, color }: ComputedDatum<SunburstNode>): JSX.Element => (
     <Paper sx={{ px: 0.75, py: 0.5 }}>
-      <Typography variant="body1" whiteSpace="nowrap">
+      <Typography variant="body1" sx={{ whiteSpace: "nowrap" }}>
         <span style={{ color }}>{"\u25cf"}</span>
         {`\u2002${getSunburstDatumName(id.toString())}`}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" sx={{ color: "text.secondary" }}>
         <span style={{ visibility: "hidden" }}>{"\u25cf"}</span>
         {`\u2002${formatPercentage(value, { total: totalAmount! })}`}
         {"\u2002·\u2002"}
@@ -279,22 +280,22 @@ const PortfolioModule = (): JSX.Element => {
       </HeaderWrapper>
       <Container maxWidth={false}>
         <Card sx={{ m: "auto", mb: 2, maxWidth: "lg" }}>
-          <Grid container columns={columns} width="100%" margin="auto">
+          <Grid container columns={columns} sx={{ width: "100%", margin: "auto" }}>
             {/* Average Scores */}
-            <Grid item xs={1}>
-              <Typography variant="h4" px="24px" py="16px">
+            <Grid size={1}>
+              <Typography variant="h4" sx={{ px: "24px", py: "16px" }}>
                 Average Scores
               </Typography>
-              <Grid container spacing={1} px="24px" pb="20px">
+              <Grid container columns={12} spacing={1} sx={{ px: "24px", pb: "20px" }}>
                 {/* Total Score */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" mt="8px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ mt: "8px" }}>
                     Total Score
                   </Typography>
                 </Grid>
-                <Grid item xs={6} justifyContent="flex-end">
+                <Grid size={6} sx={{ justifyContent: "flex-end" }}>
                   {portfolio ? (
-                    <Box width="100%" display="inline-flex" justifyContent="end">
+                    <Box sx={{ width: "100%", display: "inline-flex", justifyContent: "end" }}>
                       <BlueIconChip
                         icon={<VerifiedIcon />}
                         label={<strong>{Math.round(Math.max(0, 100 * totalScore!))}</strong>}
@@ -306,14 +307,14 @@ const PortfolioModule = (): JSX.Element => {
                   )}
                 </Grid>
                 {/* Financial Score */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" mt="8px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ mt: "8px" }}>
                     Financial Score
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   {portfolio ? (
-                    <Box width="100%" display="inline-flex" justifyContent="end">
+                    <Box sx={{ width: "100%", display: "inline-flex", justifyContent: "end" }}>
                       <YellowIconChip
                         icon={<PriceCheckIcon />}
                         label={<strong>{Math.round(Math.max(0, 100 * financialScore!))}</strong>}
@@ -325,14 +326,14 @@ const PortfolioModule = (): JSX.Element => {
                   )}
                 </Grid>
                 {/* ESG Score */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" mt="8px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ mt: "8px" }}>
                     ESG Score
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   {portfolio ? (
-                    <Box width="100%" display="inline-flex" justifyContent="end">
+                    <Box sx={{ width: "100%", display: "inline-flex", justifyContent: "end" }}>
                       <GreenIconChip
                         icon={<NaturePeopleIcon />}
                         label={<strong>{Math.round(Math.max(0, 100 * esgScore!))}</strong>}
@@ -344,15 +345,15 @@ const PortfolioModule = (): JSX.Element => {
                   )}
                 </Grid>
               </Grid>
-              <Typography variant="h4" px="24px" pb="16px">
+              <Typography variant="h4" sx={{ px: "24px", pb: "16px" }}>
                 Average Financial Data
               </Typography>
-              <Grid container spacing={1} px="24px" pb="20px">
+              <Grid container columns={12} spacing={1} sx={{ px: "24px", pb: "20px" }}>
                 {/* Dividend Yield */}
-                <Grid item xs={4.5}>
+                <Grid size={4.5}>
                   <Typography variant="h5">Dividend Yield</Typography>
                 </Grid>
-                <Grid item xs={7.5}>
+                <Grid size={7.5}>
                   <Typography variant="body1" sx={{ textAlign: "right" }}>
                     {portfolio ? (
                       formatPercentage(dividendYieldPercent, { total: 100 })
@@ -364,22 +365,22 @@ const PortfolioModule = (): JSX.Element => {
               </Grid>
             </Grid>
             {/* Average Financial Ratings */}
-            <Grid item xs={1}>
+            <Grid size={1}>
               {/* Financials */}
-              <Typography variant="h4" px="24px" py="16px">
+              <Typography variant="h4" sx={{ px: "24px", py: "16px" }}>
                 Average Financial Ratings
               </Typography>
-              <Grid container spacing={1} px="24px" pb="20px">
+              <Grid container columns={12} spacing={1} sx={{ px: "24px", pb: "20px" }}>
                 {/* Morningstar Star Rating */}
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Typography variant="h5">
                     Morningstar
                     <br />
                     Star Rating
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  <Box sx={{ mt: "4px", height: "24px" }} width="100%" display="inline-flex" justifyContent="end">
+                <Grid size={6}>
+                  <Box sx={{ width: "100%", display: "inline-flex", justifyContent: "end", mt: "4px", height: "24px" }}>
                     {portfolio ? (
                       <StarRating value={starRating} />
                     ) : (
@@ -398,14 +399,14 @@ const PortfolioModule = (): JSX.Element => {
                   </Box>
                 </Grid>
                 {/* Morningstar Fair Value */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" height="35px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ height: "35px" }}>
                     Morningstar
                     <br />
                     Fair Value
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Typography variant="body1" sx={{ textAlign: "right" }}>
                     {portfolio ? (
                       <CurrencyWithTooltip value={morningstarFairValue} currency={portfolio.currency} />
@@ -413,7 +414,7 @@ const PortfolioModule = (): JSX.Element => {
                       <Skeleton width={90} sx={{ ml: "auto" }} />
                     )}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", textAlign: "right" }}>
                     {portfolio ? (
                       formatPercentage(percentageToMorningstarFairValue, {
                         total: 100,
@@ -427,19 +428,19 @@ const PortfolioModule = (): JSX.Element => {
                   </Typography>
                 </Grid>
                 {/* Analyst Consensus */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" height="35px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ height: "35px" }}>
                     Analyst
                     <br />
                     Consensus
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   {portfolio ? (
                     <>
                       {analystConsensus !== null && analystRatings !== null && (
-                        <Box width="100%" display="inline-flex" justifyContent="end">
-                          <Box width="100%" display="block">
+                        <Box sx={{ width: "100%", display: "inline-flex", justifyContent: "end" }}>
+                          <Box sx={{ width: "100%", display: "block" }}>
                             <AnalystRatingBar stock={{ analystConsensus, analystRatings }} open />
                           </Box>
                         </Box>
@@ -450,12 +451,12 @@ const PortfolioModule = (): JSX.Element => {
                   )}
                 </Grid>
                 {/* Analyst Target Price */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" height="35px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ height: "35px" }}>
                     Analyst Target
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Typography variant="body1" sx={{ float: "right" }}>
                     {portfolio ? (
                       <CurrencyWithTooltip value={analystTargetPrice} currency={portfolio.currency} />
@@ -464,7 +465,7 @@ const PortfolioModule = (): JSX.Element => {
                     )}
                   </Typography>
                   <br />
-                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: "right" }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", textAlign: "right" }}>
                     {portfolio ? (
                       formatPercentage(percentageToAnalystTargetPrice, {
                         total: 100,
@@ -480,32 +481,27 @@ const PortfolioModule = (): JSX.Element => {
               </Grid>
             </Grid>
             {/* Average ESG Ratings */}
-            <Grid item xs={1}>
-              <Typography variant="h4" px="24px" py="16px">
+            <Grid size={1}>
+              <Typography variant="h4" sx={{ px: "24px", py: "16px" }}>
                 Average ESG Ratings
               </Typography>
-              <Grid container spacing={1} px="24px" pb="20px">
+              <Grid container columns={12} spacing={1} sx={{ px: "24px", pb: "20px" }}>
                 {/* MSCI ESG Rating */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" mt="5px" height="19px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ mt: "5px", height: "19px" }}>
                     MSCI ESG Rating
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   {portfolio ? (
                     <>
                       {msciESGRating && (
-                        <Box width="100%" display="inline-flex" justifyContent="end">
+                        <Box sx={{ width: "100%", display: "inline-flex", justifyContent: "end" }}>
                           <Chip
                             label={<strong>{msciESGRating}</strong>}
-                            style={{ cursor: "inherit" }}
                             sx={{
-                              backgroundColor: ["AAA", "AA"].includes(msciESGRating)
-                                ? theme.colors.msci.Leader
-                                : ["B", "CCC"].includes(msciESGRating)
-                                  ? theme.colors.msci.Laggard
-                                  : theme.colors.msci.Average,
-                              color: theme.colors.alpha.trueWhite[100],
+                              backgroundColor: theme.palette.msci[getMSCIESGRatingColorIndex({ msciESGRating })],
+                              color: theme.palette.trueWhite.main,
                               width: 48,
                             }}
                             size="small"
@@ -518,25 +514,24 @@ const PortfolioModule = (): JSX.Element => {
                   )}
                 </Grid>
                 {/* MSCI Implied Temperature Rise */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" height="35px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ height: "35px" }}>
                     MSCI Implied
                     <br />
                     Temperature Rise
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   {portfolio ? (
                     <>
                       {msciTemperature !== null && (
-                        <Box width="100%" display="inline-flex" justifyContent="end">
+                        <Box sx={{ width: "100%", display: "inline-flex", justifyContent: "end" }}>
                           <TemperatureChip
                             msciTemperature={msciTemperature}
                             icon={<ThermostatIcon />}
                             label={<strong>{`${Number(msciTemperature.toFixed(1))}\u2009℃`}</strong>}
                             size="small"
                             sx={{ width: 75, mt: "4px" }}
-                            style={{ cursor: "inherit" }}
                           />
                         </Box>
                       )}
@@ -546,95 +541,88 @@ const PortfolioModule = (): JSX.Element => {
                   )}
                 </Grid>
                 {/* LSEG ESG Score */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" mt="6px" height="21px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ mt: "6px", height: "21px" }}>
                     LSEG ESG Score
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   {portfolio ? (
                     <>
                       {lsegESGScore !== null && (
-                        <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
+                        <Typography variant="body1" sx={{ fontSize: 18, float: "right" }}>
                           {Math.round(lsegESGScore)}
                         </Typography>
                       )}
                     </>
                   ) : (
-                    <Typography variant="body1" fontSize={18} sx={{ textAlign: "right" }}>
+                    <Typography variant="body1" sx={{ fontSize: 18, textAlign: "right" }}>
                       <Skeleton width={30} sx={{ ml: "auto" }} />
                     </Typography>
                   )}
                 </Grid>
                 {/* LSEG Emissions */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" mt="6px" height="21px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ mt: "6px", height: "21px" }}>
                     LSEG Emissions
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   {portfolio ? (
                     <>
                       {lsegEmissions !== null && (
-                        <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
+                        <Typography variant="body1" sx={{ fontSize: 18, float: "right" }}>
                           {Math.round(lsegEmissions)}
                         </Typography>
                       )}
                     </>
                   ) : (
-                    <Typography variant="body1" fontSize={18} sx={{ textAlign: "right" }}>
+                    <Typography variant="body1" sx={{ fontSize: 18, textAlign: "right" }}>
                       <Skeleton width={30} sx={{ ml: "auto" }} />
                     </Typography>
                   )}
                 </Grid>
                 {/* S&P ESG Score */}
-                <Grid item xs={6}>
-                  <Typography variant="h5" mt="6px" height="21px">
+                <Grid size={6}>
+                  <Typography variant="h5" sx={{ mt: "6px", height: "21px" }}>
                     S&P ESG Score
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   {portfolio ? (
                     <>
                       {spESGScore !== null && (
-                        <Typography variant="body1" fontSize={18} sx={{ float: "right" }}>
+                        <Typography variant="body1" sx={{ fontSize: 18, float: "right" }}>
                           {Math.round(spESGScore)}
                         </Typography>
                       )}
                     </>
                   ) : (
-                    <Typography variant="body1" fontSize={18} sx={{ textAlign: "right" }}>
+                    <Typography variant="body1" sx={{ fontSize: 18, textAlign: "right" }}>
                       <Skeleton width={30} sx={{ ml: "auto" }} />
                     </Typography>
                   )}
                 </Grid>
                 {/* Sustainalytics ESG Risk */}
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Typography variant="h5">
                     Sustainalytics
                     <br />
                     ESG Risk
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   {portfolio ? (
                     <>
                       {sustainalyticsESGRisk !== null && (
-                        <Box width="100%" display="inline-flex" justifyContent="end">
+                        <Box sx={{ width: "100%", display: "inline-flex", justifyContent: "end" }}>
                           <Chip
                             label={<strong>{Number(sustainalyticsESGRisk.toFixed(1))}</strong>}
-                            style={{ cursor: "inherit" }}
                             sx={{
                               backgroundColor:
-                                sustainalyticsESGRisk < 10
-                                  ? theme.colors.sustainalytics.negligible
-                                  : sustainalyticsESGRisk < 20
-                                    ? theme.colors.sustainalytics.low
-                                    : sustainalyticsESGRisk < 30
-                                      ? theme.colors.sustainalytics.medium
-                                      : sustainalyticsESGRisk < 40
-                                        ? theme.colors.sustainalytics.high
-                                        : theme.colors.sustainalytics.severe,
+                                theme.palette.sustainalytics[
+                                  getSustainalyticsESGRiskColorIndex({ sustainalyticsESGRisk })
+                                ],
                               width: 64,
                               mt: "4px",
                             }}
@@ -650,41 +638,36 @@ const PortfolioModule = (): JSX.Element => {
               </Grid>
             </Grid>
             {/* Morningstar StyleBox */}
-            <Grid item xs={1}>
-              <Typography variant="h4" px="24px" py="16px">
+            <Grid size={1}>
+              <Typography variant="h4" sx={{ px: "24px", py: "16px" }}>
                 Morningstar StyleBox
               </Typography>
               <Grid
                 container
                 spacing={0}
                 columns={3}
-                mx="auto"
-                maxWidth="264px"
-                px="24px"
-                pt={columns === 3 ? "8px" : undefined}
-                pb="20px"
+                sx={{ mx: "auto", maxWidth: "264px", px: "24px", pb: "20px", ...(columns === 3 ? { pt: "8px" } : {}) }}
               >
                 {sizeArray.toReversed().map((size) =>
                   styleArray.map((style) => (
                     <Grid
-                      item
-                      xs={1}
-                      display="flex"
-                      sx={{
+                      size={1}
+                      key={`${size}-${style}`}
+                      sx={(theme) => ({
+                        display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         aspectRatio: 1,
-                        border: `1px solid ${theme.colors.alpha.black[100]}`,
-                        ...(size === "Large" ? {} : { borderTop: "1px solid transparent" }),
-                        ...(style === "Value" ? {} : { borderLeft: "1px solid transparent" }),
+                        border: `1px solid ${theme.palette.black.main}`,
                         backgroundColor:
-                          theme.colors.primary.main +
+                          theme.palette.primary.main +
                           // Add transparency to the background color based on the value of the style box.
                           Math.round(255 * (styleBox ? (styleBox[`${size}-${style}`] ?? 0) : 0))
                             .toString(16)
                             .padStart(2, "0"),
-                      }}
-                      key={`${size}-${style}`}
+                        ...(size === "Large" ? {} : { borderTop: "1px solid transparent" }),
+                        ...(style === "Value" ? {} : { borderLeft: "1px solid transparent" }),
+                      })}
                     >
                       <Tooltip title={`${size}-${style}`} arrow>
                         <Typography variant="body1">
@@ -697,8 +680,8 @@ const PortfolioModule = (): JSX.Element => {
               </Grid>
             </Grid>
             {/* Regions */}
-            <Grid item xs={1}>
-              <Typography variant="h4" px="24px" py="16px">
+            <Grid size={1}>
+              <Typography variant="h4" sx={{ px: "24px", py: "16px" }}>
                 Regions
               </Typography>
               <IconButton
@@ -711,7 +694,7 @@ const PortfolioModule = (): JSX.Element => {
               >
                 <ArrowBackIcon />
               </IconButton>
-              <Box width={216} mx="auto" mt="-32px" mb={1}>
+              <Box sx={{ width: 216, mx: "auto", mt: "-32px", mb: 1 }}>
                 {countrySunburstData && "children" in countrySunburstData && countrySunburstData.children.length ? (
                   <Sunburst
                     width={216}
@@ -755,22 +738,27 @@ const PortfolioModule = (): JSX.Element => {
                 )}
               </Box>
               {countrySunburstData && "children" in countrySunburstData && countrySunburstData.children.length ? (
-                <Grid container columnSpacing={1} rowSpacing={0} px="24px" pb="20px" justifyContent="center">
-                  <Grid item>
+                <Grid
+                  container
+                  columnSpacing={1}
+                  rowSpacing={0}
+                  sx={{ px: "24px", pb: "20px", justifyContent: "center" }}
+                >
+                  <Grid>
                     <Typography variant="body2">
-                      <span style={{ color: theme.colors.region["Americas"] }}>{"\u25cf"}</span>
+                      <span style={{ color: theme.palette.region["Americas"] }}>{"\u25cf"}</span>
                       {` ${superRegionName["Americas"]}`}
                     </Typography>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Typography variant="body2">
-                      <span style={{ color: theme.colors.region["EMEA"] }}>{"\u25cf"}</span>
+                      <span style={{ color: theme.palette.region["EMEA"] }}>{"\u25cf"}</span>
                       {` ${superRegionName["EMEA"]}`}
                     </Typography>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Typography variant="body2">
-                      <span style={{ color: theme.colors.region["Asia"] }}>{"\u25cf"}</span>
+                      <span style={{ color: theme.palette.region["Asia"] }}>{"\u25cf"}</span>
                       {` ${superRegionName["Asia"]}`}
                     </Typography>
                   </Grid>
@@ -780,8 +768,8 @@ const PortfolioModule = (): JSX.Element => {
               )}
             </Grid>
             {/* Industry Sectors */}
-            <Grid item xs={1}>
-              <Typography variant="h4" px="24px" py="16px">
+            <Grid size={1}>
+              <Typography variant="h4" sx={{ px: "24px", py: "16px" }}>
                 Industry Sectors
               </Typography>
               <IconButton
@@ -794,7 +782,7 @@ const PortfolioModule = (): JSX.Element => {
               >
                 <ArrowBackIcon />
               </IconButton>
-              <Box width={216} mx="auto" mt="-32px" mb={1}>
+              <Box sx={{ width: 216, mx: "auto", mt: "-32px", mb: 1 }}>
                 {industrySunburstData && "children" in industrySunburstData && industrySunburstData.children.length ? (
                   <Sunburst
                     width={216}
@@ -861,22 +849,27 @@ const PortfolioModule = (): JSX.Element => {
                 )}
               </Box>
               {industrySunburstData && "children" in industrySunburstData && industrySunburstData.children.length ? (
-                <Grid container columnSpacing={1} rowSpacing={0} px="24px" pb="20px" justifyContent="center">
-                  <Grid item>
+                <Grid
+                  container
+                  columnSpacing={1}
+                  rowSpacing={0}
+                  sx={{ px: "24px", pb: "20px", justifyContent: "center" }}
+                >
+                  <Grid>
                     <Typography variant="body2">
-                      <span style={{ color: theme.colors.sector["Cyclical"] }}>{"\u25cf"}</span>
+                      <span style={{ color: theme.palette.sector["Cyclical"] }}>{"\u25cf"}</span>
                       {` ${superSectorName["Cyclical"]}`}
                     </Typography>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Typography variant="body2">
-                      <span style={{ color: theme.colors.sector["Defensive"] }}>{"\u25cf"}</span>
+                      <span style={{ color: theme.palette.sector["Defensive"] }}>{"\u25cf"}</span>
                       {` ${superSectorName["Defensive"]}`}
                     </Typography>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Typography variant="body2">
-                      <span style={{ color: theme.colors.sector["Sensitive"] }}>{"\u25cf"}</span>
+                      <span style={{ color: theme.palette.sector["Sensitive"] }}>{"\u25cf"}</span>
                       {` ${superSectorName["Sensitive"]}`}
                     </Typography>
                   </Grid>

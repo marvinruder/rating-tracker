@@ -1,7 +1,7 @@
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Card, CardContent, Grid, TextField, Typography, useTheme } from "@mui/material";
+import { Box, Card, CardContent, Grid2 as Grid, TextField, Typography, useTheme } from "@mui/material";
 import { handleResponse } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import type { Dispatch, SetStateAction } from "react";
@@ -109,20 +109,20 @@ export const LoginPage = (): JSX.Element => {
   };
 
   return (
-    <Card sx={{ margin: "auto", minWidth: 275, background: theme.colors.alpha.white[50], backdropFilter: "blur(3px)" }}>
+    <Card sx={{ margin: "auto", minWidth: 275, background: theme.palette.white.alpha50, backdropFilter: "blur(3px)" }}>
       <CardContent>
-        <Grid container direction="column" spacing={2} padding={1}>
-          <Grid item>
+        <Grid container direction="column" spacing={2} sx={{ padding: 1 }}>
+          <Grid>
             <Box sx={{ display: "flex", justifyContent: "center", fontSize: 96 }}>
               <QueryStatsIcon fontSize="inherit" />
             </Box>
           </Grid>
-          <Grid item>
-            <Typography variant="h3" fontSize={24} lineHeight={1.6} textAlign="center">
+          <Grid>
+            <Typography variant="h3" sx={{ fontSize: 24, lineHeight: 1.6, textAlign: "center" }}>
               Rating Tracker
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <SwitchSelector
               value={action}
               setValue={setAction as Dispatch<SetStateAction<string>>}
@@ -132,16 +132,15 @@ export const LoginPage = (): JSX.Element => {
               rightLabel="Register"
             />
           </Grid>
-          <Grid container item direction="column">
+          <Grid container direction="column" spacing={0}>
             <Grid
-              item
-              maxHeight={action === "register" ? 60 : 0}
               sx={{
-                opacity: action === "register" ? 1 : 0,
                 transitionProperty: "max-height,opacity",
                 transitionDuration: ".4s,.2s",
-                transitionDelay: action === "register" ? "0s,.2s" : undefined,
                 transitionTimingFunction: `ease`,
+                ...(action === "register"
+                  ? { maxHeight: 60, opacity: 1, transitionDelay: "0s,.2s" }
+                  : { maxHeight: 0, opacity: 0 }),
               }}
             >
               <TextField
@@ -163,14 +162,13 @@ export const LoginPage = (): JSX.Element => {
               />
             </Grid>
             <Grid
-              item
-              maxHeight={action === "register" ? 60 : 0}
               sx={{
-                opacity: action === "register" ? 1 : 0,
                 transitionProperty: "max-height,opacity",
                 transitionDuration: ".4s,.2s",
-                transitionDelay: action === "register" ? "0s,.2s" : undefined,
                 transitionTimingFunction: `ease`,
+                ...(action === "register"
+                  ? { maxHeight: 60, opacity: 1, transitionDelay: "0s,.2s" }
+                  : { maxHeight: 0, opacity: 0 }),
               }}
             >
               <TextField
@@ -191,7 +189,7 @@ export const LoginPage = (): JSX.Element => {
                 required
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <LoadingButton
                 loading={requestInProgress}
                 startIcon={<FingerprintIcon />}

@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogTitle,
   Divider,
-  Hidden,
   IconButton,
   Skeleton,
   Slide,
@@ -59,16 +58,16 @@ export const HeaderUserbox = (): JSX.Element => {
   return (
     <Box sx={{ my: 1 }}>
       <Tooltip arrow title="Open Profile Settings">
-        <Box display="inline-block">
+        <Box sx={{ display: "inline-block" }}>
           {/* Box required for tooltip to work on disabled button */}
           <Button
             sx={{
               px: 1,
               backgroundColor: "transparent",
               "&:hover:not(:disabled)": {
-                backgroundColor: alpha(theme.colors.secondary.main, 0.1),
+                backgroundColor: alpha(theme.palette.secondary.main, 0.1),
               },
-              ".MuiTouchRipple-child": { backgroundColor: theme.colors.alpha.trueWhite[30] },
+              ".MuiTouchRipple-child": { backgroundColor: theme.palette.trueWhite.alpha30 },
             }}
             onClick={() => setOpen(true)}
             disabled={!user}
@@ -78,20 +77,18 @@ export const HeaderUserbox = (): JSX.Element => {
             ) : (
               <Skeleton variant="rounded" width={40} height={40} />
             )}
-            <Hidden mdDown>
-              <Box pl={1} textAlign="left">
-                <Typography variant="body1" fontWeight="bold" color="text.primary" noWrap>
-                  {user ? user.name : <Skeleton width={120} />}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" noWrap>
-                  {user ? user.email : <Skeleton width={160} />}
-                </Typography>
-              </Box>
-            </Hidden>
+            <Box sx={{ display: { xs: "none", md: "block" }, pl: 1, textAlign: "left" }}>
+              <Typography variant="body1" noWrap sx={{ fontWeight: "bold", color: "text.primary" }}>
+                {user ? user.name : <Skeleton width={120} />}
+              </Typography>
+              <Typography variant="body2" noWrap sx={{ color: "text.secondary" }}>
+                {user ? user.email : <Skeleton width={160} />}
+              </Typography>
+            </Box>
           </Button>
         </Box>
       </Tooltip>
-      <Box display="inline-block" sx={{ ml: 1, my: 1 }}>
+      <Box sx={{ display: "inline-block", ml: 1, my: 1 }}>
         <Tooltip arrow title="Sign out">
           <IconButton color="primary" onClick={signOut}>
             <LogoutIcon />

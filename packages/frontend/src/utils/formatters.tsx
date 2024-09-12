@@ -89,9 +89,7 @@ export const CurrencyWithTooltip = (props: CurrencyWithTooltipProps): JSX.Elemen
   props.floatAlign ? (
     <>
       <Tooltip title={props.currency && currencyName[props.currency]} arrow>
-        <Box sx={{ float: "left" }} display="inline-block">
-          {props.currency ?? ""}
-        </Box>
+        <Box sx={{ display: "inline-block", float: "left" }}>{props.currency ?? ""}</Box>
       </Tooltip>
       <Box sx={{ float: "right" }}>
         {(props.currency && props.value?.toFixed(currencyMinorUnits[props.currency])) ?? "–"}
@@ -100,7 +98,7 @@ export const CurrencyWithTooltip = (props: CurrencyWithTooltipProps): JSX.Elemen
   ) : (
     <>
       <Tooltip title={props.currency && currencyName[props.currency]} arrow>
-        <Box display="inline">{props.currency ?? ""}</Box>
+        <Box sx={{ display: "inline" }}>{props.currency ?? ""}</Box>
       </Tooltip>{" "}
       {(props.currency && props.value?.toFixed(currencyMinorUnits[props.currency])) ?? "–"}
     </>

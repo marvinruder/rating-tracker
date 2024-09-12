@@ -14,7 +14,7 @@ const LinkToDataProvider = (props: React.PropsWithChildren<LinkToDataProviderPro
       rel="noreferrer noopener" // Prevents the browser from sending the referrer
       href={props.href}
       target="_blank" // Open in new tab
-      style={{ color: "inherit", textDecoration: "none" }} // No change in color, no underline
+      sx={{ color: "inherit" }} // No change in color
     >
       {props.children}
     </Link>

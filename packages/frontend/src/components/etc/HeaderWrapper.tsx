@@ -1,4 +1,4 @@
-import { Box, Container, alpha, lighten, useTheme } from "@mui/material";
+import { Box, Container, alpha, lighten } from "@mui/material";
 import type { ReactNode } from "react";
 
 /**
@@ -6,32 +6,29 @@ import type { ReactNode } from "react";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const HeaderWrapper = (props: HeaderWrapperProps): JSX.Element => {
-  const theme = useTheme();
-
-  return (
-    <Box
-      pt={`calc(${theme.header.height} + ${theme.spacing(4)})`}
-      pb={4}
-      sx={{
-        background: theme.palette.mode === "dark" ? theme.colors.alpha.trueWhite[5] : theme.colors.alpha.white[50],
-        marginBottom: `${theme.spacing(4)}`,
+export const HeaderWrapper = (props: HeaderWrapperProps): JSX.Element => (
+  <Box
+    sx={(theme) => ({
+      pt: `calc(76px + ${theme.spacing(4)})`,
+      pb: 4,
+      marginBottom: `${theme.spacing(4)}`,
+      ...theme.applyStyles("light", {
+        background: theme.palette.white.alpha50,
         boxShadow:
-          theme.palette.mode === "dark"
-            ? `0 1px 0 ${alpha(
-                lighten(theme.colors.primary.main, 0.7),
-                0.15,
-              )}, 0px 2px 4px -3px rgba(0, 0, 0, 0.2), 0px 5px 12px -4px rgba(0, 0, 0, .1)`
-            : `0px 2px 4px -3px ${alpha(theme.colors.alpha.black[100], 0.1)}, 0px 5px 12px -4px ${alpha(
-                theme.colors.alpha.black[100],
-                0.05,
-              )}`,
-      }}
-    >
-      <Container maxWidth={props.maxWidth ?? "lg"}>{props.children}</Container>
-    </Box>
-  );
-};
+          `0px 2px 4px -3px ${alpha(theme.palette.black.main, 0.1)}, ` +
+          `0px 5px 12px -4px ${alpha(theme.palette.black.main, 0.05)}`,
+      }),
+      ...theme.applyStyles("dark", {
+        background: theme.palette.trueWhite.alpha5,
+        boxShadow:
+          `0 1px 0 ${alpha(lighten(theme.palette.primary.main, 0.7), 0.15)}, ` +
+          `0px 2px 4px -3px rgb(0 0 0 / 20%), 0px 5px 12px -4px rgb(0 0 0 / 10%)`,
+      }),
+    })}
+  >
+    <Container maxWidth={props.maxWidth ?? "lg"}>{props.children}</Container>
+  </Box>
+);
 
 /**
  * Properties for the HeaderWrapper component.

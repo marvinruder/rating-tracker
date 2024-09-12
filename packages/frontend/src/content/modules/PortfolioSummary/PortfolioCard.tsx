@@ -37,11 +37,11 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
   return (
     <Card>
       <CardActionArea>
-        <Link to={`${portfoliosAPIPath}/${props.portfolio?.id}`} component={NavLink} color="inherit" underline="none">
+        <Link to={`${portfoliosAPIPath}/${props.portfolio?.id}`} component={NavLink} sx={{ color: "inherit" }}>
           <CardContent>
             <Box>
               <Typography variant="h3">{props.portfolio?.name ?? <Skeleton width="160px" />}</Typography>
-              <Typography variant="subtitle1" color="text.secondary">
+              <Typography variant="subtitle1" sx={{ color: "text.secondary" }}>
                 {props.portfolio ? (
                   `${props.portfolio.stocks.length || "No"} stock${pluralize(props.portfolio.stocks.length)}${
                     props.portfolio.stocks.length
@@ -61,7 +61,7 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
       <CardActions sx={{ justifyContent: "flex-end" }}>
         {props.portfolio ? (
           <Tooltip arrow title="Add stock">
-            <Box display="inline-block" ml={1}>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
               <IconButton
                 aria-label={`Add stock to portfolio “${props.portfolio.name}”`}
                 color="success"
@@ -76,7 +76,7 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
         )}
         {props.portfolio ? (
           <Tooltip arrow title="Edit portfolio">
-            <Box display="inline-block" ml={1}>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
               <IconButton
                 aria-label={`Edit portfolio “${props.portfolio.name}”`}
                 color="primary"
@@ -91,7 +91,7 @@ const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
         )}
         {props.portfolio ? (
           <Tooltip arrow title="Delete portfolio">
-            <Box display="inline-block" ml={1}>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
               <IconButton
                 aria-label={`Delete portfolio “${props.portfolio.name}”`}
                 color="error"

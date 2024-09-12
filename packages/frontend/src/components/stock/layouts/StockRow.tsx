@@ -15,6 +15,7 @@ import StarsIcon from "@mui/icons-material/Stars";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import {
+  alpha,
   Avatar,
   Badge,
   Box,
@@ -75,6 +76,7 @@ import portfolioClient from "../../../api/portfolio";
 import { useFavoritesContextState, useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import { useUserContextState } from "../../../contexts/UserContext";
+import { getMSCIESGRatingColorIndex, getSustainalyticsESGRiskColorIndex } from "../../../utils/colorResolvers";
 import { CurrencyWithTooltip, formatMarketCap, formatPercentage } from "../../../utils/formatters";
 import { BlueIconChip } from "../../chips/BlueIconChip";
 import { GreenIconChip } from "../../chips/GreenIconChip";
@@ -198,10 +200,14 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       hover
       sx={{
         height: 59,
-        backgroundColor: isFavorite ? theme.colors.warning.lighter : undefined,
-        ":hover, &.MuiTableRow-hover:hover": {
-          backgroundColor: isFavorite ? darken(theme.colors.warning.lighter, 0.15) : undefined,
-        },
+        ...(isFavorite
+          ? {
+              backgroundColor: alpha(theme.palette.warning.main, 0.1),
+              ":hover, &.MuiTableRow-hover:hover": {
+                backgroundColor: darken(alpha(theme.palette.warning.main, 0.1), 0.15),
+              },
+            }
+          : {}),
       }}
       onContextMenu={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         if (props.hideActionsMenu) return;
@@ -227,7 +233,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       {props.hideActionsMenu ? (
         <TableCell sx={{ p: 0.25 }} />
       ) : (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>
           <Tooltip title="Options" placement="top" arrow>
             <IconButton
               size="small"
@@ -390,35 +396,6 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               // This text field is read-only in the Portfolio Builder result list, where the ID is undefined
               sx={{ width: "id" in props.portfolio ? 150 : 120, ...(amountError ? { mt: "6px" } : {}) }}
               disabled={!("id" in props.portfolio)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
-                    {props.portfolio.currency}
-                  </InputAdornment>
-                ),
-                endAdornment: "id" in props.portfolio && (
-                  <InputAdornment position="end" sx={{ ml: 0.5 }}>
-                    <IconButton
-                      aria-label={`Update amount of “${props.stock.name}” in portfolio`}
-                      ref={updateAmountButtonRef}
-                      size="small"
-                      onClick={updateStockInPortfolio}
-                      disabled={!!amountError || props.stock.amount === +amountInput}
-                    >
-                      <PublishedWithChangesIcon fontSize="small" />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-                style: { paddingRight: 0 },
-              }}
-              inputProps={{
-                inputMode: "decimal",
-                type: "number",
-                // Amount must be divisible by the currency's minor unit
-                step: Math.pow(10, -1 * currencyMinorUnits[props.portfolio.currency]),
-                min: Math.pow(10, -1 * currencyMinorUnits[props.portfolio.currency]), // Amount must be positive
-                sx: { textAlign: "right" },
-              }}
               onChange={(event) => {
                 setAmountInput(event.target.value);
                 // If in error state, check whether error is resolved. If so, clear the error.
@@ -438,6 +415,37 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               required
               label="Amount"
               value={amountInput}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start" sx={{ width: 30, mt: "1px" }}>
+                      {props.portfolio.currency}
+                    </InputAdornment>
+                  ),
+                  endAdornment: "id" in props.portfolio && (
+                    <InputAdornment position="end" sx={{ ml: 0.5 }}>
+                      <IconButton
+                        aria-label={`Update amount of “${props.stock.name}” in portfolio`}
+                        ref={updateAmountButtonRef}
+                        size="small"
+                        onClick={updateStockInPortfolio}
+                        disabled={!!amountError || props.stock.amount === +amountInput}
+                      >
+                        <PublishedWithChangesIcon fontSize="small" />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  sx: { pr: 0 },
+                },
+                htmlInput: {
+                  inputMode: "decimal",
+                  type: "number",
+                  // Amount must be divisible by the currency's minor unit
+                  step: Math.pow(10, -1 * currencyMinorUnits[props.portfolio.currency]),
+                  min: Math.pow(10, -1 * currencyMinorUnits[props.portfolio.currency]), // Amount must be positive
+                  sx: { textAlign: "right" },
+                },
+              }}
             />
           </Tooltip>
         </TableCell>
@@ -448,9 +456,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           component={NavLink}
           to={`${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}`}
           target="_blank"
-          color="inherit"
-          underline="none"
-          sx={{ display: "flex", alignItems: "center" }}
+          sx={{ color: "inherit", display: "flex", alignItems: "center" }}
         >
           <Badge
             anchorOrigin={{ vertical: "top", horizontal: "left" }}
@@ -473,12 +479,12 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               slotProps={{ img: { loading: "lazy" } }}
             />
           </Badge>
-          <Box width={8} />
+          <Box sx={{ width: 8 }} />
           <Box>
-            <Typography variant="body1" fontWeight="bold" color="text.primary" width={160} noWrap>
+            <Typography variant="body1" noWrap sx={{ fontWeight: "bold", color: "text.primary", width: 160 }}>
               {props.stock.name}
             </Typography>
-            <Typography variant="body2" color="text.secondary" width={160} noWrap>
+            <Typography variant="body2" noWrap sx={{ color: "text.secondary", width: 160 }}>
               {props.stock.ticker} | {props.stock.isin}
             </Typography>
           </Box>
@@ -486,10 +492,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       </TableCell>
       {/* Country and Region */}
       <TableCell sx={{ display: displayColumn("Country") }}>
-        <Typography variant="body1" fontWeight="bold" color="text.primary" width={125} noWrap>
+        <Typography variant="body1" noWrap sx={{ fontWeight: "bold", color: "text.primary", width: 125 }}>
           {props.stock.country && countryNameWithFlag[props.stock.country]}
         </Typography>
-        <Typography variant="body2" color="text.secondary" width={125} noWrap>
+        <Typography variant="body2" noWrap sx={{ color: "text.secondary", width: 125 }}>
           {props.stock.country && regionName[regionOfCountry[props.stock.country]]}
         </Typography>
       </TableCell>
@@ -499,14 +505,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           title={props.stock.size && props.stock.style ? `${props.stock.size}-${props.stock.style}` : undefined}
           arrow
         >
-          <Box
-            sx={{
-              width: 2.75 * (theme.typography.body1.fontSize as number),
-            }}
-          >
+          <Box sx={{ width: 2.75 * (theme.typography.body1.fontSize as number) }}>
             <StyleBox
-              fill={theme.colors.alpha.black[100]}
-              stroke={theme.colors.alpha.black[100]}
+              fill={theme.palette.black.main}
+              stroke={theme.palette.black.main}
               size={props.stock.size}
               style={props.stock.style}
               length={2.75 * (theme.typography.body1.fontSize as number)}
@@ -516,7 +518,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       </TableCell>
       {/* Sector */}
       <TableCell sx={{ display: displayColumn("Sector") }}>
-        <Box display="flex" alignItems="center" width={132}>
+        <Box sx={{ display: "flex", alignItems: "center", width: 132 }}>
           {props.stock.industry && (
             <SectorIcon
               industry={props.stock.industry}
@@ -524,7 +526,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               type="Sector"
             />
           )}
-          <Box width={6} />
+          <Box sx={{ width: 6 }} />
           <Tooltip
             title={
               props.stock.industry && sectorDescription[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]
@@ -532,12 +534,12 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             arrow
             placement="left"
           >
-            <Typography variant="body1" fontWeight="bold" maxWidth={105} noWrap>
+            <Typography variant="body1" noWrap sx={{ fontWeight: "bold", maxWidth: 105 }}>
               {props.stock.industry && sectorName[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]}
             </Typography>
           </Tooltip>
         </Box>
-        <Box display="flex" alignItems="center" width={132}>
+        <Box sx={{ display: "flex", alignItems: "center", width: 132 }}>
           {props.stock.industry && (
             <SectorIcon
               industry={props.stock.industry}
@@ -545,7 +547,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               type="SuperSector"
             />
           )}
-          <Box width={6} />
+          <Box sx={{ width: 6 }} />
           <Tooltip
             title={
               props.stock.industry &&
@@ -554,7 +556,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             arrow
             placement="left"
           >
-            <Typography variant="body2" color="text.secondary" maxWidth={105} noWrap>
+            <Typography variant="body2" noWrap sx={{ color: "text.secondary", maxWidth: 105 }}>
               {props.stock.industry &&
                 superSectorName[superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.stock.industry]]]]}
             </Typography>
@@ -563,21 +565,18 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       </TableCell>
       {/* Industry */}
       <TableCell sx={{ display: displayColumn("Industry") }}>
-        <Box width={150}>
+        <Box sx={{ width: 150 }}>
           <Tooltip title={props.stock.industry && industryDescription[props.stock.industry]} arrow placement="right">
             <Typography
               variant="body1"
-              fontWeight="bold"
-              color="text.primary"
-              maxWidth={150}
-              width="max-content"
               noWrap
+              sx={{ fontWeight: "bold", color: "text.primary", maxWidth: 150, width: "max-content" }}
             >
               {props.stock.industry && industryName[props.stock.industry]}
             </Typography>
           </Tooltip>
         </Box>
-        <Typography variant="body2" color="text.secondary" width={150} noWrap>
+        <Typography variant="body2" noWrap sx={{ color: "text.secondary", width: 150 }}>
           {props.stock.industry && industryGroupName[groupOfIndustry[props.stock.industry]]}
         </Typography>
       </TableCell>
@@ -614,10 +613,10 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       {/* Morningstar Fair Value */}
       <TableCell sx={{ display: displayColumn("Morningstar Fair Value") }}>
         <MorningstarNavigator stock={props.stock}>
-          <Typography variant="body1" fontWeight="bold" color="text.primary" width={90} noWrap>
+          <Typography variant="body1" noWrap sx={{ fontWeight: "bold", color: "text.primary", width: 90 }}>
             <CurrencyWithTooltip value={props.stock.morningstarFairValue} currency={props.stock.currency} floatAlign />
           </Typography>
-          <Typography variant="body2" color="text.secondary" width={90} sx={{ textAlign: "right" }} noWrap>
+          <Typography variant="body2" noWrap sx={{ color: "text.secondary", width: 90, textAlign: "right" }}>
             {formatPercentage(props.stock.morningstarFairValuePercentageToLastClose, {
               total: 100,
               precision: 2,
@@ -647,36 +646,30 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         <MarketScreenerNavigator stock={props.stock}>
           <Typography
             variant="body1"
-            fontWeight="bold"
-            color="text.primary"
+            noWrap
             sx={{
+              fontWeight: "bold",
+              color: "text.primary",
+              width: 90,
               opacity:
-                typeof props.stock?.analystCount === "number"
-                  ? props.stock?.analystCount < 10
-                    ? props.stock?.analystCount / 10
-                    : 1
+                typeof props.stock?.analystCount === "number" && props.stock.analystCount < 10
+                  ? props.stock.analystCount / 10
                   : 1,
             }}
-            width={90}
-            noWrap
           >
             <CurrencyWithTooltip value={props.stock.analystTargetPrice} currency={props.stock.currency} floatAlign />
           </Typography>
           <Typography
             variant="body2"
-            color="text.secondary"
-            width={40}
-            sx={{ textAlign: "left", display: "inline-block" }}
             noWrap
+            sx={{ color: "text.secondary", width: 40, textAlign: "left", display: "inline-block" }}
           >
             {props.stock.analystCount !== null && `n\u2009=\u2009${props.stock.analystCount}`}
           </Typography>
           <Typography
             variant="body2"
-            color="text.secondary"
-            width={50}
-            sx={{ textAlign: "right", display: "inline-block" }}
             noWrap
+            sx={{ color: "text.secondary", width: 50, textAlign: "right", display: "inline-block" }}
           >
             {props.stock.analystCount !== null &&
               formatPercentage(props.stock.analystTargetPricePercentageToLastClose, {
@@ -694,14 +687,9 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <MSCINavigator stock={props.stock}>
             <Chip
               label={<strong>{props.stock.msciESGRating}</strong>}
-              style={{ cursor: "inherit" }}
               sx={{
-                backgroundColor: ["AAA", "AA"].includes(props.stock.msciESGRating)
-                  ? theme.colors.msci.Leader
-                  : ["B", "CCC"].includes(props.stock.msciESGRating)
-                    ? theme.colors.msci.Laggard
-                    : theme.colors.msci.Average,
-                color: theme.colors.alpha.trueWhite[100],
+                backgroundColor: theme.palette.msci[getMSCIESGRatingColorIndex(props.stock!)],
+                color: theme.palette.trueWhite.main,
                 width: 48,
               }}
               size="small"
@@ -719,7 +707,6 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               label={<strong>{`${props.stock.msciTemperature}\u2009℃`}</strong>}
               size="small"
               sx={{ width: 75 }}
-              style={{ cursor: "inherit" }}
             />
           </MSCINavigator>
         )}
@@ -730,22 +717,22 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <Box sx={{ minWidth: 90, display: "flex", alignItems: "center" }}>
             <Typography
               variant="body1"
-              fontWeight="bold"
-              color="text.primary"
-              width={45}
-              fontSize={18}
-              sx={{ textAlign: "left", display: "inline-block" }}
               noWrap
+              sx={{
+                fontWeight: "bold",
+                color: "text.primary",
+                width: 45,
+                fontSize: 18,
+                textAlign: "left",
+                display: "inline-block",
+              }}
             >
               {props.stock.lsegESGScore}
             </Typography>
             <Typography
               variant="body2"
-              color="text.secondary"
-              width={45}
-              fontSize={18}
-              sx={{ textAlign: "right", display: "inline-block" }}
               noWrap
+              sx={{ color: "text.secondary", width: 45, fontSize: 18, textAlign: "right", display: "inline-block" }}
             >
               {props.stock.lsegEmissions}
             </Typography>
@@ -757,12 +744,9 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
         <SPNavigator stock={props.stock}>
           <Typography
             variant="body1"
-            fontWeight="bold"
-            color="text.primary"
-            width={48}
-            fontSize={18}
             noWrap
             align="right"
+            sx={{ fontWeight: "bold", color: "text.primary", width: 48, fontSize: 18 }}
           >
             {props.stock.spESGScore}
           </Typography>
@@ -774,19 +758,9 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
           <SustainalyticsNavigator stock={props.stock}>
             <Chip
               label={<strong>{props.stock.sustainalyticsESGRisk}</strong>}
-              style={{ cursor: "inherit" }}
               sx={{
-                backgroundColor:
-                  props.stock.sustainalyticsESGRisk < 10
-                    ? theme.colors.sustainalytics.negligible
-                    : props.stock.sustainalyticsESGRisk < 20
-                      ? theme.colors.sustainalytics.low
-                      : props.stock.sustainalyticsESGRisk < 30
-                        ? theme.colors.sustainalytics.medium
-                        : props.stock.sustainalyticsESGRisk < 40
-                          ? theme.colors.sustainalytics.high
-                          : theme.colors.sustainalytics.severe,
                 width: 64,
+                backgroundColor: theme.palette.sustainalytics[getSustainalyticsESGRiskColorIndex(props.stock!)],
               }}
               size="small"
             />
@@ -805,23 +779,21 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       </TableCell>
       {/* Dividend Yield */}
       <TableCell sx={{ display: displayColumn("Dividend Yield (%)") }}>
-        <Typography variant="body1" color="text.primary" width={45} sx={{ textAlign: "right" }} noWrap>
+        <Typography variant="body1" noWrap sx={{ color: "text.primary", width: 45, textAlign: "right" }}>
           {formatPercentage(props.stock.dividendYieldPercent, { total: 100 })}
         </Typography>
       </TableCell>
       {/* P/E Ratio */}
       <TableCell sx={{ display: displayColumn("P / E Ratio") }}>
-        <Typography variant="body1" color="text.primary" width={45} sx={{ textAlign: "right" }} noWrap>
+        <Typography variant="body1" noWrap sx={{ color: "text.primary", width: 45, textAlign: "right" }}>
           {Number(props.stock.priceEarningRatio?.toPrecision(3)) || "–"}
         </Typography>
       </TableCell>
       {/* Market Cap */}
       <TableCell sx={{ display: displayColumn("Market Capitalization") }}>
-        <Typography variant="body1" color="text.primary" width={75} noWrap>
+        <Typography variant="body1" noWrap sx={{ color: "text.primary", width: 75 }}>
           <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
-            <Box sx={{ float: "left" }} display="inline-block">
-              {props.stock.currency ?? ""}
-            </Box>
+            <Box sx={{ display: "inline-block", float: "left" }}>{props.stock.currency ?? ""}</Box>
           </Tooltip>
           <Box sx={{ float: "right" }}>{formatMarketCap(props.stock)}</Box>
         </Typography>
@@ -884,7 +856,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       {props.hideActionsMenu ? (
         <TableCell sx={{ p: 0.25 }} />
       ) : (
-        <TableCell style={{ whiteSpace: "nowrap" }}>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>
           <Skeleton
             sx={{ m: "4px", display: "inline-block", verticalAlign: "middle" }}
             variant="circular"
@@ -900,9 +872,9 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       )}
       {/* Stock */}
       <TableCell>
-        <Box style={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Skeleton variant="circular" width={40} height={40} />
-          <Box width={8} />
+          <Box sx={{ width: 8 }} />
           <Box>
             <Typography variant="body1">
               <Skeleton width={160} />
@@ -932,7 +904,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       </TableCell>
       {/* Sector */}
       <TableCell sx={{ display: displayColumn("Sector") }}>
-        <Typography variant="body1" display="flex">
+        <Typography variant="body1" sx={{ display: "flex" }}>
           <Skeleton
             variant="rectangular"
             width={1.55 * (theme.typography.body1.fontSize as number)}
@@ -941,17 +913,17 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
               m: `${0.1 * (theme.typography.body1.fontSize as number)}px`,
             }}
           />
-          <Box width={6} />
+          <Box sx={{ width: 6 }} />
           <Skeleton width={105} />
         </Typography>
-        <Typography variant="body2" display="flex">
+        <Typography variant="body2" sx={{ display: "flex" }}>
           <Skeleton
             variant="rectangular"
             width={1.55 * (theme.typography.body1.fontSize as number)}
             height={1.55 * (theme.typography.body1.fontSize as number)}
             sx={{ m: `${0.1 * (theme.typography.body1.fontSize as number)}px` }}
           />
-          <Box width={6} />
+          <Box sx={{ width: 6 }} />
           <Skeleton width={105} />
         </Typography>
       </TableCell>
@@ -1023,18 +995,18 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
       {/* LSEG + Emissions */}
       <TableCell sx={{ display: displayColumn("LSEG ESG Information") }}>
         <Box sx={{ minWidth: 90, display: "flex", alignItems: "center" }}>
-          <Typography variant="body1" fontSize={18}>
+          <Typography variant="body1" sx={{ fontSize: 18 }}>
             <Skeleton width={30} />
           </Typography>
           <Box sx={{ width: 30 }} />
-          <Typography variant="body2" fontSize={18}>
+          <Typography variant="body2" sx={{ fontSize: 18 }}>
             <Skeleton width={30} />
           </Typography>
         </Box>
       </TableCell>
       {/* S&P */}
       <TableCell sx={{ display: displayColumn("S&P ESG Score") }}>
-        <Typography variant="body1" fontSize={18}>
+        <Typography variant="body1" sx={{ fontSize: 18 }}>
           <Skeleton width={48} />
         </Typography>
       </TableCell>

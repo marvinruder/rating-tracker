@@ -129,7 +129,7 @@ export const getSectorIconPaths = (superSectorOrSector: SuperSector | Sector): J
 export const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps): JSX.Element => {
   const theme = useTheme();
   const color: React.CSSProperties["color"] = props.industry
-    ? theme.colors.sector[superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.industry]]]]
+    ? theme.palette.sector[superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.industry]]]]
     : "transparent";
   let superSectorOrSector: SuperSector | Sector | undefined;
 
