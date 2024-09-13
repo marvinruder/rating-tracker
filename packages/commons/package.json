@@ -21,7 +21,7 @@
   "dependencies": {
     "@vitest/coverage-v8": "2.1.0",
     "statuses": "2.0.1",
-    "vite": "5.4.4",
+    "vite": "5.4.5",
     "vitest": "2.1.0"
   },
   "devDependencies": {
