@@ -78,7 +78,7 @@
     "@simplewebauthn/server": "10.0.1",
     "@vitest/coverage-v8": "2.1.1",
     "@xmldom/xmldom": "0.9.2",
-    "@yarnpkg/pnpify": "4.1.1",
+    "@yarnpkg/pnpify": "4.1.2",
     "chalk": "5.3.0",
     "esbuild": "0.23.1",
     "hono": "4.6.1",
