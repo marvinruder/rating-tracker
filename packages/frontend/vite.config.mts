@@ -1,12 +1,13 @@
-// eslint-disable-next-line import/no-nodejs-modules
+/* eslint-disable import/no-nodejs-modules */
+import { execSync } from "node:child_process";
 import fs from "node:fs";
-// eslint-disable-next-line import/no-nodejs-modules
 import type { ServerOptions } from "node:https";
 
 import react from "@vitejs/plugin-react";
 import proxy from "http2-proxy";
 import type { ViteDevServer } from "vite";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
+import viteCompression from "vite-plugin-compression";
 import { createHtmlPlugin } from "vite-plugin-html";
 import wasm from "vite-plugin-wasm";
 import { defineConfig as defineVitestConfig } from "vitest/config";
@@ -16,6 +17,13 @@ let https: ServerOptions | undefined;
 try {
   https = { cert: fs.readFileSync("./certs/fullchain.pem"), key: fs.readFileSync("./certs/privkey.pem") };
 } catch {}
+
+const compressionOptions: Parameters<typeof viteCompression>[0] = {
+  filter: /\.(js|mjs|json|css|html?|svg|wasm)$/i,
+  threshold: 256,
+  // Move the compressed `index.html`s to the root directory
+  success: () => execSync("/bin/sh -c 'if [ -d dist/src ]; then mv dist/src/* dist; rmdir dist/src; fi'"),
+};
 
 export default mergeConfig(
   defineViteConfig({
@@ -80,6 +88,8 @@ export default mergeConfig(
         verbose: process.env.NODE_ENV === "development",
       }),
       wasm(),
+      viteCompression({ ...compressionOptions, algorithm: "gzip" }),
+      viteCompression({ ...compressionOptions, algorithm: "brotliCompress" }),
     ],
     preview: { port: 443, strictPort: true },
     server: { host: true, https, port: 443, strictPort: true },
