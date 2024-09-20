@@ -25,7 +25,7 @@
     "@mui/lab": "5.0.0-alpha.173",
     "@mui/material": "6.1.1",
     "@mui/system": "6.1.1",
-    "@mui/x-charts": "7.17.0",
+    "@mui/x-charts": "7.18.0",
     "@nivo/core": "0.87.0",
     "@nivo/sunburst": "0.87.0",
     "@rating-tracker/commons": "workspace:*",
