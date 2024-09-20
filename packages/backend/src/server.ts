@@ -98,13 +98,19 @@ app.use(`${baseURL}/*`, Logger.logRequest);
 // Add ETag support. Use weak ETags because Reverse Proxys may change the ETag when compressing the response
 app.use(etag({ weak: true }));
 
+// Do not cache responses by default. This can be overridden individually by endpoints or for static assets.
+app.use(async (c, next) => {
+  c.header("Cache-Control", "no-cache");
+  await next();
+});
+
 // Add security-related headers
 app.use("/api-docs", async (c, next) => {
   await next();
   // Override CSP, COEP, CORP for the Swagger UI
   const csp = c.res.headers.get("Content-Security-Policy");
   if (csp)
-    c.res.headers.set(
+    c.header(
       "Content-Security-Policy",
       csp
         .replace("img-src ", "img-src blob: ")
@@ -112,8 +118,8 @@ app.use("/api-docs", async (c, next) => {
         .replace("style-src ", "style-src https://cdn.jsdelivr.net/npm/swagger-ui-dist/ ")
         .replace("style-src-elem ", "style-src-elem https://cdn.jsdelivr.net/npm/swagger-ui-dist/ "),
     );
-  c.res.headers.set("Cross-Origin-Embedder-Policy", "unsafe-none");
-  c.res.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
+  c.header("Cross-Origin-Embedder-Policy", "unsafe-none");
+  c.header("Cross-Origin-Resource-Policy", "cross-origin");
 });
 app.use(
   secureHeaders({

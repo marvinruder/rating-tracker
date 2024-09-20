@@ -95,13 +95,6 @@ const root = path.join(__dirname, "public").replace(process.cwd(), ".");
  * @param next The next middleware handler.
  */
 export const staticFileHandler: MiddlewareHandler[] = [
-  async (c, next) => {
-    // Allow caching of static assets
-    if (c.req.path.startsWith("/assets")) c.header("Cache-Control", "public, max-age=31536000");
-    // Disallow caching of the SPA as well as API responses
-    else c.header("Cache-Control", "no-cache");
-    await next();
-  },
   // Serve static files
   serveStatic({
     root,
@@ -111,11 +104,17 @@ export const staticFileHandler: MiddlewareHandler[] = [
         ? /* c8 ignore next */ // This mapping is only active in a development environment, not during tests.
           (path = path.replace(/^\/assets\/images\/favicon/, "/assets/images/favicon-dev"))
         : path,
+    precompressed: true,
+    // Allow caching of static assets excluding the SPA
+    onFound: (_, c) =>
+      /* c8 ignore next */ // Static assets are not covered by tests.
+      c.req.path.startsWith("/assets") ? c.header("Cache-Control", "public, max-age=31536000") : undefined,
   }),
   // Only if no such file exists:
   serveStatic({
     root,
     // Serve the SPA to any route not belonging to the API
     rewriteRequestPath: (path) => path.replace(/^(?!\/api).+/, "/"),
+    precompressed: true,
   }),
 ];
