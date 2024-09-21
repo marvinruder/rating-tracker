@@ -77,7 +77,7 @@
     "@rating-tracker/commons": "workspace:*",
     "@simplewebauthn/server": "10.0.1",
     "@vitest/coverage-v8": "2.1.1",
-    "@xmldom/xmldom": "0.9.2",
+    "@xmldom/xmldom": "0.9.3",
     "@yarnpkg/pnpify": "4.1.2",
     "chalk": "5.3.0",
     "esbuild": "0.23.1",
