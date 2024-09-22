@@ -9,6 +9,7 @@ import {
   isIndividualDataProvider,
   resourcesAPIPath,
 } from "@rating-tracker/commons";
+import type { Document } from "@xmldom/xmldom";
 import { DOMParser, MIME_TYPE } from "@xmldom/xmldom";
 
 import type ResourceService from "../resource/resource.service";
@@ -413,8 +414,7 @@ class FetchService {
           );
       },
     });
-    // We are expecting an HTML document here, so we can safely cast the result to a `Document`
-    const document = parser.parseFromString(responseData, MIME_TYPE.HTML) as unknown as Document;
+    const document = parser.parseFromString(responseData, MIME_TYPE.HTML);
     if (error)
       throw new DataProviderError(`Error while fetching HTML page: ${error.message}`, {
         cause: error,
