@@ -5,7 +5,7 @@
     "Marvin A. Ruder <ratingtracker@mruder.dev>"
   ],
   "description": "A collection of utilities written in Rust and compiled to WebAssembly",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
