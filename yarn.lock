@@ -1506,7 +1506,7 @@ __metadata:
     eslint-config-google: "npm:0.14.0"
     eslint-config-prettier: "npm:9.1.0"
     eslint-plugin-import: "npm:2.30.0"
-    eslint-plugin-jsdoc: "npm:50.2.4"
+    eslint-plugin-jsdoc: "npm:50.3.0"
     eslint-plugin-prettier: "npm:5.2.1"
     hono: "npm:4.6.3"
     hono-rate-limiter: "npm:0.4.0"
@@ -1539,7 +1539,7 @@ __metadata:
     eslint-config-google: "npm:0.14.0"
     eslint-config-prettier: "npm:9.1.0"
     eslint-plugin-import: "npm:2.30.0"
-    eslint-plugin-jsdoc: "npm:50.2.4"
+    eslint-plugin-jsdoc: "npm:50.3.0"
     eslint-plugin-prettier: "npm:5.2.1"
     prettier: "npm:3.3.3"
     statuses: "npm:2.0.1"
@@ -1579,7 +1579,7 @@ __metadata:
     eslint-config-google: "npm:0.14.0"
     eslint-config-prettier: "npm:9.1.0"
     eslint-plugin-import: "npm:2.30.0"
-    eslint-plugin-jsdoc: "npm:50.2.4"
+    eslint-plugin-jsdoc: "npm:50.3.0"
     eslint-plugin-prettier: "npm:5.2.1"
     eslint-plugin-react: "npm:7.36.1"
     hare-niemeyer: "npm:3.0.0"
@@ -4089,9 +4089,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:50.2.4":
-  version: 50.2.4
-  resolution: "eslint-plugin-jsdoc@npm:50.2.4"
+"eslint-plugin-jsdoc@npm:50.3.0":
+  version: 50.3.0
+  resolution: "eslint-plugin-jsdoc@npm:50.3.0"
   dependencies:
     "@es-joy/jsdoccomment": "npm:~0.48.0"
     are-docs-informative: "npm:^0.0.2"
@@ -4106,7 +4106,7 @@ __metadata:
     synckit: "npm:^0.9.1"
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
-  checksum: 10c0/9635726563213781dd18ee07459cc85ca4aca0f3b45bf02504cd880cb78757ef627578a0f9e5d412c401abcd7f6bab6d78f79198572b982ad2a71a74e03a416f
+  checksum: 10c0/2188f10c350f3306f476913f63880bb3324932006a40f28f4b7b95c10d147e8fd98b03917357c01ae2f81d60bc1c169dbdacc72031e2c1ae602445f39e574da1
   languageName: node
   linkType: hard
 
