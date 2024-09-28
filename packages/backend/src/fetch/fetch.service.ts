@@ -122,6 +122,7 @@ class FetchService {
           .replace(/<header\b[\s\S]*<\/header>/gm, "")
           .replace(/<aside\b[\s\S]*<\/aside>/gm, "")
           .replace(/<footer>[\s\S]*/gm, "</body></html>")
+          .replaceAll('alt=""', "")
           .replaceAll('<td class="is__realtime px-5">', "")
           .replaceAll("media--1610", "media-1610");
       case "msci":
