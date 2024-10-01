@@ -1427,13 +1427,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/debug@npm:5.9.1":
-  version: 5.9.1
-  resolution: "@prisma/debug@npm:5.9.1"
-  checksum: 10c0/0e116019f5e8df7ec30503bcfd033e54c94a20e2a6d6abeed525eac3e0be8f40f8cd3b0cf43abad91d1ec80c3dbca8d827f753b2ccbf9eea20a05ff1cd1d12f5
-  languageName: node
-  linkType: hard
-
 "@prisma/engines-version@npm:5.20.0-12.06fc58a368dc7be9fbbbe894adf8d445d208c284":
   version: 5.20.0-12.06fc58a368dc7be9fbbbe894adf8d445d208c284
   resolution: "@prisma/engines-version@npm:5.20.0-12.06fc58a368dc7be9fbbbe894adf8d445d208c284"
@@ -1464,12 +1457,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/generator-helper@npm:5.9.1":
-  version: 5.9.1
-  resolution: "@prisma/generator-helper@npm:5.9.1"
+"@prisma/generator-helper@npm:5.20.0":
+  version: 5.20.0
+  resolution: "@prisma/generator-helper@npm:5.20.0"
   dependencies:
-    "@prisma/debug": "npm:5.9.1"
-  checksum: 10c0/34179bc1aded0fec379393f9849046cf3ec3792ca9c052a5486720127af0a234aa0ce3f2b31b04246ac481549a028ddbd9c08259ddcbdce81e8f88db77d5d1f4
+    "@prisma/debug": "npm:5.20.0"
+  checksum: 10c0/3628b960b0c3dad40b781e9f226d6bf79423fcb4708c408852e265735709346cf037ae42cad5624cae3ea3884e6919098a0dfeba70d8d379b8dd1049a7a59fb0
   languageName: node
   linkType: hard
 
@@ -1515,7 +1508,7 @@ __metadata:
     pino-pretty: "npm:11.2.2"
     prettier: "npm:3.3.3"
     prisma: "npm:5.20.0"
-    prisma-json-types-generator: "npm:3.0.4"
+    prisma-json-types-generator: "npm:3.1.1"
     typescript: "npm:5.6.2"
     undici-types: "npm:6.19.8"
     vite: "npm:5.4.8"
@@ -6452,18 +6445,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma-json-types-generator@npm:3.0.4":
-  version: 3.0.4
-  resolution: "prisma-json-types-generator@npm:3.0.4"
+"prisma-json-types-generator@npm:3.1.1":
+  version: 3.1.1
+  resolution: "prisma-json-types-generator@npm:3.1.1"
   dependencies:
-    "@prisma/generator-helper": "npm:5.9.1"
-    tslib: "npm:2.6.2"
+    "@prisma/generator-helper": "npm:5.20.0"
+    tslib: "npm:2.7.0"
   peerDependencies:
-    prisma: ^5.1
-    typescript: ^5.1
+    prisma: ^5.20
+    typescript: ^5.6.2
   bin:
     prisma-json-types-generator: index.js
-  checksum: 10c0/526c21ab3acd0c440151a42612eca086bbd2d98cbd92a0557655f630d0c99aff4078a0220881828e8509d3134ffc3f3d79743020ef9716d7ff4ca3c057b78e1d
+  checksum: 10c0/d319343fb0611dbe1da269f3a7ea1b795498fabc948522f04fb2f8ee558c3c27620240dd0d71464337fab450b721c7ebdcd5cd58fca5a1a75edf73d5a8980e6b
   languageName: node
   linkType: hard
 
@@ -7612,17 +7605,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.6.2":
-  version: 2.6.2
-  resolution: "tslib@npm:2.6.2"
-  checksum: 10c0/e03a8a4271152c8b26604ed45535954c0a45296e32445b4b87f8a5abdb2421f40b59b4ca437c4346af0f28179780d604094eb64546bee2019d903d01c6c19bdb
-  languageName: node
-  linkType: hard
-
-"tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.1, tslib@npm:^2.6.2":
-  version: 2.6.3
-  resolution: "tslib@npm:2.6.3"
-  checksum: 10c0/2598aef53d9dbe711af75522464b2104724d6467b26a60f2bdac8297d2b5f1f6b86a71f61717384aa8fd897240467aaa7bcc36a0700a0faf751293d1331db39a
+"tslib@npm:2.7.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.1, tslib@npm:^2.6.2":
+  version: 2.7.0
+  resolution: "tslib@npm:2.7.0"
+  checksum: 10c0/469e1d5bf1af585742128827000711efa61010b699cb040ab1800bcd3ccdd37f63ec30642c9e07c4439c1db6e46345582614275daca3e0f4abae29b0083f04a6
   languageName: node
   linkType: hard
 
