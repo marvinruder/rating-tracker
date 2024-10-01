@@ -43,7 +43,7 @@ class CronScheduler extends Singleton {
     if (process.env.AUTO_FETCH_SCHEDULE) {
       CronScheduler.schedules.push(
         cron.schedule(process.env.AUTO_FETCH_SCHEDULE, async () => {
-          for await (const dataProvider of [
+          for (const dataProvider of [
             "msci",
             "lseg",
             "sp",

@@ -154,7 +154,7 @@ class FetchService {
   async captureDataProviderError(stock: Stock, dataProvider: DataProvider, e: DataProviderError): Promise<string> {
     const resourceIDs: string[] = [];
 
-    for await (const dataSource of e.dataSources ?? []) {
+    for (const dataSource of e.dataSources ?? []) {
       if (!dataSource) continue;
       switch (true) {
         case "documentElement" in dataSource && dataSource.documentElement?.toString().length > 0: {
