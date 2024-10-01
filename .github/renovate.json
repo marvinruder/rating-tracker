@@ -3,6 +3,8 @@
   "extends": ["config:recommended", "docker:enableMajor"],
   "timezone": "UTC",
   "schedule": ["* 18 * * *"],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 4,
   "automerge": true,
   "automergeType": "pr",
   "platformAutomerge": true,
