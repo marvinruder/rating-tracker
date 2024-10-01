@@ -104,21 +104,21 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
           .then(handleResponse);
         setDoneRequests((prev) => prev + 1);
       }
-      for await (const stock of stocksToAdd) {
+      for (const stock of stocksToAdd) {
         setCurrentRequest(`Adding “${stock.name}” (${stock.ticker})…`);
         await portfolioClient[":id"].stocks[":ticker"]
           .$put({ param: { id: String(selectedPortfolio.id), ticker: stock.ticker }, json: { amount: stock.amount } })
           .then(handleResponse);
         setDoneRequests((prev) => prev + 1);
       }
-      for await (const stock of stocksToUpdate) {
+      for (const stock of stocksToUpdate) {
         setCurrentRequest(`Updating amount of “${stock.name}” (${stock.ticker})…`);
         await portfolioClient[":id"].stocks[":ticker"]
           .$patch({ param: { id: String(selectedPortfolio.id), ticker: stock.ticker }, json: { amount: stock.amount } })
           .then(handleResponse);
         setDoneRequests((prev) => prev + 1);
       }
-      for await (const stock of stocksToRemove!) {
+      for (const stock of stocksToRemove!) {
         setCurrentRequest(`Removing “${stock.ticker}”…`);
         await portfolioClient[":id"].stocks[":ticker"]
           .$delete({ param: { id: String(selectedPortfolio.id), ticker: stock.ticker } })

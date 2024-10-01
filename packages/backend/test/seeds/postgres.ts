@@ -51,7 +51,7 @@ const applyUserSeed = async (): Promise<void> => {
  * Writes example watchlist data into the watchlist table in the database. Must only be used in tests.
  */
 const applyWatchlistSeed = async (): Promise<void> => {
-  for await (const watchlist of watchlistExamples) {
+  for (const watchlist of watchlistExamples) {
     await dbService.watchlist.create({
       data: {
         ...watchlist,
@@ -69,7 +69,7 @@ const applyWatchlistSeed = async (): Promise<void> => {
  * Writes example portfolio data into the portfolio table in the database. Must only be used in tests.
  */
 const applyPortfolioSeed = async (): Promise<void> => {
-  for await (const portfolio of portfolioExamples) {
+  for (const portfolio of portfolioExamples) {
     await dbService.portfolio.create({
       data: {
         ...portfolio,

@@ -1,4 +1,4 @@
-import type { FetchResponse, YahooStockStub } from "@rating-tracker/commons";
+import type { YahooStockStub } from "@rating-tracker/commons";
 import { FetchError, isIndustry } from "@rating-tracker/commons";
 
 import BadGatewayError from "../utils/error/api/BadGatewayError";
@@ -44,20 +44,18 @@ class ProxyService {
 
     // Fetch logos from valid URLs and create data URLs
     const logoDataURLs: Record<string, string> = {};
-    const logoResponseResults = (
-      await Promise.allSettled<FetchResponse>(
-        equities
-          .filter((equity) => "logoUrl" in equity && typeof equity.logoUrl === "string" && URL.canParse(equity.logoUrl))
-          // deepcode ignore Ssrf: false positive (URL comes from Yahoo Finance API response, is validated)
-          .map((equity) => performFetchRequest(equity.logoUrl)),
-      )
-    ).filter((result): result is PromiseFulfilledResult<FetchResponse> => result.status === "fulfilled");
-    for await (const result of logoResponseResults) {
-      const response = result.value;
-      const mimeType = response.headers.get("content-type");
-      const base64 = Buffer.from(await response.arrayBuffer()).toString("base64");
-      if (mimeType && base64) logoDataURLs[response.url] = `data:${mimeType};base64,${base64}`;
-    }
+    await Promise.allSettled(
+      equities
+        .filter((equity) => "logoUrl" in equity && typeof equity.logoUrl === "string" && URL.canParse(equity.logoUrl))
+        // deepcode ignore Ssrf: false positive (URL comes from Yahoo Finance API response, is validated)
+        .map((equity) =>
+          performFetchRequest(equity.logoUrl).then(async (response) => {
+            const mimeType = response.headers.get("content-type");
+            const base64 = Buffer.from(await response.arrayBuffer()).toString("base64");
+            if (mimeType && base64) logoDataURLs[response.url] = `data:${mimeType};base64,${base64}`;
+          }),
+        ),
+    );
 
     return equities.map((equity) => {
       const industry = "industry" in equity ? equity.industry.replaceAll(/[^a-zA-Z0-9]/g, "") : null;
