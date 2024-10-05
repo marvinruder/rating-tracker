@@ -13,8 +13,8 @@ export default defineConfig({
       exclude: [
         "**/__mocks__/**",
         "dist",
+        "eslint.config.mjs",
         "prisma",
-        "test",
         "src/fetch",
         "src/types/*.d.ts",
         "src/utils/*-shim.ts",
@@ -26,6 +26,7 @@ export default defineConfig({
         "src/utils/fetchRequest.ts",
         "src/utils/logger.ts",
         "src/utils/logFormatterConfig.ts",
+        "test",
         "vitest.config.ts",
       ],
     },
