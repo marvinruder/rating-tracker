@@ -305,7 +305,6 @@ tests.push({
     await Promise.all(
       // Request 60 authentication challenges from different IP addresses
       [...Array(60)].map(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async (_, i) =>
           await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
             headers: { "X-Forwarded-For": `10.0.${i}.2` },
@@ -327,7 +326,6 @@ tests.push({
     await Promise.all(
       // Request 60 authentication challenges from the same client manipulating the X-Forwarded-For header
       [...Array(60)].map(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async (_, i) =>
           await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
             headers: { "X-Forwarded-For": `10.0.${i}.2, 10.0.0.254` },
