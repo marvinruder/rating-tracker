@@ -65,7 +65,7 @@
     "build": "esbuild --color=true src/server.ts --bundle --platform=node --packages=bundle --format=esm --inject:./src/utils/cjs-shim.ts --target=node$(node -v | sed 's/^v//') --sourcemap=linked --sources-content=false --log-override:commonjs-variable-in-esm=silent --outfile=dist/server.mjs",
     "build:logFormatterConfig": "esbuild src/utils/logFormatterConfig.ts --bundle --minify --platform=node --packages=bundle --format=cjs --log-override:commonjs-variable-in-esm=silent --outfile=dist/pino-pretty-config.cjs",
     "typecheck": "tsc --noEmit --tsBuildInfoFile $HOME/.cache/rating-tracker/backend.tsbuildinfo",
-    "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/backend.eslintcache --cache-strategy content --max-warnings 0 --ext .ts src/ test/",
+    "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/backend.eslintcache --cache-strategy content --max-warnings 0 src test",
     "lint:fix": "yarn lint --fix",
     "postinstall": "yarn prisma:generate"
   },
@@ -101,12 +101,13 @@
     "@typescript-eslint/eslint-plugin": "8.8.0",
     "@typescript-eslint/parser": "8.8.0",
     "@vitest/ui": "2.1.2",
-    "eslint": "8.57.1",
+    "eslint": "9.12.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-jsdoc": "50.3.1",
     "eslint-plugin-prettier": "5.2.1",
+    "globals": "15.10.0",
     "prettier": "3.3.3",
     "undici-types": "6.19.8"
   }

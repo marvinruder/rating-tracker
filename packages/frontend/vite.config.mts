@@ -98,7 +98,7 @@ export default mergeConfig(
   defineVitestConfig({
     server: { ws: process.env.NODE_ENV === "test" ? false : undefined },
     test: {
-      coverage: { all: false, enabled: true, provider: "v8" },
+      coverage: { all: false, enabled: true, provider: "v8", exclude: ["eslint.config.mjs"] },
       pool: "threads",
       poolOptions: { threads: { useAtomics: true } },
     },
