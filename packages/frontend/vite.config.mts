@@ -27,21 +27,7 @@ const compressionOptions: Parameters<typeof viteCompression>[0] = {
 
 export default mergeConfig(
   defineViteConfig({
-    build: {
-      rollupOptions: {
-        onLog(level, log, handler) {
-          // vitejs/vite#15012
-          if (
-            log.message.includes(
-              "Error when using sourcemap for reporting an error: Can't resolve original location of error.",
-            )
-          )
-            return;
-          handler(level, log);
-        },
-      },
-      sourcemap: true,
-    },
+    build: { sourcemap: true },
     cacheDir: ".vite",
     esbuild: { supported: { "top-level-await": true } },
     plugins: [
