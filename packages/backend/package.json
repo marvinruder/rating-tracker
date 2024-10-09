@@ -109,6 +109,6 @@
     "eslint-plugin-prettier": "5.2.1",
     "globals": "15.10.0",
     "prettier": "3.3.3",
-    "undici-types": "6.19.8"
+    "undici-types": "6.20.0"
   }
 }
