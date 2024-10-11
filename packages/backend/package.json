@@ -70,7 +70,7 @@
     "postinstall": "yarn prisma:generate"
   },
   "dependencies": {
-    "@hono/node-server": "1.13.1",
+    "@hono/node-server": "1.13.2",
     "@hono/swagger-ui": "0.4.1",
     "@hono/zod-openapi": "0.16.4",
     "@prisma/client": "5.20.0",
