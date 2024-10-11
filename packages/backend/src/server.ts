@@ -197,7 +197,7 @@ app.onError(ErrorHelper.errorHandler);
 // Setup Cron Jobs
 new CronScheduler(fetchService, resourceService, sessionService, signalService, userService);
 
-export const server = serve({ fetch: app.fetch, hostname: "::", port: process.env.PORT }, (info) => {
+export const server = serve({ fetch: app.fetch, port: process.env.PORT }, (info) => {
   Logger.info(
     {
       prefix: [
