@@ -144,7 +144,7 @@ class WebAuthnService {
 
     // The following information is required to verify the user’s identity in the future.
     // We store it in the database.
-    const { credentialPublicKey, credentialID, counter } = registrationInfo;
+    const { credential } = registrationInfo;
     if (
       verified && // If the verification was successful, this will hold true.
       // We attempt to create a new user with the provided information.
@@ -153,7 +153,7 @@ class WebAuthnService {
         // Users need to be manually approved before they can access the app.
         new User({ ...optionalUserValuesNull, email, name, accessRights: 0 }),
         // Decode base64url (as specified in https://www.w3.org/TR/webauthn-2/)
-        { id: Buffer.from(credentialID, "base64url"), publicKey: credentialPublicKey, counter },
+        { id: Buffer.from(credential.id, "base64url"), publicKey: credential.publicKey, counter: credential.counter },
       ))
     ) {
       throw new ConflictError(ALREADY_REGISTERED_ERROR_MESSAGE);
@@ -193,10 +193,10 @@ class WebAuthnService {
         expectedChallenge: this.#currentChallenges[challenge],
         expectedOrigin: this.#origin,
         expectedRPID: this.#rpID,
-        authenticator: {
+        credential: {
           // This information is stored for each user in the database.
-          credentialID: credential.id.toString("base64url"),
-          credentialPublicKey: credential.publicKey,
+          id: credential.id.toString("base64url"),
+          publicKey: credential.publicKey,
           counter: credential.counter,
         },
         requireUserVerification: true, // Require the user to verify their identity with a PIN or biometric sensor.

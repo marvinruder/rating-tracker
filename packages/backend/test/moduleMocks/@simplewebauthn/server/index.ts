@@ -5,48 +5,71 @@ const randomCredential = crypto.randomUUID();
 export const { generateRegistrationOptions, generateAuthenticationOptions } =
   await vi.importActual<typeof SimpleWebAuthnServer>("@simplewebauthn/server");
 
-export const verifyRegistrationResponse = (options: SimpleWebAuthnServer.VerifyRegistrationResponseOpts) => {
+export const verifyRegistrationResponse = (
+  options: SimpleWebAuthnServer.VerifyRegistrationResponseOpts,
+): Promise<SimpleWebAuthnServer.VerifiedRegistrationResponse> => {
   if (options.response.id !== options.response.rawId) {
     // One of the errors that can be thrown by the actual implementation.
     throw new Error("Credential ID was not base64url-encoded");
   }
   return Promise.resolve({
     verified:
-      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).challenge ===
+      (JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).challenge ===
         options.expectedChallenge &&
-      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).origin ===
-        options.expectedOrigin &&
-      options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
-      options.expectedRPID !== undefined &&
-      options.expectedRPID.includes(process.env.DOMAIN) &&
-      options.requireUserVerification,
+        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).origin ===
+          options.expectedOrigin &&
+        options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
+        options.expectedRPID !== undefined &&
+        options.expectedRPID.includes(process.env.DOMAIN) &&
+        options.requireUserVerification) ??
+      false,
     registrationInfo: {
-      credentialID: options.response.id,
-      credentialPublicKey: Buffer.from(`${randomCredential}`),
-      counter: 0,
+      fmt: "fido-u2f",
+      aaguid: "",
+      credential: {
+        id: options.response.id,
+        publicKey: Buffer.from(`${randomCredential}`),
+        counter: 0,
+      },
+      credentialType: "public-key",
+      attestationObject: Buffer.from(""),
+      userVerified: options.requireUserVerification ?? false,
+      credentialDeviceType: "multiDevice",
+      credentialBackedUp: true,
+      origin: Array.isArray(options.expectedOrigin) ? options.expectedOrigin[0] : options.expectedOrigin,
+      rpID: Array.isArray(options.expectedRPID) ? options.expectedRPID[0] : options.expectedRPID,
     },
   });
 };
 
-export const verifyAuthenticationResponse = (options: SimpleWebAuthnServer.VerifyAuthenticationResponseOpts) => {
+export const verifyAuthenticationResponse = (
+  options: SimpleWebAuthnServer.VerifyAuthenticationResponseOpts,
+): Promise<SimpleWebAuthnServer.VerifiedAuthenticationResponse> => {
   if (options.response.id !== options.response.rawId) {
     // One of the errors that can be thrown by the actual implementation.
     throw new Error("Credential ID was not base64url-encoded");
   }
   return Promise.resolve({
     verified:
-      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).challenge ===
+      (JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).challenge ===
         options.expectedChallenge &&
-      JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).origin ===
-        options.expectedOrigin &&
-      // options.response.challenge === options.expectedChallenge &&
-      options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
-      options.expectedRPID.includes(process.env.DOMAIN) &&
-      options.requireUserVerification &&
-      options.authenticator.credentialID === options.response.id &&
-      options.authenticator.credentialPublicKey.toString() === `${randomCredential}`,
+        JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).origin ===
+          options.expectedOrigin &&
+        // options.response.challenge === options.expectedChallenge &&
+        options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
+        options.expectedRPID.includes(process.env.DOMAIN) &&
+        options.requireUserVerification &&
+        options.credential.id === options.response.id &&
+        options.credential.publicKey.toString() === `${randomCredential}`) ??
+      false,
     authenticationInfo: {
-      newCounter: options.authenticator.counter + 1,
+      credentialID: options.response.id,
+      newCounter: options.credential.counter + 1,
+      userVerified: options.requireUserVerification ?? false,
+      credentialDeviceType: "multiDevice",
+      credentialBackedUp: true,
+      origin: Array.isArray(options.expectedOrigin) ? options.expectedOrigin[0] : options.expectedOrigin,
+      rpID: Array.isArray(options.expectedRPID) ? options.expectedRPID[0] : options.expectedRPID,
     },
   });
 };
