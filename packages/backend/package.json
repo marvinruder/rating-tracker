@@ -75,7 +75,7 @@
     "@hono/zod-openapi": "0.16.4",
     "@prisma/client": "5.20.0",
     "@rating-tracker/commons": "workspace:*",
-    "@simplewebauthn/server": "10.0.1",
+    "@simplewebauthn/server": "11.0.0",
     "@vitest/coverage-v8": "2.1.2",
     "@xmldom/xmldom": "0.9.3",
     "@yarnpkg/pnpify": "4.1.2",

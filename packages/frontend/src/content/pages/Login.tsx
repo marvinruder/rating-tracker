@@ -60,7 +60,7 @@ export const LoginPage = (): JSX.Element => {
               .$get({ query: { email: email.trim(), name: name.trim() } })
               .then(handleResponse);
             // Ask the browser to perform the WebAuthn registration and store a corresponding credential
-            const authRes = await SimpleWebAuthnBrowser.startRegistration(res.data);
+            const authRes = await SimpleWebAuthnBrowser.startRegistration({ optionsJSON: res.data });
             try {
               // Send the registration challenge response to the server
               await authClient.register
@@ -88,7 +88,7 @@ export const LoginPage = (): JSX.Element => {
             // Request authentication challenge
             const res = await authClient.signIn.$get().then(handleResponse);
             // Ask the browser to perform the WebAuthn authentication
-            const authRes = await SimpleWebAuthnBrowser.startAuthentication(res.data);
+            const authRes = await SimpleWebAuthnBrowser.startAuthentication({ optionsJSON: res.data });
             try {
               // Send the authentication challenge response to the server
               await authClient.signIn.$post({ json: authRes }).then(handleResponse);
