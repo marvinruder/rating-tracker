@@ -1469,7 +1469,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:8.8.1"
     "@vitest/coverage-v8": "npm:2.1.2"
     "@vitest/ui": "npm:2.1.2"
-    "@xmldom/xmldom": "npm:0.9.3"
+    "@xmldom/xmldom": "npm:0.9.4"
     "@yarnpkg/pnpify": "npm:4.1.2"
     chalk: "npm:5.3.0"
     esbuild: "npm:0.24.0"
@@ -2391,10 +2391,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@xmldom/xmldom@npm:0.9.3":
-  version: 0.9.3
-  resolution: "@xmldom/xmldom@npm:0.9.3"
-  checksum: 10c0/542bd992839751d6a0ee3f4b944b94ece387288eceebb85258d8ad5206b610c30939a7ce3c58dd9ddef04e23065462571f256f54c4259a702b91e56262ce6048
+"@xmldom/xmldom@npm:0.9.4":
+  version: 0.9.4
+  resolution: "@xmldom/xmldom@npm:0.9.4"
+  checksum: 10c0/cd598525854f679e4e8b6716709e3e61cb3ba52e12e03383010780c002c7ba38b98baf682a628ff74e6470bc205da7879d8742c70f001310ed697c0a2c2517b1
   languageName: node
   linkType: hard
 
