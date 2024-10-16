@@ -1540,7 +1540,7 @@ __metadata:
     hono: "npm:4.6.5"
     http2-proxy: "npm:5.0.53"
     ml-fcnnls: "npm:3.0.0"
-    ml-matrix: "npm:6.11.1"
+    ml-matrix: "npm:6.12.0"
     prettier: "npm:3.3.3"
     prop-types: "npm:15.8.1"
     react: "npm:18.3.1"
@@ -5794,13 +5794,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ml-matrix@npm:6.11.1, ml-matrix@npm:^6.10.5":
-  version: 6.11.1
-  resolution: "ml-matrix@npm:6.11.1"
+"ml-matrix@npm:6.12.0, ml-matrix@npm:^6.10.5":
+  version: 6.12.0
+  resolution: "ml-matrix@npm:6.12.0"
   dependencies:
     is-any-array: "npm:^2.0.1"
     ml-array-rescale: "npm:^1.3.7"
-  checksum: 10c0/5c2d60f7b162a2b74f7973ce64603081f05ad6169884925eccb14badef0ebb49582e5cbdc85c05d81ddf89f8cddc3eaf67efaed6f3929ff4911ae2e905d1a325
+  checksum: 10c0/7927c3ab18856fcdef75bd8bebf88c13c7291ef1a3b78b0e8c827abbaead4a489c634bc888ae05e4df962141448f758b6fb9dcaf876ff42b7fd35a018dacb8c8
   languageName: node
   linkType: hard
 
