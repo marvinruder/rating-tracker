@@ -84,7 +84,7 @@
     "hono": "4.6.5",
     "hono-rate-limiter": "0.4.0",
     "node-cron": "3.0.3",
-    "pino": "9.4.0",
+    "pino": "9.5.0",
     "pino-pretty": "11.2.2",
     "prisma": "5.20.0",
     "prisma-json-types-generator": "3.1.1",
