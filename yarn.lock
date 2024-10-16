@@ -1464,7 +1464,7 @@ __metadata:
     hono-rate-limiter: "npm:0.4.0"
     node-cron: "npm:3.0.3"
     pino: "npm:9.5.0"
-    pino-pretty: "npm:11.2.2"
+    pino-pretty: "npm:11.3.0"
     prettier: "npm:3.3.3"
     prisma: "npm:5.20.0"
     prisma-json-types-generator: "npm:3.1.1"
@@ -6243,16 +6243,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-abstract-transport@npm:^1.0.0":
-  version: 1.2.0
-  resolution: "pino-abstract-transport@npm:1.2.0"
-  dependencies:
-    readable-stream: "npm:^4.0.0"
-    split2: "npm:^4.0.0"
-  checksum: 10c0/b4ab59529b7a91f488440147fc58ee0827a6c1c5ca3627292339354b1381072c1a6bfa9b46d03ad27872589e8477ecf74da12cf286e1e6b665ac64a3b806bf07
-  languageName: node
-  linkType: hard
-
 "pino-abstract-transport@npm:^2.0.0":
   version: 2.0.0
   resolution: "pino-abstract-transport@npm:2.0.0"
@@ -6262,9 +6252,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-pretty@npm:11.2.2":
-  version: 11.2.2
-  resolution: "pino-pretty@npm:11.2.2"
+"pino-pretty@npm:11.3.0":
+  version: 11.3.0
+  resolution: "pino-pretty@npm:11.3.0"
   dependencies:
     colorette: "npm:^2.0.7"
     dateformat: "npm:^4.6.3"
@@ -6274,7 +6264,7 @@ __metadata:
     joycon: "npm:^3.1.1"
     minimist: "npm:^1.2.6"
     on-exit-leak-free: "npm:^2.1.0"
-    pino-abstract-transport: "npm:^1.0.0"
+    pino-abstract-transport: "npm:^2.0.0"
     pump: "npm:^3.0.0"
     readable-stream: "npm:^4.0.0"
     secure-json-parse: "npm:^2.4.0"
@@ -6282,7 +6272,7 @@ __metadata:
     strip-json-comments: "npm:^3.1.1"
   bin:
     pino-pretty: bin.js
-  checksum: 10c0/3ce1769907886a5584f6c8123d9bc987712ad10a375797733a0fe95a238df587dac8e2b709bab291c4e30d41b0cf65808c708c96f8eb98b2778b6df60afa7e66
+  checksum: 10c0/8e4d842bfce5fa3fc69d3a6adb1bca873051e000f0fb4879ae1cc5d1410387b2464a7208f6ecc70ec49bb149a9617ec233cb3ec7a5f017ec141cb482d79917c2
   languageName: node
   linkType: hard
 
