@@ -141,21 +141,21 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
 
     const worker = new ConvertAvatarWorker();
     worker.postMessage(file);
-    worker.onmessage = async (message: MessageEvent<{ result: Uint8Array } | { isError: true }>) => {
-      if (!("result" in message.data)) {
-        setNotification({
-          severity: "error",
-          title: "Error while processing image",
-          message: "Refer to the error console for detailed information.",
-        });
-        setProcessingAvatar(false);
-      } else {
+    worker.onmessage = async (message: MessageEvent<{ result: Uint8Array } | { error: Error }>) => {
+      if ("result" in message.data) {
         accountClient.avatar
           .$put({ header: { "content-type": "image/avif" } }, { init: { body: message.data.result } })
           .then(handleResponse)
           .then(() => refetchUser(Date.now()))
           .catch((e) => setErrorNotificationOrClearSession(e, "uploading account avatar"))
           .finally(() => setProcessingAvatar(false));
+      } else {
+        setNotification({
+          severity: "error",
+          title: "Error while processing image",
+          message: message.data.error.message,
+        });
+        setProcessingAvatar(false);
       }
       // Clear the file input to allow the same file to be uploaded again.
       e.target.value = "";
