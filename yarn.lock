@@ -1104,16 +1104,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.20.0":
-  version: 7.20.0
-  resolution: "@mui/x-charts@npm:7.20.0"
+"@mui/x-charts@npm:7.21.0":
+  version: 7.21.0
+  resolution: "@mui/x-charts@npm:7.21.0"
   dependencies:
     "@babel/runtime": "npm:^7.25.7"
     "@mui/utils": "npm:^5.16.6 || ^6.0.0"
     "@mui/x-charts-vendor": "npm:7.20.0"
-    "@mui/x-internals": "npm:7.20.0"
-    "@react-spring/rafz": "npm:^9.7.4"
-    "@react-spring/web": "npm:^9.7.4"
+    "@mui/x-internals": "npm:7.21.0"
+    "@react-spring/rafz": "npm:^9.7.5"
+    "@react-spring/web": "npm:^9.7.5"
     clsx: "npm:^2.1.1"
     prop-types: "npm:^15.8.1"
   peerDependencies:
@@ -1128,19 +1128,19 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/46b5fa4a7e14adcbdb1d99bfc18e63e919b21893946c0c4c35fadeb552609c7379f70b61107d5d03a379ce74b226eb9331d5184c635ccf433f9c9d1185c061c6
+  checksum: 10c0/e62603752da561ac71e3de531f1caf6e321d2bea98db29a58bbd8bb6d3b04eec414257b750542fc52ee77240680fa6978ab030511b09688f143a2ecedf39fcb0
   languageName: node
   linkType: hard
 
-"@mui/x-internals@npm:7.20.0":
-  version: 7.20.0
-  resolution: "@mui/x-internals@npm:7.20.0"
+"@mui/x-internals@npm:7.21.0":
+  version: 7.21.0
+  resolution: "@mui/x-internals@npm:7.21.0"
   dependencies:
     "@babel/runtime": "npm:^7.25.7"
     "@mui/utils": "npm:^5.16.6 || ^6.0.0"
   peerDependencies:
     react: ^17.0.0 || ^18.0.0
-  checksum: 10c0/0d20b76871ecacb8a1cc55ae865df296ff64cd79d79e0e249a295fc83864eae11509eab1b49200c267ef97b7155ae5c3e0578de5781731feff6532b13dec5f6b
+  checksum: 10c0/46d105cee6cc9e53ce8fdf6149bf0758271b546ad3319b3b8fa48f1e93b574c9255218e43dffbd90214e922933291cb1d8aab54be475bcc8303fa8452078d3cb
   languageName: node
   linkType: hard
 
@@ -1519,7 +1519,7 @@ __metadata:
     "@mui/lab": "npm:6.0.0-beta.12"
     "@mui/material": "npm:6.1.4"
     "@mui/system": "npm:6.1.4"
-    "@mui/x-charts": "npm:7.20.0"
+    "@mui/x-charts": "npm:7.21.0"
     "@nivo/core": "npm:0.87.0"
     "@nivo/sunburst": "npm:0.87.0"
     "@rating-tracker/backend": "workspace:*"
@@ -1615,7 +1615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/rafz@npm:^9.7.4, @react-spring/rafz@npm:~9.7.5":
+"@react-spring/rafz@npm:^9.7.5, @react-spring/rafz@npm:~9.7.5":
   version: 9.7.5
   resolution: "@react-spring/rafz@npm:9.7.5"
   checksum: 10c0/8bdad180feaa9a0e870a513043a5e98a4e9b7292a9f887575b7e6fadab2677825bc894b7ff16c38511b35bfe6cc1072df5851c5fee64448d67551559578ca759
@@ -1641,7 +1641,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/web@npm:9.4.5 || ^9.7.2, @react-spring/web@npm:9.7.5, @react-spring/web@npm:^9.7.4":
+"@react-spring/web@npm:9.4.5 || ^9.7.2, @react-spring/web@npm:9.7.5, @react-spring/web@npm:^9.7.5":
   version: 9.7.5
   resolution: "@react-spring/web@npm:9.7.5"
   dependencies:
