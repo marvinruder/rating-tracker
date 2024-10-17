@@ -2,7 +2,7 @@
   "packageManager": "yarn@4.5.0",
   "dependencies": {
     "pino-pretty": "11.3.0",
-    "prisma": "5.21.0"
+    "prisma": "5.21.1"
   },
   "dependenciesMeta": {
     "@prisma/engines": {
