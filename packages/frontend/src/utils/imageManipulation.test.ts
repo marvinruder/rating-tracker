@@ -20,22 +20,36 @@ describe("Avatar Conversion", async () => {
     let workerHasSentResult = false;
     const worker = new ConvertAvatarWorker();
     worker.postMessage(favicon192);
-    worker.onmessage = (message: MessageEvent<{ result: Uint8Array } | { isError: true }>) => {
+    worker.onmessage = (message: MessageEvent<{ result: Uint8Array } | { error: Error }>) => {
       assert("result" in message.data);
+      assert(!("error" in message.data));
       expect(Buffer.from(message.data.result).toString("base64")).toMatchSnapshot();
       workerHasSentResult = true;
     };
     await vi.waitUntil(() => workerHasSentResult, 16000);
   }, 16000);
 
-  it("handles errors correctly", async () => {
+  it("handles error correctly – no file", async () => {
     let workerHasSentResult = false;
     const worker = new ConvertAvatarWorker();
     worker.postMessage("no file here");
-    worker.onmessage = (message: MessageEvent<{ result: Uint8Array } | { isError: true }>) => {
-      assert("isError" in message.data);
+    worker.onmessage = (message: MessageEvent<{ result: Uint8Array } | { error: Error }>) => {
       assert(!("result" in message.data));
-      expect(message.data.isError).toBeTruthy();
+      assert("error" in message.data);
+      expect(message.data.error).toBeInstanceOf(Error);
+      workerHasSentResult = true;
+    };
+    await vi.waitUntil(() => workerHasSentResult, 8000);
+  }, 8000);
+
+  it("handles error correctly – empty file", async () => {
+    let workerHasSentResult = false;
+    const worker = new ConvertAvatarWorker();
+    worker.postMessage(new File([], "empty file"));
+    worker.onmessage = (message: MessageEvent<{ result: Uint8Array } | { error: Error }>) => {
+      assert(!("result" in message.data));
+      assert("error" in message.data);
+      expect(message.data.error).toBeInstanceOf(Error);
       workerHasSentResult = true;
     };
     await vi.waitUntil(() => workerHasSentResult, 8000);

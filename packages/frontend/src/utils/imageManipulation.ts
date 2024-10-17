@@ -4,10 +4,10 @@
  * @returns The image.
  */
 const convertAvatar = async (file: File): Promise<Uint8Array> =>
-  import("@rating-tracker/wasm").then(async (wasm) => wasm.convert_avatar(new Uint8Array(await file.arrayBuffer())));
+  import("@rating-tracker/wasm").then(async (wasm) => wasm.convertAvatar(new Uint8Array(await file.arrayBuffer())));
 
 self.onmessage = async (message: { data: File }) => {
   await convertAvatar(message.data)
     .then((result) => self.postMessage({ result }))
-    .catch(() => self.postMessage({ isError: true }));
+    .catch((error) => self.postMessage({ error }));
 };
