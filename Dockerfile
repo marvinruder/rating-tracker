@@ -1,16 +1,15 @@
 # syntax=docker/dockerfile:1-labs
 
-FROM --platform=$BUILDPLATFORM rust:1.81.0-alpine AS wasm
+FROM --platform=$BUILDPLATFORM alpine:3.20.3 AS wasm
 
 WORKDIR /workdir
 
 # Install required tools and libraries
 RUN \
   --mount=type=cache,target=/usr/local/cargo/registry \
-  apk add --no-cache binaryen pkgconfig musl-dev openssl-dev && \
+  apk add --no-cache rust wasm-pack binaryen pkgconfig musl-dev openssl-dev && \
   RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
-  rustup target add wasm32-unknown-unknown && \
-  wget -O - https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
+  rustup target add wasm32-unknown-unknown
 
 # Get and build dependencies based on dummy `lib.rs`
 RUN \
@@ -246,7 +245,7 @@ ARG TARGETARCH
 RUN \
   --mount=type=bind,from=node,source=/usr/local/bin/node,target=/mnt/usr/local/bin/node \
   --mount=type=bind,from=node,source=/etc,target=/mnt/etc \
-  apk add --no-cache libgcc libstdc++ && \
+  apk add --no-cache libstdc++ && \
   cp -a /mnt/etc/group /etc/group && \
   cp -a /mnt/etc/passwd /etc/passwd && \
   cp -a /mnt/usr/local/bin/node /usr/local/bin/node
