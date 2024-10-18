@@ -246,7 +246,7 @@ ARG TARGETARCH
 RUN \
   --mount=type=bind,from=node,source=/usr/local/bin/node,target=/mnt/usr/local/bin/node \
   --mount=type=bind,from=node,source=/etc,target=/mnt/etc \
-  apk add --no-cache libgcc libstdc++ && \
+  apk add --no-cache libstdc++ && \
   cp -a /mnt/etc/group /etc/group && \
   cp -a /mnt/etc/passwd /etc/passwd && \
   cp -a /mnt/usr/local/bin/node /usr/local/bin/node

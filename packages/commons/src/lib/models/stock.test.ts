@@ -25,7 +25,6 @@ describe.concurrent("Stock mapper", () => {
     const stockFromJSON = JSON.parse(JSON.stringify(stock));
     expect(typeof stockFromJSON.yahooLastFetch).toBe("string");
     const parsedStock = parseStock(stockFromJSON);
-    console.log(parsedStock.yahooLastFetch instanceof Date);
     expect(parsedStock.yahooLastFetch instanceof Date).toBeTruthy();
   });
 
