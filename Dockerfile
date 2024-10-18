@@ -7,7 +7,7 @@ WORKDIR /workdir
 # Install required tools and libraries
 RUN \
   --mount=type=cache,target=/usr/local/cargo/registry \
-  apk add --no-cache rust wasm-pack binaryen pkgconfig musl-dev openssl-dev && \
+  apk add --no-cache rust rustup wasm-pack binaryen pkgconfig musl-dev openssl-dev && \
   RUSTFLAGS="-Ctarget-feature=-crt-static" cargo install wasm-bindgen-cli && \
   rustup target add wasm32-unknown-unknown
 
