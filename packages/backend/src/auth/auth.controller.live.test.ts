@@ -266,6 +266,95 @@ tests.push({
 });
 
 tests.push({
+  testName: "[unsafe] registers and authenticates the first user",
+  testFunction: async () => {
+    // Delete all existing users
+    await Promise.all([
+      app.request(`${baseURL}${accountAPIPath}`, {
+        method: "DELETE",
+        headers: { Cookie: "id=exampleSessionID" },
+      }),
+      app.request(`${baseURL}${accountAPIPath}`, {
+        method: "DELETE",
+        headers: { Cookie: "id=anotherExampleSessionID" },
+      }),
+    ]);
+
+    // Get Registration Challenge
+    let res = await app.request(
+      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+        `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
+    );
+    let body = await res.json();
+
+    // Post Registration Response
+    await app.request(
+      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+        `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          id: BASE_64_ID,
+          rawId: BASE_64_ID,
+          response: {
+            clientDataJSON: Buffer.from(
+              JSON.stringify({
+                type: "webauthn.create",
+                challenge: body.challenge,
+                origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+              }),
+            ).toString("base64url"),
+            attestationObject: Buffer.from("Attestation Object").toString("base64url"),
+          },
+          clientExtensionResults: {},
+          type: "public-key",
+        }),
+      },
+    );
+
+    // Get Authentication Challenge
+    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`);
+    body = await res.json();
+
+    // Post Authentication Response
+    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        id: BASE_64_ID,
+        rawId: BASE_64_ID,
+        response: {
+          clientDataJSON: Buffer.from(
+            JSON.stringify({
+              type: "webauthn.get",
+              challenge: body.challenge,
+              origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+            }),
+          ).toString("base64url"),
+          authenticatorData: Buffer.from("Authenticator Data").toString("base64url"),
+          signature: Buffer.from("Signature").toString("base64url"),
+          userHandle: "jim.doe@example.com",
+        },
+        clientExtensionResults: {},
+        type: "public-key",
+        challenge: body.challenge,
+      }),
+    });
+    const idCookieHeader = res.headers.get("set-cookie")!.split(";")[0];
+
+    // Since we are the only user existing in the database, we should be logged in immediately and have ultimate
+    // access rights.
+    res = await app.request(`${baseURL}${accountAPIPath}`, { headers: { Cookie: idCookieHeader } });
+    body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.email).toBe("jim.doe@example.com");
+    expect(body.name).toBe("Jim Doe");
+    expect(body.accessRights).toBe(255);
+  },
+});
+
+tests.push({
   testName: "refuses to provide a registration challenge request from an existing user",
   testFunction: async () => {
     const res = await app.request(

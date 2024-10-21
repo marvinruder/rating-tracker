@@ -61,9 +61,11 @@ class UserService {
       );
       return false;
     } catch {
+      const isFirstUser = (await this.db.user.count()) === 0;
       await this.db.user.create({
         data: {
           ...user,
+          accessRights: isFirstUser ? 255 : user.accessRights,
           webAuthnCredentials: {
             create: {
               id: Buffer.from(credential.id),
