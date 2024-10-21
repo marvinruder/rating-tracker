@@ -71,6 +71,12 @@ export const envSchema = z
     MAX_FETCH_CONCURRENCY: z.coerce.number().int().min(1).max(availableParallelism()).optional().default(1),
     SIGNAL_URL: z.string().url().optional(),
     SIGNAL_SENDER: z.string().regex(new RegExp(REGEX_PHONE_NUMBER)).optional(),
+    SMTP_HOST: z.string().optional(),
+    SMTP_PORT: z.coerce.number().int().min(1).max(65535).optional(),
+    SMTP_SECURITY: z.enum(["none", "tls", "ssl"]).optional(),
+    SMTP_USER: z.string().optional(),
+    SMTP_PASSWORD: z.string().optional(),
+    SMTP_FROM: z.string().email().optional(),
     EXIT_AFTER_READY: z.coerce.boolean().optional(),
   })
   .passthrough();

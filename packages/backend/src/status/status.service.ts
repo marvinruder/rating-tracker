@@ -2,6 +2,7 @@ import type { Service } from "@rating-tracker/commons";
 import { serviceArray } from "@rating-tracker/commons";
 
 import type DBService from "../db/db.service";
+import type EmailService from "../email/email.service";
 import type SignalService from "../signal/signal.service";
 
 /**
@@ -10,6 +11,7 @@ import type SignalService from "../signal/signal.service";
 class StatusService {
   constructor(
     private dbService: DBService,
+    private emailService: EmailService,
     private signalService: SignalService,
   ) {}
 
@@ -24,6 +26,7 @@ class StatusService {
       await Promise.allSettled([
         // The order is important here and must match the order in `serviceArray`.
         this.dbService.isReady(),
+        this.emailService.isReadyOrUnused(),
         this.signalService.isReadyOrUnused(),
       ])
     ).forEach((result, index) => {
