@@ -270,16 +270,15 @@ location / {
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
     set $target_host rating-tracker; # use 127.0.0.1 here if nginx runs outside of Docker Compose setup
     proxy_pass http://$target_host:21076;
 }
 ```
 </details>
 
-#### Initial admin registration and activation
+#### Initial admin registration
 
-After setting up your Rating Tracker instance, navigate to its URL and register, creating WebAuthn credentials. Then manually connect to the database and set the new user’s `accessRights` value to `255`, granting ultimate access. After that, you can log in using your credentials. This is a one-time setup step, all other users can be granted access via the User Management web interface.
+After setting up your Rating Tracker instance, navigate to its URL and register, creating WebAuthn credentials. The first user registered will be granted ultimate access rights automatically. After registering, you can log in using your credentials.
 
 ### Supported environment variables
 
