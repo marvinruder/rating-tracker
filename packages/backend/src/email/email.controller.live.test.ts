@@ -113,22 +113,22 @@ tests.push({
 tests.push({
   testName: "[unsafe] returns correct errors when SMTP is misconfigured",
   testFunction: async () => {
-    process.env.SMTP_HOST = undefined;
+    process.env.SMTP_PASSWORD = "beepboop";
     let res = await app.request(`${basePath}${emailAPIPath}/${encodeURIComponent("jane.doe@example.com")}/Test`, {
       method: "POST",
       headers: { Cookie: "id=exampleSessionID" },
     });
     let body = await res.json();
-    expect(res.status).toBe(501);
-    expect(body.message).toMatch("No SMTP server is configured");
+    expect(res.status).toBe(502);
+    expect(body.message).toMatch("An error occurred while sending the email");
 
-    process.env.SMTP_HOST = "unresolvable";
+    process.env.SMTP_HOST = undefined;
     res = await app.request(`${basePath}${emailAPIPath}/${encodeURIComponent("jane.doe@example.com")}/Test`, {
       method: "POST",
       headers: { Cookie: "id=exampleSessionID" },
     });
     body = await res.json();
-    expect(res.status).toBe(502);
-    expect(body.message).toMatch("An error occurred while sending the email");
+    expect(res.status).toBe(501);
+    expect(body.message).toMatch("No SMTP server is configured");
   },
 });

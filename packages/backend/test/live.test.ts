@@ -24,7 +24,7 @@ import applyPostgresSeeds from "./seeds/postgres";
 export const emailMessages: { session: SMTPServerSession; data: string }[] = [];
 new SMTPServer({
   onAuth(auth, _, callback) {
-    if (auth.username !== process.env.SMTP_USER || auth.password !== process.env.SMTP_PASSWORD)
+    if (auth.username !== "ratingtracker" || auth.password !== "ratingtracker")
       return callback(new Error("Invalid username or password"));
     callback(null, { user: process.env.SMTP_USER });
   },
