@@ -101,7 +101,6 @@ tests.push({
     expect(message.session.user).toBe(process.env.SMTP_USER);
     expect((message.session.envelope.mailFrom as SMTPServerAddress).address).toBe("ratingtracker@example.com");
     expect(message.session.envelope.rcptTo[0].address).toBe("jane.doe@example.com");
-    console.debug(message.data);
     expect(message.data).toContain("From: =?UTF-8?Q?Rating_Tracker?= <ratingtracker@example.com>");
     expect(message.data).toContain("To: =?UTF-8?Q?Jane_Doe?= <jane.doe@example.com>");
     expect(message.data).toContain("Subject: =?UTF-8?Q?Rating_Tracker_Test_email?=");
