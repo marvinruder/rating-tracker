@@ -62,6 +62,7 @@ export const envSchema = z
     PORT: z.coerce.number().int().min(1).max(65535),
     DOMAIN: z.string(),
     SUBDOMAIN: z.string().optional(),
+    FQDN: z.string(),
     TRUSTWORTHY_PROXY_COUNT: z.coerce.number().int().min(0).optional().default(0),
     DATABASE_URL: z.string().url(),
     LOG_FILE: z.string().optional().default("/tmp/rating-tracker-log-(DATE).log"),
@@ -91,7 +92,10 @@ export const startup = () => {
 
   try {
     // Check whether all mandatory environment variables are set
-    process.env = envSchema.parse(process.env) as typeof process.env;
+    process.env = envSchema.parse({
+      ...process.env,
+      FQDN: `${process.env.SUBDOMAIN ? `${process.env.SUBDOMAIN}.` : ""}${process.env.DOMAIN}`,
+    }) as typeof process.env;
   } catch (e) {
     if (e instanceof Error) {
       // Print error message and exit

@@ -1,5 +1,5 @@
 import type { User } from "@rating-tracker/commons";
-import { accountAPIPath, baseURL, usersAPIPath, usersAvatarEndpointSuffix } from "@rating-tracker/commons";
+import { accountAPIPath, basePath, usersAPIPath, usersAvatarEndpointSuffix } from "@rating-tracker/commons";
 
 import type UserService from "../user/user.service";
 
@@ -15,8 +15,8 @@ class AccountService {
    * @returns The user with the avatar URL replaced.
    */
   #replaceAvatarURL(user: User): User {
-    if (user.avatar === `${baseURL}${usersAPIPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`)
-      user.avatar = `${baseURL}${accountAPIPath}${usersAvatarEndpointSuffix}`;
+    if (user.avatar === `${basePath}${usersAPIPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`)
+      user.avatar = `${basePath}${accountAPIPath}${usersAvatarEndpointSuffix}`;
     return user;
   }
 

@@ -60,7 +60,7 @@ const WatchlistSummaryModule = (): JSX.Element => {
             [...Array(3)].map(
               // Render skeleton cards
               (_, key) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4, xl: 3 }} key={key}>
+                <Grid size={{ xs: 12, sm: 6, md: 4, xl: 3 }} key={`_${key}`}>
                   <WatchlistCard />
                 </Grid>
               ),

@@ -46,35 +46,35 @@ class SignalService extends Singleton {
   }
 
   /**
-   * Checks if the Signal Client instance is reachable.
-   * @returns A {@link Promise} that resolves when the Signal Client instance is reachable, or rejects with an error if
-   *                            it is not.
+   * Checks if the Signal Client instance is configured and reachable.
+   * @returns A {@link Promise} that resolves when the Signal Client instance is reachable or not configured, or rejects
+   *          with an error if it is not.
    */
-  isReadyOrUnused = (): Promise<string | void> =>
+  getStatus = (): Promise<string> =>
     process.env.SIGNAL_URL && process.env.SIGNAL_SENDER
       ? Promise.race([
           // Request all registered accounts from the Signal Client instance
           performFetchRequest(`${process.env.SIGNAL_URL}/v1/accounts`),
           // We accept a larger timeout here because the Signal Client JVM might be slow to start
-          new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Signal is not reachable")), 5000)),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Not reachable")), 5000)),
         ])
           .then(
             (res: FetchResponse<string[]>) =>
               /* c8 ignore start */ // We do not receive a 2XX answer during tests
               // Check if our configured Signal sender is registered
               res.ok && res.data.includes(process.env.SIGNAL_SENDER!)
-                ? Promise.resolve()
-                : Promise.reject(new Error("Signal is not ready")),
+                ? Promise.resolve("Connected")
+                : Promise.reject(new Error("Not ready")),
             /* c8 ignore stop */
           )
           .catch((e) => {
             if (e instanceof TypeError && e.message.match("fetch failed"))
-              return Promise.reject(new Error("Signal is not reachable"));
-            if (e instanceof FetchError) return Promise.reject(new Error("Signal is not ready", e));
+              return Promise.reject(new Error("Not reachable"));
+            if (e instanceof FetchError) return Promise.reject(new Error("Not ready", e));
             /* c8 ignore next */
             return Promise.reject(e);
           })
-      : /* c8 ignore next */ Promise.resolve("Signal is not configured on this instance.");
+      : /* c8 ignore next */ Promise.resolve("Not configured");
 }
 
 export default SignalService;

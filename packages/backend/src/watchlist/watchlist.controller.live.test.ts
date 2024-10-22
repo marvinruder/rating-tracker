@@ -1,5 +1,5 @@
 import type { WatchlistSummary } from "@rating-tracker/commons";
-import { baseURL, stocksAPIPath, watchlistsAPIPath } from "@rating-tracker/commons";
+import { basePath, stocksAPIPath, watchlistsAPIPath } from "@rating-tracker/commons";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import { expectRouteToBePrivate } from "../../test/liveTestHelpers";
@@ -11,7 +11,7 @@ export const tests: LiveTestSuite = [];
 
 const getWatchlistID = async (name: string): Promise<number> => {
   // Get the ID of the watchlist from the summary
-  const res = await app.request(`${baseURL}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+  const res = await app.request(`${basePath}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
   const body = await res.json();
   expect(res.status).toBe(200);
   const { id } = body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === name);
@@ -21,8 +21,8 @@ const getWatchlistID = async (name: string): Promise<number> => {
 tests.push({
   testName: "reads a summary of all watchlists",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${watchlistsAPIPath}`);
-    const res = await app.request(`${baseURL}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    await expectRouteToBePrivate(`${basePath}${watchlistsAPIPath}`);
+    const res = await app.request(`${basePath}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.length).toBe(2);
@@ -43,8 +43,10 @@ tests.push({
     // Get the ID of the watchlist from the summary
     const id = await getWatchlistID("Fævørites");
 
-    await expectRouteToBePrivate(`${baseURL}${watchlistsAPIPath}/${id}`);
-    let res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
+    await expectRouteToBePrivate(`${basePath}${watchlistsAPIPath}/${id}`);
+    let res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
+      headers: { Cookie: "id=exampleSessionID" },
+    });
     let body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toBe("Fævørites");
@@ -53,7 +55,7 @@ tests.push({
     expect(body.stocks[1].name).toBe("Ørsted A/S");
 
     // Attempting to read a watchlist of a different user returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
       headers: { Cookie: "id=anotherExampleSessionID" },
     });
     body = await res.json();
@@ -65,10 +67,10 @@ tests.push({
 tests.push({
   testName: "[unsafe] creates a watchlist",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${watchlistsAPIPath}`, "PUT");
+    await expectRouteToBePrivate(`${basePath}${watchlistsAPIPath}`, "PUT");
 
     // Attempting to create another Favorites watchlist returns an error
-    let res = await app.request(`${baseURL}${watchlistsAPIPath}`, {
+    let res = await app.request(`${basePath}${watchlistsAPIPath}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ name: "Favorites" }),
@@ -77,7 +79,7 @@ tests.push({
     expect(res.status).toBe(400);
     expect(body.message).toMatch("The name “Favorites” is reserved.");
 
-    res = await app.request(`${baseURL}${watchlistsAPIPath}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}`, {
       method: "PUT",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ name: "Favȏrïtès" }),
@@ -86,7 +88,7 @@ tests.push({
     expect(res.status).toBe(201);
     const { id } = body;
 
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
     body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toBe("Favȏrïtès");
@@ -99,16 +101,16 @@ tests.push({
   testName: "[unsafe] updates a watchlist",
   testFunction: async () => {
     // Get the ID of the watchlist from the summary
-    let res = await app.request(`${baseURL}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    let res = await app.request(`${basePath}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
     let body = await res.json();
     expect(res.status).toBe(200);
     const { id, subscribed } = body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites");
     const favoritesID = body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Favorites").id;
     expect(subscribed).toBeFalsy();
 
-    await expectRouteToBePrivate(`${baseURL}${watchlistsAPIPath}/${id}`, "PATCH");
+    await expectRouteToBePrivate(`${basePath}${watchlistsAPIPath}/${id}`, "PATCH");
     // Update the watchlist
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ name: "Favoriten", subscribed: true }),
@@ -116,7 +118,7 @@ tests.push({
     expect(res.status).toBe(204);
 
     // Updating the watchlist again does not return an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ name: "Favoriten", subscribed: true }),
@@ -124,7 +126,7 @@ tests.push({
     expect(res.status).toBe(204);
 
     // Not sending any update information is meaningless but valid
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({}),
@@ -132,14 +134,14 @@ tests.push({
     expect(res.status).toBe(204);
 
     // Check that the watchlist has been updated
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
     body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toBe("Favoriten");
     expect(body.subscribed).toBeTruthy();
 
     // Attempting to update a watchlist of a different user returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=anotherExampleSessionID" },
       body: JSON.stringify({ name: "This should not work" }),
@@ -149,7 +151,7 @@ tests.push({
     expect(body.message).toMatch("does not belong to user with email address john.doe");
 
     // Attempting to update a non-existent watchlist returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/999`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/999`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ name: "This should not work" }),
@@ -159,7 +161,7 @@ tests.push({
     expect(body.message).toMatch("Watchlist 999 not found.");
 
     // Attempting to use the reserved name “Favorites” returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ name: "Favorites" }),
@@ -169,7 +171,7 @@ tests.push({
     expect(body.message).toMatch("The name “Favorites” is reserved.");
 
     // Attempting to rename the “Favorites” watchlist returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${favoritesID}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${favoritesID}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ name: "This should not work" }),
@@ -186,23 +188,23 @@ tests.push({
     // Get the ID of the watchlist from the summary
     const id = await getWatchlistID("Fævørites");
 
-    await expectRouteToBePrivate(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/ALV.DE`, "PUT");
+    await expectRouteToBePrivate(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/ALV.DE`, "PUT");
     // Add a stock to the watchlist
-    let res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/ALV.DE`, {
+    let res = await app.request(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/ALV.DE`, {
       method: "PUT",
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(204);
 
     // Adding the same stock again does not return an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/ALV.DE`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/ALV.DE`, {
       method: "PUT",
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(204);
 
     // Check that the stock has been added
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
     let body = await res.json();
     expect(res.status).toBe(200);
     expect(body.stocks.length).toBe(3);
@@ -211,7 +213,7 @@ tests.push({
     expect(body.stocks[2].name).toBe("Ørsted A/S");
 
     // Attempting to update a watchlist of a different user returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/ALV.DE`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/ALV.DE`, {
       method: "PUT",
       headers: { Cookie: "id=anotherExampleSessionID" },
     });
@@ -220,7 +222,7 @@ tests.push({
     expect(body.message).toMatch("does not belong to user with email address john.doe");
 
     // Attempting to add a stock to a non-existent watchlist returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/999${stocksAPIPath}/ALV.DE`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/999${stocksAPIPath}/ALV.DE`, {
       method: "PUT",
       headers: { Cookie: "id=exampleSessionID" },
     });
@@ -229,7 +231,7 @@ tests.push({
     expect(body.message).toMatch("Watchlist 999 not found.");
 
     // Attempting to add a non-existent stock returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/DOESNOTEXIST`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/DOESNOTEXIST`, {
       method: "PUT",
       headers: { Cookie: "id=exampleSessionID" },
     });
@@ -245,30 +247,30 @@ tests.push({
     // Get the ID of the watchlist from the summary
     const id = await getWatchlistID("Fævørites");
 
-    await expectRouteToBePrivate(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/NOVO-B.CO`, "DELETE");
+    await expectRouteToBePrivate(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/NOVO-B.CO`, "DELETE");
     // Remove a stock from the watchlist
-    let res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/NOVO-B.CO`, {
+    let res = await app.request(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/NOVO-B.CO`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(204);
 
     // Removing the same stock again does not return an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/NOVO-B.CO`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/NOVO-B.CO`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(204);
 
     // Check that the stock has been removed
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
     let body = await res.json();
     expect(res.status).toBe(200);
     expect(body.stocks.length).toBe(1);
     expect(body.stocks[0].name).toBe("Ørsted A/S");
 
     // Attempting to update a watchlist of a different user returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/NOVO-B.CO`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/NOVO-B.CO`, {
       method: "DELETE",
       headers: { Cookie: "id=anotherExampleSessionID" },
     });
@@ -277,7 +279,7 @@ tests.push({
     expect(body.message).toMatch("does not belong to user with email address john.doe");
 
     // Attempting to remove a stock from a non-existent watchlist returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/999${stocksAPIPath}/NOVO-B.CO`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/999${stocksAPIPath}/NOVO-B.CO`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
@@ -286,7 +288,7 @@ tests.push({
     expect(body.message).toMatch("Watchlist 999 not found.");
 
     // Attempting to remove a non-existent stock returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}${stocksAPIPath}/DOESNOTEXIST`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}${stocksAPIPath}/DOESNOTEXIST`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
@@ -302,34 +304,34 @@ tests.push({
     // Get the ID of the watchlist from the summary
     const id = await getWatchlistID("Fævørites");
 
-    await expectRouteToBePrivate(`${baseURL}${watchlistsAPIPath}/${id}`, "DELETE");
+    await expectRouteToBePrivate(`${basePath}${watchlistsAPIPath}/${id}`, "DELETE");
     // Attempting to delete a watchlist of a different user returns an error
-    let res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, {
+    let res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
       method: "DELETE",
       headers: { Cookie: "id=anotherExampleSessionID" },
     });
     expect(res.status).toBe(403);
 
     // Delete the watchlist
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(204);
 
     // Deleting the same watchlist again does not return an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, {
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(204);
 
     // Attempting to read the deleted watchlist returns an error
-    res = await app.request(`${baseURL}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${watchlistsAPIPath}/${id}`, { headers: { Cookie: "id=exampleSessionID" } });
     expect(res.status).toBe(404);
 
     // A watchlist with that name is no longer in the summary
-    res = await app.request(`${baseURL}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites")).toBeUndefined();

@@ -2,7 +2,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import type { ListItemProps } from "@mui/material";
 import { IconButton, ListItem, ListItemAvatar, Avatar, Box, Typography, useTheme, ListItemText } from "@mui/material";
 import type { Stock, YahooStockStub } from "@rating-tracker/commons";
-import { baseURL, emojiFlag, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
+import { basePath, emojiFlag, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
 import { NavLink } from "react-router-dom";
 
 import { SectorIcon } from "../properties/SectorIcon";
@@ -52,7 +52,7 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
               ? stock.logoUrl === null
                 ? undefined
                 : stock.logoUrl
-              : `${baseURL}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}${stockLogoEndpointSuffix}` +
+              : `${basePath}${stocksAPIPath}/${encodeURIComponent(stock.ticker)}${stockLogoEndpointSuffix}` +
                 `?variant=${theme.palette.mode}`
           }
           alt={`Logo of “${stock.name}”`}

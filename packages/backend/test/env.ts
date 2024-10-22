@@ -10,4 +10,10 @@ process.env = {
   LOG_FILE: "/dev/null",
   SIGNAL_URL: "http://signal",
   SIGNAL_SENDER: "+493012345678",
+  SMTP_HOST: "localhost",
+  SMTP_PORT: 587,
+  SMTP_SECURITY: "tls",
+  SMTP_USER: "ratingtracker",
+  SMTP_PASSWORD: "ratingtracker",
+  SMTP_FROM: "ratingtracker@example.com",
 };

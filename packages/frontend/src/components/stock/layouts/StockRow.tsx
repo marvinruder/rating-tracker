@@ -46,7 +46,7 @@ import type {
   WeightedStock,
 } from "@rating-tracker/commons";
 import {
-  baseURL,
+  basePath,
   countryNameWithFlag,
   currencyMinorUnits,
   currencyName,
@@ -472,7 +472,7 @@ export const StockRow = (props: StockRowProps): JSX.Element => {
             <Avatar
               sx={{ width: 56, height: 56, m: "-8px", background: "none" }}
               src={
-                `${baseURL}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}${stockLogoEndpointSuffix}` +
+                `${basePath}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}${stockLogoEndpointSuffix}` +
                 `?variant=${theme.palette.mode}`
               }
               alt={`Logo of “${props.stock.name}”`}

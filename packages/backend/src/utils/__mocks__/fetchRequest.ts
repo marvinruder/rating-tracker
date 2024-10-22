@@ -4,7 +4,7 @@ import { FetchError, handleResponse } from "@rating-tracker/commons";
 /**
  * A mock storage of sent Signal messages.
  */
-export const sentMessages: { message: string; recipients: string[] }[] = [];
+export const signalMessages: { message: string; recipients: string[] }[] = [];
 
 /**
  * A mock of the `fetch` API wrapper. Returns predefined responses or a 501 Not Implemented error for any other request.
@@ -25,7 +25,7 @@ export const performFetchRequest = async (
       "recipients" in config?.body &&
       Array.isArray(config?.body?.recipients)
     ) {
-      sentMessages.push({ message: config.body.message, recipients: config.body.recipients });
+      signalMessages.push({ message: config.body.message, recipients: config.body.recipients });
       return handleResponse(
         new Response(JSON.stringify({ timestamp: Date.now() }), { status: 201, statusText: "Created" }),
       );

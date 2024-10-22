@@ -9,7 +9,8 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import {
   accountAPIPath,
   authAPIPath,
-  baseURL,
+  basePath,
+  emailAPIPath,
   favoritesAPIPath,
   fetchAPIPath,
   logoBackgroundAPIPath,
@@ -33,6 +34,7 @@ import AccountService from "./account/account.service";
 import AuthController from "./auth/auth.controller";
 import WebAuthnService from "./auth/webauthn.service";
 import DBService from "./db/db.service";
+import EmailController from "./email/email.controller";
 import EmailService from "./email/email.service";
 import FavoriteController from "./favorite/favorite.controller";
 import FavoriteService from "./favorite/favorite.service";
@@ -95,7 +97,7 @@ const fetchService: FetchService = new FetchService(resourceService, signalServi
 export const app = new OpenAPIHono();
 
 // Log all API requests
-app.use(`${baseURL}/*`, Logger.logRequest);
+app.use(`${basePath}/*`, Logger.logRequest);
 
 // Add ETag support. Use weak ETags because Reverse Proxys may change the ETag when compressing the response
 app.use(etag({ weak: true }));
@@ -168,15 +170,16 @@ app.doc31("/api-spec/v3.1", {
     license: { name: packageInfo.license, url: `https://opensource.org/licenses/${packageInfo.license}` },
     description: "Specification JSONs: [v3.1](/api-spec/v3.1).",
   },
-  servers: [{ url: `https://${process.env.SUBDOMAIN ? `${process.env.SUBDOMAIN}.` : ""}${process.env.DOMAIN}` }],
+  servers: [{ url: `https://${process.env.FQDN}` }],
 });
 
 // Initialize controllers and attach API routers
 app.route(
-  baseURL,
+  basePath,
   new OpenAPIHono()
     .route(accountAPIPath, new AccountController(accountService).router)
     .route(authAPIPath, new AuthController(webauthnService).router)
+    .route(emailAPIPath, new EmailController(emailService, userService).router)
     .route(favoritesAPIPath, new FavoriteController(favoriteService).router)
     .route(fetchAPIPath, new FetchController(fetchService).router)
     .route(logoBackgroundAPIPath, new LogoBackgroundController(stockService).router)

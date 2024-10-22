@@ -478,7 +478,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       : [...Array(3)].map(
                           // Render skeleton rows
                           (_, key) => (
-                            <ListItem key={key} disablePadding disableGutters>
+                            <ListItem key={`_${key}`} disablePadding disableGutters>
                               <ListItemButton>
                                 <ListItemText
                                   primary={<Skeleton width="160px" />}
@@ -544,7 +544,7 @@ const PortfolioBuilderModule = (): JSX.Element => {
                       : [...Array(3)].map(
                           // Render skeleton rows
                           (_, key) => (
-                            <ListItem key={key} disablePadding disableGutters>
+                            <ListItem key={`_${key}`} disablePadding disableGutters>
                               <ListItemButton>
                                 <ListItemText
                                   inset

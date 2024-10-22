@@ -2,7 +2,7 @@ import { z } from "@hono/zod-openapi";
 import {
   accountAPIPath,
   accountAvatarEndpointSuffix,
-  baseURL,
+  basePath,
   REGEX_PHONE_NUMBER,
   usersAPIPath,
   usersAvatarEndpointSuffix,
@@ -33,13 +33,13 @@ export const NameSchema = z
  */
 export const AvatarRefSchema = z
   .string({ description: "A reference to the avatar of a user." })
-  .startsWith(baseURL)
+  .startsWith(basePath)
   .openapi({
     examples: [
       ...userExamples.map(
-        (user) => `${baseURL}${usersAPIPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`,
+        (user) => `${basePath}${usersAPIPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`,
       ),
-      `${baseURL}${accountAPIPath}${accountAvatarEndpointSuffix}`,
+      `${basePath}${accountAPIPath}${accountAvatarEndpointSuffix}`,
     ],
   });
 

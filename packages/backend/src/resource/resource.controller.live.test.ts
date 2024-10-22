@@ -1,4 +1,4 @@
-import { baseURL, resourcesAPIPath } from "@rating-tracker/commons";
+import { basePath, resourcesAPIPath } from "@rating-tracker/commons";
 import { DOMParser, MIME_TYPE } from "@xmldom/xmldom";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
@@ -12,8 +12,8 @@ export const tests: LiveTestSuite = [];
 tests.push({
   testName: "provides a PNG resource",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${resourcesAPIPath}/image.png`);
-    const res = await app.request(`${baseURL}${resourcesAPIPath}/image.png`, {
+    await expectRouteToBePrivate(`${basePath}${resourcesAPIPath}/image.png`);
+    const res = await app.request(`${basePath}${resourcesAPIPath}/image.png`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(200);
@@ -25,8 +25,8 @@ tests.push({
 tests.push({
   testName: "provides an HTML resource",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${resourcesAPIPath}/page.html`);
-    const res = await app.request(`${baseURL}${resourcesAPIPath}/page.html`, {
+    await expectRouteToBePrivate(`${basePath}${resourcesAPIPath}/page.html`);
+    const res = await app.request(`${basePath}${resourcesAPIPath}/page.html`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(200);
@@ -42,8 +42,8 @@ tests.push({
 tests.push({
   testName: "provides a JSON resource",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${resourcesAPIPath}/data.json`);
-    const res = await app.request(`${baseURL}${resourcesAPIPath}/data.json`, {
+    await expectRouteToBePrivate(`${basePath}${resourcesAPIPath}/data.json`);
+    const res = await app.request(`${basePath}${resourcesAPIPath}/data.json`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(200);
@@ -55,8 +55,8 @@ tests.push({
 tests.push({
   testName: "does not provide an expired resource",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${resourcesAPIPath}/expired.json`);
-    const res = await app.request(`${baseURL}${resourcesAPIPath}/expired.json`, {
+    await expectRouteToBePrivate(`${basePath}${resourcesAPIPath}/expired.json`);
+    const res = await app.request(`${basePath}${resourcesAPIPath}/expired.json`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(404);
@@ -67,8 +67,8 @@ tests.push({
 tests.push({
   testName: "fails to provide not-existent resource",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${resourcesAPIPath}/doesNotExist`);
-    const res = await app.request(`${baseURL}${resourcesAPIPath}/doesNotExist`, {
+    await expectRouteToBePrivate(`${basePath}${resourcesAPIPath}/doesNotExist`);
+    const res = await app.request(`${basePath}${resourcesAPIPath}/doesNotExist`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     const body = await res.json();

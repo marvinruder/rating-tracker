@@ -18,7 +18,7 @@ export const verifyRegistrationResponse = (
         options.expectedChallenge &&
         JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).origin ===
           options.expectedOrigin &&
-        options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
+        options.expectedOrigin.includes(`${process.env.FQDN}`) &&
         options.expectedRPID !== undefined &&
         options.expectedRPID.includes(process.env.DOMAIN) &&
         options.requireUserVerification) ??
@@ -56,7 +56,7 @@ export const verifyAuthenticationResponse = (
         JSON.parse(Buffer.from(options.response.response.clientDataJSON, "base64url").toString("ascii")).origin ===
           options.expectedOrigin &&
         // options.response.challenge === options.expectedChallenge &&
-        options.expectedOrigin.includes(`${process.env.SUBDOMAIN}.${process.env.DOMAIN}`) &&
+        options.expectedOrigin.includes(`${process.env.FQDN}`) &&
         options.expectedRPID.includes(process.env.DOMAIN) &&
         options.requireUserVerification &&
         options.credential.id === options.response.id &&

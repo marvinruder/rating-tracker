@@ -301,6 +301,12 @@ Variable | Example Value | Explanation
 `MAX_FETCH_CONCURRENCY` | `4` | The number of fetcher instances used concurrently when fetching information for multiple stocks. If unset, no concurrent fetches will be performed.
 `SIGNAL_URL` | `http://127.0.0.1:8080` | The URL of the Signal REST API. Can also use the Signal REST API service name (e.g. `signal` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file. If unset, no Signal notification messages will be sent.
 `SIGNAL_SENDER` | `+12345678900` | The phone number of the Signal account registered with the Signal CLI service, which will be used to send notification messages. Read more [here](#create-signal-account) on how to register a Signal account. If unset, no Signal notification messages will be sent.
+`SMTP_HOST` | `smtp.example.com` | The hostname of the SMTP server to use for sending emails. If unset, no emails will be sent.
+`SMTP_PORT` | `587` | The port of the SMTP server to use for sending emails. If unset, the default port will be used based on the security settings.
+`SMTP_SECURITY` | `tls` | The security method to use for the SMTP connection. Can be one of `none`, `tls`, `ssl`. If unset, `none` will be used.
+`SMTP_USER` | `ratingtracker` | The username to use for the SMTP connection. If unset, no authentication will be used.
+`SMTP_PASS` | `********` | The password to use for the SMTP connection. If unset, no authentication will be used.
+`SMTP_FROM` | `ratingtracker@example.com` | The email address to use as the sender of emails. If unset, no emails will be sent.
 
 </details>
 

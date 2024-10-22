@@ -25,9 +25,9 @@ class StatusService {
     (
       await Promise.allSettled([
         // The order is important here and must match the order in `serviceArray`.
-        this.dbService.isReady(),
-        this.emailService.isReadyOrUnused(),
-        this.signalService.isReadyOrUnused(),
+        this.dbService.getStatus(),
+        this.emailService.getStatus(),
+        this.signalService.getStatus(),
       ])
     ).forEach((result, index) => {
       if (result.status === "rejected") {

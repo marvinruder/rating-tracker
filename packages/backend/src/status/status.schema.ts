@@ -17,15 +17,21 @@ export const StatusSchema = z
             (object, key, index) => ({
               ...object,
               [key]: z
-                .string({ description: `The ${key} service status, present only when ${key} is unhealthy.` })
-                .openapi({ examples: [["Database is not reachable", "Signal is not ready"][index]] }),
+                .string({
+                  description:
+                    `The ${key} service status. ` +
+                    "Can be “Operational” or “Configured” when the service is considered healthy, " +
+                    "“Not configured” when no configuration for the service exists, " +
+                    "or an error message when the service is considered unhealthy.",
+                })
+                .openapi({ examples: [["Operational", "Configured", "Not configured"][index]] }),
             }),
             {},
           ) as Record<Service, z.ZodString>,
-          { description: "The status of the unhealthy services Rating Tracker depends on." },
+          { description: "The status of the services Rating Tracker depends on." },
         )
         .partial()
-        .openapi({ description: "The status of the unhealthy services Rating Tracker depends on." }),
+        .openapi({ description: "The status of the services Rating Tracker depends on." }),
     },
     { description: "A status report of the backend API and the services it depends on." },
   )

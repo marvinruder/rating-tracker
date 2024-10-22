@@ -7,7 +7,7 @@ import PortfolioService from "../portfolio/portfolio.service";
 import ResourceService from "../resource/resource.service";
 import SignalService from "../signal/signal.service";
 import UserService from "../user/user.service";
-import { sentMessages } from "../utils/__mocks__/fetchRequest";
+import { signalMessages } from "../utils/__mocks__/fetchRequest";
 import WatchlistService from "../watchlist/watchlist.service";
 
 import StockService from "./stock.service";
@@ -120,16 +120,16 @@ tests.push({
 
     await stockService.update("NEWSTOCK", newValues);
 
-    expect(sentMessages[0].message).toMatch("🟢");
-    expect(sentMessages[1].message).toMatch("🔴");
-    expect(sentMessages[2].message).toMatch("🟢");
-    expect(sentMessages[0].message).not.toMatch("🔴");
-    expect(sentMessages[1].message).not.toMatch("🟢");
-    expect(sentMessages[2].message).not.toMatch("🔴");
+    expect(signalMessages[0].message).toMatch("🟢");
+    expect(signalMessages[1].message).toMatch("🔴");
+    expect(signalMessages[2].message).toMatch("🟢");
+    expect(signalMessages[0].message).not.toMatch("🔴");
+    expect(signalMessages[1].message).not.toMatch("🟢");
+    expect(signalMessages[2].message).not.toMatch("🔴");
 
-    for (const sentMessage of sentMessages) {
-      expect(sentMessage.recipients).toHaveLength(1);
-      expect(sentMessage.recipients[0]).toMatch("+234567890");
+    for (const signalMessage of signalMessages) {
+      expect(signalMessage.recipients).toHaveLength(1);
+      expect(signalMessage.recipients[0]).toMatch("+234567890");
     }
 
     expect(updatedStock.ticker).toMatch("NEWSTOCK");
@@ -144,9 +144,9 @@ tests.push({
       starRating: 4,
     });
 
-    for (const sentMessage of sentMessages) {
-      expect(sentMessage.recipients).toHaveLength(2);
-      expect(sentMessage.recipients).toContain("+123456789");
+    for (const signalMessage of signalMessages) {
+      expect(signalMessage.recipients).toHaveLength(2);
+      expect(signalMessage.recipients).toContain("+123456789");
     }
   },
 });

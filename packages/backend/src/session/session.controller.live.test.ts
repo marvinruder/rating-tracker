@@ -1,4 +1,4 @@
-import { baseURL, sessionAPIPath, accountAPIPath } from "@rating-tracker/commons";
+import { basePath, sessionAPIPath, accountAPIPath } from "@rating-tracker/commons";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import { expectRouteToBePrivate } from "../../test/liveTestHelpers";
@@ -11,8 +11,8 @@ export const tests: LiveTestSuite = [];
 tests.push({
   testName: "renews cookie when token is valid",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${sessionAPIPath}`);
-    const res = await app.request(`${baseURL}${sessionAPIPath}`, {
+    await expectRouteToBePrivate(`${basePath}${sessionAPIPath}`);
+    const res = await app.request(`${basePath}${sessionAPIPath}`, {
       method: "HEAD",
       headers: { Cookie: "id=exampleSessionID" },
     });
@@ -25,7 +25,7 @@ tests.push({
 tests.push({
   testName: "does not renew cookie when token is about to expire",
   testFunction: async () => {
-    const res = await app.request(`${baseURL}${sessionAPIPath}`, {
+    const res = await app.request(`${basePath}${sessionAPIPath}`, {
       method: "HEAD",
       headers: { Cookie: "id=eolSessionID" },
     });
@@ -37,7 +37,7 @@ tests.push({
 tests.push({
   testName: "clears cookie when token is expired",
   testFunction: async () => {
-    const res = await app.request(`${baseURL}${sessionAPIPath}`, {
+    const res = await app.request(`${basePath}${sessionAPIPath}`, {
       method: "HEAD",
       headers: { Cookie: "id=expiredSessionID" },
     });
@@ -49,7 +49,7 @@ tests.push({
 tests.push({
   testName: "clears cookie when token is invalid",
   testFunction: async () => {
-    const res = await app.request(`${baseURL}${sessionAPIPath}`, {
+    const res = await app.request(`${basePath}${sessionAPIPath}`, {
       method: "HEAD",
       headers: { Cookie: "id=invalidSessionID" },
     });
@@ -61,8 +61,8 @@ tests.push({
 tests.push({
   testName: "[unsafe] deletes session when signing out",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${sessionAPIPath}`, "DELETE");
-    let res = await app.request(`${baseURL}${sessionAPIPath}`, {
+    await expectRouteToBePrivate(`${basePath}${sessionAPIPath}`, "DELETE");
+    let res = await app.request(`${basePath}${sessionAPIPath}`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
@@ -70,7 +70,7 @@ tests.push({
     expect(res.headers.get("set-cookie")).toMatch("id=;");
 
     // Check whether we can still access the current user
-    res = await app.request(`${baseURL}${accountAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
     expect(res.status).toBe(200);
     expect(Object.keys(await res.json())).toHaveLength(0);
   },

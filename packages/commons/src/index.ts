@@ -17,8 +17,9 @@ export * from "./lib/models/stock";
 export * from "./lib/models/user";
 export * from "./lib/models/watchlist";
 
+export * from "./lib/paths";
 export * from "./lib/paths/auth";
-export * from "./lib/paths/base";
+export * from "./lib/paths/email";
 export * from "./lib/paths/favorites";
 export * from "./lib/paths/fetch";
 export * from "./lib/paths/logobackground";
@@ -45,6 +46,8 @@ export * from "./lib/Currency";
 export * from "./lib/DataProvider";
 
 export * from "./lib/dummySVG";
+
+export * from "./lib/EmailTemplate";
 
 export * from "./lib/ErrorMessages";
 
