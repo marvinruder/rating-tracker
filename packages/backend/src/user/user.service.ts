@@ -114,7 +114,9 @@ class UserService {
    * @returns A list of all users.
    */
   async readAll(): Promise<User[]> {
-    return (await this.db.user.findMany()).map((user) => this.#replaceAvatarDataURL(new User(user)));
+    return (await this.db.user.findMany({ orderBy: [{ accessRights: "desc" }, { name: "asc" }] })).map((user) =>
+      this.#replaceAvatarDataURL(new User(user)),
+    );
   }
 
   /**
