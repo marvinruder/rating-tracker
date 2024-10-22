@@ -193,10 +193,10 @@ class FetchService {
       ? `For additional information, see ${resourceIDs
           .map(
             (resourceID) =>
-              `https://${process.env.SUBDOMAIN ? `${process.env.SUBDOMAIN}.` : ""}${
-                process.env.DOMAIN
-                // Ensure the user is logged in before accessing the resource API endpoint.
-              }/login?redirect=${encodeURIComponent(`/api${resourcesAPIPath}/${encodeURIComponent(resourceID)}`)}`,
+              // Ensure the user is logged in before accessing the resource API endpoint.
+              `https://${process.env.FQDN}/login?redirect=${encodeURIComponent(
+                `/api${resourcesAPIPath}/${encodeURIComponent(resourceID)}`,
+              )}`,
           )
           .join(", ")}.`
       : "No additional information available.";

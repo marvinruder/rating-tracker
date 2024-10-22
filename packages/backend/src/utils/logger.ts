@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import { baseURL, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
+import { basePath, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
 import type { MiddlewareHandler } from "hono";
 import { getCookie } from "hono/cookie";
 import pino from "pino";
@@ -133,7 +133,7 @@ class Logger {
     const ip = c.get("ip");
     const user = c.get("user");
     Logger[
-      (c.req.path.startsWith(baseURL + stocksAPIPath) && c.req.path.endsWith(stockLogoEndpointSuffix)) ||
+      (c.req.path.startsWith(basePath + stocksAPIPath) && c.req.path.endsWith(stockLogoEndpointSuffix)) ||
       ["127.0.0.1", "::1"].includes(ip)
         ? "trace"
         : "info"

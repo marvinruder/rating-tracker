@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow, TableContainer } from "@mui/material";
-import { handleResponse, User } from "@rating-tracker/commons";
+import { handleResponse, pluralize, User } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 
@@ -69,7 +69,7 @@ const UserTable: FC = (): JSX.Element => {
           <TableFooter>
             <TableRow>
               <TableCell sx={{ border: 0 }}>
-                {count} user{count != 1 && "s"}
+                {count} user{pluralize(count)}
               </TableCell>
               <TableCell sx={{ border: 0 }} />
               <TableCell sx={{ border: 0 }} />

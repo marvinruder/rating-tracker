@@ -1,6 +1,6 @@
 import { Card, Container, useTheme } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
-import { baseURL, handleResponse, parseStock, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
+import { basePath, handleResponse, parseStock, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -48,7 +48,7 @@ const StockModule = (): JSX.Element => {
   const stockLogo = new Image();
   if (ticker)
     stockLogo.src =
-      `${baseURL}${stocksAPIPath}/${encodeURIComponent(ticker)}${stockLogoEndpointSuffix}` +
+      `${basePath}${stocksAPIPath}/${encodeURIComponent(ticker)}${stockLogoEndpointSuffix}` +
       `?variant=${theme.palette.mode}`;
 
   return (

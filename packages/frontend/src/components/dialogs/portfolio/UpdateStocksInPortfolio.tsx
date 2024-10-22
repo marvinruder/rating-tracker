@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import type { PortfolioSummary, PortfolioRawData, WeightedStock } from "@rating-tracker/commons";
 import { handleResponse, pluralize } from "@rating-tracker/commons";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import portfolioClient from "../../../api/portfolio";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -152,39 +152,31 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JS
         >
           {portfolioSummariesFinal
             ? portfolioSummaries.map((portfolioSummary) => (
-                <Fragment key={portfolioSummary.id}>
-                  <ListItem disablePadding disableGutters>
-                    <ListItemButton
-                      onClick={() => setSelectedPortfolio(portfolioSummary)}
-                      disabled={requestsInProgress}
-                      selected={selectedPortfolio?.id === portfolioSummary.id}
-                    >
-                      <ListItemText
-                        inset
-                        primary={portfolioSummary.name}
-                        primaryTypographyProps={{ fontWeight: "bold" }}
-                        secondary={`${
-                          portfolioSummary.stocks.length || "No"
-                        } stock${pluralize(portfolioSummary.stocks.length)}`}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Fragment>
+                <ListItem key={portfolioSummary.id} disablePadding disableGutters>
+                  <ListItemButton
+                    onClick={() => setSelectedPortfolio(portfolioSummary)}
+                    disabled={requestsInProgress}
+                    selected={selectedPortfolio?.id === portfolioSummary.id}
+                  >
+                    <ListItemText
+                      inset
+                      primary={portfolioSummary.name}
+                      primaryTypographyProps={{ fontWeight: "bold" }}
+                      secondary={`${
+                        portfolioSummary.stocks.length || "No"
+                      } stock${pluralize(portfolioSummary.stocks.length)}`}
+                    />
+                  </ListItemButton>
+                </ListItem>
               ))
             : [...Array(3)].map(
                 // Render skeleton rows
                 (_, key) => (
-                  <Fragment key={key}>
-                    <ListItem disablePadding disableGutters>
-                      <ListItemButton>
-                        <ListItemText
-                          inset
-                          primary={<Skeleton width="160px" />}
-                          secondary={<Skeleton width="48px" />}
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  </Fragment>
+                  <ListItem key={`_${key}`} disablePadding disableGutters>
+                    <ListItemButton>
+                      <ListItemText inset primary={<Skeleton width="160px" />} secondary={<Skeleton width="48px" />} />
+                    </ListItemButton>
+                  </ListItem>
                 ),
               )}
           <ListItem disablePadding disableGutters>

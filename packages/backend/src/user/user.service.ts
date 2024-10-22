@@ -1,5 +1,5 @@
 import {
-  baseURL,
+  basePath,
   REGEX_PHONE_NUMBER,
   User,
   usersAPIPath,
@@ -40,7 +40,7 @@ class UserService {
    */
   #replaceAvatarDataURL(user: User): User {
     if (user.avatar?.startsWith("data:"))
-      user.avatar = `${baseURL}${usersAPIPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`;
+      user.avatar = `${basePath}${usersAPIPath}/${encodeURIComponent(user.email)}${usersAvatarEndpointSuffix}`;
     return user;
   }
 
@@ -114,7 +114,9 @@ class UserService {
    * @returns A list of all users.
    */
   async readAll(): Promise<User[]> {
-    return (await this.db.user.findMany()).map((user) => this.#replaceAvatarDataURL(new User(user)));
+    return (await this.db.user.findMany({ orderBy: [{ accessRights: "desc" }, { name: "asc" }] })).map((user) =>
+      this.#replaceAvatarDataURL(new User(user)),
+    );
   }
 
   /**

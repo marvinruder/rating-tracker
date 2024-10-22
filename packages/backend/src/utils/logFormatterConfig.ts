@@ -83,6 +83,7 @@ const prefixIcons: Record<string, string> = {
   postgres: "\ue76e",
   fetch: "\ufc0d",
   signal: "\uf868",
+  email: "\uf003",
   time: "\uf64f",
   socket: "\uf6ff",
   user: "\uf007",

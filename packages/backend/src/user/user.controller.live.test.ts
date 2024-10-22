@@ -1,5 +1,5 @@
 import type { User } from "@rating-tracker/commons";
-import { baseURL, usersAvatarEndpointSuffix, usersAPIPath } from "@rating-tracker/commons";
+import { basePath, usersAvatarEndpointSuffix, usersAPIPath } from "@rating-tracker/commons";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import { expectRouteToBePrivate, expectSpecialAccessRightsToBeRequired } from "../../test/liveTestHelpers";
@@ -12,9 +12,9 @@ export const tests: LiveTestSuite = [];
 tests.push({
   testName: "returns a list of users",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${usersAPIPath}`);
-    await expectSpecialAccessRightsToBeRequired(`${baseURL}${usersAPIPath}`);
-    const res = await app.request(`${baseURL}${usersAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    await expectRouteToBePrivate(`${basePath}${usersAPIPath}`);
+    await expectSpecialAccessRightsToBeRequired(`${basePath}${usersAPIPath}`);
+    const res = await app.request(`${basePath}${usersAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body).toHaveLength(2);
@@ -25,11 +25,11 @@ tests.push({
 tests.push({
   testName: "reads a user",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`);
+    await expectRouteToBePrivate(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`);
     await expectSpecialAccessRightsToBeRequired(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`,
     );
-    let res = await app.request(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
+    let res = await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     const body = await res.json();
@@ -41,7 +41,7 @@ tests.push({
     expect(body.counter).toBeUndefined();
 
     // attempting to read a non-existent user results in an error
-    res = await app.request(`${baseURL}${usersAPIPath}/does.not.exist@example.com`, {
+    res = await app.request(`${basePath}${usersAPIPath}/does.not.exist@example.com`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(404);
@@ -52,13 +52,13 @@ tests.push({
   testName: "reads a user’s avatar",
   testFunction: async () => {
     await expectRouteToBePrivate(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
     );
     await expectSpecialAccessRightsToBeRequired(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
     );
     let res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
       { headers: { Cookie: "id=exampleSessionID" } },
     );
     const body = await res.text();
@@ -68,14 +68,14 @@ tests.push({
 
     // attempting to read a non-existent user’s avatar results in an error
     res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("does.not.exist@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("does.not.exist@example.com")}${usersAvatarEndpointSuffix}`,
       { headers: { Cookie: "id=exampleSessionID" } },
     );
     expect(res.status).toBe(404);
 
     // attempting to read a user’s avatar when the user does not have one results in an error
     res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
       { headers: { Cookie: "id=exampleSessionID" } },
     );
     expect(res.status).toBe(404);
@@ -85,12 +85,12 @@ tests.push({
 tests.push({
   testName: "[unsafe] updates a user’s information",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, "PATCH");
+    await expectRouteToBePrivate(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, "PATCH");
     await expectSpecialAccessRightsToBeRequired(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`,
       "PATCH",
     );
-    let res = await app.request(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
+    let res = await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({
@@ -104,7 +104,7 @@ tests.push({
     expect(res.status).toBe(204);
 
     // Check that the changes were applied
-    res = await app.request(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe.2@example.com")}`, {
+    res = await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe.2@example.com")}`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     const body = await res.json();
@@ -114,7 +114,7 @@ tests.push({
     expect(body.phone).toBe("+987654321");
 
     // Changing nothing is useless, but fine
-    res = await app.request(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe.2@example.com")}`, {
+    res = await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe.2@example.com")}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({}),
@@ -122,7 +122,7 @@ tests.push({
     expect(res.status).toBe(204);
 
     // Changing no one is not fine
-    res = await app.request(`${baseURL}${usersAPIPath}/${encodeURIComponent("does.not.exist@example.com")}`, {
+    res = await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("does.not.exist@example.com")}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ subscriptions: 0 }),
@@ -135,17 +135,17 @@ tests.push({
   testName: "[unsafe] updates a user’s avatar",
   testFunction: async () => {
     await expectRouteToBePrivate(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
       "PUT",
     );
     await expectSpecialAccessRightsToBeRequired(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
       "PUT",
     );
 
     // Only certain media types are allowed
     let res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
       {
         method: "PUT",
         headers: { "content-type": "image/jpeg", Cookie: "id=exampleSessionID" },
@@ -156,14 +156,14 @@ tests.push({
 
     // No media type is also not allowed
     res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
       { method: "PUT", headers: { Cookie: "id=exampleSessionID" }, body: "Another fancy avatar image" },
     );
     expect(res.status).toBe(415);
 
     // Very large avatars are also not allowed
     res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
       {
         method: "PUT",
         headers: { "content-type": "image/avif", Cookie: "id=exampleSessionID" },
@@ -173,7 +173,7 @@ tests.push({
     expect(res.status).toBe(413);
 
     res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
       {
         method: "PUT",
         headers: { "content-type": "image/avif", Cookie: "id=exampleSessionID" },
@@ -184,7 +184,7 @@ tests.push({
 
     // Check that the changes were applied
     res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}${usersAvatarEndpointSuffix}`,
       { headers: { Cookie: "id=exampleSessionID" } },
     );
     expect(res.status).toBe(200);
@@ -196,28 +196,28 @@ tests.push({
 tests.push({
   testName: "[unsafe] deletes a user",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, "DELETE");
+    await expectRouteToBePrivate(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, "DELETE");
     await expectSpecialAccessRightsToBeRequired(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`,
       "DELETE",
     );
 
     // Delete the user
-    let res = await app.request(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
+    let res = await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(204);
 
     // Deleting the same user again does not return an error
-    res = await app.request(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
+    res = await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(204);
 
     // Check that the user was deleted
-    res = await app.request(`${baseURL}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
+    res = await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("john.doe@example.com")}`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(404);
@@ -228,38 +228,38 @@ tests.push({
   testName: "[unsafe] deletes a user’s avatar",
   testFunction: async () => {
     await expectRouteToBePrivate(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
       "DELETE",
     );
     await expectSpecialAccessRightsToBeRequired(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
       "DELETE",
     );
 
     // Delete the user’s avatar
     let res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
       { method: "DELETE", headers: { Cookie: "id=exampleSessionID" } },
     );
     expect(res.status).toBe(204);
 
     // Deleting the same user’s avatar again does not return an error
     res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
       { method: "DELETE", headers: { Cookie: "id=exampleSessionID" } },
     );
     expect(res.status).toBe(204);
 
     // Check that the avatar was deleted
     res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersAvatarEndpointSuffix}`,
       { headers: { Cookie: "id=exampleSessionID" } },
     );
     expect(res.status).toBe(404);
 
     // attempting to delete a non-existent user’s avatar returns an error
     res = await app.request(
-      `${baseURL}${usersAPIPath}/${encodeURIComponent("does.not.exist@example.com")}${usersAvatarEndpointSuffix}`,
+      `${basePath}${usersAPIPath}/${encodeURIComponent("does.not.exist@example.com")}${usersAvatarEndpointSuffix}`,
       { method: "DELETE", headers: { Cookie: "id=exampleSessionID" } },
     );
     expect(res.status).toBe(404);

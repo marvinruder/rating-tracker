@@ -16,6 +16,9 @@
     "./api/auth": {
       "types": "./src/auth/auth.controller.ts"
     },
+    "./api/email": {
+      "types": "./src/email/email.controller.ts"
+    },
     "./api/favorites": {
       "types": "./src/favorite/favorite.controller.ts"
     },
@@ -80,6 +83,7 @@
     "@xmldom/xmldom": "0.9.4",
     "@yarnpkg/pnpify": "4.1.3",
     "chalk": "5.3.0",
+    "emailjs": "4.0.3",
     "esbuild": "0.24.0",
     "hono": "4.6.6",
     "hono-rate-limiter": "0.4.0",
@@ -88,6 +92,7 @@
     "pino-pretty": "11.3.0",
     "prisma": "5.21.1",
     "prisma-json-types-generator": "3.1.1",
+    "smtp-server": "3.13.6",
     "typescript": "5.6.3",
     "vite": "5.4.9",
     "vitest": "2.1.3",
@@ -98,6 +103,7 @@
   "devDependencies": {
     "@types/node": "22.7.8",
     "@types/node-cron": "3.0.11",
+    "@types/smtp-server": "3.5.10",
     "@typescript-eslint/eslint-plugin": "8.11.0",
     "@typescript-eslint/parser": "8.11.0",
     "@vitest/ui": "2.1.3",

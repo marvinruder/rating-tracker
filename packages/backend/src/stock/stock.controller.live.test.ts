@@ -1,6 +1,6 @@
 import type { Stock, WatchlistSummary, PortfolioSummary } from "@rating-tracker/commons";
 import {
-  baseURL,
+  basePath,
   msciESGRatingArray,
   sizeArray,
   sortableAttributeArray,
@@ -20,7 +20,7 @@ import {
 } from "../../test/liveTestHelpers";
 import DBService from "../db/db.service";
 import { app } from "../server";
-import { sentMessages } from "../utils/__mocks__/fetchRequest";
+import { signalMessages } from "../utils/__mocks__/fetchRequest";
 
 export const suiteName = "Stocks API";
 
@@ -46,8 +46,8 @@ const expectStocksToBePresent = async (res: Response, stockNames: string[]) => {
 tests.push({
   testName: "returns a list of stocks",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}`);
-    const res = await app.request(`${baseURL}${stocksAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    await expectRouteToBePrivate(`${basePath}${stocksAPIPath}`);
+    const res = await app.request(`${basePath}${stocksAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.count).toBe(11);
@@ -59,25 +59,25 @@ tests.push({
 tests.push({
   testName: "[unsafe] computes correct scores",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}`, "PATCH");
+    await expectRouteToBePrivate(`${basePath}${stocksAPIPath}`, "PATCH");
 
     // Write incorrect score directly into the database
     await dbService.stock.update({ where: { ticker: "AAPL" }, data: { totalScore: 0 } });
 
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     let body = await res.json();
     expect(res.status).toBe(200);
     expect(body.totalScore).toBe(0);
 
     // Fix the incorrect score by recomputing
-    res = await app.request(`${baseURL}${stocksAPIPath}`, {
+    res = await app.request(`${basePath}${stocksAPIPath}`, {
       headers: { Cookie: "id=exampleSessionID" },
       method: "PATCH",
     });
     expect(res.status).toBe(204);
 
     // Now the score does not hold an incorrect value
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     body = await res.json();
     expect(res.status).toBe(200);
     expect(body.totalScore).not.toBe(0);
@@ -88,7 +88,7 @@ tests.push({
   testName: "filters and sorts stock list – example 1",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?size=Large&style=Growth&sortBy=name&sortOrder=desc`, {
+      await app.request(`${basePath}${stocksAPIPath}?size=Large&style=Growth&sortBy=name&sortOrder=desc`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Ørsted A/S", "Taiwan Semiconductor Manufacturing Co Ltd", "Novo Nordisk", "MercadoLibre", "Apple"],
@@ -100,7 +100,7 @@ tests.push({
   testName: "filters and sorts stock list – example 2",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?countries=US&sortBy=size`, {
+      await app.request(`${basePath}${stocksAPIPath}?countries=US&sortBy=size`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Newmont", "Apple"],
@@ -112,7 +112,7 @@ tests.push({
   testName: "filters and sorts stock list – example 3",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?countries=US&sortBy=style&sortOrder=desc`, {
+      await app.request(`${basePath}${stocksAPIPath}?countries=US&sortBy=style&sortOrder=desc`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Apple", "Newmont"],
@@ -124,7 +124,7 @@ tests.push({
   testName: "filters and sorts stock list – example 4",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?industries=Semiconductors&q=Semiconductor`, {
+      await app.request(`${basePath}${stocksAPIPath}?industries=Semiconductors&q=Semiconductor`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Taiwan Semiconductor Manufacturing Co Ltd"],
@@ -136,7 +136,7 @@ tests.push({
   testName: "filters and sorts stock list – example 5",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?starRatingMin=3&starRatingMax=4&sortBy=name`, {
+      await app.request(`${basePath}${stocksAPIPath}?starRatingMin=3&starRatingMax=4&sortBy=name`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Allianz", "Danone", "Iberdrola", "MercadoLibre"],
@@ -149,7 +149,7 @@ tests.push({
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
-        `${baseURL}${stocksAPIPath}?dividendYieldPercentMin=1.5&dividendYieldPercentMax=5&sortBy=name`,
+        `${basePath}${stocksAPIPath}?dividendYieldPercentMin=1.5&dividendYieldPercentMax=5&sortBy=name`,
         { headers: { Cookie: "id=exampleSessionID" } },
       ),
       ["Danone", "Iberdrola", "Newmont", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
@@ -161,7 +161,7 @@ tests.push({
   testName: "filters and sorts stock list – example 7",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?priceEarningRatioMin=10&priceEarningRatioMax=20&sortBy=name`, {
+      await app.request(`${basePath}${stocksAPIPath}?priceEarningRatioMin=10&priceEarningRatioMax=20&sortBy=name`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Allianz", "Iberdrola", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
@@ -174,7 +174,7 @@ tests.push({
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
-        `${baseURL}${stocksAPIPath}?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name`,
+        `${basePath}${stocksAPIPath}?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name`,
         {
           headers: { Cookie: "id=exampleSessionID" },
         },
@@ -189,7 +189,7 @@ tests.push({
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
-        `${baseURL}${stocksAPIPath}?analystConsensusMin=Outperform&analystConsensusMax=Outperform` +
+        `${basePath}${stocksAPIPath}?analystConsensusMin=Outperform&analystConsensusMax=Outperform` +
           "&analystCountMin=25&analystCountMax=40&sortBy=name",
         { headers: { Cookie: "id=exampleSessionID" } },
       ),
@@ -202,7 +202,7 @@ tests.push({
   testName: "filters and sorts stock list – example 10",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?analystTargetDiffMin=-20&analystTargetDiffMax=10&sortBy=name`, {
+      await app.request(`${basePath}${stocksAPIPath}?analystTargetDiffMin=-20&analystTargetDiffMax=10&sortBy=name`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Allianz", "Danone", "Iberdrola", "Newmont", "Novo Nordisk"],
@@ -214,7 +214,7 @@ tests.push({
   testName: "filters and sorts stock list – example 11",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?msciESGRatingMin=AA&msciESGRatingMax=A&sortBy=name`, {
+      await app.request(`${basePath}${stocksAPIPath}?msciESGRatingMin=AA&msciESGRatingMax=A&sortBy=name`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Allianz", "MercadoLibre", "Newmont"],
@@ -227,7 +227,7 @@ tests.push({
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
-        `${baseURL}${stocksAPIPath}` +
+        `${basePath}${stocksAPIPath}` +
           "?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name",
         { headers: { Cookie: "id=exampleSessionID" } },
       ),
@@ -241,7 +241,7 @@ tests.push({
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
-        `${baseURL}${stocksAPIPath}?lsegESGScoreMin=70&lsegESGScoreMax=80&` +
+        `${basePath}${stocksAPIPath}?lsegESGScoreMin=70&lsegESGScoreMax=80&` +
           "lsegEmissionsMin=80&lsegEmissionsMax=90&sortBy=name",
         { headers: { Cookie: "id=exampleSessionID" } },
       ),
@@ -255,7 +255,7 @@ tests.push({
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
-        `${baseURL}${stocksAPIPath}?spESGScoreMin=50&spESGScoreMax=85` +
+        `${basePath}${stocksAPIPath}?spESGScoreMin=50&spESGScoreMax=85` +
           "&sustainalyticsESGRiskMin=15&sustainalyticsESGRiskMax=25&sortBy=name",
         { headers: { Cookie: "id=exampleSessionID" } },
       ),
@@ -269,7 +269,7 @@ tests.push({
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
-        `${baseURL}${stocksAPIPath}?financialScoreMin=0&financialScoreMax=0.5&esgScoreMin=0.4&esgScoreMax=0.6` +
+        `${basePath}${stocksAPIPath}?financialScoreMin=0&financialScoreMax=0.5&esgScoreMin=0.4&esgScoreMax=0.6` +
           "&sortBy=name",
         { headers: { Cookie: "id=exampleSessionID" } },
       ),
@@ -282,7 +282,7 @@ tests.push({
   testName: "filters and sorts stock list – example 16",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?totalScoreMin=0.3&totalScoreMax=0.6&sortBy=name`, {
+      await app.request(`${basePath}${stocksAPIPath}?totalScoreMin=0.3&totalScoreMax=0.6&sortBy=name`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Allianz", "Danone", "Kion", "Newmont", "Ørsted"],
@@ -294,7 +294,7 @@ tests.push({
   testName: "filters and sorts stock list – example 17",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?q=US0378331005`, { headers: { Cookie: "id=exampleSessionID" } }),
+      await app.request(`${basePath}${stocksAPIPath}?q=US0378331005`, { headers: { Cookie: "id=exampleSessionID" } }),
       ["Apple"],
     );
   },
@@ -304,20 +304,20 @@ tests.push({
   testName: "filters and sorts stock list – stocks in watchlist",
   testFunction: async () => {
     // Get the ID of the watchlist from the summary
-    let res = await app.request(`${baseURL}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    let res = await app.request(`${basePath}${watchlistsAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
     let body = await res.json();
     expect(res.status).toBe(200);
     const { id } = body.find((watchlistSummary: WatchlistSummary) => watchlistSummary.name === "Fævørites");
 
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?watchlist=${id}&sortBy=name`, {
+      await app.request(`${basePath}${stocksAPIPath}?watchlist=${id}&sortBy=name`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Novo Nordisk A/S", "Ørsted A/S"],
     );
 
     // Attempting to read a watchlist of a different user returns an error
-    res = await app.request(`${baseURL}${stocksAPIPath}?watchlist=${id}`, {
+    res = await app.request(`${basePath}${stocksAPIPath}?watchlist=${id}`, {
       headers: { Cookie: "id=anotherExampleSessionID" },
     });
     body = await res.json();
@@ -330,26 +330,28 @@ tests.push({
   testName: "filters and sorts stock list – stocks in portfolio",
   testFunction: async () => {
     // Get the ID of the portfolio from the summary
-    let res = await app.request(`${baseURL}${portfoliosAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    let res = await app.request(`${basePath}${portfoliosAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
     let body = await res.json();
     expect(res.status).toBe(200);
     const { id } = body.find((portfolioSummary: PortfolioSummary) => portfolioSummary.name === "My Portfolio");
 
     await expectStocksToBePresent(
-      await app.request(`${baseURL}${stocksAPIPath}?portfolio=${id}&sortBy=amount&sortOrder=desc`, {
+      await app.request(`${basePath}${stocksAPIPath}?portfolio=${id}&sortBy=amount&sortOrder=desc`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
       ["Apple Inc", "Taiwan Semiconductor Manufacturing Co Ltd"],
     );
 
     // Attempting to sort by amount without specifying a portfolio returns an error
-    res = await app.request(`${baseURL}${stocksAPIPath}?sortBy=amount`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}?sortBy=amount`, {
+      headers: { Cookie: "id=exampleSessionID" },
+    });
     body = await res.json();
     expect(res.status).toBe(400);
     expect(body.message).toMatch("Cannot sort by amount without specifying a portfolio");
 
     // Attempting to read a portfolio of a different user returns an error
-    res = await app.request(`${baseURL}${stocksAPIPath}?portfolio=${id}`, {
+    res = await app.request(`${basePath}${stocksAPIPath}?portfolio=${id}`, {
       headers: { Cookie: "id=anotherExampleSessionID" },
     });
     body = await res.json();
@@ -365,7 +367,7 @@ tests.push({
       tests.push({
         testName: `filters and sorts stock list by ${sortCriterion} ${sortOrder}ending`,
         testFunction: async () => {
-          const res = await app.request(`${baseURL}${stocksAPIPath}?sortBy=${sortCriterion}&sortOrder=${sortOrder}`, {
+          const res = await app.request(`${basePath}${stocksAPIPath}?sortBy=${sortCriterion}&sortOrder=${sortOrder}`, {
             headers: { Cookie: "id=exampleSessionID" },
           });
           const body = await res.json();
@@ -431,14 +433,14 @@ tests.push({
 tests.push({
   testName: "supports pagination",
   testFunction: async () => {
-    const resAllStocks = await app.request(`${baseURL}${stocksAPIPath}?sortBy=name`, {
+    const resAllStocks = await app.request(`${basePath}${stocksAPIPath}?sortBy=name`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     const bodyAllStocks = await resAllStocks.json();
     expect(resAllStocks.status).toBe(200);
     expect(bodyAllStocks.count).toBe(11);
     expect(bodyAllStocks.stocks).toHaveLength(11);
-    const resPagination = await app.request(`${baseURL}${stocksAPIPath}?sortBy=name&offset=5&count=5`, {
+    const resPagination = await app.request(`${basePath}${stocksAPIPath}?sortBy=name&offset=5&count=5`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     const bodyPagination = await resPagination.json();
@@ -451,8 +453,8 @@ tests.push({
 tests.push({
   testName: "[unsafe] provides stock logos",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}/AAPL${stockLogoEndpointSuffix}?variant=light`);
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL${stockLogoEndpointSuffix}?variant=light`, {
+    await expectRouteToBePrivate(`${basePath}${stocksAPIPath}/AAPL${stockLogoEndpointSuffix}?variant=light`);
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL${stockLogoEndpointSuffix}?variant=light`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     let body = await res.text();
@@ -468,7 +470,7 @@ tests.push({
     expect(body).toMatch("</svg>");
 
     // This stock’s logo response is mocked to not include a Cache-Control header
-    res = await app.request(`${baseURL}${stocksAPIPath}/TSM${stockLogoEndpointSuffix}?variant=light`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/TSM${stockLogoEndpointSuffix}?variant=light`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     body = await res.text();
@@ -484,7 +486,7 @@ tests.push({
     expect(body).toMatch("</svg>");
 
     // attempting to read the logo of a stock for which no logo exists returns an empty SVG file
-    res = await app.request(`${baseURL}${stocksAPIPath}/_NULL${stockLogoEndpointSuffix}?variant=dark`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/_NULL${stockLogoEndpointSuffix}?variant=dark`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     body = await res.text();
@@ -498,7 +500,7 @@ tests.push({
     );
 
     // attempting to read a non-existent stock’s logo results in an error
-    res = await app.request(`${baseURL}${stocksAPIPath}/DOESNOTEXIST${stockLogoEndpointSuffix}?variant=light`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/DOESNOTEXIST${stockLogoEndpointSuffix}?variant=light`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(404);
@@ -508,16 +510,16 @@ tests.push({
 tests.push({
   testName: "[unsafe] creates a stock",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}/NEWSTOCK`, "PUT");
-    await expectSpecialAccessRightsToBeRequired(`${baseURL}${stocksAPIPath}/NEWSTOCK`, "PUT");
-    let res = await app.request(`${baseURL}${stocksAPIPath}/NEWSTOCK`, {
+    await expectRouteToBePrivate(`${basePath}${stocksAPIPath}/NEWSTOCK`, "PUT");
+    await expectSpecialAccessRightsToBeRequired(`${basePath}${stocksAPIPath}/NEWSTOCK`, "PUT");
+    let res = await app.request(`${basePath}${stocksAPIPath}/NEWSTOCK`, {
       method: "PUT",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ name: "New Stock", country: "GB", isin: "GB0987654321" }),
     });
     expect(res.status).toBe(201);
     await expectStockListLengthToBe(12);
-    res = await app.request(`${baseURL}${stocksAPIPath}?q=${encodeURIComponent("New Stock")}`, {
+    res = await app.request(`${basePath}${stocksAPIPath}?q=${encodeURIComponent("New Stock")}`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     const body = await res.json();
@@ -527,7 +529,7 @@ tests.push({
     expect(body.stocks[0].country).toBe("GB");
 
     // attempting to create the same stock again results in an error
-    res = await app.request(`${baseURL}${stocksAPIPath}/NEWSTOCK`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/NEWSTOCK`, {
       method: "PUT",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ name: "New Stock", country: "GB", isin: "GB0987654321" }),
@@ -540,8 +542,8 @@ tests.push({
 tests.push({
   testName: "reads a stock",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}/AAPL`);
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    await expectRouteToBePrivate(`${basePath}${stocksAPIPath}/AAPL`);
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
@@ -549,13 +551,13 @@ tests.push({
     // If a previous ETag is referenced in the If-None-Match header that matches the previous response, we should
     // receive a Not Modified response indicating that the response is identical to the one cached by the client.
     const eTag = res.headers.get("etag")!;
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       headers: { Cookie: "id=exampleSessionID", "If-None-Match": eTag },
     });
     expect(res.status).toBe(304);
 
     // attempting to read a non-existent stock results in an error
-    res = await app.request(`${baseURL}${stocksAPIPath}/DOESNOTEXIST`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/DOESNOTEXIST`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(404);
@@ -565,48 +567,48 @@ tests.push({
 tests.push({
   testName: "[unsafe] updates a stock",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}/AAPL`, "PATCH");
-    await expectSpecialAccessRightsToBeRequired(`${baseURL}${stocksAPIPath}/AAPL`, "PATCH");
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    await expectRouteToBePrivate(`${basePath}${stocksAPIPath}/AAPL`, "PATCH");
+    await expectSpecialAccessRightsToBeRequired(`${basePath}${stocksAPIPath}/AAPL`, "PATCH");
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ morningstarID: "0P01234567", name: "Apple Inc" }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     let body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
     expect(body.morningstarID).toEqual("0P01234567");
 
     // sending an update with the same information results in no changes
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ morningstarID: "0P01234567" }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
     expect(body.morningstarID).toEqual("0P01234567");
 
     // sending an update without anything results in no changes
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({}),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
     expect(body.morningstarID).toEqual("0P01234567");
 
     // attempting to update a non-existent stock results in an error
-    res = await app.request(`${baseURL}${stocksAPIPath}/DOESNOTEXIST`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/DOESNOTEXIST`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ morningstarID: "0P01234567" }),
@@ -618,26 +620,26 @@ tests.push({
 tests.push({
   testName: "[unsafe] updates a stock’s ticker",
   testFunction: async () => {
-    let res = await app.request(`${baseURL}${stocksAPIPath}/ALV.DE`, {
+    let res = await app.request(`${basePath}${stocksAPIPath}/ALV.DE`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ ticker: "ALV2.DE" }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/ALV2.DE`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/ALV2.DE`, { headers: { Cookie: "id=exampleSessionID" } });
     let body = await res.json();
     expect(res.status).toBe(200);
     expect(body.ticker).toEqual("ALV2.DE");
     expect(body.name).toEqual("Allianz SE");
 
     // Now we indicate with an underscore prefix that no price information is available:
-    res = await app.request(`${baseURL}${stocksAPIPath}/ALV2.DE`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/ALV2.DE`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ ticker: "_ALV2.DE" }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/_ALV2.DE`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/_ALV2.DE`, { headers: { Cookie: "id=exampleSessionID" } });
     body = await res.json();
     expect(res.status).toBe(200);
     expect(body.ticker).toEqual("_ALV2.DE");
@@ -654,13 +656,13 @@ tests.push({
 tests.push({
   testName: "[unsafe] updates a stock’s Morningstar ID to `null`",
   testFunction: async () => {
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ morningstarID: null }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
@@ -678,21 +680,21 @@ tests.push({
     expect(body.description).toBeNull();
 
     // Losing information is always bad:
-    expect(sentMessages[0].message).toMatch("🔴");
-    expect(sentMessages[0].message).not.toMatch("🟢");
+    expect(signalMessages[0].message).toMatch("🔴");
+    expect(signalMessages[0].message).not.toMatch("🟢");
   },
 });
 
 tests.push({
   testName: "[unsafe] updates a stock’s Market Screener ID to `null`",
   testFunction: async () => {
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ marketScreenerID: null }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
@@ -704,21 +706,21 @@ tests.push({
     expect(body.analystTargetPrice).toBeNull();
 
     // Losing information is always bad:
-    expect(sentMessages[0].message).toMatch("🔴");
-    expect(sentMessages[0].message).not.toMatch("🟢");
+    expect(signalMessages[0].message).toMatch("🔴");
+    expect(signalMessages[0].message).not.toMatch("🟢");
   },
 });
 
 tests.push({
   testName: "[unsafe] updates a stock’s MSCI ID to `null`",
   testFunction: async () => {
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ msciID: null }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
@@ -728,21 +730,21 @@ tests.push({
     expect(body.msciTemperature).toBeNull();
 
     // Losing information is always bad:
-    expect(sentMessages[0].message).toMatch("🔴");
-    expect(sentMessages[0].message).not.toMatch("🟢");
+    expect(signalMessages[0].message).toMatch("🔴");
+    expect(signalMessages[0].message).not.toMatch("🟢");
   },
 });
 
 tests.push({
   testName: "[unsafe] updates a stock’s RIC to `null`",
   testFunction: async () => {
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ ric: null }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
@@ -752,21 +754,21 @@ tests.push({
     expect(body.lsegEmissions).toBeNull();
 
     // Losing information is always bad:
-    expect(sentMessages[0].message).toMatch("🔴");
-    expect(sentMessages[0].message).not.toMatch("🟢");
+    expect(signalMessages[0].message).toMatch("🔴");
+    expect(signalMessages[0].message).not.toMatch("🟢");
   },
 });
 
 tests.push({
   testName: "[unsafe] updates a stock’s S&P ID to `null`",
   testFunction: async () => {
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ spID: null }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
@@ -775,21 +777,21 @@ tests.push({
     expect(body.spESGScore).toBeNull();
 
     // Losing information is always bad:
-    expect(sentMessages[0].message).toMatch("🔴");
-    expect(sentMessages[0].message).not.toMatch("🟢");
+    expect(signalMessages[0].message).toMatch("🔴");
+    expect(signalMessages[0].message).not.toMatch("🟢");
   },
 });
 
 tests.push({
   testName: "[unsafe] updates a stock’s Sustainalytics ID to `null`",
   testFunction: async () => {
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ sustainalyticsID: null }),
     });
     expect(res.status).toBe(204);
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, { headers: { Cookie: "id=exampleSessionID" } });
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.name).toEqual("Apple Inc");
@@ -798,19 +800,19 @@ tests.push({
     expect(body.sustainalyticsESGRisk).toBeNull();
 
     // Losing information is always bad:
-    expect(sentMessages[0].message).toMatch("🔴");
-    expect(sentMessages[0].message).not.toMatch("🟢");
+    expect(signalMessages[0].message).toMatch("🔴");
+    expect(signalMessages[0].message).not.toMatch("🟢");
   },
 });
 
 tests.push({
   testName: "[unsafe] deletes a stock",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${stocksAPIPath}/AAPL`, "DELETE");
-    await expectSpecialAccessRightsToBeRequired(`${baseURL}${stocksAPIPath}/AAPL`, "DELETE");
+    await expectRouteToBePrivate(`${basePath}${stocksAPIPath}/AAPL`, "DELETE");
+    await expectSpecialAccessRightsToBeRequired(`${basePath}${stocksAPIPath}/AAPL`, "DELETE");
 
     // Delete the stock
-    let res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    let res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });
@@ -819,7 +821,7 @@ tests.push({
     expect(stocks.find((stock) => stock.ticker === "AAPL")).toBeUndefined();
 
     // Deleting the same stock again does not return an error
-    res = await app.request(`${baseURL}${stocksAPIPath}/AAPL`, {
+    res = await app.request(`${basePath}${stocksAPIPath}/AAPL`, {
       method: "DELETE",
       headers: { Cookie: "id=exampleSessionID" },
     });

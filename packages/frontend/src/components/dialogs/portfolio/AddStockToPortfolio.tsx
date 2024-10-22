@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import type { Stock, PortfolioSummary, Currency } from "@rating-tracker/commons";
 import { currencyMinorUnits, pluralize, isCurrency, handleResponse } from "@rating-tracker/commons";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import portfolioClient from "../../../api/portfolio";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
@@ -141,54 +141,46 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Elemen
         <List onMouseLeave={() => setHoverCurrency("…")} onTouchEnd={() => setHoverCurrency("…")} disablePadding>
           {portfolioSummariesFinal
             ? portfolioSummaries.map((portfolioSummary) => (
-                <Fragment key={portfolioSummary.id}>
-                  <ListItem
-                    onMouseEnter={() => setHoverCurrency(portfolioSummary.currency)}
-                    onTouchStart={() => setHoverCurrency(portfolioSummary.currency)}
-                    sx={(theme) => ({ borderTop: `1px solid ${theme.palette.divider}` })}
-                    disablePadding
-                    disableGutters
+                <ListItem
+                  key={portfolioSummary.id}
+                  onMouseEnter={() => setHoverCurrency(portfolioSummary.currency)}
+                  onTouchStart={() => setHoverCurrency(portfolioSummary.currency)}
+                  sx={(theme) => ({ borderTop: `1px solid ${theme.palette.divider}` })}
+                  disablePadding
+                  disableGutters
+                >
+                  <ListItemButton
+                    onClick={() => addStockToPortfolio(portfolioSummary.id)}
+                    disabled={portfoliosAlreadyContainingStock.includes(portfolioSummary.id) || !!amountError}
                   >
-                    <ListItemButton
-                      onClick={() => addStockToPortfolio(portfolioSummary.id)}
-                      disabled={portfoliosAlreadyContainingStock.includes(portfolioSummary.id) || !!amountError}
-                    >
-                      <ListItemText
-                        inset
-                        primary={portfolioSummary.name}
-                        primaryTypographyProps={{ fontWeight: "bold" }}
-                        secondary={
-                          portfoliosAlreadyContainingStock.includes(portfolioSummary.id)
-                            ? `This portfolio already contains “${props.stock.name}”.`
-                            : `${
-                                portfolioSummary.stocks.length || "No"
-                              } stock${pluralize(portfolioSummary.stocks.length)}`
-                        }
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Fragment>
+                    <ListItemText
+                      inset
+                      primary={portfolioSummary.name}
+                      primaryTypographyProps={{ fontWeight: "bold" }}
+                      secondary={
+                        portfoliosAlreadyContainingStock.includes(portfolioSummary.id)
+                          ? `This portfolio already contains “${props.stock.name}”.`
+                          : `${
+                              portfolioSummary.stocks.length || "No"
+                            } stock${pluralize(portfolioSummary.stocks.length)}`
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
               ))
             : [...Array(3)].map(
-                (
-                  _,
-                  key, // Render skeleton rows
-                ) => (
-                  <Fragment key={key}>
-                    <ListItem
-                      disablePadding
-                      disableGutters
-                      sx={(theme) => ({ borderTop: `1px solid ${theme.palette.divider}` })}
-                    >
-                      <ListItemButton>
-                        <ListItemText
-                          inset
-                          primary={<Skeleton width="160px" />}
-                          secondary={<Skeleton width="48px" />}
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  </Fragment>
+                // Render skeleton rows
+                (_, key) => (
+                  <ListItem
+                    key={`_${key}`}
+                    disablePadding
+                    disableGutters
+                    sx={(theme) => ({ borderTop: `1px solid ${theme.palette.divider}` })}
+                  >
+                    <ListItemButton>
+                      <ListItemText inset primary={<Skeleton width="160px" />} secondary={<Skeleton width="48px" />} />
+                    </ListItemButton>
+                  </ListItem>
                 ),
               )}
           <ListItem

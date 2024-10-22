@@ -1,7 +1,7 @@
 import type FetchController from "@rating-tracker/backend/api/fetch";
-import { fetchAPIPath, baseURL } from "@rating-tracker/commons";
+import { fetchAPIPath, basePath } from "@rating-tracker/commons";
 import { hc } from "hono/client";
 
-const fetchClient = hc<typeof FetchController.prototype.router>(`${baseURL}${fetchAPIPath}`);
+const fetchClient = hc<typeof FetchController.prototype.router>(`${basePath}${fetchAPIPath}`);
 
 export default fetchClient;

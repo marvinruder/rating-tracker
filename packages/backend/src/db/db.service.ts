@@ -131,9 +131,9 @@ class DBService extends Singleton {
    * Checks if the database is reachable.
    * @returns A {@link Promise} that resolves when the database is reachable, or rejects with an error if it is not.
    */
-  isReady(): Promise<void> {
+  getStatus(): Promise<string> {
     return DBService.#client.$executeRaw`SELECT null`
-      .then(() => Promise.resolve())
+      .then(() => Promise.resolve("Connected"))
       .catch((e) => Promise.reject(new Error(`Database is not reachable: ${e.message}`)));
   }
 }

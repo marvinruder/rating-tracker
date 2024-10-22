@@ -1,7 +1,7 @@
 import assert from "node:assert";
 
 import type { Stock } from "@rating-tracker/commons";
-import { FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE, baseURL, stocksAPIPath } from "@rating-tracker/commons";
+import { FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE, basePath, stocksAPIPath } from "@rating-tracker/commons";
 import type { TestFunction } from "vitest";
 
 import { app } from "../src/server";
@@ -12,7 +12,7 @@ import { app } from "../src/server";
  * @returns The list of stocks returned by the server.
  */
 export const expectStockListLengthToBe = async (length: number): Promise<Stock[]> => {
-  const res = await app.request(`${baseURL}${stocksAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+  const res = await app.request(`${basePath}${stocksAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
   const body = await res.json();
   expect(res.status).toBe(200);
   assert(!("message" in body));

@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { getConnInfo } from "@hono/node-server/conninfo";
 import { serveStatic } from "@hono/node-server/serve-static";
-import { baseURL, FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
+import { basePath, FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
 import type { MiddlewareHandler } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { rateLimiter } from "hono-rate-limiter";
@@ -14,7 +14,7 @@ import InternalServerError from "./error/api/InternalServerError";
 import TooManyRequestsError from "./error/api/TooManyRequestsError";
 import UnauthorizedError from "./error/api/UnauthorizedError";
 
-export const sessionCookieOptions = { path: baseURL, httpOnly: true, secure: true, sameSite: "strict" } as const;
+export const sessionCookieOptions = { path: basePath, httpOnly: true, secure: true, sameSite: "strict" } as const;
 
 /**
  * Validates that the current user has the required access rights to access the protected endpoint.

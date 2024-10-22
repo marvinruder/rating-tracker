@@ -1,4 +1,4 @@
-import { baseURL, logoBackgroundAPIPath } from "@rating-tracker/commons";
+import { basePath, logoBackgroundAPIPath } from "@rating-tracker/commons";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import { app } from "../server";
@@ -10,7 +10,7 @@ export const tests: LiveTestSuite = [];
 tests.push({
   testName: "[unsafe] provides stock logos for background",
   testFunction: async () => {
-    let res = await app.request(`${baseURL}${logoBackgroundAPIPath}?count=50&variant=light`);
+    let res = await app.request(`${basePath}${logoBackgroundAPIPath}?count=50&variant=light`);
     let body = await res.json();
     expect(res.status).toBe(200);
     // Check max-age header, should be close to 1 day
@@ -26,7 +26,7 @@ tests.push({
     });
 
     // We can request a different number of logos
-    res = await app.request(`${baseURL}${logoBackgroundAPIPath}?count=10&variant=light`);
+    res = await app.request(`${basePath}${logoBackgroundAPIPath}?count=10&variant=light`);
     body = await res.json();
     expect(res.status).toBe(200);
     // 10 logos are returned
@@ -39,7 +39,7 @@ tests.push({
     });
 
     // We cannot request a very large number of logos
-    res = await app.request(`${baseURL}${logoBackgroundAPIPath}?count=1000&variant=light`);
+    res = await app.request(`${basePath}${logoBackgroundAPIPath}?count=1000&variant=light`);
     expect(res.status).toBe(400);
   },
 });

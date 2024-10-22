@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
 import { FAVORITES_NAME, handleResponse, pluralize } from "@rating-tracker/commons";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import watchlistClient from "../../../api/watchlist";
 import { useFavoritesContextUpdater } from "../../../contexts/FavoritesContext";
@@ -92,49 +92,41 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Elemen
         >
           {watchlistSummariesFinal
             ? watchlistSummaries.map((watchlistSummary) => (
-                <Fragment key={watchlistSummary.id}>
-                  <ListItem disablePadding disableGutters>
-                    <ListItemButton
-                      onClick={() => addStockToWatchlist(watchlistSummary.id)}
-                      disabled={watchlistsAlreadyContainingStock.includes(watchlistSummary.id)}
-                    >
-                      {watchlistSummary?.name === FAVORITES_NAME && (
-                        <ListItemIcon>
-                          <Tooltip title="This is your Favorites watchlist." arrow>
-                            <StarsIcon color="warning" />
-                          </Tooltip>
-                        </ListItemIcon>
-                      )}
-                      <ListItemText
-                        inset={watchlistSummary?.name !== FAVORITES_NAME}
-                        primary={watchlistSummary.name}
-                        primaryTypographyProps={{ fontWeight: "bold" }}
-                        secondary={
-                          watchlistsAlreadyContainingStock.includes(watchlistSummary.id)
-                            ? `This watchlist already contains “${props.stock.name}”.`
-                            : `${
-                                watchlistSummary.stocks.length || "No"
-                              } stock${pluralize(watchlistSummary.stocks.length)}`
-                        }
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Fragment>
+                <ListItem key={watchlistSummary.id} disablePadding disableGutters>
+                  <ListItemButton
+                    onClick={() => addStockToWatchlist(watchlistSummary.id)}
+                    disabled={watchlistsAlreadyContainingStock.includes(watchlistSummary.id)}
+                  >
+                    {watchlistSummary?.name === FAVORITES_NAME && (
+                      <ListItemIcon>
+                        <Tooltip title="This is your Favorites watchlist." arrow>
+                          <StarsIcon color="warning" />
+                        </Tooltip>
+                      </ListItemIcon>
+                    )}
+                    <ListItemText
+                      inset={watchlistSummary?.name !== FAVORITES_NAME}
+                      primary={watchlistSummary.name}
+                      primaryTypographyProps={{ fontWeight: "bold" }}
+                      secondary={
+                        watchlistsAlreadyContainingStock.includes(watchlistSummary.id)
+                          ? `This watchlist already contains “${props.stock.name}”.`
+                          : `${
+                              watchlistSummary.stocks.length || "No"
+                            } stock${pluralize(watchlistSummary.stocks.length)}`
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
               ))
             : [...Array(3)].map(
                 // Render skeleton rows
                 (_, key) => (
-                  <Fragment key={key}>
-                    <ListItem disablePadding disableGutters>
-                      <ListItemButton>
-                        <ListItemText
-                          inset
-                          primary={<Skeleton width="160px" />}
-                          secondary={<Skeleton width="48px" />}
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  </Fragment>
+                  <ListItem key={`_${key}`} disablePadding disableGutters>
+                    <ListItemButton>
+                      <ListItemText inset primary={<Skeleton width="160px" />} secondary={<Skeleton width="48px" />} />
+                    </ListItemButton>
+                  </ListItem>
                 ),
               )}
           <ListItem disablePadding disableGutters>

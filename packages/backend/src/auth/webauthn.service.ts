@@ -57,7 +57,7 @@ class WebAuthnService {
   /**
    * The expected origin of WebAuthn-related requests.
    */
-  #origin = `https://${process.env.SUBDOMAIN ? `${process.env.SUBDOMAIN}.` : ""}${this.#rpID}`;
+  #origin = `https://${process.env.FQDN}`;
 
   /**
    * Read a WebAuthn credential, identified by its ID, and include the associated user.

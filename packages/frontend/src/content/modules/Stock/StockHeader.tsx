@@ -7,7 +7,7 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { Box, Grid2 as Grid, Typography, Dialog, IconButton, Skeleton, Avatar, useTheme, Tooltip } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
 import {
-  baseURL,
+  basePath,
   handleResponse,
   stockLogoEndpointSuffix,
   stocksAPIPath,
@@ -60,7 +60,7 @@ export const StockHeader = (props: StockHeaderProps): JSX.Element => {
               <Avatar
                 sx={{ width: 112, height: 112, m: "-16px", mr: "-8px", background: "none" }}
                 src={
-                  `${baseURL}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}${stockLogoEndpointSuffix}` +
+                  `${basePath}${stocksAPIPath}/${encodeURIComponent(props.stock.ticker)}${stockLogoEndpointSuffix}` +
                   `?variant=${theme.palette.mode}`
                 }
                 alt={`Logo of “${props.stock.name}”`}

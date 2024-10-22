@@ -1,6 +1,6 @@
 import {
   ALREADY_REGISTERED_ERROR_MESSAGE,
-  baseURL,
+  basePath,
   registerEndpointSuffix,
   signInEndpointSuffix,
   accountAPIPath,
@@ -22,7 +22,7 @@ tests.push({
   testFunction: async () => {
     // Get Registration Challenge
     let res = await app.request(
-      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
     );
     let body = await res.json();
@@ -41,18 +41,14 @@ tests.push({
     let challenge = body.challenge;
     let response = {
       clientDataJSON: Buffer.from(
-        JSON.stringify({
-          type: "webauthn.create",
-          challenge,
-          origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
-        }),
+        JSON.stringify({ type: "webauthn.create", challenge, origin: `https://${process.env.FQDN}` }),
       ).toString("base64url"),
       attestationObject: Buffer.from("Attestation Object").toString("base64url"),
     } as object;
 
     // Post Registration Response
     res = await app.request(
-      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
       {
         method: "POST",
@@ -71,7 +67,7 @@ tests.push({
     expect(body.message).toMatch("Credential ID was not base64url-encoded");
 
     res = await app.request(
-      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
       {
         method: "POST",
@@ -85,7 +81,7 @@ tests.push({
               JSON.stringify({
                 type: "webauthn.create",
                 challenge: "Wrong challenge", // Oh no!
-                origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+                origin: `https://${process.env.FQDN}`,
               }),
             ).toString("base64url"),
           },
@@ -99,7 +95,7 @@ tests.push({
     expect(body.message).toMatch("Registration failed");
 
     res = await app.request(
-      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
       {
         method: "POST",
@@ -116,7 +112,7 @@ tests.push({
     expect(res.status).toBe(201); // Successful registration
 
     res = await app.request(
-      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
       {
         method: "POST",
@@ -133,7 +129,7 @@ tests.push({
     expect(res.status).toBe(409); // Hey, we have done that already!
 
     // Get Authentication Challenge
-    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`);
+    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`);
     body = await res.json();
     expect(res.status).toBe(200);
     expect(typeof body.challenge).toBe("string");
@@ -144,11 +140,7 @@ tests.push({
     challenge = body.challenge;
     response = {
       clientDataJSON: Buffer.from(
-        JSON.stringify({
-          type: "webauthn.get",
-          challenge,
-          origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
-        }),
+        JSON.stringify({ type: "webauthn.get", challenge, origin: `https://${process.env.FQDN}` }),
       ).toString("base64url"),
       authenticatorData: Buffer.from("Authenticator Data").toString("base64url"),
       signature: Buffer.from("Signature").toString("base64url"),
@@ -156,7 +148,7 @@ tests.push({
     };
 
     // Post Authentication Response
-    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -173,7 +165,7 @@ tests.push({
     expect(body.message).toMatch("Credential ID was not base64url-encoded");
     expect(res.headers.get("set-cookie")).toBeNull(); // no session cookie yet
 
-    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -190,7 +182,7 @@ tests.push({
     expect(body.message).toMatch("User with credential ID not found");
     expect(res.headers.get("set-cookie")).toBeNull(); // no session cookie yet
 
-    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -202,7 +194,7 @@ tests.push({
             JSON.stringify({
               type: "webauthn.get",
               challenge: "Wrong challenge", // Oh no!
-              origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+              origin: `https://${process.env.FQDN}`,
             }),
           ).toString("base64url"),
         },
@@ -216,7 +208,7 @@ tests.push({
     expect(body.message).toMatch("Authentication failed");
     expect(res.headers.get("set-cookie")).toBeNull(); // no session cookie yet
 
-    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -234,13 +226,13 @@ tests.push({
     expect(res.headers.get("set-cookie")).toBeNull(); // no session cookie yet
 
     // Activate user account
-    await app.request(`${baseURL}${usersAPIPath}/${encodeURIComponent("jim.doe@example.com")}`, {
+    await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("jim.doe@example.com")}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", Cookie: "id=exampleSessionID" },
       body: JSON.stringify({ accessRights: 1 }),
     });
 
-    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -256,7 +248,7 @@ tests.push({
 
     // Check that session cookie works
     const idCookieHeader = res.headers.get("set-cookie")!.split(";")[0];
-    res = await app.request(`${baseURL}${accountAPIPath}`, { headers: { Cookie: idCookieHeader } });
+    res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: idCookieHeader } });
     body = await res.json();
     expect(res.status).toBe(200);
     expect(body.email).toBe("jim.doe@example.com");
@@ -270,11 +262,11 @@ tests.push({
   testFunction: async () => {
     // Delete all existing users
     await Promise.all([
-      app.request(`${baseURL}${accountAPIPath}`, {
+      app.request(`${basePath}${accountAPIPath}`, {
         method: "DELETE",
         headers: { Cookie: "id=exampleSessionID" },
       }),
-      app.request(`${baseURL}${accountAPIPath}`, {
+      app.request(`${basePath}${accountAPIPath}`, {
         method: "DELETE",
         headers: { Cookie: "id=anotherExampleSessionID" },
       }),
@@ -282,14 +274,14 @@ tests.push({
 
     // Get Registration Challenge
     let res = await app.request(
-      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
     );
     let body = await res.json();
 
     // Post Registration Response
     await app.request(
-      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
       {
         method: "POST",
@@ -302,7 +294,7 @@ tests.push({
               JSON.stringify({
                 type: "webauthn.create",
                 challenge: body.challenge,
-                origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+                origin: `https://${process.env.FQDN}`,
               }),
             ).toString("base64url"),
             attestationObject: Buffer.from("Attestation Object").toString("base64url"),
@@ -314,11 +306,11 @@ tests.push({
     );
 
     // Get Authentication Challenge
-    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`);
+    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`);
     body = await res.json();
 
     // Post Authentication Response
-    res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -329,7 +321,7 @@ tests.push({
             JSON.stringify({
               type: "webauthn.get",
               challenge: body.challenge,
-              origin: `https://${process.env.SUBDOMAIN}.${process.env.DOMAIN}`,
+              origin: `https://${process.env.FQDN}`,
             }),
           ).toString("base64url"),
           authenticatorData: Buffer.from("Authenticator Data").toString("base64url"),
@@ -345,7 +337,7 @@ tests.push({
 
     // Since we are the only user existing in the database, we should be logged in immediately and have ultimate
     // access rights.
-    res = await app.request(`${baseURL}${accountAPIPath}`, { headers: { Cookie: idCookieHeader } });
+    res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: idCookieHeader } });
     body = await res.json();
     expect(res.status).toBe(200);
     expect(body.email).toBe("jim.doe@example.com");
@@ -358,7 +350,7 @@ tests.push({
   testName: "refuses to provide a registration challenge request from an existing user",
   testFunction: async () => {
     const res = await app.request(
-      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("jane.doe@example.com")}&name=${encodeURIComponent("Jane Doe")}`,
     );
     const body = await res.json();
@@ -371,7 +363,7 @@ tests.push({
   testName: "refuses to provide a registration challenge request from an invalid user",
   testFunction: async () => {
     const res = await app.request(
-      `${baseURL}${authAPIPath}${registerEndpointSuffix}` +
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("notAnEmailAddress")}&name=${encodeURIComponent("John Doe")}`,
     );
     expect(res.status).toBe(400);
@@ -381,9 +373,9 @@ tests.push({
 tests.push({
   testName: "refuses to provide a registration challenge without user information",
   testFunction: async () => {
-    let res = await app.request(`${baseURL}${authAPIPath}${registerEndpointSuffix}`);
+    let res = await app.request(`${basePath}${authAPIPath}${registerEndpointSuffix}`);
     expect(res.status).toBe(400);
-    res = await app.request(`${baseURL}${authAPIPath}${registerEndpointSuffix}?email=&name=`);
+    res = await app.request(`${basePath}${authAPIPath}${registerEndpointSuffix}?email=&name=`);
     expect(res.status).toBe(400);
   },
 });
@@ -395,14 +387,14 @@ tests.push({
       // Request 60 authentication challenges from different IP addresses
       [...Array(60)].map(
         async (_, i) =>
-          await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+          await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
             headers: { "X-Forwarded-For": `10.0.${i}.2` },
           }),
       ),
     );
 
     // Since the requests were sent from different IP addresses, the rate limiter should not be active yet.
-    const res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+    const res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
       headers: { "X-Forwarded-For": "10.0.60.2" },
     });
     expect(res.status).toBe(200);
@@ -416,14 +408,14 @@ tests.push({
       // Request 60 authentication challenges from the same client manipulating the X-Forwarded-For header
       [...Array(60)].map(
         async (_, i) =>
-          await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+          await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
             headers: { "X-Forwarded-For": `10.0.${i}.2, 10.0.0.254` },
           }),
       ),
     );
 
     // Those were too many. The rate limiter should now refuse to provide more.
-    const res = await app.request(`${baseURL}${authAPIPath}${signInEndpointSuffix}`, {
+    const res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
       headers: { "X-Forwarded-For": "10.0.60.2, 10.0.0.254" },
     });
     expect(res.status).toBe(429);

@@ -1,4 +1,4 @@
-import { baseURL, proxyAPIPath, yahooFinanceEndpointSuffix } from "@rating-tracker/commons";
+import { basePath, proxyAPIPath, yahooFinanceEndpointSuffix } from "@rating-tracker/commons";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import { expectRouteToBePrivate } from "../../test/liveTestHelpers";
@@ -11,15 +11,15 @@ export const tests: LiveTestSuite = [];
 tests.push({
   testName: "provides a list of stock stubs",
   testFunction: async () => {
-    await expectRouteToBePrivate(`${baseURL}${proxyAPIPath}${yahooFinanceEndpointSuffix}?q=app`);
+    await expectRouteToBePrivate(`${basePath}${proxyAPIPath}${yahooFinanceEndpointSuffix}?q=app`);
 
     // The `q` parameter is required.
-    let res = await app.request(`${baseURL}${proxyAPIPath}${yahooFinanceEndpointSuffix}`, {
+    let res = await app.request(`${basePath}${proxyAPIPath}${yahooFinanceEndpointSuffix}`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(400);
 
-    res = await app.request(`${baseURL}${proxyAPIPath}${yahooFinanceEndpointSuffix}?q=app`, {
+    res = await app.request(`${basePath}${proxyAPIPath}${yahooFinanceEndpointSuffix}?q=app`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     let body = await res.json();
@@ -38,7 +38,7 @@ tests.push({
       industry: "SemiconductorEquipmentMaterials",
     });
 
-    res = await app.request(`${baseURL}${proxyAPIPath}${yahooFinanceEndpointSuffix}?q=aaaaaaaa`, {
+    res = await app.request(`${basePath}${proxyAPIPath}${yahooFinanceEndpointSuffix}?q=aaaaaaaa`, {
       headers: { Cookie: "id=exampleSessionID" },
     });
     body = await res.json();

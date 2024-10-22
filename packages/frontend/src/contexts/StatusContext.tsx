@@ -70,18 +70,16 @@ export const StatusProvider = (props: React.PropsWithChildren): JSX.Element => {
         ...object,
         [key]: {
           status:
-            "services" in data && data.services !== undefined
-              ? data.services[key] === undefined
+            "services" in data && data.services !== undefined && data.services[key] !== undefined
+              ? ["Connected", "Configured"].includes(data.services[key])
                 ? "success"
-                : (data.services[key] as string).includes("not configured")
+                : "Not configured" === data.services[key]
                   ? "N/A"
                   : "error"
               : "N/A",
           details:
-            "services" in data && data.services !== undefined
-              ? data.services[key] === undefined
-                ? "Operational"
-                : data.services[key]
+            "services" in data && data.services !== undefined && data.services[key] !== undefined
+              ? data.services[key]
               : "No information available",
         },
       }),

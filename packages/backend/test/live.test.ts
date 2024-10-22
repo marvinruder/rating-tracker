@@ -1,8 +1,11 @@
 import fs from "node:fs";
 
+import type { SMTPServerSession } from "smtp-server";
+import { SMTPServer } from "smtp-server";
 import type { MockInstance } from "vitest";
 
 import DBService from "../src/db/db.service";
+import EmailService from "../src/email/email.service";
 import FavoriteService from "../src/favorite/favorite.service";
 import PortfolioService from "../src/portfolio/portfolio.service";
 import ResourceService from "../src/resource/resource.service";
@@ -11,12 +14,30 @@ import SessionService from "../src/session/session.service";
 import SignalService from "../src/signal/signal.service";
 import StockService from "../src/stock/stock.service";
 import UserService from "../src/user/user.service";
-import { sentMessages } from "../src/utils/__mocks__/fetchRequest";
+import { signalMessages } from "../src/utils/__mocks__/fetchRequest";
 import Logger from "../src/utils/logger";
 import WatchlistService from "../src/watchlist/watchlist.service";
 
 import type { LiveTestSuite } from "./liveTestHelpers";
 import applyPostgresSeeds from "./seeds/postgres";
+
+export const emailMessages: { session: SMTPServerSession; data: string }[] = [];
+new SMTPServer({
+  onAuth(auth, _, callback) {
+    if (auth.username !== "ratingtracker" || auth.password !== "ratingtracker")
+      return callback(new Error("Invalid username or password"));
+    callback(null, { user: process.env.SMTP_USER });
+  },
+  onData(stream, session, callback) {
+    const chunks: Buffer[] = [];
+    stream.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
+    stream.on("error", (err) => callback(err));
+    stream.on("end", () => {
+      emailMessages.push({ session: structuredClone(session), data: Buffer.concat(chunks).toString("utf8") });
+      callback();
+    });
+  },
+}).listen(587);
 
 vi.mock("@hono/node-server/conninfo", async () => await import("./moduleMocks/@hono/node-server/conninfo"));
 vi.mock("@simplewebauthn/server", async () => await import("./moduleMocks/@simplewebauthn/server"));
@@ -34,6 +55,7 @@ vi.spyOn(Logger, "trace").mockImplementation(() => {});
  */
 const unsafeSpies: MockInstance[] = [];
 
+unsafeSpies.push(vi.spyOn(EmailService.prototype, "sendEmail"));
 unsafeSpies.push(vi.spyOn(FavoriteService.prototype, "add"));
 unsafeSpies.push(vi.spyOn(FavoriteService.prototype, "read"));
 unsafeSpies.push(vi.spyOn(FavoriteService.prototype, "remove"));
@@ -77,8 +99,9 @@ beforeAll(async () => {
 
 afterEach(async (context) => {
   if (context.task.name.toLowerCase().includes("unsafe")) {
-    // Clears Signal message array
-    sentMessages.length = 0;
+    // Clear message arrays
+    emailMessages.length = 0;
+    signalMessages.length = 0;
     // Apply the seeds if an unsafe test modified the content
     await Promise.all([applyPostgresSeeds()]);
     // Check if a safe test has been marked as unsafe
@@ -86,9 +109,10 @@ afterEach(async (context) => {
       expect(unsafeSpies.some((spy) => spy.mock.calls.length)).toBeTruthy();
     }
   } else {
-    // If a test is not marked as unsafe, it must not use an unsafe method or send Signal messages
+    // If a test is not marked as unsafe, it must not use an unsafe method or send messages
     unsafeSpies.forEach((spy) => expect(spy).not.toHaveBeenCalled());
-    expect(sentMessages).toHaveLength(0);
+    expect(emailMessages).toHaveLength(0);
+    expect(signalMessages).toHaveLength(0);
   }
 });
 

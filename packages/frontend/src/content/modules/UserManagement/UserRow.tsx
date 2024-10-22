@@ -1,4 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
+import EmailIcon from "@mui/icons-material/Email";
 import {
   Avatar,
   Box,
@@ -30,7 +31,9 @@ import { useState } from "react";
 
 import userClient from "../../../api/user";
 import { DeleteUser } from "../../../components/dialogs/user/DeleteUser";
+import { SendEmailToUser } from "../../../components/dialogs/user/SendEmailToUser";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
+import { useStatusContextState } from "../../../contexts/StatusContext";
 
 const accessRightArray = [GENERAL_ACCESS, WRITE_STOCKS_ACCESS, ADMINISTRATIVE_ACCESS] as const;
 type AccessRight = (typeof accessRightArray)[number];
@@ -118,6 +121,10 @@ const AccessRightSelect = (props: {
 const UserRow = (props: UserRowProps): JSX.Element => {
   const theme = useTheme();
 
+  const { systemStatus } = useStatusContextState();
+  const emailConfigured = systemStatus.services["Email"].status === "success";
+
+  const [sendEmailDialogOpen, setSendEmailDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
   return props.user ? (
@@ -179,26 +186,42 @@ const UserRow = (props: UserRowProps): JSX.Element => {
         </FormControl>
       </TableCell>
       {/* Actions */}
-      {props.refetchUsers && (
-        <TableCell sx={{ whiteSpace: "nowrap" }}>
-          <Tooltip title="Delete User" arrow>
-            <Box sx={{ display: "inline-block" }}>
+      <TableCell sx={{ whiteSpace: "nowrap" }}>
+        {emailConfigured && (
+          <Tooltip title="Send email to user" arrow>
+            <Box sx={{ display: "inline-block", mr: 1 }}>
               <IconButton
-                aria-label={`Delete user “${props.user.name}”`}
-                color="error"
-                size="small"
-                onClick={() => setDeleteDialogOpen(true)}
+                aria-label={`Send email to user “${props.user.name}”`}
+                color="primary"
+                onClick={() => setSendEmailDialogOpen(true)}
               >
-                <DeleteIcon fontSize="small" />
+                <EmailIcon />
               </IconButton>
             </Box>
           </Tooltip>
-        </TableCell>
-      )}
+        )}
+        <Tooltip title="Delete User" arrow>
+          <Box sx={{ display: "inline-block" }}>
+            <IconButton
+              aria-label={`Delete user “${props.user.name}”`}
+              color="error"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        </Tooltip>
+      </TableCell>
       {/* Delete Dialog */}
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DeleteUser user={props.user} onDelete={props.refetchUsers} onClose={() => setDeleteDialogOpen(false)} />
       </Dialog>
+      {/* Send Email Dialog */}
+      {emailConfigured && (
+        <Dialog fullWidth open={sendEmailDialogOpen} onClose={() => setSendEmailDialogOpen(false)}>
+          <SendEmailToUser user={props.user} onClose={() => setSendEmailDialogOpen(false)} />
+        </Dialog>
+      )}
     </TableRow>
   ) : (
     // Skeleton of a user row
@@ -239,13 +262,10 @@ const UserRow = (props: UserRowProps): JSX.Element => {
           component="ul"
         >
           <li style={{ margin: 0, padding: theme.spacing(0.5) }}>
-            <Skeleton width={100} height={24} />
+            <Skeleton width={120} height={32} />
           </li>
           <li style={{ margin: 0, padding: theme.spacing(0.5) }}>
-            <Skeleton width={100} height={24} />
-          </li>
-          <li style={{ margin: 0, padding: theme.spacing(0.5) }}>
-            <Skeleton width={100} height={24} />
+            <Skeleton width={80} height={32} />
           </li>
         </Box>
       </TableCell>
@@ -255,12 +275,15 @@ const UserRow = (props: UserRowProps): JSX.Element => {
       </TableCell>
       {/* Actions */}
       <TableCell sx={{ whiteSpace: "nowrap" }}>
-        <Skeleton
-          sx={{ m: "2px", display: "inline-block", verticalAlign: "middle" }}
-          variant="circular"
-          width={2 * (theme.typography.body1.fontSize as number) - 4}
-          height={2 * (theme.typography.body1.fontSize as number) - 4}
-        />
+        {emailConfigured && (
+          <Skeleton
+            sx={{ mr: 1, display: "inline-block", verticalAlign: "middle" }}
+            variant="rounded"
+            width={40}
+            height={40}
+          />
+        )}
+        <Skeleton sx={{ display: "inline-block", verticalAlign: "middle" }} variant="rounded" width={40} height={40} />
       </TableCell>
     </TableRow>
   );

@@ -62,6 +62,7 @@ export const envSchema = z
     PORT: z.coerce.number().int().min(1).max(65535),
     DOMAIN: z.string(),
     SUBDOMAIN: z.string().optional(),
+    FQDN: z.string(),
     TRUSTWORTHY_PROXY_COUNT: z.coerce.number().int().min(0).optional().default(0),
     DATABASE_URL: z.string().url(),
     LOG_FILE: z.string().optional().default("/tmp/rating-tracker-log-(DATE).log"),
@@ -71,6 +72,12 @@ export const envSchema = z
     MAX_FETCH_CONCURRENCY: z.coerce.number().int().min(1).max(availableParallelism()).optional().default(1),
     SIGNAL_URL: z.string().url().optional(),
     SIGNAL_SENDER: z.string().regex(new RegExp(REGEX_PHONE_NUMBER)).optional(),
+    SMTP_HOST: z.string().optional(),
+    SMTP_PORT: z.coerce.number().int().min(1).max(65535).optional(),
+    SMTP_SECURITY: z.enum(["none", "tls", "ssl"]).optional(),
+    SMTP_USER: z.string().optional(),
+    SMTP_PASSWORD: z.string().optional(),
+    SMTP_FROM: z.string().email().optional(),
     EXIT_AFTER_READY: z.coerce.boolean().optional(),
   })
   .passthrough();
@@ -85,7 +92,10 @@ export const startup = () => {
 
   try {
     // Check whether all mandatory environment variables are set
-    process.env = envSchema.parse(process.env) as typeof process.env;
+    process.env = envSchema.parse({
+      ...process.env,
+      FQDN: `${process.env.SUBDOMAIN ? `${process.env.SUBDOMAIN}.` : ""}${process.env.DOMAIN}`,
+    }) as typeof process.env;
   } catch (e) {
     if (e instanceof Error) {
       // Print error message and exit
