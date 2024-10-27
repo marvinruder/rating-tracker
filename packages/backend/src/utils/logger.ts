@@ -43,7 +43,11 @@ class Logger {
    * The logger used to log messages to both the standard output and the log file.
    */
   static readonly #logger = pino(
-    { level: "trace", base: { pid: undefined, hostname: undefined } },
+    {
+      level: "trace",
+      base: { pid: undefined, hostname: undefined },
+      formatters: { level: (level) => ({ level }) },
+    },
     Logger.#multistream,
   );
 
