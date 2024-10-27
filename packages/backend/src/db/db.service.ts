@@ -111,16 +111,16 @@ class DBService extends Singleton {
     if (["test", "production"].includes(process.env.NODE_ENV) && !process.env.EXIT_AFTER_READY)
       await promisify(exec)("prisma migrate deploy")
         .then(({ stdout, stderr }) => {
-          if (stdout) Logger.info({ prefix: "postgres" }, `\n\n${stdout}`);
-          if (stderr) Logger.warn({ prefix: "postgres" }, `\n\n${stderr}`);
+          if (stdout) Logger.info({ component: "postgres" }, `\n\n${stdout}`);
+          if (stderr) Logger.warn({ component: "postgres" }, `\n\n${stderr}`);
           DBService.#isMigrated = true;
         })
         .catch(({ error, stdout, stderr }) => {
           /* c8 ignore start */ // Migration must succeed for tests to work properly
-          if (stdout) Logger.info({ prefix: "postgres" }, `\n\n${stdout}`);
-          if (stderr) Logger.warn({ prefix: "postgres" }, `\n\n${stderr}`);
+          if (stdout) Logger.info({ component: "postgres" }, `\n\n${stdout}`);
+          if (stderr) Logger.warn({ component: "postgres" }, `\n\n${stderr}`);
           if (error) {
-            Logger.error({ prefix: "postgres", err: error }, "Failed to migrate database");
+            Logger.error({ component: "postgres", err: error }, "Failed to migrate database");
             throw error;
           }
           /* c8 ignore stop */

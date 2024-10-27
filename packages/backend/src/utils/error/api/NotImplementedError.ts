@@ -7,10 +7,6 @@ import APIError from "./APIError";
 class NotImplementedError extends APIError {
   constructor(message: string, cause?: Error) {
     super(501, message, cause);
-
-    // Set the prototype explicitly.
-    NotImplementedError.prototype.name = "NotImplementedError";
-    Object.setPrototypeOf(this, NotImplementedError.prototype);
   }
 }
 

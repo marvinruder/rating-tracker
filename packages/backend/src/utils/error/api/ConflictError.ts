@@ -6,10 +6,6 @@ import APIError from "./APIError";
 class ConflictError extends APIError {
   constructor(message: string, cause?: Error) {
     super(409, message, cause);
-
-    // Set the prototype explicitly.
-    ConflictError.prototype.name = "ConflictError";
-    Object.setPrototypeOf(this, ConflictError.prototype);
   }
 }
 

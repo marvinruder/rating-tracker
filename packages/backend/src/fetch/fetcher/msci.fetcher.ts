@@ -59,14 +59,28 @@ class MSCIFetcher extends IndividualFetcher {
         throw new TypeError(`Extracted MSCI ESG Rating “${msciESGRatingString}” is no valid MSCI ESG Rating.`);
       }
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract MSCI ESG Rating: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "msci",
+          attribute: "msciESGRating",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.msciESGRating !== null) {
         // If an MSCI ESG Rating is already stored in the database, but we cannot extract it from the page, we log
         // this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of MSCI ESG Rating failed unexpectedly. ` +
-            "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "msci",
+            attribute: "msciESGRating",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract MSCI ESG Rating: ${ErrorHelper.getSummary(e)}`;
       }
@@ -85,14 +99,28 @@ class MSCIFetcher extends IndividualFetcher {
         throw new TypeError("Extracted MSCI Implied Temperature Rise is no valid number.");
       msciTemperature = +msciTemperatureMatches[0];
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract MSCI Implied Temperature Rise: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "msci",
+          attribute: "msciTemperature",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.msciTemperature !== null) {
         // If an MSCI Implied Temperature Rise is already stored in the database, but we cannot extract it from the
         // page, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of MSCI Implied Temperature Rise failed unexpectedly. ` +
-            "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "msci",
+            attribute: "msciTemperature",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract MSCI Implied Temperature Rise: ${ErrorHelper.getSummary(e)}`;
       }

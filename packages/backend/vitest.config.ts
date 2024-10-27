@@ -25,7 +25,6 @@ export default defineConfig({
         "src/utils/error/api/InternalServerError.ts",
         "src/utils/fetchRequest.ts",
         "src/utils/logger.ts",
-        "src/utils/logFormatterConfig.ts",
         "test",
         "vitest.config.ts",
       ],

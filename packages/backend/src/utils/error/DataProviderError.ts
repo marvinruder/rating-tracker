@@ -19,10 +19,6 @@ export default class DataProviderError extends Error {
     super(message, typeof options === "object" && "cause" in options ? { cause: options.cause } : undefined);
 
     this.dataSources = options?.dataSources;
-
-    // Set the prototype explicitly.
-    DataProviderError.prototype.name = "DataProviderError";
-    Object.setPrototypeOf(this, DataProviderError.prototype);
   }
 
   /**

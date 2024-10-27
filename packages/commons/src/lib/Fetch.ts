@@ -14,10 +14,6 @@ export class FetchError<D = any> extends Error {
     if (response.statusDescription === "" && response.status) response.statusDescription = status(response.status);
     super(`Request failed with status ${response.status} ${response.statusDescription}`);
     this.response = response;
-
-    // Set the prototype explicitly.
-    FetchError.prototype.name = "FetchError";
-    Object.setPrototypeOf(this, FetchError.prototype);
   }
 }
 

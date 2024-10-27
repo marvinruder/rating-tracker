@@ -75,14 +75,28 @@ class MarketScreenerFetcher extends IndividualFetcher {
         assert(analystCountNode, "Unable to find Analyst Count node.");
         analystCount = Number(analystCountNode.textContent);
       } catch (e) {
-        Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Analyst Count: ${e}`);
+        Logger.warn(
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "marketScreener",
+            attribute: "analystCount",
+            reason: e?.toString(),
+          },
+          "Unable to extract attribute",
+        );
         if (stock.analystCount !== null) {
           // If an analyst count is already stored in the database, but we cannot extract it from the page, we log
           // this as an error and send a message.
           Logger.error(
-            { prefix: "fetch", err: e },
-            `Stock ${stock.ticker}: Extraction of analyst count failed unexpectedly. ` +
-              "This incident will be reported.",
+            {
+              component: "fetch",
+              stock: stock.ticker,
+              dataProvider: "marketScreener",
+              attribute: "analystCount",
+              reason: e?.toString(),
+            },
+            "Extraction of attribute failed unexpectedly",
           );
           errorMessage += `\n\tUnable to extract Analyst Count: ${ErrorHelper.getSummary(e)}`;
         }
@@ -120,8 +134,14 @@ class MarketScreenerFetcher extends IndividualFetcher {
           // the target price based on the percentage difference from the last close price.
 
           Logger.warn(
-            { prefix: "fetch" },
-            `Stock ${stock.ticker}: Unable to extract Analyst Target Price directly (attempting fallback): ${e}`,
+            {
+              component: "fetch",
+              stock: stock.ticker,
+              dataProvider: "marketScreener",
+              attribute: "analystTargetPrice",
+              reason: e?.toString(),
+            },
+            "Unable to extract attribute, attempting fallback",
           );
 
           // We need the last close price to calculate the analyst target price.
@@ -149,14 +169,28 @@ class MarketScreenerFetcher extends IndividualFetcher {
           analystTargetPrice = stock.lastClose * (+spreadAvgTargetMatches[0] / 100 + 1);
         }
       } catch (e) {
-        Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Analyst Target Price: ${e}`);
+        Logger.warn(
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "marketScreener",
+            attribute: "analystTargetPrice",
+            reason: e?.toString(),
+          },
+          "Unable to extract attribute",
+        );
         if (stock.analystTargetPrice !== null) {
           // If an analyst target price is already stored in the database, but we cannot extract it from the page,
           // we log this as an error and send a message.
           Logger.error(
-            { prefix: "fetch", err: e },
-            `Stock ${stock.ticker}: Extraction of analyst target price failed unexpectedly. ` +
-              "This incident will be reported.",
+            {
+              component: "fetch",
+              stock: stock.ticker,
+              dataProvider: "marketScreener",
+              attribute: "analystTargetPrice",
+              reason: e?.toString(),
+            },
+            "Extraction of attribute failed unexpectedly",
           );
           errorMessage += `\n\tUnable to extract Analyst Target Price: ${ErrorHelper.getSummary(e)}`;
         }
@@ -175,20 +209,42 @@ class MarketScreenerFetcher extends IndividualFetcher {
         ) as Record<AnalystRating, number>;
         analystConsensus = RecordMath.mean(analystRatings);
       } catch (e) {
-        Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Analyst Ratings: ${e}`);
+        Logger.warn(
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "marketScreener",
+            attribute: "analystRatings",
+            reason: e?.toString(),
+          },
+          "Unable to extract attribute",
+        );
         if (stock.analystConsensus !== null || stock.analystRatings !== null) {
           // If an analyst consensus or analyst ratings are already stored in the database, but we cannot extract them
           // from the JSON object, we log this as an error and send a message.
           Logger.error(
-            { prefix: "fetch", err: e },
-            `Stock ${stock.ticker}: Extraction of analyst ratings failed unexpectedly. ` +
-              "This incident will be reported.",
+            {
+              component: "fetch",
+              stock: stock.ticker,
+              dataProvider: "marketScreener",
+              attribute: "analystRatings",
+              reason: e?.toString(),
+            },
+            "Extraction of attribute failed unexpectedly",
           );
           errorMessage += `\n\tUnable to extract Analyst Ratings: ${ErrorHelper.getSummary(e)}`;
         }
       }
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: \n\tUnable to extract Analyst Information: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "marketScreener",
+          reason: e?.toString(),
+        },
+        "Unable to extract analyst information",
+      );
       if (
         stock.analystConsensus !== null ||
         stock.analystCount !== null ||
@@ -198,9 +254,13 @@ class MarketScreenerFetcher extends IndividualFetcher {
         // If any of the analyst-related information is already stored in the database, but we cannot extract it
         // from the page or the JSON object, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of analyst information failed unexpectedly. ` +
-            "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "marketScreener",
+            reason: e?.toString(),
+          },
+          "Extraction of analyst information failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract Analyst Information: ${ErrorHelper.getSummary(e)}`;
       }

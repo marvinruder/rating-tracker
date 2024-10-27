@@ -8,10 +8,6 @@ import APIError from "./APIError";
 class GatewayTimeoutError extends APIError {
   constructor(message: string, cause?: Error) {
     super(504, message, cause);
-
-    // Set the prototype explicitly.
-    GatewayTimeoutError.prototype.name = "GatewayTimeoutError";
-    Object.setPrototypeOf(this, GatewayTimeoutError.prototype);
   }
 }
 /* c8 ignore stop */

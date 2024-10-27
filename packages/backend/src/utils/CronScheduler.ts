@@ -59,8 +59,8 @@ class CronScheduler extends Singleton {
               await this.fetchService.fetchFromDataProvider(dataProvider, CronScheduler.fetchOptions[dataProvider]);
             } catch (e) {
               Logger.error(
-                { prefix: "cron", err: e },
-                `An error occurred during the ${dataProviderName[dataProvider]} Cron Job`,
+                { component: "cron", dataProvider, err: e },
+                "An error occurred during the data provider Cron Job",
               );
               this.signalService.sendMessage(
                 `${
@@ -75,8 +75,9 @@ class CronScheduler extends Singleton {
 
       // If we have an auto fetch schedule, log a message
       Logger.info(
-        { prefix: ["cron", "Auto Fetch activated"] },
-        "This process will periodically fetch information from data providers for all known stocks.",
+        { component: "cron" },
+        "Auto Fetch activated: " +
+          "This process will periodically fetch information from data providers for all known stocks.",
       );
     }
   }

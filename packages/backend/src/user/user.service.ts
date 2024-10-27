@@ -53,11 +53,11 @@ class UserService {
   async create(user: User, credential: WebAuthnCredential): Promise<boolean> {
     // Attempt to find an existing user with the same email address
     try {
-      const existingUser = await this.db.user.findUniqueOrThrow({ where: { email: user.email } });
+      await this.db.user.findUniqueOrThrow({ where: { email: user.email } });
       // If that worked, a user with the same email address already exists
       Logger.warn(
-        { prefix: "postgres" },
-        `Skipping user “${user.name}” – existing already (email address ${existingUser.email}).`,
+        { component: "postgres", user: { email: user.email, name: user.name } },
+        "Skipping creation – user with that email already exists",
       );
       return false;
     } catch {
@@ -75,7 +75,7 @@ class UserService {
           },
         },
       });
-      Logger.info({ prefix: "postgres" }, `Created user “${user.name}” with email address ${user.email}.`);
+      Logger.info({ component: "postgres", user: { email: user.email, name: user.name } }, "Created user");
       // Inform the admin of the new user via Signal messenger
       this.signalService.sendMessage(
         `🆕👤 New user “${user.name}” (email ${user.email}) registered.`,
@@ -207,7 +207,8 @@ class UserService {
       await this.db.user.update({ where: { email: user.email }, data: { ...newValues } });
       Logger.info(
         {
-          prefix: "postgres",
+          component: "postgres",
+          user: { email: user.email, name: user.name },
           newValues: {
             ...newValues,
             ...("avatar" in newValues
@@ -215,11 +216,11 @@ class UserService {
               : {}),
           },
         },
-        `Updated user ${email}`,
+        "Updated user",
       );
     } else {
       // No new data was provided
-      Logger.info({ prefix: "postgres" }, `No updates for user ${email}.`);
+      Logger.info({ component: "postgres", user: { email: user.email, name: user.name } }, "No updates for user");
     }
   }
 
@@ -232,10 +233,10 @@ class UserService {
     try {
       // Attempt to delete a user with the given email address
       await this.db.user.delete({ where: { email } });
-      Logger.info({ prefix: "postgres" }, `Deleted user ${email}.`);
+      Logger.info({ component: "postgres", user: { email } }, "Deleted user");
     } catch {
       // If deletion failed, the user does not exist
-      Logger.warn({ prefix: "postgres" }, `User ${email} does not exist.`);
+      Logger.warn({ component: "postgres", user: { email } }, "User does not exist");
     }
   }
 }

@@ -66,7 +66,7 @@ class WatchlistService {
       data: { name, email },
       select: { id: true, name: true, subscribed: true, stocks: { orderBy: { ticker: "asc" } } },
     });
-    Logger.info({ prefix: "postgres" }, `Created watchlist “${watchlist.name}” with ID ${watchlist.id}.`);
+    Logger.info({ component: "postgres", watchlist: { name: watchlist.name, id: watchlist.id } }, "Created watchlist");
     return watchlist;
   }
 
@@ -135,10 +135,16 @@ class WatchlistService {
 
     if (isNewData) {
       await this.db.watchlist.update({ where: { id: watchlist.id }, data: { ...newValues } });
-      Logger.info({ prefix: "postgres", newValues }, `Updated watchlist ${id}`);
+      Logger.info(
+        { component: "postgres", watchlist: { id: watchlist.id, name: watchlist.name }, newValues },
+        "Updated watchlist",
+      );
     } else {
       // No new data was provided
-      Logger.info({ prefix: "postgres" }, `No updates for watchlist ${id}.`);
+      Logger.info(
+        { component: "postgres", watchlist: { id: watchlist.id, name: watchlist.name } },
+        "No updates for watchlist",
+      );
     }
   }
 
@@ -155,12 +161,18 @@ class WatchlistService {
     await this.#checkStockExistence(ticker);
     // Check whether the stock is already on the watchlist
     if (watchlist.stocks.some((stockInWatchlist) => ticker === stockInWatchlist.ticker)) {
-      Logger.warn({ prefix: "postgres" }, `Stock ${ticker} is already on watchlist ${id}.`);
+      Logger.warn(
+        { component: "postgres", watchlist: { id: watchlist.id, name: watchlist.name }, stock: ticker },
+        "Stock is already on watchlist",
+      );
       return;
     }
     // Add the stock to the watchlist
     await this.db.watchlist.update({ where: { id }, data: { stocks: { connect: { ticker } } } });
-    Logger.info({ prefix: "postgres" }, `Added stock ${ticker} to portfolio ${id}.`);
+    Logger.info(
+      { component: "postgres", watchlist: { id: watchlist.id, name: watchlist.name }, stock: ticker },
+      "Added stock to portfolio",
+    );
   }
 
   /**
@@ -176,12 +188,18 @@ class WatchlistService {
     await this.#checkStockExistence(ticker);
     // Check whether the stock is on the watchlist
     if (!watchlist.stocks.some((stockInWatchlist) => ticker === stockInWatchlist.ticker)) {
-      Logger.warn({ prefix: "postgres" }, `Stock ${ticker} is not on watchlist ${id}.`);
+      Logger.warn(
+        { component: "postgres", watchlist: { id: watchlist.id, name: watchlist.name }, stock: ticker },
+        "Stock is not on watchlist",
+      );
       return;
     }
     // Remove the stock from the watchlist
     await this.db.watchlist.update({ where: { id }, data: { stocks: { disconnect: { ticker } } } });
-    Logger.info({ prefix: "postgres" }, `Removed stock ${ticker} from watchlist ${id}.`);
+    Logger.info(
+      { component: "postgres", watchlist: { id: watchlist.id, name: watchlist.name }, stock: ticker },
+      "Removed stock from watchlist",
+    );
   }
 
   /**
@@ -197,7 +215,7 @@ class WatchlistService {
     } catch (e) {
       if (e instanceof NotFoundError) {
         // The watchlist does not exist at all
-        Logger.warn({ prefix: "postgres" }, `Watchlist ${id} does not exist.`);
+        Logger.warn({ component: "postgres", watchlist: { id } }, "Watchlist does not exist.");
         return;
       }
       // The watchlist exists, but does not belong to the user
@@ -205,7 +223,7 @@ class WatchlistService {
     }
     // Delete the watchlist with the given ID
     await this.db.watchlist.delete({ where: { id } });
-    Logger.info({ prefix: "postgres" }, `Deleted watchlist ${id}.`);
+    Logger.info({ component: "postgres", watchlist: { id } }, "Deleted watchlist");
   }
 }
 

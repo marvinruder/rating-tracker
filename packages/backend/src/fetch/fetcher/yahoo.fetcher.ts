@@ -74,13 +74,28 @@ class YahooFetcher extends IndividualFetcher {
         throw new TypeError(`Extracted currency code “${currencyValue}” is no valid currency code.`);
       }
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract currency: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "yahoo",
+          attribute: "currency",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.currency !== null) {
         // If a currency is already stored in the database, but we cannot extract it from the JSON object, we log this
         // as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of currency failed unexpectedly. ` + "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "yahoo",
+            attribute: "currency",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract currency: ${ErrorHelper.getSummary(e)}`;
       }
@@ -115,7 +130,16 @@ class YahooFetcher extends IndividualFetcher {
         [] as number[],
       );
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract prices: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "yahoo",
+          attribute: ["lastClose", "low52w", "high52w", "prices1y", "prices1mo"],
+          reason: e?.toString(),
+        },
+        "Unable to extract attributes",
+      );
       if (
         stock.lastClose !== null ||
         stock.low52w !== null ||
@@ -126,8 +150,14 @@ class YahooFetcher extends IndividualFetcher {
         // If prices are already stored in the database, but we cannot extract them from the JSON object, we log this as
         // an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of prices failed unexpectedly. ` + "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "yahoo",
+            attribute: ["lastClose", "low52w", "high52w", "prices1y", "prices1mo"],
+            reason: e?.toString(),
+          },
+          "Extraction of attributes failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract prices: ${ErrorHelper.getSummary(e)}`;
       }

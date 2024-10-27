@@ -7,10 +7,6 @@ import APIError from "./APIError";
 class UnprocessableContentError extends APIError {
   constructor(message: string, cause?: Error) {
     super(422, message, cause);
-
-    // Set the prototype explicitly.
-    UnprocessableContentError.prototype.name = "UnprocessableContentError";
-    Object.setPrototypeOf(this, UnprocessableContentError.prototype);
   }
 }
 

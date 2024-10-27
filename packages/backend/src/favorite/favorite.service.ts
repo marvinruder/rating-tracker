@@ -34,7 +34,10 @@ class FavoriteService {
         where: { email, name: FAVORITES_NAME },
       });
     } catch (e) {
-      Logger.info({ prefix: "postgres" }, `Creating “${FAVORITES_NAME}” watchlist for user ${email}.`);
+      Logger.info(
+        { component: "postgres", watchlist: { name: FAVORITES_NAME }, user: { email } },
+        "Creating watchlist for user",
+      );
       return await this.db.watchlist.create({
         data: { name: FAVORITES_NAME, email, subscribed: true },
         select: { id: true, name: true, subscribed: true, stocks: { orderBy: { ticker: "asc" } } },
