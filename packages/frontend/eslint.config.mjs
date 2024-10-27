@@ -8,7 +8,7 @@ import tsParser from "@typescript-eslint/parser";
 
 export default [
     {
-        files: ["**/*.ts", "**/*.tsx"],
+        files: ["**/*.mts", "**/*.ts", "**/*.tsx"],
 
         plugins: {
             react: react,
