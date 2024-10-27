@@ -114,7 +114,16 @@ class Logger {
    */
   static logRequest: MiddlewareHandler = async (c, next) => {
     const start = Date.now();
+
     await next();
+
+    const addr = c.get("ip");
+    const user = c.get("user");
+    const { method, path } = c.req;
+    const { status } = c.res;
+
+    if (["127.0.0.1", "::1"].includes(addr) && path === "/api/status") return; // Do not log health check requests
+
     const headers: Record<string, string> = {};
     ["content-type", "content-length"].forEach(
       (key) => c.res.headers.get(key) && (headers[key] = c.res.headers.get(key)!),
@@ -126,10 +135,7 @@ class Logger {
         if (value?.byteLength) headers["content-length"] = value.byteLength.toString();
       }
     }
-    const addr = c.get("ip");
-    const user = c.get("user");
-    const { method, path } = c.req;
-    const { status } = c.res;
+
     Logger.trace(
       {
         component: "hono",
