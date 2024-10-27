@@ -1,6 +1,5 @@
 import fs from "node:fs";
 
-import { basePath, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
 import type { MiddlewareHandler } from "hono";
 import { getCookie } from "hono/cookie";
 import pino from "pino";
@@ -131,13 +130,7 @@ class Logger {
     const user = c.get("user");
     const { method, path } = c.req;
     const { status } = c.res;
-    Logger[
-      // Log local requests (e.g. from health checks) and logo requests with the `trace` level.
-      (c.req.path.startsWith(basePath + stocksAPIPath) && c.req.path.endsWith(stockLogoEndpointSuffix)) ||
-      ["127.0.0.1", "::1"].includes(addr)
-        ? "trace"
-        : "info"
-    ](
+    Logger.trace(
       {
         component: "hono",
         req: {
