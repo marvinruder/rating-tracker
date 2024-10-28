@@ -1,13 +1,8 @@
 import fs from "node:fs";
 
-import { basePath, stockLogoEndpointSuffix, stocksAPIPath } from "@rating-tracker/commons";
 import type { MiddlewareHandler } from "hono";
 import { getCookie } from "hono/cookie";
 import pino from "pino";
-import pretty from "pino-pretty";
-
-import type { LoggedRequest } from "./logFormatterConfig";
-import { pinoPrettyConfig } from "./logFormatterConfig";
 
 /**
  * This class provides methods to log messages to the standard output as well as a log file.
@@ -19,11 +14,6 @@ class Logger {
    * The log level to use for printing log messages to the standard output.
    */
   static readonly #LOG_LEVEL = process.env.LOG_LEVEL;
-
-  /**
-   * The stream used to log messages to the standard output.
-   */
-  static readonly #prettyStream = pretty(pinoPrettyConfig);
 
   /**
    * Creates a new stream to write to the log file.
@@ -44,7 +34,7 @@ class Logger {
    * A multistream which writes to both the standard output and the log file.
    */
   static #multistream = pino.multistream([
-    { level: Logger.#LOG_LEVEL, stream: Logger.#prettyStream },
+    { level: Logger.#LOG_LEVEL, stream: process.stdout },
     { level: "trace", stream: Logger.#fileStream },
   ]);
 
@@ -52,7 +42,11 @@ class Logger {
    * The logger used to log messages to both the standard output and the log file.
    */
   static readonly #logger = pino(
-    { level: "trace", base: { pid: undefined, hostname: undefined } },
+    {
+      level: "trace",
+      base: { pid: undefined, hostname: undefined },
+      formatters: { level: (level) => ({ level }) },
+    },
     Logger.#multistream,
   );
 
@@ -120,9 +114,20 @@ class Logger {
    */
   static logRequest: MiddlewareHandler = async (c, next) => {
     const start = Date.now();
+
     await next();
+
+    const addr = c.get("ip");
+    const user = c.get("user");
+    const { method, path } = c.req;
+    const { status } = c.res;
+
+    if (["127.0.0.1", "::1"].includes(addr) && path === "/api/status") return; // Do not log health check requests
+
     const headers: Record<string, string> = {};
-    c.res.headers.forEach((value, key) => (headers[key] = value));
+    ["content-type", "content-length"].forEach(
+      (key) => c.res.headers.get(key) && (headers[key] = c.res.headers.get(key)!),
+    );
     if (c.res.headers.get("content-length") === null) {
       const { body } = c.res.clone();
       if (body instanceof ReadableStream) {
@@ -130,28 +135,22 @@ class Logger {
         if (value?.byteLength) headers["content-length"] = value.byteLength.toString();
       }
     }
-    const ip = c.get("ip");
-    const user = c.get("user");
-    Logger[
-      (c.req.path.startsWith(basePath + stocksAPIPath) && c.req.path.endsWith(stockLogoEndpointSuffix)) ||
-      ["127.0.0.1", "::1"].includes(ip)
-        ? "trace"
-        : "info"
-    ](
+
+    Logger.trace(
       {
-        prefix: "hono",
+        component: "hono",
         req: {
-          ip,
-          method: c.req.method,
-          url: c.req.path,
-          cookies: getCookie(c),
+          addr,
+          method,
+          path,
           query: c.req.queries(),
-          user: user ? { name: user.name, email: user.email } : undefined,
-          statusCode: c.res.status,
+          cookies: getCookie(c),
+          ...(user ? { user: { name: user.name, email: user.email } } : {}),
+          status,
           headers,
-          time: Date.now() - start,
+          latency: Date.now() - start,
         },
-      } as { prefix: string | object; req: LoggedRequest },
+      },
       "Processed request",
     );
   };

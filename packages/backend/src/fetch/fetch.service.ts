@@ -22,7 +22,6 @@ import NotFoundError from "../utils/error/api/NotFoundError";
 import DataProviderError from "../utils/error/DataProviderError";
 import { performFetchRequest } from "../utils/fetchRequest";
 import Logger from "../utils/logger";
-import TimeUtils from "../utils/time";
 
 import BulkFetcher from "./fetcher/BulkFetcher";
 import IndividualFetcher from "./fetcher/IndividualFetcher";
@@ -240,8 +239,8 @@ class FetchService {
 
     if (fetcher instanceof IndividualFetcher && isIndividualDataProvider(dataProvider)) {
       Logger.info(
-        { prefix: "fetch" },
-        `Fetching ${stocks.queued.length} stocks from ${dataProviderName[dataProvider]}.`,
+        { component: "fetch", count: stocks.queued.length, dataProvider },
+        "Fetching stocks from data provider",
       );
       const rejectedResult = (
         await Promise.allSettled(
@@ -261,12 +260,13 @@ class FetchService {
                   1000 * dataProviderTTL[dataProvider]
               ) {
                 Logger.info(
-                  { prefix: "fetch" },
-                  `Stock ${stock.ticker}: Skipping ${
-                    dataProviderName[dataProvider]
-                  } fetch since last successful fetch was ${TimeUtils.diffToNow(
-                    stock[dataProviderLastFetch[dataProvider]],
-                  )}`,
+                  {
+                    component: "fetch",
+                    stock: stock.ticker,
+                    dataProvider,
+                    lastFetchDate: stock[dataProviderLastFetch[dataProvider]],
+                  },
+                  "Skipping fetch because of recent successful fetch",
                 );
                 stocks.skipped.push(stock);
                 continue;
@@ -297,8 +297,8 @@ class FetchService {
                     e instanceof Error ? e : undefined,
                   );
                 Logger.error(
-                  { prefix: "fetch", err: e },
-                  `Stock ${stock.ticker}: Error while fetching ${dataProviderName[dataProvider]} data`,
+                  { component: "fetch", stock: stock.ticker, dataProvider, err: e },
+                  "Error while fetching data",
                 );
                 this.signalService.sendMessage(
                   `${
@@ -318,10 +318,12 @@ class FetchService {
                 if (stocks.queued.length) {
                   // No other fetcher did this before
                   Logger.error(
-                    { prefix: "fetch" },
-                    `Aborting fetching information from ${dataProviderName[dataProvider]} after ` +
-                      `${stocks.successful.length} successful fetches and ${stocks.failed.length} failures. ` +
-                      "Will continue next time.",
+                    {
+                      component: "fetch",
+                      dataProvider,
+                      count: { success: stocks.successful.length, failed: stocks.failed.length },
+                    },
+                    "Aborting fetching information from data provider. Will continue next time.",
                   );
                   this.signalService.sendMessage(
                     `${
@@ -342,8 +344,8 @@ class FetchService {
         )
       ).find((result) => result.status === "rejected") as PromiseRejectedResult | undefined;
       Logger.info(
-        { prefix: "fetch", fetchCounts: this.#countFetchResults(stocks) },
-        `Done fetching stocks from ${dataProviderName[dataProvider]}.`,
+        { component: "fetch", dataProvider, count: this.#countFetchResults(stocks) },
+        "Done fetching stocks from data provider",
       );
 
       // If stocks are still queued, something went wrong and we send an error response.
@@ -363,8 +365,8 @@ class FetchService {
     } else if (fetcher instanceof BulkFetcher) {
       await fetcher.fetch(stocks, { isStandalone: options.ticker !== undefined, clear: options.clear });
       Logger.info(
-        { prefix: "fetch", fetchCounts: this.#countFetchResults(stocks) },
-        `Done fetching stocks from ${dataProviderName[dataProvider]}.`,
+        { component: "fetch", dataProvider, count: this.#countFetchResults(stocks) },
+        "Done fetching stocks from data provider",
       );
     }
 
@@ -410,8 +412,13 @@ class FetchService {
       onError: (level, msg) => {
         if (level === "fatalError")
           Logger.warn(
-            { prefix: "fetch", err: new DataProviderError(msg) },
-            `Stock ${stock.ticker}: Error while parsing ${dataProviderName[dataProvider]} information: ${msg}`,
+            {
+              component: "fetch",
+              stock: stock.ticker,
+              dataProvider,
+              err: new DataProviderError(msg),
+            },
+            "Error while parsing information from data provider",
           );
       },
     });

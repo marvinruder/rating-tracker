@@ -77,7 +77,7 @@ class EmailService extends Singleton {
 
     try {
       await client.sendAsync(message);
-      Logger.info({ prefix: "email" }, `Email “${message.subject}” sent to recipient ${message.to}.`);
+      Logger.info({ component: "email", subject: message.subject, recipient: message.to }, "Email sent to recipient");
     } catch (e) {
       if (e instanceof SMTPError && e.code === SMTPErrorStates.TIMEDOUT)
         throw new GatewayTimeoutError("A timeout occurred while sending the email.", e);

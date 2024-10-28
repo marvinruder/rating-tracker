@@ -60,7 +60,7 @@ class SessionService {
         })
       ).id,
     );
-    Logger.info({ prefix: "postgres" }, `Created session for ${email} with ID ${sessionID}.`);
+    Logger.info({ component: "postgres", session: sessionID, user: email }, "Created session for user");
     return sessionID;
   }
 
@@ -89,8 +89,8 @@ class SessionService {
         return { eol: false, user };
       }
       Logger.warn(
-        { prefix: "postgres" },
-        `Session ${id} of user ${session.user.email} is nearing end-of-life and cannot be extended further.`,
+        { component: "postgres", session: id, user: session.user.email },
+        "Session of user is nearing end-of-life and cannot be extended further.",
       );
       return { eol: true, user };
     } catch (e) {
@@ -110,7 +110,7 @@ class SessionService {
       await this.db.session.findUniqueOrThrow({ where: { id: sessionIDBuffer, expiresAt: { gte: new Date() } } });
       // If that worked, we can delete the existing session
       await this.db.session.delete({ where: { id: sessionIDBuffer } });
-      Logger.info({ prefix: "postgres" }, `Deleted session ${id}.`);
+      Logger.info({ component: "postgres", session: id }, "Deleted session");
     } catch {
       /* c8 ignore next 2 */ // Not reached in current tests since a user can only delete their current session
       throw new NotFoundError(`Session ${id} not found.`);
@@ -124,8 +124,8 @@ class SessionService {
     const deletedSessions = await this.db.session.deleteMany({ where: { expiresAt: { lt: new Date() } } });
     if (deletedSessions.count)
       Logger.info(
-        { prefix: "postgres" },
-        `Deleted ${deletedSessions.count} expired session${pluralize(deletedSessions.count)}.`,
+        { component: "postgres", count: deletedSessions.count },
+        `Deleted expired session${pluralize(deletedSessions.count)}.`,
       );
   }
 }

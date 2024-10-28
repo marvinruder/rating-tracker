@@ -37,7 +37,7 @@ class SignalService extends Singleton {
         /* c8 ignore start */ // The mocked Signal client does not return an error
         if (e.response?.data?.error) e.message = e.response.data.error;
         Logger.error(
-          { prefix: "signal", err: e, signalMessage: { number, recipients, message } },
+          { component: "signal", err: e, message: { number, recipients, message } },
           "Failed to send Signal message",
         );
         /* c8 ignore stop */

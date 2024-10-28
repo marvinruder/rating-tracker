@@ -52,7 +52,16 @@ class SPFetcher extends IndividualFetcher {
       }
       spESGScore = Number(document.getElementsByClassName("scoreModule__score")[0].textContent);
     } catch (e) {
-      Logger.warn({ prefix: "fetch", err: e }, `Stock ${stock.ticker}: Unable to fetch S&P ESG Score: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "sp",
+          attribute: "spESGScore",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (
         stock.spESGScore !== null ||
         (options.isStandalone && e instanceof Error && e.message.includes(SP_PREMIUM_STOCK_ERROR_MESSAGE))
@@ -62,8 +71,14 @@ class SPFetcher extends IndividualFetcher {
         // To show the designated premium stock error message, we check if the request was for a single stock and the
         // error message contains the premium stock error message, and handle the error in the same way.
         Logger.error(
-          { prefix: "fetch" },
-          `Stock ${stock.ticker}: Extraction of S&P ESG Score failed unexpectedly. This incident will be reported.`,
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "sp",
+            attribute: "spESGScore",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract S&P ESG Score: ${ErrorHelper.getSummary(e)}`;
       }

@@ -6,10 +6,6 @@ import APIError from "./APIError";
 class BadGatewayError extends APIError {
   constructor(message: string, cause?: Error) {
     super(502, message, cause);
-
-    // Set the prototype explicitly.
-    BadGatewayError.prototype.name = "BadGatewayError";
-    Object.setPrototypeOf(this, BadGatewayError.prototype);
   }
 }
 

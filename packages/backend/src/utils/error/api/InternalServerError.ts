@@ -7,10 +7,6 @@ import APIError from "./APIError";
 class InternalServerError extends APIError {
   constructor(message: string, cause?: Error) {
     super(500, message, cause);
-
-    // Set the prototype explicitly.
-    InternalServerError.prototype.name = "InternalServerError";
-    Object.setPrototypeOf(this, InternalServerError.prototype);
   }
 }
 

@@ -7,7 +7,7 @@ import react from "@vitejs/plugin-react";
 import proxy from "http2-proxy";
 import type { ViteDevServer } from "vite";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
-import viteCompression from "vite-plugin-compression";
+import viteCompression from "vite-plugin-compression2";
 import { createHtmlPlugin } from "vite-plugin-html";
 import wasm from "vite-plugin-wasm";
 import { defineConfig as defineVitestConfig } from "vitest/config";
@@ -19,10 +19,8 @@ try {
 } catch {}
 
 const compressionOptions: Parameters<typeof viteCompression>[0] = {
-  filter: /\.(js|mjs|json|css|html?|svg|wasm)$/i,
+  include: /\.(js|mjs|json|css|html?|svg|wasm)$/i,
   threshold: 256,
-  // Move the compressed `index.html`s to the root directory
-  success: () => execSync("/bin/sh -c 'if [ -d dist/src ]; then mv dist/src/* dist; rmdir dist/src; fi'"),
 };
 
 export default mergeConfig(
@@ -76,6 +74,12 @@ export default mergeConfig(
       wasm(),
       viteCompression({ ...compressionOptions, algorithm: "gzip" }),
       viteCompression({ ...compressionOptions, algorithm: "brotliCompress" }),
+      (() => ({
+        apply: "build",
+        enforce: "post",
+        // Move the compressed `index.html`s to the root directory
+        closeBundle: () => execSync("/bin/sh -c 'if [ -d dist/src ]; then mv dist/src/* dist; rmdir dist/src; fi'"),
+      }))(),
     ],
     preview: { port: 443, strictPort: true },
     server: { host: true, https, port: 443, strictPort: true },

@@ -6,10 +6,6 @@ import APIError from "./APIError";
 class NotFoundError extends APIError {
   constructor(message: string, cause?: Error) {
     super(404, message, cause);
-
-    // Set the prototype explicitly.
-    NotFoundError.prototype.name = "NotFoundError";
-    Object.setPrototypeOf(this, NotFoundError.prototype);
   }
 }
 

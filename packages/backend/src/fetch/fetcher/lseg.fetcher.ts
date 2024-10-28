@@ -61,14 +61,28 @@ class LSEGFetcher extends IndividualFetcher {
       );
       lsegESGScore = Number(json.esgScore["TR.TRESG"].score);
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract LSEG ESG Score: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "lseg",
+          attribute: "lsegESGScore",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.lsegESGScore !== null) {
         // If a LSEG ESG Score is already stored in the database, but we cannot extract it from the JSON object, we log
         // this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of LSEG ESG Score failed unexpectedly. ` +
-            "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "lseg",
+            attribute: "lsegESGScore",
+            err: e,
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract LSEG ESG Score: ${ErrorHelper.getSummary(e)}`;
       }
@@ -87,14 +101,28 @@ class LSEGFetcher extends IndividualFetcher {
       );
       lsegEmissions = Number(json.esgScore["TR.TRESGEmissions"].score);
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract LSEG Emissions: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "lseg",
+          attribute: "lsegEmissions",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.lsegEmissions !== null) {
         // If a LSEG Emissions Rating is already stored in the database, but we cannot extract it from the
         // JSON object, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of LSEG Emissions failed unexpectedly. ` +
-            "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "lseg",
+            attribute: "lsegEmissions",
+            err: e,
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract LSEG Emissions: ${ErrorHelper.getSummary(e)}`;
       }

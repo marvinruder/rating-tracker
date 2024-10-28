@@ -6,10 +6,6 @@ import APIError from "./APIError";
 class ForbiddenError extends APIError {
   constructor(message: string, cause?: Error) {
     super(403, message, cause);
-
-    // Set the prototype explicitly.
-    ForbiddenError.prototype.name = "ForbiddenError";
-    Object.setPrototypeOf(this, ForbiddenError.prototype);
   }
 }
 

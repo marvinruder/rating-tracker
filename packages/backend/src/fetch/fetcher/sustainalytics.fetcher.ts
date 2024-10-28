@@ -9,7 +9,6 @@ import NotFoundError from "../../utils/error/api/NotFoundError";
 import ErrorHelper from "../../utils/error/errorHelper";
 import { performFetchRequest } from "../../utils/fetchRequest";
 import Logger from "../../utils/logger";
-import TimeUtils from "../../utils/time";
 import type { FetcherWorkspace } from "../fetch.service";
 
 import BulkFetcher from "./BulkFetcher";
@@ -44,10 +43,12 @@ class SustainalyticsFetcher extends BulkFetcher {
         // We try to read the cached Sustainalytics data first.
         sustainalyticsXMLResource = await this.resourceService.read(this.#sustainalyticsURL);
         Logger.info(
-          { prefix: "fetch" },
-          `Using cached Sustainalytics data because last fetch was ${TimeUtils.diffToNow(
-            sustainalyticsXMLResource.lastModifiedAt,
-          )}.`,
+          {
+            component: "fetch",
+            dataProvider: "sustainalytics",
+            lastFetchDate: sustainalyticsXMLResource.lastModifiedAt,
+          },
+          "Using cached data because of recent fetch",
         );
       } catch (e) {
         // If the cached data is not available, we fetch it freshly from the web.
@@ -140,14 +141,28 @@ class SustainalyticsFetcher extends BulkFetcher {
             `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk`,
             e instanceof Error ? e : undefined,
           );
-        Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${e}`);
+        Logger.warn(
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "sustainalytics",
+            attribute: "sustainalyticsESGRisk",
+            reason: e?.toString(),
+          },
+          "Unable to extract attribute",
+        );
         if (stock.sustainalyticsESGRisk !== null) {
           // If a Sustainalytics ESG Risk is already stored in the database, but we cannot extract it from the page, we
           // log this as an error and send a message.
           Logger.error(
-            { prefix: "fetch", err: e },
-            `Stock ${stock.ticker}: Extraction of Sustainalytics ESG Risk failed unexpectedly. ` +
-              "This incident will be reported.",
+            {
+              component: "fetch",
+              stock: stock.ticker,
+              dataProvider: "sustainalytics",
+              attribute: "sustainalyticsESGRisk",
+              reason: e?.toString(),
+            },
+            "Extraction of attribute failed unexpectedly",
           );
           this.signalService.sendMessage(
             `${
@@ -163,9 +178,12 @@ class SustainalyticsFetcher extends BulkFetcher {
       if (stocks.failed.length >= 10) {
         // If we have 10 errors, we stop extracting data, since something is probably wrong.
         Logger.error(
-          { prefix: "fetch" },
-          `Aborting extracting information from Sustainalytics after ${stocks.successful.length} successful ` +
-            `extractions and ${stocks.failed.length} failures. Will continue next time.`,
+          {
+            component: "fetch",
+            dataProvider: "sustainalytics",
+            count: { success: stocks.successful.length, failed: stocks.failed.length },
+          },
+          "Aborting extracting information from data provider. Will continue next time.",
         );
         this.signalService.sendMessage(
           `${

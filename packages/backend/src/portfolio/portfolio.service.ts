@@ -87,7 +87,7 @@ class PortfolioService {
         },
       }),
     );
-    Logger.info({ prefix: "postgres" }, `Created portfolio “${portfolio.name}” with ID ${portfolio.id}.`);
+    Logger.info({ component: "postgres", portfolio: { name: portfolio.name, id: portfolio.id } }, "Created portfolio");
     return portfolio;
   }
 
@@ -202,10 +202,16 @@ class PortfolioService {
 
     if (isNewData) {
       await this.db.portfolio.update({ where: { id: portfolio.id }, data: { ...newValues } });
-      Logger.info({ prefix: "postgres", newValues }, `Updated portfolio ${id}`);
+      Logger.info(
+        { component: "postgres", portfolio: { name: portfolio.name, id: portfolio.id }, newValues },
+        "Updated portfolio",
+      );
     } else {
       // No new data was provided
-      Logger.info({ prefix: "postgres" }, `No updates for portfolio ${id}.`);
+      Logger.info(
+        { component: "postgres", portfolio: { name: portfolio.name, id: portfolio.id } },
+        "No updates for portfolio",
+      );
     }
   }
 
@@ -230,7 +236,10 @@ class PortfolioService {
       where: { id },
       data: { stocks: { create: { amount: stock.amount, stock: { connect: { ticker: stock.ticker } } } } },
     });
-    Logger.info({ prefix: "postgres" }, `Added stock ${stock.ticker} to portfolio ${id}.`);
+    Logger.info(
+      { component: "postgres", portfolio: { name: portfolio.name, id: portfolio.id }, stock: stock.ticker },
+      "Added stock to portfolio",
+    );
   }
 
   /**
@@ -271,10 +280,16 @@ class PortfolioService {
         where: { id },
         data: { stocks: { update: { where: { portfolioID_ticker: { portfolioID: id, ticker } }, data: newValues } } },
       });
-      Logger.info({ prefix: "postgres", newValues }, `Updated stock ${ticker} in portfolio ${id}`);
+      Logger.info(
+        { component: "postgres", portfolio: { name: portfolio.name, id: portfolio.id }, stock: ticker, newValues },
+        "Updated stock in portfolio",
+      );
     } else {
       // No new data was provided
-      Logger.info({ prefix: "postgres" }, `No updates for stock ${ticker} in portfolio ${id}.`);
+      Logger.info(
+        { component: "postgres", portfolio: { name: portfolio.name, id: portfolio.id }, stock: ticker },
+        "No updates for stock in portfolio",
+      );
     }
   }
 
@@ -292,7 +307,10 @@ class PortfolioService {
     await this.#checkStockExistence(ticker);
     // Check whether the stock is in the portfolio
     if (!portfolio.stocks.some((stock) => stock.ticker === ticker)) {
-      Logger.warn({ prefix: "postgres" }, `Stock ${ticker} is not in portfolio ${id}.`);
+      Logger.warn(
+        { component: "postgres", portfolio: { name: portfolio.name, id: portfolio.id }, stock: ticker },
+        "Stock is not in portfolio",
+      );
       return;
     }
     // Remove the stock from the portfolio
@@ -300,7 +318,10 @@ class PortfolioService {
       where: { id },
       data: { stocks: { delete: { portfolioID_ticker: { portfolioID: id, ticker } } } },
     });
-    Logger.info({ prefix: "postgres" }, `Removed stock ${ticker} from portfolio ${id}.`);
+    Logger.info(
+      { component: "postgres", portfolio: { name: portfolio.name, id: portfolio.id }, stock: ticker },
+      "Removed stock from portfolio",
+    );
   }
 
   /**
@@ -316,7 +337,7 @@ class PortfolioService {
     } catch (e) {
       if (e instanceof NotFoundError) {
         // The portfolio does not exist at all
-        Logger.warn({ prefix: "postgres" }, `Portfolio ${id} does not exist.`);
+        Logger.warn({ component: "postgres", portfolio: { id } }, "Portfolio does not exist");
         return;
       }
       // The portfolio exists, but does not belong to the user
@@ -324,7 +345,7 @@ class PortfolioService {
     }
     // Delete the portfolio with the given ID
     await this.db.portfolio.delete({ where: { id } });
-    Logger.info({ prefix: "postgres" }, `Deleted portfolio ${id}.`);
+    Logger.info({ component: "postgres", portfolio: { id } }, "Deleted portfolio");
   }
 }
 

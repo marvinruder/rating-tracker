@@ -1,8 +1,6 @@
 // eslint-disable-next-line import/order
 import "./utils/startup";
 
-import { isIPv6 } from "node:net";
-
 import { serve } from "@hono/node-server";
 import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIHono } from "@hono/zod-openapi";
@@ -203,15 +201,6 @@ app.onError(ErrorHelper.errorHandler);
 new CronScheduler(fetchService, resourceService, sessionService, signalService, userService);
 
 export const server = serve({ fetch: app.fetch, port: process.env.PORT }, (info) => {
-  Logger.info(
-    {
-      prefix: [
-        getRuntimeKey(),
-        "hono",
-        { socket: `${isIPv6(info.address) ? `[${info.address}]` : info.address}:${info.port}` },
-      ],
-    },
-    "Listening…",
-  );
+  Logger.info({ conponent: getRuntimeKey(), interface: info.address, port: info.port }, "Listening");
   process.env.EXIT_AFTER_READY && process.exit(0);
 });

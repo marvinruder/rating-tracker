@@ -42,7 +42,7 @@ class ResourceService {
         expiresAt: new Date(Date.now() + ttlInSeconds * 1000),
       },
     });
-    Logger.info({ prefix: "postgres" }, `Created resource with URI ${resource.uri}.`);
+    Logger.info({ component: "postgres", resource: resource.uri }, "Created resource");
   }
 
   /**
@@ -66,8 +66,8 @@ class ResourceService {
     const deletedResources = await this.db.resource.deleteMany({ where: { expiresAt: { lt: new Date() } } });
     if (deletedResources.count)
       Logger.info(
-        { prefix: "postgres" },
-        `Deleted ${deletedResources.count} expired resource${pluralize(deletedResources.count)}.`,
+        { component: "postgres", count: deletedResources.count },
+        `Deleted expired resource${pluralize(deletedResources.count)}`,
       );
   }
 }

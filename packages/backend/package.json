@@ -57,7 +57,7 @@
     }
   },
   "scripts": {
-    "dev:run": "node --env-file=.env --watch --enable-source-maps dist/server.mjs",
+    "dev:run": "node --env-file=.env --watch --enable-source-maps dist/server.mjs | pino-pretty",
     "dev:watch": "yarn build --watch",
     "test:watch": "vitest --ui",
     "test": "vitest run --color",
@@ -65,8 +65,7 @@
     "prisma:generate": "pnpify prisma generate",
     "prisma:migrate:dev": "pnpify prisma migrate dev",
     "prisma:migrate:diff": "pnpify prisma migrate diff --from-schema-datasource ./prisma/schema.prisma --to-schema-datamodel ./prisma/schema.prisma --script",
-    "build": "esbuild --color=true src/server.ts --bundle --platform=node --packages=bundle --format=esm --inject:./src/utils/cjs-shim.ts --target=node$(node -v | sed 's/^v//') --sourcemap=linked --sources-content=false --log-override:commonjs-variable-in-esm=silent --outfile=dist/server.mjs",
-    "build:logFormatterConfig": "esbuild src/utils/logFormatterConfig.ts --bundle --minify --platform=node --packages=bundle --format=cjs --log-override:commonjs-variable-in-esm=silent --outfile=dist/pino-pretty-config.cjs",
+    "build": "esbuild --color=true src/server.ts --bundle --platform=node --packages=bundle --format=esm --inject:./src/utils/cjs-shim.ts --target=node$(node -v | sed 's/^v//') --sourcemap=linked --sources-content=false --outfile=dist/server.mjs",
     "typecheck": "tsc --noEmit --tsBuildInfoFile $HOME/.cache/rating-tracker/backend.tsbuildinfo",
     "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/backend.eslintcache --cache-strategy content --max-warnings 0 src test",
     "lint:fix": "yarn lint --fix",
@@ -114,6 +113,7 @@
     "eslint-plugin-jsdoc": "50.4.3",
     "eslint-plugin-prettier": "5.2.1",
     "globals": "15.11.0",
+    "pino-pretty": "11.3.0",
     "prettier": "3.3.3",
     "undici-types": "6.20.0"
   }

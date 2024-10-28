@@ -77,16 +77,16 @@ class StockService {
   async create(stock: Pick<Stock, "ticker" | "name" | "country" | "isin">): Promise<boolean> {
     // Attempt to find an existing stock with the same ticker
     try {
-      const existingStock = await this.db.stock.findUniqueOrThrow({ where: { ticker: stock.ticker } });
+      await this.db.stock.findUniqueOrThrow({ where: { ticker: stock.ticker } });
       // If that worked, a stock with the same ticker already exists
       Logger.warn(
-        { prefix: "postgres" },
-        `Skipping stock “${stock.name}” – existing already (ticker ${existingStock.ticker}).`,
+        { component: "postgres", stock: { ticker: stock.ticker, name: stock.name } },
+        "Skipping creation – stock with that ticker already exists",
       );
       return false;
     } catch {
       await this.db.stock.create({ data: stock });
-      Logger.info({ prefix: "postgres" }, `Created stock “${stock.name}” with ticker ${stock.ticker}.`);
+      Logger.info({ component: "postgres", stock: { ticker: stock.ticker, name: stock.name } }, "Created stock");
       return true;
     }
   }
@@ -563,7 +563,10 @@ class StockService {
           analystRatings: newValues.analystRatings === null ? Prisma.DbNull : newValues.analystRatings,
         },
       });
-      Logger.info({ prefix: "postgres", newValues }, `Updated stock ${ticker}`);
+      Logger.info(
+        { component: "postgres", stock: { ticker: stock.ticker, name: stock.name }, newValues },
+        "Updated stock",
+      );
       // The message string contains a newline character if and only if a parameter changed for which we want to send a
       // message
       if (signalMessage.includes("\n") && !skipMessage)
@@ -573,7 +576,7 @@ class StockService {
         );
     } else {
       // No new data was provided
-      Logger.info({ prefix: "postgres" }, `No updates for stock ${ticker}.`);
+      Logger.info({ component: "postgres", stock: { ticker: stock.ticker, name: stock.name } }, "No updates for stock");
     }
   }
 
@@ -594,10 +597,10 @@ class StockService {
     try {
       // Attempt to delete the stock with the given ticker
       await this.db.stock.delete({ where: { ticker } });
-      Logger.info({ prefix: "postgres" }, `Deleted stock ${ticker}.`);
+      Logger.info({ component: "postgres", stock: { ticker } }, "Deleted stock");
     } catch {
       // If deletion failed, the stock does not exist
-      Logger.warn({ prefix: "postgres" }, `Stock ${ticker} does not exist.`);
+      Logger.warn({ component: "postgres", stock: { ticker } }, "Stock does not exist");
     }
   }
 }

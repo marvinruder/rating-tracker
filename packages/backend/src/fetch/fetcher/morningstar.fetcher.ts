@@ -83,13 +83,28 @@ class MorningstarFetcher extends IndividualFetcher {
         throw new TypeError(`Extracted industry “${industryString}” is no valid industry.`);
       }
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract industry: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "morningstar",
+          attribute: "industry",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.industry !== null) {
         // If an industry for the stock is already stored in the database, but we cannot extract it now from the
         // page, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of industry failed unexpectedly. This incident will be reported.`,
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "morningstar",
+            attribute: "industry",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract industry: ${ErrorHelper.getSummary(e)}`;
       }
@@ -114,13 +129,28 @@ class MorningstarFetcher extends IndividualFetcher {
         throw new TypeError(`Extracted style “${sizeAndStyle[1]}” is no valid style.`);
       }
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract size and style: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "morningstar",
+          attribute: ["size", "style"],
+          reason: e?.toString(),
+        },
+        "Unable to extract attributes",
+      );
       if (stock.size !== null || stock.style !== null) {
         // If size or style for the stock are already stored in the database, but we cannot extract them now from
         // the page, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of size and style failed unexpectedly. This incident will be reported.`,
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "morningstar",
+            attribute: ["size", "style"],
+            reason: e?.toString(),
+          },
+          "Extraction of attributes failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract size and style: ${ErrorHelper.getSummary(e)}`;
       }
@@ -136,13 +166,28 @@ class MorningstarFetcher extends IndividualFetcher {
         throw new TypeError("Extracted star rating is no valid number.");
       starRating = +starRatingString;
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract star rating: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "morningstar",
+          attribute: "starRating",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.starRating !== null) {
         // If a star rating for the stock is already stored in the database, but we cannot extract it now from the
         // page, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of star rating failed unexpectedly. This incident will be reported.`,
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "morningstar",
+            attribute: "starRating",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract star rating: ${ErrorHelper.getSummary(e)}`;
       }
@@ -159,13 +204,28 @@ class MorningstarFetcher extends IndividualFetcher {
         dividendYieldPercent = +dividendYieldPercentString;
       }
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract dividend yield: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "morningstar",
+          attribute: "dividendYieldPercent",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.dividendYieldPercent !== null) {
         // If a dividend yield for the stock is already stored in the database, but we cannot extract it now from
         // the page, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of dividend yield failed unexpectedly. This incident will be reported.`,
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "morningstar",
+            attribute: "dividendYieldPercent",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract dividend yield: ${ErrorHelper.getSummary(e)}`;
       }
@@ -182,14 +242,28 @@ class MorningstarFetcher extends IndividualFetcher {
         priceEarningRatio = +priceEarningRatioString;
       }
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract price earning ratio: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "morningstar",
+          attribute: "priceEarningRatio",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.priceEarningRatio !== null) {
         // If a price earning ratio for the stock is already stored in the database, but we cannot extract it now
         // from the page, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of price earning ratio failed unexpectedly. ` +
-            "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "morningstar",
+            attribute: "priceEarningRatio",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract price earning ratio: ${ErrorHelper.getSummary(e)}`;
       }
@@ -222,14 +296,28 @@ class MorningstarFetcher extends IndividualFetcher {
         morningstarFairValue = +morningstarFairValueString;
       }
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Morningstar Fair Value: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "morningstar",
+          attribute: "morningstarFairValue",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.morningstarFairValue !== null) {
         // If a Morningstar Fair Value for the stock is already stored in the database, but we cannot extract it
         // now from the page, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of Morningstar Fair Value failed unexpectedly. ` +
-            "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "morningstar",
+            attribute: "morningstarFairValue",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract Morningstar Fair Value: ${ErrorHelper.getSummary(e)}`;
       }
@@ -256,14 +344,28 @@ class MorningstarFetcher extends IndividualFetcher {
         }
       }
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract Market Capitalization: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "morningstar",
+          attribute: "marketCap",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.marketCap !== null) {
         // If a market capitalization for the stock is already stored in the database, but we cannot extract it now
         // from the page, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of Market Capitalization failed unexpectedly. ` +
-            "This incident will be reported.",
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "morningstar",
+            attribute: "marketCap",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract Market Capitalization: ${ErrorHelper.getSummary(e)}`;
       }
@@ -274,13 +376,28 @@ class MorningstarFetcher extends IndividualFetcher {
       assert(descriptionNode && descriptionNode.textContent !== null, "Unable to find Description node.");
       description = descriptionNode.textContent;
     } catch (e) {
-      Logger.warn({ prefix: "fetch" }, `Stock ${stock.ticker}: Unable to extract description: ${e}`);
+      Logger.warn(
+        {
+          component: "fetch",
+          stock: stock.ticker,
+          dataProvider: "morningstar",
+          attribute: "description",
+          reason: e?.toString(),
+        },
+        "Unable to extract attribute",
+      );
       if (stock.description !== null) {
         // If a description for the stock is already stored in the database, but we cannot extract it now from
         // the page, we log this as an error and send a message.
         Logger.error(
-          { prefix: "fetch", err: e },
-          `Stock ${stock.ticker}: Extraction of description failed unexpectedly. This incident will be reported.`,
+          {
+            component: "fetch",
+            stock: stock.ticker,
+            dataProvider: "morningstar",
+            attribute: "description",
+            reason: e?.toString(),
+          },
+          "Extraction of attribute failed unexpectedly",
         );
         errorMessage += `\n\tUnable to extract description: ${ErrorHelper.getSummary(e)}`;
       }

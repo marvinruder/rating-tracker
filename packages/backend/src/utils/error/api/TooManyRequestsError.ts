@@ -7,10 +7,6 @@ import APIError from "./APIError";
 class TooManyRequestsError extends APIError {
   constructor(message: string, cause?: Error) {
     super(429, message, cause);
-
-    // Set the prototype explicitly.
-    TooManyRequestsError.prototype.name = "TooManyRequestsError";
-    Object.setPrototypeOf(this, TooManyRequestsError.prototype);
   }
 }
 

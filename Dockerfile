@@ -174,8 +174,6 @@ RUN \
   --network=none \
   # Bundle backend
   yarn workspace @rating-tracker/backend build && \
-  # Create CommonJS module containing log formatter configuration
-  yarn workspace @rating-tracker/backend build:logFormatterConfig && \
   # Parse backend bundle for correctness and executability in Node.js
   /bin/sh -c 'cd packages/backend && EXIT_AFTER_READY=1 node -r ./test/env.ts dist/server.mjs' && \
   # Create directories for target container and copy only necessary files

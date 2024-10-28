@@ -6,10 +6,6 @@ import APIError from "./APIError";
 class BadRequestError extends APIError {
   constructor(message: string, cause?: Error) {
     super(400, message, cause);
-
-    // Set the prototype explicitly.
-    BadRequestError.prototype.name = "BadRequestError";
-    Object.setPrototypeOf(this, BadRequestError.prototype);
   }
 }
 
