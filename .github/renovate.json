@@ -1,36 +1,56 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "docker:enableMajor"],
+  "extends": [
+    "config:recommended",
+    "docker:enableMajor"
+  ],
   "timezone": "UTC",
-  "schedule": ["* 18 * * *"],
+  "schedule": [
+    "* 18 * * *"
+  ],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 4,
   "automerge": true,
   "automergeType": "pr",
   "platformAutomerge": true,
-  "automergeSchedule": ["* 18 * * *"],
+  "automergeSchedule": [
+    "* 18 * * *"
+  ],
   "assigneesFromCodeOwners": true,
   "updateLockFiles": true,
-  "postUpdateOptions": ["yarnDedupeHighest"],
+  "postUpdateOptions": [
+    "yarnDedupeHighest"
+  ],
   "rangeStrategy": "pin",
   "packageRules": [
     {
       "groupName": "Node.js",
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["node"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "node"
+      ],
       "versioning": "docker"
     },
     {
       "groupName": "Linting and Formatting Tools",
-      "matchPackagePatterns": ["eslint", "prettier"]
+      "matchPackageNames": [
+        "/eslint/",
+        "/prettier/"
+      ]
     },
     {
       "groupName": "WebAuthn",
-      "matchPackagePatterns": ["@simplewebauthn"]
+      "matchPackageNames": [
+        "/@simplewebauthn/"
+      ]
     },
     {
       "groupName": "Type Definitions",
-      "matchPackagePatterns": ["@types/"]
+      "matchPackageNames": [
+        "/@types//"
+      ]
     }
   ]
 }
