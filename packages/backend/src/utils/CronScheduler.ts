@@ -77,7 +77,7 @@ class CronScheduler extends Singleton {
       Logger.info(
         { component: "cron" },
         "Auto Fetch activated: " +
-          "This process will periodically fetch information from data providers for all known stocks.",
+          "This instance will periodically fetch information from data providers for all known stocks.",
       );
     }
   }

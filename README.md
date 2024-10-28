@@ -141,25 +141,19 @@ Based on their access rights, users can subscribe to updates of stock ratings, f
 
 When fetching a stock fails, a screenshot of the page the fetch was attempted from is stored and a link to them is sent to stock maintainers who subscribed to error reports, so they can analyze and fix the issue.
 
-#### Logging
+#### Structured logging
 
-Logs are printed to `stdout` as well as rotating log files with [`pino-pretty`](https://yarnpkg.com/package/pino-pretty). While the `stdout` log output is already rendered with beautiful colors and icons in a [p10k](https://github.com/romkatv/powerlevel10k)-like fashion (for which a [font supporting all characters](https://github.com/romkatv/powerlevel10k/blob/master/font.md) may be required), the log files are JSON-formatted and can be pretty-printed using [`pino-pretty`](https://yarnpkg.com/package/pino-pretty). This tool is included in the Docker image and can be added to your `.zshrc` or `.bashrc` like this:
+JSON-formatted logs are printed to `stdout` as well as rotating log files. For better readability, a console-based prettifier or a separate log viewing service like [Dozzle](https://github.com/amir20/dozzle) can be used. The prettifier [`pino-pretty`](https://yarnpkg.com/package/pino-pretty) comes pre-installed in the container and can be utilized by modifying the container command to pipe the server output: `node ./server.mjs | pino-pretty`.
+
+You can also use an existing Rating Tracker container to prettify log files by aliasing `pino-pretty` in your shell like:
 
 ```shell
 # ~/.zshrc
-alias pino-pretty="docker exec -e FORCE_COLOR=1 -i $(docker compose -f <path to docker compose file> ps -q <container name>) pino-pretty -c --config /app/pino-pretty-config.cjs"
+alias pino-pretty="docker exec -i \$(docker compose -f <path to docker compose file> ps -q <container name>) pino-pretty -c
 
 # To view (and follow) a log file:
-tail -n +1 -f <...>/rating-tracker.log | pino-pretty | less -r
+tail -n +1 -f <...>/rating-tracker.log | pino-pretty | less
 ```
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/docs/images/log-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="/docs/images/log-light.png">
-  <img alt="Rating Tracker Log Output" src="/docs/images/log-light.png">
-</picture>
-
-If you prefer a plain log viewer, you can use `pino-pretty` without the configuration file and set the `PLAIN_LOG` environment variable as documented below.
 
 #### …and more to come!
 
@@ -296,7 +290,6 @@ Variable | Example Value | Explanation
 **`DATABASE_URL`** | `postgresql://rating-tracker:********@127.0.0.1:5432/rating-tracker?schema=rating-tracker` | The connection URL of the PostgreSQL instance, specifying username, password, host, port, database and schema. Can also use the PostgreSQL service name (e.g. `postgres` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file.
 `LOG_FILE` | `/var/log/rating-tracker-(DATE).log` | A file path for storing Rating Tracker log files. The string `(DATE)` will be replaced by the current date. If unset, logs are stored in the `/tmp` directory.
 `LOG_LEVEL` | `debug` | The level for the log output to `stdout`. Can be one of `fatal`, `error`, `warn`, `info`, `debug`, `trace`. If unset, `info` will be used. 
-`PLAIN_LOG` | `1` | If set to a truthy value, the log output to `stdout` will not be rendered with colors and icons.
 `AUTO_FETCH_SCHEDULE` | `0 30 2 * * *` | A Cron-like specification of a schedule for when to fetch all stocks from all providers. The format in use includes seconds, so the example value resolves to “every day at 2:30:00 AM”. If unset, no automatic fetching will happen.
 `MAX_FETCH_CONCURRENCY` | `4` | The number of fetcher instances used concurrently when fetching information for multiple stocks. If unset, no concurrent fetches will be performed.
 `SIGNAL_URL` | `http://127.0.0.1:8080` | The URL of the Signal REST API. Can also use the Signal REST API service name (e.g. `signal` in [this configuration](#minimal-example-setup-using-docker-compose)) as hostname if set up within the same Docker Compose file. If unset, no Signal notification messages will be sent.

@@ -67,7 +67,6 @@ export const envSchema = z
     DATABASE_URL: z.string().url(),
     LOG_FILE: z.string().optional().default("/tmp/rating-tracker-log-(DATE).log"),
     LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).optional().default("info"),
-    PLAIN_LOG: z.coerce.boolean().optional(),
     AUTO_FETCH_SCHEDULE: z.custom<string>((autoFetchSchedule) => cron.validate(autoFetchSchedule)).optional(),
     MAX_FETCH_CONCURRENCY: z.coerce.number().int().min(1).max(availableParallelism()).optional().default(1),
     SIGNAL_URL: z.string().url().optional(),
