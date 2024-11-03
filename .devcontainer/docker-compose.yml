@@ -27,4 +27,5 @@ services:
     volumes:
       - ..:/rating-tracker
       - ./motd:/etc/motd
+      - ~/.p10k.zsh:/root/.p10k-host.zsh:ro
     command: sleep infinity

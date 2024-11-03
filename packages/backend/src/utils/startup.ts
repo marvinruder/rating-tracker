@@ -2,7 +2,6 @@ import assert from "node:assert";
 import { availableParallelism } from "node:os";
 
 import { REGEX_PHONE_NUMBER } from "@rating-tracker/commons";
-import chalk from "chalk";
 import cron from "node-cron";
 import { z } from "zod";
 
@@ -16,24 +15,23 @@ let ratingTrackerColor: string;
 /* c8 ignore start */ // The color depends on the environment, which is fixed to `test` in tests
 switch (process.env.NODE_ENV) {
   case "production":
-    ratingTrackerColor = "#2971D6";
+    ratingTrackerColor = "41;113;214";
     break;
   case "development":
-    ratingTrackerColor = "#D68E29";
+    ratingTrackerColor = "214;142;41";
     break;
   case "test":
-    ratingTrackerColor = "#6E9F18";
+    ratingTrackerColor = "110;159;24";
     break;
   default:
-    ratingTrackerColor = "#808080";
+    ratingTrackerColor = "128;128;128";
 }
 /* c8 ignore stop */
 
 /**
  * An ASCII art logo, shown as a welcome message.
  */
-const logo = chalk.bold(
-  chalk.hex(ratingTrackerColor)(`
+const logo = `\x1b[1m\x1b[38;2;${ratingTrackerColor}m
                                     ήΒω
                                   ;βΪΆ
                         ;       ρΪΪΓε
@@ -50,8 +48,7 @@ const logo = chalk.bold(
 
  Welcome to Rating Tracker v${packageInfo.version} (${process.env.NODE_ENV ?? "no specific"} environment)!
 
-`),
-);
+\x1b[0m`;
 
 /**
  * A schema for the environment variables.
@@ -98,7 +95,7 @@ export const startup = () => {
   } catch (e) {
     if (e instanceof Error) {
       // Print error message and exit
-      console.error(`\x07${chalk.red(` \uf658 ${e.message}`)}`);
+      console.error(`\x07\x1b[31m${e.message}\x1b[0m`);
       process.exit(1);
       /* c8 ignore next */ // This should never occur, since always Errors are thrown.
     } else throw e; // if something else than an error was thrown
