@@ -1478,7 +1478,7 @@ __metadata:
     hono-rate-limiter: "npm:0.4.0"
     node-cron: "npm:3.0.3"
     pino: "npm:9.5.0"
-    pino-pretty: "npm:12.0.0"
+    pino-pretty: "npm:12.1.0"
     prettier: "npm:3.3.3"
     prisma: "npm:5.22.0"
     prisma-json-types-generator: "npm:3.1.1"
@@ -6325,9 +6325,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-pretty@npm:12.0.0":
-  version: 12.0.0
-  resolution: "pino-pretty@npm:12.0.0"
+"pino-pretty@npm:12.1.0":
+  version: 12.1.0
+  resolution: "pino-pretty@npm:12.1.0"
   dependencies:
     colorette: "npm:^2.0.7"
     dateformat: "npm:^4.6.3"
@@ -6345,7 +6345,7 @@ __metadata:
     strip-json-comments: "npm:^3.1.1"
   bin:
     pino-pretty: bin.js
-  checksum: 10c0/1af502bd70580df443ee7a01d69ab7a3baf86333454fd2ba1e1392a1b896662af26deb3a347a59b14d1764c94ff95fa718acc58a291db6b5c404a1706d20248c
+  checksum: 10c0/76518ced4e6612ff29918288acd0cd3a89f9b3e81024b2e2f364ccd6547c2f8977d41875c005da10ee9c9bdd7b020dfdca0917f3c2f8b003d2e42e60696626c6
   languageName: node
   linkType: hard
 
