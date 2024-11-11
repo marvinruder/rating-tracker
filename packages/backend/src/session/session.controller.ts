@@ -29,7 +29,7 @@ class SessionController extends Controller {
             "Provides information regarding the authentication status. " +
             "Returns a 2XX response code if the authentication token cookie is still valid, " +
             "and a 4XX response code otherwise.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           responses: {
             204: { description: "No Content: The user is authenticated." },
             401: { description: "Unauthorized: The user is not authenticated." },
@@ -44,7 +44,7 @@ class SessionController extends Controller {
           tags: this.tags,
           summary: "Delete the current session",
           description: "Deletes the current session from the database and clears the session cookie.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           responses: {
             204: { description: "No Content: The user is no longer authenticated." },
             401: {

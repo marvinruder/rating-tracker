@@ -25,7 +25,7 @@ class ResourceController extends Controller {
         tags: this.tags,
         summary: "Get a resource",
         description: "Fetches a resource from the database.",
-        middleware: [accessRightValidator(GENERAL_ACCESS)],
+        middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
         request: {
           params: z
             .object({

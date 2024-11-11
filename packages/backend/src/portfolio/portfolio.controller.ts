@@ -28,7 +28,7 @@ class PortfolioController extends Controller {
           tags: this.tags,
           summary: "Get a summary of all portfolios",
           description: "Returns a summary of the portfolios of the current user.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           responses: {
             200: {
               description: "OK: A summary of all portfolios.",
@@ -49,7 +49,7 @@ class PortfolioController extends Controller {
           tags: this.tags,
           summary: "Get a portfolio",
           description: "Reads a single portfolio from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: { params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema) }).strict() },
           responses: {
             200: {
@@ -83,7 +83,7 @@ class PortfolioController extends Controller {
           tags: this.tags,
           summary: "Create a new portfolio",
           description: "Creates a new portfolio in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             body: {
               description: "Properties of the portfolio to be created.",
@@ -125,7 +125,7 @@ class PortfolioController extends Controller {
           tags: this.tags,
           summary: "Update a portfolio",
           description: "Updates a portfolio in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema) }).strict(),
             body: {
@@ -170,7 +170,7 @@ class PortfolioController extends Controller {
           tags: this.tags,
           summary: "Add a stock to a portfolio",
           description: "Adds a stock to a portfolio in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema), ticker: TickerSchema }).strict(),
             body: {
@@ -219,7 +219,7 @@ class PortfolioController extends Controller {
           tags: this.tags,
           summary: "Update a stock in a portfolio",
           description: "Updates a stock in a portfolio in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema), ticker: TickerSchema }).strict(),
             body: {
@@ -267,7 +267,7 @@ class PortfolioController extends Controller {
           tags: this.tags,
           summary: "Remove a stock from a portfolio",
           description: "Removes a stock from a portfolio in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema), ticker: TickerSchema }).strict(),
           },
@@ -308,7 +308,7 @@ class PortfolioController extends Controller {
           tags: this.tags,
           summary: "Delete a portfolio",
           description: "Deletes a portfolio from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: { params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema) }).strict() },
           responses: {
             204: { description: "No Content: The portfolio was deleted successfully." },
