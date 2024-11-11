@@ -27,7 +27,7 @@ class FavoriteController extends Controller {
           tags: this.tags,
           summary: "Get the Favorites watchlist",
           description: "Returns the list of favorites of the current user.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           responses: {
             200: {
               description: "OK: The list of favorites of the current user.",
@@ -48,7 +48,7 @@ class FavoriteController extends Controller {
           tags: this.tags,
           summary: "Add a stock to the Favorites watchlist",
           description: "Adds a stock to the favorites of the current user.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: { params: z.object({ ticker: TickerSchema }).strict() },
           responses: {
             201: { description: "Created: The stock was added to the user’s Favorite watchlist successfully." },
@@ -78,7 +78,7 @@ class FavoriteController extends Controller {
           tags: this.tags,
           summary: "Remove a stock from the Favorites watchlist",
           description: "Removes a stock from the favorites of the current user.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: { params: z.object({ ticker: TickerSchema }).strict() },
           responses: {
             204: { description: "No Content: The stock was removed from the user’s Favorite watchlist successfully." },

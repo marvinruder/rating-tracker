@@ -37,7 +37,7 @@ class FetchController extends Controller {
           tags: this.tags,
           summary: "Fetch data from Yahoo Finance",
           description: "Fetches information from Yahoo Finance API.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: {
             query: z
               .object({
@@ -118,7 +118,7 @@ class FetchController extends Controller {
           tags: this.tags,
           summary: "Fetch data from Morningstar",
           description: "Fetches information from Morningstar Italy web page.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: {
             query: z
               .object({
@@ -199,7 +199,7 @@ class FetchController extends Controller {
           tags: this.tags,
           summary: "Fetch data from MarketScreener",
           description: "Fetches information from Market Screener web page and API.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: {
             query: z
               .object({
@@ -280,7 +280,7 @@ class FetchController extends Controller {
           tags: this.tags,
           summary: "Fetch data from MSCI",
           description: "Fetches information from MSCI ESG Ratings & Climate Search Tool web page.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: {
             query: z
               .object({
@@ -361,7 +361,7 @@ class FetchController extends Controller {
           tags: this.tags,
           summary: "Fetch data from LSEG",
           description: "Fetches information from LSEG Data & Analytics API.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: {
             query: z
               .object({
@@ -442,7 +442,7 @@ class FetchController extends Controller {
           tags: this.tags,
           summary: "Fetch data from S&P",
           description: "Fetches information from Standard & Poor’s Global Sustainable1 ESG Scores web page.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: {
             query: z
               .object({
@@ -523,7 +523,7 @@ class FetchController extends Controller {
           tags: this.tags,
           summary: "Fetch data from Sustainalytics",
           description: "Fetches information from Morningstar Sustainalytics API.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: {
             query: z
               .object({

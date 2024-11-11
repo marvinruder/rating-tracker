@@ -36,7 +36,7 @@ class EmailController extends Controller {
           tags: this.tags,
           summary: "Send an email to a user",
           description: "Sends an email based on a predefined template to a user.",
-          middleware: [accessRightValidator(ADMINISTRATIVE_ACCESS + GENERAL_ACCESS)],
+          middleware: [accessRightValidator(ADMINISTRATIVE_ACCESS + GENERAL_ACCESS)] as const,
           request: { params: z.object({ email: EMailSchema, template: z.enum(emailTemplateArray) }).strict() },
           responses: {
             202: { description: "Accepted: The email was accepted for delivery by the SMTP server." },
@@ -85,7 +85,7 @@ class EmailController extends Controller {
           tags: this.tags,
           summary: "Preview an email",
           description: "Generates a preview of an email to a user based on a predefined template.",
-          middleware: [accessRightValidator(ADMINISTRATIVE_ACCESS + GENERAL_ACCESS)],
+          middleware: [accessRightValidator(ADMINISTRATIVE_ACCESS + GENERAL_ACCESS)] as const,
           request: { params: z.object({ email: EMailSchema, template: z.enum(emailTemplateArray) }).strict() },
           responses: {
             200: {

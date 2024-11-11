@@ -66,7 +66,7 @@ class StockController extends Controller {
           tags: this.tags,
           summary: "Get a list of stocks",
           description: "Returns a list of stocks, which can be filtered, sorted and paginated.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             query: z
               .object({
@@ -263,7 +263,7 @@ class StockController extends Controller {
           tags: this.tags,
           summary: "Get a stock",
           description: "Reads a single stock from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: { params: z.object({ ticker: TickerSchema }).strict() },
           responses: {
             200: {
@@ -293,7 +293,7 @@ class StockController extends Controller {
           tags: this.tags,
           summary: "Get the logo of a stock",
           description: "Fetches the logo of a stock from the cache or TradeRepublic.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             params: z.object({ ticker: TickerSchema }).strict(),
             query: z.object({ variant: LogoVariantSchema }),
@@ -336,7 +336,7 @@ class StockController extends Controller {
           tags: this.tags,
           summary: "Create a new stock",
           description: "Creates a new stock in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: {
             params: z.object({ ticker: TickerSchema }).strict(),
             body: {
@@ -382,7 +382,7 @@ class StockController extends Controller {
           tags: this.tags,
           summary: "(Re-)Compute dynamic attributes of all stocks",
           description: "(Re-)Computes dynamic attributes of all stocks.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           responses: {
             204: { description: "No Content: The computation was successful." },
             401: {
@@ -407,7 +407,7 @@ class StockController extends Controller {
           tags: this.tags,
           summary: "Update a stock",
           description: "Updates a stock in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: {
             params: z.object({ ticker: TickerSchema }).strict(),
             body: {
@@ -466,7 +466,7 @@ class StockController extends Controller {
           tags: this.tags,
           summary: "Delete a stock",
           description: "Deletes a stock from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + WRITE_STOCKS_ACCESS)] as const,
           request: { params: z.object({ ticker: TickerSchema }).strict() },
           responses: {
             204: { description: "No Content: The stock was deleted successfully." },

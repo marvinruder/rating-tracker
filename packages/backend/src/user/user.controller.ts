@@ -39,7 +39,7 @@ class UserController extends Controller {
           tags: this.tags,
           summary: "Get a list of users",
           description: "Returns a list of users.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)] as const,
           responses: {
             200: {
               description: "OK: A list of users.",
@@ -64,7 +64,7 @@ class UserController extends Controller {
           tags: this.tags,
           summary: "Get a user",
           description: "Reads a single user from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)] as const,
           request: { params: z.object({ email: EMailSchema }).strict() },
           responses: {
             200: {
@@ -98,7 +98,7 @@ class UserController extends Controller {
           tags: this.tags,
           summary: "Get the avatar of a user",
           description: "Returns the avatar of a user from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)] as const,
           request: {
             params: z.object({ email: EMailSchema }).strict(),
             query: z
@@ -153,7 +153,7 @@ class UserController extends Controller {
           tags: this.tags,
           summary: "Update a user",
           description: "Updates a user in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)] as const,
           request: {
             params: z.object({ email: EMailSchema }).strict(),
             body: {
@@ -215,7 +215,7 @@ class UserController extends Controller {
                 throw new ContentTooLargeError("The maximum allowed upload size is 1 MB");
               },
             }),
-          ],
+          ] as const,
           request: {
             headers: z.object({
               "content-type": z
@@ -281,7 +281,7 @@ class UserController extends Controller {
           tags: this.tags,
           summary: "Delete the avatar of a user",
           description: "Deletes the avatar of a user from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)] as const,
           request: { params: z.object({ email: EMailSchema }).strict() },
           responses: {
             204: { description: "No Content: The avatar was removed successfully." },
@@ -315,7 +315,7 @@ class UserController extends Controller {
           tags: this.tags,
           summary: "Delete a user",
           description: "Deletes a user from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)] as const,
           request: { params: z.object({ email: EMailSchema }).strict() },
           responses: {
             204: { description: "No Content: The user was deleted successfully." },

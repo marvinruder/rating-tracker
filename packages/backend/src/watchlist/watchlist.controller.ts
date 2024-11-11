@@ -28,7 +28,7 @@ class WatchlistController extends Controller {
           tags: this.tags,
           summary: "Get a summary of all watchlists",
           description: "Returns a summary of the watchlists of the current user.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           responses: {
             200: {
               description: "OK: A summary of all watchlists.",
@@ -56,7 +56,7 @@ class WatchlistController extends Controller {
           tags: this.tags,
           summary: "Get a watchlist",
           description: "Reads a single watchlist from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: { params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema) }).strict() },
           responses: {
             200: {
@@ -90,7 +90,7 @@ class WatchlistController extends Controller {
           tags: this.tags,
           summary: "Create a new watchlist",
           description: "Creates a new watchlist in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             body: {
               description: "Properties of the watchlist to be created.",
@@ -123,7 +123,7 @@ class WatchlistController extends Controller {
           tags: this.tags,
           summary: "Update a watchlist",
           description: "Updates a watchlist in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema) }).strict(),
             body: {
@@ -170,7 +170,7 @@ class WatchlistController extends Controller {
           tags: this.tags,
           summary: "Add a stock to a watchlist",
           description: "Adds a stock to a watchlist in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema), ticker: TickerSchema }).strict(),
           },
@@ -211,7 +211,7 @@ class WatchlistController extends Controller {
           tags: this.tags,
           summary: "Remove a stock from a watchlist",
           description: "Removes a stock from a watchlist in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema), ticker: TickerSchema }).strict(),
           },
@@ -252,7 +252,7 @@ class WatchlistController extends Controller {
           tags: this.tags,
           summary: "Delete a watchlist",
           description: "Deletes a watchlist from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: { params: z.object({ id: ValidationHelper.coerceToInteger(IDSchema) }).strict() },
           responses: {
             204: { description: "No Content: The watchlist was deleted successfully." },

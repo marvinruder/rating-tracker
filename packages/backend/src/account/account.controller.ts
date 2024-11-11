@@ -51,7 +51,7 @@ class AccountController extends Controller {
           tags: this.tags,
           summary: "Get the avatar of the current user",
           description: "Returns the avatar of the current user.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             query: z
               .object({ v: ValidationHelper.coerceToInteger(VSchema) })
@@ -104,7 +104,7 @@ class AccountController extends Controller {
           tags: this.tags,
           summary: "Update the current user",
           description: "Updates the current user in the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           request: {
             body: {
               description: "Properties to update in the account.",
@@ -156,7 +156,7 @@ class AccountController extends Controller {
                 throw new ContentTooLargeError("The maximum allowed upload size is 1 MB");
               },
             }),
-          ],
+          ] as const,
           request: {
             headers: z.object({
               "content-type": z
@@ -214,7 +214,7 @@ class AccountController extends Controller {
           tags: this.tags,
           summary: "Delete the avatar of the current user",
           description: "Deletes the avatar of the current user from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           responses: {
             204: { description: "No Content: The avatar was removed successfully." },
             401: {
@@ -236,7 +236,7 @@ class AccountController extends Controller {
           tags: this.tags,
           summary: "Delete the current user",
           description: "Deletes the current user from the database.",
-          middleware: [accessRightValidator(GENERAL_ACCESS)],
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           responses: {
             204: { description: "No Content: The user was deleted successfully." },
             401: {

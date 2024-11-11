@@ -34,7 +34,7 @@ class AuthController extends Controller {
           tags: this.tags,
           summary: "Get a challenge for registering a new user",
           description: "Generates a registration challenge for the user to register via the WebAuthn standard",
-          middleware: [authRateLimiter],
+          middleware: [authRateLimiter] as const,
           request: { query: z.object({ email: EMailSchema, name: NameSchema }).strict() },
           responses: {
             200: {
@@ -67,7 +67,7 @@ class AuthController extends Controller {
           tags: this.tags,
           summary: "Verify the response for a WebAuthn registration challenge",
           description: "Verifies the registration response and creates a new user if the request is valid.",
-          middleware: [authRateLimiter],
+          middleware: [authRateLimiter] as const,
           request: {
             query: z.object({ email: EMailSchema, name: NameSchema }).strict(),
             body: {
@@ -115,7 +115,7 @@ class AuthController extends Controller {
           description:
             "Generates an authentication challenge for any user to sign in. " +
             "The challenge is not related to a specific user.",
-          middleware: [authRateLimiter],
+          middleware: [authRateLimiter] as const,
           responses: {
             200: {
               description: "OK: The authentication challenge.",
@@ -137,7 +137,7 @@ class AuthController extends Controller {
           summary: "Verify the response for a WebAuthn authentication challenge",
           description:
             "Verifies the authentication response and creates a session cookie if the challenge response is valid.",
-          middleware: [authRateLimiter],
+          middleware: [authRateLimiter] as const,
           request: {
             body: {
               description: "The response to the authentication challenge.",

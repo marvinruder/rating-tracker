@@ -25,7 +25,7 @@ class ProxyController extends Controller {
         tags: this.tags,
         summary: "Access the Yahoo Finance API",
         description: "Relays a request to the Yahoo Finance API.",
-        middleware: [accessRightValidator(GENERAL_ACCESS)],
+        middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
         request: {
           query: z
             .object({
