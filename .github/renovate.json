@@ -9,7 +9,7 @@
     "* 18 * * *"
   ],
   "prHourlyLimit": 0,
-  "prConcurrentLimit": 4,
+  "prConcurrentLimit": 2,
   "automerge": true,
   "automergeType": "pr",
   "platformAutomerge": true,
