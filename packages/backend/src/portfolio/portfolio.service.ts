@@ -298,8 +298,7 @@ class PortfolioService {
    * @param id The ID of the portfolio.
    * @param email The email of the current user.
    * @param ticker The ticker of the stock to remove.
-   * @throws an {@link APIError} if the portfolio does not exist or belong to the user, or if the stock is not in the
-   * portfolio.
+   * @throws an {@link APIError} if the portfolio does not exist or belong to the user.
    */
   async removeStock(id: number, email: string, ticker: string) {
     const portfolio = await this.read(id, email);

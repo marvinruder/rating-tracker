@@ -1,5 +1,6 @@
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
+import LinkOffIcon from "@mui/icons-material/LinkOff";
 import SaveIcon from "@mui/icons-material/Save";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
@@ -26,11 +27,16 @@ import {
   messageTypeName,
   REGEX_PHONE_NUMBER,
   subscriptionOfMessageType,
+  basePath,
+  authAPIPath,
+  oidcEndpointSuffix,
 } from "@rating-tracker/commons";
 import { useEffect, useRef, useState } from "react";
 
 import accountClient from "../../../../api/account";
+import OpenIDConnectIcon from "../../../../components/etc/OpenIDConnect";
 import { useNotificationContextUpdater } from "../../../../contexts/NotificationContext";
+import { useStatusContextState } from "../../../../contexts/StatusContext";
 import { useUserContextState, useUserContextUpdater } from "../../../../contexts/UserContext";
 import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
 
@@ -40,11 +46,13 @@ import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
  * @returns The component.
  */
 export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
+  const { systemStatus } = useStatusContextState();
   const { user } = useUserContextState();
   const { refetchUser } = useUserContextUpdater();
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
+  const [oidcRequestInProgress, setOIDCRequestInProgress] = useState<boolean>(false);
   const [email, setEmail] = useState<string>(user.email);
   const [emailError, setEmailError] = useState<string>(""); // Error message for the email text field.
   const [name, setName] = useState<string>(user.name);
@@ -174,6 +182,19 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
       .then(() => refetchUser())
       .catch((e) => setErrorNotificationOrClearSession(e, "deleting account avatar"));
 
+  /**
+   * Disconnects the OpenID Connect identity from the current user in the backend.
+   */
+  const disconnectOIDCIdentity = () => {
+    setOIDCRequestInProgress(true);
+    accountClient.oidc
+      .$delete()
+      .then(handleResponse)
+      .then(() => refetchUser())
+      .catch((e) => setErrorNotificationOrClearSession(e, "disconnecting OpenID Connect identity"))
+      .finally(() => setOIDCRequestInProgress(false));
+  };
+
   return (
     <>
       <DialogContent sx={{ p: 0, pb: 2 }}>
@@ -280,6 +301,51 @@ export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
                 slotProps={{ htmlInput: { inputMode: "tel", type: "tel", pattern: REGEX_PHONE_NUMBER } }}
               />
             </Grid>
+            {systemStatus.services["OpenID Connect"].status === "success" && (
+              <Grid size={12}>
+                <Typography variant="h5" sx={{ pb: 0.5 }}>
+                  OpenID Connect
+                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                  {user.oidcIdentity ? (
+                    <>
+                      <Tooltip title="OpenID Connect Identity" arrow>
+                        <Box sx={(theme) => ({ height: 1.5 * (theme.typography.body1.fontSize as number) })}>
+                          <OpenIDConnectIcon
+                            sx={(theme) => ({ fontSize: 1.5 * (theme.typography.body1.fontSize as number) })}
+                          />
+                        </Box>
+                      </Tooltip>
+                      <Box sx={{ width: 8 }} />
+                      <Typography variant="body1" noWrap sx={{}}>
+                        {user.oidcIdentity.preferredUsername}
+                      </Typography>
+                      <LoadingButton
+                        sx={{ ml: "auto" }}
+                        variant="text"
+                        color="error"
+                        size="small"
+                        onClick={disconnectOIDCIdentity}
+                        loading={oidcRequestInProgress}
+                        startIcon={<LinkOffIcon />}
+                      >
+                        Disconnect
+                      </LoadingButton>
+                    </>
+                  ) : (
+                    <LoadingButton
+                      loading={oidcRequestInProgress}
+                      startIcon={oidcRequestInProgress ? undefined : <OpenIDConnectIcon />}
+                      variant="text"
+                      size="small"
+                      href={`${basePath}${authAPIPath}${oidcEndpointSuffix}`}
+                    >
+                      Connect
+                    </LoadingButton>
+                  )}
+                </Box>
+              </Grid>
+            )}
           </Grid>
           <Grid size={12} sx={{ px: "24px" }}>
             <Divider orientation="horizontal" sx={{ my: 2 }} />

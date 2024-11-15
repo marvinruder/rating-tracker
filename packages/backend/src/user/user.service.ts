@@ -12,6 +12,7 @@ import {
 import type DBService from "../db/db.service";
 import type SignalService from "../signal/signal.service";
 import BadRequestError from "../utils/error/api/BadRequestError";
+import ConflictError from "../utils/error/api/ConflictError";
 import InternalServerError from "../utils/error/api/InternalServerError";
 import NotFoundError from "../utils/error/api/NotFoundError";
 import Logger from "../utils/logger";
@@ -45,12 +46,12 @@ class UserService {
   }
 
   /**
-   * Create a user with WebAuthn credentials.
+   * Create a user.
    * @param user The user to create.
-   * @param credential The WebAuthn credential of the user.
+   * @param credential A WebAuthn credential to add to the user.
    * @returns Whether the user was created or existed already.
    */
-  async create(user: User, credential: WebAuthnCredential): Promise<boolean> {
+  async create(user: User, credential?: WebAuthnCredential): Promise<boolean> {
     // Attempt to find an existing user with the same email address
     try {
       await this.db.user.findUniqueOrThrow({ where: { email: user.email } });
@@ -65,14 +66,17 @@ class UserService {
       await this.db.user.create({
         data: {
           ...user,
+          oidcIdentity: { create: user.oidcIdentity ?? undefined },
           accessRights: isFirstUser ? 255 : user.accessRights,
-          webAuthnCredentials: {
-            create: {
-              id: Buffer.from(credential.id),
-              publicKey: Buffer.from(credential.publicKey),
-              counter: credential.counter,
-            },
-          },
+          webAuthnCredentials: credential
+            ? {
+                create: {
+                  id: Buffer.from(credential.id),
+                  publicKey: Buffer.from(credential.publicKey),
+                  counter: credential.counter,
+                },
+              }
+            : undefined,
         },
       });
       Logger.info({ component: "postgres", user: { email: user.email, name: user.name } }, "Created user");
@@ -87,15 +91,30 @@ class UserService {
 
   /**
    * Read a user. This method does not perform modifications on the user and is to be used internally only.
-   * @param email The email address of the user.
+   * @param identifier The identifier of the user. Must be either the email address or the OpenID Connect Subject
+   *                   Identifier.
+   * @param identifier.email The email address of the user.
+   * @param identifier.sub The OpenID Connect Subject Identifier of the user.
    * @returns The user.
    * @throws an {@link APIError} if the user does not exist.
    */
-  async #read(email: string): Promise<User> {
-    try {
-      return new User(await this.db.user.findUniqueOrThrow({ where: { email } }));
-    } catch {
-      throw new NotFoundError(`User ${email} not found.`);
+  async #read(identifier: { email: string } | { sub: string }): Promise<User> {
+    if ("email" in identifier) {
+      const { email } = identifier;
+      try {
+        return new User(await this.db.user.findUniqueOrThrow({ where: { email }, include: { oidcIdentity: true } }));
+      } catch {
+        throw new NotFoundError(`User ${email} not found.`);
+      }
+    } else {
+      const { sub } = identifier;
+      try {
+        return new User(
+          await this.db.user.findFirstOrThrow({ where: { oidcIdentity: { sub } }, include: { oidcIdentity: true } }),
+        );
+      } catch {
+        throw new NotFoundError(`User with OpenID Connect Subject Identifier ${sub} not found.`);
+      }
     }
   }
 
@@ -106,7 +125,17 @@ class UserService {
    * @throws an {@link APIError} if the user does not exist.
    */
   async read(email: string): Promise<User> {
-    return this.#replaceAvatarDataURL(await this.#read(email));
+    return this.#replaceAvatarDataURL(await this.#read({ email }));
+  }
+
+  /**
+   * Read a user identified by their OpenID Connect Subject Identifier.
+   * @param sub The OpenID Connect Subject Identifier of the user.
+   * @returns The user.
+   * @throws an {@link APIError} if the user does not exist.
+   */
+  async readByOIDCSub(sub: string): Promise<User> {
+    return this.#replaceAvatarDataURL(await this.#read({ sub }));
   }
 
   /**
@@ -114,9 +143,12 @@ class UserService {
    * @returns A list of all users.
    */
   async readAll(): Promise<User[]> {
-    return (await this.db.user.findMany({ orderBy: [{ accessRights: "desc" }, { name: "asc" }] })).map((user) =>
-      this.#replaceAvatarDataURL(new User(user)),
-    );
+    return (
+      await this.db.user.findMany({
+        orderBy: [{ accessRights: "desc" }, { name: "asc" }],
+        include: { oidcIdentity: true },
+      })
+    ).map((user) => this.#replaceAvatarDataURL(new User(user)));
   }
 
   /**
@@ -140,7 +172,7 @@ class UserService {
    * @throws an {@link APIError} if the user does not exist or does not have an avatar.
    */
   async readAvatar(email: string): Promise<{ mimeType: string; buffer: Buffer }> {
-    const user = await this.#read(email);
+    const user = await this.#read({ email });
     if (user.avatar) {
       const dataURLMatcher = /^data:(?<mimeType>\w+\/\w+)(;charset=.+)?;base64,(?<data>.*)$/;
       const match = user.avatar.match(dataURLMatcher);
@@ -159,7 +191,7 @@ class UserService {
    * @returns The users who shall receive a message of the given type.
    */
   async readMessageRecipients(messageType: MessageType, stock?: Pick<Stock, "ticker">): Promise<User[]> {
-    let users = (await this.db.user.findMany({ where: { phone: { not: null } } }))
+    let users = (await this.db.user.findMany({ where: { phone: { not: null } }, include: { oidcIdentity: true } }))
       .map((user) => new User(user))
       .filter((user) => user.phone?.match(REGEX_PHONE_NUMBER) && user.isAllowedAndWishesToReceiveMessage(messageType));
 
@@ -169,6 +201,7 @@ class UserService {
         (
           await this.db.user.findMany({
             where: { watchlists: { some: { subscribed: true, stocks: { some: { ticker: stock.ticker } } } } },
+            include: { oidcIdentity: true },
           })
         )
           .map((user) => new User(user))
@@ -181,12 +214,12 @@ class UserService {
   /**
    * Update a user.
    * @param email The email address of the user.
-   * @param newValues The new values for the user.
+   * @param newValues The new values for the user. An OpenID Connect identity cannot be updated using this method.
    * @throws an {@link APIError} if the user does not exist.
    */
-  async update(email: string, newValues: Partial<User>) {
+  async update(email: string, newValues: Partial<Omit<User, "oidcIdentity">>) {
     let k: keyof typeof newValues; // all keys of new values
-    const user = await this.#read(email); // Read the user from the database
+    const user = await this.#read({ email }); // Read the user from the database
     let isNewData = false;
     // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
     for (k in newValues) {
@@ -222,6 +255,90 @@ class UserService {
       // No new data was provided
       Logger.info({ component: "postgres", user: { email: user.email, name: user.name } }, "No updates for user");
     }
+  }
+
+  /**
+   * Add an OpenID Connect identity to a user.
+   * @param email The email address of the user.
+   * @param oidcIdentity The OpenID Connect identity to add.
+   * @throws an {@link APIError} if the user does not exist or already has an OpenID Connect identity.
+   */
+  async addOIDCIdentity(email: string, oidcIdentity: NonNullable<User["oidcIdentity"]>) {
+    const user = await this.#read({ email });
+    if (user.oidcIdentity) throw new ConflictError(`User ${email} already has an OpenID Connect identity.`);
+    await this.db.user.update({ where: { email }, data: { oidcIdentity: { create: oidcIdentity } } });
+    Logger.info(
+      { component: "postgres", user: { email: user.email, name: user.name }, oidcIdentity },
+      "Added OpenID Connect identity to user",
+    );
+  }
+
+  /**
+   * Update an OpenID Connect identity of a user.
+   * @param email The email address of the user.
+   * @param newValues The new values for the OpenID Connect identity.
+   * @throws an {@link APIError} if the user does not exist or does not have an OpenID Connect identity.
+   */
+  async updateOIDCIdentity(email: string, newValues: Partial<Omit<NonNullable<User["oidcIdentity"]>, "sub">>) {
+    let k: keyof typeof newValues; // all keys of new values
+    const user = await this.#read({ email });
+    if (!user.oidcIdentity) throw new NotFoundError(`User ${email} does not have an OpenID Connect identity.`);
+    let isNewData = false;
+    // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
+    for (k in newValues) {
+      if (newValues[k] !== undefined) {
+        if (user.oidcIdentity[k] === undefined)
+          /* c8 ignore next */ // Those properties are always caught by OpenAPI validation
+          throw new BadRequestError(`Invalid property ${k} for OpenID Connect identity ${user.oidcIdentity.sub}.`);
+        if (newValues[k] === user.oidcIdentity[k]) {
+          delete newValues[k];
+          continue;
+        }
+
+        // New data is different from old data
+        isNewData = true;
+      }
+    }
+
+    if (isNewData) {
+      await this.db.user.update({
+        where: { email },
+        data: { oidcIdentity: { update: { where: { sub: user.oidcIdentity.sub }, data: { ...newValues } } } },
+      });
+      Logger.info(
+        { component: "postgres", user: { email: user.email, name: user.name }, newValues },
+        "Updated OpenID Connect identity of user",
+      );
+    } else {
+      // No new data was provided
+      Logger.info(
+        { component: "postgres", user: { email: user.email, name: user.name } },
+        "No updates for OpenID Connect identity of user",
+      );
+    }
+  }
+
+  /**
+   * Removes an OpenID Connect identity from a user.
+   * @param email The email address of the user.
+   * @throws an {@link APIError} if the user does not exist.
+   */
+  async removeOIDCIdentity(email: string) {
+    const user = await this.#read({ email });
+    // Check whether the user has an OpenID Connect identity
+    if (!user.oidcIdentity) {
+      Logger.warn(
+        { component: "postgres", user: { email: user.email, name: user.name } },
+        "User does not have an OpenID Connect identity",
+      );
+      return;
+    }
+    // Remove the OpenID Connect identity from the user
+    await this.db.user.update({ where: { email }, data: { oidcIdentity: { delete: true } } });
+    Logger.info(
+      { component: "postgres", user: { email: user.email, name: user.name } },
+      "Removed OpenID Connect identity from user",
+    );
   }
 
   /**

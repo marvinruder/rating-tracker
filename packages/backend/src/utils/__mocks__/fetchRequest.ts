@@ -65,8 +65,6 @@ export const performFetchRequest = async (
       { value: url },
     );
 
-  if (url === "http://nonexisting.signal.api.host/v1/accounts")
-    return handleResponse(new Response(JSON.stringify([]), {}));
   if (url.match(/https:\/\/assets\.traderepublic\.com\/img\/logos\/[A-Z0-9]+\/light\.svg/))
     return [
       "DE0008404005",

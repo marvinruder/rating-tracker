@@ -34,6 +34,7 @@ const applyUserSeed = async (): Promise<void> => {
         await dbService.user.create({
           data: {
             ...user,
+            oidcIdentity: { create: user.oidcIdentity ?? undefined },
             webAuthnCredentials: {
               create: {
                 ...webAuthnCredentialExamples[index],
@@ -105,7 +106,11 @@ const applyResourceSeed = async (): Promise<void> => {
 const applySessionSeed = async (): Promise<void> => {
   await dbService.session.createMany({
     data: [
-      { id: Buffer.from("exampleSessionID", "base64url"), email: "jane.doe@example.com" },
+      {
+        id: Buffer.from("exampleSessionID", "base64url"),
+        email: "jane.doe@example.com",
+        oidcIDToken: "exampleIDToken",
+      },
       { id: Buffer.from("anotherExampleSessionID", "base64url"), email: "john.doe@example.com" },
       {
         id: Buffer.from("expiredSessionID", "base64url"),

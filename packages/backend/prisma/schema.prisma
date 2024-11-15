@@ -77,6 +77,7 @@ model User {
   accessRights        Int                  @default(0) @db.SmallInt
   subscriptions       Int?                 @db.SmallInt
   webAuthnCredentials WebAuthnCredential[]
+  oidcIdentity        OIDCUser?
   watchlists          Watchlist[]
   portfolios          Portfolio[]
   Session             Session[]
@@ -88,6 +89,13 @@ model WebAuthnCredential {
   counter   Int    @default(0)
   user      User   @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
   email     String @db.VarChar(255)
+}
+
+model OIDCUser {
+  sub               String @id
+  preferredUsername String
+  user              User   @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
+  email             String @unique @db.VarChar(255)
 }
 
 model Watchlist {
@@ -119,11 +127,12 @@ model StocksInPortfolios {
 }
 
 model Session {
-  id        Bytes    @id @default(dbgenerated("gen_random_bytes(32)"))
-  user      User     @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
-  email     String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  expiresAt DateTime @default(dbgenerated("date_add(now(), '1 hour')")) @db.Timestamp(6)
+  id          Bytes    @id @default(dbgenerated("gen_random_bytes(32)"))
+  user        User     @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
+  email       String   @db.VarChar(255)
+  oidcIDToken String?
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  expiresAt   DateTime @default(dbgenerated("date_add(now(), '1 hour')")) @db.Timestamp(6)
 }
 
 model Resource {

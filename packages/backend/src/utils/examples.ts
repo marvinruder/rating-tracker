@@ -578,6 +578,10 @@ export const userExamples: User[] = [
     phone: "+123456789",
     accessRights: 255,
     subscriptions: 0,
+    oidcIdentity: {
+      sub: "00000000-0000-0000-0000-000000000000",
+      preferredUsername: "jane.doe",
+    },
   }),
   new User({
     email: "john.doe@example.com",
@@ -586,6 +590,7 @@ export const userExamples: User[] = [
     phone: "+234567890",
     accessRights: GENERAL_ACCESS,
     subscriptions: STOCK_UPDATE_MESSAGE,
+    oidcIdentity: null,
   }),
 ];
 

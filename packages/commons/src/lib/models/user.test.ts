@@ -16,6 +16,7 @@ const root = new User({
   name: "Example User",
   accessRights: 255,
   subscriptions: 255,
+  oidcIdentity: { sub: "00000000-0000-0000-0000-000000000000", preferredUsername: "root" },
 });
 const regularUser = new User({
   ...optionalUserValuesNull,

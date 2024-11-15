@@ -66,7 +66,7 @@ export default [
             }],
 
             "new-cap": ["warn", {
-                capIsNewExceptions: ["Endpoint"],
+                capIsNewExceptions: ["Endpoint", "ClientSecretPost"],
             }],
 
             quotes: ["warn", "double", {

@@ -30,6 +30,7 @@ import packageInfo from "../package.json" with { type: "json" };
 import AccountController from "./account/account.controller";
 import AccountService from "./account/account.service";
 import AuthController from "./auth/auth.controller";
+import OIDCService from "./auth/oidc.service";
 import WebAuthnService from "./auth/webauthn.service";
 import DBService from "./db/db.service";
 import EmailController from "./email/email.controller";
@@ -72,12 +73,13 @@ const portfolioService: PortfolioService = new PortfolioService(dbService);
 const resourceService: ResourceService = new ResourceService(dbService);
 const sessionService: SessionService = new SessionService(dbService);
 const signalService: SignalService = new SignalService();
-const statusService: StatusService = new StatusService(dbService, emailService, signalService);
 const watchlistService: WatchlistService = new WatchlistService(dbService);
 const userService: UserService = new UserService(dbService, signalService);
 const accountService: AccountService = new AccountService(userService);
 const favoriteService: FavoriteService = new FavoriteService(dbService, watchlistService);
+const oidcService: OIDCService = new OIDCService(sessionService, userService);
 const webauthnService: WebAuthnService = new WebAuthnService(dbService, sessionService, userService);
+const statusService: StatusService = new StatusService(dbService, emailService, oidcService, signalService);
 const stockService: StockService = new StockService(
   dbService,
   portfolioService,
@@ -176,7 +178,7 @@ app.route(
   basePath,
   new OpenAPIHono()
     .route(accountAPIPath, new AccountController(accountService).router)
-    .route(authAPIPath, new AuthController(webauthnService).router)
+    .route(authAPIPath, new AuthController(oidcService, webauthnService).router)
     .route(emailAPIPath, new EmailController(emailService, userService).router)
     .route(favoritesAPIPath, new FavoriteController(favoriteService).router)
     .route(fetchAPIPath, new FetchController(fetchService).router)
@@ -184,7 +186,7 @@ app.route(
     .route(portfoliosAPIPath, new PortfolioController(portfolioService).router)
     .route(proxyAPIPath, new ProxyController(proxyService).router)
     .route(resourcesAPIPath, new ResourceController(resourceService).router)
-    .route(sessionAPIPath, new SessionController(sessionService).router)
+    .route(sessionAPIPath, new SessionController(oidcService, sessionService).router)
     .route(statusAPIPath, new StatusController(statusService).router)
     .route(stocksAPIPath, new StockController(stockService).router)
     .route(usersAPIPath, new UserController(userService).router)

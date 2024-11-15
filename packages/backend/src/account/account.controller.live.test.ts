@@ -1,6 +1,12 @@
 import assert from "node:assert";
 
-import { accountAPIPath, accountAvatarEndpointSuffix, basePath, sessionAPIPath } from "@rating-tracker/commons";
+import {
+  accountAPIPath,
+  accountAvatarEndpointSuffix,
+  accountOIDCIdentitySuffix,
+  basePath,
+  sessionAPIPath,
+} from "@rating-tracker/commons";
 
 import { expectRouteToBePrivate, type LiveTestSuite } from "../../test/liveTestHelpers";
 import { app } from "../server";
@@ -28,6 +34,8 @@ tests.push({
     expect(body.email).toBe("jane.doe@example.com");
     expect(body.name).toBe("Jane Doe");
     expect(body.phone).toBe("+123456789");
+    expect(body.oidcIdentity.sub).toBe("00000000-0000-0000-0000-000000000000");
+    expect(body.oidcIdentity.preferredUsername).toBe("jane.doe");
     // Authentication-related fields should not be exposed
     expect("credentialID" in body).toBeFalsy();
     expect("credentialPublicKey" in body).toBeFalsy();
@@ -209,5 +217,31 @@ tests.push({
       headers: { Cookie: "id=exampleSessionID" },
     });
     expect(res.status).toBe(404);
+  },
+});
+
+tests.push({
+  testName: "[unsafe] deletes the current user’s OpenID Connect identity",
+  testFunction: async () => {
+    await expectRouteToBePrivate(`${basePath}${accountAPIPath}${accountOIDCIdentitySuffix}`, "DELETE");
+
+    // Delete the OpenID Connect identity
+    let res = await app.request(`${basePath}${accountAPIPath}${accountOIDCIdentitySuffix}`, {
+      method: "DELETE",
+      headers: { Cookie: "id=exampleSessionID" },
+    });
+    expect(res.status).toBe(204);
+
+    // Deleting the OpenID Connect identity again does not return an error
+    res = await app.request(`${basePath}${accountAPIPath}${accountOIDCIdentitySuffix}`, {
+      method: "DELETE",
+      headers: { Cookie: "id=exampleSessionID" },
+    });
+    expect(res.status).toBe(204);
+
+    res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.oidcIdentity).toBeNull();
   },
 });

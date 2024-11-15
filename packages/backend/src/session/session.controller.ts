@@ -1,7 +1,8 @@
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
+import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import { GENERAL_ACCESS } from "@rating-tracker/commons";
 import { deleteCookie, getCookie } from "hono/cookie";
 
+import type OIDCService from "../auth/oidc.service";
 import Controller from "../utils/Controller";
 import { ErrorSchema } from "../utils/error/error.schema";
 import ErrorHelper from "../utils/error/errorHelper";
@@ -13,7 +14,10 @@ import type SessionService from "./session.service";
  * This controller is responsible for handling session information.
  */
 class SessionController extends Controller {
-  constructor(private sessionService: SessionService) {
+  constructor(
+    private oidcService: OIDCService,
+    private sessionService: SessionService,
+  ) {
     super({ tags: ["Session API"] });
   }
 
@@ -46,6 +50,25 @@ class SessionController extends Controller {
           description: "Deletes the current session from the database and clears the session cookie.",
           middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
           responses: {
+            200: {
+              description:
+                "OK: The front-channel logout URI to be accessed by the user in order to log out from OpenID Connect.",
+              content: {
+                "application/json": {
+                  schema: z
+                    .object({
+                      frontchannelLogoutURI: z
+                        .string({
+                          description:
+                            "The front-channel logout URI to be accessed by the user " +
+                            "in order to log out from OpenID Connect",
+                        })
+                        .url(),
+                    })
+                    .strict(),
+                },
+              },
+            },
             204: { description: "No Content: The user is no longer authenticated." },
             401: {
               description: "Unauthorized: The user is not authenticated.",
@@ -54,8 +77,13 @@ class SessionController extends Controller {
           },
         }),
         async (c) => {
-          await this.sessionService.delete(getCookie(c, "id")!);
+          const oidcIDToken = await this.sessionService.delete(getCookie(c, "id")!);
           deleteCookie(c, "id", sessionCookieOptions);
+          if (oidcIDToken) {
+            const frontchannelLogoutURI = await this.oidcService.getFrontchannelLogoutURI(oidcIDToken);
+            if (frontchannelLogoutURI instanceof URL)
+              return c.json({ frontchannelLogoutURI: frontchannelLogoutURI.href }, 200);
+          }
           return c.body(null, 204);
         },
       );

@@ -74,6 +74,23 @@ export const SubscriptionsSchema = z
   });
 
 /**
+ * The OpenID Connect identity of a user.
+ */
+export const OIDCIdentitySchema = z
+  .object(
+    {
+      sub: z.string({ description: "The subject identifier of the OpenID Connect identity." }).min(1),
+      preferredUsername: z
+        .string({ description: "A shorthand name by which the user wishes to be referred to." })
+        .min(1),
+    },
+    { description: "The OpenID Connect identity of a user." },
+  )
+  .openapi({
+    examples: userExamples.filter((user) => user.oidcIdentity !== undefined).map((user) => user.oidcIdentity!),
+  });
+
+/**
  * A user of the application.
  */
 export const UserSchema = z
@@ -85,6 +102,7 @@ export const UserSchema = z
       phone: PhoneSchema.nullable(),
       accessRights: AccessRightsSchema,
       subscriptions: SubscriptionsSchema.nullable(),
+      oidcIdentity: OIDCIdentitySchema.nullable(),
     },
     { description: "A user of the application." },
   )

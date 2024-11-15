@@ -1,5 +1,5 @@
 import type { User } from "@rating-tracker/commons";
-import { basePath, usersAvatarEndpointSuffix, usersAPIPath } from "@rating-tracker/commons";
+import { basePath, usersAvatarEndpointSuffix, usersAPIPath, usersOIDCIdentitySuffix } from "@rating-tracker/commons";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
 import { expectRouteToBePrivate, expectSpecialAccessRightsToBeRequired } from "../../test/liveTestHelpers";
@@ -260,6 +260,49 @@ tests.push({
     // attempting to delete a non-existent user’s avatar returns an error
     res = await app.request(
       `${basePath}${usersAPIPath}/${encodeURIComponent("does.not.exist@example.com")}${usersAvatarEndpointSuffix}`,
+      { method: "DELETE", headers: { Cookie: "id=exampleSessionID" } },
+    );
+    expect(res.status).toBe(404);
+  },
+});
+
+tests.push({
+  testName: "[unsafe] deletes a user’s OpenID Connect identity",
+  testFunction: async () => {
+    await expectRouteToBePrivate(
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersOIDCIdentitySuffix}`,
+      "DELETE",
+    );
+    await expectSpecialAccessRightsToBeRequired(
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersOIDCIdentitySuffix}`,
+      "DELETE",
+    );
+
+    // Delete the user’s OpenID Connect identity
+    let res = await app.request(
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersOIDCIdentitySuffix}`,
+      { method: "DELETE", headers: { Cookie: "id=exampleSessionID" } },
+    );
+    expect(res.status).toBe(204);
+
+    // Deleting the same user’s OpenID Connect identity again does not return an error
+    res = await app.request(
+      `${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}${usersOIDCIdentitySuffix}`,
+      { method: "DELETE", headers: { Cookie: "id=exampleSessionID" } },
+    );
+    expect(res.status).toBe(204);
+
+    // Check that the avatar was deleted
+    res = await app.request(`${basePath}${usersAPIPath}/${encodeURIComponent("jane.doe@example.com")}`, {
+      headers: { Cookie: "id=exampleSessionID" },
+    });
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.oidcIdentity).toBeNull();
+
+    // attempting to delete a non-existent user’s OpenID Connect identity returns an error
+    res = await app.request(
+      `${basePath}${usersAPIPath}/${encodeURIComponent("does.not.exist@example.com")}${usersOIDCIdentitySuffix}`,
       { method: "DELETE", headers: { Cookie: "id=exampleSessionID" } },
     );
     expect(res.status).toBe(404);

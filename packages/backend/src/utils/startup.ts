@@ -74,6 +74,11 @@ export const envSchema = z
     SMTP_USER: z.string().optional(),
     SMTP_PASSWORD: z.string().optional(),
     SMTP_FROM: z.string().email().optional(),
+    OIDC_ISSUER_URL: z.string().url().optional(),
+    OIDC_CLIENT_ID: z.string().optional(),
+    OIDC_CLIENT_SECRET: z.string().optional(),
+    OIDC_SCOPES: z.string().optional().default("openid email profile"),
+    OIDC_ROLE_CLAIM_PATH: z.string().optional(),
     EXIT_AFTER_READY: z.coerce.boolean().optional(),
   })
   .passthrough();

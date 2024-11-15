@@ -41,7 +41,7 @@ class AccountService {
   }
 
   /**
-   * Update a user.
+   * Update the user.
    * @param email The email address of the user.
    * @param newValues The new values for the user.
    * @throws an {@link APIError} if the user does not exist.
@@ -51,7 +51,16 @@ class AccountService {
   }
 
   /**
-   * Delete a user.
+   * Removes an OpenID Connect identity from the user.
+   * @param email The email address of the user.
+   * @throws an {@link APIError} if the user does not exist.
+   */
+  async removeOIDCIdentity(email: string) {
+    await this.userService.removeOIDCIdentity(email);
+  }
+
+  /**
+   * Delete the user.
    * @param email The email address of the user to delete.
    * @throws an {@link APIError} if the user does not exist.
    */

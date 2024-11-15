@@ -49,18 +49,22 @@ class SessionService {
   /**
    * Create a session.
    * @param email The user to create the session for.
+   * @param oidcIDToken An ID token from the OpenID Connect provider.
    * @returns The base64url-encoded session ID.
    */
-  async create(email: string): Promise<string> {
+  async create(email: string, oidcIDToken?: string): Promise<string> {
     const sessionID = this.#encodeSessionID(
       (
         await this.db.session.create({
-          data: { email, expiresAt: new Date(Date.now() + SessionService.SESSION_TTL * 1000) },
+          data: { email, oidcIDToken, expiresAt: new Date(Date.now() + SessionService.SESSION_TTL * 1000) },
           select: { id: true },
         })
       ).id,
     );
-    Logger.info({ component: "postgres", session: sessionID, user: email }, "Created session for user");
+    Logger.info(
+      { component: "postgres", session: sessionID, user: email },
+      `Created ${oidcIDToken ? "OpenID Connect " : ""}session for user`,
+    );
     return sessionID;
   }
 
@@ -75,7 +79,7 @@ class SessionService {
     try {
       const session = await this.db.session.findUniqueOrThrow({
         where: { id: sessionIDBuffer, expiresAt: { gte: new Date() } },
-        select: { user: true, createdAt: true },
+        select: { user: { include: { oidcIdentity: true } }, createdAt: true },
       });
       const user = new User(session.user);
       if (
@@ -101,16 +105,20 @@ class SessionService {
   /**
    * Delete a session.
    * @param id The ID of the session to delete.
+   * @returns the session’s OpenID Connect ID token, or `null` if the session had no OpenID Connect ID token.
    * @throws an {@link APIError} if the session does not exist.
    */
-  async delete(id: string) {
+  async delete(id: string): Promise<string | null> {
     const sessionIDBuffer = this.#decodeSessionID(id);
     // Attempt to find a session with the given ID
     try {
-      await this.db.session.findUniqueOrThrow({ where: { id: sessionIDBuffer, expiresAt: { gte: new Date() } } });
+      const session = await this.db.session.findUniqueOrThrow({
+        where: { id: sessionIDBuffer, expiresAt: { gte: new Date() } },
+      });
       // If that worked, we can delete the existing session
       await this.db.session.delete({ where: { id: sessionIDBuffer } });
       Logger.info({ component: "postgres", session: id }, "Deleted session");
+      return session.oidcIDToken;
     } catch {
       /* c8 ignore next 2 */ // Not reached in current tests since a user can only delete their current session
       throw new NotFoundError(`Session ${id} not found.`);

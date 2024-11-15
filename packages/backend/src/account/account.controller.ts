@@ -1,5 +1,5 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { GENERAL_ACCESS, accountAvatarEndpointSuffix } from "@rating-tracker/commons";
+import { GENERAL_ACCESS, accountAvatarEndpointSuffix, accountOIDCIdentitySuffix } from "@rating-tracker/commons";
 import type { TypedResponse } from "hono";
 import { bodyLimit } from "hono/body-limit";
 
@@ -226,6 +226,28 @@ class AccountController extends Controller {
         async (c) => {
           const user = c.get("user")!;
           await this.accountService.update(user.email, { avatar: null });
+          return c.body(null, 204);
+        },
+      )
+      .openapi(
+        createRoute({
+          method: "delete",
+          path: accountOIDCIdentitySuffix,
+          tags: this.tags,
+          summary: "Delete the OpenID Connect identity of the current user",
+          description: "Deletes the OpenID Connect identity from the current user in the database.",
+          middleware: [accessRightValidator(GENERAL_ACCESS)] as const,
+          responses: {
+            204: { description: "No Content: The OpenID Connect identity was removed successfully." },
+            401: {
+              description: "Unauthorized: The user is not authenticated.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+          },
+        }),
+        async (c) => {
+          const user = c.get("user")!;
+          await this.accountService.removeOIDCIdentity(user.email);
           return c.body(null, 204);
         },
       )

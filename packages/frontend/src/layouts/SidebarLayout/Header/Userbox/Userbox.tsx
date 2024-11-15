@@ -41,14 +41,19 @@ export const HeaderUserbox = (): JSX.Element => {
     // Delete the session
     sessionClient.index
       .$delete()
-      .then(handleResponse)
-      .then(() => {
-        setNotification({
-          severity: "success",
-          title: "See you next time!",
-          message: "Signed out successfully",
-        });
-        clearUser();
+      .then(async (res) => {
+        if (res.status === 200) {
+          const { frontchannelLogoutURI } = (await handleResponse(res)).data;
+          if (URL.canParse(frontchannelLogoutURI)) window.location.href = frontchannelLogoutURI;
+        } else {
+          await handleResponse(res);
+          setNotification({
+            severity: "success",
+            title: "See you next time!",
+            message: "Signed out successfully",
+          });
+          clearUser();
+        }
       })
       .catch((e) => {
         setErrorNotificationOrClearSession(e, "signing out");

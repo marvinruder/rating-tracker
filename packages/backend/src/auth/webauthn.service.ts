@@ -60,7 +60,8 @@ class WebAuthnService {
   #origin = `https://${process.env.FQDN}`;
 
   /**
-   * Read a WebAuthn credential, identified by its ID, and include the associated user.
+   * Read a WebAuthn credential, identified by its ID, and include the associated user. The user object will not contain
+   * the OIDC identity.
    * @param credentialID The base64url-encoded ID of the credential.
    * @returns The credential including the associated user.
    * @throws an {@link APIError} if the credential does not exist.
@@ -71,7 +72,7 @@ class WebAuthnService {
     try {
       const credential = await this.db.webAuthnCredential.findUniqueOrThrow({
         where: { id: credentialIDBuffer },
-        select: { id: true, publicKey: true, counter: true, user: true },
+        select: { id: true, publicKey: true, counter: true, user: { include: { oidcIdentity: true } } },
       });
       return { ...credential, user: new User(credential.user) };
     } catch {

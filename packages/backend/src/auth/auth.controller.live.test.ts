@@ -6,6 +6,7 @@ import {
   accountAPIPath,
   usersAPIPath,
   authAPIPath,
+  oidcEndpointSuffix,
 } from "@rating-tracker/commons";
 
 import type { LiveTestSuite } from "../../test/liveTestHelpers";
@@ -343,6 +344,209 @@ tests.push({
     expect(body.email).toBe("jim.doe@example.com");
     expect(body.name).toBe("Jim Doe");
     expect(body.accessRights).toBe(255);
+  },
+});
+
+tests.push({
+  testName: "[unsafe] registers and authenticates a new user using OpenID Connect",
+  testFunction: async () => {
+    // Get authorization URL
+    let res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`);
+    expect(res.status).toBe(302);
+    const authorizationURL = new URL(res.headers.get("location")!);
+    expect(authorizationURL.protocol).toBe("https:");
+    expect(authorizationURL.hostname).toBe("sso.example.com");
+    expect(authorizationURL.pathname).toBe("/protocol/openid-connect/auth");
+    expect(authorizationURL.searchParams.get("client_id")).toBe("rating-tracker");
+    expect(authorizationURL.searchParams.get("redirect_uri")).toBe("https://subdomain.example.com/login");
+    expect(authorizationURL.searchParams.get("response_type")).toBe("code");
+    expect(authorizationURL.searchParams.get("scope")).toBe("openid profile email phone");
+    expect(authorizationURL.searchParams.has("code_challenge")).toBeTruthy();
+    expect(authorizationURL.searchParams.get("code_challenge_method")).toBe("S256");
+
+    const codeVerifierCookie = res.headers.get("set-cookie")!.split(";")[0];
+
+    // The code challenge cookie must be present
+    res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ code: "jim.doe", iss: "https://sso.example.com" }),
+    });
+    let body = await res.json();
+    expect(res.status).toBe(400);
+    expect(body.message).toMatch("No code verifier was provided");
+
+    res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", Cookie: codeVerifierCookie },
+      body: JSON.stringify({ code: "jim.doe", iss: "https://sso.example.com" }),
+    });
+    expect(res.status).toBe(204);
+
+    // Temporary cookies should be deleted
+    expect(res.headers.get("set-cookie")).toMatch("codeVerifier=;");
+    expect(res.headers.get("set-cookie")).toMatch("nonce=;");
+
+    // Check that session cookie works
+    const idCookieHeader = res.headers
+      .get("set-cookie")!
+      .substring(res.headers.get("set-cookie")!.indexOf("id="))
+      .split(";")[0];
+    res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: idCookieHeader } });
+    body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.email).toBe("jim.doe@example.com");
+    expect(body.name).toBe("Jim Doe");
+    expect(body.accessRights).toBe(1);
+    expect(body.oidcIdentity.sub).toBe("22222222-2222-2222-2222-222222222222");
+    expect(body.oidcIdentity.preferredUsername).toBe("jim.doe");
+  },
+});
+
+tests.push({
+  testName: "does not create a user whose email address is not verified",
+  testFunction: async () => {
+    // The OpenID Connect provider must declare that they verified the user’s email address
+    let res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", Cookie: "codeVerifier=jess.doe" },
+      body: JSON.stringify({ code: "jess.doe", iss: "https://sso.example.com" }),
+    });
+    let body = await res.json();
+    expect(res.status).toBe(401);
+    expect(body.message).toMatch("The OpenID Connect provider did not verify the user’s email address");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] does not create a session for a new user with no access rights",
+  testFunction: async () => {
+    // No access rights array
+    let res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", Cookie: "codeVerifier=jack.doe" },
+      body: JSON.stringify({ code: "jack.doe", iss: "https://sso.example.com" }),
+    });
+    let body = await res.json();
+    expect(res.status).toBe(401);
+    expect(body.message).toMatch("Unable to retrieve user roles from the OpenID Connect provider");
+
+    // Check that no session cookie was issued
+    expect(res.headers.get("set-cookie")).not.toMatch("id=");
+
+    // Empty access rights array
+    res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", Cookie: "codeVerifier=jen.doe" },
+      body: JSON.stringify({ code: "jen.doe", iss: "https://sso.example.com" }),
+    });
+    body = await res.json();
+    expect(res.status).toBe(403);
+    expect(body.message).toMatch("This user account is not yet activated");
+
+    // Check that no session cookie was issued
+    expect(res.headers.get("set-cookie")).not.toMatch("id=");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] adds an OpenID Connect identity to an existing authenticated user",
+  testFunction: async () => {
+    // We cannot add another OpenID Connect identity to a user that already has one
+    let res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", Cookie: "codeVerifier=jane.doe; id=exampleSessionID" },
+      body: JSON.stringify({ code: "jane.doe", iss: "https://sso.example.com" }),
+    });
+    let body = await res.json();
+    expect(res.status).toBe(409);
+    expect(body.message).toMatch("User jane.doe@example.com already has an OpenID Connect identity");
+
+    res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", Cookie: "codeVerifier=john.doe; id=anotherExampleSessionID" },
+      body: JSON.stringify({ code: "john.doe", iss: "https://sso.example.com" }),
+    });
+    expect(res.status).toBe(204);
+    // Since we are already authenticated, only our existing session cookie will be renewed.
+    // No new session ID will be created.
+    expect(res.headers.get("set-cookie")).toMatch("id=anotherExampleSessionID");
+
+    // Check that the user has an OpenID Connect identity
+    res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: "id=anotherExampleSessionID" } });
+    body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.email).toBe("john.doe@example.com");
+    expect(body.name).toBe("John Doe");
+    // Phone number provided by OpenID Connect does not match our required format and must not be updated
+    expect(body.phone).not.toBe("01234567890");
+    expect(body.accessRights).toBe(3); // Access rights were updated
+    expect(body.oidcIdentity.sub).toBe("11111111-1111-1111-1111-111111111111");
+    expect(body.oidcIdentity.preferredUsername).toBe("john.doe");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] adds an OpenID Connect identity to an existing user based on their email",
+  testFunction: async () => {
+    let res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", Cookie: "codeVerifier=john.doe" },
+      body: JSON.stringify({ code: "john.doe", iss: "https://sso.example.com" }),
+    });
+    expect(res.status).toBe(204);
+
+    // Check that session cookie works
+    const idCookieHeader = res.headers
+      .get("set-cookie")!
+      .substring(res.headers.get("set-cookie")!.indexOf("id="))
+      .split(";")[0];
+    res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: idCookieHeader } });
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.email).toBe("john.doe@example.com");
+    expect(body.name).toBe("John Doe");
+    expect(body.accessRights).toBe(3); // Access rights were updated
+    expect(body.oidcIdentity.sub).toBe("11111111-1111-1111-1111-111111111111");
+    expect(body.oidcIdentity.preferredUsername).toBe("john.doe");
+  },
+});
+
+tests.push({
+  testName: "[unsafe] updates the information of a user with an existing OpenID Connect identity",
+  testFunction: async () => {
+    // Check the current information
+    let res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: "id=exampleSessionID" } });
+    let body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.email).toBe("jane.doe@example.com");
+    expect(body.name).toBe("Jane Doe");
+    expect(body.accessRights).toBe(255);
+    expect(body.oidcIdentity.sub).toBe("00000000-0000-0000-0000-000000000000");
+    expect(body.oidcIdentity.preferredUsername).toBe("jane.doe");
+
+    // Authenticate with OpenID Connect
+    res = await app.request(`${basePath}${authAPIPath}${oidcEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", Cookie: "codeVerifier=jane.doe" },
+      body: JSON.stringify({ code: "jane.doe", iss: "https://sso.example.com" }),
+    });
+    expect(res.status).toBe(204);
+
+    // Check that session cookie works
+    const idCookieHeader = res.headers
+      .get("set-cookie")!
+      .substring(res.headers.get("set-cookie")!.indexOf("id="))
+      .split(";")[0];
+    res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: idCookieHeader } });
+    body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.email).toBe("jane.roe@example.com"); // Email address was updated
+    expect(body.name).toBe("Jane Roe"); // Name was updated
+    expect(body.phone).toBe("+1234567890"); // Phone number was updated
+    expect(body.accessRights).toBe(131); // Access rights were updated
+    expect(body.oidcIdentity.sub).toBe("00000000-0000-0000-0000-000000000000");
+    expect(body.oidcIdentity.preferredUsername).toBe("jane.roe"); // Preferred username was updated
   },
 });
 

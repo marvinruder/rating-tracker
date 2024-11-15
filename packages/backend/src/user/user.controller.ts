@@ -1,5 +1,10 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import { ADMINISTRATIVE_ACCESS, GENERAL_ACCESS, usersAvatarEndpointSuffix } from "@rating-tracker/commons";
+import {
+  ADMINISTRATIVE_ACCESS,
+  GENERAL_ACCESS,
+  usersAvatarEndpointSuffix,
+  usersOIDCIdentitySuffix,
+} from "@rating-tracker/commons";
 import type { TypedResponse } from "hono";
 import { bodyLimit } from "hono/body-limit";
 
@@ -305,6 +310,40 @@ class UserController extends Controller {
         }),
         async (c) => {
           await this.userService.update(c.req.valid("param").email, { avatar: null });
+          return c.body(null, 204);
+        },
+      )
+      .openapi(
+        createRoute({
+          method: "delete",
+          path: `/{email}${usersOIDCIdentitySuffix}`,
+          tags: this.tags,
+          summary: "Delete the OpenID Connect identity of a user",
+          description: "Deletes the OpenID Connect identity from a user in the database.",
+          middleware: [accessRightValidator(GENERAL_ACCESS + ADMINISTRATIVE_ACCESS)] as const,
+          request: { params: z.object({ email: EMailSchema }).strict() },
+          responses: {
+            204: { description: "No Content: The OpenID Connect identity was removed successfully." },
+            400: {
+              description: "Bad Request: The request path is invalid.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            401: {
+              description: "Unauthorized: The user is not authenticated.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            403: {
+              description: "Forbidden: The user lacks the necessary access rights.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            404: {
+              description: "Not Found: No user with the given email address exists.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+          },
+        }),
+        async (c) => {
+          await this.userService.removeOIDCIdentity(c.req.valid("param").email);
           return c.body(null, 204);
         },
       )

@@ -1,6 +1,7 @@
 import type { Service } from "@rating-tracker/commons";
 import { serviceArray } from "@rating-tracker/commons";
 
+import type OIDCService from "../auth/oidc.service";
 import type DBService from "../db/db.service";
 import type EmailService from "../email/email.service";
 import type SignalService from "../signal/signal.service";
@@ -12,6 +13,7 @@ class StatusService {
   constructor(
     private dbService: DBService,
     private emailService: EmailService,
+    private oidcService: OIDCService,
     private signalService: SignalService,
   ) {}
 
@@ -26,6 +28,7 @@ class StatusService {
       await Promise.allSettled([
         // The order is important here and must match the order in `serviceArray`.
         this.dbService.getStatus(),
+        this.oidcService.getStatus(),
         this.emailService.getStatus(),
         this.signalService.getStatus(),
       ])
