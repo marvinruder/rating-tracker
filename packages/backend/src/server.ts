@@ -125,6 +125,11 @@ app.use("/api-docs", async (c, next) => {
   c.header("Cross-Origin-Embedder-Policy", "unsafe-none");
   c.header("Cross-Origin-Resource-Policy", "cross-origin");
 });
+app.use("/assets/images", async (c, next) => {
+  await next();
+  // Override CORP for image resources
+  c.header("Cross-Origin-Resource-Policy", "cross-origin");
+});
 app.use(
   secureHeaders({
     contentSecurityPolicy: {
