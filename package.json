@@ -12,12 +12,12 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "conc --kill-others \"yarn dev:run\" \"yarn dev:watch\" \"yarn dev:vite\" -n \",≫,\" -p \"{name}\" -c #339933,#FFCF00,#61DAFB --timings",
+    "dev": "conc --kill-others \"yarn dev:run\" \"yarn dev:watch\" \"yarn dev:vite\" -n \",≫,\" -p \"{name}\" -c #339933,#FFCF00,#61DAFB --timings",
     "test": "yarn workspaces foreach -Apv -j unlimited run test",
     "build": "yarn workspaces foreach -Apv -j unlimited run build",
-    "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm && sed -E -i.bak 's/\"module\": \"([A-Za-z0-9\\-\\.]+)\",/\"main\": \"\\1\",\\\n  \"module\": \"\\1\",/g ; s/^}$/}\\\n/' packages/wasm/package.json && rm packages/wasm/package.json.bak",
+    "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm",
     "tools": "cd ./tools && yarn",
-    "validate": "conc \"yarn workspaces foreach -Apv -j unlimited run typecheck\" \"yarn workspaces foreach -Apv -j unlimited run lint\" -n \"ﯤ,\" -p \"{name}\" -c #3178C6,#4B32C3"
+    "validate": "conc \"yarn workspaces foreach -Apv -j unlimited run typecheck\" \"yarn workspaces foreach -Apv -j unlimited run lint\" -n \"󰛦,󰱺\" -p \"{name}\" -c #3178C6,#4B32C3"
   },
   "packageManager": "yarn@4.5.1",
   "dependencies": {

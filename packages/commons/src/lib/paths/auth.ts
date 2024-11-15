@@ -3,6 +3,10 @@
  */
 export const authAPIPath = "/auth";
 /**
+ * The OpenID Connect endpoint suffix.
+ */
+export const oidcEndpointSuffix = "/oidc";
+/**
  * The User Registration endpoint suffix.
  */
 export const registerEndpointSuffix = "/register";

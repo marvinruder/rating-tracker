@@ -111,7 +111,7 @@ The dialog to save the weighted stocks to a new or existing portfolio transparen
 
 #### User Management
 
-The Rating Tracker supports multiple users, who can self-register via WebAuthn and access the application after being granted fine-grained access by an administrator, for whom a “User Management” web interface is provided.
+The Rating Tracker supports multiple users, who can self-register via WebAuthn or OpenID Connect and access the application after being granted fine-grained access by an administrator, for whom a “User Management” web interface is provided.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/docs/images/usermanagement-dark.png">
@@ -274,6 +274,35 @@ location / {
 
 After setting up your Rating Tracker instance, navigate to its URL and register, creating WebAuthn credentials. The first user registered will be granted ultimate access rights automatically. After registering, you can log in using your credentials.
 
+#### Configure OpenID Connect provider
+
+To use Rating Tracker with an OpenID Connect provider, set the following mandatory environment variables:
+
+-   `OIDC_ISSUER_URL`: The issuer identifier (i.e., the base URL) of the OpenID Connect provider
+-   `OIDC_CLIENT_ID`: The client identifier configured for Rating Tracker at the OpenID Connect provider
+-   `OIDC_CLIENT_SECRET`: The client secret related to the Client ID above
+
+Given that your Rating Tracker instance resides at `https://ratingtracker.example.com`, the client at your OpenID Connect provider must be configured with:
+
+-    the root or home URL: `https://ratingtracker.example.com`
+-    the redirect URI: `https://ratingtracker.example.com/login`
+-    the post-logout redirect URI: `https://ratingtracker.example.com/login?origin=oidc_post_logout`
+-    the Authorization Code Flow enabled
+-    Front channel logout enabled
+-    optionally and if supported, the logo URL: `https://mruder.internal.mruder.dev/assets/images/favicon-dev/favicon-192.png`
+
+To read all supported user information from the claims, the scopes `openid profile email phone` should be requested using the `OIDC_SCOPES` environment variable.
+
+To manage access rights using OpenID Connect roles, create the following roles in your OpenID Connect provider:
+
+Role name | Description
+----------|------------
+`administrative_access` | Administrative access to the application. May add, edit and delete users.
+`write_stocks_access` | Write access to stocks. May add, edit and delete stocks, as well as fetch data from providers.
+`general_access` | General access to the application. May log in and view stocks.
+
+Next, assign users to the roles as needed, then add the roles to a scope so that they are included in the ID token. To have Rating Tracker extract the roles from the ID token, set the `OIDC_ROLE_CLAIM_PATH` environment variable to the JMES path referencing the array of roles within the ID token claims, such as `resource_access."rating-tracker".roles`.
+
 ### Supported environment variables
 
 Variables in bold font are mandatory.
@@ -300,6 +329,11 @@ Variable | Example Value | Explanation
 `SMTP_USER` | `ratingtracker` | The username to use for the SMTP connection. If unset, no authentication will be used.
 `SMTP_PASS` | `********` | The password to use for the SMTP connection. If unset, no authentication will be used.
 `SMTP_FROM` | `ratingtracker@example.com` | The email address to use as the sender of emails. If unset, no emails will be sent.
+`OIDC_ISSUER_URL` | `https://sso.example.com` | The issuer identifier (i.e., the base URL) of the OpenID Connect provider to use for authentication. If unset, no OpenID Connect authentication will be used.
+`OIDC_CLIENT_ID` | `rating-tracker` | The client identifier to use for the OpenID Connect provider. If unset, no OpenID Connect authentication will be used.
+`OIDC_CLIENT_SECRET` | `********` | The client secret to use for the OpenID Connect provider. If unset, no OpenID Connect authentication will be used.
+`OIDC_SCOPES` | `openid profile email` | A space-delimited list of scopes to request from the OpenID Connect provider. If unset, a default set of scopes will be used.
+`OIDC_ROLE_CLAIM_PATH` | `resource_access."rating-tracker".roles` | A JMES path referencing an array of roles within the ID token claims. If unset, no roles will be extracted from the ID token.
 
 </details>
 

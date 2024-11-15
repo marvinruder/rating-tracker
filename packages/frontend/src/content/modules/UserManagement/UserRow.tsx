@@ -32,6 +32,7 @@ import { useState } from "react";
 import userClient from "../../../api/user";
 import { DeleteUser } from "../../../components/dialogs/user/DeleteUser";
 import { SendEmailToUser } from "../../../components/dialogs/user/SendEmailToUser";
+import OpenIDConnectIcon from "../../../components/etc/OpenIDConnect";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import { useStatusContextState } from "../../../contexts/StatusContext";
 
@@ -147,6 +148,23 @@ const UserRow = (props: UserRowProps): JSX.Element => {
             <Typography variant="body2" noWrap sx={{ color: "text.secondary", width: 160 }}>
               {props.user.email}
             </Typography>
+            {props.user.oidcIdentity ? (
+              <Box sx={{ display: "flex", alignItems: "center", width: 160 }}>
+                <Tooltip title="OpenID Connect Identity" arrow>
+                  <Box sx={(theme) => ({ height: 1.5 * (theme.typography.body2.fontSize as number) })}>
+                    <OpenIDConnectIcon
+                      sx={(theme) => ({ fontSize: 1.5 * (theme.typography.body2.fontSize as number) })}
+                    />
+                  </Box>
+                </Tooltip>
+                <Box sx={{ width: 8 }} />
+                <Typography variant="body2" noWrap sx={{ color: "text.secondary", width: 120 }}>
+                  {props.user.oidcIdentity.preferredUsername}
+                </Typography>
+              </Box>
+            ) : (
+              <></>
+            )}
           </Box>
         </Box>
       </TableCell>
@@ -186,7 +204,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
         </FormControl>
       </TableCell>
       {/* Actions */}
-      <TableCell sx={{ whiteSpace: "nowrap" }}>
+      <TableCell sx={{ whiteSpace: "nowrap", minWidth: 102 }}>
         {emailConfigured && (
           <Tooltip title="Send email to user" arrow>
             <Box sx={{ display: "inline-block", mr: 1 }}>
@@ -274,7 +292,7 @@ const UserRow = (props: UserRowProps): JSX.Element => {
         <Skeleton width={280} height={69} />
       </TableCell>
       {/* Actions */}
-      <TableCell sx={{ whiteSpace: "nowrap" }}>
+      <TableCell sx={{ whiteSpace: "nowrap", minWidth: 102 }}>
         {emailConfigured && (
           <Skeleton
             sx={{ mr: 1, display: "inline-block", verticalAlign: "middle" }}

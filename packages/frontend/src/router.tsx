@@ -1,12 +1,13 @@
 import { Box, CircularProgress } from "@mui/material";
 import {
+  handleResponse,
   portfolioBuilderEndpointSuffix,
   portfoliosAPIPath,
   stocksAPIPath,
   usersAPIPath,
   watchlistsAPIPath,
 } from "@rating-tracker/commons";
-import { Suspense, lazy, useEffect } from "react";
+import { StrictMode, Suspense, lazy, useEffect } from "react";
 import type { RouteObject } from "react-router";
 import { useLocation } from "react-router";
 import { Navigate, useSearchParams } from "react-router-dom";
@@ -18,8 +19,10 @@ import { Navigate, useSearchParams } from "react-router-dom";
  * The login application.
  * Since it is displayed first, we load it right away and do not use a suspense loader.
  */
+import authClient from "./api/auth";
 import { LoginPage } from "./content/pages/Login";
-import { useUserContextState } from "./contexts/UserContext";
+import { useNotificationContextUpdater } from "./contexts/NotificationContext";
+import { useUserContextState, useUserContextUpdater } from "./contexts/UserContext";
 
 /**
  * A component that renders a loading indicator.
@@ -141,6 +144,50 @@ const Status404 = loader(lazy(() => import("./content/pages/Status/Status404")))
 const SidebarLayout = loader(lazy(() => import("./layouts/SidebarLayout/SidebarLayout")));
 
 /**
+ * Returns a human-readable ASCII encoded text description of an OAuth2 or OpenID Connect error code. If the error code
+ * is unknown, a generic error message is returned.
+ * @param errorCode The error code to describe.
+ * @returns The description of the error code.
+ */
+const oidcErrorDescription = (errorCode: string): string => {
+  switch (errorCode) {
+    case "invalid_request":
+      return (
+        "The request is missing a required parameter, includes an invalid parameter value, " +
+        "includes a parameter more than once, or is otherwise malformed."
+      );
+    case "unauthorized_client":
+      return "Rating Tracker is not authorized to request an authorization code using this method.";
+    case "access_denied":
+      return "The resource owner or the OpenID Connect provider denied the request.";
+    case "unsupported_response_type":
+      return "The OpenID Connect provider does not support obtaining an authorization code using this method.";
+    case "invalid_scope":
+      return "The requested scope is invalid, unknown, or malformed.";
+    case "server_error":
+      return (
+        "The OpenID Connect provider encountered an unexpected condition " +
+        "that prevented it from fulfilling the request."
+      );
+    case "temporarily_unavailable":
+      return (
+        "The OpenID Connect provider is currently unable to handle the request due to a " +
+        "temporary overloading or maintenance."
+      );
+    case "interaction_required":
+      return "The OpenID Connect provider requires user interaction of some form to proceed.";
+    case "login_required":
+      return "The OpenID Connect provider requires user authentication.";
+    case "account_selection_required":
+      return "The user is required to select a session at the OpenID Connect provider.";
+    case "consent_required":
+      return "The OpenID Connect provider requires user consent.";
+    default:
+      return "An unknown error occurred.";
+  }
+};
+
+/**
  * A wrapper ensuring that the user is authenticated before displaying the page.
  * Also provides a user context if the user is authenticated.
  * @param props The properties of the component.
@@ -148,29 +195,72 @@ const SidebarLayout = loader(lazy(() => import("./layouts/SidebarLayout/SidebarL
  */
 const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
   const { pathname } = useLocation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useUserContextState();
+  const { refetchUser } = useUserContextUpdater();
+  const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
 
-  return user !== undefined ? (
-    // If the request finished, evaluate the result
-    user ? (
-      // If the user is authenticated, display the page
-      props.isLoginPage ? (
-        // If an authenticated user tries to access the login page, redirect them to their desired page
-        // If no redirect was specified, redirect to the stock page
-        <Navigate to={searchParams.get("redirect") || stocksAPIPath} replace />
+  const redirectedFromOIDC =
+    props.isLoginPage &&
+    (searchParams.has("code") ||
+      searchParams.has("error") ||
+      (searchParams.has("origin") && searchParams.get("origin") === "oidc_post_logout"));
+
+  useEffect(() => {
+    if (redirectedFromOIDC)
+      void (async (): Promise<void> => {
+        if (searchParams.has("code")) {
+          try {
+            // Send the authentication challenge response to the server
+            await authClient.oidc
+              .$post({ json: Object.fromEntries(searchParams) as { code: string } })
+              .then(handleResponse);
+            // This is only reached if the authentication was successful
+            setNotification(undefined);
+            await refetchUser(); // After refetching, the user is redirected automatically
+          } catch (e) {
+            setErrorNotificationOrClearSession(e, "completing OpenID Connect authentication");
+          }
+        } else if (searchParams.has("error")) {
+          setErrorNotificationOrClearSession(
+            new Error(oidcErrorDescription(searchParams.get("error") ?? "")),
+            "authenticating using OpenID Connect",
+          );
+        } else if (searchParams.has("origin") && searchParams.get("origin") === "oidc_post_logout") {
+          setNotification({
+            severity: "success",
+            title: "See you next time!",
+            message: "Signed out successfully from OpenID Connect",
+          });
+        }
+        setSearchParams({});
+      })();
+  }, []);
+
+  return (
+    <StrictMode>
+      {user !== undefined && !redirectedFromOIDC ? (
+        // If the request finished, evaluate the result
+        user ? (
+          // If the user is authenticated, display the page
+          props.isLoginPage ? (
+            // If an authenticated user tries to access the login page, redirect them to their desired page
+            // If no redirect was specified, redirect to the stock page
+            <Navigate to={searchParams.get("redirect") || stocksAPIPath} replace />
+          ) : (
+            props.children // If any other page was requested, show it
+          )
+        ) : // If the user is not authenticated, show them the login page
+        props.isLoginPage ? (
+          props.children // If the login page was requested, show it
+        ) : (
+          // If any other page was requested, redirect to the login page while retaining the requested path
+          <Navigate to={`/login?redirect=${encodeURIComponent(pathname)}`} replace />
+        )
       ) : (
-        props.children // If any other page was requested, show it
-      )
-    ) : // If the user is not authenticated, show them the login page
-    props.isLoginPage ? (
-      props.children // If the login page was requested, show it
-    ) : (
-      // If any other page was requested, redirect to the login page while retaining the requested path
-      <Navigate to={`/login?redirect=${encodeURIComponent(pathname)}`} replace />
-    )
-  ) : (
-    <SuspenseLoader /> // While the request is still running, show a loading indicator
+        <SuspenseLoader /> // While the request is still running, show a loading indicator
+      )}
+    </StrictMode>
   );
 };
 

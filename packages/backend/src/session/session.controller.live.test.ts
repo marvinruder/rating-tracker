@@ -64,9 +64,32 @@ tests.push({
     await expectRouteToBePrivate(`${basePath}${sessionAPIPath}`, "DELETE");
     let res = await app.request(`${basePath}${sessionAPIPath}`, {
       method: "DELETE",
-      headers: { Cookie: "id=exampleSessionID" },
+      headers: { Cookie: "id=anotherExampleSessionID" },
     });
     expect(res.status).toBe(204);
+    expect(res.headers.get("set-cookie")).toMatch("id=;");
+
+    // Check whether we can still access the current user
+    res = await app.request(`${basePath}${accountAPIPath}`, { headers: { Cookie: "id=anotherExampleSessionID" } });
+    expect(res.status).toBe(200);
+    expect(Object.keys(await res.json())).toHaveLength(0);
+  },
+});
+
+tests.push({
+  testName: "[unsafe] returns front-channel logout URI when signing out after signing in with OpenID Connect",
+  testFunction: async () => {
+    await expectRouteToBePrivate(`${basePath}${sessionAPIPath}`, "DELETE");
+    let res = await app.request(`${basePath}${sessionAPIPath}`, {
+      method: "DELETE",
+      headers: { Cookie: "id=exampleSessionID" },
+    });
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.frontchannelLogoutURI).toMatch(
+      "https://sso.example.com/protocol/openid-connect/logout?client_id=rating-tracker&id_token_hint=exampleIDToken&" +
+        `post_logout_redirect_uri=${encodeURIComponent("https://subdomain.example.com/login?origin=oidc_post_logout")}`,
+    );
     expect(res.headers.get("set-cookie")).toMatch("id=;");
 
     // Check whether we can still access the current user

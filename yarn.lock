@@ -1456,6 +1456,7 @@ __metadata:
     "@prisma/client": "npm:5.22.0"
     "@rating-tracker/commons": "workspace:*"
     "@simplewebauthn/server": "npm:11.0.0"
+    "@types/jmespath": "npm:0.15.2"
     "@types/node": "npm:22.9.0"
     "@types/node-cron": "npm:3.0.11"
     "@types/smtp-server": "npm:3.5.10"
@@ -1476,7 +1477,9 @@ __metadata:
     globals: "npm:15.12.0"
     hono: "npm:4.6.10"
     hono-rate-limiter: "npm:0.4.0"
+    jmespath: "npm:0.16.0"
     node-cron: "npm:3.0.3"
+    oauth4webapi: "npm:3.1.2"
     pino: "npm:9.5.0"
     pino-pretty: "npm:13.0.0"
     prettier: "npm:3.3.3"
@@ -2012,6 +2015,13 @@ __metadata:
   version: 4.0.4
   resolution: "@types/http-cache-semantics@npm:4.0.4"
   checksum: 10c0/51b72568b4b2863e0fe8d6ce8aad72a784b7510d72dc866215642da51d84945a9459fa89f49ec48f1e9a1752e6a78e85a4cda0ded06b1c73e727610c925f9ce6
+  languageName: node
+  linkType: hard
+
+"@types/jmespath@npm:0.15.2":
+  version: 0.15.2
+  resolution: "@types/jmespath@npm:0.15.2"
+  checksum: 10c0/61e45c2785f845f758df3cdb093ad30d32d3ca9c6e20c5ddf6eeb74125d7b6c0426ac175ca994fec47517b7fb0a4b89a91d47155709fec15ab03969ac3bcadc5
   languageName: node
   linkType: hard
 
@@ -5346,6 +5356,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jmespath@npm:0.16.0":
+  version: 0.16.0
+  resolution: "jmespath@npm:0.16.0"
+  checksum: 10c0/84cdca62c4a3d339701f01cc53decf16581c76ce49e6455119be1c5f6ab09a19e6788372536bd261d348d21cd817981605f8debae67affadba966219a2bac1c5
+  languageName: node
+  linkType: hard
+
 "joycon@npm:^3.1.1":
   version: 3.1.1
   resolution: "joycon@npm:3.1.1"
@@ -5971,6 +5988,13 @@ __metadata:
   dependencies:
     boolbase: "npm:^1.0.0"
   checksum: 10c0/5fee7ff309727763689cfad844d979aedd2204a817fbaaf0e1603794a7c20db28548d7b024692f953557df6ce4a0ee4ae46cd8ebd9b36cfb300b9226b567c479
+  languageName: node
+  linkType: hard
+
+"oauth4webapi@npm:3.1.2":
+  version: 3.1.2
+  resolution: "oauth4webapi@npm:3.1.2"
+  checksum: 10c0/9661df38aa1ad3c71d63831538277d877606c272dd76f5ba7c263d826d48521d62e678fe8dde5cbe6d1673457a1afbf3fbf44aa1adea480d25e37fd73ce01907
   languageName: node
   linkType: hard
 

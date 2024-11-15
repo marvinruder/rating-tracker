@@ -1,15 +1,17 @@
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Card, CardContent, Grid2 as Grid, TextField, Typography, useTheme } from "@mui/material";
-import { handleResponse } from "@rating-tracker/commons";
+import { Box, Card, CardContent, Divider, Grid2 as Grid, TextField, Typography, useTheme } from "@mui/material";
+import { authAPIPath, basePath, handleResponse, oidcEndpointSuffix } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import type { Dispatch, SetStateAction } from "react";
 import { useRef, useState } from "react";
 
 import authClient from "../../api/auth";
+import OpenIDConnectIcon from "../../components/etc/OpenIDConnect";
 import { SwitchSelector } from "../../components/etc/SwitchSelector";
 import { useNotificationContextUpdater } from "../../contexts/NotificationContext";
+import { useStatusContextState } from "../../contexts/StatusContext";
 import { useUserContextUpdater } from "../../contexts/UserContext";
 
 /**
@@ -24,6 +26,7 @@ export const LoginPage = (): JSX.Element => {
   const [emailError, setEmailError] = useState<string>(""); // Error message for the email text field.
   const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
+  const { systemStatus } = useStatusContextState();
   const { refetchUser } = useUserContextUpdater();
 
   const theme = useTheme();
@@ -199,6 +202,26 @@ export const LoginPage = (): JSX.Element => {
                 onClick={onButtonClick}
               >
                 {action === "signIn" ? "Sign in" : "Register"}
+              </LoadingButton>
+            </Grid>
+            <Grid
+              sx={{
+                transitionProperty: "max-height,opacity",
+                transitionDuration: ".4s,.3s",
+                transitionTimingFunction: `ease`,
+                ...(systemStatus.services["OpenID Connect"].status === "success"
+                  ? { maxHeight: 90, opacity: 1, transitionDelay: "0s,.1s" }
+                  : { maxHeight: 0, opacity: 0 }),
+              }}
+            >
+              <Divider sx={{ my: 2 }} />
+              <LoadingButton
+                startIcon={<OpenIDConnectIcon />}
+                variant="contained"
+                fullWidth
+                href={`${basePath}${authAPIPath}${oidcEndpointSuffix}`}
+              >
+                OpenID Connect
               </LoadingButton>
             </Grid>
           </Grid>

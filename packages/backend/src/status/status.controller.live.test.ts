@@ -19,6 +19,9 @@ tests.push({
     expect(body.services.PostgreSQL).toMatch("Connected");
 
     // Configured during live tests:
+    expect(body.services["OpenID Connect"]).toMatch("Configured");
+
+    // Configured during live tests:
     expect(body.services.Email).toMatch("Configured");
 
     // Mocked to be not ready during live tests:

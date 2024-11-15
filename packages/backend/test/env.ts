@@ -16,4 +16,9 @@ process.env = {
   SMTP_USER: "ratingtracker",
   SMTP_PASSWORD: "ratingtracker",
   SMTP_FROM: "ratingtracker@example.com",
+  OIDC_ISSUER_URL: "https://sso.example.com",
+  OIDC_CLIENT_ID: "rating-tracker",
+  OIDC_CLIENT_SECRET: "rating-tracker",
+  OIDC_SCOPES: "openid profile email phone",
+  OIDC_ROLE_CLAIM_PATH: 'resource_access."rating-tracker".roles',
 };

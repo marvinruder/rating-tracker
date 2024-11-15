@@ -1,5 +1,7 @@
 import { FetchError, type FetchResponse, type User } from "@rating-tracker/commons";
 
+import BadGatewayError from "../utils/error/api/BadGatewayError";
+import GatewayTimeoutError from "../utils/error/api/GatewayTimeoutError";
 import { performFetchRequest } from "../utils/fetchRequest";
 import Logger from "../utils/logger";
 import Singleton from "../utils/Singleton";
@@ -50,13 +52,13 @@ class SignalService extends Singleton {
    * @returns A {@link Promise} that resolves when the Signal Client instance is reachable or not configured, or rejects
    *          with an error if it is not.
    */
-  getStatus = (): Promise<string> =>
-    process.env.SIGNAL_URL && process.env.SIGNAL_SENDER
+  getStatus(): Promise<string> {
+    return process.env.SIGNAL_URL && process.env.SIGNAL_SENDER
       ? Promise.race([
           // Request all registered accounts from the Signal Client instance
           performFetchRequest(`${process.env.SIGNAL_URL}/v1/accounts`),
           // We accept a larger timeout here because the Signal Client JVM might be slow to start
-          new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Not reachable")), 5000)),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new GatewayTimeoutError("Not reachable")), 5000)),
         ])
           .then(
             (res: FetchResponse<string[]>) =>
@@ -64,17 +66,18 @@ class SignalService extends Singleton {
               // Check if our configured Signal sender is registered
               res.ok && res.data.includes(process.env.SIGNAL_SENDER!)
                 ? Promise.resolve("Connected")
-                : Promise.reject(new Error("Not ready")),
+                : Promise.reject(new BadGatewayError("Not ready")),
             /* c8 ignore stop */
           )
           .catch((e) => {
             if (e instanceof TypeError && e.message.match("fetch failed"))
-              return Promise.reject(new Error("Not reachable"));
-            if (e instanceof FetchError) return Promise.reject(new Error("Not ready", e));
+              return Promise.reject(new BadGatewayError("Not reachable"));
+            if (e instanceof FetchError) return Promise.reject(new BadGatewayError("Not ready", e));
             /* c8 ignore next */
             return Promise.reject(e);
           })
       : /* c8 ignore next */ Promise.resolve("Not configured");
+  }
 }
 
 export default SignalService;

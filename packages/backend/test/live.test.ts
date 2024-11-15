@@ -41,6 +41,7 @@ new SMTPServer({
 
 vi.mock("@hono/node-server/conninfo", async () => await import("./moduleMocks/@hono/node-server/conninfo"));
 vi.mock("@simplewebauthn/server", async () => await import("./moduleMocks/@simplewebauthn/server"));
+vi.mock("oauth4webapi", async () => await import("./moduleMocks/oauth4webapi"));
 vi.mock("../src/utils/fetchRequest");
 vi.spyOn(Logger, "fatal").mockImplementation(() => {});
 vi.spyOn(Logger, "error").mockImplementation(() => {});
@@ -74,6 +75,8 @@ unsafeSpies.push(vi.spyOn(StockService.prototype, "update"));
 unsafeSpies.push(vi.spyOn(StockService.prototype, "delete"));
 unsafeSpies.push(vi.spyOn(UserService.prototype, "create"));
 unsafeSpies.push(vi.spyOn(UserService.prototype, "update"));
+unsafeSpies.push(vi.spyOn(UserService.prototype, "addOIDCIdentity"));
+unsafeSpies.push(vi.spyOn(UserService.prototype, "removeOIDCIdentity"));
 unsafeSpies.push(vi.spyOn(UserService.prototype, "delete"));
 unsafeSpies.push(vi.spyOn(WatchlistService.prototype, "create"));
 unsafeSpies.push(vi.spyOn(WatchlistService.prototype, "update"));
@@ -92,6 +95,7 @@ beforeAll(async () => {
   await dbService.$queryRaw`ALTER TABLE "Watchlist" SET UNLOGGED`;
   await dbService.$queryRaw`ALTER TABLE "Stock" SET UNLOGGED`;
   await dbService.$queryRaw`ALTER TABLE "WebAuthnCredential" SET UNLOGGED`;
+  await dbService.$queryRaw`ALTER TABLE "OIDCUser" SET UNLOGGED`;
   await dbService.$queryRaw`ALTER TABLE "User" SET UNLOGGED`;
   // Apply the seeds
   await Promise.all([applyPostgresSeeds()]);

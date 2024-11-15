@@ -85,7 +85,9 @@
     "esbuild": "0.24.0",
     "hono": "4.6.10",
     "hono-rate-limiter": "0.4.0",
+    "jmespath": "0.16.0",
     "node-cron": "3.0.3",
+    "oauth4webapi": "3.1.2",
     "pino": "9.5.0",
     "prisma": "5.22.0",
     "prisma-json-types-generator": "3.1.1",
@@ -98,6 +100,7 @@
     "zod-validation-error": "3.4.0"
   },
   "devDependencies": {
+    "@types/jmespath": "0.15.2",
     "@types/node": "22.9.0",
     "@types/node-cron": "3.0.11",
     "@types/smtp-server": "3.5.10",

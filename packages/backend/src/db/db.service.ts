@@ -4,6 +4,7 @@ import { promisify } from "node:util";
 import type { AnalystRating } from "@rating-tracker/commons";
 
 import { PrismaClient } from "../../prisma/client";
+import ServiceUnavailableError from "../utils/error/api/ServiceUnavailableError";
 import Logger from "../utils/logger";
 import Singleton from "../utils/Singleton";
 
@@ -134,7 +135,7 @@ class DBService extends Singleton {
   getStatus(): Promise<string> {
     return DBService.#client.$executeRaw`SELECT null`
       .then(() => Promise.resolve("Connected"))
-      .catch((e) => Promise.reject(new Error(`Database is not reachable: ${e.message}`)));
+      .catch((e) => Promise.reject(new ServiceUnavailableError(`Database is not reachable: ${e.message}`)));
   }
 }
 

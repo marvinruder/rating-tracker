@@ -62,6 +62,19 @@ export class User {
    * The subscriptions of the user to different types of messages, encoded as a bitfield.
    */
   subscriptions: number | null;
+  /**
+   * The OpenID Connect identity of the user.
+   */
+  oidcIdentity: {
+    /**
+     * The subject identifier of the OpenID Connect identity.
+     */
+    sub: string;
+    /**
+     * A shorthand name by which the user wishes to be referred to.
+     */
+    preferredUsername: string;
+  } | null;
 
   /**
    * Creates a new user from user information.
@@ -74,6 +87,9 @@ export class User {
     this.phone = user.phone;
     this.accessRights = user.accessRights;
     this.subscriptions = user.subscriptions;
+    this.oidcIdentity = user.oidcIdentity
+      ? { sub: user.oidcIdentity.sub, preferredUsername: user.oidcIdentity.preferredUsername }
+      : null;
   }
 
   /**
@@ -151,4 +167,5 @@ export const optionalUserValuesNull: OmitFunctions<Omit<User, "email" | "name" |
   avatar: null,
   phone: null,
   subscriptions: null,
+  oidcIdentity: null,
 };

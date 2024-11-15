@@ -1,10 +1,13 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { registerEndpointSuffix, signInEndpointSuffix } from "@rating-tracker/commons";
-import { setCookie } from "hono/cookie";
+import { oidcEndpointSuffix, registerEndpointSuffix, signInEndpointSuffix } from "@rating-tracker/commons";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 
 import SessionService from "../session/session.service";
 import { EMailSchema, NameSchema } from "../user/user.schema";
 import Controller from "../utils/Controller";
+import APIError from "../utils/error/api/APIError";
+import BadRequestError from "../utils/error/api/BadRequestError";
+import UnauthorizedError from "../utils/error/api/UnauthorizedError";
 import { ErrorSchema } from "../utils/error/error.schema";
 import ErrorHelper from "../utils/error/errorHelper";
 import { authRateLimiter, sessionCookieOptions } from "../utils/middlewares";
@@ -12,16 +15,21 @@ import { authRateLimiter, sessionCookieOptions } from "../utils/middlewares";
 import {
   AuthenticationOptionsSchema,
   AuthenticationResponseSchema,
+  OIDCAuthenticationResponseSchema,
   RegistrationOptionsSchema,
   RegistrationResponseSchema,
 } from "./auth.schema";
+import type OIDCService from "./oidc.service";
 import type WebAuthnService from "./webauthn.service";
 
 /**
  * This controller is responsible for handling all registration and authentication requests.
  */
 class AuthController extends Controller {
-  constructor(private webAuthnService: WebAuthnService) {
+  constructor(
+    private oidcService: OIDCService,
+    private webAuthnService: WebAuthnService,
+  ) {
     super({ tags: ["Authentication API"] });
   }
 
@@ -135,8 +143,7 @@ class AuthController extends Controller {
           path: signInEndpointSuffix,
           tags: this.tags,
           summary: "Verify the response for a WebAuthn authentication challenge",
-          description:
-            "Verifies the authentication response and creates a session cookie if the challenge response is valid.",
+          description: "Verifies the authentication response and creates a session if the challenge response is valid.",
           middleware: [authRateLimiter] as const,
           request: {
             body: {
@@ -178,6 +185,117 @@ class AuthController extends Controller {
           // We create and store a session cookie for the user.
           setCookie(c, "id", sessionID, { ...sessionCookieOptions, maxAge: 1000 * SessionService.SESSION_TTL });
           return c.body(null, 204);
+        },
+      )
+      .openapi(
+        createRoute({
+          method: "get",
+          path: oidcEndpointSuffix,
+          tags: this.tags,
+          summary: "Get the OpenID Connect authorization URL",
+          description: "Forwards to the OpenID Connect provider for authentication.",
+          middleware: [authRateLimiter] as const,
+          responses: {
+            302: {
+              description: "Found: The user is being redirected to the OpenID Connect provider.",
+              headers: z
+                .object({
+                  location: z.string({ description: "The authorization URL of the OpenID Connect provider." }).url(),
+                })
+                .strict(),
+            },
+            429: {
+              description: "Too Many Requests: The client has sent too many requests and is rate-limited.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            501: {
+              description: "Not Implemented: No OpenID Connect provider is configured.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            503: {
+              description: "Service Unavailable: Unable to fetch the OpenID Connect server metadata.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+          },
+        }),
+        async (c) => {
+          const { authorizationURL, codeVerifier } = await this.oidcService.getAuthorizationURL();
+          setCookie(c, "codeVerifier", codeVerifier, sessionCookieOptions);
+          if (authorizationURL.searchParams.has("nonce"))
+            setCookie(c, "nonce", authorizationURL.searchParams.get("nonce")!, sessionCookieOptions);
+          return c.redirect(authorizationURL.toString(), 302);
+        },
+      )
+      .openapi(
+        createRoute({
+          method: "post",
+          path: oidcEndpointSuffix,
+          tags: this.tags,
+          summary: "Handle the OpenID Connect callback",
+          description: "Handles the callback from the OpenID Connect provider and creates a session.",
+          middleware: [authRateLimiter] as const,
+          request: {
+            body: {
+              description: "The response from the OpenID Connect provider.",
+              required: true,
+              content: { "application/json": { schema: OIDCAuthenticationResponseSchema } },
+            },
+          },
+          responses: {
+            204: { description: "No Content: The user has been authenticated successfully." },
+            400: {
+              description: "Bad Request: The request body or cookies are invalid.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            401: {
+              description: "Unauthorized: The authentication failed.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            403: {
+              description: "Forbidden: The authentication succeeded, but the user is not allowed to sign in.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            429: {
+              description: "Too Many Requests: The client has sent too many requests and is rate-limited.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            501: {
+              description: "Not Implemented: No OpenID Connect provider is configured.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+            503: {
+              description: "Service Unavailable: Unable to fetch the OpenID Connect server metadata.",
+              content: { "application/json": { schema: ErrorSchema } },
+            },
+          },
+        }),
+        async (c) => {
+          const searchParams = new URLSearchParams(c.req.valid("json"));
+
+          // Read the code verifier and nonce from the session.
+          const codeVerifier = getCookie(c, "codeVerifier");
+          const nonce = getCookie(c, "nonce");
+
+          // Delete the code verifier and nonce cookies.
+          deleteCookie(c, "codeVerifier", sessionCookieOptions);
+          deleteCookie(c, "nonce", sessionCookieOptions);
+
+          try {
+            if (codeVerifier === undefined) throw new BadRequestError("No code verifier was provided.");
+            const sessionID = await this.oidcService.handleCallback(
+              c.get("user")?.email,
+              searchParams,
+              codeVerifier,
+              nonce,
+            );
+            if (sessionID)
+              // We create and store a session cookie for the user.
+              setCookie(c, "id", sessionID, { ...sessionCookieOptions, maxAge: 1000 * SessionService.SESSION_TTL });
+            return c.body(null, 204);
+          } catch (e) {
+            if (e instanceof APIError) throw e;
+            throw new UnauthorizedError("Authentication failed", e instanceof Error ? e : undefined);
+          }
         },
       );
   }
