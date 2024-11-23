@@ -19,7 +19,7 @@
     "tools": "cd ./tools && yarn",
     "validate": "conc \"yarn workspaces foreach -Apv -j unlimited run typecheck\" \"yarn workspaces foreach -Apv -j unlimited run lint\" -n \"󰛦,󰱺\" -p \"{name}\" -c #3178C6,#4B32C3"
   },
-  "packageManager": "yarn@4.5.1",
+  "packageManager": "yarn@4.5.2",
   "dependencies": {
     "concurrently": "9.1.0"
   },
