@@ -57,7 +57,7 @@ const SelectStock = (props: SelectStockProps): JSX.Element => {
           handleSelect();
           props.onSelect
             ? props.onSelect(stocks[0])
-            : navigate(`${stocksAPIPath}/${encodeURIComponent(stocks[0].ticker)}`);
+            : void navigate(`${stocksAPIPath}/${encodeURIComponent(stocks[0].ticker)}`);
         }
       }
     };
