@@ -5,7 +5,6 @@ import {
   usersAvatarEndpointSuffix,
   usersOIDCIdentitySuffix,
 } from "@rating-tracker/commons";
-import type { TypedResponse } from "hono";
 import { bodyLimit } from "hono/body-limit";
 
 import Controller from "../utils/Controller";
@@ -144,11 +143,7 @@ class UserController extends Controller {
         }),
         async (c) => {
           const avatar = await this.userService.readAvatar(c.req.valid("param").email);
-          return c.body(avatar.buffer, 200, { "Content-Type": avatar.mimeType }) as unknown as TypedResponse<
-            Buffer,
-            200,
-            typeof avatar.mimeType
-          >;
+          return c.body(avatar.buffer, 200, { "Content-Type": avatar.mimeType });
         },
       )
       .openapi(

@@ -1,6 +1,5 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { GENERAL_ACCESS, accountAvatarEndpointSuffix, accountOIDCIdentitySuffix } from "@rating-tracker/commons";
-import type { TypedResponse } from "hono";
 import { bodyLimit } from "hono/body-limit";
 
 import { EMailSchema, NameSchema, PhoneSchema, SubscriptionsSchema, UserSchema, VSchema } from "../user/user.schema";
@@ -90,11 +89,7 @@ class AccountController extends Controller {
         }),
         async (c) => {
           const avatar = await this.accountService.readAvatar(c.get("user")!.email);
-          return c.body(avatar.buffer, 200, { "Content-Type": avatar.mimeType }) as unknown as TypedResponse<
-            Buffer,
-            200,
-            typeof avatar.mimeType
-          >;
+          return c.body(avatar.buffer, 200, { "Content-Type": avatar.mimeType });
         },
       )
       .openapi(

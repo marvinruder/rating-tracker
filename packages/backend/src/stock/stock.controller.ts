@@ -1,6 +1,5 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import { GENERAL_ACCESS, stockLogoEndpointSuffix, WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
-import type { TypedResponse } from "hono";
 
 import { IDSchema as PortfolioIDSchema } from "../portfolio/portfolio.schema";
 import Controller from "../utils/Controller";
@@ -326,7 +325,7 @@ class StockController extends Controller {
             "Content-Type": logoResource.contentType,
             // Allow client-side caching as long as the logo is valid in the cache
             "Cache-Control": `max-age=${Math.trunc((logoResource.expiresAt.getTime() - Date.now()) / 1000)}`,
-          }) as unknown as TypedResponse<z.infer<typeof LogoSchema>, 200, "json">;
+          });
         },
       )
       .openapi(
