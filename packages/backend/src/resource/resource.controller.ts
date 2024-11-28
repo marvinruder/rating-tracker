@@ -1,6 +1,5 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import { GENERAL_ACCESS } from "@rating-tracker/commons";
-import type { TypedResponse } from "hono";
 
 import Controller from "../utils/Controller";
 import { ErrorSchema } from "../utils/error/error.schema";
@@ -59,11 +58,7 @@ class ResourceController extends Controller {
       }),
       async (c) => {
         const resource = await this.resourceService.read(c.req.valid("param").uri);
-        return c.body(resource.content, 200, { "Content-Type": resource.contentType }) as unknown as TypedResponse<
-          Buffer,
-          200,
-          typeof resource.contentType
-        >;
+        return c.body(resource.content, 200, { "Content-Type": resource.contentType });
       },
     );
   }
