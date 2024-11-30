@@ -163,7 +163,7 @@ class FetchService {
             {
               uri: resourceID,
               lastModifiedAt: new Date(),
-              content: Buffer.from(dataSource.documentElement.toString()),
+              content: new TextEncoder().encode(dataSource.documentElement.toString()),
               contentType: "text/html; charset=utf-8",
             },
             60 * 60 * 48, // We only store the resource for 48 hours.
@@ -178,7 +178,7 @@ class FetchService {
             {
               uri: resourceID,
               lastModifiedAt: new Date(),
-              content: Buffer.from(JSON.stringify(dataSource)),
+              content: new TextEncoder().encode(JSON.stringify(dataSource)),
               contentType: "application/json; charset=utf-8",
             },
             60 * 60 * 48, // We only store the resource for 48 hours.

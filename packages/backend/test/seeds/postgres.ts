@@ -38,8 +38,8 @@ const applyUserSeed = async (): Promise<void> => {
             webAuthnCredentials: {
               create: {
                 ...webAuthnCredentialExamples[index],
-                id: Buffer.from(webAuthnCredentialExamples[index].id),
-                publicKey: Buffer.from(webAuthnCredentialExamples[index].publicKey),
+                id: webAuthnCredentialExamples[index].id,
+                publicKey: webAuthnCredentialExamples[index].publicKey,
               },
             },
           },
@@ -59,7 +59,7 @@ const applyWatchlistSeed = async (): Promise<void> => {
         id: undefined,
         email: "jane.doe@example.com",
         stocks: {
-          connect: watchlist.stocks.map((stock) => ({ ticker: stock.ticker })),
+          create: watchlist.stocks.map((stock) => ({ stock: { connect: { ticker: stock.ticker } } })),
         },
       },
     });
@@ -94,7 +94,7 @@ const applyResourceSeed = async (): Promise<void> => {
   await dbService.resource.createMany({
     data: resourceExamples.map((resource) => ({
       ...resource,
-      content: Buffer.from(resource.content),
+      content: resource.content,
       ...(resource.uri.startsWith("expired") ? { expiresAt: new Date(Date.now() - 1000) } : {}),
     })),
   });
@@ -132,7 +132,7 @@ const applySessionSeed = async (): Promise<void> => {
 const applyPostgresSeeds = async (): Promise<void> => {
   if (process.env.NODE_ENV !== "test") throw new Error("Refusing to apply seed when not in a test environment");
 
-  await dbService.$queryRaw`TRUNCATE TABLE "Stock", "User", "WebAuthnCredential", "Watchlist", "_StockToWatchlist", "Portfolio", "StocksInPortfolios", "Session", "Resource" RESTART IDENTITY CASCADE`;
+  await dbService.$queryRaw`TRUNCATE TABLE "stocks", "users", "webauthn_credentials", "watchlists", "stocks_in_watchlists", "portfolios", "stocks_in_portfolios", "sessions", "resources" RESTART IDENTITY CASCADE`;
 
   await Promise.all([applyStockSeed(), applyUserSeed(), applyResourceSeed()]);
   await Promise.all([applyWatchlistSeed(), applyPortfolioSeed(), applySessionSeed()]);

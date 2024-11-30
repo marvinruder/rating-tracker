@@ -1,6 +1,7 @@
 import type { Watchlist, WatchlistSummary } from "@rating-tracker/commons";
 import { FAVORITES_NAME } from "@rating-tracker/commons";
 
+import type { Watchlist as PrismaWatchlist, Stock as PrismaStock, StocksInWatchlists } from "../../prisma/client";
 import type DBService from "../db/db.service";
 import BadGatewayError from "../utils/error/api/BadGatewayError";
 import BadRequestError from "../utils/error/api/BadRequestError";
@@ -52,6 +53,18 @@ class WatchlistService {
   }
 
   /**
+   * Create a Watchlist from the object returned by Prisma when querying the explicit many-to-many relation
+   * `StocksInWatchlists`.
+   * @param watchlist The watchlist object returned by Prisma.
+   * @returns The watchlist.
+   */
+  mapFromPrisma(
+    watchlist: Omit<PrismaWatchlist, "email"> & { stocks: (StocksInWatchlists & { stock: PrismaStock })[] },
+  ): Watchlist {
+    return { ...watchlist, stocks: watchlist.stocks.map((stock) => ({ ...stock.stock })) };
+  }
+
+  /**
    * Create a watchlist.
    * @param name The name of the watchlist to create.
    * @param email The email of the current user.
@@ -62,10 +75,17 @@ class WatchlistService {
     if (name === FAVORITES_NAME) {
       throw new BadRequestError(`The name “${FAVORITES_NAME}” is reserved.`);
     }
-    const watchlist = await this.db.watchlist.create({
-      data: { name, email },
-      select: { id: true, name: true, subscribed: true, stocks: { orderBy: { ticker: "asc" } } },
-    });
+    const watchlist = this.mapFromPrisma(
+      await this.db.watchlist.create({
+        data: { name, email },
+        select: {
+          id: true,
+          name: true,
+          subscribed: true,
+          stocks: { include: { stock: true }, orderBy: { ticker: "asc" } },
+        },
+      }),
+    );
     Logger.info({ component: "postgres", watchlist: { name: watchlist.name, id: watchlist.id } }, "Created watchlist");
     return watchlist;
   }
@@ -79,10 +99,17 @@ class WatchlistService {
    */
   async read(id: number, email: string): Promise<Watchlist> {
     await this.#checkExistenceAndOwner(id, email);
-    return await this.db.watchlist.findUniqueOrThrow({
-      select: { id: true, name: true, subscribed: true, stocks: { orderBy: { ticker: "asc" } } },
-      where: { id },
-    });
+    return this.mapFromPrisma(
+      await this.db.watchlist.findUniqueOrThrow({
+        select: {
+          id: true,
+          name: true,
+          subscribed: true,
+          stocks: { include: { stock: true }, orderBy: { ticker: "asc" } },
+        },
+        where: { id },
+      }),
+    );
   }
 
   /**
@@ -92,7 +119,12 @@ class WatchlistService {
    */
   async readAll(email: string): Promise<WatchlistSummary[]> {
     return await this.db.watchlist.findMany({
-      select: { id: true, name: true, subscribed: true, stocks: { select: { ticker: true } } },
+      select: {
+        id: true,
+        name: true,
+        subscribed: true,
+        stocks: { select: { ticker: true }, orderBy: { ticker: "asc" } },
+      },
       where: { user: { email } },
       orderBy: { id: "asc" },
     });
@@ -168,10 +200,10 @@ class WatchlistService {
       return;
     }
     // Add the stock to the watchlist
-    await this.db.watchlist.update({ where: { id }, data: { stocks: { connect: { ticker } } } });
+    await this.db.watchlist.update({ where: { id }, data: { stocks: { create: { stock: { connect: { ticker } } } } } });
     Logger.info(
       { component: "postgres", watchlist: { id: watchlist.id, name: watchlist.name }, stock: ticker },
-      "Added stock to portfolio",
+      "Added stock to watchlist",
     );
   }
 
@@ -195,7 +227,10 @@ class WatchlistService {
       return;
     }
     // Remove the stock from the watchlist
-    await this.db.watchlist.update({ where: { id }, data: { stocks: { disconnect: { ticker } } } });
+    await this.db.watchlist.update({
+      where: { id },
+      data: { stocks: { delete: { watchlistID_ticker: { watchlistID: id, ticker } } } },
+    });
     Logger.info(
       { component: "postgres", watchlist: { id: watchlist.id, name: watchlist.name }, stock: ticker },
       "Removed stock from watchlist",

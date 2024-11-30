@@ -28,11 +28,11 @@ export const verifyRegistrationResponse = (
       aaguid: "",
       credential: {
         id: options.response.id,
-        publicKey: Buffer.from(`${randomCredential}`),
+        publicKey: new TextEncoder().encode(randomCredential),
         counter: 0,
       },
       credentialType: "public-key",
-      attestationObject: Buffer.from(""),
+      attestationObject: new Uint8Array(),
       userVerified: options.requireUserVerification ?? false,
       credentialDeviceType: "multiDevice",
       credentialBackedUp: true,
@@ -60,7 +60,7 @@ export const verifyAuthenticationResponse = (
         options.expectedRPID.includes(process.env.DOMAIN) &&
         options.requireUserVerification &&
         options.credential.id === options.response.id &&
-        options.credential.publicKey.toString() === `${randomCredential}`) ??
+        new TextDecoder().decode(options.credential.publicKey) === randomCredential) ??
       false,
     authenticationInfo: {
       credentialID: options.response.id,

@@ -208,7 +208,7 @@ class StockService {
     if (filter.watchlist !== undefined && filter.email !== undefined) {
       // Check that the user has access to the watchlist
       await this.watchlistService.read(filter.watchlist, filter.email);
-      filters.push({ watchlists: { some: { id: filter.watchlist, email: filter.email } } });
+      filters.push({ watchlists: { some: { watchlist: { id: filter.watchlist, email: filter.email } } } });
     }
 
     let sortByAmount: Prisma.SortOrder | undefined;
@@ -315,7 +315,7 @@ class StockService {
             {
               uri: url,
               lastModifiedAt: new Date(response.headers.get("Date") ?? new Date(0)),
-              content: response.data,
+              content: new TextEncoder().encode(response.data),
               contentType: response.headers.get("content-type") || "image/svg+xml",
             },
             maxAge,
@@ -326,7 +326,12 @@ class StockService {
         .catch(async () => {
           // If the logo could not be fetched from TradeRepublic, use an empty SVG as a placeholder.
           await this.resourceService.create(
-            { uri: url, lastModifiedAt: new Date(), content: Buffer.from(DUMMY_SVG), contentType: "image/svg+xml" },
+            {
+              uri: url,
+              lastModifiedAt: new Date(),
+              content: new TextEncoder().encode(DUMMY_SVG),
+              contentType: "image/svg+xml",
+            },
             60 * 60, // Let’s try again after one hour
           );
           logoResource = await this.resourceService.read(url);
@@ -356,14 +361,14 @@ class StockService {
         stocks.map(async (stock: Stock, index: number) => {
           const { content } = await this.readLogo(stock.ticker, variant);
           // We do not want the response to be too large, so we limit the size of the logos to 128 kB each.
-          logos[index] = content.length > 128 * 1024 ? DUMMY_SVG : content.toString();
+          logos[index] = content.length > 128 * 1024 ? DUMMY_SVG : new TextDecoder().decode(content);
         }),
       );
       await this.resourceService.create(
         {
           uri: url,
           lastModifiedAt: new Date(),
-          content: Buffer.from(JSON.stringify(logos)),
+          content: new TextEncoder().encode(JSON.stringify(logos)),
           contentType: "application/json; charset=utf-8",
         },
         60 * 60 * 24 * 7, // Cache for one week

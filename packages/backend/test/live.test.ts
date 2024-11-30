@@ -1,5 +1,3 @@
-import fs from "node:fs";
-
 import type { SMTPServerSession } from "smtp-server";
 import { SMTPServer } from "smtp-server";
 import type { MockInstance } from "vitest";
@@ -89,14 +87,14 @@ beforeAll(async () => {
   await dbService.migrate();
 
   // Make all tables unlogged
-  await dbService.$queryRaw`ALTER TABLE "_StockToWatchlist" SET UNLOGGED`;
-  await dbService.$queryRaw`ALTER TABLE "StocksInPortfolios" SET UNLOGGED`;
-  await dbService.$queryRaw`ALTER TABLE "Portfolio" SET UNLOGGED`;
-  await dbService.$queryRaw`ALTER TABLE "Watchlist" SET UNLOGGED`;
-  await dbService.$queryRaw`ALTER TABLE "Stock" SET UNLOGGED`;
-  await dbService.$queryRaw`ALTER TABLE "WebAuthnCredential" SET UNLOGGED`;
-  await dbService.$queryRaw`ALTER TABLE "OIDCUser" SET UNLOGGED`;
-  await dbService.$queryRaw`ALTER TABLE "User" SET UNLOGGED`;
+  await dbService.$queryRaw`ALTER TABLE "stocks_in_watchlists" SET UNLOGGED`;
+  await dbService.$queryRaw`ALTER TABLE "stocks_in_portfolios" SET UNLOGGED`;
+  await dbService.$queryRaw`ALTER TABLE "portfolios" SET UNLOGGED`;
+  await dbService.$queryRaw`ALTER TABLE "watchlists" SET UNLOGGED`;
+  await dbService.$queryRaw`ALTER TABLE "stocks" SET UNLOGGED`;
+  await dbService.$queryRaw`ALTER TABLE "webauthn_credentials" SET UNLOGGED`;
+  await dbService.$queryRaw`ALTER TABLE "oidc_users" SET UNLOGGED`;
+  await dbService.$queryRaw`ALTER TABLE "users" SET UNLOGGED`;
   // Apply the seeds
   await Promise.all([applyPostgresSeeds()]);
 });
@@ -135,16 +133,20 @@ const testSuites: { [key: string]: LiveTestSuite } = {};
 const unsafeTestSuites: { [key: string]: LiveTestSuite } = {};
 
 // Get all test suites
-for await (const path of fs.promises.glob("../**/*.live.test.ts")) {
-  const { tests, suiteName }: { tests: LiveTestSuite; suiteName: string } = await import(`../${path}`);
-  testSuites[suiteName] = [];
-  unsafeTestSuites[suiteName] = [];
-  tests.forEach((test) =>
-    test.testName.toLowerCase().includes("unsafe")
-      ? unsafeTestSuites[suiteName].push(test)
-      : testSuites[suiteName].push(test),
-  );
-}
+await Promise.all(
+  Object.values(import.meta.glob<{ tests: LiveTestSuite; suiteName: string }>("../**/*.live.test.ts")).map(
+    async (testModule) => {
+      const { tests, suiteName } = await testModule();
+      testSuites[suiteName] = [];
+      unsafeTestSuites[suiteName] = [];
+      tests.forEach((test) =>
+        test.testName.toLowerCase().includes("unsafe")
+          ? unsafeTestSuites[suiteName].push(test)
+          : testSuites[suiteName].push(test),
+      );
+    },
+  ),
+);
 
 // Run tests concurrently
 Object.entries(testSuites).forEach(

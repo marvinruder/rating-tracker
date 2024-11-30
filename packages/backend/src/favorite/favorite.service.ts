@@ -29,19 +29,33 @@ class FavoriteService {
    */
   async read(email: string): Promise<Watchlist> {
     try {
-      return await this.db.watchlist.findFirstOrThrow({
-        select: { id: true, name: true, subscribed: true, stocks: { orderBy: { ticker: "asc" } } },
-        where: { email, name: FAVORITES_NAME },
-      });
+      return this.watchlistService.mapFromPrisma(
+        await this.db.watchlist.findFirstOrThrow({
+          select: {
+            id: true,
+            name: true,
+            subscribed: true,
+            stocks: { include: { stock: true }, orderBy: { ticker: "asc" } },
+          },
+          where: { email, name: FAVORITES_NAME },
+        }),
+      );
     } catch (e) {
       Logger.info(
         { component: "postgres", watchlist: { name: FAVORITES_NAME }, user: { email } },
         "Creating watchlist for user",
       );
-      return await this.db.watchlist.create({
-        data: { name: FAVORITES_NAME, email, subscribed: true },
-        select: { id: true, name: true, subscribed: true, stocks: { orderBy: { ticker: "asc" } } },
-      });
+      return this.watchlistService.mapFromPrisma(
+        await this.db.watchlist.create({
+          data: { name: FAVORITES_NAME, email, subscribed: true },
+          select: {
+            id: true,
+            name: true,
+            subscribed: true,
+            stocks: { include: { stock: true }, orderBy: { ticker: "asc" } },
+          },
+        }),
+      );
     }
   }
 
