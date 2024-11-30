@@ -71,7 +71,7 @@ class SustainalyticsFetcher extends BulkFetcher {
               {
                 uri: this.#sustainalyticsURL,
                 lastModifiedAt: new Date(response.headers.get("Date") || 0),
-                content: Buffer.from(sustainalyticsXMLLines.join("\n")),
+                content: new TextEncoder().encode(sustainalyticsXMLLines.join("\n")),
                 contentType: "text/xml; charset=utf-8",
               },
               dataProviderTTL["sustainalytics"],
@@ -86,7 +86,7 @@ class SustainalyticsFetcher extends BulkFetcher {
       throw new BadGatewayError("Unable to fetch Sustainalytics information", e instanceof Error ? e : undefined);
     }
 
-    const sustainalyticsXMLLines = sustainalyticsXMLResource!.content.toString().split("\n");
+    const sustainalyticsXMLLines = new TextDecoder().decode(sustainalyticsXMLResource!.content).split("\n");
 
     // Work while stocks are in the queue
     while (stocks.queued.length) {

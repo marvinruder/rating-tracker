@@ -196,7 +196,7 @@ class WebAuthnService {
         expectedRPID: this.#rpID,
         credential: {
           // This information is stored for each user in the database.
-          id: credential.id.toString("base64url"),
+          id: Buffer.from(credential.id).toString("base64url"),
           publicKey: credential.publicKey,
           counter: credential.counter,
         },

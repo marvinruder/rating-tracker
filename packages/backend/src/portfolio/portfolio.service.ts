@@ -160,17 +160,16 @@ class PortfolioService {
    * @returns A list of all portfolios belonging to the current user.
    */
   async readAll(email: string): Promise<PortfolioSummary[]> {
-    return (
-      await this.db.portfolio.findMany({
-        select: { id: true, name: true, currency: true, stocks: { orderBy: { amount: "desc" } } },
-        where: { user: { email } },
-        orderBy: { id: "asc" },
-      })
-    ).map((portfolio) => ({
-      ...portfolio,
-      // Remove unneccessary portfolioID from every stock
-      stocks: portfolio.stocks.map((stock) => ({ ticker: stock.ticker, amount: stock.amount })),
-    }));
+    return await this.db.portfolio.findMany({
+      select: {
+        id: true,
+        name: true,
+        currency: true,
+        stocks: { select: { ticker: true, amount: true }, orderBy: { amount: "desc" } },
+      },
+      where: { user: { email } },
+      orderBy: { id: "asc" },
+    });
   }
 
   /**
@@ -247,7 +246,7 @@ class PortfolioService {
    * @param id The ID of the portfolio.
    * @param email The email of the current user.
    * @param ticker The ticker of the stock.
-   * @param newValues The new values for the stock in the watchlist.
+   * @param newValues The new values for the stock in the portfolio.
    * @throws an {@link APIError} if the portfolio does not exist or belong to the user, or if the stock is not in the
    * portfolio.
    */

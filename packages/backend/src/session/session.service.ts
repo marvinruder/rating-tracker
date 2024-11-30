@@ -33,8 +33,8 @@ class SessionService {
    * @param id The session ID to encode.
    * @returns The base64url-encoded session ID.
    */
-  #encodeSessionID(id: Buffer): string {
-    return id.toString("base64url");
+  #encodeSessionID(id: Uint8Array): string {
+    return Buffer.from(id).toString("base64url");
   }
 
   /**

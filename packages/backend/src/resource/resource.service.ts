@@ -31,13 +31,13 @@ class ResourceService {
       where: { uri: resource.uri },
       create: {
         uri: resource.uri,
-        content: Buffer.from(resource.content),
+        content: resource.content,
         contentType: resource.contentType,
         expiresAt: new Date(Date.now() + ttlInSeconds * 1000),
       },
       update: {
         uri: resource.uri,
-        content: Buffer.from(resource.content),
+        content: resource.content,
         lastModifiedAt: new Date(),
         expiresAt: new Date(Date.now() + ttlInSeconds * 1000),
       },

@@ -2,7 +2,7 @@ generator client {
   provider        = "prisma-client-js"
   output          = "./client"
   binaryTargets   = ["native", "linux-musl-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
-  previewFeatures = ["postgresqlExtensions"]
+  previewFeatures = ["postgresqlExtensions", "relationJoins"]
 }
 
 generator json {
@@ -17,94 +17,114 @@ datasource db {
 }
 
 model Stock {
-  ticker                                    String               @id @db.VarChar(20)
-  name                                      String               @unique @db.VarChar(255)
+  ticker                                    String               @id
+  name                                      String               @unique
   country                                   Country
-  isin                                      String               @unique @db.Char(12)
+  isin                                      String               @unique
   industry                                  Industry?
   size                                      Size?
   style                                     Style?
-  financialScore                            Float                @default(0)
-  esgScore                                  Float                @default(0)
-  totalScore                                Float                @default(0)
-  yahooLastFetch                            DateTime?            @db.Timestamp(6)
+  financialScore                            Float                @default(0) @map("financial_score")
+  esgScore                                  Float                @default(0) @map("esg_score")
+  totalScore                                Float                @default(0) @map("total_score")
+  yahooLastFetch                            DateTime?            @map("yahoo_last_fetch") @db.Timestamptz
   currency                                  Currency?
-  lastClose                                 Float?
+  lastClose                                 Float?               @map("last_close")
   low52w                                    Float?
   high52w                                   Float?
   prices1y                                  Float[]              @default([])
   prices1mo                                 Float[]              @default([])
-  morningstarID                             String?              @unique @db.VarChar(255)
-  morningstarLastFetch                      DateTime?            @db.Timestamp(6)
-  starRating                                Int?                 @db.SmallInt
-  dividendYieldPercent                      Float?
-  priceEarningRatio                         Float?
-  morningstarFairValue                      Float?
-  morningstarFairValuePercentageToLastClose Float?
-  positionIn52w                             Float?
-  marketScreenerID                          String?              @unique @db.VarChar(255)
-  marketScreenerLastFetch                   DateTime?            @db.Timestamp(6)
-  analystConsensus                          AnalystRating?
+  morningstarID                             String?              @unique @map("morningstar_id")
+  morningstarLastFetch                      DateTime?            @map("morningstar_last_fetch") @db.Timestamptz
+  starRating                                Int?                 @map("star_rating") @db.SmallInt
+  dividendYieldPercent                      Float?               @map("dividend_yield_percent")
+  priceEarningRatio                         Float?               @map("price_earning_ratio")
+  morningstarFairValue                      Float?               @map("morningstar_fair_value")
+  morningstarFairValuePercentageToLastClose Float?               @map("morningstar_fair_value_percentage_to_last_close")
+  positionIn52w                             Float?               @map("position_in_52w")
+  marketScreenerID                          String?              @unique @map("market_screener_id")
+  marketScreenerLastFetch                   DateTime?            @map("market_screener_last_fetch") @db.Timestamptz
+  analystConsensus                          AnalystRating?       @map("analyst_consensus")
   /// [AnalystRatings]
-  analystRatings                            Json?
-  analystCount                              Int?                 @db.SmallInt
-  analystTargetPrice                        Float?
-  analystTargetPricePercentageToLastClose   Float?
-  msciID                                    String?              @unique @db.VarChar(255)
-  msciLastFetch                             DateTime?            @db.Timestamp(6)
-  msciESGRating                             MSCIESGRating?
-  msciTemperature                           Float?
-  ric                                       String?              @unique @db.VarChar(25)
-  lsegLastFetch                             DateTime?            @db.Timestamp(6)
-  lsegESGScore                              Int?                 @db.SmallInt
-  lsegEmissions                             Int?                 @db.SmallInt
-  spID                                      Float?               @unique
-  spLastFetch                               DateTime?            @db.Timestamp(6)
-  spESGScore                                Int?                 @db.SmallInt
-  sustainalyticsID                          String?              @unique @db.VarChar(255)
-  sustainalyticsESGRisk                     Float?
+  analystRatings                            Json?                @map("analyst_ratings")
+  analystCount                              Int?                 @map("analyst_count") @db.SmallInt
+  analystTargetPrice                        Float?               @map("analyst_target_price")
+  analystTargetPricePercentageToLastClose   Float?               @map("analyst_target_price_percentage_to_last_close")
+  msciID                                    String?              @unique @map("msci_id")
+  msciLastFetch                             DateTime?            @map("msci_last_fetch") @db.Timestamptz
+  msciESGRating                             MSCIESGRating?       @map("msci_esg_rating")
+  msciTemperature                           Float?               @map("msci_temperature")
+  ric                                       String?              @unique
+  lsegLastFetch                             DateTime?            @map("lseg_last_fetch") @db.Timestamptz
+  lsegESGScore                              Int?                 @map("lseg_esg_score") @db.SmallInt
+  lsegEmissions                             Int?                 @map("lseg_emissions") @db.SmallInt
+  spID                                      Float?               @unique @map("sp_id")
+  spLastFetch                               DateTime?            @map("sp_last_fetch") @db.Timestamptz
+  spESGScore                                Int?                 @map("sp_esg_score") @db.SmallInt
+  sustainalyticsID                          String?              @unique @map("sustainalytics_id")
+  sustainalyticsESGRisk                     Float?               @map("sustainalytics_esg_risk")
   description                               String?
-  marketCap                                 Float?
-  watchlists                                Watchlist[]
+  marketCap                                 Float?               @map("market_cap")
+  watchlists                                StocksInWatchlists[]
   portfolios                                StocksInPortfolios[]
+
+  @@map("stocks")
 }
 
 model User {
-  email               String               @id @db.VarChar(255)
-  name                String               @db.VarChar(255)
+  email               String               @id
+  name                String
   avatar              String?
-  phone               String?              @db.VarChar(16)
-  accessRights        Int                  @default(0) @db.SmallInt
+  phone               String?
+  accessRights        Int                  @default(0) @map("access_rights") @db.SmallInt
   subscriptions       Int?                 @db.SmallInt
   webAuthnCredentials WebAuthnCredential[]
   oidcIdentity        OIDCUser?
   watchlists          Watchlist[]
   portfolios          Portfolio[]
   Session             Session[]
+
+  @@map("users")
 }
 
 model WebAuthnCredential {
   id        Bytes  @id
-  publicKey Bytes
+  publicKey Bytes  @map("public_key")
   counter   Int    @default(0)
   user      User   @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
-  email     String @db.VarChar(255)
+  email     String
+
+  @@map("webauthn_credentials")
 }
 
 model OIDCUser {
   sub               String @id
-  preferredUsername String
+  preferredUsername String @map("preferred_username")
   user              User   @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
-  email             String @unique @db.VarChar(255)
+  email             String @unique
+
+  @@map("oidc_users")
 }
 
 model Watchlist {
-  id         Int     @id @default(autoincrement())
+  id         Int                  @id @default(autoincrement())
   name       String
-  subscribed Boolean @default(false)
-  stocks     Stock[]
-  user       User    @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
-  email      String  @db.VarChar(255)
+  subscribed Boolean              @default(false)
+  stocks     StocksInWatchlists[]
+  user       User                 @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
+  email      String
+
+  @@map("watchlists")
+}
+
+model StocksInWatchlists {
+  watchlist   Watchlist @relation(fields: [watchlistID], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  watchlistID Int       @map("watchlist_id")
+  stock       Stock     @relation(fields: [ticker], references: [ticker], onUpdate: Cascade, onDelete: Cascade)
+  ticker      String
+
+  @@id([watchlistID, ticker])
+  @@map("stocks_in_watchlists")
 }
 
 model Portfolio {
@@ -113,34 +133,41 @@ model Portfolio {
   currency Currency
   stocks   StocksInPortfolios[]
   user     User                 @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
-  email    String               @db.VarChar(255)
+  email    String
+
+  @@map("portfolios")
 }
 
 model StocksInPortfolios {
   portfolio   Portfolio @relation(fields: [portfolioID], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  portfolioID Int
+  portfolioID Int       @map("portfolio_id")
   stock       Stock     @relation(fields: [ticker], references: [ticker], onUpdate: Cascade, onDelete: Cascade)
-  ticker      String    @db.VarChar(20)
+  ticker      String
   amount      Float
 
   @@id([portfolioID, ticker])
+  @@map("stocks_in_portfolios")
 }
 
 model Session {
   id          Bytes    @id @default(dbgenerated("gen_random_bytes(32)"))
   user        User     @relation(fields: [email], references: [email], onUpdate: Cascade, onDelete: Cascade)
-  email       String   @db.VarChar(255)
-  oidcIDToken String?
-  createdAt   DateTime @default(now()) @db.Timestamp(6)
-  expiresAt   DateTime @default(dbgenerated("date_add(now(), '1 hour')")) @db.Timestamp(6)
+  email       String
+  oidcIDToken String?  @map("oidc_id_token")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  expiresAt   DateTime @default(dbgenerated("date_add(now(), '01:00:00'::interval)")) @map("expires_at") @db.Timestamptz
+
+  @@map("sessions")
 }
 
 model Resource {
   uri            String   @id
   content        Bytes
-  contentType    String   @db.VarChar(255)
-  lastModifiedAt DateTime @default(now()) @db.Timestamp(6)
-  expiresAt      DateTime @default(dbgenerated("date_add(now(), '1 day')")) @db.Timestamp(6)
+  contentType    String   @map("content_type")
+  lastModifiedAt DateTime @default(now()) @map("last_modified_at") @db.Timestamptz
+  expiresAt      DateTime @default(dbgenerated("date_add(now(), '1 day'::interval)")) @map("expires_at") @db.Timestamptz
+
+  @@map("resources")
 }
 
 enum Country {
@@ -392,6 +419,8 @@ enum Country {
   YE
   ZM
   ZW
+
+  @@map("country")
 }
 
 enum Industry {
@@ -540,18 +569,24 @@ enum Industry {
   SemiconductorEquipmentMaterials
   Semiconductors
   Solar
+
+  @@map("industry")
 }
 
 enum Size {
   Small
   Mid
   Large
+
+  @@map("size")
 }
 
 enum Style {
   Value
   Blend
   Growth
+
+  @@map("style")
 }
 
 enum Currency {
@@ -721,6 +756,8 @@ enum Currency {
   ZMW
   ZWG
   ZWL
+
+  @@map("currency")
 }
 
 enum MSCIESGRating {
@@ -731,6 +768,8 @@ enum MSCIESGRating {
   BB
   B
   CCC
+
+  @@map("msci_esg_rating")
 }
 
 enum AnalystRating {
@@ -739,4 +778,6 @@ enum AnalystRating {
   Hold
   Outperform
   Buy
+
+  @@map("analyst_rating")
 }

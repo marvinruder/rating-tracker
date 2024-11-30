@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["vitest/globals"],
+    "types": ["vite/client", "vitest/globals"],
     "rootDir": "."
   },
   "include": ["src", "test", "vitest.config.ts"]

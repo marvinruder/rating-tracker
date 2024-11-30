@@ -69,13 +69,7 @@ class UserService {
           oidcIdentity: { create: user.oidcIdentity ?? undefined },
           accessRights: isFirstUser ? 255 : user.accessRights,
           webAuthnCredentials: credential
-            ? {
-                create: {
-                  id: Buffer.from(credential.id),
-                  publicKey: Buffer.from(credential.publicKey),
-                  counter: credential.counter,
-                },
-              }
+            ? { create: { id: credential.id, publicKey: credential.publicKey, counter: credential.counter } }
             : undefined,
         },
       });

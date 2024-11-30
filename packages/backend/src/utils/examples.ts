@@ -654,19 +654,19 @@ export const resourceExamples: Resource[] = [
   },
   {
     uri: "page.html",
-    content: Buffer.from('<html><body><p id="hello">Hello World!</p></body></html>'),
+    content: new TextEncoder().encode('<html><body><p id="hello">Hello World!</p></body></html>'),
     contentType: "text/html; charset=utf-8",
     lastModifiedAt: new Date(),
   },
   {
     uri: "data.json",
-    content: Buffer.from(JSON.stringify({ foo: "bar" })),
+    content: new TextEncoder().encode(JSON.stringify({ foo: "bar" })),
     contentType: "application/json; charset=utf-8",
     lastModifiedAt: new Date(),
   },
   {
     uri: "expired.json",
-    content: Buffer.from(JSON.stringify({ expired: true })),
+    content: new TextEncoder().encode(JSON.stringify({ expired: true })),
     contentType: "application/json; charset=utf-8",
     lastModifiedAt: new Date(),
   },
