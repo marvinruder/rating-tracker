@@ -1363,13 +1363,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/debug@npm:5.20.0":
-  version: 5.20.0
-  resolution: "@prisma/debug@npm:5.20.0"
-  checksum: 10c0/820e3e2c25f1a046024383a3a83f28707a99af1e04f46016c78d6b6231a901353755202578ce27760e00a654b357b634a3e79b99bfe710ba6d6a7f480fcdf6b9
-  languageName: node
-  linkType: hard
-
 "@prisma/debug@npm:6.0.0":
   version: 6.0.0
   resolution: "@prisma/debug@npm:6.0.0"
@@ -1407,12 +1400,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/generator-helper@npm:5.20.0":
-  version: 5.20.0
-  resolution: "@prisma/generator-helper@npm:5.20.0"
+"@prisma/generator-helper@npm:6.0.0":
+  version: 6.0.0
+  resolution: "@prisma/generator-helper@npm:6.0.0"
   dependencies:
-    "@prisma/debug": "npm:5.20.0"
-  checksum: 10c0/3628b960b0c3dad40b781e9f226d6bf79423fcb4708c408852e265735709346cf037ae42cad5624cae3ea3884e6919098a0dfeba70d8d379b8dd1049a7a59fb0
+    "@prisma/debug": "npm:6.0.0"
+  checksum: 10c0/7cf9b5d0e41f64deaf8893d8b9397ecfea17f09f9622cba2b27d463a007e9a5e691b92519ecc0f760670cdaf59fdd46affe6677d39187149954892a9f926bfdc
   languageName: node
   linkType: hard
 
@@ -1463,7 +1456,7 @@ __metadata:
     pino-pretty: "npm:13.0.0"
     prettier: "npm:3.4.1"
     prisma: "npm:6.0.0"
-    prisma-json-types-generator: "npm:3.1.1"
+    prisma-json-types-generator: "npm:3.2.1"
     smtp-server: "npm:3.13.6"
     typescript: "npm:5.6.3"
     undici-types: "npm:7.0.0"
@@ -6354,18 +6347,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma-json-types-generator@npm:3.1.1":
-  version: 3.1.1
-  resolution: "prisma-json-types-generator@npm:3.1.1"
+"prisma-json-types-generator@npm:3.2.1":
+  version: 3.2.1
+  resolution: "prisma-json-types-generator@npm:3.2.1"
   dependencies:
-    "@prisma/generator-helper": "npm:5.20.0"
-    tslib: "npm:2.7.0"
+    "@prisma/generator-helper": "npm:6.0.0"
+    tslib: "npm:2.8.1"
   peerDependencies:
-    prisma: ^5.20
+    prisma: ^5 || ^6
     typescript: ^5.6.2
   bin:
     prisma-json-types-generator: index.js
-  checksum: 10c0/d319343fb0611dbe1da269f3a7ea1b795498fabc948522f04fb2f8ee558c3c27620240dd0d71464337fab450b721c7ebdcd5cd58fca5a1a75edf73d5a8980e6b
+  checksum: 10c0/32291e61fd5b9b1a5d33d0c90cad8bca0b72ec9ac52865806f9523c6d1e6f2cffe0c3dd9d401e63e34fa60f2629801f2777ab28079892102f5f9d68a2c5fc1d8
   languageName: node
   linkType: hard
 
@@ -7489,10 +7482,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.7.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.1, tslib@npm:^2.6.2":
-  version: 2.7.0
-  resolution: "tslib@npm:2.7.0"
-  checksum: 10c0/469e1d5bf1af585742128827000711efa61010b699cb040ab1800bcd3ccdd37f63ec30642c9e07c4439c1db6e46345582614275daca3e0f4abae29b0083f04a6
+"tslib@npm:2.8.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.1, tslib@npm:^2.6.2":
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
   languageName: node
   linkType: hard
 
