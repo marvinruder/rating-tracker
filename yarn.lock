@@ -1089,14 +1089,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.22.3":
-  version: 7.22.3
-  resolution: "@mui/x-charts@npm:7.22.3"
+"@mui/x-charts@npm:7.23.0":
+  version: 7.23.0
+  resolution: "@mui/x-charts@npm:7.23.0"
   dependencies:
     "@babel/runtime": "npm:^7.25.7"
     "@mui/utils": "npm:^5.16.6 || ^6.0.0"
     "@mui/x-charts-vendor": "npm:7.20.0"
-    "@mui/x-internals": "npm:7.21.0"
+    "@mui/x-internals": "npm:7.23.0"
     "@react-spring/rafz": "npm:^9.7.5"
     "@react-spring/web": "npm:^9.7.5"
     clsx: "npm:^2.1.1"
@@ -1106,26 +1106,26 @@ __metadata:
     "@emotion/styled": ^11.8.1
     "@mui/material": ^5.15.14 || ^6.0.0
     "@mui/system": ^5.15.14 || ^6.0.0
-    react: ^17.0.0 || ^18.0.0
-    react-dom: ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
     "@emotion/react":
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/3ecb12b941487622337356467409fe9d874ddf56bde54474c1285b8c5188315b9ecda7e301db53990987c71f75b80683befdf9811101769c0f4e57688d9b873b
+  checksum: 10c0/f1bbcc9b401137e309b4fe6557ff0625dbd47884fba23b785011367cb606eca083843049932ff526a94440330898d4a5923e7a0f1b9cb5d4783cd3456f01a2d0
   languageName: node
   linkType: hard
 
-"@mui/x-internals@npm:7.21.0":
-  version: 7.21.0
-  resolution: "@mui/x-internals@npm:7.21.0"
+"@mui/x-internals@npm:7.23.0":
+  version: 7.23.0
+  resolution: "@mui/x-internals@npm:7.23.0"
   dependencies:
     "@babel/runtime": "npm:^7.25.7"
     "@mui/utils": "npm:^5.16.6 || ^6.0.0"
   peerDependencies:
-    react: ^17.0.0 || ^18.0.0
-  checksum: 10c0/46d105cee6cc9e53ce8fdf6149bf0758271b546ad3319b3b8fa48f1e93b574c9255218e43dffbd90214e922933291cb1d8aab54be475bcc8303fa8452078d3cb
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/47d5efad1b58b2c316e7d9e61cfe536b3c0a16f6d3ff4f371c8a29aa7c598de136f328958f6b44f6401b2c96b5867872f631debb51fb9db6f3493181f43deb2a
   languageName: node
   linkType: hard
 
@@ -1509,7 +1509,7 @@ __metadata:
     "@mui/lab": "npm:6.0.0-beta.17"
     "@mui/material": "npm:6.1.9"
     "@mui/system": "npm:6.1.9"
-    "@mui/x-charts": "npm:7.22.3"
+    "@mui/x-charts": "npm:7.23.0"
     "@nivo/core": "npm:0.88.0"
     "@nivo/sunburst": "npm:0.88.0"
     "@rating-tracker/backend": "workspace:*"
