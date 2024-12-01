@@ -1456,7 +1456,7 @@ __metadata:
     pino-pretty: "npm:13.0.0"
     prettier: "npm:3.4.1"
     prisma: "npm:6.0.0"
-    prisma-json-types-generator: "npm:3.2.1"
+    prisma-json-types-generator: "npm:3.2.2"
     smtp-server: "npm:3.13.6"
     typescript: "npm:5.6.3"
     undici-types: "npm:7.0.0"
@@ -6347,9 +6347,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma-json-types-generator@npm:3.2.1":
-  version: 3.2.1
-  resolution: "prisma-json-types-generator@npm:3.2.1"
+"prisma-json-types-generator@npm:3.2.2":
+  version: 3.2.2
+  resolution: "prisma-json-types-generator@npm:3.2.2"
   dependencies:
     "@prisma/generator-helper": "npm:6.0.0"
     tslib: "npm:2.8.1"
@@ -6358,7 +6358,7 @@ __metadata:
     typescript: ^5.6.2
   bin:
     prisma-json-types-generator: index.js
-  checksum: 10c0/32291e61fd5b9b1a5d33d0c90cad8bca0b72ec9ac52865806f9523c6d1e6f2cffe0c3dd9d401e63e34fa60f2629801f2777ab28079892102f5f9d68a2c5fc1d8
+  checksum: 10c0/d232bb4397288ed2ac8a55c8194cb383b9b64a4e937676267f7cb2514533dc765ab256ba4b08aac3cb79d7bd2d1b3fc9bd108528b6e3f7e86545b7d328e0d8ca
   languageName: node
   linkType: hard
 
