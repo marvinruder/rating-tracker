@@ -1455,7 +1455,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.2.1"
     globals: "npm:15.13.0"
     hono: "npm:4.6.12"
-    hono-rate-limiter: "npm:0.4.0"
+    hono-rate-limiter: "npm:0.4.2"
     jmespath: "npm:0.16.0"
     node-cron: "npm:3.0.3"
     oauth4webapi: "npm:3.1.4"
@@ -4788,12 +4788,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hono-rate-limiter@npm:0.4.0":
-  version: 0.4.0
-  resolution: "hono-rate-limiter@npm:0.4.0"
+"hono-rate-limiter@npm:0.4.2":
+  version: 0.4.2
+  resolution: "hono-rate-limiter@npm:0.4.2"
   peerDependencies:
     hono: ^4.1.1
-  checksum: 10c0/09cfbe7c2f146b2799b4cd54ccef05e83788403b561a877e5c7da28e3e97ec6bc7ae0ee2e1b3a48ae07b68cae1d163c4d34950ae507e6bda06e7335a4243c6ee
+  checksum: 10c0/fd6c2d484a3112cdf97759c6afe9d457d20029471c9ae2ab2fce4ae75e1cd629a7947988b3f8026fceeaab5b7fcf0e208b7b51d3618a16c4a7181d93a32ee51e
   languageName: node
   linkType: hard
 
