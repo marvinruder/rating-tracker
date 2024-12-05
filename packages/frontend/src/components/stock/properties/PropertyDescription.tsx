@@ -36,7 +36,7 @@ type DescribedProperty =
  * @param props.property The property to display the description of.
  * @returns A component that displays the description of a stock property.
  */
-export const PropertyDescription = (props: { property: DescribedProperty }): JSX.Element => {
+export const PropertyDescription = (props: { property: DescribedProperty }): React.JSX.Element => {
   switch (props.property) {
     case "amount":
       return (

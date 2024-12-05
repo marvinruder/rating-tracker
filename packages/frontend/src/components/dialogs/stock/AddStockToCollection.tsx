@@ -24,7 +24,7 @@ import SelectStock from "./SelectStock";
  * @param props The properties of the component.
  * @returns The component.
  */
-const AddStockToCollection = (props: AddStockToCollectionProps): JSX.Element => {
+const AddStockToCollection = (props: AddStockToCollectionProps): React.JSX.Element => {
   const [amountInput, setAmountInput] = useState<string>("");
   const [amountError, setAmountError] = useState<string>(""); // Error message for the amount text field.
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();

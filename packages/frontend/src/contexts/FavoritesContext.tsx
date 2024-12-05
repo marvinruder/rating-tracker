@@ -41,7 +41,7 @@ const FavoritesUpdaterContext = createContext<FavoritesUpdaterContextType>({} as
  * @param props The properties of the component.
  * @returns The component.
  */
-export const FavoritesProvider = (props: React.PropsWithChildren): JSX.Element => {
+export const FavoritesProvider = (props: React.PropsWithChildren): React.JSX.Element => {
   const [favorites, setFavorites] = useState<Stock["ticker"][]>([]);
   const { user } = useUserContextState();
 

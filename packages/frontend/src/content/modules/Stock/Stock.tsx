@@ -17,7 +17,7 @@ import { StockHeader } from "./StockHeader";
  * A module that displays the details of a stock.
  * @returns The component.
  */
-const StockModule = (): JSX.Element => {
+const StockModule = (): React.JSX.Element => {
   const [stock, setStock] = useState<Stock>();
 
   const { favorites } = useFavoritesContextState();

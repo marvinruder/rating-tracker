@@ -35,7 +35,7 @@ import { useNotificationContextUpdater } from "../../../contexts/NotificationCon
  * @param props The properties of the component.
  * @returns The component.
  */
-const WatchlistCard = (props: WatchlistCardProps): JSX.Element => {
+const WatchlistCard = (props: WatchlistCardProps): React.JSX.Element => {
   const isFavorites = props.watchlist?.name === FAVORITES_NAME;
   const [addStockToCollectionDialogOpen, setAddStockToCollectionDialogOpen] = useState<boolean>(false);
   const [renameDialogOpen, setRenameDialogOpen] = useState<boolean>(false);

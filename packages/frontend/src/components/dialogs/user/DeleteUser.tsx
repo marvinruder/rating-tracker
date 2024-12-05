@@ -13,7 +13,7 @@ import { useNotificationContextUpdater } from "../../../contexts/NotificationCon
  * @param props The properties of the component.
  * @returns The component.
  */
-export const DeleteUser = (props: DeleteUserProps): JSX.Element => {
+export const DeleteUser = (props: DeleteUserProps): React.JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();

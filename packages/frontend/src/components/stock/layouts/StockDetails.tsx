@@ -48,7 +48,7 @@ import { StyleBox } from "../properties/StyleBox";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const StockDetails = (props: StockDetailsProps): JSX.Element => {
+export const StockDetails = (props: StockDetailsProps): React.JSX.Element => {
   const theme = useTheme();
 
   /**

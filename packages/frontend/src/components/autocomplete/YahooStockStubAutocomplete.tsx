@@ -13,7 +13,7 @@ import { StockPreview } from "../stock/layouts/StockPreview";
  * @param props The properties of the component.
  * @returns The component.
  */
-const YahooStockStubAutocomplete = (props: YahooStockStubAutocompleteProps): JSX.Element => {
+const YahooStockStubAutocomplete = (props: YahooStockStubAutocompleteProps): React.JSX.Element => {
   // The value of the text field in the autocomplete.
   const [queryInputValue, setQueryInputValue] = useState<string>("");
   const [stockStubs, setStockStubs] = useState<YahooStockStub[]>([]);

@@ -12,7 +12,7 @@ import { HeaderUserbox } from "./Userbox/Userbox";
  * @param props The component props.
  * @returns The component.
  */
-export const Header = (props: HeaderProps): JSX.Element => {
+export const Header = (props: HeaderProps): React.JSX.Element => {
   const theme = useTheme();
   const { pathname } = useLocation();
 

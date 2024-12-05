@@ -28,7 +28,7 @@ import { useUserContextState, useUserContextUpdater } from "./contexts/UserConte
  * A component that renders a loading indicator.
  * @returns The component.
  */
-const SuspenseLoader = (): JSX.Element => (
+const SuspenseLoader = (): React.JSX.Element => (
   <Box
     sx={{
       position: "fixed",
@@ -54,13 +54,13 @@ const SuspenseLoader = (): JSX.Element => (
  */
 const loader = (
   Component: React.LazyExoticComponent<React.ComponentType<any>>,
-): ((props: JSX.IntrinsicAttributes) => JSX.Element) => {
+): ((props: React.JSX.IntrinsicAttributes) => React.JSX.Element) => {
   /**
    * A wrapper for the suspense loader.
    * @param props The properties to pass to the component.
    * @returns The component.
    */
-  const SuspenseWrapper = (props: JSX.IntrinsicAttributes): JSX.Element => (
+  const SuspenseWrapper = (props: React.JSX.IntrinsicAttributes): React.JSX.Element => (
     <Suspense fallback={<SuspenseLoader />}>
       <Component {...props} />
     </Suspense>
@@ -193,7 +193,7 @@ const oidcErrorDescription = (errorCode: string): string => {
  * @param props The properties of the component.
  * @returns The component.
  */
-const AuthWrapper = (props: AuthWrapperProps): JSX.Element => {
+const AuthWrapper = (props: AuthWrapperProps): React.JSX.Element => {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useUserContextState();
@@ -271,7 +271,7 @@ interface AuthWrapperProps {
   /**
    * The page to display.
    */
-  children: JSX.Element;
+  children: React.JSX.Element;
   /**
    * Whether the requested page is the login page.
    */
@@ -284,7 +284,7 @@ interface AuthWrapperProps {
  * e.g. a screenshot resource URL.
  * @returns The component.
  */
-const ForwardToAPI = (): JSX.Element => {
+const ForwardToAPI = (): React.JSX.Element => {
   useEffect(() => {
     document.location = document.location;
   }, []);

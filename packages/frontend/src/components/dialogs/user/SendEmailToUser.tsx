@@ -28,7 +28,7 @@ import { useNotificationContextUpdater } from "../../../contexts/NotificationCon
  * @param props The properties of the component.
  * @returns The component.
  */
-export const SendEmailToUser = (props: SendEmailToUserProps): JSX.Element => {
+export const SendEmailToUser = (props: SendEmailToUserProps): React.JSX.Element => {
   const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null);
   const [templatePreview, setTemplatePreview] = useState<{
     from: string;

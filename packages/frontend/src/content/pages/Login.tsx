@@ -18,7 +18,7 @@ import { useUserContextUpdater } from "../../contexts/UserContext";
  * This component renders the login page.
  * @returns The component.
  */
-export const LoginPage = (): JSX.Element => {
+export const LoginPage = (): React.JSX.Element => {
   const [action, setAction] = useState<"signIn" | "register">("signIn");
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");

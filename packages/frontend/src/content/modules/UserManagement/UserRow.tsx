@@ -55,7 +55,7 @@ const accessRightLabel: Record<AccessRight, string> = {
 const AccessRightSelect = (props: {
   user: NonNullable<UserRowProps["user"]>;
   refetchUsers: NonNullable<UserRowProps["refetchUsers"]>;
-}): JSX.Element => {
+}): React.JSX.Element => {
   const [accessRights, setAccessRights] = useState<number>(props.user.accessRights);
 
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
@@ -119,7 +119,7 @@ const AccessRightSelect = (props: {
  * @param props The properties of the component.
  * @returns The component.
  */
-const UserRow = (props: UserRowProps): JSX.Element => {
+const UserRow = (props: UserRowProps): React.JSX.Element => {
   const theme = useTheme();
 
   const { systemStatus } = useStatusContextState();

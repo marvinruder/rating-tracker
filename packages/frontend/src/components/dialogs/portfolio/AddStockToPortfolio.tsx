@@ -30,7 +30,7 @@ import { AddPortfolio } from "./AddPortfolio";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const AddStockToPortfolio = (props: AddStockToPortfolioProps): JSX.Element => {
+export const AddStockToPortfolio = (props: AddStockToPortfolioProps): React.JSX.Element => {
   const [portfolioSummaries, setPortfolioSummaries] = useState<PortfolioSummary[]>([]);
   const [portfolioSummariesFinal, setPortfolioSummariesFinal] = useState<boolean>(false);
   const [amountInput, setAmountInput] = useState<string>("");

@@ -30,7 +30,7 @@ import { StockPreview } from "../../stock/layouts/StockPreview";
  * @param props The properties of the component.
  * @returns The component.
  */
-const SelectStock = (props: SelectStockProps): JSX.Element => {
+const SelectStock = (props: SelectStockProps): React.JSX.Element => {
   const [searchValue, setSearchValue] = useState("");
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [count, setCount] = useState<number>(0);

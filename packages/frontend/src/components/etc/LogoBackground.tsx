@@ -13,7 +13,7 @@ const MAX_COUNT = 50;
  * The background of the page, showing stock logos.
  * @returns The component.
  */
-export const LogoBackground = (): JSX.Element => {
+export const LogoBackground = (): React.JSX.Element => {
   const [logos, setLogos] = useState<string[]>([]);
 
   const theme = useTheme();

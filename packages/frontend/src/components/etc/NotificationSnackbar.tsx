@@ -14,7 +14,7 @@ const TRANSITION_DURATION = 350;
  * @param props The properties of the component.
  * @returns The component.
  */
-export const NotificationSnackbar = (props: NotificationSnackbarProps): JSX.Element => {
+export const NotificationSnackbar = (props: NotificationSnackbarProps): React.JSX.Element => {
   const [snackbarShown, setSnackbarShown] = useState<boolean>(false);
   // The notification is provided by the NotificationContext.
   const { notification } = useNotificationContextState();

@@ -31,7 +31,7 @@ export const NestedCheckboxList = <
   FourthLevelType extends string,
 >(
   props: NestedCheckboxListProps<FirstLevelType, SecondLevelType, ThirdLevelType, FourthLevelType>,
-): JSX.Element => {
+): React.JSX.Element => {
   const [openFirstLevel, setOpenFirstLevel] = useState<FirstLevelType[]>([]);
   const [openSecondLevel, setOpenSecondLevel] = useState<SecondLevelType[]>([]);
   const [openThirdLevel, setOpenThirdLevel] = useState<ThirdLevelType[]>([]);

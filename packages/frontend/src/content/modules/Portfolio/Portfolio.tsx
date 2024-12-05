@@ -86,7 +86,7 @@ import { PortfolioHeader } from "./PortfolioHeader";
  * A module that displays a portfolio.
  * @returns The component.
  */
-const PortfolioModule = (): JSX.Element => {
+const PortfolioModule = (): React.JSX.Element => {
   const [portfolio, setPortfolio] = useState<Portfolio>();
   const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
@@ -240,7 +240,7 @@ const PortfolioModule = (): JSX.Element => {
    * @param props.color The color of the datum.
    * @returns The tooltip.
    */
-  const SunburstTooltip = ({ id, value, color }: ComputedDatum<SunburstNode>): JSX.Element => (
+  const SunburstTooltip = ({ id, value, color }: ComputedDatum<SunburstNode>): React.JSX.Element => (
     <Paper sx={{ px: 0.75, py: 0.5 }}>
       <Typography variant="body1" sx={{ whiteSpace: "nowrap" }}>
         <span style={{ color }}>{"\u25cf"}</span>
@@ -805,8 +805,8 @@ const PortfolioModule = (): JSX.Element => {
                       // out or deleting stocks), we need to perform some manual checks to find out whether its data is
                       // valid.
                       pathInSunburstData(industrySunburstData, datum.path) ? (
+                        // @ts-expect-error
                         <animated.g
-                          // @ts-ignore
                           transform={style.transform}
                           fill={
                             isSuperSector(stripPrefixFromSunburstID(datum.id.toString()))

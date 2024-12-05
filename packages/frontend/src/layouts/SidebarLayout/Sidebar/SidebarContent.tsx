@@ -43,7 +43,9 @@ import { Logo } from "./Logo";
  * @param props The properties of the component.
  * @returns The component.
  */
-const MenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (props: React.PropsWithChildren<BoxProps>): JSX.Element => {
+const MenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
+  props: React.PropsWithChildren<BoxProps>,
+): React.JSX.Element => {
   const theme = useTheme();
   return (
     <Box
@@ -71,7 +73,7 @@ const MenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (props: React.PropsWi
  */
 const SubMenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
   props: React.PropsWithChildren<BoxProps>,
-): JSX.Element => {
+): React.JSX.Element => {
   const theme = useTheme();
   return (
     <Box
@@ -151,7 +153,7 @@ const SubMenuWrapper: FC<React.PropsWithChildren<BoxProps>> = (
  * @param props The component props.
  * @returns The component.
  */
-export const SidebarContent = (props: SidebarContentProps): JSX.Element => {
+export const SidebarContent = (props: SidebarContentProps): React.JSX.Element => {
   const [statusTooltipOpen, setStatusTooltipOpen] = useState(false);
 
   const theme = useTheme();

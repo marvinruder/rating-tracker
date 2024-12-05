@@ -10,7 +10,7 @@ import { Sidebar } from "./Sidebar/Sidebar";
  * A layout with a sidebar.
  * @returns The component.
  */
-const SidebarLayout: FC = (): JSX.Element => {
+const SidebarLayout: FC = (): React.JSX.Element => {
   const [sidebarToggle, setSidebarToggle] = useState(false);
 
   /**

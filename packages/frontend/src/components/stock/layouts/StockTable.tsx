@@ -36,7 +36,7 @@ import { MemoizedStockRow, StockRow } from "./StockRow";
  * @param props The component props.
  * @returns The stocks table component.
  */
-export const StockTable: FC<StockTableProps> = (props: StockTableProps): JSX.Element => {
+export const StockTable: FC<StockTableProps> = (props: StockTableProps): React.JSX.Element => {
   const [totalCount, setTotalCount] = useState<number>(-1);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [stocksFinal, setStocksFinal] = useState<boolean>(false);

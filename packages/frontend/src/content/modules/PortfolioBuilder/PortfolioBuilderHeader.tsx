@@ -4,7 +4,7 @@ import { Typography } from "@mui/material";
  * A header for the portfolio builder page.
  * @returns The component.
  */
-export const PortfolioBuilderHeader = (): JSX.Element => (
+export const PortfolioBuilderHeader = (): React.JSX.Element => (
   <>
     <Typography variant="h3" component="h3" gutterBottom>
       Portfolio Builder

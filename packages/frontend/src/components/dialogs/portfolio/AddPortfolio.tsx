@@ -14,7 +14,7 @@ import CurrencyAutocomplete from "../../autocomplete/CurrencyAutocomplete";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const AddPortfolio = (props: AddPortfolioProps): JSX.Element => {
+export const AddPortfolio = (props: AddPortfolioProps): React.JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [currency, setCurrency] = useState<Currency>();

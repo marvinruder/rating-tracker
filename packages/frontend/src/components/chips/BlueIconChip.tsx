@@ -7,7 +7,7 @@ import type { FC } from "react";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const BlueIconChip: FC<ChipProps> = (props: ChipProps): JSX.Element => {
+export const BlueIconChip: FC<ChipProps> = (props: ChipProps): React.JSX.Element => {
   const theme = useTheme();
   return <Chip {...props} sx={{ ...props.sx, ".MuiChip-icon": { color: theme.palette.primary.main } }} />;
 };

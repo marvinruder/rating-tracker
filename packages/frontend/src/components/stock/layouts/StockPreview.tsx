@@ -16,7 +16,7 @@ import { SectorIcon } from "../properties/SectorIcon";
  *                       If not provided, the button will not be shown.
  * @returns The component.
  */
-export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPreviewProps): JSX.Element => {
+export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPreviewProps): React.JSX.Element => {
   const theme = useTheme();
   return (
     <ListItem

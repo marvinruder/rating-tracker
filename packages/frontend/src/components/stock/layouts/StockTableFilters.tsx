@@ -70,7 +70,7 @@ import { formatPercentage } from "../../../utils/formatters";
 import { NestedCheckboxList } from "../../etc/NestedCheckboxList";
 import { StarRating } from "../properties/StarRating";
 
-export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableFiltersProps): JSX.Element => {
+export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableFiltersProps): React.JSX.Element => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [columnFilterOpen, setColumnFilterOpen] = useState<boolean>(false);
 

@@ -9,7 +9,7 @@ import { formatPercentage } from "../../utils/formatters";
  * @param props The properties of the component.
  * @returns The component.
  */
-const DiffProgressBar = (props: DiffProgressBarProps): JSX.Element => (
+const DiffProgressBar = (props: DiffProgressBarProps): React.JSX.Element => (
   <>
     <Typography variant="subtitle1" sx={{ display: "flex", justifyContent: "space-between" }}>
       <span>

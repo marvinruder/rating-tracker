@@ -21,7 +21,7 @@ const Transition = forwardRef(function Transition(
  * A search bar that can be activated from a button in the header.
  * @returns The component.
  */
-export const HeaderSearchButton = (): JSX.Element => {
+export const HeaderSearchButton = (): React.JSX.Element => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

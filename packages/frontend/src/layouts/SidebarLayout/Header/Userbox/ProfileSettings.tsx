@@ -45,7 +45,7 @@ import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const ProfileSettings = (props: ProfileSettingsProps): JSX.Element => {
+export const ProfileSettings = (props: ProfileSettingsProps): React.JSX.Element => {
   const { systemStatus } = useStatusContextState();
   const { user } = useUserContextState();
   const { refetchUser } = useUserContextUpdater();

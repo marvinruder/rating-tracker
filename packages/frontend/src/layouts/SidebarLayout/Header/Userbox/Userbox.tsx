@@ -25,7 +25,7 @@ import { useUserContextState, useUserContextUpdater } from "../../../../contexts
 
 import { ProfileSettings } from "./ProfileSettings";
 
-export const HeaderUserbox = (): JSX.Element => {
+export const HeaderUserbox = (): React.JSX.Element => {
   const [open, setOpen] = useState(false);
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
   const { user } = useUserContextState();

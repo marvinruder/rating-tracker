@@ -34,7 +34,7 @@ import { AddPortfolio } from "./AddPortfolio";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): JSX.Element => {
+export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): React.JSX.Element => {
   const [portfolioSummaries, setPortfolioSummaries] = useState<PortfolioSummary[]>([]);
   const [portfolioSummariesFinal, setPortfolioSummariesFinal] = useState<boolean>(false);
   const [addPortfolioOpen, setAddPortfolioOpen] = useState<boolean>(false);

@@ -8,7 +8,7 @@ import { useState } from "react";
  * @param props The properties of the component.
  * @returns The component.
  */
-const CurrencyAutocomplete = (props: CurrencyAutocompleteProps): JSX.Element => {
+const CurrencyAutocomplete = (props: CurrencyAutocompleteProps): React.JSX.Element => {
   // The value of the text field in the currency autocomplete.
   const [currencyInputValue, setCurrencyInputValue] = useState<string>("");
 
@@ -80,7 +80,7 @@ interface CurrencyAutocompleteProps {
   /**
    * The ref of the input element.
    */
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
   /**
    * Whether the field is required.
    */
