@@ -15,7 +15,7 @@ import { AddPortfolio } from "../../../components/dialogs/portfolio/AddPortfolio
  */
 export const PortfolioSummaryHeader: FC<PortfolioSummaryHeaderProps> = (
   props: PortfolioSummaryHeaderProps,
-): JSX.Element => {
+): React.JSX.Element => {
   const [addPortfolioOpen, setAddPortfolioOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 

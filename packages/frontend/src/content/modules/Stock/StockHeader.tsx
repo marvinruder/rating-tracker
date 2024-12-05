@@ -30,7 +30,7 @@ import { useUserContextState } from "../../../contexts/UserContext";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const StockHeader = (props: StockHeaderProps): JSX.Element => {
+export const StockHeader = (props: StockHeaderProps): React.JSX.Element => {
   const [addToWatchlistDialogOpen, setAddToWatchlistDialogOpen] = useState<boolean>(false);
   const [addToPortfolioDialogOpen, setAddToPortfolioDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);

@@ -12,7 +12,7 @@ import { useNotificationContextUpdater } from "../../../contexts/NotificationCon
  * @param props The properties of the component.
  * @returns The component.
  */
-export const AddWatchlist = (props: AddWatchlistProps): JSX.Element => {
+export const AddWatchlist = (props: AddWatchlistProps): React.JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.

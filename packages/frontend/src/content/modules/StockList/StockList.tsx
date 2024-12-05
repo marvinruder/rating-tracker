@@ -13,7 +13,7 @@ import StockListHeader from "./StockListHeader";
  * A module that displays a list of stocks.
  * @returns The component.
  */
-const StockListModule = (): JSX.Element => {
+const StockListModule = (): React.JSX.Element => {
   const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
   const [refetchStocksTrigger, setRefetchStocksTrigger] = useState<boolean>(false);

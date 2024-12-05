@@ -52,7 +52,7 @@ export const formatPercentage = (
     : fallbackString;
 };
 
-/* c8 ignore start */ // We currently do not have a test setup for JSX components.
+/* c8 ignore start */ // We currently do not have a test setup for React.JSX components.
 /**
  * Formats a decimal number using exponential notation.
  * @param props The properties of the component.
@@ -66,7 +66,7 @@ export const formatPercentage = (
 export const ExponentialNumber = (props: {
   decimal: number | undefined | null;
   options?: { precision?: number; fallbackString?: string };
-}): JSX.Element => {
+}): React.JSX.Element => {
   const { precision = 4, fallbackString = "–" } = props.options || {};
   if (!props.decimal) return <>{fallbackString}</>;
   const [mantissa, exponent] = props.decimal.toExponential(precision).split("e");
@@ -85,7 +85,7 @@ export const ExponentialNumber = (props: {
  * @param props The properties of the component.
  * @returns The component.
  */
-export const CurrencyWithTooltip = (props: CurrencyWithTooltipProps): JSX.Element =>
+export const CurrencyWithTooltip = (props: CurrencyWithTooltipProps): React.JSX.Element =>
   props.floatAlign ? (
     <>
       <Tooltip title={props.currency && currencyName[props.currency]} arrow>

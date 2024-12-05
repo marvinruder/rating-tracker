@@ -110,7 +110,7 @@ type ScatterSeriesType = _ScatterSeriesType & { data: (ScatterValueType & { coun
  * of regions, sectors and other factors.
  * @returns The component.
  */
-const PortfolioBuilderModule = (): JSX.Element => {
+const PortfolioBuilderModule = (): React.JSX.Element => {
   const [activeStep, setActiveStep] = useState<number>(0); // The dialog step to show.
   const [stocks, setStocks] = useState<Stock[]>([]); // The stocks to build the portfolio from.
   const [portfolioSummaries, setPortfolioSummaries] = useState<PortfolioSummary[]>([]);

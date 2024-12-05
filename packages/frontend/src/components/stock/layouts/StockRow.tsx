@@ -108,7 +108,7 @@ import { StyleBox } from "../properties/StyleBox";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const StockRow = (props: StockRowProps): JSX.Element => {
+export const StockRow = (props: StockRowProps): React.JSX.Element => {
   const { user } = useUserContextState();
   const { favorites } = useFavoritesContextState();
   const { refetchFavorites } = useFavoritesContextUpdater();

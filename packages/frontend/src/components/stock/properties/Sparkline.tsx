@@ -20,7 +20,7 @@ type Interval = (typeof intervalArray)[number];
  * @param props The properties of the component.
  * @returns The component.
  */
-export const Sparkline = (props: SparklineProps): JSX.Element => {
+export const Sparkline = (props: SparklineProps): React.JSX.Element => {
   const [interval, setInterval] = useState<Interval>("1y");
 
   const toggleInterval = () => setInterval((prev) => intervalArray.at(intervalArray.indexOf(prev) - 1)!);

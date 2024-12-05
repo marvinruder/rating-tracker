@@ -9,7 +9,7 @@ import type { FC } from "react";
  * @param superSectorOrSector The super sector or sector to get the icon’s paths for.
  * @returns The SVG paths for the icon.
  */
-export const getSectorIconPaths = (superSectorOrSector: SuperSector | Sector): JSX.Element => {
+export const getSectorIconPaths = (superSectorOrSector: SuperSector | Sector): React.JSX.Element => {
   switch (superSectorOrSector) {
     case "Cyclical":
       return (
@@ -126,7 +126,7 @@ export const getSectorIconPaths = (superSectorOrSector: SuperSector | Sector): J
  * @param props The properties of the component.
  * @returns The component.
  */
-export const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps): JSX.Element => {
+export const SectorIcon: FC<SectorIconProps> = (props: SectorIconProps): React.JSX.Element => {
   const theme = useTheme();
   const color: React.CSSProperties["color"] = props.industry
     ? theme.palette.sector[superSectorOfSector[sectorOfIndustryGroup[groupOfIndustry[props.industry]]]]

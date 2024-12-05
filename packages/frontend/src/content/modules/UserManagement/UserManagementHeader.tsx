@@ -5,7 +5,7 @@ import type { FC } from "react";
  * A header for the user list page. It contains the user list filters and column filter.
  * @returns The component.
  */
-const UserManagementHeader: FC = (): JSX.Element => {
+const UserManagementHeader: FC = (): React.JSX.Element => {
   return (
     <Grid container sx={{ justifyContent: "space-between", alignItems: "center" }}>
       <Grid>

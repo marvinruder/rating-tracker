@@ -15,7 +15,7 @@ import { WatchlistSummaryHeader } from "./WatchlistSummaryHeader";
  * A module that displays an overview of the user’s watchlists.
  * @returns The component.
  */
-const WatchlistSummaryModule = (): JSX.Element => {
+const WatchlistSummaryModule = (): React.JSX.Element => {
   const [watchlistSummaries, setWatchlistSummaries] = useState<WatchlistSummary[]>([]);
   const [watchlistSummariesFinal, setWatchlistSummariesFinal] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();

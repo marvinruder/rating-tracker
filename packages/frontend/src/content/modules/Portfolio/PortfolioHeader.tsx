@@ -19,7 +19,7 @@ import { StockTableFilters } from "../../../components/stock/layouts/StockTableF
  * @param props The properties of the component.
  * @returns The component.
  */
-export const PortfolioHeader = (props: PortfolioHeaderProps): JSX.Element => {
+export const PortfolioHeader = (props: PortfolioHeaderProps): React.JSX.Element => {
   const [addStockToCollectionDialogOpen, setAddStockToCollectionDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);

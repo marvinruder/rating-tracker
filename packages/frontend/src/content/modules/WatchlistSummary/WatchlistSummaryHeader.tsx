@@ -12,7 +12,7 @@ import { AddWatchlist } from "../../../components/dialogs/watchlist/AddWatchlist
  */
 export const WatchlistSummaryHeader: FC<WatchlistSummaryHeaderProps> = (
   props: WatchlistSummaryHeaderProps,
-): JSX.Element => {
+): React.JSX.Element => {
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);
 
   return (

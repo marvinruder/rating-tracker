@@ -26,7 +26,7 @@ const ColorSchemeContext = createContext<ColorSchemeContextType>({ mode: initial
  * @param props The properties of the component.
  * @returns The component.
  */
-export const ColorSchemeProvider = (props: React.PropsWithChildren): JSX.Element => {
+export const ColorSchemeProvider = (props: React.PropsWithChildren): React.JSX.Element => {
   const [preferredColorScheme, setPreferredColorScheme] = useState<ColorSchemeContextType["mode"]>(initialMode);
 
   useEffect(() => {

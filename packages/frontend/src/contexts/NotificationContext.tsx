@@ -44,7 +44,7 @@ const NotificationUpdaterContext = createContext<NotificationUpdaterContextType>
  * @param props The properties of the component.
  * @returns The component.
  */
-export const NotificationProvider = (props: React.PropsWithChildren): JSX.Element => {
+export const NotificationProvider = (props: React.PropsWithChildren): React.JSX.Element => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined);
 
   const setErrorNotificationOrClearSession = useCallback((e: unknown, actionDescription: string) => {

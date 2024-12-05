@@ -8,7 +8,7 @@ import { default as SwitchSelectorBase } from "react-switch-selector";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const SwitchSelector = (props: SwitchSelectorProps): JSX.Element => {
+export const SwitchSelector = (props: SwitchSelectorProps): React.JSX.Element => {
   const theme = useTheme();
 
   const switchOptions = [

@@ -6,7 +6,7 @@ import { Accordion, AccordionSummary, FormControlLabel, Checkbox, AccordionDetai
  * @param props The properties of the component.
  * @returns The component.
  */
-const CheckboxAccordion = (props: React.PropsWithChildren<CheckboxAccordionProps>): JSX.Element => (
+const CheckboxAccordion = (props: React.PropsWithChildren<CheckboxAccordionProps>): React.JSX.Element => (
   <Accordion
     expanded={props.expanded}
     onChange={(event, isExpanded) =>

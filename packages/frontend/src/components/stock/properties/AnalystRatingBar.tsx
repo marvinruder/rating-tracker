@@ -8,7 +8,7 @@ import { RecordMath, analystRatingArray } from "@rating-tracker/commons";
  * @param props.stock The stock to display the analyst rating for.
  * @returns The component.
  */
-export const AnalystRatingBar = ({ stock, ...props }: AnalystRatingBarProps): JSX.Element => {
+export const AnalystRatingBar = ({ stock, ...props }: AnalystRatingBarProps): React.JSX.Element => {
   const theme = useTheme();
   const sum = RecordMath.sum(stock.analystRatings);
 

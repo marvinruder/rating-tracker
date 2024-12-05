@@ -7,7 +7,7 @@ import { dataProviderName, type Stock } from "@rating-tracker/commons";
  * @param props The properties of the component.
  * @returns The component.
  */
-const LinkToDataProvider = (props: React.PropsWithChildren<LinkToDataProviderProps>): JSX.Element => {
+const LinkToDataProvider = (props: React.PropsWithChildren<LinkToDataProviderProps>): React.JSX.Element => {
   return props.href && props.stock ? (
     <Link
       aria-label={`Open “${props.stock.name}” on ${props.dataProvider} in a new tab.`}
@@ -29,7 +29,7 @@ const LinkToDataProvider = (props: React.PropsWithChildren<LinkToDataProviderPro
  * @param props The properties of the component.
  * @returns The component.
  */
-export const YahooNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
+export const YahooNavigator = (props: React.PropsWithChildren<NavigatorProps>): React.JSX.Element => (
   <LinkToDataProvider
     href={props.stock?.ticker?.match(/^[^_]/) ? `https://finance.yahoo.com/quote/${props.stock.ticker}` : ""}
     dataProvider={dataProviderName["yahoo"]}
@@ -45,7 +45,7 @@ export const YahooNavigator = (props: React.PropsWithChildren<NavigatorProps>): 
  * @param props The properties of the component.
  * @returns The component.
  */
-export const MorningstarNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
+export const MorningstarNavigator = (props: React.PropsWithChildren<NavigatorProps>): React.JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.morningstarID
@@ -66,7 +66,7 @@ export const MorningstarNavigator = (props: React.PropsWithChildren<NavigatorPro
  * @param props The properties of the component.
  * @returns The component.
  */
-export const MarketScreenerNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
+export const MarketScreenerNavigator = (props: React.PropsWithChildren<NavigatorProps>): React.JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.marketScreenerID
@@ -86,7 +86,7 @@ export const MarketScreenerNavigator = (props: React.PropsWithChildren<Navigator
  * @param props The properties of the component.
  * @returns The component.
  */
-export const MSCINavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
+export const MSCINavigator = (props: React.PropsWithChildren<NavigatorProps>): React.JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.msciID
@@ -110,7 +110,7 @@ export const MSCINavigator = (props: React.PropsWithChildren<NavigatorProps>): J
  * @param props The properties of the component.
  * @returns The component.
  */
-export const LSEGNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
+export const LSEGNavigator = (props: React.PropsWithChildren<NavigatorProps>): React.JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.ric
@@ -132,7 +132,7 @@ export const LSEGNavigator = (props: React.PropsWithChildren<NavigatorProps>): J
  * @param props The properties of the component.
  * @returns The component.
  */
-export const SPNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
+export const SPNavigator = (props: React.PropsWithChildren<NavigatorProps>): React.JSX.Element => (
   <LinkToDataProvider
     href={props.stock?.spID ? `https://www.spglobal.com/esg/scores/results?cid=${String(props.stock.spID)}` : ""}
     dataProvider={dataProviderName["sp"]}
@@ -148,7 +148,7 @@ export const SPNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX
  * @param props The properties of the component.
  * @returns The component.
  */
-export const SustainalyticsNavigator = (props: React.PropsWithChildren<NavigatorProps>): JSX.Element => (
+export const SustainalyticsNavigator = (props: React.PropsWithChildren<NavigatorProps>): React.JSX.Element => (
   <LinkToDataProvider
     href={
       props.stock?.sustainalyticsID ? `https://www.sustainalytics.com/esg-rating/${props.stock.sustainalyticsID}` : ""

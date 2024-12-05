@@ -1,14 +1,13 @@
 import { Slider, SliderMarkLabel, useTheme } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
 import { currencyMinorUnits } from "@rating-tracker/commons";
-import React from "react";
 
 /**
  * A slider that is used to display a 52-week range.
  * @param props The properties of the component.
  * @returns The component.
  */
-export const Range52WSlider = (props: Range52WSliderProps): JSX.Element => {
+export const Range52WSlider = (props: Range52WSliderProps): React.JSX.Element => {
   const theme = useTheme();
   return props.stock.lastClose !== null && props.stock.low52w !== null && props.stock.high52w !== null ? (
     <Slider

@@ -51,7 +51,7 @@ const UserUpdaterContext = createContext<UserUpdaterContextType>({} as UserUpdat
  * @param props The properties of the component.
  * @returns The component.
  */
-export const UserProvider = (props: React.PropsWithChildren): JSX.Element => {
+export const UserProvider = (props: React.PropsWithChildren): React.JSX.Element => {
   const [user, setUser] = useState<User>(undefined as unknown as User);
   const { notification } = useNotificationContextState();
   const { setNotification } = useNotificationContextUpdater();

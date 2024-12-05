@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const HeaderWrapper = (props: HeaderWrapperProps): JSX.Element => (
+export const HeaderWrapper = (props: HeaderWrapperProps): React.JSX.Element => (
   <Box
     sx={(theme) => ({
       pt: `calc(76px + ${theme.spacing(4)})`,

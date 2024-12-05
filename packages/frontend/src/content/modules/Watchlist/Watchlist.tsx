@@ -16,7 +16,7 @@ import { WatchlistHeader } from "./WatchlistHeader";
  * A module that displays a watchlist.
  * @returns The component.
  */
-const WatchlistModule = (): JSX.Element => {
+const WatchlistModule = (): React.JSX.Element => {
   const [watchlist, setWatchlist] = useState<Watchlist>();
   const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);

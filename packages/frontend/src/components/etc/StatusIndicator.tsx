@@ -10,7 +10,7 @@ import type { Status } from "../../types/Status";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const StatusIndicator: FC<StatusIndicatorProps> = (props: StatusIndicatorProps): JSX.Element => (
+export const StatusIndicator: FC<StatusIndicatorProps> = (props: StatusIndicatorProps): React.JSX.Element => (
   <Box
     sx={(theme) => ({
       height: `calc(${theme.typography.body1.fontSize}px * ${theme.typography.body1.lineHeight})`,

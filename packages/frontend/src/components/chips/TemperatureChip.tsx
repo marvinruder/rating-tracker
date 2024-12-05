@@ -12,7 +12,7 @@ import { getMSCITemperatureColorIndex } from "../../utils/colorResolvers";
  */
 export const TemperatureChip: FC<ChipProps & { msciTemperature: number }> = (
   props: ChipProps & { msciTemperature: number },
-): JSX.Element => {
+): React.JSX.Element => {
   const { msciTemperature, ...chipProps } = props;
 
   return (

@@ -7,7 +7,7 @@ import { useState } from "react";
  * @param props The properties of the component.
  * @returns The component.
  */
-const CountryAutocomplete = (props: CountryAutocompleteProps): JSX.Element => {
+const CountryAutocomplete = (props: CountryAutocompleteProps): React.JSX.Element => {
   // The value of the text field in the country autocomplete.
   const [countryInputValue, setCountryInputValue] = useState<string>("");
 
@@ -78,7 +78,7 @@ interface CountryAutocompleteProps {
   /**
    * The ref of the input element.
    */
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
   /**
    * Whether the field is required.
    */

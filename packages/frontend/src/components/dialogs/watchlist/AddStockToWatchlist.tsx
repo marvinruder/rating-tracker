@@ -30,7 +30,7 @@ import { AddWatchlist } from "./AddWatchlist";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const AddStockToWatchlist = (props: AddStockToWatchlistProps): JSX.Element => {
+export const AddStockToWatchlist = (props: AddStockToWatchlistProps): React.JSX.Element => {
   const [watchlistSummaries, setWatchlistSummaries] = useState<WatchlistSummary[]>([]);
   const [watchlistSummariesFinal, setWatchlistSummariesFinal] = useState<boolean>(false);
   const [addWatchlistOpen, setAddWatchlistOpen] = useState<boolean>(false);

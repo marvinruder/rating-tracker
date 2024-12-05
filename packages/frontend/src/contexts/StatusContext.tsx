@@ -38,7 +38,7 @@ const StatusUpdaterContext = createContext<StatusUpdaterContextType>({} as Statu
  * @param props The properties of the component.
  * @returns The component.
  */
-export const StatusProvider = (props: React.PropsWithChildren): JSX.Element => {
+export const StatusProvider = (props: React.PropsWithChildren): React.JSX.Element => {
   const [systemStatusLoading, setSystemStatusLoading] = useState(false);
 
   const UNKNOWN_STATUS: SystemStatus = {

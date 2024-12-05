@@ -29,7 +29,7 @@ import CountryAutocomplete from "../../autocomplete/CountryAutocomplete";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const EditStock = (props: EditStockProps): JSX.Element => {
+export const EditStock = (props: EditStockProps): React.JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
   const [unsafeRequestSent, setUnsafeRequestSent] = useState<boolean>(false); // Whether an unsafe request was sent.
   const [name, setName] = useState<string>(props.stock.name);

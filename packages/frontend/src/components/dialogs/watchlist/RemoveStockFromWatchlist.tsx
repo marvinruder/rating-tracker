@@ -14,7 +14,7 @@ import { useNotificationContextUpdater } from "../../../contexts/NotificationCon
  * @param props The properties of the component.
  * @returns The component.
  */
-export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): JSX.Element => {
+export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): React.JSX.Element => {
   const [requestInProgress, setRequestInProgress] = useState(false);
 
   const { refetchFavorites } = useFavoritesContextUpdater();

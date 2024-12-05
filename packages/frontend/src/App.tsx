@@ -15,7 +15,7 @@ import { theme } from "./theme";
  * The Rating Tracker Application.
  * @returns The component.
  */
-const App = (): JSX.Element => {
+const App = (): React.JSX.Element => {
   /**
    * The routes to the different views.
    */

@@ -40,7 +40,7 @@ import { StockDetails } from "../../stock/layouts/StockDetails";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const AddStock = (props: AddStockProps): JSX.Element => {
+export const AddStock = (props: AddStockProps): React.JSX.Element => {
   const [activeStep, setActiveStep] = useState<number>(0); // The dialog step to show.
   const [stock, setStock] = useState<OmitDynamicAttributesStock>({
     ...optionalStockValuesNull,

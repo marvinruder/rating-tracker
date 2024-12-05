@@ -4,7 +4,7 @@ import { Box, Typography, Container } from "@mui/material";
  * Shows a 404 Not Found page.
  * @returns The component.
  */
-const Status404 = (): JSX.Element => {
+const Status404 = (): React.JSX.Element => {
   return (
     <Box
       sx={{

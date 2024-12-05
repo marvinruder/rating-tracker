@@ -15,7 +15,7 @@ import { useUserContextState } from "../../../contexts/UserContext";
  * @param props The properties of the component.
  * @returns The component.
  */
-const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps): JSX.Element => {
+const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps): React.JSX.Element => {
   const [addStockOpen, setAddStockOpen] = useState<boolean>(false);
 
   const { user } = useUserContextState();

@@ -29,7 +29,7 @@ import AddStockToCollection from "../../../components/dialogs/stock/AddStockToCo
  * @param props The properties of the component.
  * @returns The component.
  */
-const PortfolioCard = (props: PortfolioCardProps): JSX.Element => {
+const PortfolioCard = (props: PortfolioCardProps): React.JSX.Element => {
   const [addStockToCollectionDialogOpen, setAddStockToCollectionDialogOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);

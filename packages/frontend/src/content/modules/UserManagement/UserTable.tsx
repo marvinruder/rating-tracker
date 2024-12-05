@@ -12,7 +12,7 @@ import UserRow from "./UserRow";
  * The user table component.
  * @returns The users table component.
  */
-const UserTable: FC = (): JSX.Element => {
+const UserTable: FC = (): React.JSX.Element => {
   const [count, setCount] = useState<number>(-1);
   const [users, setUsers] = useState<User[]>([]);
   const [usersFinal, setUsersFinal] = useState<boolean>(false);

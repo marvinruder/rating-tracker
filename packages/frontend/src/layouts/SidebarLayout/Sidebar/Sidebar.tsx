@@ -11,7 +11,7 @@ import { SidebarContent } from "./SidebarContent";
  */
 const SidebarWrapper: FC<React.PropsWithChildren<BoxProps>> = (
   props: React.PropsWithChildren<BoxProps>,
-): JSX.Element => {
+): React.JSX.Element => {
   return (
     <Box
       {...props}
@@ -39,7 +39,7 @@ const SidebarWrapper: FC<React.PropsWithChildren<BoxProps>> = (
  * @param props The component props.
  * @returns The component.
  */
-export const Sidebar = (props: SidebarProps): JSX.Element => {
+export const Sidebar = (props: SidebarProps): React.JSX.Element => {
   const theme = useTheme();
   return (
     <Box sx={{ position: "fixed", height: "100dvh" }}>

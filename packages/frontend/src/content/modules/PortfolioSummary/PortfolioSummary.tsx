@@ -15,7 +15,7 @@ import { PortfolioSummaryHeader } from "./PortfolioSummaryHeader";
  * A module that displays an overview of the user’s portfolios.
  * @returns The component.
  */
-const PortfolioSummaryModule = (): JSX.Element => {
+const PortfolioSummaryModule = (): React.JSX.Element => {
   const [portfolioSummaries, setPortfolioSummaries] = useState<PortfolioSummary[]>([]);
   const [portfolioSummariesFinal, setPortfolioSummariesFinal] = useState<boolean>(false);
   const { setErrorNotificationOrClearSession } = useNotificationContextUpdater();

@@ -8,7 +8,7 @@ import { Box } from "@mui/material";
  * @param props The properties of the component.
  * @returns The component.
  */
-export const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps): JSX.Element => {
+export const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps): React.JSX.Element => {
   let value: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
   switch (Math.round(2 * (props.value ?? 0)) / 2) {
     case 0.5:

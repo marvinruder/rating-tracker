@@ -13,7 +13,7 @@ export const StyleBox: FC<StyleBoxProps> = (props: StyleBoxProps) => {
    * @param style The style of the company, to be represented by the square.
    * @returns The path for the square.
    */
-  const getSquare = (size: Size | null, style: Style | null): JSX.Element => {
+  const getSquare = (size: Size | null, style: Style | null): React.JSX.Element => {
     switch (size) {
       case "Small":
         switch (style) {

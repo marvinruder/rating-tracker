@@ -6,7 +6,7 @@ import { Dialog } from "@mui/material";
  * @param props The properties of the component.
  * @returns The component.
  */
-const PinnedDialog = (props: DialogProps): JSX.Element => {
+const PinnedDialog = (props: DialogProps): React.JSX.Element => {
   return (
     <Dialog
       {...props}
