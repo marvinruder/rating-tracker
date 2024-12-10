@@ -141,9 +141,11 @@ const CredentialDescriptorSchema = z.object(
         "member of `PublicKeyCredentialType` but client platforms MUST ignore any `PublicKeyCredentialDescriptor` " +
         "with an unknown type.",
     ),
-    id: z.string({
-      description: "This member contains the credential ID of the public key credential the caller is referring to.",
-    }), // .base64url(),
+    id: z
+      .string({
+        description: "This member contains the credential ID of the public key credential the caller is referring to.",
+      })
+      .base64url(),
     transports: z
       .array(AuthenticatorTransportSchema, {
         description:
@@ -197,11 +199,13 @@ const CredentialUserEntity = z.object(
  */
 export const RegistrationOptionsSchema = z.object(
   {
-    challenge: z.string({
-      description:
-        "This member contains a challenge intended to be used for generating the newly created credential’s " +
-        "attestation object. See the § 13.4.3 Cryptographic Challenges security consideration.",
-    }), // .base64url(),
+    challenge: z
+      .string({
+        description:
+          "This member contains a challenge intended to be used for generating the newly created credential’s " +
+          "attestation object. See the § 13.4.3 Cryptographic Challenges security consideration.",
+      })
+      .base64url(),
     rp: z.object(
       {
         id: z
@@ -320,40 +324,47 @@ export const RegistrationOptionsSchema = z.object(
  */
 export const RegistrationResponseSchema = z.object(
   {
-    id: z.string({ description: "Holds the base64url encoding of the `rawId`." }), // .base64url(),
-    rawId: z.string({
-      description:
-        "This attribute contains the credential ID, chosen by the authenticator. The credential ID is used to look " +
-        "up credentials for use, and is therefore expected to be globally unique with high probability across all " +
-        "credentials of the same type, across all authenticators.",
-    }), // .base64url(),
+    id: z.string({ description: "Holds the base64url encoding of the `rawId`." }).base64url(),
+    rawId: z
+      .string({
+        description:
+          "This attribute contains the credential ID, chosen by the authenticator. The credential ID is used to look " +
+          "up credentials for use, and is therefore expected to be globally unique with high probability across all " +
+          "credentials of the same type, across all authenticators.",
+      })
+      .base64url(),
     response: z.object(
       {
-        clientDataJSON: z.string({
-          description:
-            "This attribute, inherited from `AuthenticatorResponse`, contains the JSON-compatible serialization of " +
-            "client data (see § 6.5 Attestation) passed to the authenticator by the client in order to generate this " +
-            "credential. The exact JSON serialization MUST be preserved, as the hash of the serialized client data " +
-            "has been computed over it.",
-        }), // .base64url(),
-        attestationObject: z.string({
-          description:
-            "This attribute contains an attestation object, which is opaque to, and cryptographically protected " +
-            "against tampering by, the client. The attestation object contains both authenticator data and an " +
-            "attestation statement. The former contains the AAGUID, a unique credential ID, and the credential " +
-            "public key. The contents of the attestation statement are determined by the attestation statement " +
-            "format used by the authenticator. It also contains any additional information that the Relying Party's " +
-            "server requires to validate the attestation statement, as well as to decode and validate the " +
-            "authenticator data along with the JSON-compatible serialization of client data. For more details, " +
-            "see § 6.5 Attestation, § 6.5.4 Generating an Attestation Object, and Figure 6.",
-        }), // .base64url(),
+        clientDataJSON: z
+          .string({
+            description:
+              "This attribute, inherited from `AuthenticatorResponse`, contains the JSON-compatible serialization of " +
+              "client data (see § 6.5 Attestation) passed to the authenticator by the client in order to generate " +
+              "this credential. The exact JSON serialization MUST be preserved, as the hash of the serialized client " +
+              "data has been computed over it.",
+          })
+          .base64url(),
+        attestationObject: z
+          .string({
+            description:
+              "This attribute contains an attestation object, which is opaque to, and cryptographically protected " +
+              "against tampering by, the client. The attestation object contains both authenticator data and an " +
+              "attestation statement. The former contains the AAGUID, a unique credential ID, and the credential " +
+              "public key. The contents of the attestation statement are determined by the attestation statement " +
+              "format used by the authenticator. It also contains any additional information that the Relying " +
+              "Party's server requires to validate the attestation statement, as well as to decode and validate the " +
+              "authenticator data along with the JSON-compatible serialization of client data. For more details, " +
+              "see § 6.5 Attestation, § 6.5.4 Generating an Attestation Object, and Figure 6.",
+          })
+          .base64url(),
         authenticatorData: z
           .string({
             description:
               "Holds the authenticator data contained within `attestationObject`. See § 5.2.1.1 Easily accessing " +
               "credential data.",
           })
-          .optional(), // .base64url().optional(),
+          .base64url()
+          .optional(),
         transports: z
           .array(AuthenticatorTransportSchema, {
             description:
@@ -376,7 +387,8 @@ export const RegistrationResponseSchema = z.object(
               "Holds the DER `SubjectPublicKeyInfo` of the new credential, or `null` if this is not available. " +
               "See § 5.2.1.1 Easily accessing credential data.",
           })
-          .optional(), // .base64url().optional(),
+          .base64url()
+          .optional(),
       },
       {
         description:
@@ -408,11 +420,13 @@ export const AuthenticationOptionsSchema = z.object(
           "will be the `CredentialsContainer` object’s relevant settings object's origin's effective domain.",
       })
       .optional(),
-    challenge: z.string({
-      description:
-        "This member represents a challenge that the selected authenticator signs, along with other data, when " +
-        "producing an authentication assertion. See the § 13.4.3 Cryptographic Challenges security consideration.",
-    }), // .base64url(),
+    challenge: z
+      .string({
+        description:
+          "This member represents a challenge that the selected authenticator signs, along with other data, when " +
+          "producing an authentication assertion. See the § 13.4.3 Cryptographic Challenges security consideration.",
+      })
+      .base64url(),
     timeout: z
       .number({
         description:
@@ -448,37 +462,47 @@ export const AuthenticationOptionsSchema = z.object(
  */
 export const AuthenticationResponseSchema = z.object(
   {
-    id: z.string({ description: "Holds the base64url encoding of the `rawId`." }), // .base64url(),
-    rawId: z.string({
-      description:
-        "This attribute contains the credential ID, chosen by the authenticator. The credential ID is used to look " +
-        "up credentials for use, and is therefore expected to be globally unique with high probability across all " +
-        "credentials of the same type, across all authenticators.",
-    }), // .base64url(),
+    id: z.string({ description: "Holds the base64url encoding of the `rawId`." }).base64url(),
+    rawId: z
+      .string({
+        description:
+          "This attribute contains the credential ID, chosen by the authenticator. The credential ID is used to look " +
+          "up credentials for use, and is therefore expected to be globally unique with high probability across all " +
+          "credentials of the same type, across all authenticators.",
+      })
+      .base64url(),
     response: z.object({
-      clientDataJSON: z.string({
-        description:
-          "This attribute, inherited from `AuthenticatorResponse`, contains the JSON-compatible serialization of " +
-          "client data (see § 5.8.1 Client Data Used in WebAuthn Signatures (dictionary `CollectedClientData`)) " +
-          "passed to the authenticator by the client in order to generate this assertion. The exact JSON " +
-          "serialization MUST be preserved, as the hash of the serialized client data has been computed over it.",
-      }), // .base64url(),
-      authenticatorData: z.string({
-        description:
-          "This attribute contains the authenticator data returned by the authenticator. See § 6.1 Authenticator Data.",
-      }), // .base64url(),
-      signature: z.string({
-        description:
-          "This attribute contains the raw signature returned from the authenticator. See § 6.3.3 The " +
-          "`authenticatorGetAssertion` Operation.",
-      }), // .base64url(),
+      clientDataJSON: z
+        .string({
+          description:
+            "This attribute, inherited from `AuthenticatorResponse`, contains the JSON-compatible serialization of " +
+            "client data (see § 5.8.1 Client Data Used in WebAuthn Signatures (dictionary `CollectedClientData`)) " +
+            "passed to the authenticator by the client in order to generate this assertion. The exact JSON " +
+            "serialization MUST be preserved, as the hash of the serialized client data has been computed over it.",
+        })
+        .base64url(),
+      authenticatorData: z
+        .string({
+          description:
+            "This attribute contains the authenticator data returned by the authenticator. " +
+            "See § 6.1 Authenticator Data.",
+        })
+        .base64url(),
+      signature: z
+        .string({
+          description:
+            "This attribute contains the raw signature returned from the authenticator. See § 6.3.3 The " +
+            "`authenticatorGetAssertion` Operation.",
+        })
+        .base64url(),
       userHandle: z
         .string({
           description:
             "This attribute contains the user handle returned from the authenticator, or `null` if the authenticator " +
             "did not return a user handle. See § 6.3.3 The `authenticatorGetAssertion` Operation.",
         })
-        .optional(), // .base64url().optional(),
+        .base64url()
+        .optional(),
     }),
     authenticatorAttachment: AuthenticatorAttachmentSchema.optional(),
     clientExtensionResults: AuthenticationExtensionsClientOutputsSchema.describe(
