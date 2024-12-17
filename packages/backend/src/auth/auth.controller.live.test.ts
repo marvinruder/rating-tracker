@@ -145,7 +145,6 @@ tests.push({
       ).toString("base64url"),
       authenticatorData: Buffer.from("Authenticator Data").toString("base64url"),
       signature: Buffer.from("Signature").toString("base64url"),
-      userHandle: "jim.doe@example.com",
     };
 
     // Post Authentication Response
@@ -327,7 +326,6 @@ tests.push({
           ).toString("base64url"),
           authenticatorData: Buffer.from("Authenticator Data").toString("base64url"),
           signature: Buffer.from("Signature").toString("base64url"),
-          userHandle: "jim.doe@example.com",
         },
         clientExtensionResults: {},
         type: "public-key",
