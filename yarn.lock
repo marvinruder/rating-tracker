@@ -1453,7 +1453,7 @@ __metadata:
     eslint-plugin-import: "npm:2.31.0"
     eslint-plugin-jsdoc: "npm:50.6.1"
     eslint-plugin-prettier: "npm:5.2.1"
-    globals: "npm:15.13.0"
+    globals: "npm:15.14.0"
     hono: "npm:4.6.14"
     hono-rate-limiter: "npm:0.4.2"
     jmespath: "npm:0.16.0"
@@ -1490,7 +1490,7 @@ __metadata:
     eslint-plugin-import: "npm:2.31.0"
     eslint-plugin-jsdoc: "npm:50.6.1"
     eslint-plugin-prettier: "npm:5.2.1"
-    globals: "npm:15.13.0"
+    globals: "npm:15.14.0"
     prettier: "npm:3.4.2"
     statuses: "npm:2.0.1"
     typescript: "npm:5.6.3"
@@ -1532,7 +1532,7 @@ __metadata:
     eslint-plugin-jsdoc: "npm:50.6.1"
     eslint-plugin-prettier: "npm:5.2.1"
     eslint-plugin-react: "npm:7.37.2"
-    globals: "npm:15.13.0"
+    globals: "npm:15.14.0"
     hare-niemeyer: "npm:3.0.0"
     hono: "npm:4.6.14"
     http2-proxy: "npm:5.0.53"
@@ -4583,10 +4583,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:15.13.0":
-  version: 15.13.0
-  resolution: "globals@npm:15.13.0"
-  checksum: 10c0/640365115ca5f81d91e6a7667f4935021705e61a1a5a76a6ec5c3a5cdf6e53f165af7f9db59b7deb65cf2e1f83d03ac8d6660d0b14c569c831a9b6483eeef585
+"globals@npm:15.14.0":
+  version: 15.14.0
+  resolution: "globals@npm:15.14.0"
+  checksum: 10c0/039deb8648bd373b7940c15df9f96ab7508fe92b31bbd39cbd1c1a740bd26db12457aa3e5d211553b234f30e9b1db2fee3683012f543a01a6942c9062857facb
   languageName: node
   linkType: hard
 
