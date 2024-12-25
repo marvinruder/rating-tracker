@@ -1557,7 +1557,7 @@ __metadata:
     vite: "npm:6.0.5"
     vite-plugin-compression2: "npm:1.3.3"
     vite-plugin-html: "npm:3.2.2"
-    vite-plugin-wasm: "npm:3.3.0"
+    vite-plugin-wasm: "npm:3.4.1"
     vitest: "npm:2.1.8"
   languageName: unknown
   linkType: soft
@@ -7817,12 +7817,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-wasm@npm:3.3.0":
-  version: 3.3.0
-  resolution: "vite-plugin-wasm@npm:3.3.0"
+"vite-plugin-wasm@npm:3.4.1":
+  version: 3.4.1
+  resolution: "vite-plugin-wasm@npm:3.4.1"
   peerDependencies:
-    vite: ^2 || ^3 || ^4 || ^5
-  checksum: 10c0/382ba2f2ffef31dde717ad43a69427bc930a6e2ec453d17b700ef7937b48996893a61657fdee3122654e027b1933341548493b35e6469520a8d4ae6c522d1ee2
+    vite: ^2 || ^3 || ^4 || ^5 || ^6
+  checksum: 10c0/274bbe7bb15c596e070b3dd1caf9de3a1f16d4f6aa59a1a116b58a96dc9759d1a08e0a9d0c5923e8119147e6365490a009ceb98c99d62b6439db6549ebdde8d5
   languageName: node
   linkType: hard
 
