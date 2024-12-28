@@ -1,6 +1,6 @@
 import type { Hook } from "@hono/zod-openapi";
 import type { Env, ErrorHandler } from "hono";
-import type { StatusCode } from "hono/utils/http-status";
+import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { ZodError } from "zod";
 import { fromError, ValidationError } from "zod-validation-error";
 
@@ -21,7 +21,7 @@ class ErrorHelper {
   static errorHandler: ErrorHandler = (err, c) => {
     Logger.error(err); // Log the error
 
-    let statusCode: StatusCode = 500;
+    let statusCode: ContentfulStatusCode = 500;
     let message = err.message;
 
     if (err instanceof APIError) statusCode = err.status;
