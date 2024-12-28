@@ -1,10 +1,10 @@
-import type { StatusCode } from "hono/utils/http-status";
+import type { ContentfulStatusCode } from "hono/utils/http-status";
 
 /**
  * This class is used to throw errors in the application which are associated with an HTTP status code.
  */
 abstract class APIError extends Error {
-  status: StatusCode;
+  status: ContentfulStatusCode;
 
   /**
    * Creates a new instance of the {@link APIError} class.
@@ -12,7 +12,7 @@ abstract class APIError extends Error {
    * @param message A descriptive message for the error.
    * @param cause The error that caused this error.
    */
-  constructor(httpStatus: StatusCode, message: string, cause?: Error) {
+  constructor(httpStatus: ContentfulStatusCode, message: string, cause?: Error) {
     super(message, { cause });
     Error.captureStackTrace(this, this.constructor);
     this.message = message;
