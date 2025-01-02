@@ -21,7 +21,7 @@
   },
   "packageManager": "yarn@4.6.0",
   "dependencies": {
-    "concurrently": "9.1.1"
+    "concurrently": "9.1.2"
   },
   "devDependencies": {
     "@yarnpkg/sdks": "3.2.0",
