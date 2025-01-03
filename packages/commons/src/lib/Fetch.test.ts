@@ -15,6 +15,7 @@ const mockedResponse: Pick<
   | "bodyUsed"
   | "arrayBuffer"
   | "blob"
+  | "bytes"
   | "formData"
   | "json"
   | "text"
@@ -30,6 +31,7 @@ const mockedResponse: Pick<
   bodyUsed: false,
   arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
   blob: () => Promise.resolve(new Blob()),
+  bytes: () => Promise.resolve(new Uint8Array()),
   formData: () => Promise.resolve(new FormData()),
   json: () => Promise.resolve({}),
   text: () => Promise.resolve(""),

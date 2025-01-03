@@ -2,8 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": ".",
-    "target": "ESNext",
-    "lib": ["dom", "esnext"],
+    "target": "ES2023",
+    "lib": ["dom", "ES2023"],
     "allowJs": true,
     "strict": true,
     "noEmit": true,
