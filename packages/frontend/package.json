@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@rating-tracker/backend": "workspace:*",
-    "@types/node": "22.10.4",
+    "@types/node": "22.10.5",
     "@types/react": "19.0.2",
     "@types/react-dom": "19.0.2",
     "@typescript-eslint/eslint-plugin": "8.19.0",
