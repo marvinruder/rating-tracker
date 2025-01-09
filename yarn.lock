@@ -1096,14 +1096,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.23.2":
-  version: 7.23.2
-  resolution: "@mui/x-charts@npm:7.23.2"
+"@mui/x-charts@npm:7.23.6":
+  version: 7.23.6
+  resolution: "@mui/x-charts@npm:7.23.6"
   dependencies:
     "@babel/runtime": "npm:^7.25.7"
     "@mui/utils": "npm:^5.16.6 || ^6.0.0"
     "@mui/x-charts-vendor": "npm:7.20.0"
-    "@mui/x-internals": "npm:7.23.0"
+    "@mui/x-internals": "npm:7.23.6"
     "@react-spring/rafz": "npm:^9.7.5"
     "@react-spring/web": "npm:^9.7.5"
     clsx: "npm:^2.1.1"
@@ -1120,19 +1120,19 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/86a38901fd7ff047f45222f8cc999121c10766159ae487b93cf09104980cf5f2af0be75f3adcc61bbdea3f19360e1849686285663385c54a71d118f8223c7761
+  checksum: 10c0/ee519ab7544bafc564bdd02286d1c70fc475ce5b1c623e7476ccd5401a0e0e8c442822c43d5df6f973c99b8bb24756eadae8acb1760d8231328090d1c8464e12
   languageName: node
   linkType: hard
 
-"@mui/x-internals@npm:7.23.0":
-  version: 7.23.0
-  resolution: "@mui/x-internals@npm:7.23.0"
+"@mui/x-internals@npm:7.23.6":
+  version: 7.23.6
+  resolution: "@mui/x-internals@npm:7.23.6"
   dependencies:
     "@babel/runtime": "npm:^7.25.7"
     "@mui/utils": "npm:^5.16.6 || ^6.0.0"
   peerDependencies:
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/47d5efad1b58b2c316e7d9e61cfe536b3c0a16f6d3ff4f371c8a29aa7c598de136f328958f6b44f6401b2c96b5867872f631debb51fb9db6f3493181f43deb2a
+  checksum: 10c0/c41de79311eea8a10c40a982e648d374a3d6cc950318dc2c563fd193455a4e972a6f552777c15d282eb8282e77f8e9fe0e2d95a28310e579b3322103e4836c4d
   languageName: node
   linkType: hard
 
@@ -1516,7 +1516,7 @@ __metadata:
     "@mui/lab": "npm:6.0.0-beta.22"
     "@mui/material": "npm:6.3.1"
     "@mui/system": "npm:6.3.1"
-    "@mui/x-charts": "npm:7.23.2"
+    "@mui/x-charts": "npm:7.23.6"
     "@nivo/core": "npm:0.88.0"
     "@nivo/sunburst": "npm:0.88.0"
     "@rating-tracker/backend": "workspace:*"
