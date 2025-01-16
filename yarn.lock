@@ -1476,7 +1476,7 @@ __metadata:
     prisma-json-types-generator: "npm:3.2.2"
     smtp-server: "npm:3.13.6"
     typescript: "npm:5.7.3"
-    undici-types: "npm:7.2.1"
+    undici-types: "npm:7.2.3"
     vite: "npm:6.0.7"
     vitest: "npm:2.1.8"
     xpath-ts2: "npm:1.4.2"
@@ -7660,10 +7660,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:7.2.1":
-  version: 7.2.1
-  resolution: "undici-types@npm:7.2.1"
-  checksum: 10c0/5770b83481ee04e67e4b3ed6431f6f4177521f602a111fc2465c8a5fbbd77030848f0575a0d4835dac079a724072b6f7d04c9162a4c78280261e90d27f7d8719
+"undici-types@npm:7.2.3":
+  version: 7.2.3
+  resolution: "undici-types@npm:7.2.3"
+  checksum: 10c0/f6a13791644d45363d7bd7cbdcbd169d6bacd67b4fe3f91c03f42ef20e45b10045281cc6f45c0d5d728673827c518216c6395ae947d9bf9c003d08ed433584d8
   languageName: node
   linkType: hard
 
