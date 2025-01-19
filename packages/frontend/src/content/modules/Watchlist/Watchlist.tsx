@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import type { StockFilter, StockListColumn, Watchlist } from "@rating-tracker/commons";
+import type { StockListColumn, Watchlist } from "@rating-tracker/commons";
 import { handleResponse, parseStock, stockListColumnArray } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
@@ -18,7 +18,6 @@ import { WatchlistHeader } from "./WatchlistHeader";
  */
 const WatchlistModule = (): React.JSX.Element => {
   const [watchlist, setWatchlist] = useState<Watchlist>();
-  const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
   const [refetchStocksTrigger, setRefetchStocksTrigger] = useState<boolean>(false);
 
@@ -50,25 +49,11 @@ const WatchlistModule = (): React.JSX.Element => {
           watchlist={watchlist}
           getWatchlist={() => getWatchlist(Number(id))}
           refetchStocks={refetchStocks}
-          stockTableFiltersProps={{
-            setFilter,
-            columnFilter,
-            setColumnFilter,
-            filtersInUse:
-              columnFilter.length < stockListColumnArray.length || // If not all columns are shown, or
-              Object.values(filter).some(
-                // If at least one filter is set, i.e., if at least one value
-                (value) =>
-                  typeof value !== "undefined" && // is different from undefined, and
-                  (!Array.isArray(value) || // is not an array, or
-                    value.length > 0), // is an array with at least one element
-              ),
-          }}
+          stockTableFiltersProps={{ columnFilter, setColumnFilter }}
         />
       </HeaderWrapper>
       <Container maxWidth={false}>
         <StockTable
-          filter={filter}
           refetchInitialStocksTrigger={refetchStocksTrigger}
           watchlist={watchlist}
           getWatchlist={() => getWatchlist(Number(id))}

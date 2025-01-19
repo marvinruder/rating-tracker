@@ -20,7 +20,6 @@ import {
 import type { ComputedDatum, DatumId } from "@nivo/sunburst";
 import { Sunburst } from "@nivo/sunburst";
 import type {
-  StockFilter,
   StockListColumn,
   Portfolio,
   SunburstNode,
@@ -88,7 +87,6 @@ import { PortfolioHeader } from "./PortfolioHeader";
  */
 const PortfolioModule = (): React.JSX.Element => {
   const [portfolio, setPortfolio] = useState<Portfolio>();
-  const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
   const [refetchStocksTrigger, setRefetchStocksTrigger] = useState<boolean>(false);
 
@@ -262,20 +260,7 @@ const PortfolioModule = (): React.JSX.Element => {
           portfolio={portfolio}
           getPortfolio={() => getPortfolio(Number(id))}
           refetchStocks={refetchStocks}
-          stockTableFiltersProps={{
-            setFilter,
-            columnFilter,
-            setColumnFilter,
-            filtersInUse:
-              columnFilter.length < stockListColumnArray.length || // If not all columns are shown, or
-              Object.values(filter).some(
-                // If at least one filter is set, i.e., if at least one value
-                (value) =>
-                  typeof value !== "undefined" && // is different from undefined, and
-                  (!Array.isArray(value) || // is not an array, or
-                    value.length > 0), // is an array with at least one element
-              ),
-          }}
+          stockTableFiltersProps={{ columnFilter, setColumnFilter }}
         />
       </HeaderWrapper>
       <Container maxWidth={false}>
@@ -881,7 +866,6 @@ const PortfolioModule = (): React.JSX.Element => {
           </Grid>
         </Card>
         <StockTable
-          filter={filter}
           refetchInitialStocksTrigger={refetchStocksTrigger}
           portfolio={portfolio ?? null}
           getPortfolio={() => getPortfolio(Number(id))}
