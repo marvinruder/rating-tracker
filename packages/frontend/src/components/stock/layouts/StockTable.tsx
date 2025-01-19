@@ -13,20 +13,14 @@ import {
   useMediaQuery,
   Card,
 } from "@mui/material";
-import type {
-  Portfolio,
-  SortableAttribute,
-  Stock,
-  StockFilter,
-  StockListColumn,
-  Watchlist,
-} from "@rating-tracker/commons";
+import type { Portfolio, SortableAttribute, Stock, StockListColumn, Watchlist } from "@rating-tracker/commons";
 import { handleResponse, parseStock } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useCallback, useEffect, useState } from "react";
 
 import stockClient from "../../../api/stock";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
+import useStockFilter from "../../../hooks/useStockFilter";
 import { PropertyDescription } from "../properties/PropertyDescription";
 
 import { MemoizedStockRow, StockRow } from "./StockRow";
@@ -50,6 +44,11 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): React.J
   const theme = useTheme();
 
   /**
+   * The currently active stock filters.
+   */
+  const filter = useStockFilter();
+
+  /**
    * The number of stock to fetch on each request, depending on the user’s screen size.
    */
   const fetchCount = 25 + 25 * +useMediaQuery(theme.breakpoints.up("md"));
@@ -58,7 +57,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): React.J
   // stock was added.
   useEffect(() => {
     !props.showSkeletons && getInitialStocks();
-  }, [sortBy, sortOrder, props.filter, props.refetchInitialStocksTrigger, props.showSkeletons]);
+  }, [sortBy, sortOrder, filter, props.refetchInitialStocksTrigger, props.showSkeletons]);
 
   // Get all stocks when explicitly requested, e.g. after a stock was edited.
   useEffect(() => {
@@ -71,7 +70,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): React.J
     sortBy,
     sortOrder,
     // Filtering
-    ...props.filter,
+    ...filter,
     ...(props.watchlist?.id ? { watchlist: props.watchlist.id } : {}),
     ...(props.portfolio?.id ? { portfolio: props.portfolio.id } : {}),
   };
@@ -527,10 +526,6 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): React.J
  * Properties for the StocksTable component.
  */
 interface StockTableProps {
-  /**
-   * The filter to apply to the stocks.
-   */
-  filter: StockFilter;
   /**
    * A variable that is toggled to trigger a refetch of the stocks.
    */

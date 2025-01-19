@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import type { StockFilter, StockListColumn } from "@rating-tracker/commons";
+import type { StockListColumn } from "@rating-tracker/commons";
 import { stockListColumnArray } from "@rating-tracker/commons";
 import { useState } from "react";
 
@@ -14,7 +14,6 @@ import StockListHeader from "./StockListHeader";
  * @returns The component.
  */
 const StockListModule = (): React.JSX.Element => {
-  const [filter, setFilter] = useState<StockFilter>({});
   const [columnFilter, setColumnFilter] = useState<StockListColumn[]>([...stockListColumnArray]);
   const [refetchStocksTrigger, setRefetchStocksTrigger] = useState<boolean>(false);
 
@@ -23,26 +22,10 @@ const StockListModule = (): React.JSX.Element => {
   return (
     <>
       <HeaderWrapper maxWidth={false}>
-        <StockListHeader
-          stockTableFiltersProps={{
-            setFilter,
-            columnFilter,
-            setColumnFilter,
-            filtersInUse:
-              columnFilter.length < stockListColumnArray.length || // If not all columns are shown, or
-              Object.values(filter).some(
-                // If at least one filter is set, i.e., if at least one value
-                (value) =>
-                  typeof value !== "undefined" && // is different from undefined, and
-                  (!Array.isArray(value) || // is not an array, or
-                    value.length > 0), // is an array with at least one element
-              ),
-          }}
-          refetchStocks={refetchStocks}
-        />
+        <StockListHeader stockTableFiltersProps={{ columnFilter, setColumnFilter }} refetchStocks={refetchStocks} />
       </HeaderWrapper>
       <Container maxWidth={false}>
-        <StockTable filter={filter} refetchInitialStocksTrigger={refetchStocksTrigger} columns={columnFilter} />
+        <StockTable refetchInitialStocksTrigger={refetchStocksTrigger} columns={columnFilter} />
       </Container>
       <Footer />
     </>

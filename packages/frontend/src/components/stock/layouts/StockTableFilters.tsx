@@ -36,7 +36,6 @@ import type {
   Region,
   Sector,
   Size,
-  StockFilter,
   StockListColumn,
   Style,
   SuperRegion,
@@ -65,7 +64,9 @@ import {
 } from "@rating-tracker/commons";
 import type { FC } from "react";
 import React, { Fragment, useState } from "react";
+import { useSearchParams } from "react-router";
 
+import useStockFilter from "../../../hooks/useStockFilter";
 import { formatPercentage } from "../../../utils/formatters";
 import { NestedCheckboxList } from "../../etc/NestedCheckboxList";
 import { StarRating } from "../properties/StarRating";
@@ -74,34 +75,93 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [columnFilterOpen, setColumnFilterOpen] = useState<boolean>(false);
 
-  const [totalScoreInput, setTotalScoreInput] = useState<number[]>([0, 100]);
-  const [financialScoreInput, setFinancialScoreInput] = useState<number[]>([0, 100]);
-  const [esgScoreInput, setEsgScoreInput] = useState<number[]>([0, 100]);
+  /**
+   * The currently active filters.
+   */
+  const filter = useStockFilter();
+  /**
+   * Whether any filters or column filters are currently in use.
+   */
+  const filtersInUse = Object.keys(filter).length > 0 || props.columnFilter.length < stockListColumnArray.length;
 
-  const [dividendYieldPercentInput, setDividendYieldPercentInput] = useState<number[]>([0, 20]);
-  const [priceEarningRatioInput, setPriceEarningRatioInput] = useState<number[]>([0, 100]);
+  const [totalScoreInput, setTotalScoreInput] = useState<number[]>([
+    100 * (filter.totalScoreMin ?? 0),
+    100 * (filter.totalScoreMax ?? 1),
+  ]);
+  const [financialScoreInput, setFinancialScoreInput] = useState<number[]>([
+    100 * (filter.financialScoreMin ?? 0),
+    100 * (filter.financialScoreMax ?? 1),
+  ]);
+  const [esgScoreInput, setEsgScoreInput] = useState<number[]>([
+    100 * (filter.esgScoreMin ?? 0),
+    100 * (filter.esgScoreMax ?? 1),
+  ]);
 
-  const [starRatingInput, setStarRatingInput] = useState<number[]>([0, 5]);
-  const [morningstarFairValueDiffInput, setMorningstarFairValueDiffInput] = useState<number[]>([-50, 50]);
-  const [analystConsensusInput, setAnalystConsensusInput] = useState<(AnalystRating | "None")[]>(["None", "Buy"]);
-  const [analystCountInput, setAnalystCountInput] = useState<number[]>([0, 60]);
-  const [analystTargetDiffInput, setAnalystTargetDiffInput] = useState<number[]>([-50, 50]);
+  const [dividendYieldPercentInput, setDividendYieldPercentInput] = useState<number[]>([
+    filter.dividendYieldPercentMin ?? 0,
+    filter.dividendYieldPercentMax ?? 20,
+  ]);
+  const [priceEarningRatioInput, setPriceEarningRatioInput] = useState<number[]>([
+    filter.priceEarningRatioMin ?? 0,
+    filter.priceEarningRatioMax ?? 100,
+  ]);
 
-  const [msciESGRatingInput, setMSCIESGRatingInput] = useState<(MSCIESGRating | "None")[]>(["AAA", "None"]);
-  const [msciTemperatureInput, setMSCITemperatureInput] = useState<number[]>([1.0, 4.0]);
-  const [lsegESGScoreInput, setLSEGESGScoreInput] = useState<number[]>([0, 100]);
-  const [lsegEmissionsInput, setLSEGEmissionsInput] = useState<number[]>([0, 100]);
-  const [spESGScoreInput, setSPESGScoreInput] = useState<number[]>([0, 100]);
-  const [sustainalyticsESGRiskInput, setSustainalyticsESGRiskInput] = useState<number[]>([0, 50]);
+  const [starRatingInput, setStarRatingInput] = useState<number[]>([
+    filter.starRatingMin ?? 0,
+    filter.starRatingMax ?? 5,
+  ]);
+  const [morningstarFairValueDiffInput, setMorningstarFairValueDiffInput] = useState<number[]>([
+    filter.morningstarFairValueDiffMin ?? -50,
+    filter.morningstarFairValueDiffMax ?? 50,
+  ]);
+  const [analystConsensusInput, setAnalystConsensusInput] = useState<(AnalystRating | "None")[]>([
+    filter.analystConsensusMin ?? "None",
+    filter.analystConsensusMax ?? "Buy",
+  ]);
+  const [analystCountInput, setAnalystCountInput] = useState<number[]>([
+    filter.analystCountMin ?? 0,
+    filter.analystCountMax ?? 60,
+  ]);
+  const [analystTargetDiffInput, setAnalystTargetDiffInput] = useState<number[]>([
+    filter.analystTargetDiffMin ?? -50,
+    filter.analystTargetDiffMax ?? 50,
+  ]);
 
-  const [countryInput, setCountryInput] = useState<Country[]>([]);
+  const [msciESGRatingInput, setMSCIESGRatingInput] = useState<(MSCIESGRating | "None")[]>([
+    filter.msciESGRatingMin ?? "AAA",
+    filter.msciESGRatingMax ?? "None",
+  ]);
+  const [msciTemperatureInput, setMSCITemperatureInput] = useState<number[]>([
+    filter.msciTemperatureMin ?? 1.0,
+    filter.msciTemperatureMax ?? 4.0,
+  ]);
+  const [lsegESGScoreInput, setLSEGESGScoreInput] = useState<number[]>([
+    filter.lsegESGScoreMin ?? 0,
+    filter.lsegESGScoreMax ?? 100,
+  ]);
+  const [lsegEmissionsInput, setLSEGEmissionsInput] = useState<number[]>([
+    filter.lsegEmissionsMin ?? 0,
+    filter.lsegEmissionsMax ?? 100,
+  ]);
+  const [spESGScoreInput, setSPESGScoreInput] = useState<number[]>([
+    filter.spESGScoreMin ?? 0,
+    filter.spESGScoreMax ?? 100,
+  ]);
+  const [sustainalyticsESGRiskInput, setSustainalyticsESGRiskInput] = useState<number[]>([
+    filter.sustainalyticsESGRiskMin ?? 0,
+    filter.sustainalyticsESGRiskMax ?? 50,
+  ]);
 
-  const [industryInput, setIndustryInput] = useState<Industry[]>([]);
+  const [countryInput, setCountryInput] = useState<Country[]>(filter.countries ?? []);
+
+  const [industryInput, setIndustryInput] = useState<Industry[]>(filter.industries ?? []);
 
   const [styleboxInput, setStyleboxInput] = useState<{
     size?: Size;
     style?: Style;
-  }>({});
+  }>({ ...(filter.size ? { size: filter.size } : {}), ...(filter.style ? { style: filter.style } : {}) });
+
+  const setSearchParams = useSearchParams()[1];
 
   /**
    * Possible widths for the filter container.
@@ -127,52 +187,56 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
    * Applies the filters. If a filter is set to its default value (where it does not filter anything), it is not
    * included in the filter object.
    */
-  const applyFilters = () => {
-    props.setFilter({
-      totalScoreMin: totalScoreInput[0] !== 0 ? 0.01 * totalScoreInput[0] : undefined,
-      totalScoreMax: totalScoreInput[1] !== 100 ? 0.01 * totalScoreInput[1] : undefined,
-      financialScoreMin: financialScoreInput[0] !== 0 ? 0.01 * financialScoreInput[0] : undefined,
-      financialScoreMax: financialScoreInput[1] !== 100 ? 0.01 * financialScoreInput[1] : undefined,
-      esgScoreMin: esgScoreInput[0] !== 0 ? 0.01 * esgScoreInput[0] : undefined,
-      esgScoreMax: esgScoreInput[1] !== 100 ? 0.01 * esgScoreInput[1] : undefined,
-      dividendYieldPercentMin: dividendYieldPercentInput[0] !== 0 ? dividendYieldPercentInput[0] : undefined,
-      dividendYieldPercentMax: dividendYieldPercentInput[1] !== 20 ? dividendYieldPercentInput[1] : undefined,
-      priceEarningRatioMin: priceEarningRatioInput[0] !== 0 ? priceEarningRatioInput[0] : undefined,
-      priceEarningRatioMax: priceEarningRatioInput[1] !== 100 ? priceEarningRatioInput[1] : undefined,
-      starRatingMin: starRatingInput[0] !== 0 ? starRatingInput[0] : undefined,
-      starRatingMax: starRatingInput[1] !== 5 ? starRatingInput[1] : undefined,
-      morningstarFairValueDiffMin:
-        morningstarFairValueDiffInput[0] !== -50 ? morningstarFairValueDiffInput[0] : undefined,
-      morningstarFairValueDiffMax:
-        morningstarFairValueDiffInput[1] !== 50 ? morningstarFairValueDiffInput[1] : undefined,
-      analystConsensusMin: analystConsensusInput[0] !== "None" ? analystConsensusInput[0] : undefined,
-      analystConsensusMax:
-        analystConsensusInput[1] !== "Buy" && analystConsensusInput[1] !== "None"
-          ? analystConsensusInput[1]
-          : undefined,
-      analystCountMin: analystCountInput[0] !== 0 ? analystCountInput[0] : undefined,
-      analystCountMax: analystCountInput[1] !== 60 ? analystCountInput[1] : undefined,
-      analystTargetDiffMin: analystTargetDiffInput[0] !== -50 ? analystTargetDiffInput[0] : undefined,
-      analystTargetDiffMax: analystTargetDiffInput[1] !== 50 ? analystTargetDiffInput[1] : undefined,
-      msciESGRatingMin:
-        msciESGRatingInput[0] !== "AAA" && msciESGRatingInput[0] !== "None" ? msciESGRatingInput[0] : undefined,
-      msciESGRatingMax: msciESGRatingInput[1] !== "None" ? msciESGRatingInput[1] : undefined,
-      msciTemperatureMin: msciTemperatureInput[0] !== 1.0 ? msciTemperatureInput[0] : undefined,
-      msciTemperatureMax: msciTemperatureInput[1] !== 4.0 ? msciTemperatureInput[1] : undefined,
-      lsegESGScoreMin: lsegESGScoreInput[0] !== 0 ? lsegESGScoreInput[0] : undefined,
-      lsegESGScoreMax: lsegESGScoreInput[1] !== 100 ? lsegESGScoreInput[1] : undefined,
-      lsegEmissionsMin: lsegEmissionsInput[0] !== 0 ? lsegEmissionsInput[0] : undefined,
-      lsegEmissionsMax: lsegEmissionsInput[1] !== 100 ? lsegEmissionsInput[1] : undefined,
-      spESGScoreMin: spESGScoreInput[0] !== 0 ? spESGScoreInput[0] : undefined,
-      spESGScoreMax: spESGScoreInput[1] !== 100 ? spESGScoreInput[1] : undefined,
-      sustainalyticsESGRiskMin: sustainalyticsESGRiskInput[0] !== 0 ? sustainalyticsESGRiskInput[0] : undefined,
-      sustainalyticsESGRiskMax: sustainalyticsESGRiskInput[1] !== 50 ? sustainalyticsESGRiskInput[1] : undefined,
-      countries: countryInput,
-      industries: industryInput,
-      size: styleboxInput.size,
-      style: styleboxInput.style,
+  const applyFilters = () =>
+    setSearchParams(() => {
+      const params = new URLSearchParams([
+        ...countryInput.map((country) => ["countries", country]),
+        ...industryInput.map((industry) => ["industries", industry]),
+      ]);
+      if (totalScoreInput[0] !== 0) params.set("totalScoreMin", (0.01 * totalScoreInput[0]).toString());
+      if (totalScoreInput[1] !== 100) params.set("totalScoreMax", (0.01 * totalScoreInput[1]).toString());
+      if (financialScoreInput[0] !== 0) params.set("financialScoreMin", (0.01 * financialScoreInput[0]).toString());
+      if (financialScoreInput[1] !== 100) params.set("financialScoreMax", (0.01 * financialScoreInput[1]).toString());
+      if (esgScoreInput[0] !== 0) params.set("esgScoreMin", (0.01 * esgScoreInput[0]).toString());
+      if (esgScoreInput[1] !== 100) params.set("esgScoreMax", (0.01 * esgScoreInput[1]).toString());
+      if (dividendYieldPercentInput[0] !== 0)
+        params.set("dividendYieldPercentMin", dividendYieldPercentInput[0].toString());
+      if (dividendYieldPercentInput[1] !== 20)
+        params.set("dividendYieldPercentMax", dividendYieldPercentInput[1].toString());
+      if (priceEarningRatioInput[0] !== 0) params.set("priceEarningRatioMin", priceEarningRatioInput[0].toString());
+      if (priceEarningRatioInput[1] !== 100) params.set("priceEarningRatioMax", priceEarningRatioInput[1].toString());
+      if (starRatingInput[0] !== 0) params.set("starRatingMin", starRatingInput[0].toString());
+      if (starRatingInput[1] !== 5) params.set("starRatingMax", starRatingInput[1].toString());
+      if (morningstarFairValueDiffInput[0] !== -50)
+        params.set("morningstarFairValueDiffMin", morningstarFairValueDiffInput[0].toString());
+      if (morningstarFairValueDiffInput[1] !== 50)
+        params.set("morningstarFairValueDiffMax", morningstarFairValueDiffInput[1].toString());
+      if (analystConsensusInput[0] !== "None") params.set("analystConsensusMin", analystConsensusInput[0]);
+      if (analystConsensusInput[1] !== "Buy" && analystConsensusInput[1] !== "None")
+        params.set("analystConsensusMax", analystConsensusInput[1]);
+      if (analystCountInput[0] !== 0) params.set("analystCountMin", analystCountInput[0].toString());
+      if (analystCountInput[1] !== 60) params.set("analystCountMax", analystCountInput[1].toString());
+      if (analystTargetDiffInput[0] !== -50) params.set("analystTargetDiffMin", analystTargetDiffInput[0].toString());
+      if (analystTargetDiffInput[1] !== 50) params.set("analystTargetDiffMax", analystTargetDiffInput[1].toString());
+      if (msciESGRatingInput[0] !== "AAA" && msciESGRatingInput[0] !== "None")
+        params.set("msciESGRatingMin", msciESGRatingInput[0]);
+      if (msciESGRatingInput[1] !== "None") params.set("msciESGRatingMax", msciESGRatingInput[1]);
+      if (msciTemperatureInput[0] !== 1.0) params.set("msciTemperatureMin", msciTemperatureInput[0].toString());
+      if (msciTemperatureInput[1] !== 4.0) params.set("msciTemperatureMax", msciTemperatureInput[1].toString());
+      if (lsegESGScoreInput[0] !== 0) params.set("lsegESGScoreMin", lsegESGScoreInput[0].toString());
+      if (lsegESGScoreInput[1] !== 100) params.set("lsegESGScoreMax", lsegESGScoreInput[1].toString());
+      if (lsegEmissionsInput[0] !== 0) params.set("lsegEmissionsMin", lsegEmissionsInput[0].toString());
+      if (lsegEmissionsInput[1] !== 100) params.set("lsegEmissionsMax", lsegEmissionsInput[1].toString());
+      if (spESGScoreInput[0] !== 0) params.set("spESGScoreMin", spESGScoreInput[0].toString());
+      if (spESGScoreInput[1] !== 100) params.set("spESGScoreMax", spESGScoreInput[1].toString());
+      if (sustainalyticsESGRiskInput[0] !== 0)
+        params.set("sustainalyticsESGRiskMin", sustainalyticsESGRiskInput[0].toString());
+      if (sustainalyticsESGRiskInput[1] !== 50)
+        params.set("sustainalyticsESGRiskMax", sustainalyticsESGRiskInput[1].toString());
+      if (styleboxInput.size) params.set("size", styleboxInput.size);
+      if (styleboxInput.style) params.set("style", styleboxInput.style);
+      return params;
     });
-  };
 
   return (
     <>
@@ -191,14 +255,14 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
         </Box>
       </Tooltip>
       <Tooltip arrow title="Clear all filters">
-        <Box id="clear-filters-label" sx={{ display: "inline-block", ml: props.filtersInUse ? 1 : 0 }}>
+        <Box id="clear-filters-label" sx={{ display: "inline-block", ml: filtersInUse ? 1 : 0 }}>
           <IconButton
             aria-labelledby="clear-filters-label"
-            sx={{ display: !props.filtersInUse ? "none" : undefined }}
+            sx={{ display: filtersInUse ? undefined : "none" }}
             color="error"
             onClick={() => {
               // Reset all filters to their default values
-              props.setFilter({});
+              setSearchParams(() => new URLSearchParams());
               props.setColumnFilter([...stockListColumnArray]);
               setTotalScoreInput([0, 100]);
               setFinancialScoreInput([0, 100]);
@@ -707,8 +771,6 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
  * Properties for the StockTableFilters component.
  */
 export interface StockTableFiltersProps {
-  setFilter: React.Dispatch<React.SetStateAction<StockFilter>>;
   columnFilter: StockListColumn[];
   setColumnFilter: React.Dispatch<React.SetStateAction<StockListColumn[]>>;
-  filtersInUse: boolean;
 }
