@@ -1444,7 +1444,7 @@ __metadata:
     "@hono/zod-openapi": "npm:0.18.3"
     "@prisma/client": "npm:6.2.1"
     "@rating-tracker/commons": "workspace:*"
-    "@simplewebauthn/server": "npm:13.1.0"
+    "@simplewebauthn/server": "npm:13.1.1"
     "@types/jmespath": "npm:0.15.2"
     "@types/node": "npm:22.10.10"
     "@types/node-cron": "npm:3.0.11"
@@ -1822,9 +1822,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/server@npm:13.1.0":
-  version: 13.1.0
-  resolution: "@simplewebauthn/server@npm:13.1.0"
+"@simplewebauthn/server@npm:13.1.1":
+  version: 13.1.1
+  resolution: "@simplewebauthn/server@npm:13.1.1"
   dependencies:
     "@hexagon/base64": "npm:^1.1.27"
     "@levischuck/tiny-cbor": "npm:^0.2.2"
@@ -1833,7 +1833,7 @@ __metadata:
     "@peculiar/asn1-rsa": "npm:^2.3.8"
     "@peculiar/asn1-schema": "npm:^2.3.8"
     "@peculiar/asn1-x509": "npm:^2.3.8"
-  checksum: 10c0/473ae8263467f727a32e077d12689a3d95fc90854ee1405e29870e5f52d0501c069bb8a868853ffd94f5d4a364d8dcf5f4c3482e9a0f7982f504c2fdc89b94d2
+  checksum: 10c0/35be012ff719bdd26eb8751c2b10432c373d7ccadb1f1241f6e161811f0be2a238d9582ab42f0b2e32ff1ce59cbcccae8f1a29ba3899227e76d08c5f1c2613a7
   languageName: node
   linkType: hard
 
