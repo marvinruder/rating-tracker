@@ -13,9 +13,13 @@ import wasm from "vite-plugin-wasm";
 import { defineConfig as defineVitestConfig } from "vitest/config";
 
 let https: ServerOptions | undefined;
-
 try {
   https = { cert: fs.readFileSync("./certs/fullchain.pem"), key: fs.readFileSync("./certs/privkey.pem") };
+} catch {}
+
+let host: string | undefined;
+try {
+  host = fs.readFileSync("./certs/hostname").toString().trim();
 } catch {}
 
 const compressionOptions: Parameters<typeof viteCompression>[0] = {
@@ -82,7 +86,7 @@ export default mergeConfig(
       }))(),
     ],
     preview: { port: 443, strictPort: true },
-    server: { host: true, https, port: 443, strictPort: true },
+    server: { ...(host ? { hmr: { host } } : {}), host: true, https, port: 443, strictPort: true },
     worker: { format: "es", plugins: () => [wasm()] },
   }),
   defineVitestConfig({

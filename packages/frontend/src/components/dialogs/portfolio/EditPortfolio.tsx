@@ -1,5 +1,4 @@
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid2 as Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { Currency, PortfolioSummary } from "@rating-tracker/commons";
 import { handleResponse, isCurrency } from "@rating-tracker/commons";
@@ -104,7 +103,7 @@ export const EditPortfolio = (props: EditPortfolioProps): React.JSX.Element => {
         <Button onClick={() => props.onClose()} sx={{ mr: "auto" }}>
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={updatePortfolio}
@@ -112,7 +111,7 @@ export const EditPortfolio = (props: EditPortfolioProps): React.JSX.Element => {
           startIcon={<PublishedWithChangesIcon />}
         >
           Update Portfolio
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );

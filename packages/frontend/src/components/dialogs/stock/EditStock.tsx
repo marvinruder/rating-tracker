@@ -1,5 +1,4 @@
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
-import LoadingButton from "@mui/lab/LoadingButton";
 import {
   DialogTitle,
   Typography,
@@ -417,7 +416,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
                 arrow
               >
                 <Box sx={{ display: "inline-block" }}>
-                  <LoadingButton
+                  <Button
                     size="small"
                     loading={yahooRequestInProgress}
                     onClick={() => fetchStockFromYahoo()}
@@ -426,7 +425,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
                     startIcon={<PublishedWithChangesIcon />}
                   >
                     Fetch prices
-                  </LoadingButton>
+                  </Button>
                 </Box>
               </Tooltip>
             </Grid>
@@ -442,7 +441,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={morningstarIDRequestInProgress}
                 onClick={patchStockMorningstarID}
@@ -451,7 +450,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
                 startIcon={<PublishedWithChangesIcon />}
               >
                 Update and fetch
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
@@ -465,7 +464,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={marketScreenerIDRequestInProgress}
                 onClick={patchStockMarketScreenerID}
@@ -474,7 +473,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
                 startIcon={<PublishedWithChangesIcon />}
               >
                 Update and fetch
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
@@ -488,7 +487,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={msciIDRequestInProgress}
                 onClick={patchStockMSCIID}
@@ -497,7 +496,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
                 startIcon={<PublishedWithChangesIcon />}
               >
                 Update and fetch
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
@@ -511,7 +510,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={ricRequestInProgress}
                 onClick={patchStockRIC}
@@ -520,7 +519,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
                 startIcon={<PublishedWithChangesIcon />}
               >
                 Update and fetch
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
@@ -538,7 +537,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={spIDRequestInProgress}
                 onClick={patchStockSPID}
@@ -547,7 +546,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
                 startIcon={<PublishedWithChangesIcon />}
               >
                 Update and fetch
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container size={12} spacing={1} sx={{ alignItems: "center" }}>
@@ -561,7 +560,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={sustainalyticsIDRequestInProgress}
                 onClick={patchStockSustainalyticsID}
@@ -570,7 +569,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
                 startIcon={<PublishedWithChangesIcon />}
               >
                 Update and fetch
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
         </Grid>
@@ -585,7 +584,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
         >
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={updateStock}
@@ -593,7 +592,7 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
           startIcon={<PublishedWithChangesIcon />}
         >
           Update Stock
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );

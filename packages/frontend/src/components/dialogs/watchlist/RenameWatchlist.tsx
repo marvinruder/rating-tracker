@@ -1,5 +1,4 @@
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid2 as Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
 import { handleResponse } from "@rating-tracker/commons";
@@ -79,7 +78,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): React.JSX.Element 
         <Button onClick={props.onClose} sx={{ mr: "auto" }}>
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={updateWatchlist}
@@ -87,7 +86,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): React.JSX.Element 
           startIcon={<PublishedWithChangesIcon />}
         >
           Update Watchlist
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );

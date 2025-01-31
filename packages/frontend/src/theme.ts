@@ -1,4 +1,3 @@
-import "@mui/lab/themeAugmentation";
 import type { Theme, ThemeOptions } from "@mui/material";
 import { alpha, lighten, darken, createTheme } from "@mui/material";
 import type { PaletteOptions } from "@mui/material/styles";
@@ -1103,53 +1102,6 @@ export const theme = createTheme({
         standardInfo: ({ theme }) => ({
           color: theme.palette.info.main,
         }),
-      },
-    },
-    MuiTimelineDot: {
-      styleOverrides: {
-        root: {
-          margin: 0,
-          zIndex: 5,
-          position: "absolute",
-          top: "50%",
-          marginTop: -6,
-          left: -6,
-        },
-        outlined: ({ theme }) => ({
-          backgroundColor: theme.palette.white.main,
-          boxShadow: `0 0 0 6px ${theme.palette.white.main}`,
-        }),
-        outlinedPrimary: ({ theme }) => ({
-          backgroundColor: theme.palette.white.main,
-          boxShadow: `0 0 0 6px ${theme.palette.white.main}`,
-        }),
-      },
-    },
-    MuiTimelineConnector: {
-      styleOverrides: {
-        root: ({ theme }) => ({
-          position: "absolute",
-          height: "100%",
-          top: 0,
-          borderRadius: 50,
-          backgroundColor: theme.palette.black.alpha10,
-        }),
-      },
-    },
-    MuiTimelineItem: {
-      styleOverrides: {
-        root: {
-          minHeight: 0,
-          padding: "8px 0",
-          "&:before": {
-            display: "none",
-          },
-        },
-        missingOppositeContent: {
-          "&:before": {
-            display: "none",
-          },
-        },
       },
     },
     MuiTooltip: {

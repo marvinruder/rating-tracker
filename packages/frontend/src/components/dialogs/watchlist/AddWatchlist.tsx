@@ -1,5 +1,4 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid2 as Grid, TextField, DialogActions, Button } from "@mui/material";
 import { handleResponse } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
@@ -74,7 +73,7 @@ export const AddWatchlist = (props: AddWatchlistProps): React.JSX.Element => {
         <Button onClick={props.onClose} sx={{ mr: "auto" }}>
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={putWatchlist}
@@ -82,7 +81,7 @@ export const AddWatchlist = (props: AddWatchlistProps): React.JSX.Element => {
           startIcon={<AddBoxIcon />}
         >
           Create Watchlist
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );

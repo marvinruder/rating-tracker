@@ -1,6 +1,5 @@
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import SendIcon from "@mui/icons-material/Send";
-import LoadingButton from "@mui/lab/LoadingButton";
 import {
   DialogTitle,
   Typography,
@@ -158,7 +157,7 @@ export const SendEmailToUser = (props: SendEmailToUserProps): React.JSX.Element 
         <Button onClick={props.onClose} sx={{ mr: "auto" }}>
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           disabled={selectedTemplate === null}
           variant="contained"
@@ -167,7 +166,7 @@ export const SendEmailToUser = (props: SendEmailToUserProps): React.JSX.Element 
           startIcon={<SendIcon />}
         >
           Send email
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );

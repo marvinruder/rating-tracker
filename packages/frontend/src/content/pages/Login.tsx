@@ -1,7 +1,6 @@
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Card, CardContent, Divider, Grid2 as Grid, TextField, Typography, useTheme } from "@mui/material";
+import { Box, Button, Card, CardContent, Divider, Grid2 as Grid, TextField, Typography, useTheme } from "@mui/material";
 import { authAPIPath, basePath, handleResponse, oidcEndpointSuffix } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import type { Dispatch, SetStateAction } from "react";
@@ -193,7 +192,7 @@ export const LoginPage = (): React.JSX.Element => {
               />
             </Grid>
             <Grid>
-              <LoadingButton
+              <Button
                 loading={requestInProgress}
                 startIcon={<FingerprintIcon />}
                 variant="contained"
@@ -202,7 +201,7 @@ export const LoginPage = (): React.JSX.Element => {
                 onClick={onButtonClick}
               >
                 {action === "signIn" ? "Sign in" : "Register"}
-              </LoadingButton>
+              </Button>
             </Grid>
             <Grid
               sx={{
@@ -215,14 +214,14 @@ export const LoginPage = (): React.JSX.Element => {
               }}
             >
               <Divider sx={{ my: 2 }} />
-              <LoadingButton
+              <Button
                 startIcon={<OpenIDConnectIcon />}
                 variant="contained"
                 fullWidth
                 href={`${basePath}${authAPIPath}${oidcEndpointSuffix}`}
               >
                 OpenID Connect
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
         </Grid>
