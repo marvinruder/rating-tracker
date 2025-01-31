@@ -2,7 +2,6 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddLinkIcon from "@mui/icons-material/AddLink";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import LinkIcon from "@mui/icons-material/Link";
-import LoadingButton from "@mui/lab/LoadingButton";
 import type { AlertColor } from "@mui/material";
 import {
   Box,
@@ -454,7 +453,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
         </>
       ),
       nextButton: (
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={putStock}
@@ -462,7 +461,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
           startIcon={<AddBoxIcon />}
         >
           Create Stock
-        </LoadingButton>
+        </Button>
       ),
     },
     {
@@ -484,7 +483,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={morningstarIDRequestInProgress}
                 onClick={patchStockMorningstarID}
@@ -493,7 +492,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
                 startIcon={morningstarIDSet ? <LinkIcon /> : <AddLinkIcon />}
               >
                 {morningstarIDSet ? "Update" : "Add"}
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
@@ -507,7 +506,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={marketScreenerIDRequestInProgress}
                 onClick={patchStockMarketScreenerID}
@@ -516,7 +515,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
                 startIcon={marketScreenerIDSet ? <LinkIcon /> : <AddLinkIcon />}
               >
                 {marketScreenerIDSet ? "Update" : "Add"}
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
@@ -530,7 +529,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={msciIDRequestInProgress}
                 onClick={patchStockMSCIID}
@@ -539,7 +538,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
                 startIcon={msciIDSet ? <LinkIcon /> : <AddLinkIcon />}
               >
                 {msciIDSet ? "Update" : "Add"}
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
@@ -553,7 +552,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={ricRequestInProgress}
                 onClick={patchStockRIC}
@@ -562,7 +561,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
                 startIcon={ricSet ? <LinkIcon /> : <AddLinkIcon />}
               >
                 {ricSet ? "Update" : "Add"}
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
@@ -580,7 +579,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={spIDRequestInProgress}
                 onClick={patchStockSPID}
@@ -589,7 +588,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
                 startIcon={spIDSet ? <LinkIcon /> : <AddLinkIcon />}
               >
                 {spIDSet ? "Update" : "Add"}
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Grid container spacing={1} sx={{ mt: 1, alignItems: "center" }}>
@@ -603,7 +602,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
               />
             </Grid>
             <Grid sx={{ ml: "auto" }}>
-              <LoadingButton
+              <Button
                 size="small"
                 loading={sustainalyticsIDRequestInProgress}
                 onClick={patchStockSustainalyticsID}
@@ -612,7 +611,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
                 startIcon={sustainalyticsIDSet ? <LinkIcon /> : <AddLinkIcon />}
               >
                 {sustainalyticsIDSet ? "Update" : "Add"}
-              </LoadingButton>
+              </Button>
             </Grid>
           </Grid>
           <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
@@ -623,7 +622,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
       noStepBack: true,
       optional: true,
       nextButton: (
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={getAndShowStock}
@@ -639,7 +638,7 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
           startIcon={<AutoGraphIcon />}
         >
           Show Stock
-        </LoadingButton>
+        </Button>
       ),
     },
     {
@@ -690,13 +689,13 @@ export const AddStock = (props: AddStockProps): React.JSX.Element => {
           {activeStep === 0 ? "Cancel" : "Back"}
         </Button>
         {steps[activeStep].nextButton ?? (
-          <LoadingButton
+          <Button
             variant="contained"
             onClick={handleNext}
             color={(steps[activeStep].buttonColor as AlertColor) ?? "primary"}
           >
             {activeStep === steps.length - 1 ? "Finish" : "Continue"}
-          </LoadingButton>
+          </Button>
         )}
       </DialogActions>
     </>

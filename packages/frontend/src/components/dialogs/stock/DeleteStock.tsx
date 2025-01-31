@@ -1,5 +1,4 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
 import { handleResponse } from "@rating-tracker/commons";
@@ -44,7 +43,7 @@ export const DeleteStock = (props: DeleteStockProps): React.JSX.Element => {
         <Button onClick={props.onClose} sx={{ mr: "auto" }}>
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={deleteStock}
@@ -52,7 +51,7 @@ export const DeleteStock = (props: DeleteStockProps): React.JSX.Element => {
           startIcon={<DeleteIcon />}
         >
           Delete “{props.stock.ticker}”
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );

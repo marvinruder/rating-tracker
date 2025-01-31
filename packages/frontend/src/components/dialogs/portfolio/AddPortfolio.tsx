@@ -1,5 +1,4 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, Grid2 as Grid, TextField, DialogActions, Button } from "@mui/material";
 import type { Currency } from "@rating-tracker/commons";
 import { handleResponse, isCurrency } from "@rating-tracker/commons";
@@ -97,7 +96,7 @@ export const AddPortfolio = (props: AddPortfolioProps): React.JSX.Element => {
         <Button onClick={props.onClose} sx={{ mr: "auto" }}>
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={putPortfolio}
@@ -105,7 +104,7 @@ export const AddPortfolio = (props: AddPortfolioProps): React.JSX.Element => {
           startIcon={<AddBoxIcon />}
         >
           Create Portfolio
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );

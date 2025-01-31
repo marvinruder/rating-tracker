@@ -2,7 +2,6 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import SaveIcon from "@mui/icons-material/Save";
-import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Avatar,
   Box,
@@ -320,7 +319,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): React.JSX.Element 
                       <Typography variant="body1" noWrap sx={{}}>
                         {user.oidcIdentity.preferredUsername}
                       </Typography>
-                      <LoadingButton
+                      <Button
                         sx={{ ml: "auto" }}
                         variant="text"
                         color="error"
@@ -330,10 +329,10 @@ export const ProfileSettings = (props: ProfileSettingsProps): React.JSX.Element 
                         startIcon={<LinkOffIcon />}
                       >
                         Disconnect
-                      </LoadingButton>
+                      </Button>
                     </>
                   ) : (
-                    <LoadingButton
+                    <Button
                       loading={oidcRequestInProgress}
                       startIcon={oidcRequestInProgress ? undefined : <OpenIDConnectIcon />}
                       variant="text"
@@ -341,7 +340,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): React.JSX.Element 
                       href={`${basePath}${authAPIPath}${oidcEndpointSuffix}`}
                     >
                       Connect
-                    </LoadingButton>
+                    </Button>
                   )}
                 </Box>
               </Grid>
@@ -389,7 +388,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): React.JSX.Element 
         <Button onClick={props.onClose} sx={{ mr: "auto" }}>
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={updateProfile}
@@ -403,7 +402,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): React.JSX.Element 
           startIcon={<SaveIcon />}
         >
           Update Profile
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );

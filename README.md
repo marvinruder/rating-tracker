@@ -289,7 +289,7 @@ Given that your Rating Tracker instance resides at `https://ratingtracker.exampl
 -    the post-logout redirect URI: `https://ratingtracker.example.com/login?origin=oidc_post_logout`
 -    the Authorization Code Flow enabled
 -    Front channel logout enabled
--    optionally and if supported, the logo URL: `https://mruder.internal.mruder.dev/assets/images/favicon-dev/favicon-192.png`
+-    optionally and if supported, the logo URL: `https://ratingtracker.example.com/assets/images/favicon-dev/favicon-192.png`
 
 To read all supported user information from the claims, the scopes `openid profile email phone` should be requested using the `OIDC_SCOPES` environment variable.
 
@@ -348,7 +348,7 @@ Any Rating Tracker instance’s API is self-documented, its OpenAPI web interfac
 An environment with all tools required for developing Rating Tracker and the services it depends on can quickly be created using the VS Code development container configuration included in this repository. The `scripts` section in the [`package.json`](/package.json) provides helpful commands:
 
 -   Clone the repository and open it in Visual Studio Code. When prompted, select “Reopen in Container”. This will create a Docker container with all required tools, recommended extensions and dependencies installed.
--   Check your environment. SSL Certificates must be provided to Vite beforehand, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details).
+-   Check your environment. SSL Certificates and the FQDN under which the Vite server will be reachable must be provided to Vite beforehand using the `/rating-tracker/packages/frontend/certs` directory, and a Signal account must be created before starting the server (see [section Setup steps](#setup-steps) for details).
 -   Run `yarn prisma:migrate:deploy` to initialize the PostgreSQL database.
 -   Run `yarn dev` to start the backend server as well as the Vite frontend development server.
 

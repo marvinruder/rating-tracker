@@ -4,7 +4,6 @@ import ListIcon from "@mui/icons-material/List";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LoadingButton from "@mui/lab/LoadingButton";
 import type { BoxProps } from "@mui/material";
 import {
   alpha,
@@ -297,7 +296,7 @@ export const SidebarContent = (props: SidebarContentProps): React.JSX.Element =>
                 </Fragment>
               ))}
               <Grid size={5} sx={{ mt: 1 }}>
-                <LoadingButton
+                <Button
                   id="refresh-system-status-button"
                   onClick={refreshSystemStatus}
                   loading={systemStatusLoading}
@@ -308,7 +307,7 @@ export const SidebarContent = (props: SidebarContentProps): React.JSX.Element =>
                   startIcon={<RefreshIcon />}
                 >
                   Refresh
-                </LoadingButton>
+                </Button>
               </Grid>
             </Grid>
           }

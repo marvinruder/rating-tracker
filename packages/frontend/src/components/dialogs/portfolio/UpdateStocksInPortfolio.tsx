@@ -1,6 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
-import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Box,
   DialogTitle,
@@ -278,7 +277,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): Re
           <Button onClick={props.onClose} sx={{ mr: "auto" }}>
             Cancel
           </Button>
-          <LoadingButton
+          <Button
             loading={requestsInProgress}
             disabled={!selectedPortfolio || portfolioIsUpToDate}
             variant="contained"
@@ -286,7 +285,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): Re
             startIcon={<PublishedWithChangesIcon />}
           >
             Update Portfolio
-          </LoadingButton>
+          </Button>
         </Box>
       </DialogActions>
     </>

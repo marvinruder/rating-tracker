@@ -1,5 +1,4 @@
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { DialogTitle, Typography, DialogContent, DialogActions, Button } from "@mui/material";
 import type { Stock, WatchlistSummary } from "@rating-tracker/commons";
 import { FAVORITES_NAME, handleResponse } from "@rating-tracker/commons";
@@ -52,7 +51,7 @@ export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): 
         <Button onClick={props.onClose} sx={{ mr: "auto" }}>
           Cancel
         </Button>
-        <LoadingButton
+        <Button
           loading={requestInProgress}
           variant="contained"
           onClick={removeStockFromWatchlist}
@@ -60,7 +59,7 @@ export const RemoveStockFromWatchlist = (props: RemoveStockFromWatchlistProps): 
           startIcon={<BookmarkRemoveIcon />}
         >
           Remove “{props.stock.ticker}”
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </>
   );
