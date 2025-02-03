@@ -213,3 +213,4 @@ export const server = serve({ fetch: app.fetch, port: process.env.PORT }, (info)
   Logger.info({ conponent: getRuntimeKey(), interface: info.address, port: info.port }, "Listening");
   process.env.EXIT_AFTER_READY && process.exit(0);
 });
+
