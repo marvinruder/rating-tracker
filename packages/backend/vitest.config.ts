@@ -15,6 +15,7 @@ export default defineConfig({
         "dist",
         "eslint.config.mjs",
         "prisma",
+        "src/*/*.api.ts",
         "src/fetch",
         "src/types/*.d.ts",
         "src/utils/*-shim.ts",

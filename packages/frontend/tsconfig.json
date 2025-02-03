@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["vite/client", "@rating-tracker/backend/types"],
+    "types": ["vite/client"],
     "jsx": "react-jsx",
     "rootDir": "."
   },
