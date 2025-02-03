@@ -11,54 +11,52 @@
   "type": "module",
   "exports": {
     "./api/account": {
-      "types": "./src/account/account.controller.ts"
+      "types": "./dist/types/account/account.api.d.ts"
     },
     "./api/auth": {
-      "types": "./src/auth/auth.controller.ts"
+      "types": "./dist/types/auth/auth.api.d.ts"
     },
     "./api/email": {
-      "types": "./src/email/email.controller.ts"
+      "types": "./dist/types/email/email.api.d.ts"
     },
     "./api/favorites": {
-      "types": "./src/favorite/favorite.controller.ts"
+      "types": "./dist/types/favorite/favorite.api.d.ts"
     },
     "./api/fetch": {
-      "types": "./src/fetch/fetch.controller.ts"
+      "types": "./dist/types/fetch/fetch.api.d.ts"
     },
     "./api/logobackground": {
-      "types": "./src/stock/logobackground.controller.ts"
+      "types": "./dist/types/stock/logobackground.api.d.ts"
     },
     "./api/portfolios": {
-      "types": "./src/portfolio/portfolio.controller.ts"
+      "types": "./dist/types/portfolio/portfolio.api.d.ts"
     },
     "./api/proxy": {
-      "types": "./src/proxy/proxy.controller.ts"
+      "types": "./dist/types/proxy/proxy.api.d.ts"
     },
     "./api/resources": {
-      "types": "./src/resource/resource.controller.ts"
+      "types": "./dist/types/resource/resource.api.d.ts"
     },
     "./api/session": {
-      "types": "./src/session/session.controller.ts"
+      "types": "./dist/types/session/session.api.d.ts"
     },
     "./api/status": {
-      "types": "./src/status/status.controller.ts"
+      "types": "./dist/types/status/status.api.d.ts"
     },
     "./api/stocks": {
-      "types": "./src/stock/stock.controller.ts"
+      "types": "./dist/types/stock/stock.api.d.ts"
     },
     "./api/users": {
-      "types": "./src/user/user.controller.ts"
+      "types": "./dist/types/user/user.api.d.ts"
     },
     "./api/watchlists": {
-      "types": "./src/watchlist/watchlist.controller.ts"
-    },
-    "./types": {
-      "types": "./src/types/index.d.ts"
+      "types": "./dist/types/watchlist/watchlist.api.d.ts"
     }
   },
   "scripts": {
     "dev:run": "node --env-file=.env --watch --enable-source-maps dist/server.mjs | pino-pretty",
     "dev:watch": "yarn build --watch",
+    "dev:watch:types": "yarn build:types --watch",
     "test:watch": "vitest --ui",
     "test": "vitest run --color",
     "prisma:studio": "pnpify prisma studio",
@@ -66,6 +64,7 @@
     "prisma:migrate:dev": "pnpify prisma migrate dev",
     "prisma:migrate:diff": "pnpify prisma migrate diff --from-schema-datasource ./prisma/schema.prisma --to-schema-datamodel ./prisma/schema.prisma --script",
     "build": "esbuild --color=true src/server.ts --bundle --platform=node --packages=bundle --format=esm --inject:./src/utils/cjs-shim.ts --target=node$(node -v | sed 's/^v//') --sourcemap=linked --sources-content=false --outfile=dist/server.mjs",
+    "build:types": "tsc -p tsconfig.api.json --tsBuildInfoFile $HOME/.cache/rating-tracker/backend-api.tsbuildinfo",
     "typecheck": "tsc --noEmit --tsBuildInfoFile $HOME/.cache/rating-tracker/backend.tsbuildinfo",
     "lint": "eslint --color --cache --cache-location $HOME/.cache/rating-tracker/backend.eslintcache --cache-strategy content --max-warnings 0 src test",
     "lint:fix": "yarn lint --fix",

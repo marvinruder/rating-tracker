@@ -12,7 +12,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "conc --kill-others \"yarn dev:run\" \"yarn dev:watch\" \"yarn dev:vite\" -n \",≫,\" -p \"{name}\" -c #339933,#FFCF00,#61DAFB --timings",
+    "dev": "conc --kill-others \"yarn dev:run\" \"yarn dev:watch\" \"yarn dev:watch:types\" \"yarn dev:vite\" -n \",≫,󰛦,\" -p \"{name}\" -c #339933,#FFCF00,#3178C6,#61DAFB --timings",
     "test": "yarn workspaces foreach -Apv -j unlimited run test",
     "build": "yarn workspaces foreach -Apv -j unlimited run build",
     "build:wasm": "wasm-pack build -s rating-tracker -d ../packages/wasm --release wasm",
