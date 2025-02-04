@@ -684,16 +684,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/zod-openapi@npm:0.18.3":
-  version: 0.18.3
-  resolution: "@hono/zod-openapi@npm:0.18.3"
+"@hono/zod-openapi@npm:0.18.4":
+  version: 0.18.4
+  resolution: "@hono/zod-openapi@npm:0.18.4"
   dependencies:
     "@asteasolutions/zod-to-openapi": "npm:^7.1.0"
     "@hono/zod-validator": "npm:^0.4.1"
   peerDependencies:
     hono: ">=4.3.6"
     zod: 3.*
-  checksum: 10c0/ddd917056299b654f2f5e71496db7635f1fa94fb35988db5fc2adb52414bb059e8c986635c82ec546404ec11598fb32b071b4c51b2baf320e1af4b8e73cbb16c
+  checksum: 10c0/59a725bf01fd523badca8e792273f320fcbf7e89d1b208ab2849982466e98b06300687d2df3fa9d8695ffe9b02eaf15ee3fe3817628373fde917207599eaba0e
   languageName: node
   linkType: hard
 
@@ -1352,7 +1352,7 @@ __metadata:
   dependencies:
     "@hono/node-server": "npm:1.13.8"
     "@hono/swagger-ui": "npm:0.5.0"
-    "@hono/zod-openapi": "npm:0.18.3"
+    "@hono/zod-openapi": "npm:0.18.4"
     "@prisma/client": "npm:6.3.0"
     "@rating-tracker/commons": "workspace:*"
     "@simplewebauthn/server": "npm:13.1.1"
