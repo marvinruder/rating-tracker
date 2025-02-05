@@ -1,5 +1,6 @@
 /* eslint-disable import/no-nodejs-modules */
 import { execSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import type { ServerOptions } from "node:https";
 
@@ -13,13 +14,13 @@ import wasm from "vite-plugin-wasm";
 import { defineConfig as defineVitestConfig } from "vitest/config";
 
 let https: ServerOptions | undefined;
+let allowedHosts: string[] = [];
 try {
-  https = { cert: fs.readFileSync("./certs/fullchain.pem"), key: fs.readFileSync("./certs/privkey.pem") };
-} catch {}
-
-let host: string | undefined;
-try {
-  host = fs.readFileSync("./certs/hostname").toString().trim();
+  const cert = fs.readFileSync("./certs/fullchain.pem");
+  https = { cert, key: fs.readFileSync("./certs/privkey.pem") };
+  new crypto.X509Certificate(cert).subjectAltName
+    ?.split(", ")
+    .forEach((san) => san.startsWith("DNS:") && allowedHosts.push(san.slice(4).replace(/^\*/, "")));
 } catch {}
 
 const compressionOptions: Parameters<typeof viteCompression>[0] = {
@@ -86,7 +87,7 @@ export default mergeConfig(
       }))(),
     ],
     preview: { port: 443, strictPort: true },
-    server: { ...(host ? { hmr: { host } } : {}), host: true, https, port: 443, strictPort: true },
+    server: { allowedHosts, host: true, https, port: 443, strictPort: true },
     worker: { format: "es", plugins: () => [wasm()] },
   }),
   defineVitestConfig({
