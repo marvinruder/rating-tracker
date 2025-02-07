@@ -70,7 +70,7 @@ export const UserProvider = (props: React.PropsWithChildren): React.JSX.Element 
       .$get()
       .then(handleResponse)
       .then((res) => {
-        if (Object.keys(res.data).length) {
+        if ("email" in res.data) {
           const newUser = new User(res.data);
           if (newUser.avatar) {
             if (version) newUser.avatar += `?v=${version}`;
