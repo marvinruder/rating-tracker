@@ -1375,7 +1375,7 @@ __metadata:
     eslint-plugin-jsdoc: "npm:50.6.3"
     eslint-plugin-prettier: "npm:5.2.3"
     globals: "npm:15.14.0"
-    hono: "npm:4.6.20"
+    hono: "npm:4.7.0"
     hono-rate-limiter: "npm:0.4.2"
     jmespath: "npm:0.16.0"
     node-cron: "npm:3.0.3"
@@ -1454,7 +1454,7 @@ __metadata:
     eslint-plugin-react: "npm:7.37.4"
     globals: "npm:15.14.0"
     hare-niemeyer: "npm:3.0.0"
-    hono: "npm:4.6.20"
+    hono: "npm:4.7.0"
     http2-proxy: "npm:5.0.53"
     ml-fcnnls: "npm:3.0.0"
     ml-matrix: "npm:6.12.0"
@@ -4734,10 +4734,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hono@npm:4.6.20":
-  version: 4.6.20
-  resolution: "hono@npm:4.6.20"
-  checksum: 10c0/f4ebc987452e8cfc87577cae3b3fe7553affb10121d5fb48401d139c6c378824b9d5d88e42972781124251c466bfb8bfdeb67cb95928f9d6b91d8f4925ce031c
+"hono@npm:4.7.0":
+  version: 4.7.0
+  resolution: "hono@npm:4.7.0"
+  checksum: 10c0/22f0d421cdf155793b4b0c4f94d0c5b409b879643b4cb42bcb0d8c00288f7682008c07a6995b9cd27566a2daa29e907f0f75ac80290f3eaaaec84cc91ac76360
   languageName: node
   linkType: hard
 
