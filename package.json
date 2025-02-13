@@ -31,7 +31,7 @@
   },
   "resolutions": {
     "vite/esbuild": "0.24.2",
-    "whatwg-url": "14.1.0"
+    "whatwg-url": "14.1.1"
   },
   "dependenciesMeta": {
     "@prisma/engines": {
