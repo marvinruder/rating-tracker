@@ -56,7 +56,7 @@ jobs:
           corepack enable
           yarn --immutable
       - name: Build backend API types for frontend client
-        run: yarn workspace @rating-tracker/backend build:types
+        run: yarn workspace @rating-tracker/backend build:types --tsBuildInfoFile /tmp/backend-api.tsbuildinfo
       - name: Run TypeScript
         run: yarn workspaces foreach -Apv -j unlimited run typecheck
   renovate_trigger:
