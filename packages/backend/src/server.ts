@@ -185,7 +185,7 @@ app.route(
   basePath,
   new OpenAPIHono()
     .route(accountAPIPath, new AccountController(accountService).router)
-    .route(authAPIPath, new AuthController(oidcService, webauthnService).router)
+    .route(authAPIPath, new AuthController(dbService, oidcService, webauthnService).router)
     .route(emailAPIPath, new EmailController(emailService, userService).router)
     .route(favoritesAPIPath, new FavoriteController(favoriteService).router)
     .route(fetchAPIPath, new FetchController(fetchService).router)
@@ -207,7 +207,7 @@ app.notFound((c) => {
 app.onError(ErrorHelper.errorHandler);
 
 // Setup Cron Jobs
-new CronScheduler(fetchService, resourceService, sessionService, signalService, userService);
+new CronScheduler(dbService, fetchService, signalService, userService);
 
 export const server = serve({ fetch: app.fetch, port: process.env.PORT }, (info) => {
   Logger.info({ conponent: getRuntimeKey(), interface: info.address, port: info.port }, "Listening");

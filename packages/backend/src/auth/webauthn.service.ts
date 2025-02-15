@@ -24,27 +24,14 @@ class WebAuthnService {
     private sessionService: SessionService,
     private userService: UserService,
   ) {
-    const { webAuthnCredential } = dbService;
-    this.db = { webAuthnCredential };
+    const { webAuthnChallenge, webAuthnCredential } = dbService;
+    this.db = { webAuthnChallenge, webAuthnCredential };
   }
 
   /**
    * A service that provides access to the database.
    */
-  private db: Pick<DBService, "webAuthnCredential">;
-
-  /**
-   * Stores all challenges between the client’s GET request to get such challenge and their POST request with the
-   * challenge response. Those are only required to be stored for a short time, so we can use a simple object here.
-   */
-  #currentChallenges: Record<string, string> = {};
-
-  // In the future, one might want to store the challenges in a database using the following schema:
-  // model WebAuthnChallenge {
-  //   challenge Bytes    @id @default(dbgenerated("gen_random_bytes(32)"))
-  //   email     String?  @db.VarChar(255)
-  //   expiresAt DateTime @default(dbgenerated("date_add(now(), '60 seconds')")) @db.Timestamp(6)
-  // }
+  private db: Pick<DBService, "webAuthnChallenge" | "webAuthnCredential">;
 
   /**
    * The Relying Party name.
@@ -95,6 +82,9 @@ class WebAuthnService {
       throw new ConflictError(ALREADY_REGISTERED_ERROR_MESSAGE);
     }
 
+    // We generate a challenge and store it in the database for later verification.
+    const webAuthnChallenge = await this.db.webAuthnChallenge.create({ data: { email } });
+
     // We generate the registration options and store the challenge for later verification.
     const options = await WebAuthn.generateRegistrationOptions({
       rpName: this.#rpName,
@@ -107,8 +97,8 @@ class WebAuthnService {
         // Enables the client to discover the key based on the RP ID provided in subsequent authentication requests.
         residentKey: "required",
       },
+      challenge: webAuthnChallenge.challenge,
     });
-    this.#currentChallenges[email] = options.challenge;
     return options;
   }
 
@@ -123,13 +113,15 @@ class WebAuthnService {
     email: string,
     response: WebAuthn.VerifyRegistrationResponseOpts["response"],
   ): Promise<void> {
-    // We verify the registration response against the challenge we stored earlier.
-    const expectedChallenge: string = this.#currentChallenges[email];
     let verification: WebAuthn.VerifiedRegistrationResponse;
     try {
       verification = await WebAuthn.verifyRegistrationResponse({
         response,
-        expectedChallenge,
+        // We verify the registration response against the challenge we stored earlier.
+        expectedChallenge: async (challenge: string) =>
+          (await this.db.webAuthnChallenge.findFirst({
+            where: { challenge: Buffer.from(challenge, "base64url"), email },
+          })) !== null,
         expectedOrigin: this.#origin,
         expectedRPID: this.#rpID,
         requireUserVerification: true, // Require the user to verify their identity with a PIN or biometric sensor.
@@ -166,11 +158,12 @@ class WebAuthnService {
    * @returns The authentication options, to be sent to the client.
    */
   async generateAuthenticationOptions(): Promise<ReturnType<typeof WebAuthn.generateAuthenticationOptions>> {
+    const webAuthnChallenge = await this.db.webAuthnChallenge.create({});
     const options = await WebAuthn.generateAuthenticationOptions({
       rpID: this.#rpID,
       userVerification: "required", // Require the user to verify their identity with a PIN or biometric sensor.
+      challenge: webAuthnChallenge.challenge,
     });
-    this.#currentChallenges[options.challenge] = options.challenge;
     return options;
   }
 
@@ -187,11 +180,13 @@ class WebAuthnService {
 
     let verification: WebAuthn.VerifiedAuthenticationResponse;
     try {
-      const { challenge } = JSON.parse(Buffer.from(response.response.clientDataJSON, "base64url").toString());
       verification = await WebAuthn.verifyAuthenticationResponse({
         response,
         // We verify the authentication response against the challenge we stored earlier.
-        expectedChallenge: this.#currentChallenges[challenge],
+        expectedChallenge: async (challenge: string) =>
+          (await this.db.webAuthnChallenge.findFirst({
+            where: { challenge: Buffer.from(challenge, "base64url"), email: null },
+          })) !== null,
         expectedOrigin: this.#origin,
         expectedRPID: this.#rpID,
         credential: {

@@ -1,7 +1,9 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { oidcEndpointSuffix, registerEndpointSuffix, signInEndpointSuffix } from "@rating-tracker/commons";
+import type { MiddlewareHandler } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 
+import type DBService from "../db/db.service";
 import SessionService from "../session/session.service";
 import { EMailSchema, NameSchema } from "../user/user.schema";
 import Controller from "../utils/Controller";
@@ -10,7 +12,8 @@ import BadRequestError from "../utils/error/api/BadRequestError";
 import UnauthorizedError from "../utils/error/api/UnauthorizedError";
 import { ErrorSchema } from "../utils/error/error.schema";
 import ErrorHelper from "../utils/error/errorHelper";
-import { authRateLimiter, sessionCookieOptions } from "../utils/middlewares";
+import { rateLimiter, sessionCookieOptions } from "../utils/middlewares";
+import RateLimiterStore from "../utils/rateLimiterStore";
 
 import {
   AuthenticationOptionsSchema,
@@ -27,11 +30,18 @@ import type WebAuthnService from "./webauthn.service";
  */
 class AuthController extends Controller {
   constructor(
+    dbService: DBService,
     private oidcService: OIDCService,
     private webAuthnService: WebAuthnService,
   ) {
     super({ tags: ["Authentication API"] });
+    this.#rateLimiter = rateLimiter(new RateLimiterStore(dbService));
   }
+
+  /**
+   * The rate limiter used for authentication routes.
+   */
+  #rateLimiter: MiddlewareHandler;
 
   get router() {
     return new OpenAPIHono({ defaultHook: ErrorHelper.zodErrorHandler })
@@ -42,7 +52,7 @@ class AuthController extends Controller {
           tags: this.tags,
           summary: "Get a challenge for registering a new user",
           description: "Generates a registration challenge for the user to register via the WebAuthn standard",
-          middleware: [authRateLimiter] as const,
+          middleware: [this.#rateLimiter] as const,
           request: { query: z.object({ email: EMailSchema, name: NameSchema }).strict() },
           responses: {
             200: {
@@ -75,7 +85,7 @@ class AuthController extends Controller {
           tags: this.tags,
           summary: "Verify the response for a WebAuthn registration challenge",
           description: "Verifies the registration response and creates a new user if the request is valid.",
-          middleware: [authRateLimiter] as const,
+          middleware: [this.#rateLimiter] as const,
           request: {
             query: z.object({ email: EMailSchema, name: NameSchema }).strict(),
             body: {
@@ -91,7 +101,7 @@ class AuthController extends Controller {
               content: { "application/json": { schema: ErrorSchema } },
             },
             401: {
-              description: "Unauthorized: The registration response is invalid.",
+              description: "Unauthorized: The registration failed.",
               content: { "application/json": { schema: ErrorSchema } },
             },
             409: {
@@ -123,7 +133,7 @@ class AuthController extends Controller {
           description:
             "Generates an authentication challenge for any user to sign in. " +
             "The challenge is not related to a specific user.",
-          middleware: [authRateLimiter] as const,
+          middleware: [this.#rateLimiter] as const,
           responses: {
             200: {
               description: "OK: The authentication challenge.",
@@ -144,7 +154,7 @@ class AuthController extends Controller {
           tags: this.tags,
           summary: "Verify the response for a WebAuthn authentication challenge",
           description: "Verifies the authentication response and creates a session if the challenge response is valid.",
-          middleware: [authRateLimiter] as const,
+          middleware: [this.#rateLimiter] as const,
           request: {
             body: {
               description: "The response to the authentication challenge.",
@@ -194,7 +204,7 @@ class AuthController extends Controller {
           tags: this.tags,
           summary: "Get the OpenID Connect authorization URL",
           description: "Forwards to the OpenID Connect provider for authentication.",
-          middleware: [authRateLimiter] as const,
+          middleware: [this.#rateLimiter] as const,
           responses: {
             302: {
               description: "Found: The user is being redirected to the OpenID Connect provider.",
@@ -233,7 +243,7 @@ class AuthController extends Controller {
           tags: this.tags,
           summary: "Handle the OpenID Connect callback",
           description: "Handles the callback from the OpenID Connect provider and creates a session.",
-          middleware: [authRateLimiter] as const,
+          middleware: [this.#rateLimiter] as const,
           request: {
             body: {
               description: "The response from the OpenID Connect provider.",

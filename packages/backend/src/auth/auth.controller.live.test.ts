@@ -44,29 +44,10 @@ tests.push({
       clientDataJSON: Buffer.from(
         JSON.stringify({ type: "webauthn.create", challenge, origin: `https://${process.env.FQDN}` }),
       ).toString("base64url"),
-      attestationObject: Buffer.from("Attestation Object").toString("base64url"),
+      attestationObject: Buffer.from("Valid Attestation Object").toString("base64url"),
     } as object;
 
     // Post Registration Response
-    res = await app.request(
-      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
-        `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          id: BASE_64_ID,
-          rawId: "ID",
-          response,
-          clientExtensionResults: {},
-          type: "public-key",
-        }),
-      },
-    );
-    body = await res.json();
-    expect(res.status).toBe(422); // Unprocessable Content
-    expect(body.message).toMatch("Credential ID was not base64url-encoded");
-
     res = await app.request(
       `${basePath}${authAPIPath}${registerEndpointSuffix}` +
         `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
@@ -86,6 +67,28 @@ tests.push({
               }),
             ).toString("base64url"),
           },
+          clientExtensionResults: {},
+          type: "public-key",
+        }),
+      },
+    );
+    body = await res.json();
+    expect(res.status).toBe(422); // Unprocessable Entity
+    expect(body.message).toMatch(
+      'Custom challenge verifier returned false for registration response challenge "Wrong challenge"',
+    );
+
+    res = await app.request(
+      `${basePath}${authAPIPath}${registerEndpointSuffix}` +
+        `?email=${encodeURIComponent("jim.doe@example.com")}&name=${encodeURIComponent("Jim Doe")}`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          id: BASE_64_ID,
+          rawId: BASE_64_ID,
+          // Oh no!
+          response: { ...response, attestationObject: Buffer.from("Invalid Attestation Object").toString("base64url") },
           clientExtensionResults: {},
           type: "public-key",
         }),
@@ -144,27 +147,10 @@ tests.push({
         JSON.stringify({ type: "webauthn.get", challenge, origin: `https://${process.env.FQDN}` }),
       ).toString("base64url"),
       authenticatorData: Buffer.from("Authenticator Data").toString("base64url"),
-      signature: Buffer.from("Signature").toString("base64url"),
+      signature: Buffer.from("Valid Signature").toString("base64url"),
     };
 
     // Post Authentication Response
-    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        id: BASE_64_ID,
-        rawId: "ID",
-        response,
-        clientExtensionResults: {},
-        type: "public-key",
-        challenge,
-      }),
-    });
-    body = await res.json();
-    expect(res.status).toBe(422); // Unprocessable Content
-    expect(body.message).toMatch("Credential ID was not base64url-encoded");
-    expect(res.headers.get("set-cookie")).toBeNull(); // no session cookie yet
-
     res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -174,7 +160,6 @@ tests.push({
         response,
         clientExtensionResults: {},
         type: "public-key",
-        challenge,
       }),
     });
     body = await res.json();
@@ -200,7 +185,24 @@ tests.push({
         },
         clientExtensionResults: {},
         type: "public-key",
-        challenge: "Wrong challenge", // Oh no!
+      }),
+    });
+    body = await res.json();
+    expect(res.status).toBe(422); // Unprocessable Entity
+    expect(body.message).toMatch(
+      'Custom challenge verifier returned false for authentication response challenge "Wrong challenge"',
+    );
+    expect(res.headers.get("set-cookie")).toBeNull(); // no session cookie yet
+
+    res = await app.request(`${basePath}${authAPIPath}${signInEndpointSuffix}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        id: BASE_64_ID,
+        rawId: BASE_64_ID,
+        response: { ...response, signature: Buffer.from("Invalid Signature").toString("base64url") }, // Oh no!
+        clientExtensionResults: {},
+        type: "public-key",
       }),
     });
     body = await res.json();
@@ -217,7 +219,6 @@ tests.push({
         response,
         clientExtensionResults: {},
         type: "public-key",
-        challenge,
       }),
     });
     body = await res.json();
@@ -241,7 +242,6 @@ tests.push({
         response,
         clientExtensionResults: {},
         type: "public-key",
-        challenge,
       }),
     });
     expect(res.status).toBe(204);
@@ -297,7 +297,7 @@ tests.push({
                 origin: `https://${process.env.FQDN}`,
               }),
             ).toString("base64url"),
-            attestationObject: Buffer.from("Attestation Object").toString("base64url"),
+            attestationObject: Buffer.from("Valid Attestation Object").toString("base64url"),
           },
           clientExtensionResults: {},
           type: "public-key",
@@ -325,11 +325,10 @@ tests.push({
             }),
           ).toString("base64url"),
           authenticatorData: Buffer.from("Authenticator Data").toString("base64url"),
-          signature: Buffer.from("Signature").toString("base64url"),
+          signature: Buffer.from("Valid Signature").toString("base64url"),
         },
         clientExtensionResults: {},
         type: "public-key",
-        challenge: body.challenge,
       }),
     });
     const idCookieHeader = res.headers.get("set-cookie")!.split(";")[0];

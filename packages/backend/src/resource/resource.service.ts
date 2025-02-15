@@ -1,5 +1,4 @@
 import type { Resource } from "@rating-tracker/commons";
-import { pluralize } from "@rating-tracker/commons";
 
 import type DBService from "../db/db.service";
 import NotFoundError from "../utils/error/api/NotFoundError";
@@ -57,18 +56,6 @@ class ResourceService {
     } catch (e) {
       throw new NotFoundError(`Resource ${uri} not found.`);
     }
-  }
-
-  /**
-   * Delete all expired resources.
-   */
-  async cleanup() {
-    const deletedResources = await this.db.resource.deleteMany({ where: { expiresAt: { lt: new Date() } } });
-    if (deletedResources.count)
-      Logger.info(
-        { component: "postgres", count: deletedResources.count },
-        `Deleted expired resource${pluralize(deletedResources.count)}`,
-      );
   }
 }
 

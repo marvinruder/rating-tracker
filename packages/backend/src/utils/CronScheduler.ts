@@ -2,10 +2,9 @@ import type { DataProvider } from "@rating-tracker/commons";
 import { dataProviderName } from "@rating-tracker/commons";
 import cron from "node-cron";
 
+import type DBService from "../db/db.service";
 import type FetchService from "../fetch/fetch.service";
 import type { FetchOptions } from "../fetch/fetch.service";
-import type ResourceService from "../resource/resource.service";
-import type SessionService from "../session/session.service";
 import SignalService from "../signal/signal.service";
 import type UserService from "../user/user.service";
 
@@ -18,9 +17,8 @@ import Singleton from "./Singleton";
  */
 class CronScheduler extends Singleton {
   constructor(
+    private dbService: DBService,
     private fetchService: FetchService,
-    private resourceService: ResourceService,
-    private sessionService: SessionService,
     private signalService: SignalService,
     private userService: UserService,
   ) {
@@ -29,11 +27,7 @@ class CronScheduler extends Singleton {
 
     // Clean up resources and sessions every minute
     CronScheduler.schedules.push(
-      cron.schedule(
-        "* * * * *",
-        () => void Promise.all([this.resourceService.cleanup(), this.sessionService.cleanup()]),
-        { runOnInit: true },
-      ),
+      cron.schedule("* * * * *", () => void Promise.all([this.dbService.cleanup()]), { runOnInit: true }),
     );
 
     // Rotate log file every day

@@ -1,4 +1,4 @@
-import { pluralize, User } from "@rating-tracker/commons";
+import { User } from "@rating-tracker/commons";
 
 import type DBService from "../db/db.service";
 import NotFoundError from "../utils/error/api/NotFoundError";
@@ -123,18 +123,6 @@ class SessionService {
       /* c8 ignore next 2 */ // Not reached in current tests since a user can only delete their current session
       throw new NotFoundError(`Session ${id} not found.`);
     }
-  }
-
-  /**
-   * Delete all expired sessions.
-   */
-  async cleanup() {
-    const deletedSessions = await this.db.session.deleteMany({ where: { expiresAt: { lt: new Date() } } });
-    if (deletedSessions.count)
-      Logger.info(
-        { component: "postgres", count: deletedSessions.count },
-        `Deleted expired session${pluralize(deletedSessions.count)}.`,
-      );
   }
 }
 

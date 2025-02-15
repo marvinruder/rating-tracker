@@ -5,7 +5,8 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { basePath, FORBIDDEN_ERROR_MESSAGE, UNAUTHORIZED_ERROR_MESSAGE } from "@rating-tracker/commons";
 import type { MiddlewareHandler } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
-import { rateLimiter } from "hono-rate-limiter";
+import type { Store } from "hono-rate-limiter";
+import { rateLimiter as honoRateLimiter } from "hono-rate-limiter";
 
 import SessionService from "../session/session.service";
 
@@ -32,16 +33,20 @@ export const accessRightValidator: (accessRights: number) => MiddlewareHandler =
 };
 
 /**
- * Rate limiter in use by authentication routes.
+ * Limits the number of requests per minute per IP address.
+ * @param store The rate limiter store, storing hit counts in the database.
+ * @returns The middleware handler.
  */
-export const authRateLimiter = rateLimiter({
-  keyGenerator: (c) => c.get("ip"),
-  windowMs: 1000 * 60,
-  limit: 60,
-  handler: () => {
-    throw new TooManyRequestsError("Please try again later.");
-  },
-});
+export const rateLimiter = (store: Store): MiddlewareHandler =>
+  honoRateLimiter({
+    keyGenerator: (c) => c.get("ip"),
+    windowMs: 1000 * 60,
+    limit: 60,
+    handler: () => {
+      throw new TooManyRequestsError("Please try again later.");
+    },
+    store,
+  });
 
 /**
  * Extracts the IP address from the request and sets it as a context variable.
@@ -53,8 +58,9 @@ export const ipExtractor: MiddlewareHandler = async (c, next) => {
     .header("X-Forwarded-For")
     ?.split(",") // Read the IP addresses from the X-Forwarded-For header, if present.
     .reverse() // The first IPs are the closest proxies, and the last ones were potentially set by a malicious client,
-    .slice(0, process.env.TRUSTWORTHY_PROXY_COUNT) // so we cut them off
-    .at(-1); // and look at the last trustworthy IP.
+    .slice(0, process.env.TRUSTWORTHY_PROXY_COUNT) // so we cut them off,
+    .at(-1) // look at the last trustworthy IP
+    ?.trim(); // and remove any leading/trailing whitespace.
   const ip = lastTrustworthyIP ?? getConnInfo(c).remote.address;
   if (!ip) throw new InternalServerError("No IP address found.");
   c.set("ip", ip);
