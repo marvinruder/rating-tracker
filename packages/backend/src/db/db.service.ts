@@ -1,7 +1,7 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
 
-import type { AnalystRating } from "@rating-tracker/commons";
+import { pluralize, type AnalystRating } from "@rating-tracker/commons";
 
 import { PrismaClient } from "../../prisma/client";
 import ServiceUnavailableError from "../utils/error/api/ServiceUnavailableError";
@@ -38,6 +38,14 @@ class DBService extends Singleton {
    */
   get portfolio() {
     return DBService.#client.portfolio;
+  }
+
+  /**
+   * Provides access to the Rate Limit Event table.
+   * @returns The Rate Limit Event table.
+   */
+  get rateLimitHitCount() {
+    return DBService.#client.rateLimitHitCount;
   }
 
   /**
@@ -78,6 +86,14 @@ class DBService extends Singleton {
    */
   get watchlist() {
     return DBService.#client.watchlist;
+  }
+
+  /**
+   * Provides access to the WebAuthnChallenge table.
+   * @returns The WebAuthnChallenge table.
+   */
+  get webAuthnChallenge() {
+    return DBService.#client.webAuthnChallenge;
   }
 
   /**
@@ -136,6 +152,50 @@ class DBService extends Singleton {
     return DBService.#client.$executeRaw`SELECT null`
       .then(() => Promise.resolve("Connected"))
       .catch((e) => Promise.reject(new ServiceUnavailableError(`Database is not reachable: ${e.message}`)));
+  }
+
+  /**
+   * Delete all expired rows.
+   */
+  async cleanup() {
+    await Promise.allSettled([
+      // Delete expired rate limit hit counts
+      DBService.#client.rateLimitHitCount
+        .deleteMany({ where: { expiresAt: { lt: new Date() } } })
+        .then((deletedRateLimitHitCounts) => {
+          if (deletedRateLimitHitCounts.count)
+            Logger.info(
+              { component: "postgres", count: deletedRateLimitHitCounts.count },
+              `Deleted expired rate limit hit count${pluralize(deletedRateLimitHitCounts.count)}.`,
+            );
+        }),
+      // Delete expired resources
+      DBService.#client.resource.deleteMany({ where: { expiresAt: { lt: new Date() } } }).then((deletedResources) => {
+        if (deletedResources.count)
+          Logger.info(
+            { component: "postgres", count: deletedResources.count },
+            `Deleted expired resource${pluralize(deletedResources.count)}.`,
+          );
+      }),
+      // Delete expired sessions
+      DBService.#client.session.deleteMany({ where: { expiresAt: { lt: new Date() } } }).then((deletedSessions) => {
+        if (deletedSessions.count)
+          Logger.info(
+            { component: "postgres", count: deletedSessions.count },
+            `Deleted expired session${pluralize(deletedSessions.count)}.`,
+          );
+      }),
+      // Delete expired WebAuthn challenges
+      DBService.#client.webAuthnChallenge
+        .deleteMany({ where: { expiresAt: { lt: new Date() } } })
+        .then((deletedWebAuthnChallenges) => {
+          if (deletedWebAuthnChallenges.count)
+            Logger.info(
+              { component: "postgres", count: deletedWebAuthnChallenges.count },
+              `Deleted expired WebAuthn challenge${pluralize(deletedWebAuthnChallenges.count)}.`,
+            );
+        }),
+    ]);
   }
 }
 

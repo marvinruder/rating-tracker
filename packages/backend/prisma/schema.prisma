@@ -97,6 +97,22 @@ model WebAuthnCredential {
   @@map("webauthn_credentials")
 }
 
+model WebAuthnChallenge {
+  challenge Bytes    @id @default(dbgenerated("gen_random_bytes(32)"))
+  email     String?
+  expiresAt DateTime @default(dbgenerated("date_add(now(), '60 seconds')")) @map("expires_at") @db.Timestamptz
+
+  @@map("webauthn_challenges")
+}
+
+model RateLimitHitCount {
+  key       String   @id
+  count     Int
+  expiresAt DateTime @map("expires_at") @db.Timestamptz
+
+  @@map("rate_limit_hit_counts")
+}
+
 model OIDCUser {
   sub               String @id
   preferredUsername String @map("preferred_username")
