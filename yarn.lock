@@ -1388,7 +1388,7 @@ __metadata:
     hono-rate-limiter: "npm:0.4.2"
     jmespath: "npm:0.16.0"
     node-cron: "npm:3.0.3"
-    oauth4webapi: "npm:3.1.4"
+    oauth4webapi: "npm:3.1.5"
     pino: "npm:9.6.0"
     pino-pretty: "npm:13.0.0"
     prettier: "npm:3.5.1"
@@ -5882,10 +5882,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oauth4webapi@npm:3.1.4":
-  version: 3.1.4
-  resolution: "oauth4webapi@npm:3.1.4"
-  checksum: 10c0/81e471750f4903121efcef4edb1b73d725ae6d3b9646a0febd45e29ed05b62faba14a69e433181eae441913684a02d681c4e561dcac578de9cb45dd719f53464
+"oauth4webapi@npm:3.1.5":
+  version: 3.1.5
+  resolution: "oauth4webapi@npm:3.1.5"
+  checksum: 10c0/11b57790c3ef0683f7380e3886dfc957930aac897caae642ec38f3bc9cf1b0079e607e8345394460752e1354164c36b0d0905a979c97b3acc82bc185dd050344
   languageName: node
   linkType: hard
 
