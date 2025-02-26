@@ -5,7 +5,7 @@ authors = ["Marvin A. Ruder <ratingtracker@mruder.dev>"]
 description = "A collection of utilities written in Rust and compiled to WebAssembly"
 license = "MIT"
 repository = "https://github.com/marvinruder/rating-tracker"
-edition = "2021"
+edition = "2024"
 
 [lib]
 crate-type = ["cdylib"]
