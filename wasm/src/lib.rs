@@ -1,8 +1,8 @@
 use std::io::Cursor;
 
 use image::{
-    codecs::avif::AvifEncoder, imageops, metadata::Orientation, DynamicImage, ImageDecoder,
-    ImageReader,
+    DynamicImage, ImageDecoder, ImageReader, codecs::avif::AvifEncoder, imageops,
+    metadata::Orientation,
 };
 use wasm_bindgen::prelude::*;
 

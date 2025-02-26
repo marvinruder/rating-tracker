@@ -30,6 +30,7 @@
     "typescript": "5.7.3"
   },
   "resolutions": {
+    "cross-spawn": "7.0.6",
     "vite/esbuild": "0.25.0",
     "whatwg-url": "14.1.1"
   },
