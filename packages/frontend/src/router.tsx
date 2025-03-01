@@ -286,7 +286,7 @@ interface AuthWrapperProps {
  */
 const ForwardToAPI = (): React.JSX.Element => {
   useEffect(() => {
-    document.location = document.location;
+    window.location.reload();
   }, []);
   return <></>;
 };
