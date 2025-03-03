@@ -100,7 +100,7 @@
   },
   "devDependencies": {
     "@types/jmespath": "0.15.2",
-    "@types/node": "22.13.8",
+    "@types/node": "22.13.9",
     "@types/node-cron": "3.0.11",
     "@types/smtp-server": "3.5.10",
     "@typescript-eslint/eslint-plugin": "8.25.0",
