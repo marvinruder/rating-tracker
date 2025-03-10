@@ -30,7 +30,7 @@
     "typescript": "5.8.2"
   },
   "resolutions": {
-    "vite/esbuild": "0.25.0",
+    "vite/esbuild": "0.25.1",
     "whatwg-url": "14.1.1"
   },
   "dependenciesMeta": {
