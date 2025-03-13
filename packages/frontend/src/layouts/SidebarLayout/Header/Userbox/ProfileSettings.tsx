@@ -35,9 +35,9 @@ import { useEffect, useRef, useState } from "react";
 import accountClient from "../../../../api/account";
 import OpenIDConnectIcon from "../../../../components/etc/OpenIDConnect";
 import { useNotificationContextUpdater } from "../../../../contexts/NotificationContext";
-import { useStatusContextState } from "../../../../contexts/StatusContext";
 import { useUserContextState, useUserContextUpdater } from "../../../../contexts/UserContext";
 import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
+import { isSupportedByServer } from "../../../../utils/serverFeatures";
 
 /**
  * A dialog to edit the user’s own information.
@@ -45,7 +45,6 @@ import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";
  * @returns The component.
  */
 export const ProfileSettings = (props: ProfileSettingsProps): React.JSX.Element => {
-  const { systemStatus } = useStatusContextState();
   const { user } = useUserContextState();
   const { refetchUser } = useUserContextUpdater();
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
@@ -300,7 +299,7 @@ export const ProfileSettings = (props: ProfileSettingsProps): React.JSX.Element 
                 slotProps={{ htmlInput: { inputMode: "tel", type: "tel", pattern: REGEX_PHONE_NUMBER } }}
               />
             </Grid>
-            {systemStatus.services["OpenID Connect"].status === "success" && (
+            {isSupportedByServer("oidc") && (
               <Grid size={12}>
                 <Typography variant="h5" sx={{ pb: 0.5 }}>
                   OpenID Connect

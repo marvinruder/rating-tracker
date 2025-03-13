@@ -68,6 +68,19 @@ export const ipExtractor: MiddlewareHandler = async (c, next) => {
 };
 
 /**
+ * Adds a cookie with supported server features to an HTML response.
+ * @param featureString The string representation of the supported server features.
+ * @returns The middleware handler.
+ */
+export const featureCookieHandler =
+  (featureString: string): MiddlewareHandler =>
+  async (c, next) => {
+    await next();
+    if (c.res.headers.get("Content-Type")?.startsWith("text/html") && getCookie(c, "features") !== featureString)
+      setCookie(c, "features", featureString, { path: "/", httpOnly: false, secure: true, sameSite: "strict" });
+  };
+
+/**
  * Checks for user authentication via session cookie.
  * @param sessionService The session service.
  * @returns The middleware handler.

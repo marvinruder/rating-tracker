@@ -34,7 +34,7 @@ import { DeleteUser } from "../../../components/dialogs/user/DeleteUser";
 import { SendEmailToUser } from "../../../components/dialogs/user/SendEmailToUser";
 import OpenIDConnectIcon from "../../../components/etc/OpenIDConnect";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
-import { useStatusContextState } from "../../../contexts/StatusContext";
+import { isSupportedByServer } from "../../../utils/serverFeatures";
 
 const accessRightArray = [GENERAL_ACCESS, WRITE_STOCKS_ACCESS, ADMINISTRATIVE_ACCESS] as const;
 type AccessRight = (typeof accessRightArray)[number];
@@ -103,7 +103,7 @@ const AccessRightSelect = (props: {
           onClick={() => setAccessRights(accessRights ^ accessRight)}
         >
           <Checkbox
-            inputProps={{ "aria-labelledby": `access-right-${accessRight}-label` }}
+            slotProps={{ input: { "aria-labelledby": `access-right-${accessRight}-label` } }}
             checked={(accessRights & accessRight) === accessRight}
             disableRipple
           />
@@ -122,8 +122,7 @@ const AccessRightSelect = (props: {
 const UserRow = (props: UserRowProps): React.JSX.Element => {
   const theme = useTheme();
 
-  const { systemStatus } = useStatusContextState();
-  const emailConfigured = systemStatus.services["Email"].status === "success";
+  const emailConfigured = isSupportedByServer("email");
 
   const [sendEmailDialogOpen, setSendEmailDialogOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);

@@ -10,8 +10,8 @@ import authClient from "../../api/auth";
 import OpenIDConnectIcon from "../../components/etc/OpenIDConnect";
 import { SwitchSelector } from "../../components/etc/SwitchSelector";
 import { useNotificationContextUpdater } from "../../contexts/NotificationContext";
-import { useStatusContextState } from "../../contexts/StatusContext";
 import { useUserContextUpdater } from "../../contexts/UserContext";
+import { isSupportedByServer } from "../../utils/serverFeatures";
 
 /**
  * This component renders the login page.
@@ -25,7 +25,6 @@ export const LoginPage = (): React.JSX.Element => {
   const [emailError, setEmailError] = useState<string>(""); // Error message for the email text field.
   const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
-  const { systemStatus } = useStatusContextState();
   const { refetchUser } = useUserContextUpdater();
 
   const theme = useTheme();
@@ -203,26 +202,19 @@ export const LoginPage = (): React.JSX.Element => {
                 {action === "signIn" ? "Sign in" : "Register"}
               </Button>
             </Grid>
-            <Grid
-              sx={{
-                transitionProperty: "max-height,opacity",
-                transitionDuration: ".4s,.3s",
-                transitionTimingFunction: `ease`,
-                ...(systemStatus.services["OpenID Connect"].status === "success"
-                  ? { maxHeight: 90, opacity: 1, transitionDelay: "0s,.1s" }
-                  : { maxHeight: 0, opacity: 0 }),
-              }}
-            >
-              <Divider sx={{ my: 2 }} />
-              <Button
-                startIcon={<OpenIDConnectIcon />}
-                variant="contained"
-                fullWidth
-                href={`${basePath}${authAPIPath}${oidcEndpointSuffix}`}
-              >
-                OpenID Connect
-              </Button>
-            </Grid>
+            {isSupportedByServer("oidc") && (
+              <Grid>
+                <Divider sx={{ my: 2 }} />
+                <Button
+                  startIcon={<OpenIDConnectIcon />}
+                  variant="contained"
+                  fullWidth
+                  href={`${basePath}${authAPIPath}${oidcEndpointSuffix}`}
+                >
+                  OpenID Connect
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </CardContent>

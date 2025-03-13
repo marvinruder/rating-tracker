@@ -96,6 +96,7 @@ export default mergeConfig(
       coverage: { all: false, enabled: true, provider: "v8", exclude: ["eslint.config.mjs"] },
       pool: "threads",
       poolOptions: { threads: { useAtomics: true } },
+      unstubGlobals: true,
     },
   }),
 );
