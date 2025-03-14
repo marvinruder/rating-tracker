@@ -4,6 +4,7 @@ import "./utils/startup";
 import { serve } from "@hono/node-server";
 import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIHono } from "@hono/zod-openapi";
+import type { ServerFeature } from "@rating-tracker/commons";
 import {
   accountAPIPath,
   authAPIPath,
@@ -59,7 +60,7 @@ import CronScheduler from "./utils/CronScheduler";
 import NotFoundError from "./utils/error/api/NotFoundError";
 import ErrorHelper from "./utils/error/errorHelper";
 import Logger from "./utils/logger";
-import { ipExtractor, sessionValidator, staticFileHandler } from "./utils/middlewares";
+import { featureCookieHandler, ipExtractor, sessionValidator, staticFileHandler } from "./utils/middlewares";
 import WatchlistController from "./watchlist/watchlist.controller";
 import WatchlistService from "./watchlist/watchlist.service";
 
@@ -89,6 +90,30 @@ const stockService: StockService = new StockService(
   watchlistService,
 );
 const fetchService: FetchService = new FetchService(resourceService, signalService, stockService, userService);
+
+/**
+ * An array of features that are supported by the server.
+ */
+const features: ServerFeature[] = [];
+
+await oidcService
+  .getStatus()
+  // OpenID Connect is available
+  .then((status) => status === "Configured" && features.push("oidc"))
+  // OpenID is unavailable, but configured. We consider this a temporary issue at startup and still indicate support.
+  .catch(() => features.push("oidc"));
+
+await emailService
+  .getStatus()
+  // Email is configured
+  .then((status) => status === "Configured" && features.push("email"))
+  // This function always resolves.
+  .catch(() => {});
+
+/**
+ * A tilde-separated string of features that are supported by the server.
+ */
+const featureString = features.join("~");
 
 /**
  * A server, powered by Hono. Responsible for serving static content and routing requests through various middlewares
@@ -158,6 +183,9 @@ app.use(
 // Extract the IP address from the request and set it as a context variable
 app.use(ipExtractor);
 
+// Add cookie with supported server features to HTML response
+app.use(featureCookieHandler(featureString));
+
 // Serve the static files of the SPA and sets the correct cache control headers.
 app.use(...staticFileHandler);
 
@@ -201,7 +229,7 @@ app.route(
 );
 
 app.notFound((c) => {
-  throw new NotFoundError(`Endpoint ${c.req.path} not found.`);
+  throw new NotFoundError(`Resource ${c.req.path} not found.`);
 });
 
 app.onError(ErrorHelper.errorHandler);

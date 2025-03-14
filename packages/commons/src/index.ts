@@ -57,6 +57,8 @@ export * from "./lib/MessageType";
 
 export * from "./lib/OmitFunctions";
 
+export * from "./lib/ServerFeature";
+
 export * from "./lib/Service";
 
 export * from "./lib/SortableAttribute";

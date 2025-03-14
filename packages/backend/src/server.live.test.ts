@@ -32,6 +32,6 @@ tests.push({
     const res = await app.request("/api/hello");
     const body = await res.json();
     expect(res.status).toBe(404);
-    expect(body.message).toMatch("Endpoint /api/hello not found");
+    expect(body.message).toMatch("Resource /api/hello not found");
   },
 });
