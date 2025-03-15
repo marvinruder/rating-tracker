@@ -1,5 +1,6 @@
 import { User, handleResponse } from "@rating-tracker/commons";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
 
 import accountClient from "../api/account";
 
@@ -56,6 +57,8 @@ export const UserProvider = (props: React.PropsWithChildren): React.JSX.Element 
   const { notification } = useNotificationContextState();
   const { setNotification } = useNotificationContextUpdater();
 
+  const [searchParams] = useSearchParams();
+
   const clearUser = useCallback(() => setUser(null as unknown as User), []);
 
   /**
@@ -93,7 +96,8 @@ export const UserProvider = (props: React.PropsWithChildren): React.JSX.Element 
       // If unsuccessful, delete the user information so that the user is redirected to the login page
       .catch(clearUser);
 
-  useEffect(() => void fetchUser(), []);
+  // Initial fetching of user information is delayed until evaluation of OpenID Connect parameter
+  useEffect(() => void (!searchParams.has("code") && fetchUser()), []);
 
   useEffect(() => {
     if (notification?.message === SESSION_EXPIRED_MESSAGE) clearUser();

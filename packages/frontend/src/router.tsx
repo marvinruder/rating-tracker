@@ -9,8 +9,8 @@ import {
 } from "@rating-tracker/commons";
 import { StrictMode, Suspense, lazy, useEffect } from "react";
 import type { RouteObject } from "react-router";
-import { useLocation } from "react-router";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router";
+import { Navigate } from "react-router-dom";
 
 //
 // Applications
@@ -217,10 +217,17 @@ const AuthWrapper = (props: AuthWrapperProps): React.JSX.Element => {
               .then(handleResponse);
             // This is only reached if the authentication was successful
             setNotification(undefined);
-            await refetchUser(); // After refetching, the user is redirected automatically
+            // Read the cached redirect URL from the session storage and add it to the search parameters, if present
+            const redirect = window.sessionStorage.getItem("redirect");
+            if (redirect) {
+              window.sessionStorage.removeItem("redirect");
+              setSearchParams({ redirect });
+            }
           } catch (e) {
             setErrorNotificationOrClearSession(e, "completing OpenID Connect authentication");
           }
+          // This is the initial fetching of user information when the OpenID Connect parameter is present
+          await refetchUser(); // After refetching, the user is redirected automatically
         } else if (searchParams.has("error")) {
           setErrorNotificationOrClearSession(
             new Error(oidcErrorDescription(searchParams.get("error") ?? "")),
