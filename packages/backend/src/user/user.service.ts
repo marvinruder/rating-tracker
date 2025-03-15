@@ -76,8 +76,9 @@ class UserService {
       Logger.info({ component: "postgres", user: { email: user.email, name: user.name } }, "Created user");
       // Inform the admin of the new user via Signal messenger
       this.signalService.sendMessage(
-        `🆕👤 New user “${user.name}” (email ${user.email}) registered.`,
+        `👤 New user **${user.name}** (email \`${user.email}\`) registered.`,
         await this.readMessageRecipients("userManagement"),
+        true,
       );
       return true;
     }

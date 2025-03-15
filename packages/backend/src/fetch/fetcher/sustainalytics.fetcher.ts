@@ -167,8 +167,9 @@ class SustainalyticsFetcher extends BulkFetcher {
           this.signalService.sendMessage(
             `${
               SignalService.ERROR_PREFIX
-            }Stock ${stock.ticker}: Unable to extract Sustainalytics ESG Risk: ${ErrorHelper.getSummary(e)}`,
+            }Stock \`${stock.ticker}\`: Unable to extract Sustainalytics ESG Risk: ${ErrorHelper.getSummary(e)}`,
             await this.userService.readMessageRecipients("fetchError"),
+            true,
           );
           stocks.failed.push(stock);
         } else {
@@ -188,9 +189,10 @@ class SustainalyticsFetcher extends BulkFetcher {
         this.signalService.sendMessage(
           `${
             SignalService.ERROR_PREFIX
-          }Aborting extracting information from Sustainalytics after ${stocks.successful.length} successful ` +
+          }Aborting extracting information from **Sustainalytics** after ${stocks.successful.length} successful ` +
             `extractions and ${stocks.failed.length} failures. Will continue next time.`,
           await this.userService.readMessageRecipients("fetchError"),
+          true,
         );
         break;
       }

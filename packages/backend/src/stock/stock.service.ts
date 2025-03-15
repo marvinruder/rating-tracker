@@ -431,7 +431,7 @@ class StockService {
 
     let k: keyof typeof newValues; // all keys of new values
     const stock = await this.read(ticker); // Read the stock from the database
-    let signalMessage = `Updates for ${stock.name} (${ticker}):`;
+    let signalMessage = `Updates for **${stock.name}** (\`${ticker}\`):`;
     let isNewData = false;
     // deepcode ignore NonLocalLoopVar: The left-hand side of a 'for...in' statement cannot use a type annotation.
     for (k in newValues) {
@@ -473,7 +473,7 @@ class StockService {
 
         switch (k) {
           case "starRating":
-            signalMessage += `\n\t${
+            signalMessage += `\n${
               // larger is better
               (newValues[k] ?? 0) > (stock[k] ?? 0) ? SignalService.PREFIX_BETTER : SignalService.PREFIX_WORSE
             }Star Rating changed from ${
@@ -485,7 +485,7 @@ class StockService {
             const oldCurrency = stock.currency ?? "";
             const newCurrency = newValues.currency ?? oldCurrency;
             const lastClose = newValues.lastClose ?? stock.lastClose ?? "N/A";
-            signalMessage += `\n\t${
+            signalMessage += `\n${
               // larger is better
               (newValues[k] ?? 0) > (stock[k] ?? 0) ? SignalService.PREFIX_BETTER : SignalService.PREFIX_WORSE
             }Morningstar Fair Value changed from ${oldCurrency} ${stock[k] ?? "N/A"} to ${newCurrency} ${
@@ -493,7 +493,7 @@ class StockService {
             } (last close ${newCurrency} ${lastClose})`;
             break;
           case "msciTemperature":
-            signalMessage += `\n\t${
+            signalMessage += `\n${
               // smaller is better
               (newValues[k] ?? Number.MAX_VALUE) < (stock[k] ?? Number.MAX_VALUE)
                 ? SignalService.PREFIX_BETTER
@@ -531,22 +531,35 @@ class StockService {
                     : SignalService.PREFIX_WORSE;
                 break;
               case "sustainalyticsESGRisk":
-                signalPrefix =
-                  // smaller is better
-                  (newValues.sustainalyticsESGRisk ?? Number.MAX_VALUE) <
-                  (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE)
-                    ? SignalService.PREFIX_BETTER
-                    : SignalService.PREFIX_WORSE;
+                if (
+                  Math.abs(
+                    (newValues.sustainalyticsESGRisk ?? Number.MAX_VALUE) -
+                      (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE),
+                  ) < 1
+                )
+                  signalPrefix = "INSIGNIFICANT";
+                else
+                  signalPrefix =
+                    // smaller is better
+                    (newValues.sustainalyticsESGRisk ?? Number.MAX_VALUE) <
+                    (stock.sustainalyticsESGRisk ?? Number.MAX_VALUE)
+                      ? SignalService.PREFIX_BETTER
+                      : SignalService.PREFIX_WORSE;
                 break;
-              default:
-                signalPrefix =
-                  // larger is better for all other parameters
-                  (newValues[k] ?? 0) > (stock[k] ?? 0) ? SignalService.PREFIX_BETTER : SignalService.PREFIX_WORSE;
+              case "lsegESGScore":
+              case "lsegEmissions":
+              case "spESGScore":
+                if (Math.abs((newValues[k] ?? 0) - (stock[k] ?? 0)) < 3) signalPrefix = "INSIGNIFICANT";
+                else
+                  signalPrefix =
+                    // larger is better for all other parameters
+                    (newValues[k] ?? 0) > (stock[k] ?? 0) ? SignalService.PREFIX_BETTER : SignalService.PREFIX_WORSE;
                 break;
             }
-            signalMessage +=
-              `\n\t${signalPrefix}${this.#parameterPrettyNames[k]} changed ` +
-              `from ${stock[k] ?? "N/A"} to ${newValues[k] ?? "N/A"}`;
+            if (signalPrefix !== "INSIGNIFICANT")
+              signalMessage +=
+                `\n${signalPrefix}${this.#parameterPrettyNames[k]} changed ` +
+                `from ${stock[k] ?? "N/A"} to ${newValues[k] ?? "N/A"}`;
             break;
           default:
             break;
@@ -578,6 +591,7 @@ class StockService {
         this.signalService.sendMessage(
           signalMessage,
           await this.userService.readMessageRecipients("stockUpdate", stock),
+          true,
         );
     } else {
       // No new data was provided

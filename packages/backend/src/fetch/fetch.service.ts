@@ -303,7 +303,7 @@ class FetchService {
                 this.signalService.sendMessage(
                   `${
                     SignalService.ERROR_PREFIX
-                  }Stock ${stock.ticker}: Error while fetching ${dataProviderName[dataProvider]} data: ${
+                  }Stock \`${stock.ticker}\`: Error while fetching ${dataProviderName[dataProvider]} data: ${
                     e instanceof Error ? e.message : String(e)
                   }${
                     e instanceof DataProviderError
@@ -311,6 +311,7 @@ class FetchService {
                       : ""
                   }`,
                   await this.userService.readMessageRecipients("fetchError"),
+                  true,
                 );
               }
               if (stocks.failed.length >= 10) {
@@ -328,10 +329,11 @@ class FetchService {
                   this.signalService.sendMessage(
                     `${
                       SignalService.ERROR_PREFIX
-                    }Aborting fetching information from ${dataProviderName[dataProvider]} after ` +
+                    }Aborting fetching information from **${dataProviderName[dataProvider]}** after ` +
                       `${stocks.successful.length} successful fetches and ${stocks.failed.length} failures. ` +
                       "Will continue next time.",
                     await this.userService.readMessageRecipients("fetchError"),
+                    true,
                   );
                   const skippedStocks = [...stocks.queued];
                   stocks.queued.length = 0;
