@@ -25,15 +25,16 @@ class SignalService extends Singleton {
    * Send a message to the given users.
    * @param message The message to send.
    * @param users The users to send the message to.
+   * @param isStyled Whether the message contains escape sequences for styling.
    */
-  sendMessage(message: string, users: User[]) {
+  sendMessage(message: string, users: User[], isStyled?: boolean) {
     // Only send the message if the Signal Client URL, sender and recipients are specified in the environment variables
     if (process.env.SIGNAL_URL && process.env.SIGNAL_SENDER && users.length) {
       const number = process.env.SIGNAL_SENDER;
       // Remove duplicate phone numbers (i.e. user subscribed to all updates and has a watchlist containing the stock)
       const recipients = [...new Set(users.map((user) => user.phone).filter((phone) => phone !== null))];
       performFetchRequest(`${process.env.SIGNAL_URL}/v2/send`, {
-        body: { message, number, recipients },
+        body: { message, number, recipients, ...(isStyled ? { text_mode: "styled" } : {}) },
         method: "POST",
       }).catch((e) => {
         /* c8 ignore start */ // The mocked Signal client does not return an error

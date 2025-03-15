@@ -59,8 +59,11 @@ class CronScheduler extends Singleton {
               this.signalService.sendMessage(
                 `${
                   SignalService.ERROR_PREFIX
-                }An error occurred during the ${dataProviderName[dataProvider]} Cron Job: ${ErrorHelper.getSummary(e)}`,
+                }An error occurred during the **${dataProviderName[dataProvider]}** Cron Job: ${ErrorHelper.getSummary(
+                  e,
+                )}`,
                 await this.userService.readMessageRecipients("fetchError"),
+                true,
               );
             }
           }

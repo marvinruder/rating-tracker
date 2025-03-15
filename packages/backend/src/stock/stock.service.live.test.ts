@@ -97,7 +97,7 @@ tests.push({
       msciESGRating: "CCC",
       msciTemperature: 2.2,
       lsegESGScore: 73,
-      lsegEmissions: 22,
+      lsegEmissions: 20,
       spESGScore: 77,
       sustainalyticsESGRisk: 31.5,
       dividendYieldPercent: null,
@@ -126,6 +126,13 @@ tests.push({
     expect(signalMessages[0].message).not.toMatch("🔴");
     expect(signalMessages[1].message).not.toMatch("🟢");
     expect(signalMessages[2].message).not.toMatch("🔴");
+
+    expect(signalMessages[1].message).not.toMatch("changed from 74 to 73");
+    expect(signalMessages[1].message).toMatch("changed from 23 to 20");
+    expect(signalMessages[1].message).not.toMatch("changed from 31.2 to 31.5");
+    expect(signalMessages[2].message).not.toMatch("changed from 73 to 74");
+    expect(signalMessages[2].message).toMatch("changed from 20 to 23");
+    expect(signalMessages[2].message).not.toMatch("changed from 31.5 to 31.2");
 
     for (const signalMessage of signalMessages) {
       expect(signalMessage.recipients).toHaveLength(1);
