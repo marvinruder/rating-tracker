@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import type { ServerOptions } from "node:https";
 
+import type { ServerFeature } from "@rating-tracker/commons";
 import react from "@vitejs/plugin-react";
 import proxy from "http2-proxy";
 import type { ViteDevServer } from "vite";
@@ -36,7 +37,10 @@ export default mergeConfig(
     plugins: [
       (() => {
         const configure = (server: ViteDevServer) => {
+          const features: ServerFeature[] = ["oidc", "email"];
           server.middlewares.use((req, res, next) => {
+            if (!req.headers.cookie?.includes(`features=${features.join("~")}`))
+              res.setHeader("Set-Cookie", `features=${features.join("~")}; SameSite=Strict; Secure`);
             if (req.url?.startsWith("/api"))
               void proxy.web(
                 req,

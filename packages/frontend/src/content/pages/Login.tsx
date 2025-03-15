@@ -5,6 +5,7 @@ import { authAPIPath, basePath, handleResponse, oidcEndpointSuffix } from "@rati
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import type { Dispatch, SetStateAction } from "react";
 import { useRef, useState } from "react";
+import { useSearchParams } from "react-router";
 
 import authClient from "../../api/auth";
 import OpenIDConnectIcon from "../../components/etc/OpenIDConnect";
@@ -26,6 +27,8 @@ export const LoginPage = (): React.JSX.Element => {
   const [nameError, setNameError] = useState<string>(""); // Error message for the name text field.
   const { setNotification, setErrorNotificationOrClearSession } = useNotificationContextUpdater();
   const { refetchUser } = useUserContextUpdater();
+
+  const [searchParams] = useSearchParams();
 
   const theme = useTheme();
 
@@ -209,6 +212,12 @@ export const LoginPage = (): React.JSX.Element => {
                   startIcon={<OpenIDConnectIcon />}
                   variant="contained"
                   fullWidth
+                  onClick={() =>
+                    // If a redirect parameter is present, store it in the session storage so we can perform the
+                    // redirect after a successful OpenID Connect authentication
+                    searchParams.has("redirect") &&
+                    window.sessionStorage.setItem("redirect", searchParams.get("redirect")!)
+                  }
                   href={`${basePath}${authAPIPath}${oidcEndpointSuffix}`}
                 >
                   OpenID Connect
