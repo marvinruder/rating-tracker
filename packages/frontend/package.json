@@ -35,7 +35,7 @@
     "@vitest/coverage-v8": "3.0.8",
     "@vitest/web-worker": "3.0.8",
     "hare-niemeyer": "3.0.0",
-    "hono": "4.7.4",
+    "hono": "4.7.5",
     "http2-proxy": "5.0.53",
     "ml-fcnnls": "3.0.0",
     "ml-matrix": "6.12.1",
