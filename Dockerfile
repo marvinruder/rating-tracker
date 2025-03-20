@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1-labs
 
-FROM --platform=$BUILDPLATFORM rust:1.85.0-alpine AS wasm
+FROM --platform=$BUILDPLATFORM rust:1.85.1-alpine AS wasm
 
 WORKDIR /workdir
 
