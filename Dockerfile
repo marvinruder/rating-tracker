@@ -28,10 +28,7 @@ RUN \
   --mount=type=bind,source=wasm/Cargo.toml,target=Cargo.toml \
   --mount=type=bind,source=wasm/Cargo.lock,target=Cargo.lock \
   --mount=type=bind,source=wasm/src,target=src \
-  wasm-pack build -s rating-tracker --release && \
-  # Fix `package.json`
-  sed -E -i.bak 's/"module": "([A-Za-z0-9\-\.]+)",/"main": "\1",\n  "module": "\1",/g ; s/^}$/}\n/' pkg/package.json && \
-  rm pkg/package.json.bak
+  wasm-pack build -s rating-tracker --release
 
 
 FROM --platform=$BUILDPLATFORM node:22.14.0-alpine AS yarn
