@@ -17,7 +17,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  Grid2 as Grid,
+  Grid,
   InputAdornment,
   List,
   ListItem,

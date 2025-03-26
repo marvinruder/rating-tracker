@@ -11,7 +11,7 @@ import {
   CardActions,
   CardContent,
   Dialog,
-  Grid2 as Grid,
+  Grid,
   IconButton,
   Link,
   Skeleton,

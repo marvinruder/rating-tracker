@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  DialogActions,
-  Divider,
-  Grid2 as Grid,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, DialogActions, Divider, Grid, InputAdornment, TextField, Typography } from "@mui/material";
 import type { PortfolioSummary, WatchlistSummary } from "@rating-tracker/commons";
 import { FAVORITES_NAME, currencyMinorUnits, handleResponse } from "@rating-tracker/commons";
 import { useRef, useState } from "react";

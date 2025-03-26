@@ -1,5 +1,5 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { DialogTitle, Typography, DialogContent, Grid2 as Grid, TextField, DialogActions, Button } from "@mui/material";
+import { DialogTitle, Typography, DialogContent, Grid, TextField, DialogActions, Button } from "@mui/material";
 import { handleResponse } from "@rating-tracker/commons";
 import { useRef, useState } from "react";
 

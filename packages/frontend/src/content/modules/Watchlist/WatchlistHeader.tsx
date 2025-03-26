@@ -3,7 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import { Box, Grid2 as Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
+import { Box, Grid, Typography, Dialog, IconButton, Skeleton, Tooltip, Divider } from "@mui/material";
 import type { Watchlist } from "@rating-tracker/commons";
 import { FAVORITES_NAME, handleResponse, pluralize, watchlistsAPIPath } from "@rating-tracker/commons";
 import { useState } from "react";
