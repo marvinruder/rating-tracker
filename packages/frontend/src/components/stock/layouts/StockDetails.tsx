@@ -2,7 +2,7 @@ import NaturePeopleIcon from "@mui/icons-material/NaturePeople";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import { Box, Grid2 as Grid, Typography, useTheme, Tooltip, Chip, useMediaQuery, Skeleton } from "@mui/material";
+import { Box, Grid, Typography, useTheme, Tooltip, Chip, useMediaQuery, Skeleton } from "@mui/material";
 import type { Stock } from "@rating-tracker/commons";
 import {
   countryNameWithFlag,

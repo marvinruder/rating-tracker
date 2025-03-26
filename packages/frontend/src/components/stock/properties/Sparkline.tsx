@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Grid2 as Grid, useTheme } from "@mui/material";
+import { Button, ButtonGroup, Grid, useTheme } from "@mui/material";
 import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
 import type { Stock } from "@rating-tracker/commons";
 import { useState } from "react";

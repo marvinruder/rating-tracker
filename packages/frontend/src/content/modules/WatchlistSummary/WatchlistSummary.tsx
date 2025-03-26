@@ -1,4 +1,4 @@
-import { Box, Container, Grid2 as Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import type { WatchlistSummary } from "@rating-tracker/commons";
 import { handleResponse } from "@rating-tracker/commons";
 import { useEffect, useState } from "react";

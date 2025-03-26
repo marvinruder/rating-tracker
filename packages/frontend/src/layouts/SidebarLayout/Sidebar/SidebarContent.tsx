@@ -16,7 +16,7 @@ import {
   Card,
   Typography,
   Tooltip,
-  Grid2 as Grid,
+  Grid,
   Skeleton,
 } from "@mui/material";
 import {

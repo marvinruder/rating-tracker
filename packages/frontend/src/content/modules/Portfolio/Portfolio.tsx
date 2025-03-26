@@ -8,7 +8,7 @@ import {
   Card,
   Chip,
   Container,
-  Grid2 as Grid,
+  Grid,
   IconButton,
   Paper,
   Skeleton,

@@ -91,6 +91,7 @@ export default mergeConfig(
       }))(),
     ],
     preview: { port: 443, strictPort: true },
+    resolve: { conditions: ["mui-modern", "module", "browser", "development|production"] },
     server: { allowedHosts, host: true, https, port: 443, strictPort: true },
     worker: { format: "es", plugins: () => [wasm()] },
   }),

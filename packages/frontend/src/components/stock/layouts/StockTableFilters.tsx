@@ -9,7 +9,7 @@ import {
   Box,
   Typography,
   Button,
-  Grid2 as Grid,
+  Grid,
   Tooltip,
   DialogTitle,
   IconButton,

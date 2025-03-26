@@ -1,6 +1,6 @@
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import { Box, Button, Card, CardContent, Divider, Grid2 as Grid, TextField, Typography, useTheme } from "@mui/material";
+import { Box, Button, Card, CardContent, Divider, Grid, TextField, Typography, useTheme } from "@mui/material";
 import { authAPIPath, basePath, handleResponse, oidcEndpointSuffix } from "@rating-tracker/commons";
 import * as SimpleWebAuthnBrowser from "@simplewebauthn/browser";
 import type { Dispatch, SetStateAction } from "react";

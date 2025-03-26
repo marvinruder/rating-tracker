@@ -12,7 +12,7 @@ import {
   ListItemIcon,
   Skeleton,
   Dialog,
-  Grid2 as Grid,
+  Grid,
   TextField,
   InputAdornment,
 } from "@mui/material";

@@ -10,7 +10,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  Grid2 as Grid,
+  Grid,
   Chip,
   Avatar,
   Box,

@@ -13,7 +13,7 @@ import {
   Divider,
   FormControlLabel,
   FormGroup,
-  Grid2 as Grid,
+  Grid,
   IconButton,
   TextField,
   Tooltip,

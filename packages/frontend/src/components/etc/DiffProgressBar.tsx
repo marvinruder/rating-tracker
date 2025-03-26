@@ -1,6 +1,6 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { alpha, Grid2 as Grid, LinearProgress, Typography } from "@mui/material";
+import { alpha, Grid, LinearProgress, Typography } from "@mui/material";
 
 import { formatPercentage } from "../../utils/formatters";
 

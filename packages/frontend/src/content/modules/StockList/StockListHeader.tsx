@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import type { SlideProps } from "@mui/material";
-import { Box, Typography, Grid2 as Grid, Tooltip, Dialog, IconButton, useMediaQuery, Slide } from "@mui/material";
+import { Box, Typography, Grid, Tooltip, Dialog, IconButton, useMediaQuery, Slide } from "@mui/material";
 import { WRITE_STOCKS_ACCESS } from "@rating-tracker/commons";
 import type { FC } from "react";
 import { useState } from "react";
