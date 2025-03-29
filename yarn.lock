@@ -1310,13 +1310,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/debug@npm:6.0.0":
-  version: 6.0.0
-  resolution: "@prisma/debug@npm:6.0.0"
-  checksum: 10c0/2adb1fe906ee12b0f39787ca9db39d6026e9611d9350a5b667a45bf3b6e5fa08d6f5d9a937286287eecb1a824292d156c093d3ae26c7db1a64fc3be3d085eadb
-  languageName: node
-  linkType: hard
-
 "@prisma/debug@npm:6.5.0":
   version: 6.5.0
   resolution: "@prisma/debug@npm:6.5.0"
@@ -1354,12 +1347,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/generator-helper@npm:6.0.0":
-  version: 6.0.0
-  resolution: "@prisma/generator-helper@npm:6.0.0"
+"@prisma/generator-helper@npm:6.5.0":
+  version: 6.5.0
+  resolution: "@prisma/generator-helper@npm:6.5.0"
   dependencies:
-    "@prisma/debug": "npm:6.0.0"
-  checksum: 10c0/7cf9b5d0e41f64deaf8893d8b9397ecfea17f09f9622cba2b27d463a007e9a5e691b92519ecc0f760670cdaf59fdd46affe6677d39187149954892a9f926bfdc
+    "@prisma/debug": "npm:6.5.0"
+  checksum: 10c0/2a687b064a6b7dd05711ffa447fb114159d9be8abb2da50a1f1f165a08aab95bf913e923f38850b9d7f20d960badb474d756387f7c8680910d1304cc8a670d4f
   languageName: node
   linkType: hard
 
@@ -1410,7 +1403,7 @@ __metadata:
     pino-pretty: "npm:13.0.0"
     prettier: "npm:3.5.3"
     prisma: "npm:6.5.0"
-    prisma-json-types-generator: "npm:3.2.2"
+    prisma-json-types-generator: "npm:3.2.3"
     smtp-server: "npm:3.13.6"
     typescript: "npm:5.8.2"
     undici-types: "npm:7.5.0"
@@ -6318,18 +6311,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma-json-types-generator@npm:3.2.2":
-  version: 3.2.2
-  resolution: "prisma-json-types-generator@npm:3.2.2"
+"prisma-json-types-generator@npm:3.2.3":
+  version: 3.2.3
+  resolution: "prisma-json-types-generator@npm:3.2.3"
   dependencies:
-    "@prisma/generator-helper": "npm:6.0.0"
+    "@prisma/generator-helper": "npm:6.5.0"
     tslib: "npm:2.8.1"
   peerDependencies:
     prisma: ^5 || ^6
     typescript: ^5.6.2
   bin:
     prisma-json-types-generator: index.js
-  checksum: 10c0/d232bb4397288ed2ac8a55c8194cb383b9b64a4e937676267f7cb2514533dc765ab256ba4b08aac3cb79d7bd2d1b3fc9bd108528b6e3f7e86545b7d328e0d8ca
+  checksum: 10c0/576407806645343a10aaa826e48f9c634396562316bbd7ef4c78b4d625cd0177062a18a566f4f5e7959b95f18adef59d3d4fab0b0acf3cebff1fed40860c5e9b
   languageName: node
   linkType: hard
 
