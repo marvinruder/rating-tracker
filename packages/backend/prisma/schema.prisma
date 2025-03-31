@@ -100,7 +100,7 @@ model WebAuthnCredential {
 model WebAuthnChallenge {
   challenge Bytes    @id @default(dbgenerated("gen_random_bytes(32)"))
   email     String?
-  expiresAt DateTime @default(dbgenerated("date_add(now(), '60 seconds')")) @map("expires_at") @db.Timestamptz
+  expiresAt DateTime @default(dbgenerated("date_add(now(), '00:01:00'::interval)")) @map("expires_at") @db.Timestamptz
 
   @@map("webauthn_challenges")
 }
@@ -610,7 +610,6 @@ enum Currency {
   AFN
   ALL
   AMD
-  ANG
   AOA
   ARS
   AUD
@@ -641,7 +640,6 @@ enum Currency {
   COP
   COU
   CRC
-  CUC
   CUP
   CVE
   CZK
@@ -765,13 +763,13 @@ enum Currency {
   WST
   XAF
   XCD
+  XCG
   XOF
   XPF
   YER
   ZAR
   ZMW
   ZWG
-  ZWL
 
   @@map("currency")
 }

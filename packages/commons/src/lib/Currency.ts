@@ -9,7 +9,6 @@ export const currencyArray = [
   "AFN",
   "ALL",
   "AMD",
-  "ANG", // Will be replaced by XCG – Carribean Guilder effective from 31 March 2025
   "AOA",
   "ARS",
   "AUD",
@@ -40,7 +39,6 @@ export const currencyArray = [
   "COP",
   "COU",
   "CRC",
-  "CUC",
   "CUP",
   "CVE",
   "CZK",
@@ -164,13 +162,13 @@ export const currencyArray = [
   "WST",
   "XAF",
   "XCD",
+  "XCG",
   "XOF",
   "XPF",
   "YER",
   "ZAR",
   "ZMW",
   "ZWG",
-  "ZWL", // Will expire effective 1 September 2024
 ] as const;
 
 /**
@@ -195,7 +193,6 @@ export const currencyName: Record<Currency, string> = {
   AFN: "Afghani",
   ALL: "Lek",
   AMD: "Armenian Dram",
-  ANG: "Netherlands Antillean Guilder", // Will be replaced by XCG – Carribean Guilder effective from 31 March 2025
   AOA: "Kwanza",
   ARS: "Argentine Peso",
   AUD: "Australian Dollar",
@@ -226,7 +223,6 @@ export const currencyName: Record<Currency, string> = {
   COP: "Colombian Peso",
   COU: "Unidad de Valor Real",
   CRC: "Costa Rican Colon",
-  CUC: "Peso Convertible",
   CUP: "Cuban Peso",
   CVE: "Cabo Verde Escudo",
   CZK: "Czech Koruna",
@@ -350,13 +346,13 @@ export const currencyName: Record<Currency, string> = {
   WST: "Tala",
   XAF: "CFA Franc BEAC",
   XCD: "East Caribbean Dollar",
+  XCG: "Carribean Guilder",
   XOF: "CFA Franc BCEAO",
   XPF: "CFP Franc",
   YER: "Yemeni Rial",
   ZAR: "Rand",
   ZMW: "Zambian Kwacha",
   ZWG: "Zimbabwe Gold",
-  ZWL: "Zimbabwe Dollar", // Will expire effective 1 September 2024
 };
 
 /**
@@ -367,7 +363,6 @@ export const countryOfCurrency: Record<Currency, Country | "EU"> = {
   AFN: "AF",
   ALL: "AL",
   AMD: "AM",
-  ANG: "CW", // Will be replaced by XCG – Carribean Guilder effective from 31 March 2025
   AOA: "AO",
   ARS: "AR",
   AUD: "AU",
@@ -398,7 +393,6 @@ export const countryOfCurrency: Record<Currency, Country | "EU"> = {
   COP: "CO",
   COU: "CO",
   CRC: "CR",
-  CUC: "CU",
   CUP: "CU",
   CVE: "CV",
   CZK: "CZ",
@@ -522,13 +516,13 @@ export const countryOfCurrency: Record<Currency, Country | "EU"> = {
   WST: "WS",
   XAF: "CM",
   XCD: "LC",
+  XCG: "CW",
   XOF: "CI",
   XPF: "NC",
   YER: "YE",
   ZAR: "ZA",
   ZMW: "ZM",
   ZWG: "ZW",
-  ZWL: "ZW", // Will expire effective 1 September 2024
 };
 
 /**
@@ -539,7 +533,6 @@ export const currencyMinorUnits: Record<Currency, 0 | 2 | 3 | 4> = {
   AFN: 2,
   ALL: 2,
   AMD: 2,
-  ANG: 2,
   AOA: 2,
   ARS: 2,
   AUD: 2,
@@ -570,7 +563,6 @@ export const currencyMinorUnits: Record<Currency, 0 | 2 | 3 | 4> = {
   COP: 2,
   COU: 2,
   CRC: 2,
-  CUC: 2,
   CUP: 2,
   CVE: 2,
   CZK: 2,
@@ -694,13 +686,13 @@ export const currencyMinorUnits: Record<Currency, 0 | 2 | 3 | 4> = {
   WST: 2,
   XAF: 0,
   XCD: 2,
+  XCG: 2,
   XOF: 0,
   XPF: 0,
   YER: 2,
   ZAR: 2,
   ZMW: 2,
   ZWG: 2,
-  ZWL: 2, // Will expire effective 1 September 2024
 };
 
 /**
