@@ -92,7 +92,7 @@
     "prisma-json-types-generator": "3.2.3",
     "smtp-server": "3.13.6",
     "typescript": "5.8.2",
-    "vite": "6.2.4",
+    "vite": "6.2.5",
     "vitest": "3.1.1",
     "xpath-ts2": "1.4.2",
     "zod": "3.24.2",
