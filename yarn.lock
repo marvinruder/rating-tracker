@@ -1383,7 +1383,7 @@ __metadata:
     "@rating-tracker/commons": "workspace:*"
     "@simplewebauthn/server": "npm:13.1.1"
     "@types/jmespath": "npm:0.15.2"
-    "@types/node": "npm:22.14.0"
+    "@types/node": "npm:22.14.1"
     "@types/node-cron": "npm:3.0.11"
     "@types/smtp-server": "npm:3.5.10"
     "@typescript-eslint/eslint-plugin": "npm:8.29.1"
@@ -1463,8 +1463,8 @@ __metadata:
     "@rating-tracker/wasm": "workspace:*"
     "@react-spring/web": "npm:9.7.5"
     "@simplewebauthn/browser": "npm:13.1.0"
-    "@types/node": "npm:22.14.0"
-    "@types/react": "npm:19.1.1"
+    "@types/node": "npm:22.14.1"
+    "@types/react": "npm:19.1.2"
     "@types/react-dom": "npm:19.1.2"
     "@typescript-eslint/eslint-plugin": "npm:8.29.1"
     "@typescript-eslint/parser": "npm:8.29.1"
@@ -1976,12 +1976,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:22.14.0":
-  version: 22.14.0
-  resolution: "@types/node@npm:22.14.0"
+"@types/node@npm:*, @types/node@npm:22.14.1":
+  version: 22.14.1
+  resolution: "@types/node@npm:22.14.1"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/9d79f3fa1af9c2c869514f419c4a4905b34c10e12915582fd1784868ac4e74c6d306cf5eb47ef889b6750ab85a31be96618227b86739c4a3e0b1c15063f384c6
+  checksum: 10c0/d49c4d00403b1c2348cf0701b505fd636d80aabe18102105998dc62fdd36dcaf911e73c7a868c48c21c1022b825c67b475b65b1222d84b704d8244d152bb7f86
   languageName: node
   linkType: hard
 
@@ -2035,12 +2035,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:19.1.1":
-  version: 19.1.1
-  resolution: "@types/react@npm:19.1.1"
+"@types/react@npm:19.1.2":
+  version: 19.1.2
+  resolution: "@types/react@npm:19.1.2"
   dependencies:
     csstype: "npm:^3.0.2"
-  checksum: 10c0/d22417857460ade4250806135a3d1e2558737a7ae76f120f88afbc6419ab04312977a5208a70d4f85059b9493c0f1f16c9ba1483aa8ea1dad581da666c95773e
+  checksum: 10c0/76ffe71395c713d4adc3c759465012d3c956db00af35ab7c6d0d91bd07b274b7ce69caa0478c0760311587bd1e38c78ffc9688ebc629f2b266682a19d8750947
   languageName: node
   linkType: hard
 
