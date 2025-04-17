@@ -283,14 +283,14 @@ const PortfolioBuilderModule = (): React.JSX.Element => {
       .forEach((stock) => {
         if (!newScatterData.find((series) => series.id === stock.amount))
           newScatterData.push({
-            highlightScope: { highlighted: "series" },
+            highlightScope: { highlight: "series" },
             type: "scatter",
             id: stock.amount,
             label: currency ? `${currency} ${stock.amount.toFixed(currencyMinorUnits[currency])}` : "",
             data: [],
             color: theme.palette.primary.main,
             markerSize: 5,
-            valueFormatter: (value) => ("count" in value ? `# of stocks: ${String(value.count)}` : ""),
+            valueFormatter: (value) => ("count" in value! ? `# of stocks: ${String(value.count)}` : ""),
           });
         const index = newScatterData.findIndex((series) => series.id === stock.amount);
         newScatterData[index].data.push({
@@ -973,7 +973,7 @@ const PortfolioBuilderModule = (): React.JSX.Element => {
               )}
             </Alert>
             <Box>
-              <Typography variant="h5" sx={{ mb: -3 }}>
+              <Typography variant="h5" sx={{ pb: 0.5 }}>
                 Amount distribution
               </Typography>
               <ScatterChart
@@ -983,13 +983,19 @@ const PortfolioBuilderModule = (): React.JSX.Element => {
                     min: Math.min(...weightedStocks.map((stock) => stock.amount)) - +minAmountInput,
                     max: Math.max(...weightedStocks.map((stock) => stock.amount)) + +minAmountInput,
                     tickMinStep: +tickInput,
-                    valueFormatter: (value) =>
-                      currency ? `${currency} ${value.toFixed(currencyMinorUnits[currency])}` : "",
+                    valueFormatter: (value: unknown) =>
+                      currency &&
+                      typeof value === "number" &&
+                      value >= Math.min(...weightedStocks.map((stock) => stock.amount)) &&
+                      value <= Math.max(...weightedStocks.map((stock) => stock.amount))
+                        ? `${currency} ${value.toFixed(currencyMinorUnits[currency])}`
+                        : "",
                   },
                 ]}
                 yAxis={[{ min: 0 }]}
-                slotProps={{ legend: { hidden: true } }}
-                height={200}
+                slotProps={{ legend: { sx: { display: "none" } } }}
+                height={160}
+                sx={{ ml: -3, mr: 1 }}
               />
             </Box>
             {regionConstraintOpen && (
