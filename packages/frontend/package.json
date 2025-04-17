@@ -24,7 +24,7 @@
     "@mui/icons-material": "7.0.2",
     "@mui/material": "7.0.2",
     "@mui/system": "7.0.2",
-    "@mui/x-charts": "7.28.0",
+    "@mui/x-charts": "7.29.0",
     "@nivo/core": "0.88.0",
     "@nivo/sunburst": "0.88.0",
     "@rating-tracker/commons": "workspace:*",
