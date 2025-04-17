@@ -76,7 +76,11 @@ class EmailService extends Singleton {
     const message = this.getMessage(user, template);
 
     try {
-      await client.sendAsync(message);
+      await client.sendAsync({
+        ...message,
+        "message-id": `<${new Date().getTime()}.${crypto.randomUUID().slice(0, 8)}@${process.env.FQDN}>`,
+        "MIME-Version": "1.0",
+      });
       Logger.info({ component: "email", subject: message.subject, recipient: message.to }, "Email sent to recipient");
     } catch (e) {
       if (e instanceof SMTPError && e.code === SMTPErrorStates.TIMEDOUT)
