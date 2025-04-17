@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "@types/statuses": "2.0.5",
-    "@typescript-eslint/eslint-plugin": "8.29.1",
-    "@typescript-eslint/parser": "8.29.1",
+    "@typescript-eslint/eslint-plugin": "8.30.1",
+    "@typescript-eslint/parser": "8.30.1",
     "@vitest/ui": "3.1.1",
     "eslint": "9.24.0",
     "eslint-config-google": "0.14.0",
