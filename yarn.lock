@@ -973,7 +973,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta, @mui/utils@npm:^7.0.2":
+"@mui/utils@npm:^5.16.6 || ^6.0.0 || ^7.0.0, @mui/utils@npm:^7.0.2":
   version: 7.0.2
   resolution: "@mui/utils@npm:7.0.2"
   dependencies:
@@ -1016,14 +1016,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:7.28.0":
-  version: 7.28.0
-  resolution: "@mui/x-charts@npm:7.28.0"
+"@mui/x-charts@npm:7.29.0":
+  version: 7.29.0
+  resolution: "@mui/x-charts@npm:7.29.0"
   dependencies:
     "@babel/runtime": "npm:^7.25.7"
-    "@mui/utils": "npm:^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta"
+    "@mui/utils": "npm:^5.16.6 || ^6.0.0 || ^7.0.0"
     "@mui/x-charts-vendor": "npm:7.20.0"
-    "@mui/x-internals": "npm:7.28.0"
+    "@mui/x-internals": "npm:7.29.0"
     "@react-spring/rafz": "npm:^9.7.5"
     "@react-spring/web": "npm:^9.7.5"
     clsx: "npm:^2.1.1"
@@ -1031,8 +1031,8 @@ __metadata:
   peerDependencies:
     "@emotion/react": ^11.9.0
     "@emotion/styled": ^11.8.1
-    "@mui/material": ^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
-    "@mui/system": ^5.15.14 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
+    "@mui/material": ^5.15.14 || ^6.0.0 || ^7.0.0
+    "@mui/system": ^5.15.14 || ^6.0.0 || ^7.0.0
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
@@ -1040,19 +1040,19 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/09c1832c72899bc3656dca33b95497251e540975f20e0a0b7fd9de26f89e9d1bb52e38d184cc3ee539ecada502c0bb2caf917989e4874bfa03f49769283fc884
+  checksum: 10c0/5a2b2ac59a84fded4265948fa971cacb4eec1c10ba07a740db8883e0d37fcfcf51f6daacfe245359f8c7822d5acc1c37efc447136d79cec5936fe4caec0c7c19
   languageName: node
   linkType: hard
 
-"@mui/x-internals@npm:7.28.0":
-  version: 7.28.0
-  resolution: "@mui/x-internals@npm:7.28.0"
+"@mui/x-internals@npm:7.29.0":
+  version: 7.29.0
+  resolution: "@mui/x-internals@npm:7.29.0"
   dependencies:
     "@babel/runtime": "npm:^7.25.7"
-    "@mui/utils": "npm:^5.16.6 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta"
+    "@mui/utils": "npm:^5.16.6 || ^6.0.0 || ^7.0.0"
   peerDependencies:
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/50950953fa5566890c424a8a69e935b389d810cde93cb4bf0c223331bdcae593089fe4051261033626a25df1d7fe5f61aa9e9403a76dbe75933c2f53c2b0a279
+  checksum: 10c0/adb4358ef0e29f6f57622b50ff479e9d225078761b4c82546343e2976ccb55eed687e122c37874c76a170f4ec2ea6e82f89bf8b9c0ef3b5cb35b32d026761fba
   languageName: node
   linkType: hard
 
@@ -1455,7 +1455,7 @@ __metadata:
     "@mui/icons-material": "npm:7.0.2"
     "@mui/material": "npm:7.0.2"
     "@mui/system": "npm:7.0.2"
-    "@mui/x-charts": "npm:7.28.0"
+    "@mui/x-charts": "npm:7.29.0"
     "@nivo/core": "npm:0.88.0"
     "@nivo/sunburst": "npm:0.88.0"
     "@rating-tracker/backend": "workspace:*"
