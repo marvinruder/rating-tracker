@@ -76,8 +76,11 @@ export const featureCookieHandler =
   (featureString: string): MiddlewareHandler =>
   async (c, next) => {
     await next();
-    if (c.res.headers.get("Content-Type")?.startsWith("text/html") && getCookie(c, "features") !== featureString)
-      setCookie(c, "features", featureString, { path: "/", httpOnly: false, secure: true, sameSite: "strict" });
+    if (c.res.headers.get("Content-Type")?.startsWith("text/html")) {
+      c.res.headers.append("Vary", "Cookie"); // We declare that the response depends on the request’s Cookie header.
+      if (getCookie(c, "features") !== featureString)
+        setCookie(c, "features", featureString, { path: "/", httpOnly: false, secure: true, sameSite: "strict" });
+    }
   };
 
 /**

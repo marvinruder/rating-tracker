@@ -23,7 +23,7 @@ import {
   watchlistsAPIPath,
 } from "@rating-tracker/commons";
 import { getRuntimeKey } from "hono/adapter";
-import { etag } from "hono/etag";
+import { etag, RETAINED_304_HEADERS } from "hono/etag";
 import { secureHeaders } from "hono/secure-headers";
 
 import packageInfo from "../package.json" with { type: "json" };
@@ -124,8 +124,10 @@ export const app = new OpenAPIHono();
 // Log all API requests
 app.use(`${basePath}/*`, Logger.logRequest);
 
-// Add ETag support. Use weak ETags because Reverse Proxys may change the ETag when compressing the response
-app.use(etag({ weak: true }));
+// Add ETag support.
+// Use weak ETags because Reverse Proxys may change the ETag when compressing the response.
+// Retain the Set-Cookie header to set the feature cookie on 304 Not Modified responses.
+app.use(etag({ weak: true, retainedHeaders: ["set-cookie", ...RETAINED_304_HEADERS] }));
 
 // Do not cache responses by default. This can be overridden individually by endpoints or for static assets.
 app.use(async (c, next) => {
