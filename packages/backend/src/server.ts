@@ -136,7 +136,7 @@ app.use(async (c, next) => {
 });
 
 // Add security-related headers
-app.use("/api-docs", async (c, next) => {
+app.use("/api-docs/", async (c, next) => {
   await next();
   // Override CSP, COEP, CORP for the Swagger UI
   const csp = c.res.headers.get("Content-Security-Policy");
@@ -195,7 +195,8 @@ app.use(...staticFileHandler);
 app.use(sessionValidator(sessionService));
 
 // Host the OpenAPI UI
-app.get("/api-docs", swaggerUI({ url: "/api-spec/v3.1" }));
+app.get("/api-docs", (c) => c.redirect("/api-docs/", 301));
+app.get("/api-docs/", swaggerUI({ url: "/api-spec/v3.1" }));
 
 // Host the OpenAPI JSON configuration
 app.doc31("/api-spec/v3.1", {
