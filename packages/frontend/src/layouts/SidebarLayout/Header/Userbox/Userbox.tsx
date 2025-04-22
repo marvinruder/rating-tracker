@@ -69,9 +69,7 @@ export const HeaderUserbox = (): React.JSX.Element => {
             sx={{
               px: 1,
               backgroundColor: "transparent",
-              "&:hover:not(:disabled)": {
-                backgroundColor: alpha(theme.palette.secondary.main, 0.1),
-              },
+              "&:hover:not(:disabled)": { backgroundColor: alpha(theme.palette.secondary.main, 0.1) },
               ".MuiTouchRipple-child": { backgroundColor: theme.palette.trueWhite.alpha30 },
             }}
             onClick={() => setOpen(true)}
@@ -104,8 +102,8 @@ export const HeaderUserbox = (): React.JSX.Element => {
         open={open}
         onClose={() => setOpen(false)}
         fullScreen={fullScreenDialogs}
-        TransitionComponent={fullScreenDialogs ? Slide : undefined}
-        TransitionProps={{ direction: "up" } as SlideProps}
+        slots={{ transition: fullScreenDialogs ? Slide : undefined }}
+        slotProps={{ transition: { direction: "up" } as SlideProps }}
       >
         <DialogTitle>
           <Typography variant="h3">Profile Settings</Typography>

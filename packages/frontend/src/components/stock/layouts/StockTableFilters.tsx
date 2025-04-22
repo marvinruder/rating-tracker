@@ -740,13 +740,13 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                 >
                   <ListItemIcon sx={{ minWidth: 32 }}>
                     <Checkbox
-                      inputProps={{ "aria-labelledby": `stock-list-column-${index}-label` }}
+                      slotProps={{ input: { "aria-labelledby": `stock-list-column-${index}-label` } }}
                       checked={props.columnFilter.includes(column)}
                       sx={{ p: 0 }}
                       disableRipple
                     />
                   </ListItemIcon>
-                  <ListItemText primary={column} primaryTypographyProps={{ id: `stock-list-column-${index}-label` }} />
+                  <ListItemText primary={column} slotProps={{ primary: { id: `stock-list-column-${index}-label` } }} />
                 </ListItemButton>
               </ListItem>
             ))}

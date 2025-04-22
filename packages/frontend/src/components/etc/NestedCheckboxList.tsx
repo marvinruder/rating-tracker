@@ -286,7 +286,7 @@ export const NestedCheckboxList = <
           >
             <ListItemIcon sx={{ minWidth: 0 }}>
               <Checkbox
-                inputProps={{ "aria-labelledby": `${firstLevelElement}-1-label` }}
+                slotProps={{ input: { "aria-labelledby": `${firstLevelElement}-1-label` } }}
                 checked={getFirstLevelCheckboxStatus(firstLevelElement) === "checked"}
                 indeterminate={getFirstLevelCheckboxStatus(firstLevelElement) === "indeterminate"}
                 sx={{ p: 0, pl: 1, pr: 1 }}
@@ -343,7 +343,7 @@ export const NestedCheckboxList = <
                     >
                       <ListItemIcon sx={{ minWidth: 0 }}>
                         <Checkbox
-                          inputProps={{ "aria-labelledby": `${secondLevelElement}-2-label` }}
+                          slotProps={{ input: { "aria-labelledby": `${secondLevelElement}-2-label` } }}
                           checked={getSecondLevelCheckboxStatus(secondLevelElement) === "checked"}
                           indeterminate={getSecondLevelCheckboxStatus(secondLevelElement) === "indeterminate"}
                           sx={{ p: 0, pl: 1, pr: 1 }}
@@ -402,7 +402,7 @@ export const NestedCheckboxList = <
                               >
                                 <ListItemIcon sx={{ minWidth: 0 }}>
                                   <Checkbox
-                                    inputProps={{ "aria-labelledby": `${thirdLevelElement}-3-label` }}
+                                    slotProps={{ input: { "aria-labelledby": `${thirdLevelElement}-3-label` } }}
                                     checked={getThirdLevelCheckboxStatus(thirdLevelElement) === "checked"}
                                     indeterminate={getThirdLevelCheckboxStatus(thirdLevelElement) === "indeterminate"}
                                     sx={{ p: 0, pl: 1, pr: 1 }}
@@ -471,7 +471,9 @@ export const NestedCheckboxList = <
                                         >
                                           <ListItemIcon sx={{ minWidth: 0 }}>
                                             <Checkbox
-                                              inputProps={{ "aria-labelledby": `${fourthLevelElement}-4-label` }}
+                                              slotProps={{
+                                                input: { "aria-labelledby": `${fourthLevelElement}-4-label` },
+                                              }}
                                               checked={getFourthLevelCheckboxStatus(fourthLevelElement) === "checked"}
                                               sx={{ p: 0, pl: 1, pr: 1 }}
                                               disableRipple

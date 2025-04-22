@@ -74,11 +74,11 @@ export const HeaderSearchButton = (): React.JSX.Element => {
       </Tooltip>
       <PinnedDialog
         open={open}
-        TransitionComponent={Transition}
+        slots={{ transition: Transition }}
         maxWidth="xs"
         fullWidth
         onClose={() => setOpen(false)}
-        PaperProps={{ elevation: 16 }}
+        slotProps={{ paper: { elevation: 16 } }}
       >
         <SelectStock title="Search for a stock by name, ISIN or ticker symbol" onClose={() => setOpen(false)} />
       </PinnedDialog>

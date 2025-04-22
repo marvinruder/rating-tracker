@@ -107,7 +107,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): React.JSX.
                     <ListItemText
                       inset={watchlistSummary?.name !== FAVORITES_NAME}
                       primary={watchlistSummary.name}
-                      primaryTypographyProps={{ fontWeight: "bold" }}
+                      slotProps={{ primary: { fontWeight: "bold" } }}
                       secondary={
                         watchlistsAlreadyContainingStock.includes(watchlistSummary.id)
                           ? `This watchlist already contains “${props.stock.name}”.`
@@ -134,7 +134,7 @@ export const AddStockToWatchlist = (props: AddStockToWatchlistProps): React.JSX.
               <ListItemIcon>
                 <AddIcon color="primary" />
               </ListItemIcon>
-              <ListItemText primary="Create a new watchlist…" primaryTypographyProps={{ fontWeight: "bold" }} />
+              <ListItemText primary="Create a new watchlist…" slotProps={{ primary: { fontWeight: "bold" } }} />
             </ListItemButton>
           </ListItem>
         </List>

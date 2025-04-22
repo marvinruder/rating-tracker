@@ -55,9 +55,18 @@ export const Sparkline = (props: SparklineProps): React.JSX.Element => {
           ))}
         </ButtonGroup>
       </Grid>
-      <Grid sx={{ width: "calc(100% - 30px)" }}>
+      <Grid>
         <YahooNavigator stock={props.stock}>
-          <SparkLineChart data={data} color={color} height={props.height} yAxis={{ min, max }} />
+          <SparkLineChart
+            data={data}
+            color={color}
+            width={props.width - 30}
+            height={props.height}
+            yAxis={{ min, max }}
+            disableAxisListener
+            disableVoronoi
+            skipAnimation
+          />
         </YahooNavigator>
       </Grid>
     </Grid>

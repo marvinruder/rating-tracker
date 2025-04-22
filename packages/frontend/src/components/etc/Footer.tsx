@@ -25,7 +25,7 @@ export const Footer = (props: FooterProps) => (
           <GitHubIcon />
         </IconButton>
         <Typography sx={{ pt: { xs: 2, md: 0 }, order: -1 }} variant="subtitle1">
-          &copy; 2022–2024 Marvin A. Ruder
+          &copy; 2022–2025 Marvin A. Ruder
         </Typography>
       </Box>
     </Container>

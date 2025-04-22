@@ -33,7 +33,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 import accountClient from "../../../../api/account";
-import OpenIDConnectIcon from "../../../../components/etc/OpenIDConnect";
+import OpenIDConnectIcon from "../../../../components/etc/OpenIDConnectIcon";
 import { useNotificationContextUpdater } from "../../../../contexts/NotificationContext";
 import { useUserContextState, useUserContextUpdater } from "../../../../contexts/UserContext";
 import ConvertAvatarWorker from "../../../../utils/imageManipulation?worker";

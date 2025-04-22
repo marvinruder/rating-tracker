@@ -36,27 +36,35 @@ export const AnalystRatingBar = ({ stock, ...props }: AnalystRatingBarProps): Re
     >
       <Tooltip
         title={stock.analystConsensus}
-        PopperProps={{
-          sx: {
-            ...(props.width ? { width: props.width } : {}),
-            position: "static !important",
-            transform: "none !important",
-            ".MuiTooltip-tooltip": {
-              mt: "-4px !important",
-              width: "fit-content",
-              mx: "auto",
-              transition: "none !important",
+        slotProps={{
+          arrow: { sx: { top: "-0.71em", left: "calc(50% - 0.5em)", "&::before": { transformOrigin: "0 100%" } } },
+          popper: {
+            anchorEl: null,
+            sx: {
+              ...(props.width ? { width: props.width } : {}),
+              position: "static !important",
+              transform: "none !important",
+              ".MuiTooltip-tooltip": {
+                mt: "-4px !important",
+                width: "fit-content",
+                mx: "auto",
+                transition: "none !important",
+              },
             },
+            disablePortal: true,
+            modifiers: [
+              { name: "flip", enabled: false },
+              { name: "preventOverflow", enabled: false },
+            ],
           },
-          disablePortal: true,
-          modifiers: [
-            { name: "flip", enabled: false },
-            { name: "preventOverflow", enabled: false },
-          ],
         }}
+        disableFocusListener
+        disableHoverListener
+        disableTouchListener
+        disableInteractive
         enterDelay={0}
         placement="bottom"
-        open={props.open}
+        open
         arrow
       >
         <Box sx={{ width: props.width, height: 24, background: gradient, borderRadius: 0.5 }} />
@@ -80,8 +88,4 @@ interface AnalystRatingBarProps {
    * The width of the bar.
    */
   width?: number;
-  /**
-   * Whether the tooltip is open.
-   */
-  open: boolean;
 }

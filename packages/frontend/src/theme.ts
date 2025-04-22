@@ -670,13 +670,15 @@ export const theme = createTheme({
     },
     MuiListItemText: {
       defaultProps: {
-        primaryTypographyProps: {
-          variant: "body1",
-          color: "text.primary",
-        },
-        secondaryTypographyProps: {
-          variant: "body2",
-          color: "text.secondary",
+        slotProps: {
+          primary: {
+            variant: "body1",
+            color: "text.primary",
+          },
+          secondary: {
+            variant: "body2",
+            color: "text.secondary",
+          },
         },
       },
       styleOverrides: {

@@ -21,10 +21,7 @@ export const SwitchSelector = (props: SwitchSelectorProps): React.JSX.Element =>
           variant="button"
           sx={{
             padding: 0.5,
-            color:
-              props.value === option.value
-                ? theme.palette.switchSelector.selected
-                : theme.palette.switchSelector.unselected,
+            color: theme.palette.switchSelector[props.value === option.value ? "selected" : "unselected"],
           }}
         >
           {option.label}

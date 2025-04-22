@@ -8,7 +8,7 @@ import { useRef, useState } from "react";
 import { useSearchParams } from "react-router";
 
 import authClient from "../../api/auth";
-import OpenIDConnectIcon from "../../components/etc/OpenIDConnect";
+import OpenIDConnectIcon from "../../components/etc/OpenIDConnectIcon";
 import { SwitchSelector } from "../../components/etc/SwitchSelector";
 import { useNotificationContextUpdater } from "../../contexts/NotificationContext";
 import { useUserContextUpdater } from "../../contexts/UserContext";

@@ -54,15 +54,8 @@ export const Header = (props: HeaderProps): React.JSX.Element => {
         }),
       }}
     >
-      <Box
-        component="span"
-        sx={{
-          mr: 1,
-          my: 1,
-          display: "inline-block",
-          // Since the sidebar is hidden on small screens, we need to show the menu button.
-        }}
-      >
+      <Box component="span" sx={{ mr: 1, my: 1, display: "inline-block" }}>
+        {/* Since the sidebar is hidden on small screens, we need to show the menu button. */}
         <Box component="span" sx={{ display: { lg: "none", xs: undefined } }}>
           <Tooltip arrow title="Toggle Menu">
             <IconButton color="primary" onClick={props.toggleSidebar}>

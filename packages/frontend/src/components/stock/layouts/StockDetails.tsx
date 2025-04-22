@@ -490,7 +490,6 @@ export const StockDetails = (props: StockDetailsProps): React.JSX.Element => {
                         analystConsensus: props.stock.analystConsensus,
                         analystRatings: props.stock.analystRatings,
                       }}
-                      open
                     />
                   </MarketScreenerNavigator>
                 )}

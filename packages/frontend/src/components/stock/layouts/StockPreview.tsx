@@ -59,7 +59,7 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
           slotProps={{ img: { loading: "lazy" } }}
         />
       </ListItemAvatar>
-      <ListItemText primary={stock.name} primaryTypographyProps={{ fontWeight: "bold" }} secondary={stock.ticker} />
+      <ListItemText primary={stock.name} slotProps={{ primary: { fontWeight: "bold" } }} secondary={stock.ticker} />
       <Typography sx={{ fontSize: 18, ml: 1 }}>{"country" in stock ? emojiFlag(stock.country) : ""}</Typography>
       <Box sx={{ width: 24, height: 24, ml: 1, mr: onDelete && 1 }}>
         <SectorIcon industry={stock.industry} length={24} type="Sector" />
