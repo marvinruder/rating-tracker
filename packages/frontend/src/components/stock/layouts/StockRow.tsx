@@ -268,7 +268,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
               </ListItemIcon>
               <ListItemText
                 primary={`Open “${props.stock.ticker}” in new tab`}
-                primaryTypographyProps={{ color: "text.secondary" }}
+                slotProps={{ primary: { color: "text.secondary" } }}
               />
             </MenuItem>
             {!props.watchlist && !props.portfolio && (
@@ -302,7 +302,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
                       ? `Remove “${props.stock.ticker}” from Favorites`
                       : `Mark “${props.stock.ticker}” as Favorite`
                   }
-                  primaryTypographyProps={{ color: "text.secondary" }}
+                  slotProps={{ primary: { color: "text.secondary" } }}
                 />
               </MenuItem>
             )}
@@ -313,7 +313,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
                 </ListItemIcon>
                 <ListItemText
                   primary={`Add “${props.stock.ticker}” to watchlist…`}
-                  primaryTypographyProps={{ color: "text.secondary" }}
+                  slotProps={{ primary: { color: "text.secondary" } }}
                 />
               </MenuItem>
             )}
@@ -324,7 +324,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
                 </ListItemIcon>
                 <ListItemText
                   primary={`Add “${props.stock.ticker}” to portfolio…`}
-                  primaryTypographyProps={{ color: "text.secondary" }}
+                  slotProps={{ primary: { color: "text.secondary" } }}
                 />
               </MenuItem>
             )}
@@ -338,7 +338,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
                 </ListItemIcon>
                 <ListItemText
                   primary={`Edit “${props.stock.ticker}”…`}
-                  primaryTypographyProps={{ color: "text.secondary" }}
+                  slotProps={{ primary: { color: "text.secondary" } }}
                 />
               </MenuItem>
             )}
@@ -352,7 +352,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
                 </ListItemIcon>
                 <ListItemText
                   primary={`Delete “${props.stock.ticker}”…`}
-                  primaryTypographyProps={{ color: "text.secondary" }}
+                  slotProps={{ primary: { color: "text.secondary" } }}
                 />
               </MenuItem>
             )}
@@ -363,7 +363,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
                 </ListItemIcon>
                 <ListItemText
                   primary={`Remove “${props.stock.ticker}” from “${props.watchlist.name}”`}
-                  primaryTypographyProps={{ color: "text.secondary" }}
+                  slotProps={{ primary: { color: "text.secondary" } }}
                 />
               </MenuItem>
             )}
@@ -374,7 +374,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
                 </ListItemIcon>
                 <ListItemText
                   primary={`Remove “${props.stock.ticker}” from “${props.portfolio.name}”`}
-                  primaryTypographyProps={{ color: "text.secondary" }}
+                  slotProps={{ primary: { color: "text.secondary" } }}
                 />
               </MenuItem>
             )}
@@ -636,7 +636,6 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
                 analystRatings: props.stock.analystRatings,
               }}
               width={120}
-              open={displayColumn("Analyst Ratings") !== "none"}
             />
           </MarketScreenerNavigator>
         )}

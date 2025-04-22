@@ -32,7 +32,7 @@ import { useState } from "react";
 import userClient from "../../../api/user";
 import { DeleteUser } from "../../../components/dialogs/user/DeleteUser";
 import { SendEmailToUser } from "../../../components/dialogs/user/SendEmailToUser";
-import OpenIDConnectIcon from "../../../components/etc/OpenIDConnect";
+import OpenIDConnectIcon from "../../../components/etc/OpenIDConnectIcon";
 import { useNotificationContextUpdater } from "../../../contexts/NotificationContext";
 import { isSupportedByServer } from "../../../utils/serverFeatures";
 

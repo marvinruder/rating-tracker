@@ -90,7 +90,7 @@ export const SendEmailToUser = (props: SendEmailToUserProps): React.JSX.Element 
               >
                 <ListItemText
                   primary={template}
-                  primaryTypographyProps={{ fontWeight: "bold" }}
+                  slotProps={{ primary: { fontWeight: "bold" } }}
                   secondary={emailTemplateDescriptions[template]}
                 />
               </ListItemButton>

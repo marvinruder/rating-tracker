@@ -467,7 +467,7 @@ const PortfolioBuilderModule = (): React.JSX.Element => {
                             >
                               <ListItemText
                                 primary={portfolioSummary.name}
-                                primaryTypographyProps={{ fontWeight: "bold" }}
+                                slotProps={{ primary: { fontWeight: "bold" } }}
                                 secondary={`${
                                   portfolioSummary.stocks.length || "No"
                                 } stock${pluralize(portfolioSummary.stocks.length)}`}
@@ -533,7 +533,7 @@ const PortfolioBuilderModule = (): React.JSX.Element => {
                               <ListItemText
                                 inset={watchlistSummary?.name !== FAVORITES_NAME}
                                 primary={watchlistSummary.name}
-                                primaryTypographyProps={{ fontWeight: "bold" }}
+                                slotProps={{ primary: { fontWeight: "bold" } }}
                                 secondary={`${
                                   watchlistSummary.stocks.length || "No"
                                 } stock${pluralize(watchlistSummary.stocks.length)}`}
@@ -567,11 +567,10 @@ const PortfolioBuilderModule = (): React.JSX.Element => {
                     onClose={() => {}}
                     onSelect={(stock: Stock) =>
                       setStocks((prevStocks) =>
-                        [
-                          ...prevStocks,
-                          // If a stock does not have a size or style, set it to the "Small" size and "Blend" style
-                          { ...stock, size: stock.size || "Small", style: stock.style || "Blend" },
-                        ].sort((a, b) => a.ticker.localeCompare(b.ticker)),
+                        // If a stock does not have a size or style, set it to the "Small" size and "Blend" style
+                        [...prevStocks, { ...stock, size: stock.size || "Small", style: stock.style || "Blend" }].sort(
+                          (a, b) => a.ticker.localeCompare(b.ticker),
+                        ),
                       )
                     }
                     disabledStocks={stocks}
@@ -1226,8 +1225,8 @@ const PortfolioBuilderModule = (): React.JSX.Element => {
             maxWidth="xs"
             open={updatePortfolioDialogOpen}
             onClose={() => setUpdatePortfolioDialogOpen(false)}
-            TransitionComponent={fullScreenDialogs ? Slide : undefined}
-            TransitionProps={{ direction: "up" } as SlideProps}
+            slots={{ transition: fullScreenDialogs ? Slide : undefined }}
+            slotProps={{ transition: { direction: "up" } as SlideProps }}
             fullScreen={fullScreenDialogs}
           >
             {!fullScreenDialogs && <Box sx={{ width: 444 }} />}

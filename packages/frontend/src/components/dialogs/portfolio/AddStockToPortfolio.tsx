@@ -156,7 +156,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): React.JSX.
                     <ListItemText
                       inset
                       primary={portfolioSummary.name}
-                      primaryTypographyProps={{ fontWeight: "bold" }}
+                      slotProps={{ primary: { fontWeight: "bold" } }}
                       secondary={
                         portfoliosAlreadyContainingStock.includes(portfolioSummary.id)
                           ? `This portfolio already contains “${props.stock.name}”.`
@@ -195,7 +195,7 @@ export const AddStockToPortfolio = (props: AddStockToPortfolioProps): React.JSX.
               <ListItemIcon>
                 <AddIcon color="primary" />
               </ListItemIcon>
-              <ListItemText primary="Create a new portfolio…" primaryTypographyProps={{ fontWeight: "bold" }} />
+              <ListItemText primary="Create a new portfolio…" slotProps={{ primary: { fontWeight: "bold" } }} />
             </ListItemButton>
           </ListItem>
         </List>

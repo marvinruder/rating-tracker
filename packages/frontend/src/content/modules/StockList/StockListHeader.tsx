@@ -56,8 +56,8 @@ const StockListHeader: FC<StockListHeaderProps> = (props: StockListHeaderProps):
           maxWidth="sm"
           open={addStockOpen}
           fullScreen={fullScreenDialogs}
-          TransitionComponent={fullScreenDialogs ? Slide : undefined}
-          TransitionProps={{ direction: "up" } as SlideProps}
+          slots={{ transition: fullScreenDialogs ? Slide : undefined }}
+          slotProps={{ transition: { direction: "up" } as SlideProps }}
           fullWidth
         >
           <AddStock onClose={() => setAddStockOpen(false)} onCloseAfterAdd={props.refetchStocks} />

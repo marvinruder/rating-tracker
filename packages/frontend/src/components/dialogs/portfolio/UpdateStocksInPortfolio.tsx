@@ -160,7 +160,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): Re
                     <ListItemText
                       inset
                       primary={portfolioSummary.name}
-                      primaryTypographyProps={{ fontWeight: "bold" }}
+                      slotProps={{ primary: { fontWeight: "bold" } }}
                       secondary={`${
                         portfolioSummary.stocks.length || "No"
                       } stock${pluralize(portfolioSummary.stocks.length)}`}
@@ -183,7 +183,7 @@ export const UpdateStocksInPortfolio = (props: UpdateStocksInPortfolioProps): Re
               <ListItemIcon>
                 <AddIcon color="primary" />
               </ListItemIcon>
-              <ListItemText primary="Create a new portfolio…" primaryTypographyProps={{ fontWeight: "bold" }} />
+              <ListItemText primary="Create a new portfolio…" slotProps={{ primary: { fontWeight: "bold" } }} />
             </ListItemButton>
           </ListItem>
         </List>

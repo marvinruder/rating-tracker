@@ -426,7 +426,7 @@ const PortfolioModule = (): React.JSX.Element => {
                       {analystConsensus !== null && analystRatings !== null && (
                         <Box sx={{ width: "100%", display: "inline-flex", justifyContent: "end" }}>
                           <Box sx={{ width: "100%", display: "block" }}>
-                            <AnalystRatingBar stock={{ analystConsensus, analystRatings }} open />
+                            <AnalystRatingBar stock={{ analystConsensus, analystRatings }} />
                           </Box>
                         </Box>
                       )}

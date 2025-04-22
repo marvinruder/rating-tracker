@@ -12,34 +12,16 @@ export const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps): R
   let value: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
   switch (Math.round(2 * (props.value ?? 0)) / 2) {
     case 0.5:
-      value = 0.5;
-      break;
     case 1:
-      value = 1;
-      break;
     case 1.5:
-      value = 1.5;
-      break;
     case 2:
-      value = 2;
-      break;
     case 2.5:
-      value = 2.5;
-      break;
     case 3:
-      value = 3;
-      break;
     case 3.5:
-      value = 3.5;
-      break;
     case 4:
-      value = 4;
-      break;
     case 4.5:
-      value = 4.5;
-      break;
     case 5:
-      value = 5;
+      value = Math.round(2 * (props.value ?? 0)) / 2;
       break;
     default:
       value = 0;
