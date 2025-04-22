@@ -1060,46 +1060,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nivo/arcs@npm:0.88.0":
-  version: 0.88.0
-  resolution: "@nivo/arcs@npm:0.88.0"
+"@nivo/arcs@npm:0.89.1":
+  version: 0.89.1
+  resolution: "@nivo/arcs@npm:0.89.1"
   dependencies:
-    "@nivo/colors": "npm:0.88.0"
-    "@nivo/core": "npm:0.88.0"
+    "@nivo/colors": "npm:0.89.1"
+    "@nivo/core": "npm:0.89.1"
     "@react-spring/web": "npm:9.4.5 || ^9.7.2"
     "@types/d3-shape": "npm:^3.1.6"
     d3-shape: "npm:^3.2.0"
   peerDependencies:
-    react: ">= 16.14.0 < 19.0.0"
-  checksum: 10c0/a9fe18e1012fb8d0e7d53b21d4dca8b8510d0773380220553a18052dcfb0886a362126b1a492d82e12c47829a33ac0d6633a89c81611bc0e26bb5ad0928a4246
+    react: ">= 16.14.0 < 20.0.0"
+  checksum: 10c0/5d48a82b8de0c2b50e9e7e09b2662b92e8bfda98611856d8fca994f09f5a922c07860d8778a2878d6142f839ded70c4c76152da7d7367a7108a1a493fd10e7ca
   languageName: node
   linkType: hard
 
-"@nivo/colors@npm:0.88.0":
-  version: 0.88.0
-  resolution: "@nivo/colors@npm:0.88.0"
+"@nivo/colors@npm:0.89.1":
+  version: 0.89.1
+  resolution: "@nivo/colors@npm:0.89.1"
   dependencies:
-    "@nivo/core": "npm:0.88.0"
+    "@nivo/core": "npm:0.89.1"
     "@types/d3-color": "npm:^3.0.0"
     "@types/d3-scale": "npm:^4.0.8"
     "@types/d3-scale-chromatic": "npm:^3.0.0"
-    "@types/prop-types": "npm:^15.7.2"
     d3-color: "npm:^3.1.0"
     d3-scale: "npm:^4.0.2"
     d3-scale-chromatic: "npm:^3.0.0"
     lodash: "npm:^4.17.21"
-    prop-types: "npm:^15.7.2"
   peerDependencies:
-    react: ">= 16.14.0 < 19.0.0"
-  checksum: 10c0/e52a69fc6fb942f30f053f02e4dd36c4ecdf1012446368b20a5c847f8eb3c2ecb70924505cb3041b0d72efb4f0c5edcb8322b009b7fa3f4934bf154bc7e45776
+    react: ">= 16.14.0 < 20.0.0"
+  checksum: 10c0/71a1353037ed461adfa08ce626a0b8bd867826e16547b03d87fe4749bb9f2e8db5ba2d3114e7eb209cedd3262b0cd7d8c501054ef5893d19a0f171f0be0f4834
   languageName: node
   linkType: hard
 
-"@nivo/core@npm:0.88.0":
-  version: 0.88.0
-  resolution: "@nivo/core@npm:0.88.0"
+"@nivo/core@npm:0.89.1":
+  version: 0.89.1
+  resolution: "@nivo/core@npm:0.89.1"
   dependencies:
-    "@nivo/tooltip": "npm:0.88.0"
+    "@nivo/tooltip": "npm:0.89.1"
     "@react-spring/web": "npm:9.4.5 || ^9.7.2"
     "@types/d3-shape": "npm:^3.1.6"
     d3-color: "npm:^3.1.0"
@@ -1110,39 +1108,38 @@ __metadata:
     d3-shape: "npm:^3.2.0"
     d3-time-format: "npm:^3.0.0"
     lodash: "npm:^4.17.21"
-    prop-types: "npm:^15.7.2"
   peerDependencies:
-    react: ">= 16.14.0 < 19.0.0"
-  checksum: 10c0/5dbc7f7b78ca502a0ec2bfcd459c20a6fba6bf1a4da19dbd31c50141ec0a2a6506bfde07bdd6f116ff6d96b9d4806de2b87c886ee8a0152eb4b9b1a337f2708c
+    react: ">= 16.14.0 < 20.0.0"
+  checksum: 10c0/8c03fc06ccfc8d01b511a8b78acbd719f7062fd123f13c8fd57a26042a588b3cb111492d73ef4c908db0d25e09a3c0708195d6723f1f1d35b651363b5bf6f820
   languageName: node
   linkType: hard
 
-"@nivo/sunburst@npm:0.88.0":
-  version: 0.88.0
-  resolution: "@nivo/sunburst@npm:0.88.0"
+"@nivo/sunburst@npm:0.89.1":
+  version: 0.89.1
+  resolution: "@nivo/sunburst@npm:0.89.1"
   dependencies:
-    "@nivo/arcs": "npm:0.88.0"
-    "@nivo/colors": "npm:0.88.0"
-    "@nivo/core": "npm:0.88.0"
-    "@nivo/tooltip": "npm:0.88.0"
+    "@nivo/arcs": "npm:0.89.1"
+    "@nivo/colors": "npm:0.89.1"
+    "@nivo/core": "npm:0.89.1"
+    "@nivo/tooltip": "npm:0.89.1"
     "@types/d3-hierarchy": "npm:^1.1.8"
     d3-hierarchy: "npm:^1.1.8"
     lodash: "npm:^4.17.21"
   peerDependencies:
-    react: ">= 16.14.0 < 19.0.0"
-  checksum: 10c0/e9c1567e212247f309fe2b4f07769edcb288518f7de30ea430eb77177dda229287f147f12ec6edad898eae8cb37c5b983dcf75812c33ab77623795ae430c0af6
+    react: ">= 16.14.0 < 20.0.0"
+  checksum: 10c0/db89a7a53fa5594fe9d9c02ed1f56af97cf53fa243709fde84a6294dae0f3687f11d8b9027410bc18b4708dc86841dfa8e650d07888fcab769a48f3e8002046b
   languageName: node
   linkType: hard
 
-"@nivo/tooltip@npm:0.88.0":
-  version: 0.88.0
-  resolution: "@nivo/tooltip@npm:0.88.0"
+"@nivo/tooltip@npm:0.89.1":
+  version: 0.89.1
+  resolution: "@nivo/tooltip@npm:0.89.1"
   dependencies:
-    "@nivo/core": "npm:0.88.0"
+    "@nivo/core": "npm:0.89.1"
     "@react-spring/web": "npm:9.4.5 || ^9.7.2"
   peerDependencies:
-    react: ">= 16.14.0 < 19.0.0"
-  checksum: 10c0/1a5eef73875f7a87984055adffee5f804a1e1be92166c9799877a25ccd61768963b0ad80f603a0e9e5e43e4121bb11e9cce9123078a89e816d1bfae20e9b07bf
+    react: ">= 16.14.0 < 20.0.0"
+  checksum: 10c0/51fc2e37344d308e035c0af150ccbeeed314c9b87002695ea72abce6f38e2f6ce5022ea56839cebbc2a422b5c9d0fdbce0529d75103a937a5ba8c4051b5292b9
   languageName: node
   linkType: hard
 
@@ -1460,8 +1457,8 @@ __metadata:
     "@mui/material": "npm:7.0.2"
     "@mui/system": "npm:7.0.2"
     "@mui/x-charts": "npm:8.0.0"
-    "@nivo/core": "npm:0.88.0"
-    "@nivo/sunburst": "npm:0.88.0"
+    "@nivo/core": "npm:0.89.1"
+    "@nivo/sunburst": "npm:0.89.1"
     "@rating-tracker/backend": "workspace:*"
     "@rating-tracker/commons": "workspace:*"
     "@rating-tracker/wasm": "workspace:*"
@@ -2028,7 +2025,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prop-types@npm:^15.7.14, @types/prop-types@npm:^15.7.2":
+"@types/prop-types@npm:^15.7.14":
   version: 15.7.14
   resolution: "@types/prop-types@npm:15.7.14"
   checksum: 10c0/1ec775160bfab90b67a782d735952158c7e702ca4502968aa82565bd8e452c2de8601c8dfe349733073c31179116cf7340710160d3836aa8a1ef76d1532893b1
@@ -6414,7 +6411,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.8.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:15.8.1, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
