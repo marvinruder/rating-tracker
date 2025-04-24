@@ -67,7 +67,7 @@ import React, { Fragment, useState } from "react";
 import { useSearchParams } from "react-router";
 
 import useStockFilter from "../../../hooks/useStockFilter";
-import { formatPercentage } from "../../../utils/formatters";
+import { formatMarketCap, formatPercentage } from "../../../utils/formatters";
 import { NestedCheckboxList } from "../../etc/NestedCheckboxList";
 import { StarRating } from "../properties/StarRating";
 
@@ -104,6 +104,10 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
   const [priceEarningRatioInput, setPriceEarningRatioInput] = useState<number[]>([
     filter.priceEarningRatioMin ?? 0,
     filter.priceEarningRatioMax ?? 100,
+  ]);
+  const [marketCapInput, setMarketCapInput] = useState<number[]>([
+    filter.marketCapMin ?? 0,
+    filter.marketCapMax ?? 10e12,
   ]);
 
   const [starRatingInput, setStarRatingInput] = useState<number[]>([
@@ -205,6 +209,8 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
         params.set("dividendYieldPercentMax", dividendYieldPercentInput[1].toString());
       if (priceEarningRatioInput[0] !== 0) params.set("priceEarningRatioMin", priceEarningRatioInput[0].toString());
       if (priceEarningRatioInput[1] !== 100) params.set("priceEarningRatioMax", priceEarningRatioInput[1].toString());
+      if (marketCapInput[0] !== 0) params.set("marketCapMin", marketCapInput[0].toString());
+      if (marketCapInput[1] !== 10e12) params.set("marketCapMax", marketCapInput[1].toString());
       if (starRatingInput[0] !== 0) params.set("starRatingMin", starRatingInput[0].toString());
       if (starRatingInput[1] !== 5) params.set("starRatingMax", starRatingInput[1].toString());
       if (morningstarFairValueDiffInput[0] !== -50)
@@ -269,6 +275,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
               setEsgScoreInput([0, 100]);
               setDividendYieldPercentInput([0, 20]);
               setPriceEarningRatioInput([0, 100]);
+              setMarketCapInput([0, 10e12]);
               setStarRatingInput([0, 5]);
               setMorningstarFairValueDiffInput([-50, 50]);
               setAnalystConsensusInput(["None", "Buy"]);
@@ -374,6 +381,24 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
                   max={100}
                   onChange={(_, newValue) => setPriceEarningRatioInput(newValue as number[])}
                   valueLabelDisplay="auto"
+                />
+                {/* Market Capitalization */}
+                <Typography id="market-cap-label" variant="h5">
+                  Market Capitalization
+                </Typography>
+                <Slider
+                  aria-labelledby="market-cap-label"
+                  sx={{ width: "230px", ml: "10px", mr: "10px" }}
+                  value={marketCapInput.map((value) => Math.log10(value))}
+                  min={6}
+                  max={13}
+                  onChange={(_, newValue) =>
+                    setMarketCapInput((newValue as number[]).map((value) => (value <= 6 ? 0 : 10 ** value)))
+                  }
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(value) =>
+                    `USD ${value <= 6 ? 0 : formatMarketCap(10 ** value).replace(/\.0+/, "")}`
+                  }
                 />
               </Box>
             </Grid>

@@ -24,6 +24,7 @@ import {
   LogoVariantSchema,
   LSEGEmissionsSchema,
   LSEGESGScoreSchema,
+  MarketCapSchema,
   MarketScreenerIDSchema,
   MorningstarFairValuePercentageToLastCloseSchema,
   MorningstarIDSchema,
@@ -129,6 +130,12 @@ class StockController extends Controller {
                 ),
                 priceEarningRatioMax: ValidationHelper.coerceToNumber(PriceEarningRatioSchema).describe(
                   "The maximum price-earning ratio of a stock.",
+                ),
+                marketCapMin: ValidationHelper.coerceToNumber(MarketCapSchema).describe(
+                  "The minimum market capitalization of a stock, in United States dollars.",
+                ),
+                marketCapMax: ValidationHelper.coerceToNumber(MarketCapSchema).describe(
+                  "The maximum market capitalization of a stock, in United States dollars.",
                 ),
                 morningstarFairValueDiffMin: ValidationHelper.coerceToNumber(
                   MorningstarFairValuePercentageToLastCloseSchema,
@@ -246,7 +253,7 @@ class StockController extends Controller {
         async (c) => {
           const { sortBy, sortOrder, offset, count, ...filter } = c.req.valid("query");
           return c.json(
-            await this.stockService.readAll(
+            await this.stockService.readMany(
               { ...filter, email: c.get("user")!.email },
               { sortBy, sortOrder },
               { offset, count },

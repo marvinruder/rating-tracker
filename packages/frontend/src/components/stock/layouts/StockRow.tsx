@@ -791,10 +791,10 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
       {/* Market Cap */}
       <TableCell sx={{ display: displayColumn("Market Capitalization") }}>
         <Typography variant="body1" noWrap sx={{ color: "text.primary", width: 75 }}>
-          <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
-            <Box sx={{ display: "inline-block", float: "left" }}>{props.stock.currency ?? ""}</Box>
+          <Tooltip title={currencyName["USD"]} arrow>
+            <Box sx={{ display: "inline-block", float: "left" }}>USD</Box>
           </Tooltip>
-          <Box sx={{ float: "right" }}>{formatMarketCap(props.stock)}</Box>
+          <Box sx={{ float: "right" }}>{formatMarketCap(props.stock.marketCap)}</Box>
         </Typography>
       </TableCell>
       {props.getStocks ? (

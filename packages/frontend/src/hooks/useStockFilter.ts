@@ -39,6 +39,8 @@ const useStockFilter = (): StockFilter => {
       filter.priceEarningRatioMin = +searchParams.get("priceEarningRatioMin")!;
     if (searchParams.has("priceEarningRatioMax"))
       filter.priceEarningRatioMax = +searchParams.get("priceEarningRatioMax")!;
+    if (searchParams.has("marketCapMin")) filter.marketCapMin = +searchParams.get("marketCapMin")!;
+    if (searchParams.has("marketCapMax")) filter.marketCapMax = +searchParams.get("marketCapMax")!;
 
     if (searchParams.has("starRatingMin")) filter.starRatingMin = +searchParams.get("starRatingMin")!;
     if (searchParams.has("starRatingMax")) filter.starRatingMax = +searchParams.get("starRatingMax")!;

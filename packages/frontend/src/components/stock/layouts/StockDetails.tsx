@@ -287,10 +287,10 @@ export const StockDetails = (props: StockDetailsProps): React.JSX.Element => {
             <Typography variant="body1" sx={{ textAlign: "right" }}>
               {props.stock ? (
                 <>
-                  <Tooltip title={props.stock.currency && currencyName[props.stock.currency]} arrow>
-                    <Box sx={{ display: "inline-block" }}>{props.stock.currency ?? ""}</Box>
+                  <Tooltip title={currencyName["USD"]} arrow>
+                    <Box sx={{ display: "inline-block" }}>USD</Box>
                   </Tooltip>{" "}
-                  {formatMarketCap(props.stock)}
+                  {formatMarketCap(props.stock.marketCap)}
                 </>
               ) : (
                 <Skeleton width={60} sx={{ ml: "auto" }} />

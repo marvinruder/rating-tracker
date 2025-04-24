@@ -1,9 +1,10 @@
 import assert from "node:assert";
 
-import type { Industry, Size, Style, Stock } from "@rating-tracker/commons";
-import { isIndustry, isSize, isStyle } from "@rating-tracker/commons";
+import type { Industry, Size, Style, Stock, Currency } from "@rating-tracker/commons";
+import { isCurrency, isIndustry, isSize, isStyle } from "@rating-tracker/commons";
 import xpath from "xpath-ts2";
 
+import type CurrencyService from "../../currency/currency.service";
 import type StockService from "../../stock/stock.service";
 import DataProviderError from "../../utils/error/DataProviderError";
 import ErrorHelper from "../../utils/error/errorHelper";
@@ -16,7 +17,10 @@ import IndividualFetcher from "./IndividualFetcher";
  * This fetcher fetches data from Morningstar Italy.
  */
 class MorningstarFetcher extends IndividualFetcher {
-  constructor(private stockService: StockService) {
+  constructor(
+    private currencyService: CurrencyService,
+    private stockService: StockService,
+  ) {
     super();
   }
 
@@ -45,6 +49,8 @@ class MorningstarFetcher extends IndividualFetcher {
     let marketCap: number | null | undefined;
     let description: string | undefined;
 
+    let currencyString: string | undefined;
+
     const document = await FetchService.getAndParseHTML(
       "https://tools.morningstar.it/it/stockreport/default.aspx",
       {
@@ -69,6 +75,12 @@ class MorningstarFetcher extends IndividualFetcher {
 
     // Prepare an error message.
     let errorMessage = "";
+
+    try {
+      currencyString = document.getElementById("Col0PriceTime")!.textContent as string;
+      // Example: "17:35:38 CET | EUR  Minimum 15 Minutes Delay."
+      currencyString = currencyString.match(/\s+\|\s+([A-Z]{3})\s+/)![1];
+    } catch (e) {} // Ignore errors, an absence of the currency will be handled later.
 
     try {
       const industryNode = this.#xpathIndustry.select1({ node: document, isHtml: true });
@@ -271,12 +283,9 @@ class MorningstarFetcher extends IndividualFetcher {
 
     try {
       // Check whether the currency matches the stock price currency first.
-      let currencyString = document.getElementById("Col0PriceTime")!.textContent as string;
-      // Example: "17:35:38 CET | EUR  Minimum 15 Minutes Delay."
-      currencyString = currencyString.match(/\s+\|\s+([A-Z]{3})\s+/)![1];
       assert(
         currencyString === stock.currency,
-        `Currency ${currencyString} does not match stock price currency ${stock.currency}.`,
+        `Currency “${currencyString}” does not match stock price currency “${stock.currency}”.`,
       );
 
       const morningstarFairValueNode = this.#xpathFairValue.select1({ node: document, isHtml: true });
@@ -331,17 +340,26 @@ class MorningstarFetcher extends IndividualFetcher {
       if (marketCapText === "-") {
         marketCap = null;
       } else {
+        let marketCapInLocalCurrency: number | undefined;
         if (marketCapText.includes("Bil")) {
-          marketCap = Math.round(1e9 * +marketCapText.substring(0, marketCapText.indexOf("Bil")));
+          marketCapInLocalCurrency = Math.round(1e9 * +marketCapText.substring(0, marketCapText.indexOf("Bil")));
         } else if (marketCapText.includes("Mil")) {
-          marketCap = Math.round(1e6 * +marketCapText.substring(0, marketCapText.indexOf("Mil")));
+          marketCapInLocalCurrency = Math.round(1e6 * +marketCapText.substring(0, marketCapText.indexOf("Mil")));
         } else {
-          marketCap = +marketCapText;
+          marketCapInLocalCurrency = +marketCapText;
         }
-        if (!marketCapText.match(/\d+/) || Number.isNaN(marketCap)) {
-          marketCap = undefined;
+        if (
+          !marketCapText.match(/\d+/) ||
+          Number.isNaN(marketCapInLocalCurrency) ||
+          typeof marketCapInLocalCurrency !== "number"
+        )
           throw new TypeError("Extracted market capitalization is no valid number.");
-        }
+
+        let marketCapCurrency: Currency | undefined;
+        if (!isCurrency(currencyString))
+          throw new TypeError(`Extracted currency “${currencyString}” is no valid currency.`);
+        else marketCapCurrency = currencyString;
+        marketCap = await this.currencyService.convert(marketCapCurrency, "USD", marketCapInLocalCurrency);
       }
     } catch (e) {
       Logger.warn(

@@ -164,6 +164,7 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): React.J
             "lsegEmissions",
             "spESGScore",
             "dividendYieldPercent",
+            "marketCap",
             "amount",
           ].includes(attribute)
             ? "desc"
@@ -465,9 +466,15 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): React.J
                   </TableCell>
                   {/* Market Cap */}
                   <TableCell sx={{ display: displayColumn("Market Capitalization") }}>
-                    <Tooltip title={<PropertyDescription property="marketCap" />} arrow>
-                      <Box sx={{ display: "inline-block" }}>Market Cap</Box>
-                    </Tooltip>
+                    <TableSortLabel
+                      active={sortBy === "marketCap"}
+                      direction={sortBy === "marketCap" ? sortOrder : "desc"}
+                      onClick={handleSortLabelClicked("marketCap")}
+                    >
+                      <Tooltip title={<PropertyDescription property="marketCap" />} arrow>
+                        <Box sx={{ display: "inline-block" }}>Market Cap</Box>
+                      </Tooltip>
+                    </TableSortLabel>
                   </TableCell>
                 </TableRow>
               </TableHead>

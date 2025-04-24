@@ -19,6 +19,8 @@ export type StockFilter = {
   dividendYieldPercentMax?: number;
   priceEarningRatioMin?: number;
   priceEarningRatioMax?: number;
+  marketCapMin?: number;
+  marketCapMax?: number;
   starRatingMin?: number;
   starRatingMax?: number;
   morningstarFairValueDiffMin?: number;

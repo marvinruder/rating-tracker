@@ -12,6 +12,7 @@ import {
 import type { Document } from "@xmldom/xmldom";
 import { DOMParser, MIME_TYPE } from "@xmldom/xmldom";
 
+import type CurrencyService from "../currency/currency.service";
 import type ResourceService from "../resource/resource.service";
 import SignalService from "../signal/signal.service";
 import type StockService from "../stock/stock.service";
@@ -70,6 +71,7 @@ export type FetchOptions = {
  */
 class FetchService {
   constructor(
+    private currencyService: CurrencyService,
     private resourceService: ResourceService,
     private signalService: SignalService,
     private stockService: StockService,
@@ -77,7 +79,7 @@ class FetchService {
   ) {
     this.#dataProviderFetchers = {
       yahoo: new YahooFetcher(stockService),
-      morningstar: new MorningstarFetcher(stockService),
+      morningstar: new MorningstarFetcher(currencyService, stockService),
       marketScreener: new MarketScreenerFetcher(stockService),
       msci: new MSCIFetcher(stockService),
       lseg: new LSEGFetcher(stockService),

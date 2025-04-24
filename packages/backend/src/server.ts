@@ -33,6 +33,7 @@ import AccountService from "./account/account.service";
 import AuthController from "./auth/auth.controller";
 import OIDCService from "./auth/oidc.service";
 import WebAuthnService from "./auth/webauthn.service";
+import CurrencyService from "./currency/currency.service";
 import DBService from "./db/db.service";
 import EmailController from "./email/email.controller";
 import EmailService from "./email/email.service";
@@ -70,13 +71,14 @@ await dbService.migrate();
 
 const emailService: EmailService = new EmailService();
 const proxyService: ProxyService = new ProxyService();
+const signalService: SignalService = new SignalService();
 const portfolioService: PortfolioService = new PortfolioService(dbService);
 const resourceService: ResourceService = new ResourceService(dbService);
 const sessionService: SessionService = new SessionService(dbService);
-const signalService: SignalService = new SignalService();
-const watchlistService: WatchlistService = new WatchlistService(dbService);
 const userService: UserService = new UserService(dbService, signalService);
+const watchlistService: WatchlistService = new WatchlistService(dbService);
 const accountService: AccountService = new AccountService(userService);
+const currencyService: CurrencyService = new CurrencyService(resourceService);
 const favoriteService: FavoriteService = new FavoriteService(dbService, watchlistService);
 const oidcService: OIDCService = new OIDCService(sessionService, userService);
 const webauthnService: WebAuthnService = new WebAuthnService(dbService, sessionService, userService);
@@ -89,7 +91,13 @@ const stockService: StockService = new StockService(
   userService,
   watchlistService,
 );
-const fetchService: FetchService = new FetchService(resourceService, signalService, stockService, userService);
+const fetchService: FetchService = new FetchService(
+  currencyService,
+  resourceService,
+  signalService,
+  stockService,
+  userService,
+);
 
 /**
  * An array of features that are supported by the server.

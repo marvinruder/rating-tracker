@@ -91,7 +91,7 @@ tests.push({
       await app.request(`${basePath}${stocksAPIPath}?size=Large&style=Growth&sortBy=name&sortOrder=desc`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
-      ["Ørsted A/S", "Taiwan Semiconductor Manufacturing Co Ltd", "Novo Nordisk", "MercadoLibre", "Apple"],
+      ["Ørsted", "Taiwan Semiconductor Manufacturing", "Novo Nordisk", "MercadoLibre", "Apple"],
     );
   },
 });
@@ -127,7 +127,7 @@ tests.push({
       await app.request(`${basePath}${stocksAPIPath}?industries=Semiconductors&q=Semiconductor`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
-      ["Taiwan Semiconductor Manufacturing Co Ltd"],
+      ["Taiwan Semiconductor Manufacturing"],
     );
   },
 });
@@ -152,7 +152,7 @@ tests.push({
         `${basePath}${stocksAPIPath}?dividendYieldPercentMin=1.5&dividendYieldPercentMax=5&sortBy=name`,
         { headers: { Cookie: "id=exampleSessionID" } },
       ),
-      ["Danone", "Iberdrola", "Newmont", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
+      ["Danone", "Iberdrola", "Newmont", "Taiwan Semiconductor Manufacturing", "Ørsted"],
     );
   },
 });
@@ -164,7 +164,7 @@ tests.push({
       await app.request(`${basePath}${stocksAPIPath}?priceEarningRatioMin=10&priceEarningRatioMax=20&sortBy=name`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
-      ["Allianz", "Iberdrola", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
+      ["Allianz", "Iberdrola", "Taiwan Semiconductor Manufacturing", "Ørsted"],
     );
   },
 });
@@ -173,19 +173,31 @@ tests.push({
   testName: "filters and sorts stock list – example 8",
   testFunction: async () => {
     await expectStocksToBePresent(
-      await app.request(
-        `${basePath}${stocksAPIPath}?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name`,
-        {
-          headers: { Cookie: "id=exampleSessionID" },
-        },
-      ),
-      ["Allianz", "Apple", "Danone", "Iberdrola", "MercadoLibre", "Newmont", "Ørsted A/S"],
+      await app.request(`${basePath}${stocksAPIPath}?marketCapMin=10000000000&marketCapMax=100000000000&sortBy=name`, {
+        headers: { Cookie: "id=exampleSessionID" },
+      }),
+      ["Allianz", "Danone", "Iberdrola", "MercadoLibre", "Newmont", "Ørsted"],
     );
   },
 });
 
 tests.push({
   testName: "filters and sorts stock list – example 9",
+  testFunction: async () => {
+    await expectStocksToBePresent(
+      await app.request(
+        `${basePath}${stocksAPIPath}?morningstarFairValueDiffMin=-30&morningstarFairValueDiffMax=10&sortBy=name`,
+        {
+          headers: { Cookie: "id=exampleSessionID" },
+        },
+      ),
+      ["Allianz", "Apple", "Danone", "Iberdrola", "MercadoLibre", "Newmont", "Ørsted"],
+    );
+  },
+});
+
+tests.push({
+  testName: "filters and sorts stock list – example 10",
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
@@ -199,7 +211,7 @@ tests.push({
 });
 
 tests.push({
-  testName: "filters and sorts stock list – example 10",
+  testName: "filters and sorts stock list – example 11",
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(`${basePath}${stocksAPIPath}?analystTargetDiffMin=-20&analystTargetDiffMax=10&sortBy=name`, {
@@ -211,7 +223,7 @@ tests.push({
 });
 
 tests.push({
-  testName: "filters and sorts stock list – example 11",
+  testName: "filters and sorts stock list – example 12",
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(`${basePath}${stocksAPIPath}?msciESGRatingMin=AA&msciESGRatingMax=A&sortBy=name`, {
@@ -223,7 +235,7 @@ tests.push({
 });
 
 tests.push({
-  testName: "filters and sorts stock list – example 12",
+  testName: "filters and sorts stock list – example 13",
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
@@ -231,13 +243,13 @@ tests.push({
           "?msciESGRatingMax=AAA&msciTemperatureMin=1.5&msciTemperatureMax=1.8&sortBy=name",
         { headers: { Cookie: "id=exampleSessionID" } },
       ),
-      ["Iberdrola", "Taiwan Semiconductor Manufacturing Co Ltd", "Ørsted A/S"],
+      ["Iberdrola", "Taiwan Semiconductor Manufacturing", "Ørsted"],
     );
   },
 });
 
 tests.push({
-  testName: "filters and sorts stock list – example 13",
+  testName: "filters and sorts stock list – example 14",
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
@@ -245,13 +257,13 @@ tests.push({
           "lsegEmissionsMin=80&lsegEmissionsMax=90&sortBy=name",
         { headers: { Cookie: "id=exampleSessionID" } },
       ),
-      ["Ørsted A/S"],
+      ["Ørsted"],
     );
   },
 });
 
 tests.push({
-  testName: "filters and sorts stock list – example 14",
+  testName: "filters and sorts stock list – example 15",
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
@@ -265,7 +277,7 @@ tests.push({
 });
 
 tests.push({
-  testName: "filters and sorts stock list – example 15",
+  testName: "filters and sorts stock list – example 16",
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(
@@ -279,7 +291,7 @@ tests.push({
 });
 
 tests.push({
-  testName: "filters and sorts stock list – example 16",
+  testName: "filters and sorts stock list – example 17",
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(`${basePath}${stocksAPIPath}?totalScoreMin=0.3&totalScoreMax=0.6&sortBy=name`, {
@@ -291,7 +303,7 @@ tests.push({
 });
 
 tests.push({
-  testName: "filters and sorts stock list – example 17",
+  testName: "filters and sorts stock list – example 18",
   testFunction: async () => {
     await expectStocksToBePresent(
       await app.request(`${basePath}${stocksAPIPath}?q=US0378331005`, { headers: { Cookie: "id=exampleSessionID" } }),
@@ -313,7 +325,7 @@ tests.push({
       await app.request(`${basePath}${stocksAPIPath}?watchlist=${id}&sortBy=name`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
-      ["Novo Nordisk A/S", "Ørsted A/S"],
+      ["Novo Nordisk", "Ørsted"],
     );
 
     // Attempting to read a watchlist of a different user returns an error
@@ -339,7 +351,7 @@ tests.push({
       await app.request(`${basePath}${stocksAPIPath}?portfolio=${id}&sortBy=amount&sortOrder=desc`, {
         headers: { Cookie: "id=exampleSessionID" },
       }),
-      ["Apple Inc", "Taiwan Semiconductor Manufacturing Co Ltd"],
+      ["Apple Inc", "Taiwan Semiconductor Manufacturing"],
     );
 
     // Attempting to sort by amount without specifying a portfolio returns an error

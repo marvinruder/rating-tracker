@@ -992,7 +992,7 @@ const PortfolioBuilderModule = (): React.JSX.Element => {
                   },
                 ]}
                 yAxis={[{ min: 0 }]}
-                slotProps={{ legend: { sx: { display: "none" } } }}
+                hideLegend
                 height={160}
                 sx={{ ml: -3, mr: 1 }}
               />

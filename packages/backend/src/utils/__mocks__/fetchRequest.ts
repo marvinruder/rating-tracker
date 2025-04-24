@@ -65,6 +65,17 @@ export const performFetchRequest = async (
       { value: url },
     );
 
+  if (url === "https://latest.currency-api.pages.dev/v1/currencies/usd.json")
+    return handleResponse(
+      new Response(
+        JSON.stringify({
+          date: new Date(Date.now()).toISOString().split("T")[0],
+          usd: { eur: 0.875, gbp: 0.75, usd: 1 },
+        }),
+        { headers: new Headers({ "Content-Type": "application/json" }) },
+      ),
+    );
+
   if (url.match(/https:\/\/assets\.traderepublic\.com\/img\/logos\/[A-Z0-9]+\/light\.svg/))
     return [
       "DE0008404005",

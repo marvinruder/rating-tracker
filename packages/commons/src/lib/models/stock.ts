@@ -112,7 +112,7 @@ export type Stock = {
    */
   morningstarFairValuePercentageToLastClose: number | null;
   /**
-   * The market capitalization of the stock.
+   * The market capitalization of the stock, in United States dollars.
    */
   marketCap: number | null;
   /**
