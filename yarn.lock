@@ -1018,9 +1018,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:8.0.0":
-  version: 8.0.0
-  resolution: "@mui/x-charts@npm:8.0.0"
+"@mui/x-charts@npm:8.1.0":
+  version: 8.1.0
+  resolution: "@mui/x-charts@npm:8.1.0"
   dependencies:
     "@babel/runtime": "npm:^7.27.0"
     "@mui/utils": "npm:^7.0.2"
@@ -1029,7 +1029,6 @@ __metadata:
     bezier-easing: "npm:^2.1.0"
     clsx: "npm:^2.1.1"
     prop-types: "npm:^15.8.1"
-    react-is: "npm:^18.3.1 || ^19.0.0"
     reselect: "npm:^5.1.1"
     use-sync-external-store: "npm:^1.5.0"
   peerDependencies:
@@ -1044,7 +1043,7 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/9304f5e5e439811d9c5337e2c2dc4ca1f99c98aa2932b42d126bb1820d8fee907735af809d5cb0d43eca32179882657e97753de810011a812f8980a0ab63fb91
+  checksum: 10c0/1ebeebfd97e95c9b375e11fd4e884de607c13ab6e0fd8b7ab060a6783eba6c6b9bf29cc2e2b4fc7c578dc2b51c4390e2df25332b549753227bd9587df602c5b1
   languageName: node
   linkType: hard
 
@@ -1449,7 +1448,7 @@ __metadata:
     "@mui/icons-material": "npm:7.0.2"
     "@mui/material": "npm:7.0.2"
     "@mui/system": "npm:7.0.2"
-    "@mui/x-charts": "npm:8.0.0"
+    "@mui/x-charts": "npm:8.1.0"
     "@nivo/core": "npm:0.89.1"
     "@nivo/sunburst": "npm:0.89.1"
     "@rating-tracker/backend": "workspace:*"
@@ -6499,7 +6498,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^18.3.1 || ^19.0.0, react-is@npm:^19.1.0":
+"react-is@npm:^19.1.0":
   version: 19.1.0
   resolution: "react-is@npm:19.1.0"
   checksum: 10c0/b6c6cadd172d5d39f66d493700d137a5545c294a62ce0f8ec793d59794c97d2bed6bad227626f16bd0e90004ed7fdc8ed662a004e6edcf5d2b7ecb6e3040ea6b
