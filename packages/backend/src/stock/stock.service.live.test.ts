@@ -12,7 +12,7 @@ import WatchlistService from "../watchlist/watchlist.service";
 
 import StockService from "./stock.service";
 
-export const suiteName = "Stock Table";
+export const suiteName = "Stocks Service";
 
 export const tests: LiveTestSuite = [];
 

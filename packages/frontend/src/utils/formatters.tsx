@@ -1,25 +1,19 @@
 import { Box, Tooltip } from "@mui/material";
-import type { Currency, OmitDynamicAttributesStock } from "@rating-tracker/commons";
+import type { Currency } from "@rating-tracker/commons";
 import { currencyMinorUnits, currencyName } from "@rating-tracker/commons";
 
 /**
  * Formats the market capitalization of a stock to a human readable format.
- * @param stock The stock to format the market capitalization of.
+ * @param marketCap The market capitalization to format.
  * @returns The formatted market capitalization.
  */
-export const formatMarketCap = (stock: OmitDynamicAttributesStock): string => {
-  if (stock.marketCap === null || stock.currency === null) return "–";
-  if (stock.marketCap >= 1e12) {
-    return `${(stock.marketCap / 1e12).toPrecision(3)} T`; // trillion, rounded to 3 significant digits
-  } else if (stock.marketCap >= 1e9) {
-    return `${(stock.marketCap / 1e9).toPrecision(3)} B`; // billion, rounded to 3 significant digits
-  } else if (stock.marketCap >= 1e6) {
-    return `${(stock.marketCap / 1e6).toPrecision(3)} M`; // million, rounded to 3 significant digits
-  } else if (stock.marketCap >= 1e3) {
-    return `${(stock.marketCap / 1e3).toPrecision(3)} k`; // thousand, rounded to 3 significant digits
-  } else {
-    return stock.marketCap.toFixed(0); // rounded to 0 decimal places
-  }
+export const formatMarketCap = (marketCap: number | null): string => {
+  if (marketCap === null) return "–";
+  if (marketCap >= 1e12) return `${(marketCap / 1e12).toPrecision(3)} T`; // trillion, rounded to 3 significant digits
+  if (marketCap >= 1e9) return `${(marketCap / 1e9).toPrecision(3)} B`; // billion, rounded to 3 significant digits
+  if (marketCap >= 1e6) return `${(marketCap / 1e6).toPrecision(3)} M`; // million, rounded to 3 significant digits
+  if (marketCap >= 1e3) return `${(marketCap / 1e3).toPrecision(3)} k`; // thousand, rounded to 3 significant digits
+  return marketCap.toFixed(0); // rounded to 0 decimal places
 };
 
 /**

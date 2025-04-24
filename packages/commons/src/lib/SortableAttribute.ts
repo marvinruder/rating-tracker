@@ -11,6 +11,7 @@ export const sortableAttributeArray =
     "starRating",
     "dividendYieldPercent",
     "priceEarningRatio",
+    "marketCap",
     "morningstarFairValuePercentageToLastClose",
     "positionIn52w",
     "analystConsensus",

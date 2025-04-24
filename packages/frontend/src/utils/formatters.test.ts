@@ -1,53 +1,30 @@
-import type { OmitDynamicAttributesStock } from "@rating-tracker/commons";
-import { optionalStockValuesNull } from "@rating-tracker/commons";
 import { describe, expect, it } from "vitest";
 
 import { formatMarketCap, formatPercentage } from "./formatters";
 
-const stock: OmitDynamicAttributesStock = {
-  ...optionalStockValuesNull,
-  ticker: "EXAMPLE",
-  name: "Example Inc.",
-  isin: "US0000000000",
-  country: "US",
-  currency: "USD",
-};
-
 describe.concurrent("Market Capitalization Formatter", () => {
   it("formats trillions", () => {
-    stock.marketCap = 1234000000000;
-    expect(formatMarketCap(stock)).toBe("1.23 T");
+    expect(formatMarketCap(1234000000000)).toBe("1.23 T");
   });
 
   it("formats billions", () => {
-    stock.marketCap = 12340000000;
-    expect(formatMarketCap(stock)).toBe("12.3 B");
+    expect(formatMarketCap(12340000000)).toBe("12.3 B");
   });
 
   it("formats millions", () => {
-    stock.marketCap = 123400000;
-    expect(formatMarketCap(stock)).toBe("123 M");
+    expect(formatMarketCap(123400000)).toBe("123 M");
   });
 
   it("formats thousands", () => {
-    stock.marketCap = 1234;
-    expect(formatMarketCap(stock)).toBe("1.23 k");
+    expect(formatMarketCap(1234)).toBe("1.23 k");
   });
 
   it("formats other things", () => {
-    stock.marketCap = 1.234;
-    expect(formatMarketCap(stock)).toBe("1");
-  });
-
-  it("refuses to format when no valid currency is given", () => {
-    stock.marketCap = 1234000000000;
-    stock.currency = null;
-    expect(formatMarketCap(stock)).toBe("–");
+    expect(formatMarketCap(1.234)).toBe("1");
   });
 
   it("refuses to format when no valid market cap is given", () => {
-    stock.marketCap = null;
-    expect(formatMarketCap(stock)).toBe("–");
+    expect(formatMarketCap(null)).toBe("–");
   });
 });
 

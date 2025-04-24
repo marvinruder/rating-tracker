@@ -254,10 +254,10 @@ export const MorningstarFairValuePercentageToLastCloseSchema = z
   });
 
 /**
- * The market capitalization of a stock.
+ * The market capitalization of a stock, in United States dollars.
  */
 export const MarketCapSchema = z
-  .number({ description: "The market capitalization of a stock." })
+  .number({ description: "The market capitalization of a stock, in United States dollars." })
   .nonnegative()
   .openapi({
     examples: stockExamples.filter((stock) => stock.marketCap !== null).map((stock) => stock.marketCap!),

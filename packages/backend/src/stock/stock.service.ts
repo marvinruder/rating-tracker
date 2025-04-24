@@ -115,7 +115,7 @@ class StockService {
    * @param pagination.count The number of stocks to return
    * @returns A list of stocks with the total count of stocks
    */
-  async readAll(
+  async readMany(
     filter: StockFilter & {
       q?: string;
       watchlist?: Watchlist["id"];
@@ -151,6 +151,8 @@ class StockService {
       filters.push({ priceEarningRatio: { gte: filter.priceEarningRatioMin } });
     if (filter.priceEarningRatioMax !== undefined)
       filters.push({ priceEarningRatio: { lte: filter.priceEarningRatioMax } });
+    if (filter.marketCapMin !== undefined) filters.push({ marketCap: { gte: filter.marketCapMin } });
+    if (filter.marketCapMax !== undefined) filters.push({ marketCap: { lte: filter.marketCapMax } });
     if (filter.morningstarFairValueDiffMin !== undefined)
       filters.push({ morningstarFairValuePercentageToLastClose: { gte: filter.morningstarFairValueDiffMin } });
     if (filter.morningstarFairValueDiffMax !== undefined)
@@ -256,9 +258,7 @@ class StockService {
     } else {
       [stocks, count] = await this.db.$transaction([
         this.db.stock.findMany(stockFindManyArgs),
-        this.db.stock.count({
-          where: { ...stockFindManyArgs?.where },
-        }),
+        this.db.stock.count({ where: { ...stockFindManyArgs?.where } }),
       ]);
     }
 
@@ -355,7 +355,7 @@ class StockService {
     } catch (e) {
       // If the logos are not in the database, fetch them one by one and store them in the database as one bundled
       // resource.
-      const { stocks } = await this.readAll({}, { sortBy: "totalScore", sortOrder: "desc" }, { count });
+      const { stocks } = await this.readMany({}, { sortBy: "totalScore", sortOrder: "desc" }, { count });
       const logos: string[] = new Array(count).fill(DUMMY_SVG);
       await Promise.allSettled(
         stocks.map(async (stock: Stock, index: number) => {
@@ -603,8 +603,9 @@ class StockService {
    * (Re-)Computes dynamic attributes of all stocks.
    */
   async computeDynamicAttributes(): Promise<void> {
-    const { stocks } = await this.readAll({}, {}, {});
-    await Promise.all(stocks.map((stock: Stock) => this.update(stock.ticker, {}, true)));
+    await Promise.all(
+      (await this.readMany({}, {}, {})).stocks.map((stock: Stock) => this.update(stock.ticker, {}, true)),
+    );
   }
 
   /**
