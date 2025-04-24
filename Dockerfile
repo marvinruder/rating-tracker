@@ -31,7 +31,7 @@ RUN \
   wasm-pack build -s rating-tracker --release
 
 
-FROM --platform=$BUILDPLATFORM node:22.14.0-alpine AS yarn
+FROM --platform=$BUILDPLATFORM node:22.15.0-alpine AS yarn
 ENV FORCE_COLOR=true
 ENV PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x
 
@@ -57,7 +57,7 @@ RUN \
   yarn tools
 
 
-FROM --platform=$BUILDPLATFORM node:22.14.0-alpine AS test-backend
+FROM --platform=$BUILDPLATFORM node:22.15.0-alpine AS test-backend
 ENV FORCE_COLOR=true
 ENV DOMAIN=example.com
 ENV SUBDOMAIN=subdomain
@@ -100,7 +100,7 @@ RUN \
   mv packages/backend/coverage /coverage/backend
 
 
-FROM --platform=$BUILDPLATFORM node:22.14.0-alpine AS test-commons
+FROM --platform=$BUILDPLATFORM node:22.15.0-alpine AS test-commons
 ENV FORCE_COLOR=true
 
 WORKDIR /workdir
@@ -123,7 +123,7 @@ RUN \
   mv packages/commons/coverage /coverage/commons
 
 
-FROM --platform=$BUILDPLATFORM node:22.14.0-alpine AS test-frontend
+FROM --platform=$BUILDPLATFORM node:22.15.0-alpine AS test-frontend
 ENV FORCE_COLOR=true
 
 WORKDIR /workdir
@@ -148,7 +148,7 @@ RUN \
   mv packages/frontend/coverage /coverage/frontend
 
 
-FROM --platform=$BUILDPLATFORM node:22.14.0-alpine AS build-backend
+FROM --platform=$BUILDPLATFORM node:22.15.0-alpine AS build-backend
 ENV NODE_ENV=production
 ENV FORCE_COLOR=true
 
@@ -180,7 +180,7 @@ RUN \
   cp packages/backend/prisma/client/schema.prisma /app/prisma/client && \
   ln -s ./client/schema.prisma /app/prisma/schema.prisma
 
-FROM --platform=$BUILDPLATFORM node:22.14.0-alpine AS build-frontend
+FROM --platform=$BUILDPLATFORM node:22.15.0-alpine AS build-frontend
 ENV NODE_ENV=production
 ENV FORCE_COLOR=true
 
@@ -232,7 +232,7 @@ ENTRYPOINT [ "codacy-coverage" ]
 
 
 # required for Renovate to update the base image:
-FROM node:22.14.0-alpine AS node
+FROM node:22.15.0-alpine AS node
 
 FROM alpine:3.21.3 AS deploy-base
 ARG TARGETARCH
