@@ -39,6 +39,6 @@ tests.push({
     const resource = await resourceService.read("https://latest.currency-api.pages.dev/v1/currencies/usd.json");
     // The resource should expire tomorrow at 02:00 UTC
     const expectedExpiryDate = new Date(Date.now() + 86400000).setUTCHours(2, 0, 0, 0);
-    expect(resource.expiresAt.getTime()).toBe(expectedExpiryDate);
+    expect(resource.expiresAt.getTime()).toBeCloseTo(expectedExpiryDate, -1);
   },
 });

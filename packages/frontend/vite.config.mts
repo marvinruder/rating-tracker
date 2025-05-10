@@ -2,6 +2,7 @@
 import { execSync } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
+import type { OutgoingHttpHeaders } from "node:http";
 import type { ServerOptions } from "node:https";
 
 import type { ServerFeature } from "@rating-tracker/commons";
@@ -50,7 +51,9 @@ export default mergeConfig(
                   port: Number(process.env.PORT ?? 3001),
                   onReq: async (incomingMessage, options) => {
                     if (!options.headers) options.headers = {};
-                    options.headers["X-Forwarded-For"] = incomingMessage.headers["x-forwarded-for"]
+                    (options.headers as OutgoingHttpHeaders)["x-forwarded-for"] = incomingMessage.headers[
+                      "x-forwarded-for"
+                    ]
                       ? `${incomingMessage.headers["x-forwarded-for"]}, ${incomingMessage.socket.remoteAddress}`
                       : incomingMessage.socket.remoteAddress;
                   },
