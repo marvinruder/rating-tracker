@@ -330,10 +330,10 @@ const PortfolioBuilderModule = (): React.JSX.Element => {
    * The constraints to use for the portfolio computation.
    */
   const activeConstraints = {
-    ...(regionConstraintOpen ? regionConstraints : {}),
-    ...(sectorConstraintOpen ? sectorConstraints : {}),
-    ...(sizeConstraintOpen ? sizeConstraints : {}),
-    ...(styleConstraintOpen ? styleConstraints : {}),
+    ...(regionConstraintOpen && regionConstraints),
+    ...(sectorConstraintOpen && sectorConstraints),
+    ...(sizeConstraintOpen && sizeConstraints),
+    ...(styleConstraintOpen && styleConstraints),
   } as Record<Region | Sector | Size | Style, number>;
 
   /**

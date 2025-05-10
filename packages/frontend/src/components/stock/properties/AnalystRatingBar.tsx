@@ -41,7 +41,7 @@ export const AnalystRatingBar = ({ stock, ...props }: AnalystRatingBarProps): Re
           popper: {
             anchorEl: null,
             sx: {
-              ...(props.width ? { width: props.width } : {}),
+              ...(props.width && { width: props.width }),
               position: "static !important",
               transform: "none !important",
               ".MuiTooltip-tooltip": {

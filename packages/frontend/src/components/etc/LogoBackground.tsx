@@ -70,8 +70,8 @@ export const LogoBackground = (): React.JSX.Element => {
           key={i}
           className="backgroundlogo"
           style={{
-            ...(i > count ? { display: "none" } : {}),
-            ...(logos[i] ? { backgroundImage: `url('data:image/svg+xml;base64,${btoa(logos[i])}')` } : {}),
+            ...(i > count && { display: "none" }),
+            ...(logos[i] && { backgroundImage: `url('data:image/svg+xml;base64,${btoa(logos[i])}')` }),
             position: "absolute",
             height: `${80 - (30 * i) / count}px`,
             width: `${80 - (30 * i) / count}px`,

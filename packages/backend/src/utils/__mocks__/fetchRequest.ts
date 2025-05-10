@@ -99,7 +99,7 @@ export const performFetchRequest = async (
               headers: new Headers({
                 "Content-Type": "image/svg+xml",
                 Age: "23596",
-                ...(url.includes("US8740391003") ? {} : { "Cache-Control": "public, max-age=2592000" }),
+                ...(!url.includes("US8740391003") && { "Cache-Control": "public, max-age=2592000" }),
               }),
             },
           ),

@@ -163,7 +163,7 @@ export const StockTableFilters: FC<StockTableFiltersProps> = (props: StockTableF
   const [styleboxInput, setStyleboxInput] = useState<{
     size?: Size;
     style?: Style;
-  }>({ ...(filter.size ? { size: filter.size } : {}), ...(filter.style ? { style: filter.style } : {}) });
+  }>({ ...(filter.size && { size: filter.size }), ...(filter.style && { style: filter.style }) });
 
   const setSearchParams = useSearchParams()[1];
 

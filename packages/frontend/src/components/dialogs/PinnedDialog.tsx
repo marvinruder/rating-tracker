@@ -10,16 +10,14 @@ const PinnedDialog = (props: DialogProps): React.JSX.Element => {
   return (
     <Dialog
       {...props}
-      {...(props.fullScreen
-        ? {}
-        : {
-            sx: {
-              ...props.sx,
-              ".MuiDialog-container": { height: "auto" },
-              ".MuiDialog-paperScrollPaper": { maxHeight: "calc(100dvh - 64px)" },
-              ".MuiDialogContent-root": { maxHeight: "calc(100dvh - 256px)" },
-            },
-          })}
+      {...(!props.fullScreen && {
+        sx: {
+          ...props.sx,
+          ".MuiDialog-container": { height: "auto" },
+          ".MuiDialog-paperScrollPaper": { maxHeight: "calc(100dvh - 64px)" },
+          ".MuiDialogContent-root": { maxHeight: "calc(100dvh - 256px)" },
+        },
+      })}
     />
   );
 };

@@ -200,14 +200,12 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
       hover
       sx={{
         height: 59,
-        ...(isFavorite
-          ? {
-              backgroundColor: alpha(theme.palette.warning.main, 0.1),
-              ":hover, &.MuiTableRow-hover:hover": {
-                backgroundColor: darken(alpha(theme.palette.warning.main, 0.1), 0.15),
-              },
-            }
-          : {}),
+        ...(isFavorite && {
+          backgroundColor: alpha(theme.palette.warning.main, 0.1),
+          ":hover, &.MuiTableRow-hover:hover": {
+            backgroundColor: darken(alpha(theme.palette.warning.main, 0.1), 0.15),
+          },
+        }),
       }}
       onContextMenu={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         if (props.hideActionsMenu) return;
@@ -394,7 +392,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
           >
             <TextField
               // This text field is read-only in the Portfolio Builder result list, where the ID is undefined
-              sx={{ width: "id" in props.portfolio ? 150 : 120, ...(amountError ? { mt: "6px" } : {}) }}
+              sx={{ width: "id" in props.portfolio ? 150 : 120, ...(amountError && { mt: "6px" }) }}
               disabled={!("id" in props.portfolio)}
               onChange={(event) => {
                 setAmountInput(event.target.value);
@@ -850,7 +848,7 @@ export const StockRow = (props: StockRowProps): React.JSX.Element => {
     </TableRow>
   ) : (
     // Skeleton of a stock row
-    <TableRow hover sx={{ height: 59 }} {...(props.isInfiniteLoadingTrigger ? { ref: infiniteLoadingTriggerRef } : {})}>
+    <TableRow hover sx={{ height: 59 }} {...(props.isInfiniteLoadingTrigger && { ref: infiniteLoadingTriggerRef })}>
       {/* Actions */}
       {props.hideActionsMenu ? (
         <TableCell sx={{ p: 0.25 }} />

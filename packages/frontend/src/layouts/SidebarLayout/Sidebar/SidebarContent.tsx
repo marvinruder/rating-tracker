@@ -199,9 +199,9 @@ export const SidebarContent = (props: SidebarContentProps): React.JSX.Element =>
                 <Button
                   sx={{ ".MuiTouchRipple-child": { backgroundColor: theme.palette.trueWhite.alpha30 } }}
                   component={NavLink}
-                  {...(location.pathname === portfoliosAPIPath + portfolioBuilderEndpointSuffix
-                    ? { className: "notActive" }
-                    : {})}
+                  {...(location.pathname === portfoliosAPIPath + portfolioBuilderEndpointSuffix && {
+                    className: "notActive",
+                  })}
                   onClick={props.closeSidebar}
                   to={portfoliosAPIPath}
                   startIcon={<ShoppingCartIcon />}

@@ -105,10 +105,10 @@ export const ProfileSettings = (props: ProfileSettingsProps): React.JSX.Element 
       .$patch({
         json: {
           // Only send the parameters that have changed.
-          ...(email !== user.email ? { email: email.trim() } : {}),
-          ...(name !== user.name ? { name: name.trim() } : {}),
-          ...(phone !== user.phone ? { phone: phone?.trim() || null } : {}),
-          ...(subscriptions !== user.subscriptions ? { subscriptions } : {}),
+          ...(email !== user.email && { email: email.trim() }),
+          ...(name !== user.name && { name: name.trim() }),
+          ...(phone !== user.phone && { phone: phone?.trim() || null }),
+          ...(subscriptions !== user.subscriptions && { subscriptions }),
         },
       })
       .then(handleResponse)

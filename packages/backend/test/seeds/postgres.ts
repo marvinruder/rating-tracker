@@ -91,7 +91,7 @@ const applyResourceSeed = async (): Promise<void> => {
     data: resourceExamples.map((resource) => ({
       ...resource,
       content: resource.content,
-      ...(resource.uri.startsWith("expired") ? { expiresAt: new Date(Date.now() - 1000) } : {}),
+      ...(resource.uri.startsWith("expired") && { expiresAt: new Date(Date.now() - 1000) }),
     })),
   });
 };
