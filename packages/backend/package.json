@@ -81,7 +81,7 @@
     "@xmldom/xmldom": "0.9.8",
     "@yarnpkg/pnpify": "4.1.4",
     "emailjs": "4.0.3",
-    "esbuild": "0.25.3",
+    "esbuild": "0.25.4",
     "hono": "4.7.8",
     "hono-rate-limiter": "0.4.2",
     "jmespath": "0.16.0",
