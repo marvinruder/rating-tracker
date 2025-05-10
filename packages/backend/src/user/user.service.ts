@@ -239,9 +239,9 @@ class UserService {
           user: { email: user.email, name: user.name },
           newValues: {
             ...newValues,
-            ...("avatar" in newValues
-              ? { avatar: newValues.avatar?.substring(0, 64).concat("…") ?? newValues.avatar }
-              : {}),
+            ...("avatar" in newValues && {
+              avatar: newValues.avatar?.substring(0, 64).concat("…") ?? newValues.avatar,
+            }),
           },
         },
         "Updated user",

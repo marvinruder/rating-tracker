@@ -45,8 +45,8 @@ export const EditPortfolio = (props: EditPortfolioProps): React.JSX.Element => {
         param: { id: String(props.portfolio.id) },
         json: {
           // Only send the parameters that have changed.
-          ...(name !== props.portfolio.name ? { name: name.trim() } : {}),
-          ...(currency !== props.portfolio.currency ? { currency } : {}),
+          ...(name !== props.portfolio.name && { name: name.trim() }),
+          ...(currency !== props.portfolio.currency && { currency }),
         },
       })
       .then(handleResponse)

@@ -34,7 +34,7 @@ class SignalService extends Singleton {
       // Remove duplicate phone numbers (i.e. user subscribed to all updates and has a watchlist containing the stock)
       const recipients = [...new Set(users.map((user) => user.phone).filter((phone) => phone !== null))];
       performFetchRequest(`${process.env.SIGNAL_URL}/v2/send`, {
-        body: { message, number, recipients, ...(isStyled ? { text_mode: "styled" } : {}) },
+        body: { message, number, recipients, ...(isStyled && { text_mode: "styled" }) },
         method: "POST",
       }).catch((e) => {
         /* c8 ignore start */ // The mocked Signal client does not return an error

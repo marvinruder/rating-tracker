@@ -23,13 +23,11 @@ export const StatusIndicator: FC<StatusIndicatorProps> = (props: StatusIndicator
         width: theme.typography.body1.fontSize,
         height: theme.typography.body1.fontSize,
         color: props.status === "N/A" ? theme.palette.secondary.main : theme.palette[props.status as AlertColor].main,
-        ...(props.status === "N/A"
-          ? {}
-          : {
-              filter:
-                `drop-shadow(0 0 calc(${theme.typography.body1.fontSize}px * 0.2) ` +
-                `${theme.palette[props.status as AlertColor].main})`,
-            }),
+        ...(props.status !== "N/A" && {
+          filter:
+            `drop-shadow(0 0 calc(${theme.typography.body1.fontSize}px * 0.2) ` +
+            `${theme.palette[props.status as AlertColor].main})`,
+        }),
       })}
     />
   </Box>

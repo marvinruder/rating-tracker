@@ -21,7 +21,7 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
   return (
     <ListItem
       {...props}
-      {...(navLink ? { component: NavLink, to: `${stocksAPIPath}/${encodeURIComponent(stock.ticker)}` } : {})}
+      {...(navLink && { component: NavLink, to: `${stocksAPIPath}/${encodeURIComponent(stock.ticker)}` })}
       sx={{
         ...props.sx,
         cursor: props.onClick || navLink ? "pointer" : undefined,
@@ -30,15 +30,13 @@ export const StockPreview = ({ stock, navLink, onDelete, ...props }: StockPrevie
         "&:hover": props.onClick || navLink ? { background: theme.palette.action.hover } : {},
         "> .MuiListItemSecondaryAction-root": { right: 9 },
       }}
-      {...(onDelete
-        ? {
-            secondaryAction: (
-              <IconButton aria-label={`Delete stock “${stock.name}”`} color="error" onClick={onDelete}>
-                <ClearIcon />
-              </IconButton>
-            ),
-          }
-        : {})}
+      {...(onDelete && {
+        secondaryAction: (
+          <IconButton aria-label={`Delete stock “${stock.name}”`} color="error" onClick={onDelete}>
+            <ClearIcon />
+          </IconButton>
+        ),
+      })}
     >
       <ListItemAvatar>
         <Avatar

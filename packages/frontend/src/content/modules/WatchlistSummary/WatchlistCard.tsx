@@ -53,7 +53,7 @@ const WatchlistCard = (props: WatchlistCardProps): React.JSX.Element => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  ...(isFavorites ? { maxWidth: "calc(100% - 36px)" } : {}),
+                  ...(isFavorites && { maxWidth: "calc(100% - 36px)" }),
                 }}
               >
                 <Box>

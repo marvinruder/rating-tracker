@@ -85,22 +85,22 @@ export const EditStock = (props: EditStockProps): React.JSX.Element => {
         param: { ticker: props.stock.ticker },
         json: {
           // Only send the parameters that have changed.
-          ...(ticker.trim() !== props.stock.ticker ? { ticker: ticker.trim() } : {}),
-          ...(name.trim() !== props.stock.name ? { name: name.trim() } : {}),
-          ...(isin.trim() !== props.stock.isin ? { isin: isin.trim() } : {}),
-          ...(country.trim() !== props.stock.country ? { country: country } : {}),
-          ...(morningstarID.trim() !== (props.stock.morningstarID ?? "")
-            ? { morningstarID: morningstarID.trim() || null }
-            : {}),
-          ...(marketScreenerID.trim() !== (props.stock.marketScreenerID ?? "")
-            ? { marketScreenerID: marketScreenerID.trim() || null }
-            : {}),
-          ...(msciID.trim() !== (props.stock.msciID ?? "") ? { msciID: msciID.trim() || null } : {}),
-          ...(ric.trim() !== (props.stock.ric ?? "") ? { ric: ric.trim() || null } : {}),
-          ...(spID !== props.stock.spID ? { spID } : {}),
-          ...(sustainalyticsID.trim() !== (props.stock.sustainalyticsID ?? "")
-            ? { sustainalyticsID: sustainalyticsID.trim() || null }
-            : {}),
+          ...(ticker.trim() !== props.stock.ticker && { ticker: ticker.trim() }),
+          ...(name.trim() !== props.stock.name && { name: name.trim() }),
+          ...(isin.trim() !== props.stock.isin && { isin: isin.trim() }),
+          ...(country.trim() !== props.stock.country && { country: country }),
+          ...(morningstarID.trim() !== (props.stock.morningstarID ?? "") && {
+            morningstarID: morningstarID.trim() || null,
+          }),
+          ...(marketScreenerID.trim() !== (props.stock.marketScreenerID ?? "") && {
+            marketScreenerID: marketScreenerID.trim() || null,
+          }),
+          ...(msciID.trim() !== (props.stock.msciID ?? "") && { msciID: msciID.trim() || null }),
+          ...(ric.trim() !== (props.stock.ric ?? "") && { ric: ric.trim() || null }),
+          ...(spID !== props.stock.spID && { spID }),
+          ...(sustainalyticsID.trim() !== (props.stock.sustainalyticsID ?? "") && {
+            sustainalyticsID: sustainalyticsID.trim() || null,
+          }),
         },
       })
       .then(handleResponse)

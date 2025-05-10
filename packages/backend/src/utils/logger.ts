@@ -145,7 +145,7 @@ class Logger {
           path,
           query: c.req.queries(),
           cookies: getCookie(c),
-          ...(user ? { user: { name: user.name, email: user.email } } : {}),
+          ...(user && { user: { name: user.name, email: user.email } }),
           status,
           headers,
           latency: Date.now() - start,

@@ -631,7 +631,7 @@ const PortfolioModule = (): React.JSX.Element => {
                 container
                 spacing={0}
                 columns={3}
-                sx={{ mx: "auto", maxWidth: "264px", px: "24px", pb: "20px", ...(columns === 3 ? { pt: "8px" } : {}) }}
+                sx={{ mx: "auto", maxWidth: "264px", px: "24px", pb: "20px", ...(columns === 3 && { pt: "8px" }) }}
               >
                 {sizeArray.toReversed().map((size) =>
                   styleArray.map((style) => (
@@ -650,8 +650,8 @@ const PortfolioModule = (): React.JSX.Element => {
                           Math.round(255 * (styleBox ? (styleBox[`${size}-${style}`] ?? 0) : 0))
                             .toString(16)
                             .padStart(2, "0"),
-                        ...(size === "Large" ? {} : { borderTop: "1px solid transparent" }),
-                        ...(style === "Value" ? {} : { borderLeft: "1px solid transparent" }),
+                        ...(size !== "Large" && { borderTop: "1px solid transparent" }),
+                        ...(style !== "Value" && { borderLeft: "1px solid transparent" }),
                       })}
                     >
                       <Tooltip title={`${size}-${style}`} arrow>

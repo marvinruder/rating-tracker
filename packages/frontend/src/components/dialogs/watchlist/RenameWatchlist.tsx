@@ -39,7 +39,7 @@ export const RenameWatchlist = (props: RenameWatchlistProps): React.JSX.Element 
       .$patch({
         param: { id: String(props.watchlist.id) },
         // Only send the parameters that have changed.
-        json: { ...(name !== props.watchlist.name ? { name: name.trim() } : {}) },
+        json: { ...(name !== props.watchlist.name && { name: name.trim() }) },
       })
       .then(handleResponse)
       .then(() => (props.onRename(), props.onClose())) // Update the watchlists in the parent component.

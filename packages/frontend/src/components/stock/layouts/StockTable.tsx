@@ -71,8 +71,8 @@ export const StockTable: FC<StockTableProps> = (props: StockTableProps): React.J
     sortOrder,
     // Filtering
     ...filter,
-    ...(props.watchlist?.id ? { watchlist: props.watchlist.id } : {}),
-    ...(props.portfolio?.id ? { portfolio: props.portfolio.id } : {}),
+    ...(props.watchlist?.id && { watchlist: props.watchlist.id }),
+    ...(props.portfolio?.id && { portfolio: props.portfolio.id }),
   };
 
   /**
