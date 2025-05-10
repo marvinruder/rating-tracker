@@ -96,7 +96,7 @@
     "vitest": "3.1.2",
     "xpath-ts2": "1.4.2",
     "zod": "3.24.4",
-    "zod-validation-error": "3.4.0"
+    "zod-validation-error": "3.4.1"
   },
   "devDependencies": {
     "@types/jmespath": "0.15.2",
