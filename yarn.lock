@@ -1453,7 +1453,7 @@ __metadata:
     prettier: "npm:3.5.3"
     prisma: "npm:6.8.2"
     prisma-json-types-generator: "npm:3.4.2"
-    smtp-server: "npm:3.13.6"
+    smtp-server: "npm:3.13.7"
     typescript: "npm:5.8.3"
     undici-types: "npm:7.9.0"
     vite: "npm:6.3.5"
@@ -5953,10 +5953,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:6.9.15":
-  version: 6.9.15
-  resolution: "nodemailer@npm:6.9.15"
-  checksum: 10c0/92493406310cb1bb0bac575d604b3c75b67e420e8af94711bd55cb012ee02d3bf6fda57c663d66c15bdd89acd5f9cd540922644b089617c6e191596536503b5b
+"nodemailer@npm:7.0.3":
+  version: 7.0.3
+  resolution: "nodemailer@npm:7.0.3"
+  checksum: 10c0/835492262328471b94a080cea43ea20f4232e19a915400cd71c7f4f4ab93a7d361775154eebe30a8fc40379eecf11a0bbc73e6cf4bbee9dccb6dd1cf7a1dc792
   languageName: node
   linkType: hard
 
@@ -7112,15 +7112,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"smtp-server@npm:3.13.6":
-  version: 3.13.6
-  resolution: "smtp-server@npm:3.13.6"
+"smtp-server@npm:3.13.7":
+  version: 3.13.7
+  resolution: "smtp-server@npm:3.13.7"
   dependencies:
     base32.js: "npm:0.1.0"
     ipv6-normalize: "npm:1.0.1"
-    nodemailer: "npm:6.9.15"
+    nodemailer: "npm:7.0.3"
     punycode.js: "npm:2.3.1"
-  checksum: 10c0/1cf74fa057c67ac60e024652db048a9790595ccd6db80667e55a4fb81ab02d70dadcaf04e14d1c6eb68d56a422595a10728591a406d4d2575aa61f02b7f0b889
+  checksum: 10c0/688895fe335b2e84aa0b7c418ac46367e0828cd830b8d590153e0731b55de66d8935466cd2b5555506b8bf78ed5c67925e6ec56502d055dbe1d0469e94735677
   languageName: node
   linkType: hard
 
