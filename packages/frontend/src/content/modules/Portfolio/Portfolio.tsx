@@ -701,7 +701,6 @@ const PortfolioModule = (): React.JSX.Element => {
                       // out or deleting stocks), we need to perform some manual checks to find out whether its data is
                       // valid.
                       pathInSunburstData(countrySunburstData, datum.path) ? (
-                        // @ts-ignore
                         <animated.g transform={style.transform} style={{ pointerEvents: "none" }}>
                           <circle stroke={theme.palette.background.paper} strokeWidth={1} fill={datum.color} r={12} />
                           <text textAnchor="middle" dominantBaseline="central" style={{ fontSize: 16 }}>
@@ -790,7 +789,6 @@ const PortfolioModule = (): React.JSX.Element => {
                       // out or deleting stocks), we need to perform some manual checks to find out whether its data is
                       // valid.
                       pathInSunburstData(industrySunburstData, datum.path) ? (
-                        // @ts-expect-error
                         <animated.g
                           transform={style.transform}
                           fill={
