@@ -1446,7 +1446,7 @@ __metadata:
     hono: "npm:4.7.10"
     hono-rate-limiter: "npm:0.4.2"
     jmespath: "npm:0.16.0"
-    node-cron: "npm:3.0.3"
+    node-cron: "npm:4.0.6"
     oauth4webapi: "npm:3.5.1"
     pino: "npm:9.7.0"
     pino-pretty: "npm:13.0.0"
@@ -5907,12 +5907,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-cron@npm:3.0.3":
-  version: 3.0.3
-  resolution: "node-cron@npm:3.0.3"
-  dependencies:
-    uuid: "npm:8.3.2"
-  checksum: 10c0/e6e817c5bf28cca69f256ecc1a2cb737cf895cb0fe22f8ec58ce614cb74dcc22e93f495984a26ece51322473238ccc0ef53b4f373035697017b8c28bddacb9b9
+"node-cron@npm:4.0.6":
+  version: 4.0.6
+  resolution: "node-cron@npm:4.0.6"
+  checksum: 10c0/16482aa79deaf210a8c9efd33c0ff58071b6bf5187ffd0b2dcbdeee2ff823e8ad07d990259244828573f11f89c71e8faea40459c3b62219c5f91eb0a369ddeb7
   languageName: node
   linkType: hard
 
@@ -7784,15 +7782,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/1b8663515c0be34fa653feb724fdcce3984037c78dd4a18f68b2c8be55cc1a1084c578d5b75f158d41b5ddffc2bf5600766d1af3c19c8e329bb20af2ec6f52f4
-  languageName: node
-  linkType: hard
-
-"uuid@npm:8.3.2":
-  version: 8.3.2
-  resolution: "uuid@npm:8.3.2"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 10c0/bcbb807a917d374a49f475fae2e87fdca7da5e5530820ef53f65ba1d12131bd81a92ecf259cc7ce317cbe0f289e7d79fdfebcef9bfa3087c8c8a2fa304c9be54
   languageName: node
   linkType: hard
 
