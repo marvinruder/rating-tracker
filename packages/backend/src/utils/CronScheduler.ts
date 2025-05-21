@@ -1,5 +1,6 @@
 import type { DataProvider } from "@rating-tracker/commons";
 import { dataProviderName } from "@rating-tracker/commons";
+import type { ScheduledTask } from "node-cron";
 import cron from "node-cron";
 
 import type DBService from "../db/db.service";
@@ -25,10 +26,11 @@ class CronScheduler extends Singleton {
     super();
     if (CronScheduler.schedules.length) return;
 
+    const dbCleanupSchedule = cron.schedule("* * * * *", () => void Promise.all([this.dbService.cleanup()]));
+    void dbCleanupSchedule.execute();
+
     // Clean up resources and sessions every minute
-    CronScheduler.schedules.push(
-      cron.schedule("* * * * *", () => void Promise.all([this.dbService.cleanup()]), { runOnInit: true }),
-    );
+    CronScheduler.schedules.push(dbCleanupSchedule);
 
     // Rotate log file every day
     CronScheduler.schedules.push(cron.schedule("0 0 * * *", () => Logger.rotateFile()));
@@ -79,7 +81,7 @@ class CronScheduler extends Singleton {
     }
   }
 
-  private static schedules: cron.ScheduledTask[] = [];
+  private static schedules: ScheduledTask[] = [];
 
   /**
    * A record of options for each data provider.
