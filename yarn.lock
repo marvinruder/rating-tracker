@@ -1060,30 +1060,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nivo/arcs@npm:0.98.0":
-  version: 0.98.0
-  resolution: "@nivo/arcs@npm:0.98.0"
+"@nivo/arcs@npm:0.99.0":
+  version: 0.99.0
+  resolution: "@nivo/arcs@npm:0.99.0"
   dependencies:
-    "@nivo/colors": "npm:0.98.0"
-    "@nivo/core": "npm:0.98.0"
-    "@nivo/text": "npm:0.98.0"
-    "@nivo/theming": "npm:0.98.0"
+    "@nivo/colors": "npm:0.99.0"
+    "@nivo/core": "npm:0.99.0"
+    "@nivo/text": "npm:0.99.0"
+    "@nivo/theming": "npm:0.99.0"
     "@react-spring/core": "npm:9.4.5 || ^9.7.2 || ^10.0"
     "@react-spring/web": "npm:9.4.5 || ^9.7.2 || ^10.0"
     "@types/d3-shape": "npm:^3.1.6"
     d3-shape: "npm:^3.2.0"
   peerDependencies:
     react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 10c0/a4511bb1916433680e2f1b4fee6ee01c3063c6488b12f52e0401cfa7fbb4ffa3ece31cbf456d3600d9dfa918b0bc469ea65690227360285c9607d2f2c2bbf5db
+  checksum: 10c0/443b9cf8673d2159dfff6e6caf12081c6f6d00fa66d7da700adcb31437d0b7e01bedf6cb1d994856e696d657599cb819bb8429664fb54dd19fdd6f2fdd3bb60e
   languageName: node
   linkType: hard
 
-"@nivo/colors@npm:0.98.0":
-  version: 0.98.0
-  resolution: "@nivo/colors@npm:0.98.0"
+"@nivo/colors@npm:0.99.0":
+  version: 0.99.0
+  resolution: "@nivo/colors@npm:0.99.0"
   dependencies:
-    "@nivo/core": "npm:0.98.0"
-    "@nivo/theming": "npm:0.98.0"
+    "@nivo/core": "npm:0.99.0"
+    "@nivo/theming": "npm:0.99.0"
     "@types/d3-color": "npm:^3.0.0"
     "@types/d3-scale": "npm:^4.0.8"
     "@types/d3-scale-chromatic": "npm:^3.0.0"
@@ -1093,16 +1093,16 @@ __metadata:
     lodash: "npm:^4.17.21"
   peerDependencies:
     react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 10c0/51aba554c94f44f737ef9596a6294d5ee1436a1a1fedf4a63fbe03cd1e3de20850da412affcec0cb9380551aef4deff4c1315782ffab1cc6664ced8566eb6479
+  checksum: 10c0/391976c8d52e3a6095f1f15e9666984271e9ff15359170f2b145f658c171c9e0e15ae80b994fbd7125fe46bee3ae2e25c99f75205f2c746446ab2542bf50c883
   languageName: node
   linkType: hard
 
-"@nivo/core@npm:0.98.0":
-  version: 0.98.0
-  resolution: "@nivo/core@npm:0.98.0"
+"@nivo/core@npm:0.99.0":
+  version: 0.99.0
+  resolution: "@nivo/core@npm:0.99.0"
   dependencies:
-    "@nivo/theming": "npm:0.98.0"
-    "@nivo/tooltip": "npm:0.98.0"
+    "@nivo/theming": "npm:0.99.0"
+    "@nivo/tooltip": "npm:0.99.0"
     "@react-spring/web": "npm:9.4.5 || ^9.7.2 || ^10.0"
     "@types/d3-shape": "npm:^3.1.6"
     d3-color: "npm:^3.1.0"
@@ -1117,62 +1117,62 @@ __metadata:
     use-debounce: "npm:^10.0.4"
   peerDependencies:
     react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 10c0/1d8cce1335cd19d015b407541183405754ce86c54170b6a2752dfd0d8690101df812fb480a69814ae7fb9a178a3cae08f5f09145f4359af1ff2bb43857063b65
+  checksum: 10c0/b12744a65ca6f07d663b4a72110a88bb4f53a2033a70ca37d5b4fec6e416bd509d9e339fa38e728c3e1eaa8b6d099c4dea1208209f67185ad8911f21487de0b0
   languageName: node
   linkType: hard
 
-"@nivo/sunburst@npm:0.98.0":
-  version: 0.98.0
-  resolution: "@nivo/sunburst@npm:0.98.0"
+"@nivo/sunburst@npm:0.99.0":
+  version: 0.99.0
+  resolution: "@nivo/sunburst@npm:0.99.0"
   dependencies:
-    "@nivo/arcs": "npm:0.98.0"
-    "@nivo/colors": "npm:0.98.0"
-    "@nivo/core": "npm:0.98.0"
-    "@nivo/theming": "npm:0.98.0"
-    "@nivo/tooltip": "npm:0.98.0"
+    "@nivo/arcs": "npm:0.99.0"
+    "@nivo/colors": "npm:0.99.0"
+    "@nivo/core": "npm:0.99.0"
+    "@nivo/theming": "npm:0.99.0"
+    "@nivo/tooltip": "npm:0.99.0"
     "@types/d3-hierarchy": "npm:^3.1.7"
     d3-hierarchy: "npm:^3.1.2"
     lodash: "npm:^4.17.21"
   peerDependencies:
     react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 10c0/28fcfb527e680883f33d0acf4dba41bd76bd7d799e3dab0961af9baf139c42ac17ad4553ae7c75a1a8db2ca48cd0cdfeee4db3b92d28faade27cde6d6fe55f59
+  checksum: 10c0/d32caedcdc0e4809e6663d1f4e20385347558078251a4b17bd6fb3f1fbbda3fc43de937034f6092461b6cf9e95b43e9f4add0349643e6315175b4034d769db69
   languageName: node
   linkType: hard
 
-"@nivo/text@npm:0.98.0":
-  version: 0.98.0
-  resolution: "@nivo/text@npm:0.98.0"
+"@nivo/text@npm:0.99.0":
+  version: 0.99.0
+  resolution: "@nivo/text@npm:0.99.0"
   dependencies:
-    "@nivo/core": "npm:0.98.0"
-    "@nivo/theming": "npm:0.98.0"
+    "@nivo/core": "npm:0.99.0"
+    "@nivo/theming": "npm:0.99.0"
     "@react-spring/web": "npm:9.4.5 || ^9.7.2 || ^10.0"
   peerDependencies:
     react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 10c0/a1ee7501333b7e84ab5693c71b924767e743c9ed89a910b6afbadac1d2731815c19662790ec12d72e737dd2640de968f3719b5ec1c0b24cc178c3019129d2289
+  checksum: 10c0/add071c276ad4809a771e4d42b2dbd9912e22a213828b1407c4caaa09ac623f0978854be11b6844a9c494fda130075325214b9ad75a0c0727241b335477dad88
   languageName: node
   linkType: hard
 
-"@nivo/theming@npm:0.98.0":
-  version: 0.98.0
-  resolution: "@nivo/theming@npm:0.98.0"
+"@nivo/theming@npm:0.99.0":
+  version: 0.99.0
+  resolution: "@nivo/theming@npm:0.99.0"
   dependencies:
     lodash: "npm:^4.17.21"
   peerDependencies:
     react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 10c0/494c738d79ec3af847074033164c0381b8296954d377ccd6f57eeb23ec0b2e075fc6e393a01e911fcddc2969c09f3c04cb55d367dfdc50e1cf4123cc5e3af954
+  checksum: 10c0/bc69e59a632e3106e061c44b0f7c86d8f757002b147e7e9ec93a0b11286ade71d67cf90d720484867c7dc933f0b33ec4135814adc7100f70700799f6ff05f59b
   languageName: node
   linkType: hard
 
-"@nivo/tooltip@npm:0.98.0":
-  version: 0.98.0
-  resolution: "@nivo/tooltip@npm:0.98.0"
+"@nivo/tooltip@npm:0.99.0":
+  version: 0.99.0
+  resolution: "@nivo/tooltip@npm:0.99.0"
   dependencies:
-    "@nivo/core": "npm:0.98.0"
-    "@nivo/theming": "npm:0.98.0"
+    "@nivo/core": "npm:0.99.0"
+    "@nivo/theming": "npm:0.99.0"
     "@react-spring/web": "npm:9.4.5 || ^9.7.2 || ^10.0"
   peerDependencies:
     react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 10c0/77e5298fdb9ec036b189ff27195c9bb7c1c748cd7b2f3daba03a5dcd293176fc68d012867fbbb8efc5e4ce15a335b10df3351083d229c2eca4708ba438ac7b4d
+  checksum: 10c0/0446ce0c31f2de20854a1e793bb222ee5f26d723df7c5008de0f853f5e0deafee7865bcca9b3a0584a6cb8e2b015d7875b487a880d5ae9dab8d2489bb8e9ba5b
   languageName: node
   linkType: hard
 
@@ -1498,8 +1498,8 @@ __metadata:
     "@mui/material": "npm:7.1.0"
     "@mui/system": "npm:7.1.0"
     "@mui/x-charts": "npm:8.4.0"
-    "@nivo/core": "npm:0.98.0"
-    "@nivo/sunburst": "npm:0.98.0"
+    "@nivo/core": "npm:0.99.0"
+    "@nivo/sunburst": "npm:0.99.0"
     "@rating-tracker/backend": "workspace:*"
     "@rating-tracker/commons": "workspace:*"
     "@rating-tracker/wasm": "workspace:*"
