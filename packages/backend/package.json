@@ -85,7 +85,7 @@
     "hono": "4.7.10",
     "hono-rate-limiter": "0.4.2",
     "jmespath": "0.16.0",
-    "node-cron": "4.0.6",
+    "node-cron": "4.0.7",
     "oauth4webapi": "3.5.1",
     "pino": "9.7.0",
     "prisma": "6.8.2",
