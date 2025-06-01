@@ -692,26 +692,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/zod-openapi@npm:0.19.6":
-  version: 0.19.6
-  resolution: "@hono/zod-openapi@npm:0.19.6"
+"@hono/zod-openapi@npm:0.19.8":
+  version: 0.19.8
+  resolution: "@hono/zod-openapi@npm:0.19.8"
   dependencies:
     "@asteasolutions/zod-to-openapi": "npm:^7.3.0"
-    "@hono/zod-validator": "npm:^0.5.0"
+    "@hono/zod-validator": "npm:^0.7.0"
   peerDependencies:
     hono: ">=4.3.6"
     zod: 3.*
-  checksum: 10c0/3a3313ba56f68829616263c25841633ff9390f2c5bedd16f454a46a12c98ab1dea708bb3a9dc9810a5fe33e291bc4e9c6d312c44cb2f24dd4e53934aebd3a724
+  checksum: 10c0/f2af759a18d784908ff220685f1eafb4aaaf8933dbd1aa268dc0a42aa3f104a32865d46d0e01f8511cd47d224c509de2d03254539b1f9de5a5886610cf0f86ca
   languageName: node
   linkType: hard
 
-"@hono/zod-validator@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "@hono/zod-validator@npm:0.5.0"
+"@hono/zod-validator@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "@hono/zod-validator@npm:0.7.0"
   peerDependencies:
     hono: ">=3.9.0"
-    zod: ^3.19.1
-  checksum: 10c0/fe941a6ea6fb9e05ed4fc6f4e00aa8ca3bf34e582b5a79dcdbeae965927eaf944f1894e7bae2d9f16e17a57f94f8432d2811f34397254af1c454f3efd798a093
+    zod: ^3.25.0
+  checksum: 10c0/8e362358348ef84a889ada450bba0a0c5b6109dacf74189153622f947e1fb66e161ef8772f169efe49d737e837d490c33efbbe094e5bb3e7a55dccd62848acd6
   languageName: node
   linkType: hard
 
@@ -1420,7 +1420,7 @@ __metadata:
   dependencies:
     "@hono/node-server": "npm:1.14.3"
     "@hono/swagger-ui": "npm:0.5.1"
-    "@hono/zod-openapi": "npm:0.19.6"
+    "@hono/zod-openapi": "npm:0.19.8"
     "@prisma/client": "npm:6.8.2"
     "@rating-tracker/commons": "workspace:*"
     "@simplewebauthn/server": "npm:13.1.1"
