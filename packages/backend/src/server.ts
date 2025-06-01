@@ -248,7 +248,9 @@ app.onError(ErrorHelper.errorHandler);
 // Setup Cron Jobs
 new CronScheduler(dbService, fetchService, signalService, userService);
 
-export const server = serve({ fetch: app.fetch, port: process.env.PORT }, (info) => {
-  Logger.info({ conponent: getRuntimeKey(), interface: info.address, port: info.port }, "Listening");
-  process.env.EXIT_AFTER_READY && process.exit(0);
-});
+/* c8 ignore start */ // We do not run the server in tests
+if (process.env.NODE_ENV !== "test")
+  serve({ fetch: app.fetch, port: process.env.PORT }, (info) => {
+    Logger.info({ conponent: getRuntimeKey(), interface: info.address, port: info.port }, "Listening");
+    process.env.EXIT_AFTER_READY && process.exit(0);
+  });

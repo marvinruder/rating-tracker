@@ -674,12 +674,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/node-server@npm:1.14.1":
-  version: 1.14.1
-  resolution: "@hono/node-server@npm:1.14.1"
+"@hono/node-server@npm:1.14.3":
+  version: 1.14.3
+  resolution: "@hono/node-server@npm:1.14.3"
   peerDependencies:
     hono: ^4
-  checksum: 10c0/b5261c0179a0c87ebe063e2e68c0e22cbd1214a9a33af7e29c14703671edf62278a1a2f5fa120c9a3d09fd22179f39b27c80b29de1849b96a842f0485dd3910b
+  checksum: 10c0/2e873ed38be44bd2499ffd6e592782edd9216475935d992119ad1d3f61f14cb39dc8fe79d1ed5d7d8caeef1d9fd84b36f9715add0b9f98c3d040b5cc9ef872f8
   languageName: node
   linkType: hard
 
@@ -1418,7 +1418,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@rating-tracker/backend@workspace:packages/backend"
   dependencies:
-    "@hono/node-server": "npm:1.14.1"
+    "@hono/node-server": "npm:1.14.3"
     "@hono/swagger-ui": "npm:0.5.1"
     "@hono/zod-openapi": "npm:0.19.6"
     "@prisma/client": "npm:6.8.2"
