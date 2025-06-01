@@ -234,7 +234,7 @@ ENTRYPOINT [ "codacy-coverage" ]
 # required for Renovate to update the base image:
 FROM node:22.16.0-alpine AS node
 
-FROM alpine:3.21.3 AS deploy-base
+FROM alpine:3.22.0 AS deploy-base
 ARG TARGETARCH
 
 # Install standard libraries and copy Node.js binary
