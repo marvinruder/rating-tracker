@@ -7,7 +7,6 @@ import EmailService from "../src/email/email.service";
 import FavoriteService from "../src/favorite/favorite.service";
 import PortfolioService from "../src/portfolio/portfolio.service";
 import ResourceService from "../src/resource/resource.service";
-import { server } from "../src/server";
 import SessionService from "../src/session/session.service";
 import SignalService from "../src/signal/signal.service";
 import StockService from "../src/stock/stock.service";
@@ -116,10 +115,6 @@ afterEach(async (context) => {
     expect(emailMessages).toHaveLength(0);
     expect(signalMessages).toHaveLength(0);
   }
-});
-
-afterAll(() => {
-  server.close();
 });
 
 /**

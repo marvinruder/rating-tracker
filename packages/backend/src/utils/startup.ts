@@ -98,12 +98,10 @@ export const startup = () => {
       FQDN: `${process.env.SUBDOMAIN ? `${process.env.SUBDOMAIN}.` : ""}${process.env.DOMAIN}`,
     }) as typeof process.env;
   } catch (e) {
-    if (e instanceof Error) {
-      // Print error message and exit
-      console.error(`\x07\x1b[31m${e.message}\x1b[0m`);
-      process.exit(1);
-      /* c8 ignore next */ // This should never occur, since always Errors are thrown.
-    } else throw e; // if something else than an error was thrown
+    assert(e instanceof Error);
+    // Print error message and exit
+    console.error(`\x07\x1b[31m${e.message}\x1b[0m`);
+    process.exit(1);
   }
 
   if (process.env.AUTO_FETCH_SCHEDULE) assert(cron.validate(process.env.AUTO_FETCH_SCHEDULE), "Invalid cron schedule");
