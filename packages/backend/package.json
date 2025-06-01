@@ -82,7 +82,7 @@
     "@yarnpkg/pnpify": "4.1.4",
     "emailjs": "4.0.3",
     "esbuild": "0.25.4",
-    "hono": "4.7.10",
+    "hono": "4.7.11",
     "hono-rate-limiter": "0.4.2",
     "jmespath": "0.16.0",
     "node-cron": "4.0.7",
