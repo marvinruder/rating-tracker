@@ -1019,14 +1019,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-charts@npm:8.4.0":
-  version: 8.4.0
-  resolution: "@mui/x-charts@npm:8.4.0"
+"@mui/x-charts@npm:8.5.0":
+  version: 8.5.0
+  resolution: "@mui/x-charts@npm:8.5.0"
   dependencies:
     "@babel/runtime": "npm:^7.27.1"
     "@mui/utils": "npm:^7.0.2"
     "@mui/x-charts-vendor": "npm:8.4.0"
-    "@mui/x-internals": "npm:8.4.0"
+    "@mui/x-internals": "npm:8.5.0"
     bezier-easing: "npm:^2.1.0"
     clsx: "npm:^2.1.1"
     prop-types: "npm:^15.8.1"
@@ -1044,19 +1044,20 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: 10c0/341ff1fb81eb46e63994ef760099d2d9c59119ca8152a4ba200b571277a498d57b2561876486ff940d6da7d58afa76d5ec67e520206c6bf9e5afb9c8440b8b82
+  checksum: 10c0/0026aab2966ab2eaea29b91ecede4715a0a711e779dd1493b358e69365901bdcbde6720c76e6e20c6031697d6bb2aa3e9243637f06c78f71519134f1589c1cb5
   languageName: node
   linkType: hard
 
-"@mui/x-internals@npm:8.4.0":
-  version: 8.4.0
-  resolution: "@mui/x-internals@npm:8.4.0"
+"@mui/x-internals@npm:8.5.0":
+  version: 8.5.0
+  resolution: "@mui/x-internals@npm:8.5.0"
   dependencies:
     "@babel/runtime": "npm:^7.27.1"
     "@mui/utils": "npm:^7.0.2"
   peerDependencies:
+    "@mui/system": ^5.15.14 || ^6.0.0 || ^7.0.0
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/40a7e0c611650efc67586e86a306d094bbf3a260336e580bfa3e2949140322a5cc1dc5d7e400938fd7e91299bfbc5520306e5094b4a208dcfe5d966642eeb344
+  checksum: 10c0/205f16b6f2f3be38203f0b0c75c89b04d6a54997a0eb4906027e07509edd903a9452edb9dfc877a80d9575a6ff6cfde28ccb0218574b8c8819305b0bba1b92be
   languageName: node
   linkType: hard
 
@@ -1497,7 +1498,7 @@ __metadata:
     "@mui/icons-material": "npm:7.1.0"
     "@mui/material": "npm:7.1.0"
     "@mui/system": "npm:7.1.0"
-    "@mui/x-charts": "npm:8.4.0"
+    "@mui/x-charts": "npm:8.5.0"
     "@nivo/core": "npm:0.99.0"
     "@nivo/sunburst": "npm:0.99.0"
     "@rating-tracker/backend": "workspace:*"
