@@ -172,7 +172,7 @@ RUN \
   # Bundle backend
   yarn workspace @rating-tracker/backend build && \
   # Parse backend bundle for correctness and executability in Node.js
-  /bin/sh -c 'cd packages/backend && sed -i "/OIDC\|SMTP/d" ./test/env.ts && EXIT_AFTER_READY=1 node -r ./test/env.ts dist/server.mjs' && \
+  /bin/sh -c 'cd packages/backend && sed -i "/OIDC\|SMTP/d; s/NODE_ENV: \"test\"/NODE_ENV: \"production\"/g" ./test/env.ts && EXIT_AFTER_READY=1 node -r ./test/env.ts dist/server.mjs' && \
   # Create directories for target container and copy only necessary files
   mkdir -p /app/public/api-docs /app/prisma/client && \
   cp -r packages/backend/dist/* /app && \
