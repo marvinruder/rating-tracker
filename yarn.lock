@@ -1459,7 +1459,7 @@ __metadata:
     vite: "npm:6.3.5"
     vitest: "npm:3.1.4"
     xpath-ts2: "npm:1.4.2"
-    zod: "npm:3.25.28"
+    zod: "npm:3.25.46"
     zod-validation-error: "npm:3.4.1"
   languageName: unknown
   linkType: soft
@@ -8172,9 +8172,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.25.28":
-  version: 3.25.28
-  resolution: "zod@npm:3.25.28"
-  checksum: 10c0/557fb621813d128f8090c43de65f9e8661ce9bd8bd29d7adc6b38b0a79e14729a8926e28a2e6eee2fa0ec0ea390cc549363f50235e8f45d2e4771906d1f87b20
+"zod@npm:3.25.46":
+  version: 3.25.46
+  resolution: "zod@npm:3.25.46"
+  checksum: 10c0/2cc754a49244f9d80ef50c0da8e01136e0202a9fa92229bcfef2b8285ca07f865bcdd17f0fb609219bd91a2de7965b9a27627cd456e151924144d7a06c6d6686
   languageName: node
   linkType: hard
