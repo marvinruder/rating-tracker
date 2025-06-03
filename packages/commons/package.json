@@ -19,16 +19,16 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@vitest/coverage-v8": "3.2.0",
+    "@vitest/coverage-v8": "3.2.1",
     "statuses": "2.0.1",
     "vite": "6.3.5",
-    "vitest": "3.2.0"
+    "vitest": "3.2.1"
   },
   "devDependencies": {
     "@types/statuses": "2.0.5",
     "@typescript-eslint/eslint-plugin": "8.33.1",
     "@typescript-eslint/parser": "8.33.1",
-    "@vitest/ui": "3.2.0",
+    "@vitest/ui": "3.2.1",
     "eslint": "9.28.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "10.1.5",
