@@ -1425,7 +1425,7 @@ __metadata:
     "@rating-tracker/commons": "workspace:*"
     "@simplewebauthn/server": "npm:13.1.1"
     "@types/jmespath": "npm:0.15.2"
-    "@types/node": "npm:22.15.29"
+    "@types/node": "npm:22.15.30"
     "@types/node-cron": "npm:3.0.11"
     "@types/smtp-server": "npm:3.5.10"
     "@typescript-eslint/eslint-plugin": "npm:8.33.1"
@@ -1468,7 +1468,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@rating-tracker/commons@workspace:packages/commons"
   dependencies:
-    "@types/statuses": "npm:2.0.5"
+    "@types/statuses": "npm:2.0.6"
     "@typescript-eslint/eslint-plugin": "npm:8.33.1"
     "@typescript-eslint/parser": "npm:8.33.1"
     "@vitest/coverage-v8": "npm:3.2.1"
@@ -1505,9 +1505,9 @@ __metadata:
     "@rating-tracker/wasm": "workspace:*"
     "@react-spring/web": "npm:10.0.1"
     "@simplewebauthn/browser": "npm:13.1.0"
-    "@types/node": "npm:22.15.29"
+    "@types/node": "npm:22.15.30"
     "@types/react": "npm:19.1.6"
-    "@types/react-dom": "npm:19.1.5"
+    "@types/react-dom": "npm:19.1.6"
     "@typescript-eslint/eslint-plugin": "npm:8.33.1"
     "@typescript-eslint/parser": "npm:8.33.1"
     "@vitejs/plugin-react": "npm:4.5.1"
@@ -2055,12 +2055,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:22.15.29":
-  version: 22.15.29
-  resolution: "@types/node@npm:22.15.29"
+"@types/node@npm:*, @types/node@npm:22.15.30":
+  version: 22.15.30
+  resolution: "@types/node@npm:22.15.30"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/602cc88c6150780cd9b5b44604754e0ce13983ae876a538861d6ecfb1511dff289e5576fffd26c841cde2142418d4bb76e2a72a382b81c04557ccb17cff29e1d
+  checksum: 10c0/ca330ac0e7fd502686d6df115fcc606aba46fd334220f749bbba2f639accdadcb23f7900603ceccdc8240be736739cad5c0b87c0fa92c9255a4dff245f07d664
   languageName: node
   linkType: hard
 
@@ -2096,12 +2096,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:19.1.5":
-  version: 19.1.5
-  resolution: "@types/react-dom@npm:19.1.5"
+"@types/react-dom@npm:19.1.6":
+  version: 19.1.6
+  resolution: "@types/react-dom@npm:19.1.6"
   peerDependencies:
     "@types/react": ^19.0.0
-  checksum: 10c0/2a29e77cf6bb6e9f57bcfa54509c216cad2e16e244f0bd56369966ec88c072b9c91f6011d14f9e18fbfe2b801b18b86f616de75e5c8aef0be73c1f74abb33b49
+  checksum: 10c0/7ba74eee2919e3f225e898b65fdaa16e54952aaf9e3472a080ddc82ca54585e46e60b3c52018d21d4b7053f09d27b8293e9f468b85f9932ff452cd290cc131e8
   languageName: node
   linkType: hard
 
@@ -2149,10 +2149,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/statuses@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@types/statuses@npm:2.0.5"
-  checksum: 10c0/4dacec0b29483a44be902a022a11a22b339de7a6e7b2059daa4f7add10cb6dbcc28d02d2a416fe9687e48d335906bf983065391836d4e7c847e55ddef4de8fad
+"@types/statuses@npm:2.0.6":
+  version: 2.0.6
+  resolution: "@types/statuses@npm:2.0.6"
+  checksum: 10c0/dd88c220b0e2c6315686289525fd61472d2204d2e4bef4941acfb76bda01d3066f749ac74782aab5b537a45314fcd7d6261eefa40b6ec872691f5803adaa608d
   languageName: node
   linkType: hard
 
