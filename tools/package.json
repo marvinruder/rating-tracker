@@ -1,5 +1,5 @@
 {
-  "packageManager": "yarn@4.9.1",
+  "packageManager": "yarn@4.9.2",
   "dependencies": {
     "pino-pretty": "13.0.0",
     "prisma": "6.9.0"
