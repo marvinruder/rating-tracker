@@ -90,7 +90,7 @@
     "pino": "9.7.0",
     "prisma": "6.9.0",
     "prisma-json-types-generator": "3.4.2",
-    "smtp-server": "3.13.7",
+    "smtp-server": "3.13.8",
     "typescript": "5.8.3",
     "vite": "6.3.5",
     "vitest": "3.2.1",
