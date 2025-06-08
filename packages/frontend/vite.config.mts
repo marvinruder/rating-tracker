@@ -10,7 +10,7 @@ import react from "@vitejs/plugin-react";
 import proxy from "http2-proxy";
 import type { ViteDevServer } from "vite";
 import { mergeConfig, defineConfig as defineViteConfig } from "vite";
-import viteCompression from "vite-plugin-compression2";
+import { compression } from "vite-plugin-compression2";
 import { createHtmlPlugin } from "vite-plugin-html";
 import wasm from "vite-plugin-wasm";
 import { defineConfig as defineVitestConfig } from "vitest/config";
@@ -24,11 +24,6 @@ try {
     ?.split(", ")
     .forEach((san) => san.startsWith("DNS:") && allowedHosts.push(san.slice(4).replace(/^\*/, "")));
 } catch {}
-
-const compressionOptions: Parameters<typeof viteCompression>[0] = {
-  include: /\.(js|mjs|json|css|html?|svg|wasm)$/i,
-  threshold: 256,
-};
 
 export default mergeConfig(
   defineViteConfig({
@@ -84,8 +79,7 @@ export default mergeConfig(
         verbose: process.env.NODE_ENV === "development",
       }),
       wasm(),
-      viteCompression({ ...compressionOptions, algorithm: "gzip" }),
-      viteCompression({ ...compressionOptions, algorithm: "brotliCompress" }),
+      compression({ include: /\.(js|mjs|json|css|html?|svg|wasm)$/i }),
       (() => ({
         apply: "build",
         enforce: "post",
