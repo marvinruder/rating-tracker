@@ -95,7 +95,7 @@
     "vite": "6.3.5",
     "vitest": "3.2.2",
     "xpath-ts2": "1.4.2",
-    "zod": "3.25.56",
+    "zod": "3.25.64",
     "zod-validation-error": "3.4.1"
   },
   "devDependencies": {
