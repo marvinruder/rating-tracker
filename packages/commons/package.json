@@ -33,7 +33,7 @@
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-jsdoc": "50.8.0",
+    "eslint-plugin-jsdoc": "51.0.1",
     "eslint-plugin-prettier": "5.4.1",
     "globals": "16.2.0",
     "prettier": "3.5.3",
