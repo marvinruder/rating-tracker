@@ -31,7 +31,7 @@
     "@rating-tracker/wasm": "workspace:*",
     "@react-spring/web": "10.0.1",
     "@simplewebauthn/browser": "13.1.0",
-    "@vitejs/plugin-react": "4.5.2",
+    "@vitejs/plugin-react": "4.6.0",
     "@vitest/coverage-v8": "3.2.4",
     "@vitest/web-worker": "3.2.4",
     "hare-niemeyer": "3.0.0",
