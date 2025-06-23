@@ -1461,7 +1461,7 @@ __metadata:
     vitest: "npm:3.2.3"
     xpath-ts2: "npm:1.4.2"
     zod: "npm:3.25.67"
-    zod-validation-error: "npm:3.5.0"
+    zod-validation-error: "npm:3.5.2"
   languageName: unknown
   linkType: soft
 
@@ -8268,12 +8268,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod-validation-error@npm:3.5.0":
-  version: 3.5.0
-  resolution: "zod-validation-error@npm:3.5.0"
+"zod-validation-error@npm:3.5.2":
+  version: 3.5.2
+  resolution: "zod-validation-error@npm:3.5.2"
   peerDependencies:
     zod: ^3.25.0
-  checksum: 10c0/3cc9a4a8da5e9748814873b6d6638376073138b9c021889c2940a14c6bb1d65055cd75fbe9609fd62468efa8df393a29f3a2ed5be00d0ecefbac4ff6760d9a5e
+  checksum: 10c0/da50926ec91c7ad2880bacc5010a53c42de58f73f7c4629baad8132695c4daf74dd68620787198da81aca85134471182ed4c566b5fc9bc5349aefd8540946d57
   languageName: node
   linkType: hard
 
