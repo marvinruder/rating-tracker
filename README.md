@@ -16,7 +16,7 @@
 A web service fetching and providing financial and ESG ratings for stocks.
 
 > [!CAUTION]
-> Due to multiple data providers having implemented paywalls that cannot be circumvented easily, the Rating Tracker project is unable to continue further. It is sunset and will only receive critical security updates, waiting to be archived later this year.
+> Due to multiple data providers having implemented paywalls that cannot be circumvented easily, the Rating Tracker project is unable to continue further. It is now archived and will receive no further updates.
 
 ## Features
 
